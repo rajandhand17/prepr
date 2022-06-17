@@ -1,0 +1,106 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Prepr lab central APIs",
+        "description": "<p>Prepr lab central APIs documentation is intended only for Developers.</p><p>Below are the steps you can use to export these API documentations on Postman.</p><ol><li>Copy the URL of swagger API docs JSON <a href='/docs/api-docs.json'>api-docs.json</a>.</li><li>Open Postman and go to Import from link (Top-Left corner).</li><li>Use default settings & click Import.</li></ol>",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User login API",
+                "description": "User login",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "admin@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "mbd@2021"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User Authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "-----@gmail.com"
+                                                },
+                                                "password": {
+                                                    "type": "string",
+                                                    "example": "abc1234"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "default": "User Authorized"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Your email is not verified!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have provided wrong credentials (or) your account does not exits!"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authorization",
+            "description": "User & Organization Registration APIs"
+        },
+        {
+            "name": "Authentication",
+            "description": "User Login & logout APIs"
+        }
+    ]
+}
