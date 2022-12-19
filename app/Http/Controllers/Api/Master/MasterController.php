@@ -2,61 +2,85 @@
 
 namespace App\Http\Controllers\Api\Master;
 
-use App\Repositories\Api\Master\MasterInterface;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Master\CategoryResource;
+use App\Http\Resources\Master\ProjectTypeResource;
 use App\Http\Resources\Master\SkillResource;
 use App\Http\Resources\Master\TagResource;
+use App\Http\Resources\Master\IndustryResource;
 use Illuminate\Support\Facades\App;
+use App\Repositories\Api\Master\MasterRepository;
+use Illuminate\Http\Request;
 
 class MasterController extends AppBaseController
 {  
-    public function __construct(MasterInterface $masterInterface)
+    public function __construct(MasterRepository $masterrepository,Request $request)
     {
-        $this->masterInterface= $masterInterface;
+        $this->masterrepository= $masterrepository;
+        App::setlocale($request->lang);
     }
 
-    public function getCategories($lang,$categoryName=null)
-    {
+    public function getCategories(Request $request)
+    {   
         try{
-            App::setlocale($lang);
-            $category=$this->masterInterface->getcategories($categoryName);
+            $category=$this->masterrepository->getcategories($request->search);
             if($category){
-              return $this->sendResponse(CategoryResource::collection($category),__('messages.responses.category_list'));
+              return $this->sendResponse(CategoryResource::collection($category),__('responses.category_list'));
           }
-         }
-         catch (\Exception $e){
-             return $this->sendError(__('messages.responses.send_error'));
+         }catch (\Exception $e){
+             return $this->sendError(__('responses.send_error'));
          }
     }
 
-    public function getSkills($lang,$skillName=null)
+    public function getSkills(Request $request)
     {  
         try{
-            App::setlocale($lang);
-            $category=$this->masterInterface->getSkills($skillName);
+            $category=$this->masterrepository->getSkills($request->search);
             if($category){
-              return $this->sendResponse(SkillResource::collection($category),__('messages.responses.skill_list'));
+              return $this->sendResponse(SkillResource::collection($category),__('responses.skill_list'));
           }
+         }catch (\Exception $e){
+             return $this->sendError(__('responses.send_error'));
          }
-         catch (\Exception $e){
-             return $this->sendError(__('messages.responses.send_error'));
-         }
-       
     }
 
-    public function getTags($lang,$tagName=null)
+    public function getTags(Request $request)
     {
         try{
-            App::setlocale($lang);
-            $tag=$this->masterInterface->getTags($tagName);
+            $tag=$this->masterrepository->getTags($request->search);
             if($tag){
-              return $this->sendResponse(TagResource::collection($tag),__('messages.responses.tag_list'));
+              return $this->sendResponse(TagResource::collection($tag),__('responses.tag_list'));
           }
          }
          catch (\Exception $e){
-             return $this->sendError(__('messages.responses.send_error'));
+             return $this->sendError(__('responses.send_error'));
          }
     }
-    
+
+    public function getIndustries(Request $request)
+    {      
+        try{
+           $industry=$this->masterrepository->getIndustry($request->search);
+           if($industry){
+              return $this->sendResponse(IndustryResource::collection($industry),__('responses.project_industry_list'));
+          }
+         }
+         catch (\Exception $e){
+             return $this->sendError(__('responses.send_error'));
+         }
+    }
+
+    public function getTypes(Request $request)
+    {    
+       try{
+            $industry=$this->masterrepository->getTypes($request->search);
+            if($industry){
+               return $this->sendResponse(ProjectTypeResource::collection($industry),__('responses.project_type'));
+            }
+          }
+          catch (\Exception $e){
+              return $this->sendError(__('responses.send_error'));
+          }
+    }
+
 }

@@ -6,5 +6,7 @@ Interface MasterInterface{
     public function getCategories(String $categoryName=null);
     public function getSkills(string $skillName=null);
     public function getTags(string $tagName=null);
+    public function getIndustry(string $industryName=null);
+    public function getTypes(string $typeName=null);
     
 }

@@ -2,8 +2,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Master\MasterController;
 
-Route::get('/getcategories/{lang}/{categoryName?}', [MasterController::class, 'getCategories']);
-Route::get('/gettags/{lang}/{tagName?}', [MasterController::class, 'getTags']);
-Route::get('/getskills/{lang}/{skillName?}', [MasterController::class, 'getSkills']);
+Route::middleware(['language'])->group(function () {
+    Route::get('/categories',[MasterController::class, 'getCategories']);
+    Route::get('/skills',[MasterController::class, 'getSkills']);
+    Route::get('/tags',[MasterController::class, 'getTags']);
+    Route::get('/industries',[MasterController::class, 'getIndustries']);
+    Route::get('/types',[MasterController::class, 'getTypes']);
+});
+
+
 
 

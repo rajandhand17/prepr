@@ -4,7 +4,7 @@ namespace App\Http\Resources\Master;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SkillResource extends JsonResource
+class ProjectTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,8 @@ class SkillResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'skill' => $this->skill,
-            'language' => $this->language,
-            'fr_CA_skill'=>$this->fr_CA_skill,
+            'type_name' => $this->type_name,
+            
         ];
     }
 }
