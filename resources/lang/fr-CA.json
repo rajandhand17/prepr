@@ -2864,5 +2864,10 @@
     "responses.skill_list":"Liste de compétences trouvée",
     "responses.tag_list":"Liste des balises trouvées",
     "responses.project_industry_list":"Liste des industries fondées",
-    "responses.project_type":"Liste des types de projets fondés!"
+    "responses.project_type":"Liste des types de projets fondés!",
+    "responses.project_stages":"Liste des étapes du projet fondées!",
+    "responses.verticals":"Liste des verticales fondées!",
+    "responses.project_status":"Liste des statuts fondés!",
+    "responses.social_media":"Liste des médias sociaux fondée!"
+    
 }

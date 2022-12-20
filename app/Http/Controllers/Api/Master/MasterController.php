@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ProjectTypeResource;
+use App\Http\Resources\Master\ProjectStatusResource;
 use App\Http\Resources\Master\SkillResource;
+use App\Http\Resources\Master\VerticalsResource;
+use App\Http\Resources\Master\MediaResource;
 use App\Http\Resources\Master\TagResource;
 use App\Http\Resources\Master\IndustryResource;
+use App\Http\Resources\Master\ProjectStageResource;
 use Illuminate\Support\Facades\App;
 use App\Repositories\Api\Master\MasterRepository;
+use App\Models\SocialMedia;
 use Illuminate\Http\Request;
 
 class MasterController extends AppBaseController
@@ -81,6 +86,58 @@ class MasterController extends AppBaseController
           catch (\Exception $e){
               return $this->sendError(__('responses.send_error'));
           }
+    }
+
+    public function getstages(Request $request)
+    {
+        try{
+           $stages=$this->masterrepository->getStages($request->search);
+           if($stages){
+            return $this->sendResponse(ProjectStageResource::collection($stages),__('responses.project_stages'));
+           }
+        }
+        catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'));
+        }
+    }
+
+    public function getverticals(Request $request)
+    {
+        try{
+            $stages=$this->masterrepository->getverticals($request->search);
+            if($stages){
+             return $this->sendResponse(VerticalsResource::collection($stages),__('responses.project_stages'));
+            } 
+         }
+         catch (\Exception $e){
+             return $this->sendError(__('responses.send_error'));
+         }
+    }
+
+    public function getstatus(Request $request)
+    {   
+       try{
+          $status=$this->masterrepository->getstatus($request->search);
+          if($status){
+            return $this->sendResponse(ProjectStatusResource::collection($status),__('responses.project_status'));
+           } 
+       }
+       catch (\Exception $e){
+        return $this->sendError(__('responses.send_error'));
+      }
+    }
+
+    public function getmedia(Request $request)
+    {    
+        try{
+            $status=$this->masterrepository->getmedia($request->search);
+            if($status){
+               return $this->sendResponse(MediaResource::collection($status),__('responses.social_media'));
+             } 
+         }
+         catch (\Exception $e){
+          return $this->sendError(__('responses.send_error'));
+        }
     }
 
 }

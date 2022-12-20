@@ -5,22 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SocialMedia extends Model
+class ProjectStatus extends Model
 {
     use HasFactory;
 
-    public function getAll($mediaName=null)
+    public function getAll($StatusName=null)
     {   
-     
+         
         try{
-            if($mediaName==null){
-                $social_list = static::get();
+            if($StatusName==null){
+                $type_list = static::get();
             }else{
-                $social_list = static::where('social_media_name','like','%'.$mediaName.'%')->get();
+                $type_list = static::where('status_name','like','%'.$StatusName.'%')->get();
             }
             
-            if(!$social_list->isEmpty()){
-                return $social_list;
+            if(!$type_list->isEmpty()){
+                return $type_list;
             }
             return false;
         }

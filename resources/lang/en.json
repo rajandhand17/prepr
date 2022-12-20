@@ -2859,5 +2859,11 @@
     "responses.skill_list":"List of Skills Founded!",
     "responses.tag_list":"List Of Tags Founded!",
     "responses.project_industry_list":"List of Industry Founded!",
-    "responses.project_type":"List of Project types Founded!"
+    "responses.project_type":"List of Project Types Founded!",
+    "responses.project_stages":"List of Project Stages Founded!",
+    "responses.verticals":"List of Verticals Founded!",
+    "responses.project_status":"List of Status Founded!",
+    "responses.social_media":"List of Social Medias Founded!"
+
+    
 }

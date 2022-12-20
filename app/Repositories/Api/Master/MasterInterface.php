@@ -8,5 +8,10 @@ Interface MasterInterface{
     public function getTags(string $tagName=null);
     public function getIndustry(string $industryName=null);
     public function getTypes(string $typeName=null);
+    public function getStages(string $stageName=null);
+    public function getverticals(string $verticalsName=null);
+    public function getstatus(string $statusName=null);
+    public function getmedia(string $mediaName=null);
+    
     
 }
