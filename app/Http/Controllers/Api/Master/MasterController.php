@@ -18,27 +18,29 @@ use App\Models\SocialMedia;
 use Illuminate\Http\Request;
 
 class MasterController extends AppBaseController
-{  
-    public function __construct(MasterRepository $masterrepository,Request $request)
+{
+
+    public function __construct(MasterRepository $masterRepository)
     {
-        $this->masterrepository= $masterrepository;
-        App::setlocale($request->lang);
+        $this->masterRepository= $masterRepository;
+
     }
 
     public function getCategories(Request $request)
-    {   
+    {
         try{
-            $category=$this->masterrepository->getcategories($request->search);
+            $category=$this->masterRepository->getcategories($request);
             if($category){
               return $this->sendResponse(CategoryResource::collection($category),__('responses.category_list'));
-          }
+            }
+            return $this->sendError(__('responses.not_found_category_list'));
          }catch (\Exception $e){
-             return $this->sendError(__('responses.send_error'));
+             return $this->sendError(__('responses.send_error'),500);
          }
     }
 
     public function getSkills(Request $request)
-    {  
+    {
         try{
             $category=$this->masterrepository->getSkills($request->search);
             if($category){
@@ -63,7 +65,7 @@ class MasterController extends AppBaseController
     }
 
     public function getIndustries(Request $request)
-    {      
+    {
         try{
            $industry=$this->masterrepository->getIndustry($request->search);
            if($industry){
@@ -76,7 +78,7 @@ class MasterController extends AppBaseController
     }
 
     public function getTypes(Request $request)
-    {    
+    {
        try{
             $industry=$this->masterrepository->getTypes($request->search);
             if($industry){
@@ -107,7 +109,7 @@ class MasterController extends AppBaseController
             $stages=$this->masterrepository->getverticals($request->search);
             if($stages){
              return $this->sendResponse(VerticalsResource::collection($stages),__('responses.project_stages'));
-            } 
+            }
          }
          catch (\Exception $e){
              return $this->sendError(__('responses.send_error'));
@@ -115,12 +117,12 @@ class MasterController extends AppBaseController
     }
 
     public function getstatus(Request $request)
-    {   
+    {
        try{
           $status=$this->masterrepository->getstatus($request->search);
           if($status){
             return $this->sendResponse(ProjectStatusResource::collection($status),__('responses.project_status'));
-           } 
+           }
        }
        catch (\Exception $e){
         return $this->sendError(__('responses.send_error'));
@@ -128,12 +130,12 @@ class MasterController extends AppBaseController
     }
 
     public function getmedia(Request $request)
-    {    
+    {
         try{
             $status=$this->masterrepository->getmedia($request->search);
             if($status){
                return $this->sendResponse(MediaResource::collection($status),__('responses.social_media'));
-             } 
+             }
          }
          catch (\Exception $e){
           return $this->sendError(__('responses.send_error'));

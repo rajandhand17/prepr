@@ -2,8 +2,8 @@
 namespace App\Repositories\Api\Master;
 use App\Repositories\Api\Master\MasterRepository;
 Interface MasterInterface{
-    
-    public function getCategories(String $categoryName=null);
+
+    public function getCategories($request);
     public function getSkills(string $skillName=null);
     public function getTags(string $tagName=null);
     public function getIndustry(string $industryName=null);
@@ -12,6 +12,6 @@ Interface MasterInterface{
     public function getverticals(string $verticalsName=null);
     public function getstatus(string $statusName=null);
     public function getmedia(string $mediaName=null);
-    
-    
+
+
 }

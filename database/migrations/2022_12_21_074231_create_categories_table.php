@@ -13,10 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-         Schema::create('project_types', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('type_name');
+            $table->string('name');
+            $table->string('fr_CA_name')->nullable();
+            $table->string('components')->nullable();
+            $table->bigInteger('parent_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_types');
+        Schema::dropIfExists('categories');
     }
 };

@@ -13,10 +13,11 @@ class CategoryResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {   
+    {
         return [
+            'id' => $this->id,
             'name' => $this->name,
-            'parent_id' => $this->parent_id
+            'parent_category' => $this->parent_id
         ];
     }
 }

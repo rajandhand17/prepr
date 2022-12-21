@@ -1,6 +1,6 @@
 <?php
 namespace App\Repositories\Api\Master;
-use App\Repositories\Api\Master\MasterInterface;
+
 use App\Models\Category;
 use App\Models\Skill;
 use App\Models\Tag;
@@ -12,7 +12,7 @@ use App\Models\ProjectStatus;
 use App\Models\SocialMedia;
 
 class MasterRepository implements MasterInterface{
-     
+
     private $category;
     private $skill;
     private $tag;
@@ -22,6 +22,7 @@ class MasterRepository implements MasterInterface{
     private $vertical;
     private $projectstatus;
     private $socialmedia;
+
     function __construct(Category $category,Skill $skill,Tag $tag,Industrie $industry, ProjectType $projecttype, ProjectStage $projectstage, Vertical $vertical, ProjectStatus $projectstatus, SocialMedia $socialmedia) {
         $this->category = $category;
         $this->skill = $skill;
@@ -34,10 +35,10 @@ class MasterRepository implements MasterInterface{
         $this->socialmedia=$socialmedia;
     }
 
-    public function getCategories(String $categoryName=null)
-    {   
-        try{ 
-           return $this->category->getAll($categoryName);
+    public function getCategories($request)
+    {
+        try{
+           return $this->category->getCategories($request->language,$request->search,$request->component);
         }
         catch (\Exception $e){
             return false;
@@ -45,7 +46,7 @@ class MasterRepository implements MasterInterface{
     }
 
     public function getSkills(string $skillName=null){
-        
+
         try{
             return $this->skill->getAll($skillName);
         }
@@ -65,8 +66,8 @@ class MasterRepository implements MasterInterface{
     }
 
     public function getIndustry(string $industryName=null){
-          
-        try{ 
+
+        try{
             return $this->industry->getAll($industryName);
         }
         catch (\Exception $e){
@@ -75,8 +76,8 @@ class MasterRepository implements MasterInterface{
     }
 
     public function getTypes(string $typename=null)
-    {   
-       try{ 
+    {
+       try{
            return $this->projecttype->getAll($typename);
         }
         catch (\Exception $e){
@@ -105,7 +106,7 @@ class MasterRepository implements MasterInterface{
     }
 
     public function getstatus(string $StatusName = null)
-    {   
+    {
         try{
              return $this->projectstatus->getAll($StatusName);
          }

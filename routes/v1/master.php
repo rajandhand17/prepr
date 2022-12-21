@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Master\MasterController;
 
 Route::middleware(['language'])->group(function () {
+
     Route::get('/categories',[MasterController::class, 'getCategories']);
     Route::get('/skills',[MasterController::class, 'getSkills']);
     Route::get('/tags',[MasterController::class, 'getTags']);
@@ -12,8 +13,8 @@ Route::middleware(['language'])->group(function () {
     Route::get('/verticals',[MasterController::class,'getverticals']);
     Route::get('/status',[MasterController::class,'getstatus']);
     Route::get('/media',[MasterController::class,'getmedia']);
-    
-    
+
+
 });
 
 

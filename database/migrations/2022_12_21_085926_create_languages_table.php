@@ -13,10 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('project_status', function (Blueprint $table) {
+        Schema::create('languages', function (Blueprint $table) {
             $table->id();
-            $table->string('status_name');
+            $table->string('name');
+            $table->string('iso')->nullable();
+            $table->string('status')->nullable();
+            $table->bigInteger('is_imported')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_status');
+        Schema::dropIfExists('languages');
     }
 };

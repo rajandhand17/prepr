@@ -2854,9 +2854,24 @@
     "placeholders.placeholders_pro_ievc": "Insert embedded video code",
     "placeholders.placeholders_search_project": "Search project",
     "placeholders.placeholders_pro_pd": "Project description (maximum 300 characters)",
-    "responses.send_error":"Something Went Wrong",
-    "responses.category_list":"List Of Category Found!",
-    "responses.skill_list":"List of Skills Founded!",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    "responses.send_error":"Something went wrong",
+    "responses.found_category_list":"Category list fetched",
+    "responses.not_found_category_list":"Category not found!",
+    "responses.skill_list":"List of skills Found!",
     "responses.tag_list":"List Of Tags Founded!",
     "responses.project_industry_list":"List of Industry Founded!",
     "responses.project_type":"List of Project Types Founded!",
@@ -2865,5 +2880,5 @@
     "responses.project_status":"List of Status Founded!",
     "responses.social_media":"List of Social Medias Founded!"
 
-    
+
 }
