@@ -46,7 +46,7 @@ class ProjectIndustry extends Command
 
             $project_industry = DB::connection('mysql2')->table('project_industry')->get();
             if($project_industry->count() > 0){
-                
+                 
                 foreach ($project_industry as $key => $single_industry){
                    $project_industry_details=[
                         'name' => $single_industry->name,
@@ -66,7 +66,6 @@ class ProjectIndustry extends Command
             $this->error('No Project Industry found.');
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;

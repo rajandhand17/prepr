@@ -2857,14 +2857,18 @@
     "responses.send_error":"Something went wrong",
     "responses.found_category_list":"Category list fetched",
     "responses.not_found_category_list":"Category not found!",
-    "responses.found_skill_list":"List of skills Found!",
-    "responses.tag_list":"List Of Tags Founded!",
-    "responses.project_industry_list":"List of Industry Founded!",
-    "responses.project_type":"List of Project Types Founded!",
-    "responses.project_stages":"List of Project Stages Founded!",
-    "responses.verticals":"List of Verticals Founded!",
-    "responses.project_status":"List of Status Founded!",
-    "responses.social_media":"List of Social Medias Founded!"
-
-
+    "responses.found_skill_list":"Skill list fetched",
+    "responses.not_found_skill_list":"Skill not found!",
+    "responses.found_tag_list":"Tag list fetched",
+    "responses.not_found_tag_list":"Tag not found!",
+    "responses.found_project_industry_list":"Project industry list fetched",
+    "responses.not_found_project_industry_list":"Project industry not found!",
+    "responses.found_project_stages_list":"Project stage list fetched",
+    "responses.not_found_project_stages_list":"Project stage not found!",
+    "responses.found_project_verticals_list":"Project verticals list fetched",
+    "responses.not_found_project_verticals_list":"Project verticals not found!",
+    "responses.found_project_status_list":"Project status list fetched",
+    "responses.not_found_project_status_list":"Project status not found!",
+    "responses.found_social_links_list":"Social links list fetched",
+    "responses.not_found_social_links_list":"Social links not found!"
 }

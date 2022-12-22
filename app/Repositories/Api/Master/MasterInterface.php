@@ -11,7 +11,7 @@ Interface MasterInterface{
     public function getStages($request);
     public function getVerticals($request);
     public function getStatus($request);
-    public function getmedia(string $mediaName=null);
+    public function getSocialLinks($request);
 
 
 }

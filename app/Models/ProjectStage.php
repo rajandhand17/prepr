@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Schema;
 class ProjectStage extends Model
 {
     use HasFactory;
+    
     use SoftDeletes;
 
     protected $table = 'project_stages';
@@ -29,7 +30,6 @@ class ProjectStage extends Model
         try{
             if($language == 'en'){
                 $project_stage_list = static::select('id','name');
-                  //Search categories based on user input
             }
             else {
                  //get column name based on language
@@ -41,7 +41,7 @@ class ProjectStage extends Model
                 }
                 $project_stage_list = static::select('id', $column_name . ' as name');
             }
-
+ 
             //Search categories based on user input
             if($search!=null){
                 $column_name = isset($column_name) ? $column_name : "name";

@@ -9,7 +9,7 @@ use App\Models\ProjectType;
 use App\Models\ProjectStage;
 use App\Models\ProjectVertical;
 use App\Models\ProjectStatus;
-use App\Models\SocialMedia;
+use App\Models\SocialLink;
 
 class MasterRepository implements MasterInterface{
 
@@ -21,9 +21,9 @@ class MasterRepository implements MasterInterface{
     private $project_stage;
     private $project_verticals;
     private $project_status;
-    private $socialmedia;
+    private $social_link;
 
-    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialMedia $socialmedia) {
+    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link) {
         $this->category = $category;
         $this->skill = $skill;
         $this->tag=$tag;
@@ -32,7 +32,7 @@ class MasterRepository implements MasterInterface{
         $this->project_stage=$project_stage;
         $this->project_verticals=$project_verticals;
         $this->project_status=$project_status;
-        $this->socialmedia=$socialmedia;
+        $this->social_link=$social_link;
     }
 
     public function getCategories($request)
@@ -115,10 +115,10 @@ class MasterRepository implements MasterInterface{
          }
     }
 
-    public function getmedia(string $mediaName=null)
+    public function getSocialLinks($request)
     {
         try{
-            return $this->socialmedia->getAll($mediaName);
+            return $this->social_link->getSocialLinks($request->language,$request->search);
         }
         catch(\Exception $e){
          return false;

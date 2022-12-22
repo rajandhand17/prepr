@@ -4,7 +4,7 @@ namespace App\Http\Resources\Master;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MediaResource extends JsonResource
+class SocialLinkResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,8 @@ class MediaResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'social_media_name' => $this->social_media_name,
-            
+            'name' => $this->name,
+            'icon' => $this->icon,
         ];
     }
 }

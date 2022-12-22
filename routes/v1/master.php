@@ -11,7 +11,7 @@ Route::middleware(['language'])->group(function () {
     Route::get('/stages',[MasterController::class, 'getStages']);
     Route::get('/verticals',[MasterController::class,'getVerticals']);
     Route::get('/status',[MasterController::class,'getStatus']);
-    Route::get('/media',[MasterController::class,'getmedia']);
+    Route::get('/links',[MasterController::class,'getSocialLinks']);
 });
  
 

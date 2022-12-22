@@ -8,7 +8,7 @@ use App\Http\Resources\Master\ProjectTypeResource;
 use App\Http\Resources\Master\ProjectStatusResource;
 use App\Http\Resources\Master\SkillResource;
 use App\Http\Resources\Master\ProjectVerticalsResource;
-use App\Http\Resources\Master\MediaResource;
+use App\Http\Resources\Master\SocialLinkResource;
 use App\Http\Resources\Master\TagResource;
 use App\Http\Resources\Master\ProjectIndustryResource;
 use App\Http\Resources\Master\ProjectStageResource;
@@ -59,6 +59,7 @@ class MasterController extends AppBaseController
             if($tag){
               return $this->sendResponse(TagResource::collection($tag),__('responses.found_tag_list'));
           }
+          return $this->sendError(__('responses.not_found_tag_list'));
          }catch (\Exception $e){
              return $this->sendError(__('responses.send_error'));
          }
@@ -134,16 +135,17 @@ class MasterController extends AppBaseController
       }
     }
 
-    public function getmedia(Request $request)
+    public function getSocialLinks(Request $request)
     {
         try{
-            $status=$this->masterrepository->getmedia($request->search);
+            $status=$this->masterRepository->getSocialLinks($request);
             if($status){
-               return $this->sendResponse(MediaResource::collection($status),__('responses.social_media'));
+               return $this->sendResponse(SocialLinkResource::collection($status),__('responses.found_social_links_list'));
              }
+             return $this->sendError(__('responses.not_found_social_links_list'));
          }
          catch (\Exception $e){
-          return $this->sendError(__('responses.send_error'));
+          return $this->sendError(__('responses.send_error'),500);
         }
     }
 
