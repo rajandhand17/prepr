@@ -4,7 +4,7 @@ namespace App\Http\Resources\Master;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class VerticalsResource extends JsonResource
+class ProjectIndustryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +14,6 @@ class VerticalsResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id'=> $this->id,
-            'verticals_name' => $this->verticals_name,
-        ];
+        return parent::toArray($request);
     }
 }

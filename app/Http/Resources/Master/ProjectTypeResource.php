@@ -16,7 +16,7 @@ class ProjectTypeResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'type_name' => $this->type_name,
+            'name' => $this->name,
             
         ];
     }

@@ -48,15 +48,15 @@ class Languages extends Command
 
             if($languages->count() > 0){
                 foreach ($languages as $key => $single_language){
-                    $languageDetails=[
+                    $language_details=[
                         'name' => $single_language->lang_name,
                         'iso' => $single_language->lang_iso,
                         'status' => $single_language->status,
                         'is_imported' => $single_language->is_imported
                     ];
-                    $checkCategory = Language::where($languageDetails)->first();
+                    $checkCategory = Language::where($language_details)->first();
                     if(!$checkCategory){
-                        Language::create($languageDetails);
+                        Language::create($language_details);
                     }
                 }
                 DB::commit();
@@ -67,7 +67,6 @@ class Languages extends Command
             $this->error('No languages found.');
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;

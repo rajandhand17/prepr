@@ -16,7 +16,7 @@ class ProjectStatusResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'status_name' => $this->status_name,
+            'name' => $this->name,
             
         ];
     }

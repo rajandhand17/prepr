@@ -2,19 +2,28 @@
 
 namespace App\Models;
 
+use App\Helpers\LanguageColumnHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Facades\Schema;
+ 
 
 class Skill extends Model
 {
     use HasFactory;
 
     use SoftDeletes;
-    protected $fillable = ['skill','language','fr_CA_skill'];
+    
+    protected $table = 'skills';
+    
+    protected $fillable = [
+        'name',
+        'fr_CA_name'
+    ];
 
-
+   
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     /***
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -25,7 +34,7 @@ class Skill extends Model
 
     /***
      * @param $value
-     * @return string
+     * @return string 
      */
     public function getDeletedAtAttribute($value)
     {
@@ -34,24 +43,43 @@ class Skill extends Model
         }
     }
 
-    public function getAll($skillName=null)
-    {   
+    public function getSkills($language='en',$search=null)
+    {  
         try{
-            if($skillName==null){
-                $Skill_list = static::get();
-            }else{
-                $Skill_list = static::where('skill','like','%'.$skillName.'%')->get();
+            if($language == 'en'){
+                $skill_list = static::select('id','name');
             }
-            
-            if(!$Skill_list->isEmpty()){
-                return $Skill_list;
+            else {
+
+                //get column name based on language
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language,'name');
+
+                //check whether the column exist in the db or not
+                if(!$column_name || !Schema::hasColumn('skills', $column_name)){
+                    return false;
+                }
+                $skill_list = static::select('id', $column_name . ' as name');
             }
+
+            //Search categories based on user input
+            if($search!=null){
+                $column_name = isset($column_name) ? $column_name : "name";
+                $skill_list = $skill_list->where($column_name,"like",'%'.$search.'%');
+            }
+
+            //take 20 results based from the table
+            $skill_list = $skill_list->take(20)->get();
+
+            //check if there are any results
+            if(!$skill_list->isEmpty()){
+                return $skill_list;
+            }
+
             return false;
         }
         catch (\Exception $e){
             return false;
         }
-
     }
  
 }

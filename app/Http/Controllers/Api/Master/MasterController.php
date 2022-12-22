@@ -7,10 +7,10 @@ use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ProjectTypeResource;
 use App\Http\Resources\Master\ProjectStatusResource;
 use App\Http\Resources\Master\SkillResource;
-use App\Http\Resources\Master\VerticalsResource;
+use App\Http\Resources\Master\ProjectVerticalsResource;
 use App\Http\Resources\Master\MediaResource;
 use App\Http\Resources\Master\TagResource;
-use App\Http\Resources\Master\IndustryResource;
+use App\Http\Resources\Master\ProjectIndustryResource;
 use App\Http\Resources\Master\ProjectStageResource;
 use Illuminate\Support\Facades\App;
 use App\Repositories\Api\Master\MasterRepository;
@@ -27,11 +27,11 @@ class MasterController extends AppBaseController
     }
 
     public function getCategories(Request $request)
-    {
+    {   
         try{
             $category=$this->masterRepository->getcategories($request);
             if($category){
-              return $this->sendResponse(CategoryResource::collection($category),__('responses.category_list'));
+              return $this->sendResponse(CategoryResource::collection($category),__('responses.found_category_list'));
             }
             return $this->sendError(__('responses.not_found_category_list'));
          }catch (\Exception $e){
@@ -42,90 +42,95 @@ class MasterController extends AppBaseController
     public function getSkills(Request $request)
     {
         try{
-            $category=$this->masterrepository->getSkills($request->search);
-            if($category){
-              return $this->sendResponse(SkillResource::collection($category),__('responses.skill_list'));
+            $skills=$this->masterRepository->getSkills($request);
+            if($skills){
+              return $this->sendResponse(SkillResource::collection($skills),__('responses.found_skill_list'));
+          }
+          return $this->sendError(__('responses.not_found_skill_list'));
+         }catch (\Exception $e){
+             return $this->sendError(__('responses.send_error'),500);
+         }
+    }
+
+    public function getTags(Request $request)
+    {      
+        try{
+            $tag=$this->masterRepository->getTags($request);
+            if($tag){
+              return $this->sendResponse(TagResource::collection($tag),__('responses.found_tag_list'));
           }
          }catch (\Exception $e){
              return $this->sendError(__('responses.send_error'));
          }
     }
 
-    public function getTags(Request $request)
+    public function getIndustry(Request $request)
     {
         try{
-            $tag=$this->masterrepository->getTags($request->search);
-            if($tag){
-              return $this->sendResponse(TagResource::collection($tag),__('responses.tag_list'));
-          }
-         }
-         catch (\Exception $e){
-             return $this->sendError(__('responses.send_error'));
-         }
-    }
-
-    public function getIndustries(Request $request)
-    {
-        try{
-           $industry=$this->masterrepository->getIndustry($request->search);
+           $industry=$this->masterRepository->getIndustry($request);
            if($industry){
-              return $this->sendResponse(IndustryResource::collection($industry),__('responses.project_industry_list'));
+              return $this->sendResponse(ProjectIndustryResource::collection($industry),__('responses.found_project_industry_list'));
           }
+          return $this->sendError(__('responses.not_found_project_industry_list'));
          }
          catch (\Exception $e){
-             return $this->sendError(__('responses.send_error'));
+             return $this->sendError(__('responses.send_error'),500);
          }
     }
 
     public function getTypes(Request $request)
     {
        try{
-            $industry=$this->masterrepository->getTypes($request->search);
-            if($industry){
-               return $this->sendResponse(ProjectTypeResource::collection($industry),__('responses.project_type'));
+            $type=$this->masterRepository->getTypes($request);
+            if($type){
+               return $this->sendResponse(ProjectTypeResource::collection($type),__('responses.found_project_industry_list'));
             }
+            return $this->sendError(__('responses.not_found_project_industry_list'));
           }
           catch (\Exception $e){
-              return $this->sendError(__('responses.send_error'));
+              return $this->sendError(__('responses.send_error'),500);
           }
     }
 
-    public function getstages(Request $request)
+    public function getStages(Request $request)
     {
         try{
-           $stages=$this->masterrepository->getStages($request->search);
+           $stages=$this->masterRepository->getStages($request);
            if($stages){
-            return $this->sendResponse(ProjectStageResource::collection($stages),__('responses.project_stages'));
+            return $this->sendResponse(ProjectStageResource::collection($stages),__('responses.not_found_project_stages_list'));
            }
+           return $this->sendError(__('responses.not_found_project_stages_list'));
         }
         catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'));
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 
-    public function getverticals(Request $request)
+    public function getVerticals(Request $request)
     {
         try{
-            $stages=$this->masterrepository->getverticals($request->search);
-            if($stages){
-             return $this->sendResponse(VerticalsResource::collection($stages),__('responses.project_stages'));
+            $project_verticals=$this->masterRepository->getVerticals($request);
+            if($project_verticals){
+             return $this->sendResponse(ProjectVerticalsResource::collection($project_verticals),__('responses.found_project_verticals_list'));
             }
+            return $this->sendError(__('responses.not_found_project_verticals_list'));
          }
          catch (\Exception $e){
-             return $this->sendError(__('responses.send_error'));
+             return $this->sendError(__('responses.send_error'),500);
          }
     }
 
-    public function getstatus(Request $request)
+    public function getStatus(Request $request)
     {
        try{
-          $status=$this->masterrepository->getstatus($request->search);
-          if($status){
-            return $this->sendResponse(ProjectStatusResource::collection($status),__('responses.project_status'));
+          $project_status=$this->masterRepository->getStatus($request);
+          if($project_status){
+            return $this->sendResponse(ProjectStatusResource::collection($project_status),__('responses.found_project_status_list'));
            }
+           return $this->sendError(__('responses.not_found_project_status_list'));
        }
        catch (\Exception $e){
-        return $this->sendError(__('responses.send_error'));
+        return $this->sendError(__('responses.send_error'),500);
       }
     }
 

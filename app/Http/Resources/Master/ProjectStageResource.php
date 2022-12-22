@@ -16,7 +16,7 @@ class ProjectStageResource extends JsonResource
     { 
         return [
             'id'=> $this->id,
-            'stage_name' => $this->stage_name,
+            'name' => $this->name,
             
         ];
     }

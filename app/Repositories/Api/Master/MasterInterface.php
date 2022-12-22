@@ -4,13 +4,13 @@ use App\Repositories\Api\Master\MasterRepository;
 Interface MasterInterface{
 
     public function getCategories($request);
-    public function getSkills(string $skillName=null);
+    public function getSkills($request);
     public function getTags(string $tagName=null);
-    public function getIndustry(string $industryName=null);
-    public function getTypes(string $typeName=null);
-    public function getStages(string $stageName=null);
-    public function getverticals(string $verticalsName=null);
-    public function getstatus(string $statusName=null);
+    public function getIndustry($request);
+    public function getTypes($request);
+    public function getStages($request);
+    public function getVerticals($request);
+    public function getStatus($request);
     public function getmedia(string $mediaName=null);
 
 

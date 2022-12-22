@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Console\Commands\OldDataMigration;
+
+use Illuminate\Console\Command;
+use DB;
+use App\Models\ProjectStatus as Status; 
+
+class ProjectStatus extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'migrate-old-data:project_Status';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'This command is use to migrate old project Status table data to new db structure.';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        try {
+
+            $this->info('Migrating Old Data for Project Status table.');
+            DB::beginTransaction();
+
+            $project_status = DB::connection('mysql2')->table('project_status')->get();
+            if($project_status->count() > 0){
+                
+                foreach ($project_status as $key => $single_status){
+                   $project_status_details=[
+                        'name' => $single_status->name,
+                        'fr_CA_name' => $single_status->fr_CA_name,
+                    ];
+                    $check_project_industry = Status::where($project_status_details)->first();
+                    if(!$check_project_industry){
+                        Status::create($project_status_details);
+                    }
+                }
+                DB::commit();
+                $this->info('Migrating of old data for Project Status table completed.');
+                return;
+            }
+            DB::rollback();
+            $this->error('No Project Type found.');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $this->error('Something went wrong.');
+            return;
+        }
+    }
+}

@@ -48,15 +48,15 @@ class Categories extends Command
 
             if($categories->count() > 0){
                 foreach ($categories as $key => $single_category){
-                    $categoryDetails=[
+                    $category_details=[
                         'name' => $single_category->name,
                         'fr_CA_name' => $single_category->fr_CA_name,
                         'components' => $single_category->components,
                         'parent_id' => $single_category->parent_id
                     ];
-                    $checkCategory = Category::where($categoryDetails)->first();
+                    $checkCategory = Category::where($category_details)->first();
                     if(!$checkCategory){
-                        Category::create($categoryDetails);
+                        Category::create($category_details);
                     }
                 }
                 DB::commit();

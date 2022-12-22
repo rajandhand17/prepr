@@ -8,63 +8,52 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
 
-class Category extends Model
+class ProjectIndustry extends Model
 {
     use HasFactory;
-
+    
     use SoftDeletes;
-
-    protected $table = 'categories';
-
+    
+    protected $table = 'project_industry';
+    
     protected $fillable = [
         'name',
-        'fr_CA_name',
-        'components',
-        'parent_id'
+        'fr_CA_name'
     ];
 
+    
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-
-    public function parent()
-    {
-        return $this->hasOne(self::class, 'id', 'parent_id');
-    }
-
-    public function getCategories($language='en',$search=null,$component=null)
-    {
+   
+    public function getProjectIndustry($language='en',$search=null)
+    {    
         try{
             if($language == 'en'){
-                $category_list = static::select('id','name','parent_id');
+                $project_industry_list = static::select('id','name');
+                  //Search categories based on user input
             }
             else {
-
-                //get column name based on language
+                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language,'name');
 
                 //check whether the column exist in the db or not
-                if(!$column_name || !Schema::hasColumn('categories', $column_name)){
+                if(!$column_name || !Schema::hasColumn('skills', $column_name)){
                     return false;
                 }
-                $category_list = static::select('id', $column_name . ' as name','parent_id');
+                $project_industry_list = static::select('id', $column_name . ' as name');
             }
 
             //Search categories based on user input
             if($search!=null){
                 $column_name = isset($column_name) ? $column_name : "name";
-                $category_list = $category_list->where($column_name,"like",'%'.$search.'%');
-            }
-
-            //get categories based on component
-            if($component!=null){
-                $category_list = $category_list->where($component,"like",'%'.$component.'%');
+                $project_industry_list = $project_industry_list->where($column_name,"like",'%'.$search.'%');
             }
 
             //take 20 results based from the table
-            $category_list = $category_list->take(20)->get();
+            $project_industry_list = $project_industry_list->take(20)->get();
 
             //check if there are any results
-            if(!$category_list->isEmpty()){
-                return $category_list;
+            if(!$project_industry_list->isEmpty()){
+                return $project_industry_list;
             }
 
             return false;
@@ -72,6 +61,5 @@ class Category extends Model
         catch (\Exception $e){
             return false;
         }
-
     }
-}
+} 

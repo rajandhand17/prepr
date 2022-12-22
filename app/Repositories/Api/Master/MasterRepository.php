@@ -4,10 +4,10 @@ namespace App\Repositories\Api\Master;
 use App\Models\Category;
 use App\Models\Skill;
 use App\Models\Tag;
-use App\Models\Industrie;
+use App\Models\ProjectIndustry;
 use App\Models\ProjectType;
 use App\Models\ProjectStage;
-use App\Models\Vertical;
+use App\Models\ProjectVertical;
 use App\Models\ProjectStatus;
 use App\Models\SocialMedia;
 
@@ -16,42 +16,42 @@ class MasterRepository implements MasterInterface{
     private $category;
     private $skill;
     private $tag;
-    private $industry;
-    private $projecttype;
-    private $projectstage;
-    private $vertical;
-    private $projectstatus;
+    private $project_industry;
+    private $project_type;
+    private $project_stage;
+    private $project_verticals;
+    private $project_status;
     private $socialmedia;
 
-    function __construct(Category $category,Skill $skill,Tag $tag,Industrie $industry, ProjectType $projecttype, ProjectStage $projectstage, Vertical $vertical, ProjectStatus $projectstatus, SocialMedia $socialmedia) {
+    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialMedia $socialmedia) {
         $this->category = $category;
         $this->skill = $skill;
         $this->tag=$tag;
-        $this->industry=$industry;
-        $this->projecttype=$projecttype;
-        $this->projectstage=$projectstage;
-        $this->vertical=$vertical;
-        $this->projectstatus=$projectstatus;
+        $this->project_industry=$project_industry;
+        $this->project_type=$project_type;
+        $this->project_stage=$project_stage;
+        $this->project_verticals=$project_verticals;
+        $this->project_status=$project_status;
         $this->socialmedia=$socialmedia;
     }
 
     public function getCategories($request)
-    {
+    {    
         try{
            return $this->category->getCategories($request->language,$request->search,$request->component);
         }
         catch (\Exception $e){
-            return false;
+           return false;
         }
     }
 
-    public function getSkills(string $skillName=null){
-
-        try{
-            return $this->skill->getAll($skillName);
+    public function getSkills($request)
+    {    
+       try{
+           return $this->skill->getSkills($request->language,$request->search);
         }
         catch (\Exception $e){
-            return false;
+           return false;
         }
     }
 
@@ -65,50 +65,50 @@ class MasterRepository implements MasterInterface{
         }
     }
 
-    public function getIndustry(string $industryName=null){
+    public function getIndustry($request){
 
         try{
-            return $this->industry->getAll($industryName);
+            return $this->project_industry->getProjectIndustry($request->language,$request->search);
         }
         catch (\Exception $e){
             return false;
         }
     }
 
-    public function getTypes(string $typename=null)
+    public function getTypes($request)
     {
        try{
-           return $this->projecttype->getAll($typename);
+           return $this->project_type->getProjectType($request->language,$request->search);
         }
         catch (\Exception $e){
             return false;
         }
     }
 
-    public function getStages(string $stagename = null)
+    public function getStages($request)
     {
         try{
-           return $this->projectstage->getAll($stagename);
+           return $this->project_stage->getProjectStages($request->language,$request->search);
         }
         catch(\Exception $e){
             return false;
         }
     }
 
-    public function getverticals(string $verticalsName = null)
+    public function getVerticals($request)
     {
        try{
-          return $this->vertical->getAll($verticalsName);
+          return $this->project_verticals->getProjectVerticals($request->language,$request->search);
        }
        catch(\Exception $e){
         return false;
        }
     }
 
-    public function getstatus(string $StatusName = null)
+    public function getStatus($request)
     {
         try{
-             return $this->projectstatus->getAll($StatusName);
+             return $this->project_status->getProjectStatus($request->language,$request->search);
          }
          catch(\Exception $e){
           return false;

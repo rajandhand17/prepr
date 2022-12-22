@@ -2,31 +2,64 @@
 
 namespace App\Models;
 
+use App\Helpers\LanguageColumnHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Schema;
 
 class ProjectType extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
+    protected $table = 'project_types';
     
-    public function getAll($typeName=null)
-    {   
+    protected $fillable = [
+        'name',
+        'fr_CA_name'
+    ];
+
+   
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+    
+    public function getProjectType($language='en',$search=null)
+    {
         try{
-            if($typeName==null){
-                $type_list = static::get();
-            }else{
-                $type_list = static::where('type_name','like','%'.$typeName.'%')->get();
+            if($language == 'en'){
+                $project_type_list = static::select('id','name');
+                  //Search categories based on user input
             }
-            
-            if(!$type_list->isEmpty()){
-                return $type_list;
+            else {
+                 //get column name based on language
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language,'name');
+
+                //check whether the column exist in the db or not
+                if(!$column_name || !Schema::hasColumn('project_types', $column_name)){
+                    return false;
+                }
+                $project_type_list = static::select('id', $column_name . ' as name');
             }
+
+            //Search categories based on user input
+            if($search!=null){
+                $column_name = isset($column_name) ? $column_name : "name";
+                $project_type_list = $project_type_list->where($column_name,"like",'%'.$search.'%');
+            }
+
+            //take 20 results based from the table
+            $project_type_list = $project_type_list->take(20)->get();
+
+            //check if there are any results
+            if(!$project_type_list->isEmpty()){
+                return $project_type_list;
+            }
+
             return false;
         }
         catch (\Exception $e){
             return false;
         }
-
     }
   
 }

@@ -16,9 +16,7 @@ class SkillResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'skill' => $this->skill,
-            'language' => $this->language,
-            'fr_CA_skill'=>$this->fr_CA_skill,
+            'name' => $this->name,
         ];
     }
 }

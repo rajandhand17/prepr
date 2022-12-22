@@ -4,7 +4,7 @@ namespace App\Http\Resources\Master;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IndustryResource extends JsonResource
+class ProjectVerticalsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,7 @@ class IndustryResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'industries_name' => $this->industries_name,
-            
+            'name' => $this->name,
         ];
     }
 }

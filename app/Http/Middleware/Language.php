@@ -18,7 +18,7 @@ class Language
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {
+    {  
         try{
             if(isset($request->language) && !empty($request->language)){
                 $check_language = \App\Models\Language::where('iso',$request->language)->first();
@@ -31,6 +31,7 @@ class Language
             }
             return Response::json(ResponseUtil::makeError('Please provide the language.'), 400);
         }catch (\Exception $e){
+            dd($e);
             return Response::json(ResponseUtil::makeError('Something went wrong during setting up the application language.'), 400);
         }
     }
