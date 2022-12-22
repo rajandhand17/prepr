@@ -13,7 +13,7 @@ class ProjectStages extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:project_Stages';
+    protected $signature = 'migrate-old-data:project-stages';
 
     /**
      * The console command description.
@@ -41,10 +41,10 @@ class ProjectStages extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for Project Stages table.');
+            $this->info('Migrating old data for project stages table.');
             DB::beginTransaction();
 
-            $project_stages = DB::connection('mysql2')->table('project_Stage')->get();
+            $project_stages = DB::connection('mysql2')->table('project_stage')->get();
             if($project_stages->count() > 0){
                 
                 foreach ($project_stages as $key => $single_stages){
@@ -59,11 +59,11 @@ class ProjectStages extends Command
                   
                 }
                 DB::commit();
-                $this->info('Migrating of old data for Project Stages table completed.');
+                $this->info('Migrating of old data for project stages table completed.');
                 return;
             }
             DB::rollback();
-            $this->error('No Project Type found.');
+            $this->error('No project type found.');
 
         } catch (\Exception $e) {
             DB::rollback();

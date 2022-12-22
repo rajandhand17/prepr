@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('project_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->string('fr_CA_name')->nullable();
-            $table->enum('status',['0','1'])->default('1');
+            $table->enum('status',['0','1'])->default('1')->comment('1=>active,0=>Not active');
             $table->timestamps();
             $table->softDeletes();
         });

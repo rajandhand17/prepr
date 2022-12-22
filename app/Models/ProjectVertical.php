@@ -46,6 +46,7 @@ class ProjectVertical extends Model
                 $project_verticals_list = $project_verticals_list->where($column_name,"like",'%'.$search.'%');
             }
 
+            
             //take 20 results based from the table
             $project_verticals_list = $project_verticals_list->take(20)->get();
 

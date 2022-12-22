@@ -8,7 +8,7 @@ use App\Models\Category;
 
 class Categories extends Command
 {
-    /**
+    /** 
      * The name and signature of the console command.
      *
      * @var string

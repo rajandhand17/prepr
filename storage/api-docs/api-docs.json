@@ -1,0 +1,306 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "L5 OpenApi",
+        "description": "L5 Swagger OpenApi description",
+        "contact": {
+            "email": "darius@matulionis.lt"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/master/categories": {
+            "get": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Finds lists of categories",
+                "description": "Get all the categories lists",
+                "operationId": "getCategories",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/skills": {
+            "get": {
+                "tags": [
+                    "skills"
+                ],
+                "summary": "Finds lists of skills",
+                "description": "Get all the skills lists",
+                "operationId": "getSkills",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/tags": {
+            "get": {
+                "tags": [
+                    "getTags"
+                ],
+                "summary": "Finds lists of tags",
+                "description": "Get all tags lists",
+                "operationId": "getTags",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/industries": {
+            "get": {
+                "tags": [
+                    "getProjectIndustries"
+                ],
+                "summary": "Finds lists of tags",
+                "description": "Get all tags lists",
+                "operationId": "getProjectIndustries",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/types": {
+            "get": {
+                "tags": [
+                    "getProjectTypes"
+                ],
+                "summary": "Finds lists of tags",
+                "description": "Get all tags lists",
+                "operationId": "getProjectTypes",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/stages": {
+            "get": {
+                "tags": [
+                    "getProjectStages"
+                ],
+                "summary": "Finds lists of Stages",
+                "description": "Get all tags Stages",
+                "operationId": "getProjectStages",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/verticals": {
+            "get": {
+                "tags": [
+                    "getProjectVerticals"
+                ],
+                "summary": "Finds lists of project verticals",
+                "description": "Get all tags project verticals",
+                "operationId": "getProjectVerticals",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/status": {
+            "get": {
+                "tags": [
+                    "getProjectStatus"
+                ],
+                "summary": "Finds lists of project status",
+                "description": "Get all tags project status",
+                "operationId": "getProjectStatus",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/links": {
+            "get": {
+                "tags": [
+                    "getSocialLinks"
+                ],
+                "summary": "Finds lists of project status",
+                "description": "Get all tags project status",
+                "operationId": "getSocialLinks",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "description": "Home page",
+                "responses": {
+                    "default": {
+                        "description": "Welcome page"
+                    }
+                }
+            }
+        }
+    }
+}

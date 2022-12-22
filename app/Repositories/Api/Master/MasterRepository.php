@@ -55,30 +55,30 @@ class MasterRepository implements MasterInterface{
         }
     }
 
-    public function getTags(String $tagName=null)
+    public function getTags($request)
     {
         try{
-            return $this->tag->getAll($tagName);
+            return $this->tag->getTags($request->language,$request->search);
         }
         catch (\Exception $e){
             return false;
         }
     }
-
-    public function getIndustry($request){
+ 
+    public function getProjectIndustries($request){
 
         try{
-            return $this->project_industry->getProjectIndustry($request->language,$request->search);
+            return $this->project_industry->getProjectIndustries($request->language,$request->search);
         }
         catch (\Exception $e){
             return false;
         }
     }
 
-    public function getTypes($request)
+    public function getProjectTypes($request)
     {
        try{
-           return $this->project_type->getProjectType($request->language,$request->search);
+           return $this->project_type->getProjectTypes($request->language,$request->search);
         }
         catch (\Exception $e){
             return false;

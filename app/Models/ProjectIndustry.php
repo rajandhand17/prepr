@@ -24,7 +24,7 @@ class ProjectIndustry extends Model
     
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
    
-    public function getProjectIndustry($language='en',$search=null)
+    public function getProjectIndustries($language='en',$search=null)
     {    
         try{
             if($language == 'en'){

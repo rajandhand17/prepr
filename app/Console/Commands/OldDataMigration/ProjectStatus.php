@@ -13,7 +13,7 @@ class ProjectStatus extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:project_Status';
+    protected $signature = 'migrate-old-data:project-status';
 
     /**
      * The console command description.
@@ -58,11 +58,11 @@ class ProjectStatus extends Command
                     }
                 }
                 DB::commit();
-                $this->info('Migrating of old data for Project Status table completed.');
+                $this->info('Migrating of old data for project status table completed.');
                 return;
             }
             DB::rollback();
-            $this->error('No Project Type found.');
+            $this->error('No project type found.');
 
         } catch (\Exception $e) {
             DB::rollback();

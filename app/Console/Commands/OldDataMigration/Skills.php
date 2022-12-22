@@ -20,7 +20,7 @@ class Skills extends Command
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old Skill table data to new db structure.';
+    protected $description = 'This command is use to migrate old skill table data to new db structure.';
 
     /**
      * Create a new command instance.

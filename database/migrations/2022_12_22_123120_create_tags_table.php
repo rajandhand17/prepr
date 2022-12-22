@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('project_industry', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('fr_CA_name')->nullable();
-            $table->enum('status',['0','1'])->default('1')->comment('1=>active,0=>Not active');
+            $table->string('fr_CA_name');
+            $table->string('tag_image')->nullable();
+            $table->string('fr_CA_tag_image')->nullable();
+            $table->string('components')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_industry');
+        Schema::dropIfExists('tags');
     }
 };

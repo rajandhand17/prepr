@@ -14,18 +14,47 @@ use App\Http\Resources\Master\ProjectIndustryResource;
 use App\Http\Resources\Master\ProjectStageResource;
 use Illuminate\Support\Facades\App;
 use App\Repositories\Api\Master\MasterRepository;
-use App\Models\SocialMedia;
 use Illuminate\Http\Request;
 
 class MasterController extends AppBaseController
-{
-
-    public function __construct(MasterRepository $masterRepository)
+{    
+      
+   public function __construct(MasterRepository $masterRepository)
     {
         $this->masterRepository= $masterRepository;
 
     }
 
+     /**
+     * @OA\Get(
+     *     path="/api/v1/master/categories",
+     *     tags={"categories"},
+     *     summary="Finds lists of categories",
+     *     description="Get all the categories lists",
+     *     operationId="getCategories",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Search values that needed to be considered for filter",
+     *         required=false,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *    
+     *     ),
+     * )
+     */
     public function getCategories(Request $request)
     {   
         try{
@@ -38,7 +67,37 @@ class MasterController extends AppBaseController
              return $this->sendError(__('responses.send_error'),500);
          }
     }
-
+  
+    /**
+     * @OA\Get(
+     *     path="/api/v1/master/skills",
+     *     tags={"skills"},
+     *     summary="Finds lists of skills",
+     *     description="Get all the skills lists",
+     *     operationId="getSkills",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="search values that needed to be considered for filter",
+     *         required=false,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *    
+     *     ),
+     * )
+     */
     public function getSkills(Request $request)
     {
         try{
@@ -52,6 +111,37 @@ class MasterController extends AppBaseController
          }
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/master/tags",
+     *     tags={"getTags"},
+     *     summary="Finds lists of tags",
+     *     description="Get all tags lists",
+     *     operationId="getTags",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="search values that needed to be considered for filter",
+     *         required=false,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *    
+     *     ),
+     * )
+     */
     public function getTags(Request $request)
     {      
         try{
@@ -61,14 +151,43 @@ class MasterController extends AppBaseController
           }
           return $this->sendError(__('responses.not_found_tag_list'));
          }catch (\Exception $e){
-             return $this->sendError(__('responses.send_error'));
+             return $this->sendError(__('responses.send_error'),500);
          }
     }
-
-    public function getIndustry(Request $request)
+/**
+     * @OA\Get(
+     *     path="/api/v1/master/industries",
+     *     tags={"getProjectIndustries"},
+     *     summary="Finds lists of tags",
+     *     description="Get all tags lists",
+     *     operationId="getProjectIndustries",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="search values that needed to be considered for filter",
+     *         required=false,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *    
+     *     ),
+     * )
+     */
+    public function getProjectIndustries(Request $request)
     {
         try{
-           $industry=$this->masterRepository->getIndustry($request);
+           $industry=$this->masterRepository->getProjectIndustries($request);
            if($industry){
               return $this->sendResponse(ProjectIndustryResource::collection($industry),__('responses.found_project_industry_list'));
           }
@@ -78,11 +197,40 @@ class MasterController extends AppBaseController
              return $this->sendError(__('responses.send_error'),500);
          }
     }
-
-    public function getTypes(Request $request)
+/**
+     * @OA\Get(
+     *     path="/api/v1/master/types",
+     *     tags={"getProjectTypes"},
+     *     summary="Finds lists of tags",
+     *     description="Get all tags lists",
+     *     operationId="getProjectTypes",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="search values that needed to be considered for filter",
+     *         required=false,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *    
+     *     ),
+     * )
+     */
+    public function getProjectTypes(Request $request)
     {
        try{
-            $type=$this->masterRepository->getTypes($request);
+            $type=$this->masterRepository->getProjectTypes($request);
             if($type){
                return $this->sendResponse(ProjectTypeResource::collection($type),__('responses.found_project_industry_list'));
             }
@@ -92,13 +240,42 @@ class MasterController extends AppBaseController
               return $this->sendError(__('responses.send_error'),500);
           }
     }
-
-    public function getStages(Request $request)
+/**
+     * @OA\Get(
+     *     path="/api/v1/master/stages",
+     *     tags={"getProjectStages"},
+     *     summary="Finds lists of Stages",
+     *     description="Get all tags Stages",
+     *     operationId="getProjectStages",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="search values that needed to be considered for filter",
+     *         required=false,
+     *         explode=true,
+     *         
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *    
+     *     ),
+     * )
+     */
+    public function getProjectStages(Request $request)
     {
         try{
            $stages=$this->masterRepository->getStages($request);
            if($stages){
-            return $this->sendResponse(ProjectStageResource::collection($stages),__('responses.not_found_project_stages_list'));
+            return $this->sendResponse(ProjectStageResource::collection($stages),__('responses.found_project_stages_list'));
            }
            return $this->sendError(__('responses.not_found_project_stages_list'));
         }
@@ -106,8 +283,38 @@ class MasterController extends AppBaseController
             return $this->sendError(__('responses.send_error'),500);
         }
     }
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/verticals",
+         *     tags={"getProjectVerticals"},
+         *     summary="Finds lists of project verticals",
+         *     description="Get all tags project verticals",
+         *     operationId="getProjectVerticals",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="successful operation",
+         *    
+         *     ),
+         * )
+         */
 
-    public function getVerticals(Request $request)
+    public function getProjectVerticals(Request $request)
     {
         try{
             $project_verticals=$this->masterRepository->getVerticals($request);
@@ -121,7 +328,38 @@ class MasterController extends AppBaseController
          }
     }
 
-    public function getStatus(Request $request)
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/status",
+         *     tags={"getProjectStatus"},
+         *     summary="Finds lists of project status",
+         *     description="Get all tags project status",
+         *     operationId="getProjectStatus",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="successful operation",
+         *    
+         *     ),
+         * )
+         */
+
+    public function getProjectStatus(Request $request)
     {
        try{
           $project_status=$this->masterRepository->getStatus($request);
@@ -135,6 +373,36 @@ class MasterController extends AppBaseController
       }
     }
 
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/links",
+         *     tags={"getSocialLinks"},
+         *     summary="Finds lists of project status",
+         *     description="Get all tags project status",
+         *     operationId="getSocialLinks",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="successful operation",
+         *    
+         *     ),
+         * )
+         */
     public function getSocialLinks(Request $request)
     {
         try{

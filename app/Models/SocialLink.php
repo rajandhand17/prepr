@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\Helpers\LanguageColumnHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Schema;
 
 class SocialLink extends Model
 {
@@ -41,7 +39,7 @@ class SocialLink extends Model
             if(!$social_link_list->isEmpty()){
                 return $social_link_list;
             }
-
+ 
             return false;
         }
         catch (\Exception $e){

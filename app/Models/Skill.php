@@ -24,25 +24,8 @@ class Skill extends Model
 
    
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-    /***
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    /***
-     * @param $value
-     * @return string 
-     */
-    public function getDeletedAtAttribute($value)
-    {
-        if ($value == null) {
-            return "";
-        }
-    }
-
+   
+   
     public function getSkills($language='en',$search=null)
     {  
         try{
