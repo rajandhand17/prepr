@@ -13,7 +13,7 @@ class SocialLink extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:social_link';
+    protected $signature = 'migrate-old-data:social-link';
 
     /**
      * The console command description.
@@ -41,7 +41,7 @@ class SocialLink extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for social link table.');
+            $this->info('Migrating old data for social link table.');
             DB::beginTransaction();
 
             $social_link = DB::connection('mysql2')->table('social_link')->get();
@@ -66,7 +66,7 @@ class SocialLink extends Command
             $this->error('No social link found.');
 
         } catch (\Exception $e) {
-          
+            
             DB::rollback();
             $this->error('Something went wrong.');
             return;

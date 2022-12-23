@@ -41,7 +41,7 @@ class Skills extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for SKills table.');
+            $this->info('Migrating old data for sKills table.');
             DB::beginTransaction();
 
             $skills = DB::connection('mysql2')->table('skills')->get();
@@ -59,7 +59,7 @@ class Skills extends Command
                   
                 }
                 DB::commit();
-                $this->info('Migrating of old data for Skill table completed.');
+                $this->info('Migrating of old data for skill table completed.');
                 return;
             }
             DB::rollback();

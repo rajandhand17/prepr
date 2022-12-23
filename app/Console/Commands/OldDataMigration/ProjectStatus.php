@@ -41,7 +41,7 @@ class ProjectStatus extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for Project Status table.');
+            $this->info('Migrating old data for project status table.');
             DB::beginTransaction();
 
             $project_status = DB::connection('mysql2')->table('project_status')->get();
@@ -52,8 +52,8 @@ class ProjectStatus extends Command
                         'name' => $single_status->name,
                         'fr_CA_name' => $single_status->fr_CA_name,
                     ];
-                    $check_project_industry = Status::where($project_status_details)->first();
-                    if(!$check_project_industry){
+                    $check_project_status = Status::where($project_status_details)->first();
+                    if(!$check_project_status){
                         Status::create($project_status_details);
                     }
                 }

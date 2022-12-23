@@ -13,7 +13,7 @@ class ProjectType extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:project_type';
+    protected $signature = 'migrate-old-data:project-type';
 
     /**
      * The console command description.
@@ -41,7 +41,7 @@ class ProjectType extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for Project type table.');
+            $this->info('Migrating old data for project type table.');
             DB::beginTransaction();
 
             $project_type = DB::connection('mysql2')->table('project_type')->get();
@@ -59,11 +59,11 @@ class ProjectType extends Command
                   
                 }
                 DB::commit();
-                $this->info('Migrating of old data for Project Type table completed.');
+                $this->info('Migrating of old data for project type table completed.');
                 return;
             }
             DB::rollback();
-            $this->error('No Project Type found.');
+            $this->error('No project type found.');
 
         } catch (\Exception $e) {
           DB::rollback();

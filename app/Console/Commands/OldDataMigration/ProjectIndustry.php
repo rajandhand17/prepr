@@ -13,7 +13,7 @@ class ProjectIndustry extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:project_industry';
+    protected $signature = 'migrate-old-data:project-industry';
 
     /**
      * The console command description.
@@ -41,7 +41,7 @@ class ProjectIndustry extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for Project Industry table.');
+            $this->info('Migrating Old Data for project industry table.');
             DB::beginTransaction();
 
             $project_industry = DB::connection('mysql2')->table('project_industry')->get();
@@ -59,11 +59,11 @@ class ProjectIndustry extends Command
                   
                 }
                 DB::commit();
-                $this->info('Migrating of old data for Project Industry table completed.');
+                $this->info('Migrating of old data for project industry table completed.');
                 return;
             }
             DB::rollback();
-            $this->error('No Project Industry found.');
+            $this->error('No project industry found.');
 
         } catch (\Exception $e) {
             DB::rollback();

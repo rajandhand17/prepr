@@ -13,7 +13,7 @@ class ProjectVerticals extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:project_verticals';
+    protected $signature = 'migrate-old-data:project-verticals';
 
     /**
      * The console command description.
@@ -41,7 +41,7 @@ class ProjectVerticals extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for Project verticals table.');
+            $this->info('Migrating old data for project verticals table.');
             DB::beginTransaction();
 
             $project_verticals = DB::connection('mysql2')->table('project_verticals')->get();
@@ -59,11 +59,11 @@ class ProjectVerticals extends Command
                   
                 }
                 DB::commit();
-                $this->info('Migrating of old data for Project Type table completed.');
+                $this->info('Migrating of old data for project verticals table completed.');
                 return;
             }
             DB::rollback();
-            $this->error('No Project Type found.');
+            $this->error('No project type found.');
 
         } catch (\Exception $e) {
           DB::rollback();

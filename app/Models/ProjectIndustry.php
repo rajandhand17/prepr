@@ -14,7 +14,7 @@ class ProjectIndustry extends Model
     
     use SoftDeletes;
     
-    protected $table = 'project_industry';
+    protected $table = 'project_industries';
     
     protected $fillable = [
         'name',
