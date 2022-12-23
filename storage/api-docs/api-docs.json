@@ -4,7 +4,7 @@
         "title": "L5 OpenApi",
         "description": "L5 Swagger OpenApi description",
         "contact": {
-            "email": "darius@matulionis.lt"
+            "email": "info@preprlabs.org"
         },
         "license": {
             "name": "Apache 2.0",
@@ -16,7 +16,7 @@
         "/api/v1/master/categories": {
             "get": {
                 "tags": [
-                    "categories"
+                    "Master API - Categories"
                 ],
                 "summary": "Finds lists of categories",
                 "description": "Get all the categories lists",
@@ -40,6 +40,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }
@@ -47,7 +56,7 @@
         "/api/v1/master/skills": {
             "get": {
                 "tags": [
-                    "skills"
+                    "Master API -Skills"
                 ],
                 "summary": "Finds lists of skills",
                 "description": "Get all the skills lists",
@@ -71,6 +80,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }
@@ -78,7 +96,7 @@
         "/api/v1/master/tags": {
             "get": {
                 "tags": [
-                    "getTags"
+                    "Master API -Tags"
                 ],
                 "summary": "Finds lists of tags",
                 "description": "Get all tags lists",
@@ -102,6 +120,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }
@@ -109,7 +136,7 @@
         "/api/v1/master/industries": {
             "get": {
                 "tags": [
-                    "getProjectIndustries"
+                    "Master API - Project Industries"
                 ],
                 "summary": "Finds lists of tags",
                 "description": "Get all tags lists",
@@ -133,6 +160,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }
@@ -140,7 +176,7 @@
         "/api/v1/master/types": {
             "get": {
                 "tags": [
-                    "getProjectTypes"
+                    "Master API - Project Types"
                 ],
                 "summary": "Finds lists of tags",
                 "description": "Get all tags lists",
@@ -164,6 +200,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }
@@ -171,7 +216,7 @@
         "/api/v1/master/stages": {
             "get": {
                 "tags": [
-                    "getProjectStages"
+                    "Master API - Project Stages"
                 ],
                 "summary": "Finds lists of Stages",
                 "description": "Get all tags Stages",
@@ -195,6 +240,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }
@@ -202,7 +256,7 @@
         "/api/v1/master/verticals": {
             "get": {
                 "tags": [
-                    "getProjectVerticals"
+                    "Master API - Project Verticals"
                 ],
                 "summary": "Finds lists of project verticals",
                 "description": "Get all tags project verticals",
@@ -226,6 +280,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }
@@ -233,7 +296,7 @@
         "/api/v1/master/status": {
             "get": {
                 "tags": [
-                    "getProjectStatus"
+                    "Master API - Project Status"
                 ],
                 "summary": "Finds lists of project status",
                 "description": "Get all tags project status",
@@ -257,6 +320,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }
@@ -264,7 +336,7 @@
         "/api/v1/master/links": {
             "get": {
                 "tags": [
-                    "getSocialLinks"
+                    "Master API - Project Links"
                 ],
                 "summary": "Finds lists of project status",
                 "description": "Get all tags project status",
@@ -288,6 +360,15 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
                     }
                 }
             }

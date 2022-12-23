@@ -28,7 +28,7 @@ class MasterController extends AppBaseController
      /**
      * @OA\Get(
      *     path="/api/v1/master/categories",
-     *     tags={"categories"},
+     *     tags={"Master API - Categories"},
      *     summary="Finds lists of categories",
      *     description="Get all the categories lists",
      *     operationId="getCategories",
@@ -53,6 +53,21 @@ class MasterController extends AppBaseController
      *         description="successful operation",
      *    
      *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *    
+     *     ),
      * )
      */
     public function getCategories(Request $request)
@@ -71,7 +86,7 @@ class MasterController extends AppBaseController
     /**
      * @OA\Get(
      *     path="/api/v1/master/skills",
-     *     tags={"skills"},
+     *     tags={"Master API -Skills"},
      *     summary="Finds lists of skills",
      *     description="Get all the skills lists",
      *     operationId="getSkills",
@@ -96,6 +111,21 @@ class MasterController extends AppBaseController
      *         description="successful operation",
      *    
      *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *    
+     *     ),
      * )
      */
     public function getSkills(Request $request)
@@ -115,7 +145,7 @@ class MasterController extends AppBaseController
     /**
      * @OA\Get(
      *     path="/api/v1/master/tags",
-     *     tags={"getTags"},
+     *     tags={"Master API -Tags"},
      *     summary="Finds lists of tags",
      *     description="Get all tags lists",
      *     operationId="getTags",
@@ -140,6 +170,21 @@ class MasterController extends AppBaseController
      *         description="successful operation",
      *    
      *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *    
+     *     ),
      * )
      */
     public function getTags(Request $request)
@@ -157,7 +202,7 @@ class MasterController extends AppBaseController
 /**
      * @OA\Get(
      *     path="/api/v1/master/industries",
-     *     tags={"getProjectIndustries"},
+     *     tags={"Master API - Project Industries"},
      *     summary="Finds lists of tags",
      *     description="Get all tags lists",
      *     operationId="getProjectIndustries",
@@ -182,6 +227,21 @@ class MasterController extends AppBaseController
      *         description="successful operation",
      *    
      *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *    
+     *     ),
      * )
      */
     public function getProjectIndustries(Request $request)
@@ -200,7 +260,7 @@ class MasterController extends AppBaseController
 /**
      * @OA\Get(
      *     path="/api/v1/master/types",
-     *     tags={"getProjectTypes"},
+     *     tags={"Master API - Project Types"},
      *     summary="Finds lists of tags",
      *     description="Get all tags lists",
      *     operationId="getProjectTypes",
@@ -225,6 +285,21 @@ class MasterController extends AppBaseController
      *         description="successful operation",
      *    
      *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *    
+     *     ),
      * )
      */
     public function getProjectTypes(Request $request)
@@ -243,7 +318,7 @@ class MasterController extends AppBaseController
 /**
      * @OA\Get(
      *     path="/api/v1/master/stages",
-     *     tags={"getProjectStages"},
+     *     tags={"Master API - Project Stages"},
      *     summary="Finds lists of Stages",
      *     description="Get all tags Stages",
      *     operationId="getProjectStages",
@@ -268,6 +343,21 @@ class MasterController extends AppBaseController
      *         description="successful operation",
      *    
      *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request!",
+     *    
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *    
+     *     ),
      * )
      */
     public function getProjectStages(Request $request)
@@ -286,7 +376,7 @@ class MasterController extends AppBaseController
     /**
          * @OA\Get(
          *     path="/api/v1/master/verticals",
-         *     tags={"getProjectVerticals"},
+         *     tags={"Master API - Project Verticals"},
          *     summary="Finds lists of project verticals",
          *     description="Get all tags project verticals",
          *     operationId="getProjectVerticals",
@@ -311,6 +401,21 @@ class MasterController extends AppBaseController
          *         description="successful operation",
          *    
          *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad Request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
          * )
          */
 
@@ -331,7 +436,7 @@ class MasterController extends AppBaseController
     /**
          * @OA\Get(
          *     path="/api/v1/master/status",
-         *     tags={"getProjectStatus"},
+         *     tags={"Master API - Project Status"},
          *     summary="Finds lists of project status",
          *     description="Get all tags project status",
          *     operationId="getProjectStatus",
@@ -356,6 +461,21 @@ class MasterController extends AppBaseController
          *         description="successful operation",
          *    
          *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad Request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
          * )
          */
 
@@ -376,7 +496,7 @@ class MasterController extends AppBaseController
     /**
          * @OA\Get(
          *     path="/api/v1/master/links",
-         *     tags={"getSocialLinks"},
+         *     tags={"Master API - Project Links"},
          *     summary="Finds lists of project status",
          *     description="Get all tags project status",
          *     operationId="getSocialLinks",
@@ -399,6 +519,21 @@ class MasterController extends AppBaseController
          *     @OA\Response(
          *         response=200,
          *         description="successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad Request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
          *    
          *     ),
          * )
