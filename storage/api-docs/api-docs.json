@@ -1,0 +1,387 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "L5 OpenApi",
+        "description": "L5 Swagger OpenApi description",
+        "contact": {
+            "email": "info@preprlabs.org"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/master/categories": {
+            "get": {
+                "tags": [
+                    "Master API - Categories"
+                ],
+                "summary": "Finds lists of categories",
+                "description": "Get all the categories lists",
+                "operationId": "getCategories",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/skills": {
+            "get": {
+                "tags": [
+                    "Master API -Skills"
+                ],
+                "summary": "Finds lists of skills",
+                "description": "Get all the skills lists",
+                "operationId": "getSkills",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/tags": {
+            "get": {
+                "tags": [
+                    "Master API -Tags"
+                ],
+                "summary": "Finds lists of tags",
+                "description": "Get all tags lists",
+                "operationId": "getTags",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/industries": {
+            "get": {
+                "tags": [
+                    "Master API - Project Industries"
+                ],
+                "summary": "Finds lists of tags",
+                "description": "Get all tags lists",
+                "operationId": "getProjectIndustries",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/types": {
+            "get": {
+                "tags": [
+                    "Master API - Project Types"
+                ],
+                "summary": "Finds lists of tags",
+                "description": "Get all tags lists",
+                "operationId": "getProjectTypes",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/stages": {
+            "get": {
+                "tags": [
+                    "Master API - Project Stages"
+                ],
+                "summary": "Finds lists of Stages",
+                "description": "Get all tags Stages",
+                "operationId": "getProjectStages",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/verticals": {
+            "get": {
+                "tags": [
+                    "Master API - Project Verticals"
+                ],
+                "summary": "Finds lists of project verticals",
+                "description": "Get all tags project verticals",
+                "operationId": "getProjectVerticals",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/status": {
+            "get": {
+                "tags": [
+                    "Master API - Project Status"
+                ],
+                "summary": "Finds lists of project status",
+                "description": "Get all tags project status",
+                "operationId": "getProjectStatus",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/links": {
+            "get": {
+                "tags": [
+                    "Master API - Project Links"
+                ],
+                "summary": "Finds lists of project status",
+                "description": "Get all tags project status",
+                "operationId": "getSocialLinks",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "description": "Home page",
+                "responses": {
+                    "default": {
+                        "description": "Welcome page"
+                    }
+                }
+            }
+        }
+    }
+}
