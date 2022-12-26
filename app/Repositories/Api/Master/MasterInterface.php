@@ -11,6 +11,7 @@ Interface MasterInterface{
     public function getVerticals($request); 
     public function getStatus($request);
     public function getSocialLinks($request);
+    public function getSkillGroups($request);
 
 
 }

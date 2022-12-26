@@ -2870,5 +2870,7 @@
     "responses.found_project_status_list":"Project status list fetched",
     "responses.not_found_project_status_list":"Project status not found!",
     "responses.found_social_links_list":"Social links list fetched",
-    "responses.not_found_social_links_list":"Social links not found!"
+    "responses.not_found_social_links_list":"Social links not found!",
+    "responses.found_skill_groups_list":"Skill groups list fetched",
+    "responses.not_found_skill_groups_list":"Skill groups not found!"
 }

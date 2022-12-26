@@ -12,8 +12,9 @@ Route::middleware(['language'])->group(function () {
     Route::get('/verticals',[MasterController::class,'getProjectVerticals']);
     Route::get('/status',[MasterController::class,'getProjectStatus']);
     Route::get('/links',[MasterController::class,'getSocialLinks']);
+    Route::get('/skill-groups',[MasterController::class,'getSkillGroups']);
 });
- 
+  
 
 
 
