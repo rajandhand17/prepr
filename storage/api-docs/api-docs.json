@@ -373,6 +373,60 @@
                 }
             }
         },
+        "/api/v1/master/skill-groups": {
+            "get": {
+                "tags": [
+                    "Master API - Skill Group"
+                ],
+                "summary": "Finds lists of skill group",
+                "description": "Get all tags skill group",
+                "operationId": "getSkillGroups",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "skills",
+                        "in": "query",
+                        "description": "skills values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "skill_stacks",
+                        "in": "query",
+                        "description": "skill stacks values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "not found!"
+                    },
+                    "400": {
+                        "description": "Bad Request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
         "/": {
             "get": {
                 "description": "Home page",

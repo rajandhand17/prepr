@@ -10,6 +10,7 @@ use App\Models\ProjectStage;
 use App\Models\ProjectVertical;
 use App\Models\ProjectStatus;
 use App\Models\SocialLink;
+use App\Models\SkillGroup;
 
 class MasterRepository implements MasterInterface{
 
@@ -22,8 +23,9 @@ class MasterRepository implements MasterInterface{
     private $project_verticals;
     private $project_status;
     private $social_link;
+    private $skill_group;
 
-    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link) {
+    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group) {
         $this->category = $category;
         $this->skill = $skill;
         $this->tag=$tag;
@@ -33,6 +35,7 @@ class MasterRepository implements MasterInterface{
         $this->project_verticals=$project_verticals;
         $this->project_status=$project_status;
         $this->social_link=$social_link;
+        $this->skill_group=$skill_group;
     }
 
     public function getCategories($request)
@@ -122,6 +125,15 @@ class MasterRepository implements MasterInterface{
         }
         catch(\Exception $e){
          return false;
+        }
+    }
+    
+    public function getSkillGroups($request)
+    {   
+        try{
+            return $this->skill_group->getSkillGroups($request->language,$request->search,$request->skill_stacks,$request->skills);
+        }catch(\Exception $e){
+             return false;
         }
     }
 }

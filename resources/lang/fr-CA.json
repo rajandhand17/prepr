@@ -2869,6 +2869,8 @@
     "responses.not_found_project_verticals_list":"Produits verticaux du projet introuvables !",
     "responses.found_project_status_list":"Liste d'état du projet récupérée",
     "responses.not_found_project_status_list":"Statut du projet introuvable !",
-    "responses.found_social_links_list":"Liste des liens sociaux récupérée !",
-    "responses.not_found_social_links_list":"Liens sociaux introuvables !"   
+    "responses.found_social_links_list":"Liste des liens sociaux récupérée",
+    "responses.not_found_social_links_list":"Liens sociaux introuvables !",
+    "responses.found_skill_groups_list":"Liste des groupes de compétences récupérée ",
+    "responses.not_found_skill_groups_list":"Groupes de compétences introuvables !"   
 }

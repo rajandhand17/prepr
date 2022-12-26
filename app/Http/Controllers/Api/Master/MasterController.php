@@ -12,7 +12,7 @@ use App\Http\Resources\Master\SocialLinkResource;
 use App\Http\Resources\Master\TagResource;
 use App\Http\Resources\Master\ProjectIndustryResource;
 use App\Http\Resources\Master\ProjectStageResource;
-use Illuminate\Support\Facades\App;
+use App\Http\Resources\Master\SkillGroupResource;
 use App\Repositories\Api\Master\MasterRepository;
 use Illuminate\Http\Request;
 
@@ -50,22 +50,22 @@ class MasterController extends AppBaseController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="successful operation",
+     *         description="Successful operation",
      *    
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="not found!",
+     *         description="Not found!",
      *    
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad Request!",
+     *         description="Bad request!",
      *    
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error!",
+     *         description="Internal server error!",
      *    
      *     ),
      * )
@@ -108,17 +108,17 @@ class MasterController extends AppBaseController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="successful operation",
+     *         description="Successful operation",
      *    
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="not found!",
+     *         description="Not found!",
      *    
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad Request!",
+     *         description="Bad request!",
      *    
      *     ),
      *     @OA\Response(
@@ -167,17 +167,17 @@ class MasterController extends AppBaseController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="successful operation",
+     *         description="Successful operation",
      *    
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="not found!",
+     *         description="Not found!",
      *    
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad Request!",
+     *         description="Bad request!",
      *    
      *     ),
      *     @OA\Response(
@@ -224,17 +224,17 @@ class MasterController extends AppBaseController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="successful operation",
+     *         description="Successful operation",
      *    
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="not found!",
+     *         description="Not found!",
      *    
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad Request!",
+     *         description="Bad request!",
      *    
      *     ),
      *     @OA\Response(
@@ -282,17 +282,17 @@ class MasterController extends AppBaseController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="successful operation",
+     *         description="Successful operation",
      *    
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="not found!",
+     *         description="Not found!",
      *    
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad Request!",
+     *         description="Bad request!",
      *    
      *     ),
      *     @OA\Response(
@@ -340,17 +340,17 @@ class MasterController extends AppBaseController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="successful operation",
+     *         description="Successful operation",
      *    
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="not found!",
+     *         description="Not found!",
      *    
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad Request!",
+     *         description="Bad request!",
      *    
      *     ),
      *     @OA\Response(
@@ -398,17 +398,17 @@ class MasterController extends AppBaseController
          *     ),
          *     @OA\Response(
          *         response=200,
-         *         description="successful operation",
+         *         description="Successful operation",
          *    
          *     ),
          *     @OA\Response(
          *         response=404,
-         *         description="not found!",
+         *         description="Not found!",
          *    
          *     ),
          *     @OA\Response(
          *         response=400,
-         *         description="Bad Request!",
+         *         description="Bad request!",
          *    
          *     ),
          *     @OA\Response(
@@ -458,7 +458,7 @@ class MasterController extends AppBaseController
          *     ),
          *     @OA\Response(
          *         response=200,
-         *         description="successful operation",
+         *         description="Successful operation",
          *    
          *     ),
          *     @OA\Response(
@@ -518,17 +518,17 @@ class MasterController extends AppBaseController
          *     ),
          *     @OA\Response(
          *         response=200,
-         *         description="successful operation",
+         *         description="Successful operation",
          *    
          *     ),
          *     @OA\Response(
          *         response=404,
-         *         description="not found!",
+         *         description="Not found!",
          *    
          *     ),
          *     @OA\Response(
          *         response=400,
-         *         description="Bad Request!",
+         *         description="Bad request!",
          *    
          *     ),
          *     @OA\Response(
@@ -546,6 +546,82 @@ class MasterController extends AppBaseController
                return $this->sendResponse(SocialLinkResource::collection($status),__('responses.found_social_links_list'));
              }
              return $this->sendError(__('responses.not_found_social_links_list'));
+         }
+         catch (\Exception $e){
+          return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/skill-groups",
+         *     tags={"Master API - Skill Group"},
+         *     summary="Finds lists of skill group",
+         *     description="Get all tags skill group",
+         *     operationId="getSkillGroups",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="skills",
+         *         in="query",
+         *         description="skills values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="skill_stacks",
+         *         in="query",
+         *         description="skill stacks values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getSkillGroups(Request $request)
+    {   
+        try{
+            $get_skill_groups=$this->masterRepository->getSkillGroups($request);
+            if($get_skill_groups){
+               return $this->sendResponse(SkillGroupResource::collection($get_skill_groups),__('responses.found_skill_groups_list'));
+             }
+             return $this->sendError(__('responses.not_found_skill_groups_list'));
          }
          catch (\Exception $e){
           return $this->sendError(__('responses.send_error'),500);
