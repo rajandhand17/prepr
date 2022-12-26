@@ -35,7 +35,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="language values that needed to be considered for choose languages",
+     *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
      *         
@@ -93,7 +93,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="language values that needed to be considered for choose languages",
+     *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
      *         
@@ -101,7 +101,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="search values that needed to be considered for filter",
+     *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
      *         
@@ -152,7 +152,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="language values that needed to be considered for choose languages",
+     *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
      *         
@@ -160,7 +160,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="search values that needed to be considered for filter",
+     *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
      *         
@@ -209,7 +209,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="language values that needed to be considered for choose languages",
+     *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
      *         
@@ -267,7 +267,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="language values that needed to be considered for choose languages",
+     *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
      *         
@@ -325,7 +325,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="language values that needed to be considered for choose languages",
+     *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
      *         
@@ -383,7 +383,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="language",
          *         in="query",
-         *         description="language values that needed to be considered for choose languages",
+         *         description="Language values that needed to be considered for choose languages",
          *         required=true,
          *         explode=true,
          *         
@@ -443,7 +443,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="language",
          *         in="query",
-         *         description="language values that needed to be considered for choose languages",
+         *         description="Language values that needed to be considered for choose languages",
          *         required=true,
          *         explode=true,
          *         
@@ -503,7 +503,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="language",
          *         in="query",
-         *         description="language values that needed to be considered for choose languages",
+         *         description="Language values that needed to be considered for choose languages",
          *         required=true,
          *         explode=true,
          *         
@@ -563,7 +563,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="language",
          *         in="query",
-         *         description="language values that needed to be considered for choose languages",
+         *         description="Language values that needed to be considered for choose languages",
          *         required=true,
          *         explode=true,
          *         
