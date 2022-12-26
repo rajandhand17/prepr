@@ -7,11 +7,14 @@ use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ProjectTypeResource;
 use App\Http\Resources\Master\ProjectStatusResource;
 use App\Http\Resources\Master\SkillResource;
+use App\Http\Resources\Master\SkillStackResource;
 use App\Http\Resources\Master\ProjectVerticalsResource;
 use App\Http\Resources\Master\SocialLinkResource;
 use App\Http\Resources\Master\TagResource;
 use App\Http\Resources\Master\ProjectIndustryResource;
 use App\Http\Resources\Master\ProjectStageResource;
+use App\Http\Resources\Master\ProjectSubmissionRequirementResource;
+use App\Http\Resources\Master\RankResource;
 use App\Http\Resources\Master\SkillGroupResource;
 use App\Repositories\Api\Master\MasterRepository;
 use Illuminate\Http\Request;
@@ -217,7 +220,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="search values that needed to be considered for filter",
+     *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
      *         
@@ -275,7 +278,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="search values that needed to be considered for filter",
+     *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
      *         
@@ -333,7 +336,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="search values that needed to be considered for filter",
+     *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
      *         
@@ -391,7 +394,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="search",
          *         in="query",
-         *         description="search values that needed to be considered for filter",
+         *         description="Search values that needed to be considered for filter",
          *         required=false,
          *         explode=true,
          *         
@@ -451,7 +454,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="search",
          *         in="query",
-         *         description="search values that needed to be considered for filter",
+         *         description="Search values that needed to be considered for filter",
          *         required=false,
          *         explode=true,
          *         
@@ -511,7 +514,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="search",
          *         in="query",
-         *         description="search values that needed to be considered for filter",
+         *         description="Search values that needed to be considered for filter",
          *         required=false,
          *         explode=true,
          *         
@@ -571,7 +574,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="search",
          *         in="query",
-         *         description="search values that needed to be considered for filter",
+         *         description="Search values that needed to be considered for filter",
          *         required=false,
          *         explode=true,
          *         
@@ -625,6 +628,138 @@ class MasterController extends AppBaseController
          }
          catch (\Exception $e){
           return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/skill-sets",
+         *     tags={"Master API - Skill Sets"},
+         *     summary="Finds lists of skill Set",
+         *     description="Get all tags skill Sets",
+         *     operationId="getSkillStacks",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getSkillStacks(Request $request)
+    {
+        try{
+         $get_skill_stacks=$this->masterRepository->getSkillStacks($request);
+         if($get_skill_stacks){
+             return $this->sendResponse(SkillStackResource::collection($get_skill_stacks),__('responses.found_skill_stacks_list'));
+         }
+         return $this->sendError(__('responses.not_found_skill_stacks_list'));
+        }catch(\Exception $e){
+          return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+
+    
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/ranks",
+         *     tags={"Master API - Ranks"},
+         *     summary="Finds lists of ranks",
+         *     description="Get all tags ranks",
+         *     operationId="getRanks",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getRanks(Request $request)
+    {
+        try{
+         $get_ranks=$this->masterRepository->getRanks($request);
+          if($get_ranks){
+             return $this->sendResponse(RankResource::collection($get_ranks),__('responses.found_rank_list'));
+          }
+          return $this->sendError(__('response.not_found_rank_list'));
+        }catch(\Exception){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    public function getProjectSubmissionRequirements(Request $request)
+    {
+        try{
+           $project_submission_requirements=$this->masterRepository->getProjectSubmissionRequirements($request);
+           if($project_submission_requirements){
+               return $this->sendResponse(ProjectSubmissionRequirementResource::collection($project_submission_requirements),__('responses.found_project_submission_requirements_list'));
+           }
+           return $this->sendError(__('response.not_found_project_submission_requirements_list'));
+        }catch(\Exception){
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 

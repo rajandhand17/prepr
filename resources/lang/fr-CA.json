@@ -2872,5 +2872,11 @@
     "responses.found_social_links_list":"Liste des liens sociaux récupérée",
     "responses.not_found_social_links_list":"Liens sociaux introuvables !",
     "responses.found_skill_groups_list":"Liste des groupes de compétences récupérée ",
-    "responses.not_found_skill_groups_list":"Groupes de compétences introuvables !"   
+    "responses.not_found_skill_groups_list":"Groupes de compétences introuvables !",
+    "responses.found_skill_stacks_list":"Liste des piles de compétences récupérée",
+    "responses.not_found_skill_stacks_list":"Piles de compétences introuvables !",
+    "responses.found_rank_list":"Liste des classements récupérée",
+    "responses.not_found_rank_list":"Rangs introuvables!",
+    "responses.found_project_submission_requirements_list":"Liste des exigences de soumission de projet récupérée",
+    "responses.not_found_project_submission_requirements_list":"Exigences de soumission de projet introuvables!"   
 }

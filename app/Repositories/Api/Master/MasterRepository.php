@@ -11,7 +11,9 @@ use App\Models\ProjectVertical;
 use App\Models\ProjectStatus;
 use App\Models\SocialLink;
 use App\Models\SkillGroup;
-
+use App\Models\SkillStack;
+use App\Models\Rank;
+use App\Models\ProjectSubmissionRequirement;
 class MasterRepository implements MasterInterface{
 
     private $category;
@@ -24,8 +26,10 @@ class MasterRepository implements MasterInterface{
     private $project_status;
     private $social_link;
     private $skill_group;
-
-    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group) {
+    private $skill_stack;
+    private $rank;
+    private $project_submission_requirements;
+    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements) {
         $this->category = $category;
         $this->skill = $skill;
         $this->tag=$tag;
@@ -36,6 +40,9 @@ class MasterRepository implements MasterInterface{
         $this->project_status=$project_status;
         $this->social_link=$social_link;
         $this->skill_group=$skill_group;
+        $this->skill_stack=$skill_stack;
+        $this->rank=$rank;
+        $this->project_submission_requirements=$project_submission_requirements;
     }
 
     public function getCategories($request)
@@ -134,6 +141,36 @@ class MasterRepository implements MasterInterface{
             return $this->skill_group->getSkillGroups($request->language,$request->search,$request->skill_stacks,$request->skills);
         }catch(\Exception $e){
              return false;
+        }
+    }
+
+    public function getSkillStacks($request)
+    {
+        try{
+        
+            return $this->skill_stack->getSkillStacks($request->language,$request->search);
+        
+        }catch(\Exception){
+           return false;
+        }
+    }
+
+    public function getRanks($request)
+    {
+        try{
+           return $this->rank->getRanks($request->language,$request->search);
+
+        }catch(\Exception){
+           return false;
+        }
+    }
+
+    public function getProjectSubmissionRequirements($request)
+    {
+        try{
+           return $this->project_submission_requirements->getProjectSubmissionRequirements($request->language,$request->search);
+        }catch(\Exception){
+          return false;
         }
     }
 }

@@ -2872,5 +2872,11 @@
     "responses.found_social_links_list":"Social links list fetched",
     "responses.not_found_social_links_list":"Social links not found!",
     "responses.found_skill_groups_list":"Skill groups list fetched",
-    "responses.not_found_skill_groups_list":"Skill groups not found!"
+    "responses.not_found_skill_groups_list":"Skill groups not found!",
+    "responses.found_skill_stacks_list":"Skill stacks list fetched",
+    "responses.not_found_skill_stacks_list":"Skill stacks not found!",
+    "responses.found_rank_list":"Ranks list fetched",
+    "responses.not_found_rank_list":"Ranks not found!",
+    "responses.found_project_submission_requirements_list":"Project submission requirements list fetched",
+    "responses.not_found_project_submission_requirements_list":"Project submission requirements not found!"
 }

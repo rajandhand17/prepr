@@ -13,9 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('project_stages', function (Blueprint $table) {
+        Schema::create('project_submission_requirements', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('fr_CA_title')->nullable();
+            $table->enum('status',['0','1'])->default('1')->comment('1=>active,0=>Not active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_stages');
+        Schema::dropIfExists('project_submission_requirements');
     }
 };
