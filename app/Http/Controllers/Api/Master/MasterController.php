@@ -814,11 +814,11 @@ class MasterController extends AppBaseController
 
     /**
          * @OA\Get(
-         *     path="/api/v1/master/acheivement-condition-list",
-         *     tags={"Master API - Acheivement Condition List"},
-         *     summary="Finds lists of project acheivement condition list",
-         *     description="Get all list of project acheivement condition list",
-         *     operationId="getAcheivementConditionLists",
+         *     path="/api/v1/master/achievement-condition-list",
+         *     tags={"Master API - achievement Condition List"},
+         *     summary="Finds lists of project achievement condition list",
+         *     description="Get all list of project achievement condition list",
+         *     operationId="getAchievementConditionLists",
          *     @OA\Parameter(
          *         name="language",
          *         in="query",
@@ -857,10 +857,10 @@ class MasterController extends AppBaseController
          *     ),
          * )
          */
-    public function getAcheivementConditionLists(Request $request)
+    public function getAchievementConditionLists(Request $request)
     {
         try{
-             $acheivement_condition_list=$this->masterRepository->getAcheivementConditionLists($request);
+             $acheivement_condition_list=$this->masterRepository->getAchievementConditionLists($request);
              if($acheivement_condition_list){
                return $this->sendResponse(AcheivementConditionListResource::collection($acheivement_condition_list),__('responses.found_acheivement_condition_list'));
              }

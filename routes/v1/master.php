@@ -16,7 +16,7 @@ Route::middleware(['language'])->group(function () {
     Route::get('/skill-sets',[MasterController::class,'getSkillStacks']);
     Route::get('/ranks',[MasterController::class,'getRanks']);
     Route::get('/project-submission-requirement',[MasterController::class,'getProjectSubmissionRequirements']);
-    Route::get('/acheivement-condition-list',[MasterController::class,'getAcheivementConditionLists']);
+    Route::get('/achievement-condition-list',[MasterController::class,'getAchievementConditionLists']);
     Route::get('/host',[MasterController::class,'getHosts']);
 
 });

@@ -181,10 +181,10 @@ class MasterRepository implements MasterInterface{
         }
     }
 
-    public function getAcheivementConditionLists($request)
+    public function getAchievementConditionLists($request)
     {
         try{
-            return $this->achievement_condition_list->getAcheivementConditionLists($request->language,$request->search);
+            return $this->achievement_condition_list->getAchievementConditionLists($request->language,$request->search);
         }catch(\Exception){
            return false;
         }

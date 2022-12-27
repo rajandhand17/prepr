@@ -24,7 +24,7 @@ class AchievementConditionList extends Model
     
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-    public function getAcheivementConditionLists($language='en',$search=null)
+    public function getAchievementConditionLists($language='en',$search=null)
     {
         try{
             if($language == 'en'){
