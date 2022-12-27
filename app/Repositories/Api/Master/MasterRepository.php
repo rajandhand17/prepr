@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories\Api\Master;
 
+use App\Console\Commands\OldDataMigration\AcheivementConditionList;
 use App\Models\Category;
 use App\Models\Skill;
 use App\Models\Tag;
@@ -14,6 +15,8 @@ use App\Models\SkillGroup;
 use App\Models\SkillStack;
 use App\Models\Rank;
 use App\Models\ProjectSubmissionRequirement;
+use App\Models\AchievementConditionList;
+use App\Models\Host;
 class MasterRepository implements MasterInterface{
 
     private $category;
@@ -29,7 +32,9 @@ class MasterRepository implements MasterInterface{
     private $skill_stack;
     private $rank;
     private $project_submission_requirements;
-    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements) {
+    private $achievement_condition_list;
+    private $host;
+    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host) {
         $this->category = $category;
         $this->skill = $skill;
         $this->tag=$tag;
@@ -43,6 +48,8 @@ class MasterRepository implements MasterInterface{
         $this->skill_stack=$skill_stack;
         $this->rank=$rank;
         $this->project_submission_requirements=$project_submission_requirements;
+        $this->achievement_condition_list=$achievement_condition_list;
+        $this->host=$host;
     }
 
     public function getCategories($request)
@@ -169,6 +176,24 @@ class MasterRepository implements MasterInterface{
     {
         try{
            return $this->project_submission_requirements->getProjectSubmissionRequirements($request->language,$request->search);
+        }catch(\Exception){
+          return false;
+        }
+    }
+
+    public function getAcheivementConditionLists($request)
+    {
+        try{
+            return $this->achievement_condition_list->getAcheivementConditionLists($request->language,$request->search);
+        }catch(\Exception){
+           return false;
+        }
+    }
+
+    public function getHosts($request)
+    {   
+        try{
+           return $this->host->getHosts($request->language,$request->search);
         }catch(\Exception){
           return false;
         }

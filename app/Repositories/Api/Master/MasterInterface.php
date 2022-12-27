@@ -15,6 +15,8 @@ Interface MasterInterface{
     public function getSkillStacks($request);
     public function getRanks($request);
     public function getProjectSubmissionRequirements($request);
+    public function getAcheivementConditionLists($request);
+    public function getHosts($request);
 
 
 }

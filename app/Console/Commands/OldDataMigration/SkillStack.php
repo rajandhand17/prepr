@@ -69,7 +69,6 @@ class SkillStack extends Command
             $this->error('No skill stack found.');
 
         } catch (\Exception $e) {
-          
             DB::rollback();
             $this->error('Something went wrong.');
             return;

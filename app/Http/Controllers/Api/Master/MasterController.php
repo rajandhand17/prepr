@@ -7,6 +7,7 @@ use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ProjectTypeResource;
 use App\Http\Resources\Master\ProjectStatusResource;
 use App\Http\Resources\Master\SkillResource;
+use App\Http\Resources\Master\AcheivementConditionListResource;
 use App\Http\Resources\Master\SkillStackResource;
 use App\Http\Resources\Master\ProjectVerticalsResource;
 use App\Http\Resources\Master\SocialLinkResource;
@@ -16,6 +17,7 @@ use App\Http\Resources\Master\ProjectStageResource;
 use App\Http\Resources\Master\ProjectSubmissionRequirementResource;
 use App\Http\Resources\Master\RankResource;
 use App\Http\Resources\Master\SkillGroupResource;
+use App\Http\Resources\Master\HostResource;
 use App\Repositories\Api\Master\MasterRepository;
 use Illuminate\Http\Request;
 
@@ -750,6 +752,52 @@ class MasterController extends AppBaseController
         }
     }
 
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/project-submission-requirement",
+         *     tags={"Master API - Project Submission Requirements"},
+         *     summary="Finds lists of project submission requirement",
+         *     description="Get all tags project submission requirement",
+         *     operationId="getProjectSubmissionRequirements",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    
     public function getProjectSubmissionRequirements(Request $request)
     {
         try{
@@ -760,6 +808,124 @@ class MasterController extends AppBaseController
            return $this->sendError(__('response.not_found_project_submission_requirements_list'));
         }catch(\Exception){
             return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/acheivement-condition-list",
+         *     tags={"Master API - Acheivement Condition List"},
+         *     summary="Finds lists of project acheivement condition list",
+         *     description="Get all list of project acheivement condition list",
+         *     operationId="getAcheivementConditionLists",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getAcheivementConditionLists(Request $request)
+    {
+        try{
+             $acheivement_condition_list=$this->masterRepository->getAcheivementConditionLists($request);
+             if($acheivement_condition_list){
+               return $this->sendResponse(AcheivementConditionListResource::collection($acheivement_condition_list),__('responses.found_acheivement_condition_list'));
+             }
+             return $this->sendError(__('response.not_found_acheivement_condition_list'));
+        
+        }catch(\Exception){
+            return $this->sendError(__('responses.send_error'),500);
+
+        }
+    }
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/host",
+         *     tags={"Master API - Host"},
+         *     summary="Finds lists of Host",
+         *     description="Get all list of Host",
+         *     operationId="getHosts",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getHosts(Request $request)
+    {
+        try{
+             $host_list=$this->masterRepository->getHosts($request);
+             if($host_list){
+               return $this->sendResponse(HostResource::collection($host_list),__('responses.found_host_list'));
+             }              
+             return $this->sendError(__('response.not_found_host_list')); 
+        }catch(\Exception){
+            return $this->sendError(__('response.send_error'),500);
         }
     }
 

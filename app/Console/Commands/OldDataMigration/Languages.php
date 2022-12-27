@@ -41,7 +41,7 @@ class Languages extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for languages table.');
+            $this->info('Migrating old data for languages table.');
             DB::beginTransaction();
 
             $languages = DB::connection('mysql2')->table('languages')->get();

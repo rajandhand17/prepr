@@ -2878,5 +2878,9 @@
     "responses.found_rank_list":"Ranks list fetched",
     "responses.not_found_rank_list":"Ranks not found!",
     "responses.found_project_submission_requirements_list":"Project submission requirements list fetched",
-    "responses.not_found_project_submission_requirements_list":"Project submission requirements not found!"
+    "responses.not_found_project_submission_requirements_list":"Project submission requirements not found!",
+    "responses.found_acheivement_condition_list":"Achievement condition list list fetched",
+    "responses.not_found_acheivement_condition_list":"Achievement condition list not found!",
+    "responses.found_host_list":"Host list fetched",
+    "responses.not_found_host_list":"Host list not found!"
 }
