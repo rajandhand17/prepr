@@ -18,6 +18,8 @@ use App\Http\Resources\Master\ProjectSubmissionRequirementResource;
 use App\Http\Resources\Master\RankResource;
 use App\Http\Resources\Master\SkillGroupResource;
 use App\Http\Resources\Master\HostResource;
+use App\Http\Resources\Master\LabConditionResource;
+use App\Http\Resources\Master\FlexibleDateDurationResource;
 use App\Repositories\Api\Master\MasterRepository;
 use Illuminate\Http\Request;
 
@@ -746,7 +748,7 @@ class MasterController extends AppBaseController
           if($get_ranks){
              return $this->sendResponse(RankResource::collection($get_ranks),__('responses.found_rank_list'));
           }
-          return $this->sendError(__('response.not_found_rank_list'));
+          return $this->sendError(__('responses.not_found_rank_list'));
         }catch(\Exception){
             return $this->sendError(__('responses.send_error'),500);
         }
@@ -805,7 +807,7 @@ class MasterController extends AppBaseController
            if($project_submission_requirements){
                return $this->sendResponse(ProjectSubmissionRequirementResource::collection($project_submission_requirements),__('responses.found_project_submission_requirements_list'));
            }
-           return $this->sendError(__('response.not_found_project_submission_requirements_list'));
+           return $this->sendError(__('responses.not_found_project_submission_requirements_list'));
         }catch(\Exception){
             return $this->sendError(__('responses.send_error'),500);
         }
@@ -864,7 +866,7 @@ class MasterController extends AppBaseController
              if($acheivement_condition_list){
                return $this->sendResponse(AcheivementConditionListResource::collection($acheivement_condition_list),__('responses.found_acheivement_condition_list'));
              }
-             return $this->sendError(__('response.not_found_acheivement_condition_list'));
+             return $this->sendError(__('responses.not_found_acheivement_condition_list'));
         
         }catch(\Exception){
             return $this->sendError(__('responses.send_error'),500);
@@ -923,9 +925,186 @@ class MasterController extends AppBaseController
              if($host_list){
                return $this->sendResponse(HostResource::collection($host_list),__('responses.found_host_list'));
              }              
-             return $this->sendError(__('response.not_found_host_list')); 
+             return $this->sendError(__('responses.not_found_host_list')); 
         }catch(\Exception){
-            return $this->sendError(__('response.send_error'),500);
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+     /**
+         * @OA\Get(
+         *     path="/api/v1/master/flexible-date-duration",
+         *     tags={"Master API - Flexible Date Duration"},
+         *     summary="Finds lists of flexible date duration",
+         *     description="Get all list of flexible date duration",
+         *     operationId="getFlexibleDateDurations",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getFlexibleDateDurations(Request $request)
+    {
+        try {
+            $flexible_date_duration=$this->masterRepository->getFlexibleDateDurations($request);
+            if($flexible_date_duration){
+               return $this->sendResponse(FlexibleDateDurationResource::collection($flexible_date_duration),__('responses.found_flexible_list'));
+            }
+            return $this->sendError(__('responses.found_flexible_list'));
+        } catch (\Exception) {
+            return $this->sendError(__('responses.send_error'),500);  
+        }
+    }
+   
+    
+     /**
+         * @OA\Get(
+         *     path="/api/v1/master/pitch-templates",
+         *     tags={"Master API - Pitch Templates"},
+         *     summary="Finds lists of pitch templates",
+         *     description="Get all list of pitch templates",
+         *     operationId="getPitchTemplates",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getPitchTemplates(Request $request)
+    {
+        try {
+            $pitch_templates=$this->masterRepository->getPitchTemplates($request);
+            if($pitch_templates){
+                return $this->sendResponse(FlexibleDateDurationResource::collection($pitch_templates),__('responses.found_pitch_templates_list'));
+
+                
+            }
+            return $this->sendError(__('responses.not_found_pitch_templates_list'));
+        } catch (\Exception){
+            return $this->sendError(__('responses.send_error'),500);  
+        }
+    }
+
+
+     /**
+         * @OA\Get(
+         *     path="/api/v1/master/lab-conditions",
+         *     tags={"Master API - Lab Conditions"},
+         *     summary="Finds lists of lab conditions",
+         *     description="Get all list of lab conditions",
+         *     operationId="getLabConditions",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getLabConditions(Request $request)
+    {  
+        try {
+            $lab_condition=$this->masterRepository->getLabConditions($request);
+            if($lab_condition){
+                return $this->sendResponse(LabConditionResource::collection($lab_condition),__('responses.found_lab_condition_list'));
+             }
+            return $this->sendError(__('responses.not_found_lab_condition_list'));
+        } catch (\Exception) {
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 

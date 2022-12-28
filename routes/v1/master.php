@@ -18,6 +18,11 @@ Route::middleware(['language'])->group(function () {
     Route::get('/project-submission-requirement',[MasterController::class,'getProjectSubmissionRequirements']);
     Route::get('/achievement-condition-list',[MasterController::class,'getAchievementConditionLists']);
     Route::get('/host',[MasterController::class,'getHosts']);
+    Route::get('/flexible-date-duration',[MasterController::class,'getFlexibleDateDurations']);
+    Route::get('/pitch-templates',[MasterController::class,'getPitchTemplates']);
+    Route::get('/lab-conditions',[MasterController::class,'getLabConditions']);
+
+
 
 });
   

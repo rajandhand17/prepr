@@ -17,6 +17,9 @@ Interface MasterInterface{
     public function getProjectSubmissionRequirements($request);
     public function getAchievementConditionLists($request);
     public function getHosts($request);
+    public function getFlexibleDateDurations($request);
+    public function getPitchTemplates($request);
+    public function getLabConditions($request);
 
 
 }
