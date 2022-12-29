@@ -4,9 +4,9 @@ namespace App\Console\Commands\OldDataMigration;
 
 use Illuminate\Console\Command;
 use DB;
-use App\Models\Host;
+use App\Models\Host as Hosts;
 
-class Skills extends Command
+class Host extends Command
 {
     /**
      * The name and signature of the console command.
@@ -53,9 +53,9 @@ class Skills extends Command
                         'link' => $single_host->link,
                         'image' => $single_host->image,
                     ];
-                    $check_hosts = Host::where($hosts_details)->first();
+                    $check_hosts = Hosts::where($hosts_details)->first();
                     if(!$check_hosts){
-                        Host::create($hosts_details);
+                        Hosts::create($hosts_details);
                     }
                   
                 }
