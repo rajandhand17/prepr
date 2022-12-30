@@ -25,7 +25,7 @@ class Host extends Model
 
     public function getHosts($language="en",$search=null)
     {    
-      try {
+      try { 
              $host=static::select("id","name","link","image","status");
              if($search!=null){
                 $host=$host->where("name","like",'%'.$search.'%');

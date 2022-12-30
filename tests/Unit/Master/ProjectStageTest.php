@@ -37,7 +37,12 @@ final class ProjectStageTest extends TestCase
 
     public function testGetProjectStages(): void
     {
-        /** @todo This test is incomplete. */
-        $this->markTestIncomplete();
+        $response = $this->get('/api/v1/master/stages?language=en');
+        $reponse=$response->json();
+        if($reponse['success']==true){
+            $response->assertOk();
+        }else{
+            $this->assertEquals($reponse['success'],false);
+        }
     }
 }

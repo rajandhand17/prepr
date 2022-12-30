@@ -37,7 +37,12 @@ final class SocialLinkTest extends TestCase
 
     public function testGetSocialLinks(): void
     {
-        /** @todo This test is incomplete. */
-        $this->markTestIncomplete();
+        $response = $this->get('/api/v1/master/links?language=en');
+        $reponse=$response->json();
+        if($reponse['success']==true){
+            $response->assertOk();
+        }else{
+            $this->assertEquals($reponse['success'],false);
+        }
     }
 }

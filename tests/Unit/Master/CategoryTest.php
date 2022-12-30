@@ -34,7 +34,7 @@ final class CategoryTest extends TestCase
 
         unset($this->category);
     }
-
+ 
     public function testParent(): void
     {
         /** @todo This test is incomplete. */
@@ -43,7 +43,12 @@ final class CategoryTest extends TestCase
 
     public function testGetCategories(): void
     {
-        /** @todo This test is incomplete. */
-        $this->markTestIncomplete();
+        $response = $this->get('/api/v1/master/categories?language=en');
+        $reponse=$response->json();
+        if($reponse['success']==true){
+            $response->assertOk();
+        }else{
+            $this->assertEquals($reponse['success'],false);
+        }
     }
 }

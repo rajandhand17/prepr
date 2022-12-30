@@ -37,7 +37,12 @@ final class ProjectSubmissionRequirementTest extends TestCase
 
     public function testGetProjectSubmissionRequirements(): void
     {
-        /** @todo This test is incomplete. */
-        $this->markTestIncomplete();
+        $response = $this->get('/api/v1/master/project-submission-requirement?language=en');
+        $reponse=$response->json();
+        if($reponse['success']==true){
+            $response->assertOk();
+        }else{
+            $this->assertEquals($reponse['success'],false);
+        }
     }
 }

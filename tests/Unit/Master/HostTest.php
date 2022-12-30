@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Host;
+use App\Models\Host; 
 use Tests\TestCase;
 
 /**
@@ -37,7 +37,12 @@ final class HostTest extends TestCase
 
     public function testGetHosts(): void
     {
-        /** @todo This test is incomplete. */
-        $this->markTestIncomplete();
+        $response = $this->get('/api/v1/master/host?language=en');
+        $reponse=$response->json();
+        if($reponse['success']==true){
+            $response->assertOk();
+        }else{
+            $this->assertEquals($reponse['success'],false);
+        }
     }
 }

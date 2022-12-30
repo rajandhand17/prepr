@@ -36,8 +36,15 @@ final class FlexibleExpireDateDurationTest extends TestCase
     }
 
     public function testGetFlexibleDateDurations(): void
-    {
-        /** @todo This test is incomplete. */
-        $this->markTestIncomplete();
+    {  
+        /*checking apis working or not */
+        $response = $this->get('/api/v1/master/flexible-date-duration?language=en');
+        $reponse=$response->json();
+        if($reponse['success']==true){
+            $response->assertStatus(200);
+        }else{
+            $this->assertEquals($reponse['success'],false);
+        }
     }
 }
+ 

@@ -33,7 +33,7 @@ class Category extends Model
     public function getCategories($language='en',$search=null,$component=null)
     {
         try{
-            if($language == 'en'){
+            if($language == 'en'){ 
                 $category_list = static::select('id','name','parent_id');
           }else{
 

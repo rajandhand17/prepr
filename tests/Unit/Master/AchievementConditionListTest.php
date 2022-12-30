@@ -37,7 +37,12 @@ final class AchievementConditionListTest extends TestCase
 
     public function testGetAchievementConditionLists(): void
     {
-        /** @todo This test is incomplete. */
-        $this->markTestIncomplete();
+        $response = $this->get('/api/v1/master/achievement-condition-list?language=en');
+        $reponse=$response->json();
+        if($reponse['success']==true){
+            $response->assertOk();
+        }else{
+            $this->assertEquals($reponse['success'],false);
+        }
     }
 }

@@ -17,13 +17,11 @@ class RanksTest extends TestCase
     {
         $response = $this->get('/api/v1/master/ranks?language=en');
         $reponse=$response->json();
-        $reponse=$response->json();
         if($reponse['success']==true){
             $response->assertOk();
         }else{
             $this->assertEquals($reponse['success'],false);
         }
 
-        //$response->assertStatus(200);
     }
 }
