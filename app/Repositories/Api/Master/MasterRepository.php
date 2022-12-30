@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories\Api\Master;
 
-use App\Console\Commands\OldDataMigration\AcheivementConditionList;
 use App\Models\Category;
 use App\Models\Skill;
 use App\Models\Tag;
