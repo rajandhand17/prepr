@@ -41,7 +41,7 @@ class ProjectIndustry extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for project industry table.');
+            $this->info('Migrating old data for project industry table.');
             DB::beginTransaction();
 
             $project_industry = DB::connection('mysql2')->table('project_industry')->get();

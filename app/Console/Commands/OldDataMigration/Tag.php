@@ -4,9 +4,9 @@ namespace App\Console\Commands\OldDataMigration;
 
 use Illuminate\Console\Command;
 use DB;
-use App\Models\Tag;
+use App\Models\Tag as Tags;
 
-class Tags extends Command
+class Tag extends Command
 {
     /**
      * The name and signature of the console command.
@@ -54,9 +54,9 @@ class Tags extends Command
                         'fr_CA_tag_image'=>$single_tags->fr_CA_tag_image,
                         'components'=>$single_tags->category, 
                     ];
-                    $check_tags = Tag::where($tags_details)->first();
+                    $check_tags = Tags::where($tags_details)->first();
                     if(!$check_tags){
-                        Tag::create($tags_details);
+                        Tags::create($tags_details);
                     }
                   
                 }
@@ -68,7 +68,6 @@ class Tags extends Command
             $this->error('No tag found.');
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;

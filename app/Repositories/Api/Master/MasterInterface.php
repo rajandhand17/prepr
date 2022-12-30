@@ -12,6 +12,14 @@ Interface MasterInterface{
     public function getStatus($request);
     public function getSocialLinks($request);
     public function getSkillGroups($request);
+    public function getSkillStacks($request);
+    public function getRanks($request);
+    public function getProjectSubmissionRequirements($request);
+    public function getAchievementConditionLists($request);
+    public function getHosts($request);
+    public function getFlexibleDateDurations($request);
+    public function getPitchTemplates($request);
+    public function getLabConditions($request);
 
 
 }

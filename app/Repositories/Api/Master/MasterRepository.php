@@ -11,7 +11,14 @@ use App\Models\ProjectVertical;
 use App\Models\ProjectStatus;
 use App\Models\SocialLink;
 use App\Models\SkillGroup;
-
+use App\Models\SkillStack;
+use App\Models\Rank;
+use App\Models\ProjectSubmissionRequirement;
+use App\Models\AchievementConditionList;
+use App\Models\Host;
+use App\Models\FlexibleExpireDateDuration;
+use App\Models\PitchTemplate;
+use App\Models\LabCondition;
 class MasterRepository implements MasterInterface{
 
     private $category;
@@ -24,8 +31,15 @@ class MasterRepository implements MasterInterface{
     private $project_status;
     private $social_link;
     private $skill_group;
-
-    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group) {
+    private $skill_stack;
+    private $rank;
+    private $project_submission_requirements;
+    private $achievement_condition_list;
+    private $host;
+    private $flexible_expireDate_duration;
+    private $pitch_template;
+    private $lab_condition;
+    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration,PitchTemplate $pitch_template, LabCondition $lab_condition) {
         $this->category = $category;
         $this->skill = $skill;
         $this->tag=$tag;
@@ -36,6 +50,14 @@ class MasterRepository implements MasterInterface{
         $this->project_status=$project_status;
         $this->social_link=$social_link;
         $this->skill_group=$skill_group;
+        $this->skill_stack=$skill_stack;
+        $this->rank=$rank;
+        $this->project_submission_requirements=$project_submission_requirements;
+        $this->achievement_condition_list=$achievement_condition_list;
+        $this->host=$host;
+        $this->flexible_expireDate_duration=$flexible_expireDate_duration;
+        $this->pitch_template=$pitch_template;
+        $this->lab_condition=$lab_condition;
     }
 
     public function getCategories($request)
@@ -134,6 +156,83 @@ class MasterRepository implements MasterInterface{
             return $this->skill_group->getSkillGroups($request->language,$request->search,$request->skill_stacks,$request->skills);
         }catch(\Exception $e){
              return false;
+        }
+    }
+
+    public function getSkillStacks($request)
+    {
+        try{
+        
+            return $this->skill_stack->getSkillStacks($request->language,$request->search);
+        
+        }catch(\Exception){
+           return false;
+        }
+    }
+
+    public function getRanks($request)
+    {
+        try{
+           return $this->rank->getRanks($request->language,$request->search);
+
+        }catch(\Exception){
+           return false;
+        }
+    }
+
+    public function getProjectSubmissionRequirements($request)
+    {
+        try{
+           return $this->project_submission_requirements->getProjectSubmissionRequirements($request->language,$request->search);
+        }catch(\Exception){
+          return false;
+        }
+    }
+
+    public function getAchievementConditionLists($request)
+    {
+        try{
+            return $this->achievement_condition_list->getAchievementConditionLists($request->language,$request->search);
+        }catch(\Exception){
+           return false;
+        }
+    }
+
+    public function getHosts($request)
+    {   
+        try{
+           return $this->host->getHosts($request->language,$request->search);
+        }catch(\Exception){
+          return false;
+        }
+    }
+
+    public function getFlexibleDateDurations($request)
+    {
+        try {
+
+            return $this->flexible_expireDate_duration->getFlexibleDateDurations($request->language,$request->search);
+
+        }catch(\Exception){
+            return false;
+        }
+    }
+
+    public function getPitchTemplates($request)
+    {
+        try {
+            return $this->pitch_template->getPitchTemplates($request->language,$request->search);
+        } catch (\Exception) {
+            return false;
+        }
+    }
+
+    public function getLabConditions($request)
+    {
+        try {
+            return $this->lab_condition->getLabConditions($request->language,$request->search);
+        } catch (\Exception) {
+            return false;
         }
     }
 }

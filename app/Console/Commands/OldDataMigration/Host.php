@@ -4,23 +4,23 @@ namespace App\Console\Commands\OldDataMigration;
 
 use Illuminate\Console\Command;
 use DB;
-use App\Models\Skill;
+use App\Models\Host as Hosts;
 
-class Skills extends Command
+class Host extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:skills';
+    protected $signature = 'migrate-old-data:host';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old skill table data to new db structure.';
+    protected $description = 'This command is use to migrate old host table data to new db structure.';
 
     /**
      * Create a new command instance.
@@ -41,29 +41,30 @@ class Skills extends Command
     {
         try {
 
-            $this->info('Migrating old data for skills table.');
+            $this->info('Migrating old data for host table.');
             DB::beginTransaction();
 
-            $skills = DB::connection('mysql2')->table('skills')->get();
-            if($skills->count() > 0){
+            $hosts = DB::connection('mysql2')->table('hosts')->get();
+            if($hosts->count() > 0){
                 
-                foreach ($skills as $key => $single_skill){
-                   $skills_details=[
-                        'name' => $single_skill->skill,
-                        'fr_CA_name' => $single_skill->fr_CA_skill,
+                foreach ($hosts as $key => $single_host){
+                   $hosts_details=[
+                        'name' => $single_host->name,
+                        'link' => $single_host->link,
+                        'image' => $single_host->image,
                     ];
-                    $check_skills = Skill::where($skills_details)->first();
-                    if(!$check_skills){
-                        Skill::create($skills_details);
+                    $check_hosts = Hosts::where($hosts_details)->first();
+                    if(!$check_hosts){
+                        Hosts::create($hosts_details);
                     }
                   
                 }
                 DB::commit();
-                $this->info('Migrating of old data for skills table completed.');
+                $this->info('Migrating of old data for hosts table completed.');
                 return;
             }
             DB::rollback();
-            $this->error('No skill found.');
+            $this->error('No hosts found.');
 
         } catch (\Exception $e) {
             DB::rollback();

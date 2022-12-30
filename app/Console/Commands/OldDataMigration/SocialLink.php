@@ -66,7 +66,6 @@ class SocialLink extends Command
             $this->error('No social link found.');
 
         } catch (\Exception $e) {
-            
             DB::rollback();
             $this->error('Something went wrong.');
             return;

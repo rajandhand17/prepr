@@ -4,9 +4,9 @@ namespace App\Console\Commands\OldDataMigration;
 
 use Illuminate\Console\Command;
 use DB;
-use App\Models\Category;
+use App\Models\Category as Categories;
 
-class Categories extends Command
+class Category extends Command
 {
     /** 
      * The name and signature of the console command.
@@ -41,7 +41,7 @@ class Categories extends Command
     {
         try {
 
-            $this->info('Migrating Old Data for categories table.');
+            $this->info('Migrating old data for categories table.');
             DB::beginTransaction();
 
             $categories = DB::connection('mysql2')->table('categories')->get();
@@ -54,9 +54,9 @@ class Categories extends Command
                         'components' => $single_category->components,
                         'parent_id' => $single_category->parent_id
                     ];
-                    $checkCategory = Category::where($category_details)->first();
+                    $checkCategory = Categories::where($category_details)->first();
                     if(!$checkCategory){
-                        Category::create($category_details);
+                        Categories::create($category_details);
                     }
                 }
                 DB::commit();

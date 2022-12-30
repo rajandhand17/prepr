@@ -25,7 +25,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
@@ -39,16 +39,16 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
                     },
                     "500": {
-                        "description": "Internal Server Error!"
+                        "description": "Internal server error!"
                     }
                 }
             }
@@ -65,27 +65,27 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
                     },
                     "500": {
                         "description": "Internal Server Error!"
@@ -105,27 +105,27 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
                     },
                     "500": {
                         "description": "Internal Server Error!"
@@ -145,27 +145,27 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
                     },
                     "500": {
                         "description": "Internal Server Error!"
@@ -185,27 +185,27 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
                     },
                     "500": {
                         "description": "Internal Server Error!"
@@ -225,27 +225,27 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
                     },
                     "500": {
                         "description": "Internal Server Error!"
@@ -265,27 +265,27 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
                     },
                     "500": {
                         "description": "Internal Server Error!"
@@ -305,21 +305,21 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
                         "description": "not found!"
@@ -345,27 +345,27 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
                     },
                     "500": {
                         "description": "Internal Server Error!"
@@ -385,14 +385,14 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "language values that needed to be considered for choose languages",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "search values that needed to be considered for filter",
+                        "description": "Search values that needed to be considered for filter",
                         "required": false,
                         "explode": true
                     },
@@ -413,13 +413,333 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "404": {
-                        "description": "not found!"
+                        "description": "Not found!"
                     },
                     "400": {
-                        "description": "Bad Request!"
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/skill-sets": {
+            "get": {
+                "tags": [
+                    "Master API - Skill Sets"
+                ],
+                "summary": "Finds lists of skill Set",
+                "description": "Get all tags skill Sets",
+                "operationId": "getSkillStacks",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/ranks": {
+            "get": {
+                "tags": [
+                    "Master API - Ranks"
+                ],
+                "summary": "Finds lists of ranks",
+                "description": "Get all tags ranks",
+                "operationId": "getRanks",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/project-submission-requirement": {
+            "get": {
+                "tags": [
+                    "Master API - Project Submission Requirements"
+                ],
+                "summary": "Finds lists of project submission requirement",
+                "description": "Get all tags project submission requirement",
+                "operationId": "getProjectSubmissionRequirements",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/achievement-condition-list": {
+            "get": {
+                "tags": [
+                    "Master API - achievement Condition List"
+                ],
+                "summary": "Finds lists of project achievement condition list",
+                "description": "Get all list of project achievement condition list",
+                "operationId": "getAchievementConditionLists",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/host": {
+            "get": {
+                "tags": [
+                    "Master API - Host"
+                ],
+                "summary": "Finds lists of Host",
+                "description": "Get all list of Host",
+                "operationId": "getHosts",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/flexible-date-duration": {
+            "get": {
+                "tags": [
+                    "Master API - Flexible Date Duration"
+                ],
+                "summary": "Finds lists of flexible date duration",
+                "description": "Get all list of flexible date duration",
+                "operationId": "getFlexibleDateDurations",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/pitch-templates": {
+            "get": {
+                "tags": [
+                    "Master API - Pitch Templates"
+                ],
+                "summary": "Finds lists of pitch templates",
+                "description": "Get all list of pitch templates",
+                "operationId": "getPitchTemplates",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/master/lab-conditions": {
+            "get": {
+                "tags": [
+                    "Master API - Lab Conditions"
+                ],
+                "summary": "Finds lists of lab conditions",
+                "description": "Get all list of lab conditions",
+                "operationId": "getLabConditions",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
                     },
                     "500": {
                         "description": "Internal Server Error!"

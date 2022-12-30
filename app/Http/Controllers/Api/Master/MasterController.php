@@ -7,12 +7,19 @@ use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ProjectTypeResource;
 use App\Http\Resources\Master\ProjectStatusResource;
 use App\Http\Resources\Master\SkillResource;
+use App\Http\Resources\Master\AcheivementConditionListResource;
+use App\Http\Resources\Master\SkillStackResource;
 use App\Http\Resources\Master\ProjectVerticalsResource;
 use App\Http\Resources\Master\SocialLinkResource;
 use App\Http\Resources\Master\TagResource;
 use App\Http\Resources\Master\ProjectIndustryResource;
 use App\Http\Resources\Master\ProjectStageResource;
+use App\Http\Resources\Master\ProjectSubmissionRequirementResource;
+use App\Http\Resources\Master\RankResource;
 use App\Http\Resources\Master\SkillGroupResource;
+use App\Http\Resources\Master\HostResource;
+use App\Http\Resources\Master\LabConditionResource;
+use App\Http\Resources\Master\FlexibleDateDurationResource;
 use App\Repositories\Api\Master\MasterRepository;
 use Illuminate\Http\Request;
 
@@ -217,7 +224,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="search values that needed to be considered for filter",
+     *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
      *         
@@ -275,7 +282,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="search values that needed to be considered for filter",
+     *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
      *         
@@ -333,7 +340,7 @@ class MasterController extends AppBaseController
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="search values that needed to be considered for filter",
+     *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
      *         
@@ -391,7 +398,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="search",
          *         in="query",
-         *         description="search values that needed to be considered for filter",
+         *         description="Search values that needed to be considered for filter",
          *         required=false,
          *         explode=true,
          *         
@@ -451,7 +458,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="search",
          *         in="query",
-         *         description="search values that needed to be considered for filter",
+         *         description="Search values that needed to be considered for filter",
          *         required=false,
          *         explode=true,
          *         
@@ -511,7 +518,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="search",
          *         in="query",
-         *         description="search values that needed to be considered for filter",
+         *         description="Search values that needed to be considered for filter",
          *         required=false,
          *         explode=true,
          *         
@@ -571,7 +578,7 @@ class MasterController extends AppBaseController
          *     @OA\Parameter(
          *         name="search",
          *         in="query",
-         *         description="search values that needed to be considered for filter",
+         *         description="Search values that needed to be considered for filter",
          *         required=false,
          *         explode=true,
          *         
@@ -625,6 +632,479 @@ class MasterController extends AppBaseController
          }
          catch (\Exception $e){
           return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/skill-sets",
+         *     tags={"Master API - Skill Sets"},
+         *     summary="Finds lists of skill Set",
+         *     description="Get all tags skill Sets",
+         *     operationId="getSkillStacks",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getSkillStacks(Request $request)
+    {
+        try{
+         $get_skill_stacks=$this->masterRepository->getSkillStacks($request);
+         if($get_skill_stacks){
+             return $this->sendResponse(SkillStackResource::collection($get_skill_stacks),__('responses.found_skill_stacks_list'));
+         }
+         return $this->sendError(__('responses.not_found_skill_stacks_list'));
+        }catch(\Exception $e){
+          return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+
+    
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/ranks",
+         *     tags={"Master API - Ranks"},
+         *     summary="Finds lists of ranks",
+         *     description="Get all tags ranks",
+         *     operationId="getRanks",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getRanks(Request $request)
+    {
+        try{
+         $get_ranks=$this->masterRepository->getRanks($request);
+          if($get_ranks){
+             return $this->sendResponse(RankResource::collection($get_ranks),__('responses.found_rank_list'));
+          }
+          return $this->sendError(__('responses.not_found_rank_list'));
+        }catch(\Exception){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/project-submission-requirement",
+         *     tags={"Master API - Project Submission Requirements"},
+         *     summary="Finds lists of project submission requirement",
+         *     description="Get all tags project submission requirement",
+         *     operationId="getProjectSubmissionRequirements",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    
+    public function getProjectSubmissionRequirements(Request $request)
+    {
+        try{
+           $project_submission_requirements=$this->masterRepository->getProjectSubmissionRequirements($request);
+           if($project_submission_requirements){
+               return $this->sendResponse(ProjectSubmissionRequirementResource::collection($project_submission_requirements),__('responses.found_project_submission_requirements_list'));
+           }
+           return $this->sendError(__('responses.not_found_project_submission_requirements_list'));
+        }catch(\Exception){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/achievement-condition-list",
+         *     tags={"Master API - achievement Condition List"},
+         *     summary="Finds lists of project achievement condition list",
+         *     description="Get all list of project achievement condition list",
+         *     operationId="getAchievementConditionLists",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getAchievementConditionLists(Request $request)
+    {
+        try{
+             $acheivement_condition_list=$this->masterRepository->getAchievementConditionLists($request);
+             if($acheivement_condition_list){
+               return $this->sendResponse(AcheivementConditionListResource::collection($acheivement_condition_list),__('responses.found_acheivement_condition_list'));
+             }
+             return $this->sendError(__('responses.not_found_acheivement_condition_list'));
+        
+        }catch(\Exception){
+            return $this->sendError(__('responses.send_error'),500);
+
+        }
+    }
+    /**
+         * @OA\Get(
+         *     path="/api/v1/master/host",
+         *     tags={"Master API - Host"},
+         *     summary="Finds lists of Host",
+         *     description="Get all list of Host",
+         *     operationId="getHosts",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getHosts(Request $request)
+    {
+        try{
+             $host_list=$this->masterRepository->getHosts($request);
+             if($host_list){
+               return $this->sendResponse(HostResource::collection($host_list),__('responses.found_host_list'));
+             }              
+             return $this->sendError(__('responses.not_found_host_list')); 
+        }catch(\Exception){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+     /**
+         * @OA\Get(
+         *     path="/api/v1/master/flexible-date-duration",
+         *     tags={"Master API - Flexible Date Duration"},
+         *     summary="Finds lists of flexible date duration",
+         *     description="Get all list of flexible date duration",
+         *     operationId="getFlexibleDateDurations",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getFlexibleDateDurations(Request $request)
+    {
+        try {
+            $flexible_date_duration=$this->masterRepository->getFlexibleDateDurations($request);
+            if($flexible_date_duration){
+               return $this->sendResponse(FlexibleDateDurationResource::collection($flexible_date_duration),__('responses.found_flexible_list'));
+            }
+            return $this->sendError(__('responses.found_flexible_list'));
+        } catch (\Exception) {
+            return $this->sendError(__('responses.send_error'),500);  
+        }
+    }
+   
+    
+     /**
+         * @OA\Get(
+         *     path="/api/v1/master/pitch-templates",
+         *     tags={"Master API - Pitch Templates"},
+         *     summary="Finds lists of pitch templates",
+         *     description="Get all list of pitch templates",
+         *     operationId="getPitchTemplates",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getPitchTemplates(Request $request)
+    {
+        try {
+            $pitch_templates=$this->masterRepository->getPitchTemplates($request);
+            if($pitch_templates){
+                return $this->sendResponse(FlexibleDateDurationResource::collection($pitch_templates),__('responses.found_pitch_templates_list'));
+
+                
+            }
+            return $this->sendError(__('responses.not_found_pitch_templates_list'));
+        } catch (\Exception){
+            return $this->sendError(__('responses.send_error'),500);  
+        }
+    }
+
+
+     /**
+         * @OA\Get(
+         *     path="/api/v1/master/lab-conditions",
+         *     tags={"Master API - Lab Conditions"},
+         *     summary="Finds lists of lab conditions",
+         *     description="Get all list of lab conditions",
+         *     operationId="getLabConditions",
+         *     @OA\Parameter(
+         *         name="language",
+         *         in="query",
+         *         description="Language values that needed to be considered for choose languages",
+         *         required=true,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Parameter(
+         *         name="search",
+         *         in="query",
+         *         description="Search values that needed to be considered for filter",
+         *         required=false,
+         *         explode=true,
+         *         
+         *     ),
+         *     @OA\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=404,
+         *         description="Not found!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=400,
+         *         description="Bad request!",
+         *    
+         *     ),
+         *     @OA\Response(
+         *         response=500,
+         *         description="Internal Server Error!",
+         *    
+         *     ),
+         * )
+         */
+    public function getLabConditions(Request $request)
+    {  
+        try {
+            $lab_condition=$this->masterRepository->getLabConditions($request);
+            if($lab_condition){
+                return $this->sendResponse(LabConditionResource::collection($lab_condition),__('responses.found_lab_condition_list'));
+             }
+            return $this->sendError(__('responses.not_found_lab_condition_list'));
+        } catch (\Exception) {
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 

@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('project_stages', function (Blueprint $table) {
+        Schema::create('flexible_expire_date_durations', function (Blueprint $table) {
             $table->id();
+            $table->string("title");
+            $table->string("fr_CA_title");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_stages');
+        Schema::dropIfExists('flexible_expire_date_duration');
     }
 };

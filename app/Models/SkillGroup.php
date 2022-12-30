@@ -37,7 +37,7 @@ class SkillGroup extends Model
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language,'title');
                 
                 //check whether the column exist in the db or not
-                if(!$column_name || !Schema::hasColumn('skills', $column_name)){
+                if(!$column_name || !Schema::hasColumn('skill_groups', $column_name)){
                     return false;
                 }
                 

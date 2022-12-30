@@ -8,52 +8,52 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
 
-class ProjectIndustry extends Model
+class AchievementConditionList extends Model
 {
     use HasFactory;
     
     use SoftDeletes;
     
-    protected $table = 'project_industries';
-     
+    protected $table = 'achievement_condition_lists';
+    
     protected $fillable = [
-        'name',
-        'fr_CA_name'
+        'title',
+        'fr_CA_title'
     ];
 
     
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-   
-    public function getProjectIndustries($language='en',$search=null)
-    {    
+
+    public function getAchievementConditionLists($language='en',$search=null)
+    {
         try{
             if($language == 'en'){
-                $project_industry_list = static::select('id','name');
+                $project_status_list = static::select('id','title');
                   //Search categories based on user input
             }
             else {
-                 //get column name based on language
-                $column_name = LanguageColumnHelper::getLanguageColumnName($language,'name');
+                 //get column title based on language
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language,'title');
 
                 //check whether the column exist in the db or not
-                if(!$column_name || !Schema::hasColumn('skills', $column_name)){
+                if(!$column_name || !Schema::hasColumn('achievement_condition_lists', $column_name)){
                     return false;
                 }
-                $project_industry_list = static::select('id', $column_name . ' as name');
+                $project_status_list = static::select('id', $column_name . ' as title');
             }
-
+ 
             //Search categories based on user input
             if($search!=null){
-                $column_name = isset($column_name) ? $column_name : "name";
-                $project_industry_list = $project_industry_list->where($column_name,"like",'%'.$search.'%');
+                $column_name = isset($column_name) ? $column_name : "title";
+                $project_status_list = $project_status_list->where($column_name,"like",'%'.$search.'%');
             }
 
             //take 20 results based from the table
-            $project_industry_list = $project_industry_list->take(20)->get();
+            $project_status_list = $project_status_list->take(20)->get();
 
             //check if there are any results
-            if(!$project_industry_list->isEmpty()){
-                return $project_industry_list;
+            if(!$project_status_list->isEmpty()){
+                return $project_status_list;
             }
 
             return false;
@@ -62,4 +62,4 @@ class ProjectIndustry extends Model
             return false;
         }
     }
-} 
+}
