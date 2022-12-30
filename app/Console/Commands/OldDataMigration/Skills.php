@@ -66,7 +66,6 @@ class Skills extends Command
             $this->error('No skill found.');
 
         } catch (\Exception $e) {
-          
             DB::rollback();
             $this->error('Something went wrong.');
             return;

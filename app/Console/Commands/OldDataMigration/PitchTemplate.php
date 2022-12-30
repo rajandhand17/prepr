@@ -66,7 +66,6 @@ class PitchTemplate extends Command
             $this->error('No pitch template found.');
 
         } catch (\Exception $e) {
-            print_r($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;

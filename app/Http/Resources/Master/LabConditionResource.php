@@ -17,7 +17,6 @@ class LabConditionResource extends JsonResource
         return [
             "id"=>$this->id,
             "title"=>$this->title,
-            "fr_CA_title"=>$this->fr_CA_title,
         ];
     }
 }

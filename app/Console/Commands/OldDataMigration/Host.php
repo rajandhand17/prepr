@@ -67,7 +67,6 @@ class Host extends Command
             $this->error('No hosts found.');
 
         } catch (\Exception $e) {
-          dd($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;

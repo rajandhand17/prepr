@@ -68,7 +68,6 @@ class Tag extends Command
             $this->error('No tag found.');
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;
