@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands\OldDataMigration;
 
 use Illuminate\Console\Command;
@@ -20,7 +19,7 @@ class User extends Command
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old host table data to new db structure.';
+    protected $description = 'This command is use to migrate old user table data to new db structure.';
 
     /**
      * Create a new command instance.
@@ -40,15 +39,12 @@ class User extends Command
     public function handle()
     {
         try {
-
             $this->info('Migrating old data for user table.');
             DB::beginTransaction();
-
             $users = DB::connection('mysql2')->table('users')->get();
             if($users->count() > 0){
-                
                 foreach ($users as $key => $single_user){
-                   $users_details=[
+                   $users_details=[ 
                         'device_token' => $single_user->device_token,
                         'name' => $single_user->name,
                         'first_name' => $single_user->first_name,
@@ -89,7 +85,6 @@ class User extends Command
             $this->error('No users found.');
 
         } catch (\Exception $e) {
-
             DB::rollback();
             $this->error('Something went wrong.');
             return;

@@ -25,7 +25,7 @@ class AuthController extends AppBaseController
             if($register){
               return $this->sendResponse(RegisterUserResource::collection($register),__('notification.notification_pvyeatpl'));
           }
-          return $this->sendError(__('responses.no  tification_scptl'));
+          return $this->sendError(__('responses.notification_scptl'));
         }catch (\Throwable $th){
             return $this->sendError(__('responses.send_error'),500);
         }

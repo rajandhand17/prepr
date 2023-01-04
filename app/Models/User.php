@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,9 +18,28 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'first_name',
+        'last_name',
+        'username',
+        'country_code',
+        'verification',
         'name',
         'email',
         'password',
+        'two_factor',
+        'two_factor_otp',
+        'is_login',
+        'profile_image',
+        'phone_number',
+        'fr_request',
+        'fr_accept',
+        'point',
+        'rank',
+        'remember_token',
+        'is_verify',
+        'is_email_sent',
+        'verify_token',
+        'mycode',
     ];
 
     /**
@@ -88,6 +106,12 @@ class User extends Authenticatable
                 'status' => request('status'),
                 'user_type' => request('user_type'),
             ]);
+
+
+      return response()->json(['status' => 'success', 'message' => 'You have registered successfully.', 'data' => $data], 200);
+       
+
+
         } catch (\Throwable $th) {
             return false;
         }

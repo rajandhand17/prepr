@@ -54,6 +54,7 @@ class UserPersonals extends Command
                         'gender' => $single_user_personal->gender,
                         'date_of_birth' => $single_user_personal->date_of_birth,
                         'age' => $single_user_personal->age,
+                        'status' => $single_user_personal->status,
                         'user_type' => $single_user_personal->user_type,
                         'language' => $single_user_personal->language,
                         'recent_immigrant' => $single_user_personal->recent_immigrant,
