@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Http\Requests\RegisterDataRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\Language;
+use App\Models\Setting;
+use App\Models\UserPoint;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -40,6 +44,9 @@ class User extends Authenticatable
         'is_email_sent',
         'verify_token',
         'mycode',
+        'isReferralOpen',
+        'manage_alerts',
+        'is_subscribe',
     ];
 
     /**
@@ -62,57 +69,219 @@ class User extends Authenticatable
     ];
 
 
-    public function register($request)
-    {  
-        $validation_array = [
-            'first_name' => 'required|string|max:20',
-            'last_name' => 'required|string|max:20',
-            'username' => 'required|string|max:20|regex:/^[A-Za-z0-9_-]*$/|unique:users',
-            'password' => 'required|min:6',
-            'password_confirmation' => 'required|same:password',
-            'email' => 'required|string|email|max:50|unique:users',
-            'user_type' => 'required',
-            'status' => 'required|min:1',
-        ];
-        $validation = Validator::make($request->all(), $validation_array);
-        if ($validation->fails()) {
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 200);
-        }
+   // public function register(RegisterDataRequest $request)
+   public function register($data)
+    {    
         try {
-            $name=request('first_name')."-".request('last_name');
+            DB::beginTransaction();
             $user = User::create([
-                'first_name'=>request('first_name'),
-                'last_name'=>request('last_name'),
-                'name' => $name,
-                'username' => request('username'),
-                'email' => request('email'),  
-                'password' => $request->password
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'country_code' => $data['country_code'], 
+                'phone_number' => $data['phone_number'],
+                'password' => $data['password'],
+                'name' => $data['firstName'] . ' ' . $data['lastName'],
+                'first_name' => $data['firstName'],
+                'last_name' => $data['lastName'],
+                'language_id' => $data['language_id'],
             ]);
 
+            $language = \App\Models\Language::where('status', 1)->where('id', $data['language_id'])->first();
+
+            $data['name'] = $data['firstName'] . ' ' . $data['lastName'];
+            if (isset($data['referralCode']) && $data['referralCode']) {
+                $user->referal_code = $data['referralCode'];
+                $referal = User::where('mycode', $data['referralCode'])->first();
+                if ($referal) {
+                    $point_1 = Setting::get(config('points.referal_code'));
+                    $point_2 = Setting::get(config('points.referal_user'));
+                    UserPoint::firstOrCreate(['type' => 'referal_code', 'date' => date('Y-m-d'), 'user_id' => $user->id, 'point' => $point_2]);
+                    UserPoint::firstOrCreate(['type' => 'referal_user', 'date' => date('Y-m-d'), 'user_id' => $referal->id, 'point' => $point_1]);
+                }
+            }
+
+            $user->phone_number = (empty($data['phone_number'])) ? null : $data['phone_number'];
+
+            if (isset($data['user_type'])) {
+                //get autocreate templates
+                $getcloneInfo = AutoCreateTemplates::where('role_user_type', $data['user_type'])->where('language', $language->lang_iso)->first();
+
+                if ($getcloneInfo) {
+                    $labGroupsArray = explode(',', @$getcloneInfo->lab_group_id);
+                    $challengeGroupsArray = explode(',', @$getcloneInfo->challenge_group_id);
+                    $groupLabIds = Group::whereIn('id', $labGroupsArray)->pluck('lab_id')->toArray();
+                    $groupChallengeIds = Group::whereIn('id', $challengeGroupsArray)->pluck('challenge_id')->toArray();
+
+                    $autoTemplateLabIds = explode(',', @$getcloneInfo->lab_id);
+                    $autoTemplateChallengeIds = explode(',', @$getcloneInfo->challenge_id);
+                    $reqlLabIds = array_filter(array_merge($autoTemplateLabIds, $groupLabIds));
+                    $reqChallengeIds = array_filter(array_merge($autoTemplateChallengeIds, $groupChallengeIds));
+                    $implodeLabIds = implode(',', $reqlLabIds);
+                    $implodeChallengeIds = implode(',', $reqChallengeIds);
+                    $finalLabIds = array_unique(explode(',', $implodeLabIds));
+                    $finalChallengeIds = array_unique(explode(',', $implodeChallengeIds));
+                } else {
+                    $finalLabIds = [];
+                    $finalChallengeIds = [];
+                }
+
+                // sync auto template challenges and labs for user registration
+                if (!empty($finalLabIds)) {
+                    foreach ($finalLabIds as $key => $labId) {
+                        if (isset($data['normal_user']) && $data['normal_user'] == 'normal_user' && $labId != '' && $labId !== null) {
+                            Helper::syncUserMembersForLabTemplates($user, $labId);
+                        }
+                    }
+                }
+                if (!empty($finalChallengeIds)) {
+                    foreach ($finalChallengeIds as $key => $challengeId) {
+                        if (isset($data['normal_user']) && $data['normal_user'] == 'normal_user' && $challengeId != '' && $challengeId !== null) {
+                            Helper::syncUserMembersForChallengeTemplates($user->id, $user->email, $challengeId);
+                        }
+                    }
+                }
+            }
+            $organization = collect();
+            if (isset($data['role']) && $data['role'] == 'organization') {
+                $user->syncRoles(['free_organisation_manager', 'user']);
+                $user->admin_lab_limit = '1';
+                $user->admin_challenge_limit = '1';
+                $user->save();
+                $languageIso = Helper::getLanguageIso($user->email);
+                // create organization
+                $org = Organisation::create(['user_id' => $user->id,'language' => $languageIso, 'name' => $data['organization_name'], 'vanity_slug' => $data['vanity_slug'],'slug' => $data['vanity_slug'], 'vanity_link' => URL::to('/') . '/org/' . $data['vanity_link'], 'status' => '1', 'plan' => 'limited', 'plan_validity' => 'yearly', 'labs_limit' => '1', 'challenges_limit' => '1']);
+
+                // sync auto template challenges and labs for user registration
+                if (!empty($finalChallengeIds)) {
+                    foreach ($finalChallengeIds as $key => $challengeId) {
+                        if ($challengeId != '' && $challengeId !== null) {
+                            Helper::freeChallengemanagerSync($user->id, $org->id, $challengeId);
+                            /*Helper:: inviteChallengeUsers('org', $data['user_type'], $challengeId, $user->name, $user->email);*/
+                            // auto create adding as member
+                            if (@$getcloneInfo->invite_challenges == '1') {
+                                Helper::syncUserMembersForChallengeTemplates($user->id, $user->email, $challengeId);
+                            }
+                        }
+                    }
+                }
+                if (!empty($finalLabIds)) {
+                    foreach ($finalLabIds as $key => $labId) {
+                        if ($labId != '' && $labId !== null) {
+                            // auto create adding as member
+                            if (@$getcloneInfo->invite_labs == '1') {
+                                Helper::syncUserMembersForLabTemplates($user, $labId);
+                            }
+                            Helper::freeLabmanagerSync($user->id, $org->id, $labId);
+                        }
+                    }
+                }
+
+                UserPersonal::create([
+                    'user_id' => $user->id,
+                    'user_type' => $data['user_type'],
+                ]);
+            } elseif (isset($data['role']) && $data['role'] == 'free_lab_manager') {
+                $user->syncRoles(['free_lab_manager', 'user']);
+                $user->admin_lab_limit = 1;
+                $user->admin_challenge_limit = 1;
+
+                UserPersonal::create([
+                    'user_id' => $user->id,
+                    'user_type' => $data['user_type']
+                ]);
+
+                // sync auto template challenges and labs for user registration
+                if (!empty($finalLabIds)) {
+                    foreach ($finalLabIds as $key => $labId) {
+                        if ($labId != '' && $labId !== null) {
+                            Helper::freeLabmanagerSync($user->id, '', $labId);
+                            if (@$getcloneInfo->invite_labs == '1') {
+                                Helper::syncUserMembersForLabTemplates($user, $labId);
+                            }
+                        }
+                    }
+                }
+                if (!empty($finalChallengeIds)) {
+                    foreach ($finalChallengeIds as $key => $challengeId) {
+                        if ($challengeId != '' && $challengeId !== null) {
+                            Helper::freeChallengemanagerSync($user->id, '', $challengeId);
+                            if (@$getcloneInfo->invite_challenges == '1') {
+                                Helper::syncUserMembersForChallengeTemplates($user->id, $user->email, $challengeId);
+                            }
+                        }
+                    }
+                }
+            } elseif (isset($data['role']) && $data['role'] == 'free_challenge_manager') {
+                $user->syncRoles(['free_challenge_manager', 'user']);
+                $user->admin_lab_limit = 1;
+                $user->admin_challenge_limit = 1;
+
+                UserPersonal::create([
+                    'user_id' => $user->id,
+                    'user_type' => $data['user_type']
+                ]);
+
+                // creating challenge for free challenge manager
+                if (!empty($finalChallengeIds)) {
+                    foreach ($finalChallengeIds as $key => $challengeId) {
+                        if ($challengeId != '' && $challengeId !== null) {
+                            Helper::freeChallengemanagerSync($user->id, '', $challengeId);
+                            if (@$getcloneInfo->invite_challenges == '1') {
+                                Helper::syncUserMembersForChallengeTemplates($user->id, $user->email, $challengeId);
+                            }
+                        }
+                    }
+                }
+            } else {
+                $user->syncRoles(['user']);
+            }
             $sting = str_random(30);
-            $user->username = request('username');
             $user->remember_token = $sting;
             $user->verify_token = $sting;
-            $user->mycode = request('username');
-            $user->device_token = request('device_token');
-            $user->device_platform = request('device_platform');
-            $data['user'] = $user;
-            $user->syncRoles(['user']);
+            $user->mycode = trim($data['username']) . random_int('100', '999');
             $user->save();
             $user_id = $user->id;
-            
-            UserPersonal::updateOrCreate([
-                'user_id' => $user_id,
-                'status' => request('status'),
-                'user_type' => request('user_type'),
-            ]);
 
+            // Register user get org role
+            $assignOrgRoles = Helper::syncRolesForIfInvitedFromOranisation($user->email);
+            if (!empty($assignOrgRoles)) {
+                if ($user->syncRoles($assignOrgRoles)) {
+                    Helper::updateUserIdInviteByEmailInOrganisation($user->email, $user->id);
+                }
+            }
 
-      return response()->json(['status' => 'success', 'message' => 'You have registered successfully.', 'data' => $data], 200);
-       
+            // adding user personal details
+            if ($user->hasRole('user')) {
+                UserPersonal::updateOrCreate([
+                    'user_id' => $user_id,
+                    'status' => (isset($data['status'])) ? $data['status'] : 'looking_team',
+                    'user_type' => $data['user_type'],
+                ]);
+            }
 
+            // sync invite user to lab, challenge, project, and organisation
+            Helper::invitedUserSync($data['email'], $user_id);
 
-        } catch (\Throwable $th) {
+            // send user to sendgrid list as per user type
+            $processSendGrid=$this->sendgridUserType($data, $user, $organization);
+//            if ($processSendGrid==false) {
+//                DB::rollback();
+//                return false;
+//            }
+            $url = route('emailVerify', [$user->remember_token]);
+            $data1 = [
+                'mail_template' => 'email_verification', "username" => $user->name, "remember_token" => $user->remember_token,
+                'email' => $user->email, 'to_email' => $user->email, 'url' => $url, 'to_name' => $user->username, 'fullname' => $user->name,
+                'title' => __('labels.labels_reg_ve'), 'subject_title' => __('labels.labels_reg_ve'), 'name' => $user->name
+            ];
+            User::where('id', $user->id)->update(['is_email_sent' => '1']);
+            if (!empty($user->email)) {
+                Event::dispatch('send-template', array($data1));
+            }
+            DB::commit();
+            return $user;
+        } catch (Exception $e) {
+            DB::rollback();
             return false;
         }
     }

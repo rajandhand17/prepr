@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('display_name')->nullable();
-            $table->string('description')->nullable();
+            $table->string("code");
+            $table->enum("type",['BOOLEAN','NUMBER','DATE','TEXT','SELECT','FILE','TEXTAREA']);
+            $table->string("label");
+            $table->text("value")->nullable();
+            $table->tinyInteger("hidden");
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('settings');
     }
 };
