@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
-use App\Http\Requests\RegisterDataRequest;
+//use App\Http\Requests\RegisterDataRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+//use Illuminate\Support\Facades\Validator;
 use App\Models\Language;
 use App\Models\Setting;
 use App\Models\UserPoint;
+use App\Models\AutoCreateTemplate;
+use App\Helpers\Helper;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -69,9 +72,8 @@ class User extends Authenticatable
     ];
 
 
-   // public function register(RegisterDataRequest $request)
    public function register($data)
-    {    
+    {     
         try {
             DB::beginTransaction();
             $user = User::create([
@@ -80,15 +82,15 @@ class User extends Authenticatable
                 'country_code' => $data['country_code'], 
                 'phone_number' => $data['phone_number'],
                 'password' => $data['password'],
-                'name' => $data['firstName'] . ' ' . $data['lastName'],
-                'first_name' => $data['firstName'],
-                'last_name' => $data['lastName'],
+                'name' => $data['first_name'] . ' ' . $data['last_name'],
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
                 'language_id' => $data['language_id'],
             ]);
 
-            $language = \App\Models\Language::where('status', 1)->where('id', $data['language_id'])->first();
+            $language = Language::where('status', 1)->where('id', $data['language_id'])->first();
 
-            $data['name'] = $data['firstName'] . ' ' . $data['lastName'];
+            $data['name'] = $data['first_name'] . ' ' . $data['last_name'];
             if (isset($data['referralCode']) && $data['referralCode']) {
                 $user->referal_code = $data['referralCode'];
                 $referal = User::where('mycode', $data['referralCode'])->first();
@@ -104,7 +106,7 @@ class User extends Authenticatable
 
             if (isset($data['user_type'])) {
                 //get autocreate templates
-                $getcloneInfo = AutoCreateTemplates::where('role_user_type', $data['user_type'])->where('language', $language->lang_iso)->first();
+                $getcloneInfo = AutoCreateTemplate::where('role_user_type', $data['user_type'])->where('language', $language->lang_iso)->first();
 
                 if ($getcloneInfo) {
                     $labGroupsArray = explode(',', @$getcloneInfo->lab_group_id);
@@ -282,6 +284,7 @@ class User extends Authenticatable
             return $user;
         } catch (Exception $e) {
             DB::rollback();
+            print_r($e);
             return false;
         }
     }

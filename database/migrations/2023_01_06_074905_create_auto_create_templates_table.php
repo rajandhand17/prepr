@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string("language",191)->default("en");
             $table->string("role_type",191)->nullable();
             $table->string("role_user_type",191)->nullable();
-            $table->text("role_user_type")->nullable();
             $table->text("lab_id")->nullable();
             $table->text("challenge_id")->nullable();
             $table->text("project_id")->nullable();
@@ -27,8 +26,9 @@ return new class extends Migration
             $table->set('invite_labs', ['0','1'])->default('0');
             $table->set('invite_challenges', ['0','1'])->default('0');
             $table->timestamps();
+            $table->softDeletes();
         });
-    }   
+    }
 
     /**
      * Reverse the migrations.

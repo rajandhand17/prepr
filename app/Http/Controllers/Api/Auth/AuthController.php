@@ -21,11 +21,10 @@ class AuthController extends AppBaseController
     }
 
    public function registerUser(Request $request)
-  // public function registerUser(RegisterDataRequest $request)
     {   
         try {
             $register=$this->authRepository->registerUser($request);
-            return $register;
+           
             if($register){
               return $this->sendResponse(RegisterUserResource::collection($register),__('notification.notification_pvyeatpl'));
           }

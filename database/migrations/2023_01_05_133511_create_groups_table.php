@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title',191);
-            $table->string('title',191);
             $table->text('description');
             $table->integer('organisation');
             $table->integer('category');

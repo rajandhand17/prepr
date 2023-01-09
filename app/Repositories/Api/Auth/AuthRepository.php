@@ -11,7 +11,7 @@ class AuthRepository implements AuthInterface{
         $this->user=$user;
     }
     public function registerUser($request)
-    { 
+    {    
         try{
             return $this->user->register($request);
          }
