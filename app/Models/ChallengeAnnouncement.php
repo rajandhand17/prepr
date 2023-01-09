@@ -12,7 +12,7 @@ class ChallengeAnnouncement extends Model
 
     use SoftDeletes;
 
-    protected $table = 'challenge_announcement';
+    protected $table = 'challenge_announcements';
 
     protected $fillable=[
         'user_id','challenge_id','customDateId','sent_status','title','body','schedule_status','announcementNumber','announcementSchedule','date','time','recipients','is_completed','is_send',

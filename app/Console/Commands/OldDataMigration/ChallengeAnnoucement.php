@@ -13,7 +13,7 @@ class ChallengeAnnoucement extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:Challenge-annoucements';
+    protected $signature = 'migrate-old-data:challenge-annoucements';
 
     /**
      * The console command description.
@@ -41,30 +41,43 @@ class ChallengeAnnoucement extends Command
     {
         try {
 
-            $this->info('Migrating old data for Challenge-annoucements table.');
+            $this->info('Migrating old data for Challenge annoucements table.');
             DB::beginTransaction();
 
-            $challenge_announcements = DB::connection('mysql2')->table('challenge_announcements')->get();
+            $challenge_announcements = DB::connection('mysql2')->table('challenge_announcement')->get();
 
             if($challenge_announcements->count() > 0){
                 foreach ($challenge_announcements as $key => $single_challenge_announcements){
-                    $challanges_details=[
+                    $challanges_annoucement_details=[
                         'user_id' => $single_challenge_announcements->user_id,
+                        'challenge_id'=>$single_challenge_announcements->challenge_id, 
+                        'custom_date_id'=>$single_challenge_announcements->customDateId, 
+                        'sent_status'=>$single_challenge_announcements->sent_status, 
+                        'title'=>$single_challenge_announcements->title, 
+                        'body'=>$single_challenge_announcements->body, 
+                        'schedule_status'=>$single_challenge_announcements->schedule_status, 
+                        'announcement_number'=>$single_challenge_announcements->announcementNumber, 
+                        'announcement_schedule'=>$single_challenge_announcements->announcementSchedule, 
+                        'date'=>$single_challenge_announcements->date, 
+                        'time'=>$single_challenge_announcements->time, 
+                        'recipients'=>$single_challenge_announcements->recipients, 
+                        'is_completed'=>$single_challenge_announcements->is_completed, 
+                        'is_send'=>$single_challenge_announcements->is_send, 
                     ];
-                    $check_category = ChallengeAnnoucements::where($challanges_details)->first();
-                    if(!$check_category){
-                        ChallengeAnnoucements::create($challanges_details);
+                    $check_category_annoucement = ChallengeAnnoucements::where($challanges_annoucement_details)->first();
+                    if(!$check_category_annoucement){
+                        ChallengeAnnoucements::create($challanges_annoucement_details);
                     }
                 }
                 DB::commit();
-                $this->info('Migrating of old data for challanges table completed.');
+                $this->info('Migrating of old data for challanges annoucement table completed.');
                 return;
             }
             DB::rollback();
-            $this->error('No challanges found.');
+            $this->error('No challanges annoucement found.');
 
         } catch (\Exception $e) {
-        
+           dd($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;

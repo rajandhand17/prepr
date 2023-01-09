@@ -17,13 +17,13 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id')->nullable();
             $table->integer('challenge_id')->nullable();
-            $table->string('customDateId')->nullable();
+            $table->string('custom_date_id')->nullable();
             $table->enum('sent_status', ['email', 'push', 'inbox'])->nullable();
             $table->string('title', 1000)->nullable();
             $table->text('body')->nullable();
             $table->enum('schedule_status', ['immediately', 'custome'])->nullable();
-            $table->integer('announcementNumber')->nullable();
-            $table->string('announcementSchedule')->nullable();
+            $table->integer('announcement_number')->nullable();
+            $table->string('announcement_schedule')->nullable();
             $table->text('date')->nullable();
             $table->string('time', 250)->nullable();
             $table->string('recipients', 1000)->nullable();
