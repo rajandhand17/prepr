@@ -10,11 +10,13 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Validator;
 use App\Models\Language;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Setting;
 use App\Models\UserPoint;
 use App\Models\AutoCreateTemplate;
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\Event;
+
 
 class User extends Authenticatable
 {
@@ -72,18 +74,37 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function syncRoles()
+    {
+        return $this->belongsToMany(Role::class);
 
+    }
+
+    public function hasRole($role)
+    {
+        return Role::where('role', $role)->get();
+    }
+
+    function generateRandomString($length = 30) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
    public function register($data)
     {     
-
         try {
+            
             DB::beginTransaction();
             $user = User::create([
                 'username' => $data['username'],
                 'email' => $data['email'],
                 'country_code' => $data['country_code'], 
                 'phone_number' => $data['phone_number'],
-                'password' => $data['password'],
+                'password' => Hash::make($data['password']),
                 'name' => $data['first_name'] . ' ' . $data['last_name'],
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
@@ -93,20 +114,19 @@ class User extends Authenticatable
             $language = Language::where('status', 1)->where('id', $data['language_id'])->first();
 
             $data['name'] = $data['first_name'] . ' ' . $data['last_name'];
-            if (isset($data['referralCode']) && $data['referralCode']) {
-                $user->referal_code = $data['referralCode'];
-                $referal = User::where('mycode', $data['referralCode'])->first();
-                if ($referal) {
-                    $point_1 = Setting::get(config('points.referal_code'));
-                    $point_2 = Setting::get(config('points.referal_user'));
-                    UserPoint::firstOrCreate(['type' => 'referal_code', 'date' => date('Y-m-d'), 'user_id' => $user->id, 'point' => $point_2]);
-                    UserPoint::firstOrCreate(['type' => 'referal_user', 'date' => date('Y-m-d'), 'user_id' => $referal->id, 'point' => $point_1]);
-                }
-            }
-
+            // if (isset($data['referralCode']) && $data['referralCode']) {
+            //     $user->referal_code = $data['referralCode'];
+            //     $referal = User::where('mycode', $data['referralCode'])->first();
+            //     if ($referal) {
+            //         $point_1 = Setting::get(config('points.referal_code'));
+            //         $point_2 = Setting::get(config('points.referal_user'));
+            //         UserPoint::firstOrCreate(['type' => 'referal_code', 'date' => date('Y-m-d'), 'user_id' => $user->id, 'point' => $point_2]);
+            //         UserPoint::firstOrCreate(['type' => 'referal_user', 'date' => date('Y-m-d'), 'user_id' => $referal->id, 'point' => $point_1]);
+            //     }
+            // }
             $user->phone_number = (empty($data['phone_number'])) ? null : $data['phone_number'];
-
-            if (isset($data['user_type'])) {
+            
+            if(isset($data['user_type'])){
                 //get autocreate templates
                 $getcloneInfo = AutoCreateTemplate::where('role_user_type', $data['user_type'])->where('language', $language->lang_iso)->first();
 
@@ -128,7 +148,7 @@ class User extends Authenticatable
                     $finalLabIds = [];
                     $finalChallengeIds = [];
                 }
-
+                    
                 // sync auto template challenges and labs for user registration
                 if (!empty($finalLabIds)) {
                     foreach ($finalLabIds as $key => $labId) {
@@ -148,16 +168,26 @@ class User extends Authenticatable
             $organization = collect();
             if (isset($data['role']) && $data['role'] == 'organization') {
                 $user->syncRoles(['free_organisation_manager', 'user']);
-                $user->admin_lab_limit = '1';
-                $user->admin_challenge_limit = '1';
+             
                 $user->save();
-                $languageIso = Helper::getLanguageIso($user->email);
+                 
+             $languageIso="en";
                 // create organization
-                $org = Organisation::create(['user_id' => $user->id,'language' => $languageIso, 'name' => $data['organization_name'], 'vanity_slug' => $data['vanity_slug'],'slug' => $data['vanity_slug'], 'vanity_link' => URL::to('/') . '/org/' . $data['vanity_link'], 'status' => '1', 'plan' => 'limited', 'plan_validity' => 'yearly', 'labs_limit' => '1', 'challenges_limit' => '1']);
+                $org = Organisation::create([
+                    'user_id' => $user->id,
+                    'language' => $languageIso, 
+                    'name' => $data['organization_name'], 
+                    'vanity_slug' => $data['vanity_slug'],
+                    'slug' => $data['vanity_slug'], 
+                    'vanity_link' => '/org/' . $data['vanity_link'], 
+                    'status' => '1',  
+                    'labs_limit' => '1', 
+                    'challenges_limit' => '1'
+                ]);
 
                 // sync auto template challenges and labs for user registration
-                if (!empty($finalChallengeIds)) {
-                    foreach ($finalChallengeIds as $key => $challengeId) {
+                if(!empty($finalChallengeIds)){
+                    foreach ($finalChallengeIds as $key => $challengeId){
                         if ($challengeId != '' && $challengeId !== null) {
                             Helper::freeChallengemanagerSync($user->id, $org->id, $challengeId);
                             /*Helper:: inviteChallengeUsers('org', $data['user_type'], $challengeId, $user->name, $user->email);*/
@@ -184,6 +214,7 @@ class User extends Authenticatable
                     'user_id' => $user->id,
                     'user_type' => $data['user_type'],
                 ]);
+
             } elseif (isset($data['role']) && $data['role'] == 'free_lab_manager') {
                 $user->syncRoles(['free_lab_manager', 'user']);
                 $user->admin_lab_limit = 1;
@@ -205,7 +236,7 @@ class User extends Authenticatable
                         }
                     }
                 }
-                if (!empty($finalChallengeIds)) {
+                if(!empty($finalChallengeIds)){
                     foreach ($finalChallengeIds as $key => $challengeId) {
                         if ($challengeId != '' && $challengeId !== null) {
                             Helper::freeChallengemanagerSync($user->id, '', $challengeId);
@@ -219,12 +250,11 @@ class User extends Authenticatable
                 $user->syncRoles(['free_challenge_manager', 'user']);
                 $user->admin_lab_limit = 1;
                 $user->admin_challenge_limit = 1;
-
+               
                 UserPersonal::create([
                     'user_id' => $user->id,
                     'user_type' => $data['user_type']
                 ]);
-
                 // creating challenge for free challenge manager
                 if (!empty($finalChallengeIds)) {
                     foreach ($finalChallengeIds as $key => $challengeId) {
@@ -239,49 +269,47 @@ class User extends Authenticatable
             } else {
                 $user->syncRoles(['user']);
             }
-            $sting = str_random(30);
+            
+            $sting = self::generateRandomString(30);//str_random(30);
             $user->remember_token = $sting;
             $user->verify_token = $sting;
             $user->mycode = trim($data['username']) . random_int('100', '999');
             $user->save();
-            $user_id = $user->id;
+//             // Register user get org role
+//             $assignOrgRoles = Helper::syncRolesForIfInvitedFromOranisation($user->email);
+//             if (!empty($assignOrgRoles)) {
+//                 if ($user->syncRoles($assignOrgRoles)) {
+//                     Helper::updateUserIdInviteByEmailInOrganisation($user->email, $user->id);
+//                 }
+//             }
+//             // adding user personal details
+//             if ($user->hasRole('user')) {
+//                 UserPersonal::updateOrCreate([
+//                     'user_id' => $user_id,
+//                     'status' => (isset($data['status'])) ? $data['status'] : 'looking_team',
+//                     'user_type' => $data['user_type'],
+//                 ]);
+//             }
 
-            // Register user get org role
-            $assignOrgRoles = Helper::syncRolesForIfInvitedFromOranisation($user->email);
-            if (!empty($assignOrgRoles)) {
-                if ($user->syncRoles($assignOrgRoles)) {
-                    Helper::updateUserIdInviteByEmailInOrganisation($user->email, $user->id);
-                }
-            }
+//             // sync invite user to lab, challenge, project, and organisation
+//             Helper::invitedUserSync($data['email'], $user_id);
 
-            // adding user personal details
-            if ($user->hasRole('user')) {
-                UserPersonal::updateOrCreate([
-                    'user_id' => $user_id,
-                    'status' => (isset($data['status'])) ? $data['status'] : 'looking_team',
-                    'user_type' => $data['user_type'],
-                ]);
-            }
-
-            // sync invite user to lab, challenge, project, and organisation
-            Helper::invitedUserSync($data['email'], $user_id);
-
-            // send user to sendgrid list as per user type
-            $processSendGrid=$this->sendgridUserType($data, $user, $organization);
-//            if ($processSendGrid==false) {
-//                DB::rollback();
-//                return false;
-//            }
-            $url = route('emailVerify', [$user->remember_token]);
-            $data1 = [
-                'mail_template' => 'email_verification', "username" => $user->name, "remember_token" => $user->remember_token,
-                'email' => $user->email, 'to_email' => $user->email, 'url' => $url, 'to_name' => $user->username, 'fullname' => $user->name,
-                'title' => __('labels.labels_reg_ve'), 'subject_title' => __('labels.labels_reg_ve'), 'name' => $user->name
-            ];
-            User::where('id', $user->id)->update(['is_email_sent' => '1']);
-            if (!empty($user->email)) {
-                Event::dispatch('send-template', array($data1));
-            }
+//             // send user to sendgrid list as per user type
+//             $processSendGrid=$this->sendgridUserType($data, $user, $organization);
+// //            if ($processSendGrid==false) {
+// //                DB::rollback();
+// //                return false;
+// //            }
+//             $url = route('emailVerify', [$user->remember_token]);
+//             $data1 = [
+//                 'mail_template' => 'email_verification', "username" => $user->name, "remember_token" => $user->remember_token,
+//                 'email' => $user->email, 'to_email' => $user->email, 'url' => $url, 'to_name' => $user->username, 'fullname' => $user->name,
+//                 'title' => __('labels.labels_reg_ve'), 'subject_title' => __('labels.labels_reg_ve'), 'name' => $user->name
+//             ];
+//             User::where('id', $user->id)->update(['is_email_sent' => '1']);
+//             if (!empty($user->email)) {
+//                 Event::dispatch('send-template', array($data1));
+//             }
             DB::commit();
             return $user;
         } catch (\Exception $e) {
@@ -290,3 +318,4 @@ class User extends Authenticatable
         }
     }
 }
+

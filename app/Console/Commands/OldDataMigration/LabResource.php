@@ -70,7 +70,6 @@ class LabResource extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
             $this->error('Something went wrong.');
             return;
         }

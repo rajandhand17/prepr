@@ -16,6 +16,7 @@ use App\Models\Tag;
 use App\Models\SocialLink;
 use App\Models\LabTag;
 use App\Models\LabSocialLink;
+use App\Models\User;
 
 Class Helper{
     
@@ -76,8 +77,9 @@ Class Helper{
     public static function getLanguageIso($email)
     {
         $userData = User::select('language_id')->where(['email' => trim($email)])->first();
+        print_r($userData->language_id);die;
         if (!empty($userData)) {
-            $language = Language::select('lang_iso')->where('id', $userData->language_id)->first();
+            $language = Language::select('iso')->where('id', $userData->language_id)->first();
             if (!empty($language)) {
                 return $language['lang_iso'];
             } else {
@@ -475,7 +477,7 @@ Class Helper{
                   return $lab;
               }
               return false;
-          } catch (Exception $ex) {
+          } catch (Exception $ex){
               return false;
           }
       }
