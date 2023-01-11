@@ -14,6 +14,7 @@ use App\Models\Setting;
 use App\Models\UserPoint;
 use App\Models\AutoCreateTemplate;
 use App\Helpers\Helper;
+use Illuminate\Support\Facades\Event;
 
 class User extends Authenticatable
 {
@@ -74,6 +75,7 @@ class User extends Authenticatable
 
    public function register($data)
     {     
+
         try {
             DB::beginTransaction();
             $user = User::create([
@@ -282,9 +284,8 @@ class User extends Authenticatable
             }
             DB::commit();
             return $user;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            print_r($e);
             return false;
         }
     }

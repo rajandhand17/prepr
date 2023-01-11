@@ -9,6 +9,14 @@ use App\Models\Organisation;
 use App\Models\Language;
 use App\Models\ChallengePrice;
 use App\Models\ChallengePitche;
+use App\Models\OrganizationInviteUser;
+use App\Models\Project;
+use App\Models\ProjectInvitation;
+use App\Models\Tag;
+use App\Models\SocialLink;
+use App\Models\LabTag;
+use App\Models\LabSocialLink;
+
 Class Helper{
     
     /* -----------------------------------------------------------------------------------------
@@ -272,4 +280,205 @@ Class Helper{
               }
           }
       }
+
+
+      public static function invitedUserSync($email, $userId)
+    {
+        try {
+
+            /* Start Put User id when Organization invited user register */
+            $invite_org_users = OrganizationInviteUser::where(['email' => $email])->get();
+            if (count($invite_org_users) > 0) {
+                foreach ($invite_org_users as $invite) {
+                    $emailuser = OrganizationInviteUser::find($invite->id);
+                    $emailuser->user_id = $userId;
+                    $emailuser->status = '1';
+                    $emailuser->save();
+                }
+            }
+            /* End Put User id when Organization invited user register */
+
+            /* Start Put User id in Project member when Project invited user register */
+            $inviteProjectUsers = ProjectInvitation::where(['email' => $email, 'status' => '1'])->get();
+            if (count($inviteProjectUsers) > 0) {
+                foreach ($inviteProjectUsers as $key => $user) {
+                    $project = Project::find($user->project_id);
+                    if ($project !== null) {
+                        $project_team = Helper::checkMemberUpdate($user->project_id);
+                        if ($project_team != null) {
+                            $send_mail = explode(',', $project_team);
+                            array_push($send_mail, (string) $userId);
+                        } else {
+                            $send_mail = (array) $userId;
+                        }
+
+                        if (count($send_mail) != 0) {
+                            $project->team = implode(',', $send_mail);
+                        }
+                        $project->save();
+                    }
+                }
+            }
+            /* End Put User id in Project member when Project invited user register */
+            return true;
+        } catch (Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+
+    
+    /* -----------------------------------------------------------------------------------------
+      @Description: Function for check member update
+      @input: id
+      @Output: team member
+      -------------------------------------------------------------------------------------------- */
+
+      public static function checkMemberUpdate($id)
+      {
+          $project = Project::find($id);
+          if ($project !== null) {
+              return $project->team;
+          } else {
+              return null;
+          }
+      }
+
+
+      public static function syncRolesForIfInvitedFromOranisation($email)
+    {
+        $inviteOrgUsers = OrganizationInviteUser::where(['email' => $email])->get();
+        if ($inviteOrgUsers->count() > 0) {
+            $userData = User::where('email', $email)->first();
+            if (!empty($userData)) {
+                return self::getRoleForUser($email, $userData->id, $inviteOrgUsers);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    
+    /* -----------------------------------------------------------------------------------------
+      @Description: This function use for get role which is invited from organisation
+      @Input: email and userId
+      @Output: return role array
+      -------------------------------------------------------------------------------------------- */
+
+      public static function getRoleForUser($email, $userId, $inviteOrgUsers)
+      {
+          $assignUserRole = ['user'];
+          if (!empty($inviteOrgUsers)) {
+              foreach ($inviteOrgUsers as $invite) {
+                  if ($invite->role == 'labmanager') {
+                      array_push($assignUserRole, 'org_lab_manager');
+                  } elseif ($invite->role == 'challengemanager') {
+                      array_push($assignUserRole, 'org_challenge_manager');
+                  } elseif ($invite->role == 'resourcemanager') {
+                      array_push($assignUserRole, 'org_resource_manager');
+                  } elseif ($invite->role == 'organisation_manager') {
+                      array_push($assignUserRole, 'organisation_manager');
+                  } elseif ($invite->role == 'org_admin_manager') {
+                      array_push($assignUserRole, 'org_admin_manager');
+                  }
+              }
+          }
+          return $assignUserRole;
+      }
+
+
+      /* -----------------------------------------------------------------------------------------
+      @Description: This function can update userid who is invited by email in organisation
+      @Input: email and userId
+      @Output: return role array
+      -------------------------------------------------------------------------------------------- */
+
+    public static function updateUserIdInviteByEmailInOrganisation($email, $userId)
+    {
+        OrganizationInviteUser::where(['email' => $email])->whereNull('user_id')->update(['user_id' => $userId, 'status' => '1', 'invite_status' => 'accepted']);
+    }
+
+    /* -----------------------------------------------------------------------------------------
+      @Description: Function for creating lab for free lab manager
+      @input: user id, organisation id
+      @Output:
+      -------------------------------------------------------------------------------------------- */
+
+      public static function freeLabmanagerSync($user_id, $org_id, $templateId)
+      {
+          try {
+              if ($org_id == '') {
+                  $organisation = Organisation::first();
+                  $org_id = $organisation->id;
+              }
+              $organisationName = Organisation::where('id', $org_id)->pluck('name')->first();
+              $labTemplate = Lab::find($templateId);
+  
+              if ($labTemplate) {
+                  $lab = $labTemplate->replicate();
+                  $lab->title = $organisationName . '_' . $labTemplate->title;
+                  $lab->slug = str_slug($organisationName) . '_' . $labTemplate->slug;
+                  $lab->organisation = $org_id;
+                  $lab->user_id = $user_id;
+                  $lab->privacy = 'private';
+                  $lab->status = '1';
+                  $lab->user_count = '0';
+                  $lab->member = '';
+                  $lab->is_auto_created = '1';
+                  $lab->save();
+  
+                  $tag = Tag::first();
+                  $socialLink = SocialLink::first();
+  //                $resource = Resource::first();
+  
+                  //clone tags data
+                  $getTags=LabTag::where('lab_id', $labTemplate->id)->get();
+  
+                  if ($getTags) {
+                      foreach ($getTags as $singleTag) {
+                          LabTag::create(['lab_id' => $lab->id, 'tag' => $singleTag->tag, 'user_id' => $user_id]);
+                      }
+                  }
+  
+                  //clone tags data
+                  $getLabSocialLink=LabSocialLink::where('lab_id', $labTemplate->id)->get();
+  
+                  if ($getLabSocialLink) {
+                      foreach ($getLabSocialLink as $singleLabSocialLink) {
+                          $labsocial = LabSocialLink::create([
+                              'user_id' => $user_id,
+                              'lab_id' => $lab->id,
+                              'social_link_id' => $singleLabSocialLink->social_link_id,
+                          ]);
+                      }
+                  }
+  
+  
+                  $labResources = \App\Models\LabResources::where('lab_id', $labTemplate->id)->get();
+                  if ($labResources) {
+                      foreach ($labResources as $singleResource) {
+                          \App\Models\LabResources::create([
+                              'lab_id' => $lab->id,
+                              'resources_id' => $singleResource->resources_id
+                          ]);
+                      }
+                  }
+  
+                  $labData['public']  = $lab->privacy === 'private' ? '0' : '1';
+                  $labData['lab_id']  = $lab->id;
+                  $labData['user_id'] = $lab->user_id;
+                  $labData['invitee_id'] = $lab->user_id;
+                //  MemberManagementHelper::labRequestAcceptReject([], $labData, 'request');
+                  return $lab;
+              }
+              return false;
+          } catch (Exception $ex) {
+              return false;
+          }
+      }
+  
+  
 }

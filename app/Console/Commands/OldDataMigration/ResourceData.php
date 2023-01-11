@@ -66,7 +66,6 @@ class ResourceData extends Command
             $this->error('No resource datas found.');
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;

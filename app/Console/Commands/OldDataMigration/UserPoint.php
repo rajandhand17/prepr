@@ -70,7 +70,6 @@ class UserPoint extends Command
             $this->error('No user points found.');
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             $this->error('Something went wrong.');
             return;
