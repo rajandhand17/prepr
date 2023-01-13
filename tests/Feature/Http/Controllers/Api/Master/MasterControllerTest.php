@@ -61,7 +61,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
             $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(400, $response->getStatusCode());
         }
     }
     
@@ -85,7 +85,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
             $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(404, $response->getStatusCode());
         }
     }
     
@@ -109,7 +109,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
             $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(400, $response->getStatusCode());
         }
     }
     
@@ -133,7 +133,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-        $this->assertEquals(405, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
        }  
     }
     
@@ -158,7 +158,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
             $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(400, $response->getStatusCode());
         }
    }
 
@@ -182,7 +182,7 @@ final class MasterControllerTest extends TestCase
            if($reponse['success']==true){
                $response->assertOk();
            }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(404, $response->getStatusCode());
            }
       }
 
@@ -206,7 +206,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
             $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(400, $response->getStatusCode());
         }
     }
         /**ProjectIndustries positive test cases with search */
@@ -229,7 +229,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
             $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(404, $response->getStatusCode());
         }
     }
     /**ProjectTypes positive test cases */
@@ -251,7 +251,7 @@ final class MasterControllerTest extends TestCase
          if($reponse['success']==true){
              $response->assertOk();
          }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(400, $response->getStatusCode());
          }
     }
       /**ProjectTypes Positive test cases with search */
@@ -273,7 +273,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
              $response->assertOk();
          }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(404, $response->getStatusCode());
          }
     }
     
@@ -298,7 +298,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-          $this->assertEquals(405, $response->getStatusCode());
+          $this->assertEquals(400, $response->getStatusCode());
        }
     }
 
@@ -322,7 +322,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-         $this->assertEquals(405, $response->getStatusCode());
+         $this->assertEquals(404, $response->getStatusCode());
        }
     }
     
@@ -346,7 +346,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-          $this->assertEquals(405, $response->getStatusCode());
+          $this->assertEquals(400, $response->getStatusCode());
       }
     }
     
@@ -370,7 +370,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
            $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(404, $response->getStatusCode());
           }
     }
     
@@ -395,7 +395,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-        $this->assertEquals(405, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
       }
     }
     
@@ -421,7 +421,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{ 
-           $this->assertEquals(405, $response->getStatusCode());
+           $this->assertEquals(404, $response->getStatusCode());
        }
     }
     
@@ -446,7 +446,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-          $this->assertEquals(405, $response->getStatusCode());
+          $this->assertEquals(400, $response->getStatusCode());
       }
     }
       
@@ -471,7 +471,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-        $this->assertEquals(405, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
        }
     }
      
@@ -490,12 +490,12 @@ final class MasterControllerTest extends TestCase
     /**SkillGroups negative test cases */
     public function testGetSkillGroupsNegative(): void
     {
-       $response = $this->get('/api/v1/master/skill-groups?language=en&search=facebook');
+       $response = $this->get('/api/v1/master/skill-groups');
        $reponse=$response->json();
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-        $this->assertEquals(405, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
        }
     }
     
@@ -519,7 +519,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(404, $response->getStatusCode());
       }
     }
      
@@ -543,7 +543,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
             $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(400, $response->getStatusCode());
        }
     }
 
@@ -567,7 +567,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
             $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(404, $response->getStatusCode());
         }
     }
     
@@ -591,7 +591,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-          $this->assertEquals(405, $response->getStatusCode());
+          $this->assertEquals(400, $response->getStatusCode());
       }
     }
      
@@ -615,7 +615,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-           $this->assertEquals(405, $response->getStatusCode());
+           $this->assertEquals(404, $response->getStatusCode());
        }
     }
       
@@ -639,9 +639,8 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-         $this->assertEquals(405, $response->getStatusCode());
-      
-       }
+         $this->assertEquals(400, $response->getStatusCode());
+        }
     }
       
     /**AchievementConditionLists positive test cases with search*/
@@ -664,7 +663,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{  
-          $this->assertEquals(405, $response->getStatusCode());
+          $this->assertEquals(404, $response->getStatusCode());
        }
     }
     
@@ -687,7 +686,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(400, $response->getStatusCode());
       
        }
     }
@@ -711,7 +710,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-          $this->assertEquals(405, $response->getStatusCode());
+          $this->assertEquals(404, $response->getStatusCode());
        }
     }
      /**FlexibleDateDuration positive test case */
@@ -734,7 +733,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-          $this->assertEquals(405, $response->getStatusCode());
+          $this->assertEquals(400, $response->getStatusCode());
        }
     }
        
@@ -758,7 +757,7 @@ final class MasterControllerTest extends TestCase
         if($reponse['success']==true){
            $response->assertOk();
         }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(404, $response->getStatusCode());
         }
     }
       
@@ -782,7 +781,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-        $this->assertEquals(405, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
        }
     }
     
@@ -805,7 +804,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-           $this->assertEquals(405, $response->getStatusCode());
+           $this->assertEquals(404, $response->getStatusCode());
        }
     }
        
@@ -829,7 +828,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-            $this->assertEquals(405, $response->getStatusCode());
+            $this->assertEquals(400, $response->getStatusCode());
         }
     }
      
@@ -853,7 +852,7 @@ final class MasterControllerTest extends TestCase
        if($reponse['success']==true){
            $response->assertOk();
        }else{
-           $this->assertEquals(405, $response->getStatusCode());
+           $this->assertEquals(404, $response->getStatusCode());
        }
     }
 }
