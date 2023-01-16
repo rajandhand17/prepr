@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\RegisterDataRequest;
+use App\Http\Requests\RegisterFormRequest;
 use App\Repositories\Api\Auth\AuthRepository;
 use App\Http\Resources\Auth\RegisterUserResource;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +20,7 @@ class AuthController extends AppBaseController
 
     }
 
-   public function registerUser(RegisterDataRequest $request)
+   public function registerUser(RegisterFormRequest $request)
     {   
         try {
             $register=$this->authRepository->registerUser($request);
