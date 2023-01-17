@@ -4,7 +4,7 @@ namespace App\Console\Commands\OldDataMigration;
 
 use Illuminate\Console\Command;
 use DB;
-use App\Models\AchievementConditionList;
+use App\Models\AchievementConditionList as AchievementConditionLists;
 
 class AcheivementConditionList extends Command
 {
@@ -16,7 +16,7 @@ class AcheivementConditionList extends Command
     protected $signature = 'migrate-old-data:achievement-condition-list';
 
     /**
-     * The console command description.
+     * The console command description.  
      *
      * @var string
      */
@@ -51,9 +51,9 @@ class AcheivementConditionList extends Command
                     $achievement_condition_list_details=[
                         'title' => $single_acheivement_condition_list->condition_title,
                     ];
-                     $check_achievement_condition_list = AchievementConditionList::where($achievement_condition_list_details)->first();
+                     $check_achievement_condition_list = AchievementConditionLists::where($achievement_condition_list_details)->first();
                     if(!$check_achievement_condition_list){
-                        AchievementConditionList::create($achievement_condition_list_details);
+                        AchievementConditionLists::create($achievement_condition_list_details);
                     }
                 }
                 DB::commit();

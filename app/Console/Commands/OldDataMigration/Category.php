@@ -54,8 +54,8 @@ class Category extends Command
                         'components' => $single_category->components,
                         'parent_id' => $single_category->parent_id
                     ];
-                    $checkCategory = Categories::where($category_details)->first();
-                    if(!$checkCategory){
+                    $check_category = Categories::where($category_details)->first();
+                    if(!$check_category){
                         Categories::create($category_details);
                     }
                 }
