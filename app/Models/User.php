@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -79,8 +80,8 @@ class User extends Authenticatable
             $user_id = $user->id;
             $user_personals=new UserPersonal;
             $user_personals->user_id=$user_id;
-            $user_personals->status=$request("status");
-            $user_personals->language=$request("language");
+            $user_personals->status=$request["status"];
+            $user_personals->language=$request["language_id"];
             $user_personals->save();
             DB::commit();
             if($user_id){

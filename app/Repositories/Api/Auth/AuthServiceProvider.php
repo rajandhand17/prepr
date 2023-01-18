@@ -1,5 +1,5 @@
 <?php
-namespace App\Repositories\Api\Master;
+namespace App\Repositories\Api\Auth;
 
 
 use Illuminate\Support\ServiceProvider;

@@ -34,6 +34,7 @@ class RegisterFormRequest extends FormRequest
             'email' => 'required|string|email|max:50|unique:users',
             'user_type' => 'required',
             'status' => 'required|min:1',
+            'language_id'=>'required|numeric|min:1',
         ];
     }
 
@@ -66,6 +67,8 @@ class RegisterFormRequest extends FormRequest
             "password.min"=>"Please enter password minimum 6 characters!",
             "password_confirmation.required"=>"Please enter confirm password!",
             "password_confirmation.same"=>"Please enter same password in confirm password as password!",
+            "language_id.required"=>"Please choose language!",
+            "language_id.numeric"=>"Please enter correct language id!",
         ];
     }
 }
