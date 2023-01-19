@@ -14,7 +14,9 @@
         "laravel/passport": "^11.3",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "predis/predis": "^2.0"
+        "predis/predis": "^2.0",
+        "santigarcor/laratrust": "^7.1",
+        "twilio/sdk": "^6.44"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

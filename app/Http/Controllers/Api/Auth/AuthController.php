@@ -11,7 +11,7 @@ use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckOrganizationRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
 use App\Repositories\Api\Auth\AuthRepository;
-
+use App\Helpers\SMSHelper;
 
 class AuthController extends AppBaseController
 {   
@@ -88,5 +88,12 @@ class AuthController extends AppBaseController
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'),500);
         }
+    }
+
+    public function sendMessage(Request $request)
+    {  
+        
+       $sms=SmsHelper::sendsms($request->receiver,$request->message);
+       print_r($sms);
     }
 }

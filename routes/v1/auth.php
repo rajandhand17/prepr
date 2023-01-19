@@ -9,3 +9,4 @@ Route::post('/checkemail',[AuthController::class, 'checkemail']);
 Route::post('/checkphone',[AuthController::class, 'checkphone']);
 Route::post('/checkorgnization',[AuthController::class, 'checkorgnization']);
 
+Route::post('send-sms', [ AuthController::class, 'sendMessage' ])->name('send.sms');

@@ -35,6 +35,7 @@ class RegisterFormRequest extends FormRequest
             'user_type' => 'required',
             'status' => 'required|min:1',
             'language_id'=>'required|numeric|min:1',
+            'phone_number' => 'required|numeric|unique:users'
         ];
     }
 
@@ -71,6 +72,9 @@ class RegisterFormRequest extends FormRequest
             "password_confirmation.same"=>"Please enter same password in confirm password as password!",
             "language_id.required"=>"Please choose language!",
             "language_id.numeric"=>"Please enter correct language id!",
+            'phone_number.required' => 'Please enter phone-number!',
+            'phone_number.numeric'=>'Please enter numeric number!',
+            'phone_number.unique'=>'This phone number already registered with us!',
         ];
     }
 }
