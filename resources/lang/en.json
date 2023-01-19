@@ -2888,6 +2888,11 @@
     "responses.found_pitch_templates_list":"Pitch templates list fetched",
     "responses.not_found_pitch_templates_list":"Pitch templates list not found!",
     "responses.found_lab_condition_list":"Lab condition list fetched",
-    "responses.not_found_lab_condition_list":"Lab condition list not found!"
+    "responses.not_found_lab_condition_list":"Lab condition list not found!",
+    "responses.registeration_successfully":"User successfully registered,please verify email to login!",
+    "responses.registeration_failed":"User registrations is failed, please try later!",
+    "responses.found_username_list":"Username list found!",
+    "responses.not_found_username_list":"Username list not found!"
+
 }
  

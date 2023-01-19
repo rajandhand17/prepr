@@ -75,7 +75,8 @@ class User extends Authenticatable
             $user->remember_token = $sting;
             $user->verify_token = $sting;
             $user->mycode = $request['username'];
-            $user->password = $request['password'];
+            $user->password = Hash::make($request['password']);
+            $user->phone_number = $request['phone_number'];
             $user->save();
             $user_id = $user->id;
             $user_personals=new UserPersonal;
@@ -105,6 +106,52 @@ class User extends Authenticatable
             }
             return $randomString;
         }
+
+        public function checkusername($request)
+        {  
+           try {
+            $username=User::select("id")->where("username",$request['username'])->first();
+             
+            if($username){
+                
+                return response()->json(['status' => 'fail', 'message' => 'This username is not avaible!'], 200);
+              }
+              
+              return response()->json(['status' => 'success', 'message' => 'Username available!'], 200);
+            }catch (\Exception $e){
+               
+                return response()->json(['status' => 'fail', 'message' => $e->getMessage()], 200);
+            }
+        }
+        
+        public function checkemail($request)
+        {
+          try {
+            $checkemail=User::select("id")->where("email",$request['email'])->first();
+            if($checkemail){
+              
+             return response()->json(['status'=>"fail","message"=>"This email is already  exists!"],200);
+            }
+            return response()->json(["status"=>"success","message"=>"This email is not registered with us!"],200);
+          }catch (\Exception $e) {  
+             return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
+          }
+        }
+
+        public function checkphone($request)
+        {
+            try {
+                $checkphone=User::select("id")->where("phone_number",$request['phone'])->first();
+                if($checkphone){
+                    return response()->json(['status'=>"fail","message"=>"This phone is already exists!"]);
+                }
+                 return response()->json(["status"=>"success","message"=>"This phone number is not registered with us!"]);
+            } catch (\Exception $e){
+                return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
+            }
+        }
+
+      
    
 }
 

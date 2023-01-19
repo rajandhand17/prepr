@@ -2888,5 +2888,9 @@
     "responses.found_pitch_templates_list":"Liste des modèles de pitch récupérée",
     "responses.not_found_pitch_templates_list":"Liste des modèles de pitch introuvable !",
     "responses.found_lab_condition_list":"Liste des conditions de laboratoire récupérée",
-    "responses.not_found_lab_condition_list":"Liste des conditions de laboratoire introuvable !"   
+    "responses.not_found_lab_condition_list":"Liste des conditions de laboratoire introuvable !",
+    "responses.registeration_successfully":"L'utilisateur s'est enregistré avec succès, veuillez vérifier l'e-mail pour vous connecter !",
+    "responses.registeration_failed":"Les inscriptions des utilisateurs ont échoué, veuillez réessayer plus tard",
+    "responses.found_username_list":"Liste des noms d'utilisateurs trouvée !",
+    "responses.not_found_username_list":"Liste de noms d'utilisateur introuvable !"   
 }
