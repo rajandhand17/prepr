@@ -35,7 +35,8 @@ class RegisterFormRequest extends FormRequest
             'user_type' => 'required',
             'status' => 'required|min:1',
             'language_id'=>'required|numeric|min:1',
-            'phone_number' => 'required|numeric|unique:users'
+            'phone_number' => 'required|numeric|unique:users',
+            'country_code'=>'required|numeric|'
         ];
     }
 
@@ -75,6 +76,8 @@ class RegisterFormRequest extends FormRequest
             'phone_number.required' => 'Please enter phone-number!',
             'phone_number.numeric'=>'Please enter numeric number!',
             'phone_number.unique'=>'This phone number already registered with us!',
+            'country_code.required'=>'Please enter Country-code!',
+            'country_code.numeric'=>'Please enter Country-code!',
         ];
     }
 }

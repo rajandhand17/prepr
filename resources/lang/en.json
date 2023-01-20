@@ -2892,7 +2892,9 @@
     "responses.registeration_successfully":"User successfully registered,please verify email to login!",
     "responses.registeration_failed":"User registrations is failed, please try later!",
     "responses.found_username_list":"Username list found!",
-    "responses.not_found_username_list":"Username list not found!"
-
+    "responses.not_found_username_list":"Username list not found!",
+    "responses.verify_success":"Your account is verified successfully,Please login !",
+    "responses.verify_success_already":"Your account is already verified,Please login!"
+     
 }
  

@@ -11,7 +11,9 @@ use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckOrganizationRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
 use App\Repositories\Api\Auth\AuthRepository;
-use App\Helpers\SMSHelper;
+use App\Http\Requests\Auth\SendOtpRequest;
+use App\Http\Requests\Auth\VerifyOtpRequest;
+
 
 class AuthController extends AppBaseController
 {   
@@ -35,10 +37,10 @@ class AuthController extends AppBaseController
         } 
     }
 
-    public function checkusername(CheckUserRequest $request)
+    public function checkUsername(CheckUserRequest $request)
     {
         try {
-            $username=$this->authRepository->checkusername($request);
+            $username=$this->authRepository->checkUsername($request);
             if($username){
                 return $this->sendResponse($username,__('responses.found_username_list'));
             }
@@ -49,10 +51,10 @@ class AuthController extends AppBaseController
 
     }
 
-    public function checkemail(CheckEmailRequest $request)
+    public function checkEmail(CheckEmailRequest $request)
     {
         try {
-            $checkemail=$this->authRepository->checkemail($request);
+            $checkemail=$this->authRepository->checkEmail($request);
             if($checkemail){
                 return $this->sendResponse($checkemail,__('responses.found_exists_email_list'));
             }
@@ -63,10 +65,10 @@ class AuthController extends AppBaseController
         }
     }
 
-    public function checkphone(CheckPhoneRequest $request)
+    public function checkPhone(CheckPhoneRequest $request)
     {
         try {
-            $checkphone=$this->authRepository->checkphone($request);
+            $checkphone=$this->authRepository->checkPhone($request);
             if($checkphone){
                   return $this->sendResponse($checkphone,__('responses.found_exists_phone_list'));
             }
@@ -77,10 +79,10 @@ class AuthController extends AppBaseController
         }
     }
 
-    public function checkorgnization(CheckOrganizationRequest $request)
+    public function checkOrgnization(CheckOrganizationRequest $request)
     {
         try {
-            $checkorganization=$this->authRepository->checkorgnization($request);
+            $checkorganization=$this->authRepository->checkOrgnization($request);
             if($checkorganization){
                return $this->sendResponse($checkorganization,__('responses.found_exists_organizations'));
             }
@@ -90,10 +92,29 @@ class AuthController extends AppBaseController
         }
     }
 
-    public function sendMessage(Request $request)
+    public function sendOtp(SendOtpRequest $request)
     {  
-        
-       $sms=SmsHelper::sendsms($request->receiver,$request->message);
-       print_r($sms);
+        try {
+            $sendotp=$this->authRepository->sendOtp($request);
+            if($sendotp!==""){
+                return $this->sendResponse($sendotp,__('responses.sms_success'));
+               }
+               return $this->sendError(__('responses.sms_error'));
+            } catch (\Exception $e) {
+                return $this->sendError(__('responses.send_error'),500);
+            }
+    }
+
+    public function verifyOtp(VerifyOtpRequest $request)
+    { 
+      try {
+        $verify=$this->authRepository->verifyOtp($request);
+        if($verify!==""){
+            return $this->sendResponse($verify,__('responses.verify_success'));
+           }
+           return $this->sendError(__('responses.verify_error'));
+        }catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'),500);
+        }  
     }
 }

@@ -35,7 +35,7 @@ class Organisation extends Model
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-    public function checkorgnization($request)
+    public function checkOrgnization($request)
     {
         try {
             $checkorganization=Organisation::select("id")->where("name",$request['organization_name'])->first();

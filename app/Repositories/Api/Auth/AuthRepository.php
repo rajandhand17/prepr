@@ -29,42 +29,60 @@ class AuthRepository implements AuthInterface{
         # code...
     }
 
-    public function checkusername($request)
+    public function checkUsername($request)
     {
       try{ 
-            return $this->user->checkusername($request);
+            return $this->user->checkUsername($request);
          }catch (\Exception $e){
-           
             return false;
          }
     }
 
-    public function checkemail($request)
+    public function checkEmail($request)
     {
         try {
-            return $this->user->checkemail($request);
+            return $this->user->checkEmail($request);
         } catch (\Exception $e) {
             return false;
         }
        
     }
 
-    public function checkphone($request)
+    public function checkPhone($request)
     {
       try {
-        return $this->user->checkphone($request);
+        return $this->user->checkPhone($request);
       } catch (\Exception $e){
         return false;
       }
     }
 
-    public function checkorgnization($request)
+    public function checkOrgnization($request)
     {
         try {
             return $this->organisation->checkorgnization($request);
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function sendOtp($request)
+    {
+        try {
+            return $this->user->sendOtp($request);
+          } catch (\Exception $e){
+            return false;
+          }
+
+    }
+
+    public function verifyOtp($request)
+    {
+        try {
+            return $this->user->verifyOtp($request);
+        }catch(\Exception $e){
+            return false;
+          }
     }
 }
  
