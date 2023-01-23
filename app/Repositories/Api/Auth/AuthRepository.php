@@ -91,15 +91,6 @@ class AuthRepository implements AuthInterface{
           }
     }
 
-    public function logout($request)
-    {
-      try {
-        return $this->user->logout($request);
-      } catch (\Exception $e){
-        return false;
-      }
-    }
-
     public function referenceCode($request)
     {
         try {

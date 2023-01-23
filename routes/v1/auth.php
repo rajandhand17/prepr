@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\Auth\AuthController;
 
 Route::post('/register',[AuthController::class, 'registerUser']);
 Route::post('/login',[AuthController::class, 'login']);
-Route::post('/logout',[AuthController::class, 'logout']);
 Route::post('/checkusername',[AuthController::class, 'checkUsername']);
 Route::post('/checkemail',[AuthController::class, 'checkEmail']);
 Route::post('/checkphone',[AuthController::class, 'checkPhone']);

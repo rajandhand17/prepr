@@ -54,16 +54,6 @@ class AuthController extends AppBaseController
             return $this->sendError(__('responses.send_error'),500);
         } 
     }
-    
-    public function logout(Request $request)
-    {
-        try {
-            $logout=$this->authRepository->logout($request);
-
-        }catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'),500);
-        } 
-    }
 
     public function checkUsername(CheckUserRequest $request)
     {

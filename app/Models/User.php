@@ -88,13 +88,6 @@ class User extends Authenticatable
         }  
    }
 
-   public function logout ($request) {
-        $token = $request->user()->token();
-        $token->revoke();
-        $response = ['message' => 'You have been successfully logged out!'];
-        return response($response, 200);
-    }
-    
     public function register($request)
     {   
         try {
