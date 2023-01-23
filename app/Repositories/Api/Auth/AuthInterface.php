@@ -2,9 +2,8 @@
 
 namespace App\Repositories\Api\Auth;
 
-use PhpParser\Builder\Interface_;
-
 Interface AuthInterface{
+  public function login($request);
   public function register($request);
   public function checkUsername($request);
   public function checkEmail($request);
@@ -12,6 +11,8 @@ Interface AuthInterface{
   public function checkOrgnization($request);
   public function sendOtp($request);
   public function verifyOtp($request);
+  public function logout($request);
+  public function referenceCode($request);
 }
 
 ?>

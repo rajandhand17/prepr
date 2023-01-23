@@ -10,9 +10,11 @@ use App\Http\Requests\Auth\CheckUserRequest;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckOrganizationRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
+use App\Http\Requests\Auth\LoginFormRequest;
 use App\Repositories\Api\Auth\AuthRepository;
 use App\Http\Requests\Auth\SendOtpRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
+use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 
 
 class AuthController extends AppBaseController
@@ -21,6 +23,22 @@ class AuthController extends AppBaseController
     public function __construct(AuthRepository $authRepository)
     {   
         $this->authRepository= $authRepository;
+    }
+
+    public function login(LoginFormRequest $request)
+    {    
+        try {
+
+        $login=$this->authRepository->login($request);
+        if($login){
+            return $this->sendResponse($login,__('notification.login_successfully'));
+        }
+
+        return $this->sendError(__('responses.login_failed'));
+        }catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        } 
+
     }
 
     public function registerUser(RegisterFormRequest $request)
@@ -32,6 +50,16 @@ class AuthController extends AppBaseController
                 return $this->sendResponse($register,__('notification.registeration_successfully'));
                }
           return $this->sendError(__('responses.registeration_failed'));
+        }catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        } 
+    }
+    
+    public function logout(Request $request)
+    {
+        try {
+            $logout=$this->authRepository->logout($request);
+
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         } 
@@ -117,4 +145,18 @@ class AuthController extends AppBaseController
             return $this->sendError(__('responses.send_error'),500);
         }  
     }
+    
+    public function referenceCode(VerifyInviteCodeRequest $request)
+    {
+       try {
+         $referencecode=$this->authRepository->referenceCode($request);
+         if($referencecode!==""){
+            return $this->sendResponse($referencecode,__('responses.verify_reference_success'));
+         }
+         return $this->sendError(__('responses.verify_reference_error'));
+       }catch (\Exception $e) {
+        return $this->sendError(__('responses.send_error'),500);
+       }
+    }
+   
 }

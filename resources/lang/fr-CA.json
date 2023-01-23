@@ -2892,5 +2892,7 @@
     "responses.registeration_successfully":"L'utilisateur s'est enregistré avec succès, veuillez vérifier l'e-mail pour vous connecter !",
     "responses.registeration_failed":"Les inscriptions des utilisateurs ont échoué, veuillez réessayer plus tard",
     "responses.found_username_list":"Liste des noms d'utilisateurs trouvée !",
-    "responses.not_found_username_list":"Liste de noms d'utilisateur introuvable !"   
+    "responses.not_found_username_list":"Liste de noms d'utilisateur introuvable !",
+    "responses.verify_success":"Votre compte est vérifié avec succès, veuillez vous connecter!",
+    "responses.verify_success_already":"Votre compte est déjà vérifié, veuillez vous connecter!"   
 }

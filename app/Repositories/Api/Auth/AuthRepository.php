@@ -12,6 +12,17 @@ class AuthRepository implements AuthInterface{
         $this->user=$user;
         $this->organisation=$organisation;
     }
+    
+    public function login($request)
+    {
+        try{ 
+            return $this->user->login($request);
+         }
+         catch (\Exception $e){
+           
+            return false;
+         }
+    }
 
     public function register($request)
     {   
@@ -22,11 +33,6 @@ class AuthRepository implements AuthInterface{
            
             return false;
          }
-    }
-
-    public function login($request)
-    {
-        # code...
     }
 
     public function checkUsername($request)
@@ -83,6 +89,24 @@ class AuthRepository implements AuthInterface{
         }catch(\Exception $e){
             return false;
           }
+    }
+
+    public function logout($request)
+    {
+      try {
+        return $this->user->logout($request);
+      } catch (\Exception $e){
+        return false;
+      }
+    }
+
+    public function referenceCode($request)
+    {
+        try {
+            return $this->user->referenceCode($request);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }
  
