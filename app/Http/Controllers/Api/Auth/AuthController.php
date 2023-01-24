@@ -15,6 +15,8 @@ use App\Repositories\Api\Auth\AuthRepository;
 use App\Http\Requests\Auth\SendOtpRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
+use App\Http\Requests\Auth\ForgetPasswordRequest;
+use App\Http\Requests\Auth\submitResetPasswordFormRequest;
 
 
 class AuthController extends AppBaseController
@@ -53,6 +55,19 @@ class AuthController extends AppBaseController
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         } 
+    }
+
+    public function forgetPassword(ForgetPasswordRequest $request)
+    {   
+        try{
+           $forgetpassword=$this->authRepository->forgetPassword($request);
+           if($forgetpassword){
+                return $this->sendResponse($forgetpassword,__('notification.forget_password_sucessfully'));
+           }
+           return $this->sendError(__('responses.forget_password_failed'));    
+        }catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
     }
 
     public function checkUsername(CheckUserRequest $request)
@@ -147,6 +162,19 @@ class AuthController extends AppBaseController
        }catch (\Exception $e) {
         return $this->sendError(__('responses.send_error'),500);
        }
+    }
+
+    public function resetPassword(submitResetPasswordFormRequest $request)
+    {
+        try {
+            $resetcode=$this->authRepository->resetPassword($request);
+            if($resetcode!==""){
+               return $this->sendResponse($resetcode,__('responses.reset_password_success'));
+            }
+               return $this->sendError(__('responses.reset_password_failed'));
+        } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
     }
    
 }

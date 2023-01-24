@@ -99,6 +99,26 @@ class AuthRepository implements AuthInterface{
             return false;
         }
     }
+
+    
+    public function forgetPassword($request)
+    {
+        try {
+            return $this->user->forgetPassword($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function resetPassword($request)
+    {
+        try {
+            return $this->user->resetPassword($request);
+        } catch (\Exception $e) {
+           return false;
+        }
+    }
+
 }
  
 ?>

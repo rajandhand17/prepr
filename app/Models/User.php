@@ -9,9 +9,10 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laratrust\Traits\LaratrustUserTrait;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use App\Helpers\SMSHelper;
 use Carbon\Carbon;
+use Mail;
 
 class User extends Authenticatable
 {
@@ -267,10 +268,53 @@ class User extends Authenticatable
                 if($userrecords){
                     return response()->json(['status' => 'success', 'message' => 'This reference code is found!.', 'data' => $userrecords], 200);
                 }
-                   return response()->json(["status"=>"success","message"=>"This reference code is not found!"],200);
+                   return response()->json(["status"=>"failed","message"=>"This reference code is not found!"],200);
                  }catch (\Exception $e) {  
                     return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
                  }
+        }
+
+        public function forgetPassword($request)
+        {
+            try {
+                $user = User::where("email",$request->email)->first();
+                $mail_data=[
+                    "recipient"=>"rajan@prepr.org",
+                    "fromEmail"=>"rajan@prepr.org",
+                    "fromName"=>"Rajan Dhand",
+                    "subject"=>"testing",
+                    "body"=>"test",
+                ];
+                \Mail::send('email.reset_password',$mail_data,function($message) use ($mail_data){
+                    $message->to($mail_data['recipient'])->from($mail_data['fromEmail'],$mail_data['fromName'])->subject($mail_data['subject']);
+                });
+            if (!$user){
+                return response()->json(['status' => 'fail', 'message' => 'Your username or email address not registered..'], 200);
+            }else{
+                $string = self::generateRandomString(60);
+                $user->remember_token = $string;
+                $user->save();
+                return response()->json(['status' => 'success', 'message' => 'Your password reset link sent on your registered email address..'], 200);
+            }
+            }catch (\Exception $e){
+                return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
+            }
+        }
+
+        public function resetPassword($request)
+        {
+            try {
+                
+                $user=User::where("email",$request->email)->first();
+                $user->password = Hash::make($request->password);
+                if($user->save()){
+                    return response()->json(['status' => 'success', 'message' => 'Your password is changed!Please login with new password!'], 200);
+                }
+                return response()->json(["status"=>"failed","message"=>"Your password is not changed!Please try later"]);
+               
+            }catch(\Exception $e){
+                return $this->sendError(__('responses.send_error'),500);
+            }
         }
 }
 

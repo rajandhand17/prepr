@@ -2897,9 +2897,6 @@
     "responses.verify_success_already":"Your account is already verified,Please login!",
     "responses.verify_error":"Here some issues happened,Please try later!",
     "responses.verify_reference_success":"Here some issues happened,Please try later!",
-    "responses.verify_reference_error":"Here some issues happened,Please try later!",
-
-
-     
+    "responses.verify_reference_error":"Here some issues happened,Please try later!"
 }
  
