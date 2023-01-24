@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Event;
 use App\Helpers\SMSHelper;
 use Carbon\Carbon;
 use Mail;
+use App\Events\Events;
+use App\Listeners\sendEmail;
 
 class User extends Authenticatable
 {
@@ -278,25 +280,18 @@ class User extends Authenticatable
         {
             try {
                 $user = User::where("email",$request->email)->first();
-                $mail_data=[
-                    "recipient"=>"rajan@prepr.org",
-                    "fromEmail"=>"rajan@prepr.org",
-                    "fromName"=>"Rajan Dhand",
-                    "subject"=>"testing",
-                    "body"=>"test",
-                ];
-                \Mail::send('email.reset_password',$mail_data,function($message) use ($mail_data){
-                    $message->to($mail_data['recipient'])->from($mail_data['fromEmail'],$mail_data['fromName'])->subject($mail_data['subject']);
-                });
-            if (!$user){
-                return response()->json(['status' => 'fail', 'message' => 'Your username or email address not registered..'], 200);
-            }else{
-                $string = self::generateRandomString(60);
-                $user->remember_token = $string;
-                $user->save();
-                return response()->json(['status' => 'success', 'message' => 'Your password reset link sent on your registered email address..'], 200);
-            }
-            }catch (\Exception $e){
+                if (!$user){
+                   return response()->json(['status' => 'fail', 'message' => 'Your username or email address not registered..'], 200);
+                }else{
+                    $string = self::generateRandomString(60);
+                    $otp=self::generateRandomnumber(4);
+                    $user->remember_token = $string;
+                    $user->two_factor_otp=$otp;
+                    $user->save();
+                    Event::dispatch(new Events($user->id));
+                    return response()->json(['status' => 'success', 'message' => 'Your password reset link sent on your registered email address..'], 200);
+                }
+            }catch(\Exception $e){
                 return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
             }
         }

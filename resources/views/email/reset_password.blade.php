@@ -28,13 +28,14 @@
 						<td align="center" style="padding: 10px 0;"><img src="/" alt=""></td>
 					</tr>
 					<tr>
-						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear Rajan Dhand,<br>
+						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear {{ ucfirst($user['first_name']); }} {{ ucfirst($user['last_name']); }},<br>
 						  <br>
-                            We’ve received a request to reset your password. You can reset your password using this link: </td>
+                            We’ve received a request to reset your password. You can reset your password using this OTP: </td>
                     </tr>
 					<tr>
+					
 						<td style="padding: 20px;" align="center">
-							<a style="color: #fff; background: #44C1E0; text-decoration: none; font-size: 18px; padding: 10px 50px; border-radius: 4px; " href=""> Reset Password</a>
+							<a style="color: #000; text-decoration: none; font-size: 18px; padding: 10px 50px; border-radius: 4px; " href="">Reset Password OTP is {{$user['otp']}}</a>
 						</td>
 					</tr>
 
