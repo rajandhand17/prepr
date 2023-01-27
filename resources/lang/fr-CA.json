@@ -2896,6 +2896,8 @@
     "responses.verify_success":"Votre compte est vérifié avec succès, veuillez vous connecter!",
     "responses.verify_success_already":"Votre compte est déjà vérifié, veuillez vous connecter!",
     "responses.verify_error":"Ici, certains problèmes se sont produits, veuillez réessayer plus tard!",
-    "responses.verify_reference_success":"Ici, certains problèmes se sont produits, veuillez réessayer plus tard!",
-    "responses.verify_reference_error":"Ici, certains problèmes se sont produits, veuillez réessayer plus tard!"   
+    "responses.verify_reference_success":"Le code de parrainage a été vérifié avec succès!",
+    "responses.verify_reference_error":"Le code de parrainage n'est pas vérifié!",
+    "responses.unique_email":"Cet e-mail est déjà enregistré!",
+    "responses.max_email":"Veuillez entrer moins de 50 mots!"   
 }

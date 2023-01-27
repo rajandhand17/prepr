@@ -17,7 +17,7 @@ use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\submitResetPasswordFormRequest;
-
+use Predis\Response\Status;
 
 class AuthController extends AppBaseController
 {   
@@ -30,13 +30,14 @@ class AuthController extends AppBaseController
     public function login(LoginFormRequest $request)
     {    
         try {
-
         $login=$this->authRepository->login($request);
-        if($login){
-            return $this->sendResponse($login,__('notification.login_successfully'));
+        $responses=json_decode($login->content());
+        $data=$responses->data;
+        if($responses->status=="success"){
+                return $this->sendResponse($data,__('notification.login_successfully'));
+        }else{
+                return $this->sendError($responses->message);
         }
-
-        return $this->sendError(__('responses.login_failed'));
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         } 
@@ -47,11 +48,13 @@ class AuthController extends AppBaseController
     {     
         try {
             $register=$this->authRepository->register($request);
-            
-            if($register){
-                return $this->sendResponse($register,__('notification.registeration_successfully'));
-               }
-          return $this->sendError(__('responses.registeration_failed'));
+            $responses=json_decode($register->content());
+            $data=$responses->data;
+            if($responses->status=="success"){
+                return $this->sendResponse($data,__('responses.user_register'));
+            }else{
+                return $this->sendError($responses->message);
+            }
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         } 
@@ -61,11 +64,14 @@ class AuthController extends AppBaseController
     {   
         try{
            $forgetpassword=$this->authRepository->forgetPassword($request);
-           if($forgetpassword){
-                return $this->sendResponse($forgetpassword,__('notification.forget_password_sucessfully'));
-           }
-           return $this->sendError(__('responses.forget_password_failed'));    
-        }catch (\Exception $e){
+           $responses=json_decode($forgetpassword->content());
+            $data=["email"=>$request->email];
+            if($responses->status=="success"){
+                return $this->sendResponse($data,__('notification.notification_yprlsoyrea'));
+            }else{
+                return $this->sendError($responses->message);
+            }
+         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }
     }
@@ -74,11 +80,14 @@ class AuthController extends AppBaseController
     {
         try {
             $username=$this->authRepository->checkUsername($request);
-            if($username){
-                return $this->sendResponse($username,__('responses.found_username_list'));
+            $responses=json_decode($username->content());
+            $data=["username"=>$request->username];
+            if($responses->status=="success"){
+                return $this->sendResponse($data,__('responses.username_available'));
+            }else{
+                return $this->sendError($responses->message);
             }
-           return $this->sendError(__('responses.not_found_username_list'));
-        }catch (\Exception $e){
+            }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         } 
 
@@ -88,11 +97,13 @@ class AuthController extends AppBaseController
     {
         try {
             $checkemail=$this->authRepository->checkEmail($request);
-            if($checkemail){
-                return $this->sendResponse($checkemail,__('responses.found_exists_email_list'));
-            }
-            return $this->sendError(__('responses.not_found_exists_email_list'));
-
+            $responses=json_decode($checkemail->content());
+            $data=["email"=>$request->email];
+            if($responses->status=="success"){
+                return $this->sendResponse($data,__('responses.not_exists_email'));
+            }else{
+                  return $this->sendError($responses->message);
+             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'),500);
         }
@@ -102,24 +113,29 @@ class AuthController extends AppBaseController
     {
         try {
             $checkphone=$this->authRepository->checkPhone($request);
-            if($checkphone){
-                  return $this->sendResponse($checkphone,__('responses.found_exists_phone_list'));
-            }
-            return $this->sendError(__('responses.not_found_exists_phone_list'));    
-
+            $responses=json_decode($checkphone->content());
+            $data=["phone_number"=>$request->phone_number];
+            if($responses->status=="success"){
+                return $this->sendResponse($data,__('responses.found_exists_phone_list'));
+            }else{
+                  return $this->sendError($responses->message);
+             }
         } catch (\Exception $e) {
            return $this->sendError(__('responses.send_error'),500);
         }
     }
 
     public function checkOrgnization(CheckOrganizationRequest $request)
-    {
+    {   
         try {
             $checkorganization=$this->authRepository->checkOrgnization($request);
-            if($checkorganization){
-               return $this->sendResponse($checkorganization,__('responses.found_exists_organizations'));
-            }
-            return $this->sendError(__('responses.not_found_exists_organizations_lists'));
+            $responses=json_decode($checkorganization->content());
+            $data=["name"=>$request->name];
+            if($responses->status=="success"){
+                return $this->sendResponse($data,__('responses.organization_not_exists'));
+            }else{
+                  return $this->sendError($responses->message);
+             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'),500);
         }
@@ -129,36 +145,45 @@ class AuthController extends AppBaseController
     {  
         try {
             $sendotp=$this->authRepository->sendOtp($request);
-            if($sendotp!==""){
-                return $this->sendResponse($sendotp,__('responses.sms_success'));
-               }
-               return $this->sendError(__('responses.sms_error'));
-            } catch (\Exception $e) {
+            $responses=json_decode($sendotp->content());
+            $data=$responses->data;
+            if($responses->status=="success"){
+                return $this->sendResponse($data,__('responses.otp_send'));
+            }else{
+                  return $this->sendError($responses->message);
+             }
+            }catch (\Exception $e) {
                 return $this->sendError(__('responses.send_error'),500);
             }
     }
 
     public function verifyOtp(VerifyOtpRequest $request)
-    { 
+    {   
       try {
         $verify=$this->authRepository->verifyOtp($request);
-        if($verify!==""){
-            return $this->sendResponse($verify,__('responses.verify_success'));
-           }
-           return $this->sendError(__('responses.verify_error'));
-        }catch (\Exception $e) {
+        $responses=json_decode($verify->content(), true);
+        $data=["email"=>$request->email,"otp"=>"$request->otp"];
+        if($responses['status']=="success"){
+            return $this->sendResponse($data,__('responses.verify_success'));
+         }else{
+            return $this->sendError($responses['message']);
+         }
+        }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'),500);
         }  
     }
     
-    public function referenceCode(VerifyInviteCodeRequest $request)
+    public function referalCode(VerifyInviteCodeRequest $request)
     {
        try {
-         $referencecode=$this->authRepository->referenceCode($request);
-         if($referencecode!==""){
-            return $this->sendResponse($referencecode,__('responses.verify_reference_success'));
+         $referencecode=$this->authRepository->referalCode($request);
+         $responses=json_decode($referencecode->content(), true);
+         $data=$responses['data'];
+         if($responses['status']=="success"){
+            return $this->sendResponse($data,__('responses.verify_reference_success'));
+         }else{
+            return $this->sendError($responses['message']);
          }
-         return $this->sendError(__('responses.verify_reference_error'));
        }catch (\Exception $e) {
         return $this->sendError(__('responses.send_error'),500);
        }
@@ -168,10 +193,13 @@ class AuthController extends AppBaseController
     {
         try {
             $resetcode=$this->authRepository->resetPassword($request);
-            if($resetcode!==""){
-               return $this->sendResponse($resetcode,__('responses.reset_password_success'));
+            $responses=json_decode($resetcode->content(), true);
+            $data=["email"=>$request->email];
+            if($responses['status']=="success"){
+               return $this->sendResponse($data,__('notification.notification_yprs'));
+            }else{
+               return $this->sendError($responses['message']);
             }
-               return $this->sendError(__('responses.reset_password_failed'));
         } catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }

@@ -26,7 +26,7 @@ class LoginFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|string|email|max:50',
+            'email' => 'required|email|max:50',
             'password' => 'required|min:6',
         ];
     }
@@ -44,11 +44,11 @@ class LoginFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Please enter your email!',
-            'email.unique'=>'This email is already registered!',
-            'email.email'=>'Please enter only emails!',
-            "password.required"=>"Please enter password!",
-            "password.min"=>"Please enter password minimum 6 characters!",
+            'email.required' => __('notification.notification_peeief'),
+            'email.email'=>__('notification.notification_iea'),
+            'email.max'=>__('responses.max_email'),
+            "password.required"=>__('notification.notification_reg_pass'),
+            "password.min"=>__('notification.min_password'),
         ];
     }
 }

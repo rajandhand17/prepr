@@ -10,9 +10,9 @@ class SMSHelper{
     {   
        
         try {
-            $accountSid = getenv("TWILIO_SID");
-            $authToken = getenv("TWILIO_TOKEN");
-            $twilioNumber = getenv("TWILIO_NUMBER");
+            $accountSid = config('twilio.accountSid');
+            $authToken = config('twilio.authToken');
+            $twilioNumber =config('twilio.twilioNumber'); 
          
            $client = new Client($accountSid, $authToken);
  

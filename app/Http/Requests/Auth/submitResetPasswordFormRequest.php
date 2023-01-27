@@ -26,7 +26,7 @@ class submitResetPasswordFormRequest extends FormRequest
     public function rules()
     {
         return [
-              'email' => 'required|email|exists:users',
+              'email' => 'required|email|exists:users,email',
               'password' => 'required|string|min:6',
               'password_confirmation' => 'required|same:password',
         ];
@@ -44,13 +44,13 @@ class submitResetPasswordFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Please enter your email!',
-            'email.unique'=>'This email is already registered!',
-            'email.email'=>'Please enter only emails!',
-            "password.required"=>"Please enter password!",
-            "password.min"=>"Please enter password minimum 6 characters!",
-            "password_confirmation.required"=>"Please enter confirm password!",
-            "password_confirmation.same"=>"Please enter same password in confirm password as password!",
+            'email.required' => __('notification.notification_peeief'),
+            'email.unique'=>__('responses.unique_email'), 
+            'email.email'=>__('notification.notification_iea'),
+            "password.required"=>__('notification.notification_reg_pass'),
+            "password.min"=>__('notification.min_password'),
+            "password_confirmation.required"=>__('notification.notification_reg_cpr'),
+            "password_confirmation.same"=>__('responses.password_confirm_password'),
         ];
     }
 }

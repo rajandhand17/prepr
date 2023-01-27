@@ -10,6 +10,6 @@ Route::post('/checkphone',[AuthController::class, 'checkPhone']);
 Route::post('/checkorgnization',[AuthController::class, 'checkOrgnization']);
 Route::post('/send-otp', [ AuthController::class, 'sendOtp' ]);
 Route::post('/verify-otp', [ AuthController::class, 'verifyOtp']);
-Route::post('/verify-invite-code', [ AuthController::class, 'referenceCode']);
+Route::post('/verify-invite-code', [ AuthController::class, 'referalCode']);
 Route::post('/forget-password',[AuthController::class,'forgetPassword']);
 Route::post('/reset-password',[AuthController::class,'resetPassword']);

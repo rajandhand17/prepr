@@ -6,9 +6,8 @@ use App\Events\Events;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\User;
-use Mail;
 
-class sendEmail
+class SendEmail
 {
     /**
      * Create the event listener.
@@ -32,7 +31,7 @@ class sendEmail
         $user['otp']=$user->two_factor_otp;
         $mail_data=[
             "recipient"=>$user['email'],
-            "fromEmail"=>env("MAIL_USERNAME"),//"rajan@prepr.org",
+            "fromEmail"=>env("MAIL_USERNAME"),
             "fromName"=>$user['name'],
             "subject"=>"Forget Password!",
         ];

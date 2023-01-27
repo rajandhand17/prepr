@@ -91,10 +91,10 @@ class AuthRepository implements AuthInterface{
           }
     }
 
-    public function referenceCode($request)
+    public function referalCode($request)
     {
         try {
-            return $this->user->referenceCode($request);
+            return $this->user->referalCode($request);
         } catch (\Exception $e) {
             return false;
         }

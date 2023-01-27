@@ -12,7 +12,7 @@ Interface AuthInterface{
   public function checkOrgnization($request);
   public function sendOtp($request);
   public function verifyOtp($request);
-  public function referenceCode($request);
+  public function referalCode($request);
   public function resetPassword($request);
 }
 

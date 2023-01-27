@@ -26,9 +26,8 @@ class VerifyOtpRequest extends FormRequest
     public function rules()
     {
         return [
-            "country_code"=>"required|numeric",
-            "phone_number"=>"required|numeric|exists:users",
-            "otp"=>"required|numeric"
+            'email' => 'required|email|max:50|exists:users,email',
+            "otp"=>"required"
         ];
     }
 
@@ -45,13 +44,11 @@ class VerifyOtpRequest extends FormRequest
     public function messages()
     {
         return [
-            'country_code.required'=>"Please enter country code!",
-            'country_code.numeric'=>"Please enter country code!",
-            'phone_number.required'=>"Please enter phone number!",
-            'phone_number.numeric'=>"Please enter phone number!",
-            'phone_number.exists'=>"Please enter account related phone number!",
-            'otp.required'=>'Please enter otp!',
-            'otp.numeric'=>'Please enter numeric!',
+            'email.required' => __('notification.notification_peeief'),
+            'email.exists'=>__('responses.exists_email'), 
+            'email.email'=>__('notification.notification_iea'),
+            'email.max'=>__('responses.max_email'),
+            'otp.required'=>__("responses.otp_required"),
         ];
     }
 

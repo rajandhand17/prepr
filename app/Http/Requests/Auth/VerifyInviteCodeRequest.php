@@ -26,7 +26,7 @@ class VerifyInviteCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            "mycode"=>"required|exists:users"
+            "mycode"=>"required|exists:users,mycode"
         ];
     }
 

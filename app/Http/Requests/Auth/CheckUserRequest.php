@@ -26,7 +26,7 @@ class CheckUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'required|string|max:20|regex:/^[A-Za-z0-9_-]*$/||unique:users',
+            'username' => 'required|max:20|regex:/^[A-Za-z0-9_-]*$/||unique:users,username',
         ];
     }
 
@@ -43,9 +43,10 @@ class CheckUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.max'=>"Please enter username under 20 characters!",
-            'username.required'=>"Please enter username!",
-            'username.unique'=>"This username already used!"
+            'username.max'=>__("responses.username_max"),
+            'username.required'=>__("responses.username_required"),
+            'username.unique'=>__("responses.username_unique"),
+            'username.regex'=>__("notification.notification_reg_unc"),
         ];
     }
 }

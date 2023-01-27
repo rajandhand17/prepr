@@ -42,9 +42,9 @@ class CheckPhoneRequest extends FormRequest
     public function messages()
     {
         return[
-            'phone_number.required' => 'Please enter phone-number!',
-            'phone_number.numeric'=>'Please enter numeric number!',
-            'phone_number.unique'=>'This phone number already registered with us!',
+            'phone_number.required' => __("notification.notification_ypnie"),
+            'phone_number.numeric'=>__("responses.numeric"),
+            'phone_number.unique'=>__("responses.already_number"),
         ];
     }
 }

@@ -27,7 +27,7 @@ class CheckOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|unique:organisations',
+            'name' => 'required|regex:/^[a-zA-Z]+$/u|unique:organisations,name',
         ];
     } 
     
@@ -43,9 +43,9 @@ class CheckOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'name.required' => 'Please enter organization number!',
-            'name.string'=>'Please enter organization number!',
-            'name.unique'=>'This organization number already registered with us!',
+            'name.required' =>__("notification.notification_toir"),
+            'name.regex'=>__("responses.organization_string"),
+            'name.unique'=>__("responses.organization_exists"),
         ];
     }
 }

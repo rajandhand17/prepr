@@ -26,8 +26,7 @@ class SendOtpRequest extends FormRequest
     public function rules()
     {
         return [
-            "country_code"=>"required|numeric|",
-            "phone_number"=>"required|numeric|exists:users",
+            'email' => 'required|email|max:50|exists:users,email',
         ];
     }
 
@@ -44,12 +43,10 @@ class SendOtpRequest extends FormRequest
     public function messages()
     {
         return [
-            'country_code.required'=>"Please enter country code!",
-            'country_code.numeric'=>"Please enter country code!",
-            'phone_number.required'=>"Please enter phone number!",
-            'phone_number.numeric'=>"Please enter phone number!",
-            'phone_number.numeric'=>"Please enter phone number!",
-            'phone_number.exists'=>"Please enter account related phone number!",
+            'email.required' => __('notification.notification_peeief'),
+            'email.exists'=>__('responses.exists_email'), 
+            'email.email'=>__('notification.notification_iea'),
+            'email.max'=>__('responses.max_email'),
 
         ];
     }
