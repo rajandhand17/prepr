@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Event;
 use App\Helpers\SMSHelper;
 use Carbon\Carbon;
 use Mail;
-use App\Events\Events;
+use App\Mail\SendMail;
 
 class User extends Authenticatable
 {
@@ -116,15 +116,15 @@ class User extends Authenticatable
             $user->two_factor_otp=$otp;
             $user->save();
             $user_id = $user->id;
-            $user_personals=new UserPersonal;
-            $user_personals->user_id=$user_id;
-            $user_personals->status=$request->status;
-            $user_personals->language=$request->language_id;
-            $user_personals->save();
+            // $user_personals=new UserPersonal;
+            // $user_personals->user_id=$user_id;
+            // $user_personals->status=$request->status;
+            // $user_personals->language=$request->language_id;
+            // $user_personals->save();
             /**sending otp on registeres number */
-            $sms=SMSHelper::sendsms($receiver,$otp);
-            DB::commit();
+          //  $sms=SMSHelper::sendsms($receiver,$otp);
             if($user_id){
+              DB::commit();
               return response()->json(['status' => 'success', 'message' =>__("responses.user_register"), 'data' => $user], 200);
             }
            
@@ -280,7 +280,8 @@ class User extends Authenticatable
         {
             try{
                 $user = User::where("email",$request->email)->first();
-                if (!$user){
+                 
+                if(!$user){
                    return response()->json(['status' => 'fail', 'message' =>__("notification.notification_yuoeanr")]);
                 }else{
                     $string = self::generateRandomString(60);
@@ -288,7 +289,7 @@ class User extends Authenticatable
                     $user->remember_token = $string;
                     $user->two_factor_otp=$otp;
                     $user->save();
-                    Event::dispatch(new Events($user->id));
+                    $mail=Mail::to($user->email)->send(new SendMail($user));
                     return response()->json(['status' => 'success', 'message' =>__("notification.notification_yprlsoyrea")], 200);
                 }
             }catch(\Exception $e){

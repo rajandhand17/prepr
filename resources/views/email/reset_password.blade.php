@@ -35,7 +35,7 @@
 					<tr>
 					
 						<td style="padding: 20px;" align="center">
-							<a style="color: #000; text-decoration: none; font-size: 18px; padding: 10px 50px; border-radius: 4px; " href="">Reset Password OTP is {{$user['otp']}}</a>
+							<a style="color: #000; text-decoration: none; font-size: 18px; padding: 10px 50px; border-radius: 4px; " href="">Reset Password OTP is {{$user['two_factor_otp']}}</a>
 						</td>
 					</tr>
 
