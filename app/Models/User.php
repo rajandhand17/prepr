@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Event;
 use App\Helpers\SMSHelper;
 use Carbon\Carbon;
 use Mail;
+use App\Events\Events;
 use App\Mail\SendMail;
 
 class User extends Authenticatable
@@ -116,13 +117,13 @@ class User extends Authenticatable
             $user->two_factor_otp=$otp;
             $user->save();
             $user_id = $user->id;
-            // $user_personals=new UserPersonal;
-            // $user_personals->user_id=$user_id;
-            // $user_personals->status=$request->status;
-            // $user_personals->language=$request->language_id;
-            // $user_personals->save();
+            $user_personals=new UserPersonal;
+            $user_personals->user_id=$user_id;
+            $user_personals->status=$request->status;
+            $user_personals->language=$request->language_id;
+            $user_personals->save();
             /**sending otp on registeres number */
-          //  $sms=SMSHelper::sendsms($receiver,$otp);
+            $sms=SMSHelper::sendsms($receiver,$otp);
             if($user_id){
               DB::commit();
               return response()->json(['status' => 'success', 'message' =>__("responses.user_register"), 'data' => $user], 200);
