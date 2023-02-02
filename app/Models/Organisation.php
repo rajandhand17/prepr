@@ -18,19 +18,14 @@ class Organisation extends Model
         'user_id',
         'name',
         'slug',
-      //  'vanity_slug',
         'description',
         'cover_image',
         'profile_image',
         'about',
          'category',
-        //  'latitude',
-        //  'longitude',
-        //  'address',
          'vanity_link',
          'status',
          'labs_limit',
-       //  'challenges_limit',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

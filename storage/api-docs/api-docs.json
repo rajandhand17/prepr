@@ -13,6 +13,464 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth API -login"
+                ],
+                "summary": "Send request for check login",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth API - check register"
+                ],
+                "summary": "Send request for check register",
+                "operationId": "registerUser",
+                "parameters": [
+                    {
+                        "name": "language_id",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "description": "check the username value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "user_type",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "country_code",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "organization_name",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "vanity_link",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/forget-password": {
+            "post": {
+                "tags": [
+                    "Auth API -forget-password"
+                ],
+                "summary": "send email for forget-password",
+                "description": "send otp for forget-password",
+                "operationId": "forgetPassword",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/checkusername": {
+            "post": {
+                "tags": [
+                    "Auth API -username"
+                ],
+                "summary": "Send request for check username",
+                "operationId": "checkUsername",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "description": "check the username value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/checkemail": {
+            "post": {
+                "tags": [
+                    "Auth API - checkemail"
+                ],
+                "summary": "Send request for check checkemail",
+                "operationId": "checkEmail",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/checkphone": {
+            "post": {
+                "tags": [
+                    "Auth API - checkPhone"
+                ],
+                "summary": "Send request for check checkemail",
+                "operationId": "checkPhone",
+                "parameters": [
+                    {
+                        "name": "phone_number",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/checkorgnization": {
+            "post": {
+                "tags": [
+                    "Auth API - check orgnization"
+                ],
+                "summary": "Send request for check checkemail",
+                "operationId": "checkOrgnization",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/send-otp": {
+            "post": {
+                "tags": [
+                    "Auth API - check sendOtp"
+                ],
+                "summary": "Send request for check sendOtp",
+                "operationId": "sendOtp",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/verify-otp": {
+            "post": {
+                "tags": [
+                    "Auth API - check verify Otp"
+                ],
+                "summary": "Send request for check sendOtp",
+                "operationId": "verifyOtp",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "otp",
+                        "in": "query",
+                        "description": "check the otp value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/verify-invite-code": {
+            "post": {
+                "tags": [
+                    "Auth API - check verify Otp"
+                ],
+                "summary": "Send request for check verify-otp",
+                "operationId": "referalCode",
+                "parameters": [
+                    {
+                        "name": "mycode",
+                        "in": "query",
+                        "description": "check the mycode value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Auth API - check reset-password"
+                ],
+                "summary": "Send request for check reset-password",
+                "operationId": "resetPassword",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "check the password value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "description": "check the password value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
         "/api/v1/master/categories": {
             "get": {
                 "tags": [

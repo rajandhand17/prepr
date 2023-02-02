@@ -52,7 +52,7 @@ final class MasterControllerTest extends TestCase
             $this->assertEquals($reponse['success'],false);
         }
     }
-    
+     
     /**Categories negative test cases */
     public function testGetCategoriesNegative():void
     {   

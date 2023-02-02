@@ -9,11 +9,9 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laratrust\Traits\LaratrustUserTrait;
-use Illuminate\Support\Facades\Event;
 use App\Helpers\SMSHelper;
 use Carbon\Carbon;
 use Mail;
-use App\Events\Events;
 use App\Mail\SendMail;
 
 class User extends Authenticatable
