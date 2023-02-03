@@ -36,7 +36,7 @@ final class MasterControllerTest extends TestCase
      */
     protected function tearDown(): void
     {
-        parent::tearDown();
+        parent::tearDown(); 
 
         unset($this->masterController);
         unset($this->masterRepository);
