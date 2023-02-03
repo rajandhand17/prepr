@@ -65,7 +65,7 @@ return [
      | complex tests skeleton (getter/setter tests...).
      |--------------------------------------------------------------------------
      */
-    'automaticGeneration'      => true,
+    'automaticGeneration'      => false,
 
     /*
      |--------------------------------------------------------------------------
