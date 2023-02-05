@@ -26,7 +26,7 @@ class LoginFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|max:50',
+            'email' => 'required|email|max:50|exists:users,email',
             'password' => 'required|min:6',
         ];
     }
@@ -37,7 +37,7 @@ class LoginFormRequest extends FormRequest
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]));
+        ],401));
     }
 
     
@@ -47,6 +47,7 @@ class LoginFormRequest extends FormRequest
             'email.required' => __('notification.notification_peeief'),
             'email.email'=>__('notification.notification_iea'),
             'email.max'=>__('responses.max_email'),
+            'email.exists'=>__('notification.notification_iea'),
             "password.required"=>__('notification.notification_reg_pass'),
             "password.min"=>__('notification.min_password'),
         ];

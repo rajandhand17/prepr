@@ -72,23 +72,26 @@ class User extends Authenticatable
         try {
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
-            if($user) {
+            if(!$user){
+                return 1;
+            }
+            if($user->is_verify==0){
+                return 2;
+            }
+            if($user){
                 /**check password same or not */
               if (Hash::check($request->password, $user->password)) {
-                  $sting = self::generateRandomString(30);
-                  $token = $user->createToken($sting)->accessToken;
-                  $response = ['token' => $token];
-                  return response()->json(['status' => 'success', 'message' =>__("responses.user_login_sucess"), 'data' => $response], 200);
-
+                  $token = $user->createToken(env("APP_NAME"))->accessToken;
+                  $response = ['status'=>'success','token' => $token];
+                  return $response;
               }else {
-                return response()->json(['status' => 'fail', 'message' =>__("responses.incorrect_password")], 422);
-
+                return false;
               }
             }else{
-                return response()->json(['status' => 'fail', 'message' =>__("notification.notification_yuoeanr")], 422);
+                return false;
              }
         }catch (\Exception $e) {
-           return response()->json(['status' => 'fail', 'message' => $e->getMessage()], 200);
+            return false;
         }  
    }
 
@@ -121,17 +124,16 @@ class User extends Authenticatable
             $user_personals->language=$request->language_id;
             $user_personals->save();
             /**sending otp on registeres number */
-            $sms=SMSHelper::sendsms($receiver,$otp);
+            $sms=SMSHelper::SendSms($receiver,$otp);
             if($user_id){
               DB::commit();
-              return response()->json(['status' => 'success', 'message' =>__("responses.user_register"), 'data' => $user], 200);
+              $success=["success"=>true,"user"=>$user];
+              return $success;
             }
-           
-            return response()->json(['status' => 'fail', 'message' =>__("notification.notification_swwptal")], 200);
-           
+            return false;
         }catch (\Exception $e){
             DB::rollback();
-            return response()->json(['status' => 'fail', 'message' => $e->getMessage()], 200);
+            return false;
         }
     }
              /**generating string  */
@@ -217,7 +219,7 @@ class User extends Authenticatable
                     $userupdate=User::updateOrCreate(["email"=>$request->email], $saveData);
                     $receiver=$user->country_code.$user->phone_number;  
                     /**sending sms */
-                    $sms=SMSHelper::sendsms($receiver,$otp);
+                    $sms=SMSHelper::SendSms($receiver,$otp);
                     if($sms){
                       return response()->json(["status"=>"success","message"=>__("responses.otp_send"),"data"=>["email"=>$request->email,"phone_number"=>$receiver]],200);
                     }
@@ -278,11 +280,10 @@ class User extends Authenticatable
         public function forgetPassword($request)
         {
             try{
-                $user = User::where("email",$request->email)->first();
-                 
-                if(!$user){
+                 $user=User::where("email",$request->email)->first();
+                 if(!$user){
                    return response()->json(['status' => 'fail', 'message' =>__("notification.notification_yuoeanr")]);
-                }else{
+                 }else{
                     $string = self::generateRandomString(60);
                     $otp=self::generateRandomnumber(4);
                     $user->remember_token = $string;
@@ -299,14 +300,12 @@ class User extends Authenticatable
         public function resetPassword($request)
         {
             try {
-                
                 $user=User::where("email",$request->email)->first();
                 $user->password = Hash::make($request->password);
                 if($user->save()){
-                    return response()->json(['status' => 'success', 'message' =>__("responses.change_password_success") ], 200);
-                }
-                return response()->json(["status"=>"failed","message"=>__("responses.change_password_failed")]);
-               
+                    return true;
+                 }
+                return false;
             }catch(\Exception $e){
                 return $this->sendError(__('responses.send_error'),500);
             }

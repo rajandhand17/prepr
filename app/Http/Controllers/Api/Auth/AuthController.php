@@ -74,13 +74,16 @@ class AuthController extends AppBaseController
     {    
         try {
         $login=$this->authRepository->login($request);
-        $responses=json_decode($login->content());
-        $data=$responses->data;
-        if($responses->status=="success"){
-                return $this->sendResponse($data,__('notification.login_successfully'),200);
-        }else{
-                return $this->sendError($responses->message);
+        if($login==1){
+             return $this->sendError(__('responses.send_error'),401);
         }
+        if($login==2){
+             return $this->sendError(__('notification.notification_pvyeatpl'),401);  
+        }
+        if($login['status']=="success"){
+             return $this->sendResponse($login['token'],__('responses.login_successfully'),200);
+        }
+        return $this->sendError(__('responses.send_error'),500);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         } 
@@ -222,12 +225,11 @@ class AuthController extends AppBaseController
     {     
         try {
             $register=$this->authRepository->register($request);
-            $responses=json_decode($register->content());
-            $data=$responses->data;
-            if($responses->status=="success"){
-                return $this->sendResponse($data,__('responses.user_register'));
-            }else{
-                return $this->sendError($responses->message);
+            if($register==false){
+                response()->json(['status' => 'fail', 'message' =>__("notification.notification_swwptal")], 401);
+            }
+            if($register['success']=="success"){
+                return $this->sendResponse($register,__('responses.user_register'));
             }
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
@@ -274,8 +276,8 @@ class AuthController extends AppBaseController
     public function forgetPassword(ForgetPasswordRequest $request)
     {   
         try{
-           $forgetpassword=$this->authRepository->forgetPassword($request);
-           $responses=json_decode($forgetpassword->content());
+            $forgetpassword=$this->authRepository->forgetPassword($request);
+            $responses=json_decode($forgetpassword->content());
             $data=["email"=>$request->email];
             if($responses->status=="success"){
                 return $this->sendResponse($data,__('notification.notification_yprlsoyrea'));
@@ -284,7 +286,7 @@ class AuthController extends AppBaseController
             }
          }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
-        }
+         }
     }
   /**
      * @OA\Post(
@@ -714,13 +716,11 @@ class AuthController extends AppBaseController
     {
         try {
             $resetcode=$this->authRepository->resetPassword($request);
-            $responses=json_decode($resetcode->content(), true);
-            $data=["email"=>$request->email];
-            if($responses['status']=="success"){
-               return $this->sendResponse($data,__('notification.notification_yprs'));
-            }else{
-               return $this->sendError($responses['message']);
+            if($resetcode==true){
+                $data=["email"=>$request->email];
+                return $this->sendResponse($data,__('notification.notification_yprs'));
             }
+            return $this->sendError(__('responses.send_error'),500);
         } catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }

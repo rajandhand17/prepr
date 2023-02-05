@@ -31,8 +31,8 @@ class LaratrustSetupTables extends Migration
             $table->timestamps();
         });
 
-        // Create table for storing teams
-        Schema::create('teams', function (Blueprint $table) {
+        // Create table for storing organizations 
+        Schema::create('organizations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
             $table->string('display_name')->nullable();
@@ -45,14 +45,14 @@ class LaratrustSetupTables extends Migration
             $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('user_id');
             $table->string('user_type');
-            $table->unsignedBigInteger('team_id')->nullable();
+            $table->unsignedBigInteger('org_id')->nullable();
 
             $table->foreign('role_id')->references('id')->on('roles')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('team_id')->references('id')->on('teams')
+            $table->foreign('org_id')->references('id')->on('teams')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->unique(['user_id', 'role_id', 'user_type', 'team_id']);
+            $table->unique(['user_id', 'role_id', 'user_type', 'org_id']);
         });
 
         // Create table for associating permissions to users (Many To Many Polymorphic)
@@ -60,14 +60,14 @@ class LaratrustSetupTables extends Migration
             $table->unsignedBigInteger('permission_id');
             $table->unsignedBigInteger('user_id');
             $table->string('user_type');
-            $table->unsignedBigInteger('team_id')->nullable();
+            $table->unsignedBigInteger('org_id')->nullable();
 
             $table->foreign('permission_id')->references('id')->on('permissions')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('team_id')->references('id')->on('teams')
+            $table->foreign('org_id')->references('id')->on('teams')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->unique(['user_id', 'permission_id', 'user_type', 'team_id']);
+            $table->unique(['user_id', 'permission_id', 'user_type', 'org_id']);
         });
 
         // Create table for associating permissions to roles (Many-to-Many)
@@ -96,6 +96,6 @@ class LaratrustSetupTables extends Migration
         Schema::dropIfExists('permissions');
         Schema::dropIfExists('role_user');
         Schema::dropIfExists('roles');
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('organizations');
     }
 }

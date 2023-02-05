@@ -2929,7 +2929,8 @@
     "responses.found_reference_code":"This reference code is found!",
     "responses.not_found_reference_code":"This reference code is not found!",
     "responses.change_password_success":"Your password is changed!Please login with new password!",
-    "responses.change_password_failed":"Your password is not change,please try later!"
+    "responses.change_password_failed":"Your password is not change,please try later!",
+    "responses.account_not_verified":"This account is need to verify!"
 
 }
  

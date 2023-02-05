@@ -4,9 +4,9 @@ use Twilio\Rest\Client;
 use Illuminate\Contracts\Validation\Validator;
 use App\Http\Requests\Master\SmsRequest;
 
-class SMSHelper{
+class SMSHelper{ 
 
-    public static function sendsms($receiver,$message)
+    public static function SendSms($receiver,$message)
     {   
        
         try {
