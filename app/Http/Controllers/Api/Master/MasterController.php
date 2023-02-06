@@ -80,7 +80,7 @@ class MasterController extends AppBaseController
     public function getCategories(Request $request)
     {   
         try{
-            $category=$this->masterRepository->getcategories($request);
+            $category=$this->masterRepository->getCategories($request);
             if($category){
               return $this->sendResponse(CategoryResource::collection($category),__('responses.found_category_list'));
             }

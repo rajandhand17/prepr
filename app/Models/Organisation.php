@@ -17,7 +17,7 @@ class Organisation extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'slug',
+        'slug', 
         'description',
         'cover_image',
         'profile_image',
@@ -35,9 +35,9 @@ class Organisation extends Model
         try {
             $checkorganization=Organisation::select("id")->where("name",$request->organization_name)->first();
             if($checkorganization){
-                return response()->json(['status'=>"fail","message"=>__("responses.organization_exists")]);
+                return true;
             }
-             return response()->json(["status"=>"success","message"=>__("responses.organization_not_exists")]);
+            return false;
         } catch (\Exception $e){
             return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
         }

@@ -37,10 +37,10 @@ class LoginFormRequest extends FormRequest
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ],401));
+        ],422));
     }
 
-    
+     
     public function messages()
     {
         return [

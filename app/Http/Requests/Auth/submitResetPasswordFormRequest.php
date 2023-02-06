@@ -27,7 +27,7 @@ class submitResetPasswordFormRequest extends FormRequest
     {
         return [
               'email' => 'required|email|exists:users,email',
-              'password' => 'required|string|min:6',
+              'password' => 'required|min:6',
               'password_confirmation' => 'required|same:password',
         ];
     }
@@ -38,14 +38,14 @@ class submitResetPasswordFormRequest extends FormRequest
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]));
+        ],422));
     }
 
     public function messages()
     {
         return [
             'email.required' => __('notification.notification_peeief'),
-            'email.unique'=>__('responses.unique_email'), 
+            'email.exists'=>__('responses.not_exists_email'), 
             'email.email'=>__('notification.notification_iea'),
             "password.required"=>__('notification.notification_reg_pass'),
             "password.min"=>__('notification.min_password'),

@@ -2909,7 +2909,7 @@
     "responses.username_max":"Please enter username under 20 characters!",
     "responses.username_required":"Please enter username!",
     "responses.username_unique":"Username already taken,please choose another-one!",
-    "responses.username_available":"Username available!",
+    "responses.username_available":"Username available!", 
     "responses.first_name_string":"Please enter string in first name!",
     "responses.last_name_string":"Please enter string in last name!",
     "responses.language_numeric":"Please enter correct language",
@@ -2930,7 +2930,9 @@
     "responses.not_found_reference_code":"This reference code is not found!",
     "responses.change_password_success":"Your password is changed!Please login with new password!",
     "responses.change_password_failed":"Your password is not change,please try later!",
-    "responses.account_not_verified":"This account is need to verify!"
-
+    "responses.account_not_verified":"This account is need to verify!",
+    "responses.mycode":"Please enter mycode!",
+    "responses.not_mycode":"This reference code is not exists!"
+    
 }
  

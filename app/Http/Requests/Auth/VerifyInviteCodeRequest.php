@@ -36,15 +36,15 @@ class VerifyInviteCodeRequest extends FormRequest
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]));
+        ],422));
     }
 
 
     public function messages()
     {
         return [
-            'mycode.required'=>"Please enter mycode!",
-            'mycode.exists'=>"This reference code is not exists!",
+            'mycode.required'=>__("responses.mycode"),
+            'mycode.exists'=>__("responses.not_mycode"),
 
         ];
     }

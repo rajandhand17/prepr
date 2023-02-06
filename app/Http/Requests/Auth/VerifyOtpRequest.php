@@ -37,7 +37,7 @@ class VerifyOtpRequest extends FormRequest
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]));
+        ],422));
     }
 
 
@@ -45,7 +45,7 @@ class VerifyOtpRequest extends FormRequest
     {
         return [
             'email.required' => __('notification.notification_peeief'),
-            'email.exists'=>__('responses.exists_email'), 
+            'email.exists'=>__('responses.not_exists_email'), 
             'email.email'=>__('notification.notification_iea'),
             'email.max'=>__('responses.max_email'),
             'otp.required'=>__("responses.otp_required"),

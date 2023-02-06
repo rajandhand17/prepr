@@ -1,7 +1,7 @@
 <?php
 return [
-    "accountSid" => env("TWILIO_SID"),
-    "authToken" => env("TWILIO_TOKEN"),
-    "twilioNumber" => env("TWILIO_NUMBER"),
+    "account_sid" => env("TWILIO_SID"),
+    "auth_token" => env("TWILIO_TOKEN"),
+    "twilio_number" => env("TWILIO_NUMBER"),
 ];
 ?>

@@ -10,14 +10,14 @@ class SMSHelper{
     {   
        
         try {
-            $accountSid = config('twilio.accountSid');
-            $authToken = config('twilio.authToken');
-            $twilioNumber =config('twilio.twilioNumber'); 
+            $account_sid = config('twilio.account_sid');
+            $auth_token = config('twilio.auth_token');
+            $twilio_number =config('twilio.twilio_number'); 
          
-           $client = new Client($accountSid, $authToken);
+           $client = new Client($account_sid, $auth_token);
  
            $result= $client->messages->create($receiver, [
-                'from' => $twilioNumber,
+                'from' => $twilio_number,
                 'body' => $message
             ]);
             if($result){

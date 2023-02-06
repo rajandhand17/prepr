@@ -82,9 +82,23 @@ class User extends Authenticatable
                 /**check password same or not */
               if (Hash::check($request->password, $user->password)) {
                   $token = $user->createToken(env("APP_NAME"))->accessToken;
+                  if($user->two_factor=="allow"){
+                       $otp=self::generateRandomnumber(4);
+                       $saveData = [
+                           "two_factor_otp" => $otp,
+                       ];
+                       /**save otp in database */
+                       $userupdate=User::updateOrCreate(["email"=>$user->email], $saveData);
+                       $receiver=$user->country_code.$user->phone_number;  
+                       /**sending sms */
+                       $sms=SMSHelper::SendSms($receiver,$otp);
+                       if($sms){
+                          return 9; 
+                       }
+                  }
                   $response = ['status'=>'success','token' => $token];
                   return $response;
-              }else {
+              }else{
                 return false;
               }
             }else{
@@ -160,16 +174,13 @@ class User extends Authenticatable
         public function checkUsername($request)
         {  
            try {
-            $username=User::select("id")->where("username",$request->username)->first();
-            if($username){
-                
-                return response()->json(['status' => 'fail', 'message' =>__("responses.username_unique")], 200);
-              }
-              
-              return response()->json(['status' => 'success', 'message' =>__("responses.username_available")], 200);
+                $username=User::select("id")->where("username",$request->username)->first();
+                if($username){
+                     return true;
+                }
+                return false;  
             }catch (\Exception $e){
-               
-                return response()->json(['status' => 'fail', 'message' => $e->getMessage()], 200);
+              return false;   
             }
         }
         
@@ -177,14 +188,13 @@ class User extends Authenticatable
         {
           try {
             $checkemail=User::select("id")->where("email",$request->email)->first();
-
             if($checkemail){
-             return response()->json(['status'=>"fail","message"=>__("responses.unique_email")],200);
+               return true;
             }
-            return response()->json(["status"=>"success","message"=>__("responses.not_exists_email")],200);
-          }catch (\Exception $e) {  
-             return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
-          }
+               return false;  
+            }catch (\Exception $e) {  
+             return false; 
+            }
         }
 
         public function checkPhone($request)
@@ -192,12 +202,12 @@ class User extends Authenticatable
             try {
                 $checkphone=User::select("id")->where("phone_number",$request->phone)->first();
                 if($checkphone){
-                    return response()->json(['status'=>"fail","message"=>"This phone is already exists!"]);
+                    return true;
                 }
-                 return response()->json(["status"=>"success","message"=>"This phone number is not registered with us!"]);
-            } catch (\Exception $e){
-                return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
-            }
+                return false;
+             }catch (\Exception $e){
+                return false;
+             }
         }
 
         public function sendOtp($request)
@@ -208,7 +218,7 @@ class User extends Authenticatable
                 if($user!=""){
                     /**check account is verified or not */
                     if($user->is_verify==1){
-                        return response()->json(["status"=>"failed","message"=>__("responses.verify_success_already")]);
+                       return 5;
                     }
                     /**generating otp */
                     $otp=self::generateRandomnumber(4);
@@ -221,13 +231,12 @@ class User extends Authenticatable
                     /**sending sms */
                     $sms=SMSHelper::SendSms($receiver,$otp);
                     if($sms){
-                      return response()->json(["status"=>"success","message"=>__("responses.otp_send"),"data"=>["email"=>$request->email,"phone_number"=>$receiver]],200);
+                       return true; 
                     }
                 }
-                return response()->json(['status'=>"fail","message"=>__("notification.notification_swwptal")]);
+                return false;
             } catch (\Exception $e){
-              
-                return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
+                return false;
             }
         }
 
@@ -239,27 +248,27 @@ class User extends Authenticatable
                 $updated_user=$user->updated_at;
                 /**check user account verified or not */
                 if($user->is_verify==1){
-                    return response()->json(["status"=>"failed","message"=>__("responses.verify_success_already")]);      
+                  return 5;    
                 }
                 $currentTime = Carbon::now();
                 $minutes = $currentTime->diffInMinutes($updated_user);
                 /**check otp time 10 minutes expired or not */
                 if($minutes > 10){
-                    return response()->json(['status'=>"fail","message"=>__("responses.otp_expried_required")]);
+                    return 4;
                 }
                 /**Matching otp is same or not */
                 if($user->two_factor_otp==$request->otp){
                     $user = User::firstOrCreate(['id' => $user->id]);
                     $user->is_verify = '1';
                     if($user->save()){
-                       return response()->json(["status"=>"success","message"=>__("responses.verify_success")],200);
+                       return true;
                     }
-                    return response()->json(['status'=>"fail","message"=>__("notification.notification_swwptal")],500);
+                    return false;
                  }else{
-                    return response()->json(['status'=>"fail","message"=>__("responses.otp_correct_required")],500);
+                    return false;
                  }
             }catch (\Exception $e){
-                return response()->json(["status"=>"fail","message"=>$e->getMessage()]);
+                return false;
             }
         }
 
@@ -268,12 +277,11 @@ class User extends Authenticatable
              try {
                 $userrecords=User::select("id","email","first_name","last_name")->where(["mycode"=>$request->mycode])->first();
                 if($userrecords){
-                    return response()->json(['status' => 'success', 'message' =>__("responses.found_reference_code"), 'data' => $userrecords], 200);
-
-                }
-                 return response()->json(["status"=>"failed","message"=>"This reference code is not found!"],200);
+                     return true;
+                 }
+                 return false;
                  }catch (\Exception $e) {  
-                    return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
+                    return false;
                  }
         }
 
@@ -282,7 +290,7 @@ class User extends Authenticatable
             try{
                  $user=User::where("email",$request->email)->first();
                  if(!$user){
-                   return response()->json(['status' => 'fail', 'message' =>__("notification.notification_yuoeanr")]);
+                   return false;
                  }else{
                     $string = self::generateRandomString(60);
                     $otp=self::generateRandomnumber(4);
@@ -290,10 +298,10 @@ class User extends Authenticatable
                     $user->two_factor_otp=$otp;
                     $user->save();
                     $mail=Mail::to($user->email)->send(new SendMail($user));
-                    return response()->json(['status' => 'success', 'message' =>__("notification.notification_yprlsoyrea")], 200);
+                    return true;
                 }
             }catch(\Exception $e){
-                return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
+                return false;
             }
         }
 
@@ -311,4 +319,4 @@ class User extends Authenticatable
             }
         }
 }
-
+ 
