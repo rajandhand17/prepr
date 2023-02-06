@@ -36,15 +36,15 @@ class SmsRequest extends FormRequest
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]));
+        ],403));
     }
 
     public function messages()
     {
         return[
-            'receiver.required' => 'Please enter receiver!',
-            'receiver.numeric'=>'Please enter numeric receiver!',
-            'receiver.unique'=>'This receiver already registered with us!',
+            'receiver.required' =>__("responses.receiver_unique"),
+            'receiver.numeric'=>__("responses.numeric"),
+            'receiver.unique'=>__("responses.receiver_unique"),
         ];
     }
 }

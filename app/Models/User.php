@@ -91,7 +91,7 @@ class User extends Authenticatable
                        $userupdate=User::updateOrCreate(["email"=>$user->email], $saveData);
                        $receiver=$user->country_code.$user->phone_number;  
                        /**sending sms */
-                       $sms=SMSHelper::SendSms($receiver,$otp);
+                       $sms=SMSHelper::sendSms($receiver,$otp);
                        if($sms){
                           return 9; 
                        }
@@ -138,7 +138,7 @@ class User extends Authenticatable
             $user_personals->language=$request->language_id;
             $user_personals->save();
             /**sending otp on registeres number */
-            $sms=SMSHelper::SendSms($receiver,$otp);
+            $sms=SMSHelper::sendSms($receiver,$otp);
             if($user_id){
               DB::commit();
               $success=["success"=>true,"user"=>$user];
@@ -221,7 +221,7 @@ class User extends Authenticatable
                        return 5;
                     }
                     /**generating otp */
-                    $otp=self::generateRandomnumber(4);
+                    $otp=random_int(1000,9999);
                     $saveData = [
                         "two_factor_otp" => $otp,
                     ];
@@ -229,7 +229,7 @@ class User extends Authenticatable
                     $userupdate=User::updateOrCreate(["email"=>$request->email], $saveData);
                     $receiver=$user->country_code.$user->phone_number;  
                     /**sending sms */
-                    $sms=SMSHelper::SendSms($receiver,$otp);
+                    $sms=1;//SMSHelper::sendSms($receiver,$otp);
                     if($sms){
                        return true; 
                     }

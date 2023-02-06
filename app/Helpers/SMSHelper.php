@@ -6,7 +6,7 @@ use App\Http\Requests\Master\SmsRequest;
 
 class SMSHelper{ 
 
-    public static function SendSms($receiver,$message)
+    public static function sendSms($receiver,$message)
     {   
        
         try {

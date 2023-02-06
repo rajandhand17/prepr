@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-
-use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\RegisterFormRequest;
 use App\Http\Requests\Auth\CheckUserRequest;
@@ -296,7 +294,7 @@ class AuthController extends AppBaseController
      *     path="/api/v1/auth/checkusername",
      *     tags={"Auth API - Username"},
      *     summary="Send request for check user name",
-     *     operationId="checkUsername",
+     *     operationId="checkUsername", 
      *     @OA\Parameter(
      *         name="username",
      *         in="query",
@@ -340,7 +338,6 @@ class AuthController extends AppBaseController
             }catch (\Exception $e){
                  return $this->sendError(__('responses.send_error'),500);
             } 
-
      }
 /**
      * @OA\Post(
@@ -535,13 +532,13 @@ class AuthController extends AppBaseController
     public function sendOtp(SendOtpRequest $request)
     {  
         try {
-            $sendotp=$this->authRepository->sendOtp($request);
-            if($sendotp==5){   
+            $send_otp=$this->authRepository->sendOtp($request);
+            
+            if($send_otp==5){ 
                 return $this->sendError(__('notification.notification_uarvrf'));
             }
-            if($sendotp==true){
-                $data=$request->email;
-                return $this->sendResponse($data,__('responses.otp_send'));
+            if($send_otp==true || $send_otp==1){
+                return $this->sendResponse(null,__('responses.otp_send'));
             }
             return $this->sendError(__('responses.send_error'));
             }catch (\Exception $e){

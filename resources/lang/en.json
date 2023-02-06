@@ -2932,7 +2932,9 @@
     "responses.change_password_failed":"Your password is not change,please try later!",
     "responses.account_not_verified":"This account is need to verify!",
     "responses.mycode":"Please enter mycode!",
-    "responses.not_mycode":"This reference code is not exists!"
+    "responses.not_mycode":"This reference code is not exists!",
+    "responses.receiver_required":"Please enter receiver!",
+    "responses.receiver_unique":"This receiver already registered with us!"
     
 }
  
