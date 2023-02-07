@@ -39,7 +39,7 @@ class Organisation extends Model
             }
             return false;
         } catch (\Exception $e){
-            return response()->json(["status"=>"fail","message"=>$e->getMessage()],200);
+            return false;
         }
     }
 

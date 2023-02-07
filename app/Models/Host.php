@@ -31,9 +31,13 @@ class Host extends Model
                 $host=$host->where("name","like",'%'.$search.'%');
              }
              $host=$host->take(20)->get();
-             return $host;
+            //  return $host;
+            if(!$host->isEmpty()){
+                return $host;
+            }
 
-        } catch (\Throwable $th) {
+            return false;
+        } catch(\Exception $e){
             return false;
         }
     }

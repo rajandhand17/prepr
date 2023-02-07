@@ -41,16 +41,16 @@ final class AuthControllerTest extends TestCase
         unset($this->authController);
         unset($this->authRepository);
     }
-
+      /**login positive test cases */
     public function testLoginPositive(): void
     {
         /** @todo This test is complete. */
       $response = $this->postJson('/api/v1/auth/login',["email"=>"rajan@prepr.org","password"=>"Prepr@123"]);
       if($response['success']==true){
             $response->assertOk();
-        }else{
+       }else{
             $this->assertEquals($response['success'],false);
-        }
+      }
     
     }
 

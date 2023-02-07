@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\RegisterFormRequest;
-use App\Http\Requests\Auth\CheckUserRequest;
+use App\Http\Requests\Auth\CheckUsernameRequest;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckOrganizationRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
@@ -71,11 +71,8 @@ class AuthController extends AppBaseController
     {    
         try {
         $login=$this->authRepository->login($request);
-        if($login==1){
-             return $this->sendError(__('responses.send_error'),401);
-        }
         if($login==2){
-             return $this->sendError(__('notification.notification_pvyeatpl'),401);  
+             return $this->sendError(__('notification.notification_pvyeatpl'),403);  
         }
         if($login==9){
             $data=["email"=>$request->email];
@@ -228,6 +225,7 @@ class AuthController extends AppBaseController
             $register=$this->authRepository->register($request);
             if($register==false){
                 response()->json(['status' => 'fail', 'message' =>__("notification.notification_swwptal")], 401);
+               
             }
             if($register['success']=="success"){
                 return $this->sendResponse($register,__('responses.user_register'));
@@ -325,7 +323,7 @@ class AuthController extends AppBaseController
      *     ),
      * )
      */
-    public function checkUsername(CheckUserRequest $request)
+    public function checkUsername(CheckUsernameRequest $request)
     {
         try {
             $username=$this->authRepository->checkUsername($request);

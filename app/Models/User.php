@@ -13,6 +13,7 @@ use App\Helpers\SMSHelper;
 use Carbon\Carbon;
 use Mail;
 use App\Mail\SendMail;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -66,15 +67,13 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserPersonal::class);
     }
-
+     
+    /**login apis */
     public function login($request)
     {    
         try {
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
-            if(!$user){
-                return 1;
-            }
             if($user->is_verify==0){
                 return 2;
             }
@@ -83,12 +82,12 @@ class User extends Authenticatable
               if (Hash::check($request->password, $user->password)) {
                   $token = $user->createToken(env("APP_NAME"))->accessToken;
                   if($user->two_factor=="allow"){
-                       $otp=self::generateRandomnumber(4);
+                       $otp=random_int(1000,9999);
                        $saveData = [
                            "two_factor_otp" => $otp,
                        ];
                        /**save otp in database */
-                       $userupdate=User::updateOrCreate(["email"=>$user->email], $saveData);
+                       User::updateOrCreate(["email"=>$user->email], $saveData);
                        $receiver=$user->country_code.$user->phone_number;  
                        /**sending sms */
                        $sms=SMSHelper::sendSms($receiver,$otp);
@@ -108,14 +107,15 @@ class User extends Authenticatable
             return false;
         }  
    }
-
+    
+   /**Register user */
     public function register($request)
     {   
         try {
             DB::beginTransaction();
             $name=$request->first_name." ".$request->last_name;
-            $otp=self::generateRandomnumber(4);
-            $sting = self::generateRandomString(30);
+            $otp=random_int(1000,9999);
+            $sting =  Str::random(30);
             $receiver=$request->country_code.$request->phone_number;
             $user=new User;
             $user->username = $request->username;
@@ -150,28 +150,9 @@ class User extends Authenticatable
             return false;
         }
     }
-             /**generating string  */
-        function generateRandomString($length = 30) {
-            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $charactersLength = strlen($characters);
-            $randomString = '';
-            for ($i = 0; $i < $length; $i++) {
-                $randomString .= $characters[rand(0, $charactersLength - 1)];
-            }
-            return $randomString;
-        }
-             /**generating numerice value */
-        function generateRandomnumber($length = 4) {
-            $characters = '0123456789';
-            $charactersLength = strlen($characters);
-            $randomString = '';
-            for ($i = 0; $i < $length; $i++) {
-                $randomString .= $characters[rand(0, $charactersLength - 1)];
-            }
-            return $randomString;
-        }
-
-        public function checkUsername($request)
+    
+    /**Check user exists or not */
+    public function checkUsername($request)
         {  
            try {
                 $username=User::select("id")->where("username",$request->username)->first();
@@ -183,8 +164,8 @@ class User extends Authenticatable
               return false;   
             }
         }
-        
-        public function checkEmail($request)
+    /**Check email exists or not */    
+    public function checkEmail($request)
         {
           try {
             $checkemail=User::select("id")->where("email",$request->email)->first();
@@ -196,8 +177,8 @@ class User extends Authenticatable
              return false; 
             }
         }
-
-        public function checkPhone($request)
+  /**Check phone number exists or not */
+     public function checkPhone($request)
         {
             try {
                 $checkphone=User::select("id")->where("phone_number",$request->phone)->first();
@@ -226,10 +207,10 @@ class User extends Authenticatable
                         "two_factor_otp" => $otp,
                     ];
                     /**save otp in database */
-                    $userupdate=User::updateOrCreate(["email"=>$request->email], $saveData);
+                    User::updateOrCreate(["email"=>$request->email], $saveData);
                     $receiver=$user->country_code.$user->phone_number;  
                     /**sending sms */
-                    $sms=1;//SMSHelper::sendSms($receiver,$otp);
+                    $sms=SMSHelper::sendSms($receiver,$otp);
                     if($sms){
                        return true; 
                     }
@@ -239,7 +220,7 @@ class User extends Authenticatable
                 return false;
             }
         }
-
+        /**Verify otp */
         public function verifyOtp($request)
         {   
             try {
@@ -267,11 +248,12 @@ class User extends Authenticatable
                  }else{
                     return false;
                  }
-            }catch (\Exception $e){
+            }catch(\Exception $e){
                 return false;
             }
         }
-
+    
+        /**check referal code exists or not */
         public function referalCode($request)
         {   
              try {
@@ -280,11 +262,11 @@ class User extends Authenticatable
                      return true;
                  }
                  return false;
-                 }catch (\Exception $e) {  
+                 }catch(\Exception $e){  
                     return false;
                  }
         }
-
+          /**Forget Password */
         public function forgetPassword($request)
         {
             try{
@@ -292,8 +274,8 @@ class User extends Authenticatable
                  if(!$user){
                    return false;
                  }else{
-                    $string = self::generateRandomString(60);
-                    $otp=self::generateRandomnumber(4);
+                    $string = Str::random(60);
+                    $otp=random_int(1000,9999);
                     $user->remember_token = $string;
                     $user->two_factor_otp=$otp;
                     $user->save();
@@ -304,7 +286,7 @@ class User extends Authenticatable
                 return false;
             }
         }
-
+          /**Reset password */
         public function resetPassword($request)
         {
             try {
