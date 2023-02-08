@@ -2935,6 +2935,7 @@
     "responses.not_mycode":"This reference code is not exists!",
     "responses.receiver_required":"Please enter receiver!",
     "responses.receiver_unique":"This receiver already registered with us!"
+
     
 }
  

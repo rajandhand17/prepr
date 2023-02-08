@@ -44,7 +44,7 @@ class SendOtpRequest extends FormRequest
     {
         return [
             'email.required' => __('notification.notification_peeief'),
-            'email.exists'=>__('responses.exists_email'), 
+            'email.exists'=>__('responses.not_exists_email'), 
             'email.email'=>__('notification.notification_iea'),
             'email.max'=>__('responses.max_email'),
 

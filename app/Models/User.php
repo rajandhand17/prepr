@@ -98,7 +98,8 @@ class User extends Authenticatable
                   $response = ['status'=>'success','token' => $token];
                   return $response;
               }else{
-                return false;
+                $response = ['status'=>'false','error' =>'Wrong Password'];
+                return $response;
               }
             }else{
                 return false;
@@ -210,7 +211,7 @@ class User extends Authenticatable
                     User::updateOrCreate(["email"=>$request->email], $saveData);
                     $receiver=$user->country_code.$user->phone_number;  
                     /**sending sms */
-                    $sms=SMSHelper::sendSms($receiver,$otp);
+                    $sms=1;//SMSHelper::sendSms($receiver,$otp);
                     if($sms){
                        return true; 
                     }
@@ -289,12 +290,26 @@ class User extends Authenticatable
           /**Reset password */
         public function resetPassword($request)
         {
-            try {
-                $user=User::where("email",$request->email)->first();
-                $user->password = Hash::make($request->password);
-                if($user->save()){
-                    return true;
-                 }
+            try{
+               /**get records of particular user by using email */
+               $user=User::select("id","two_factor_otp","is_verify","country_code","phone_number","updated_at")->where(["email"=>$request->email])->first();
+               $updated_user=$user->updated_at;
+               /**check user account verified or not */
+               if($user->is_verify==0){
+                 return 5;    
+               }
+               $currentTime = Carbon::now();
+               $minutes = $currentTime->diffInMinutes($updated_user);
+               /**check otp time 10 minutes expired or not */
+               if($minutes > 10){
+                   return 4;
+               } 
+               if($user->two_factor_otp==$request->otp){
+                    $user->password = Hash::make($request->password);
+                    if($user->save()){
+                        return true;
+                    }
+               }
                 return false;
             }catch(\Exception $e){
                 return $this->sendError(__('responses.send_error'),500);
