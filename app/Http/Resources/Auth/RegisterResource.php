@@ -4,7 +4,7 @@ namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LoginResource extends JsonResource
+class RegisterResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,8 +14,6 @@ class LoginResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'token' => $request->token,
-        ];
+        return parent::toArray($request);
     }
 }

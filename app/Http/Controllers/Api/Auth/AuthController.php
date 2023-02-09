@@ -15,7 +15,7 @@ use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\submitResetPasswordFormRequest;
-
+use App\Http\Resources\Auth\LoginResource;
 class AuthController extends AppBaseController
 {
     private $authRepository;

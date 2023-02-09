@@ -1,12 +1,6 @@
 <?php
 
 namespace Tests\Feature\Http\Controllers\Api\Auth;
-
-use App\Http\Controllers\Api\Auth\AuthController;
-use App\Models\User;
-use App\Repositories\Api\Auth\AuthRepository;
-use Mockery;
-use Mockery\Mock;
 use Tests\TestCase;
 
 /** 
