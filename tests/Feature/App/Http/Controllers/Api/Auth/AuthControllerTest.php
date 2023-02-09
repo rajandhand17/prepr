@@ -17,6 +17,7 @@ final class AuthControllerTest extends TestCase
         /** @todo This test is complete. */
         $response = $this->postJson('/api/v1/auth/login', ["email" => "rajan@prepr.org", "password" => "Prepr@123"]);
         $this->assertEquals(200, $response->getStatusCode());
+        
     }
     /**Login Negative Wrong Password*/
     public function testLoginNegativeWithWrongPassword(): void

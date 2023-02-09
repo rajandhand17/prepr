@@ -21,10 +21,15 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/categories?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('parent_category', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('parent_category', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
     }
 
     /**Categories negative test cases */
@@ -39,11 +44,15 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/categories?language=en&search=Co-working Space');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('parent_category', $data['data'][0]);
-
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('parent_category', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
     }
 
     /**Categories negative test cases with search */
@@ -58,9 +67,14 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/skills?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
     }
 
     /**Skills negative test cases */
@@ -75,9 +89,14 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/skills?language=en&search=Critical thinking');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
     }
 
     /**Skills negative test cases with Search */
@@ -93,11 +112,16 @@ final class MasterControllerTest extends TestCase
         /** @todo This test is complete. */
         $response = $this->get('/api/v1/master/tags?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('tag_image', $data['data'][0]);
-        $this->assertArrayHasKey('components', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('tag_image', $data['data'][0]);
+            $this->assertArrayHasKey('components', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
     }
 
     /**Tags negative test cases */
@@ -112,11 +136,16 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/tags?language=en&search=No Poverty');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('tag_image', $data['data'][0]);
-        $this->assertArrayHasKey('components', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('tag_image', $data['data'][0]);
+            $this->assertArrayHasKey('components', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
     }
 
     /** Tags negative test cases with search*/
@@ -131,9 +160,14 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/industries?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
     }
 
     /**ProjectIndustries negative test cases */
@@ -147,9 +181,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/industries?language=en&search=Automotive');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**ProjectIndustries negative test cases with search */
@@ -163,9 +201,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/types?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
     /**ProjectTypes negative test cases */
     public function testGetProjectTypesNegative(): void
@@ -178,9 +220,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/types?language=en&search=Hackathon');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
     /**ProjectTypes negative test cases with search */
     public function testGetProjectTypesWithSearchNegative(): void
@@ -194,9 +240,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/stages?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**ProjectStages negative test cases */
@@ -226,9 +276,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/verticals?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**ProjectVerticals negative test cases */
@@ -243,9 +297,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/verticals?language=en&search=Automotive');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**ProjectVerticals negative test cases with search*/
@@ -260,9 +318,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/status?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
 
@@ -279,9 +341,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/status?language=en&search=Active');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
 
@@ -298,10 +364,14 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/links?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('icon',$data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('icon', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**SocialLinks negative test cases*/
@@ -317,10 +387,14 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/links?language=en&search=facebook');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('icon',$data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('icon', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**SocialLinks negative test cases with search*/
@@ -335,12 +409,16 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/skill-groups?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
-        $this->assertArrayHasKey('skill_stacks', $data['data'][0]);
-        $this->assertArrayHasKey('skills', $data['data'][0]);
-        $this->assertArrayHasKey('description', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+            $this->assertArrayHasKey('skill_stacks', $data['data'][0]);
+            $this->assertArrayHasKey('skills', $data['data'][0]);
+            $this->assertArrayHasKey('description', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**SkillGroups negative test cases */
@@ -355,12 +433,16 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/skill-groups?language=en&search=Title');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
-        $this->assertArrayHasKey('skill_stacks', $data['data'][0]);
-        $this->assertArrayHasKey('skills', $data['data'][0]);
-        $this->assertArrayHasKey('description', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+            $this->assertArrayHasKey('skill_stacks', $data['data'][0]);
+            $this->assertArrayHasKey('skills', $data['data'][0]);
+            $this->assertArrayHasKey('description', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**SkillGroups negative test cases with search*/
@@ -375,15 +457,19 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/ranks?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('description', $data['data'][0]);
-        $this->assertArrayHasKey('image', $data['data'][0]);
-        $this->assertArrayHasKey('category', $data['data'][0]);
-        $this->assertArrayHasKey('point', $data['data'][0]);
-        $this->assertArrayHasKey('no_of_use', $data['data'][0]);
-        $this->assertArrayHasKey('status', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('description', $data['data'][0]);
+            $this->assertArrayHasKey('image', $data['data'][0]);
+            $this->assertArrayHasKey('category', $data['data'][0]);
+            $this->assertArrayHasKey('point', $data['data'][0]);
+            $this->assertArrayHasKey('no_of_use', $data['data'][0]);
+            $this->assertArrayHasKey('status', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**Ranks negative test cases*/
@@ -398,15 +484,19 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/ranks?language=en&search=Rank 0');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('description', $data['data'][0]);
-        $this->assertArrayHasKey('image', $data['data'][0]);
-        $this->assertArrayHasKey('category', $data['data'][0]);
-        $this->assertArrayHasKey('point', $data['data'][0]);
-        $this->assertArrayHasKey('no_of_use', $data['data'][0]);
-        $this->assertArrayHasKey('status', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('description', $data['data'][0]);
+            $this->assertArrayHasKey('image', $data['data'][0]);
+            $this->assertArrayHasKey('category', $data['data'][0]);
+            $this->assertArrayHasKey('point', $data['data'][0]);
+            $this->assertArrayHasKey('no_of_use', $data['data'][0]);
+            $this->assertArrayHasKey('status', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**Ranks negative test cases with search*/
@@ -421,9 +511,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/project-submission-requirement?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**ProjectSubmission negative test cases with search*/
@@ -438,9 +532,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/project-submission-requirement?language=en&search=Complete project pitch');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**ProjectSubmission negative test cases with search*/
@@ -455,9 +553,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/achievement-condition-list?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**AchievementConditionLists negative test cases with search*/
@@ -472,9 +574,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/achievement-condition-list?language=en&search=Complete All');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**AchievementConditionLists negative test cases with search*/
@@ -489,12 +595,16 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/host?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('link', $data['data'][0]);
-        $this->assertArrayHasKey('image', $data['data'][0]);
-        $this->assertArrayHasKey('status', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('link', $data['data'][0]);
+            $this->assertArrayHasKey('image', $data['data'][0]);
+            $this->assertArrayHasKey('status', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
     /**Hosts negative test cases */
     public function testGetHostsNegative(): void
@@ -507,12 +617,16 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/host?language=en&search=Google');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('name', $data['data'][0]);
-        $this->assertArrayHasKey('link', $data['data'][0]);
-        $this->assertArrayHasKey('image', $data['data'][0]);
-        $this->assertArrayHasKey('status', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('link', $data['data'][0]);
+            $this->assertArrayHasKey('image', $data['data'][0]);
+            $this->assertArrayHasKey('status', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**Host negative test case with search */
@@ -526,9 +640,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/flexible-date-duration?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**FlexibleDateDuration negative test case */
@@ -543,9 +661,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/flexible-date-duration?language=en&search=Title');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**FlexibleDateDuration negative test case with search */
@@ -560,9 +682,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/pitch-templates?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**PitchTemplates negative test case*/
@@ -577,9 +703,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/pitch-templates?language=en&search=PIE Framework');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
     /**PitchTemplates negative test case with search*/
     public function testGetPitchTemplatesWithSearchNegative(): void
@@ -593,9 +723,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/lab-conditions?language=en');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**LabConditions negative test case */
@@ -610,9 +744,13 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/lab-conditions?language=en&search=title');
         $this->assertEquals(200, $response->getStatusCode());
-        $data=$response->json();
-        $this->assertArrayHasKey('id', $data['data'][0]);
-        $this->assertArrayHasKey('title', $data['data'][0]);
+        $data = $response->json();
+        if ($data['success'] == "true") {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('title', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
     }
 
     /**LabConditions negative test case with search*/
