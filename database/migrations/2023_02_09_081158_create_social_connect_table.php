@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('organization_addresses', function (Blueprint $table) {
+        Schema::create('social_connect', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger("organization_id");
-            $table->text("address")->nullable();
-            $table->string("longitude")->nullable();
-            $table->string("latitude")->nullable();
-            $table->foreign('organization_id')->references('id')->on('organisations')->onDelete('cascade');
+            $table->string('name');
+            $table->string('logo');
+            $table->enum("integration_status", ['0', '1'])->comment('0 -> disabled, 1 -> enabled')->default('1');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organization_addresses');
+        Schema::dropIfExists('social_connect');
     }
 };

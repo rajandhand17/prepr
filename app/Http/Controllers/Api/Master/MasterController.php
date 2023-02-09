@@ -44,7 +44,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -52,27 +52,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal server error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -80,7 +80,7 @@ class MasterController extends AppBaseController
     {
         try {
             $category = $this->masterRepository->getCategories($request);
-            if ($category != false){
+            if ($category){
                 return response()->json(['status' => 'success', 'message' => __('responses.found_category_list'), 'data' => CategoryResource::collection($category)], 200);
             }
             return $this->sendError(__('responses.not_found_category_list'));
@@ -102,7 +102,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -110,27 +110,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -161,7 +161,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -169,27 +169,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -218,7 +218,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -226,27 +226,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -275,7 +275,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -283,27 +283,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -332,7 +332,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -340,27 +340,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -389,7 +389,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -397,27 +397,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -448,7 +448,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -456,27 +456,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad Request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -507,7 +507,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -515,27 +515,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -566,7 +566,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -574,7 +574,7 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="skills",
@@ -582,7 +582,7 @@ class MasterController extends AppBaseController
      *         description="skills values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="skill_stacks",
@@ -590,27 +590,27 @@ class MasterController extends AppBaseController
      *         description="skill stacks values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -641,7 +641,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -649,27 +649,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -701,7 +701,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -709,27 +709,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -759,7 +759,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -767,27 +767,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -819,7 +819,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -827,27 +827,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -876,7 +876,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -884,27 +884,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -933,7 +933,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -941,27 +941,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -992,7 +992,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -1000,27 +1000,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -1051,7 +1051,7 @@ class MasterController extends AppBaseController
      *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="search",
@@ -1059,27 +1059,27 @@ class MasterController extends AppBaseController
      *         description="Search values that needed to be considered for filter",
      *         required=false,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
