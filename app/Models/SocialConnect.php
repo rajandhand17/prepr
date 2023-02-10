@@ -27,7 +27,7 @@ class SocialConnect extends Model
             $social_connect_list = static::select('id','name','logo');
             
             //take 20 results based from the table
-            $social_connect_list = $social_connect_list->take(20)->get();
+            $social_connect_list = $social_connect_list->where("integration_status",'1')->get();
             //check if there are any results
             if(!$social_connect_list->isEmpty()){
                 return $social_connect_list;

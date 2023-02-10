@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\SendMailHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -78,10 +79,10 @@ class User extends Authenticatable
                 return 2;
             }
             if($user){
-                /**check password same or not */
-              if (Hash::check($request->password, $user->password)) {
-                  $token = $user->createToken(env("APP_NAME"))->accessToken;
-                  if($user->two_factor_verification==1){
+               /**check password same or not */
+              if (Hash::check($request->password, $user->password)){
+                $token=$user->createToken('Token Name')->accessToken;
+                if($user->two_factor_verification==1){
                        $otp=random_int(1000,9999);
                        $saveData = [
                            "otp" => $otp,
@@ -90,6 +91,7 @@ class User extends Authenticatable
                        User::updateOrCreate(["email"=>$user->email], $saveData);
                        $receiver=$user->country_code.$user->phone_number;  
                        /**sending sms */
+                       //Mail::to($user->email)->send(new SendMail($user));
                        $sms=SMSHelper::sendSms($receiver,$otp);
                        if($sms){
                           return 9; 
@@ -117,7 +119,6 @@ class User extends Authenticatable
             $name=$request->first_name." ".$request->last_name;
             $otp=random_int(1000,9999);
             $string =  Str::random(30);
-            
             $receiver=$request->country_code.$request->phone_number;
             $user=new User;
             $user->preferred_language=$request->preferred_language;
@@ -141,12 +142,13 @@ class User extends Authenticatable
             $userpersonal->user_type=$request->user_type;
             $userpersonal->save();
             /**sending otp on registeres number */
-            $sms=SMSHelper::sendSms($receiver,$otp);
+            $mail=SendMailHelper::sendMail($user,"register_user");
             if($user_id){
               DB::commit();
               $success=["success"=>true,"user"=>$user];
               return $success;
             }
+            DB::rollback();
             return false;
         }catch (\Exception $e){
               DB::rollback();
@@ -198,22 +200,22 @@ class User extends Authenticatable
         {
             try {
                 /**getting records of user by using email */
-                $user=User::select("two_factor_otp","is_verify","country_code","phone_number")->where(["email"=>$request->email])->first();
+                $user=User::select("otp","verified_user","country_code","phone_number")->where(["email"=>$request->email])->first();
                 if($user!=""){
                     /**check account is verified or not */
-                    if($user->is_verify==1){
+                   if($user->verified_user==1){
                        return 5;
                     }
                     /**generating otp */
                     $otp=random_int(1000,9999);
                     $saveData = [
-                        "two_factor_otp" => $otp,
+                        "otp" => $otp,
                     ];
                     /**save otp in database */
                     User::updateOrCreate(["email"=>$request->email], $saveData);
                     $receiver=$user->country_code.$user->phone_number;  
                     /**sending sms */
-                    $sms=1;//SMSHelper::sendSms($receiver,$otp);
+                    $sms=SMSHelper::sendSms($receiver,$otp);
                     if($sms){
                        return true; 
                     }
@@ -228,10 +230,10 @@ class User extends Authenticatable
         {   
             try {
                 /**get records of particular user by using email */
-                $user=User::select("id","two_factor_otp","is_verify","country_code","phone_number","updated_at")->where(["email"=>$request->email])->first();
+                $user=User::select("id","otp","verified_user","country_code","phone_number","updated_at")->where(["email"=>$request->email])->first();
                 $updated_user=$user->updated_at;
                 /**check user account verified or not */
-                if($user->is_verify==1){
+                if($user->verified_user==1){
                   return 5;    
                 }
                 $currentTime = Carbon::now();
@@ -282,7 +284,7 @@ class User extends Authenticatable
                     $user->remember_token = $string;
                     $user->two_factor_otp=$otp;
                     $user->save();
-                    $mail=Mail::to($user->email)->send(new SendMail($user));
+                    $mail=SendMailHelper::sendMail($user,"forget_password");
                     return true;
                 }
             }catch(\Exception $e){

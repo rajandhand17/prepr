@@ -1,8 +1,6 @@
 <?php
 namespace App\Helpers;
 use Twilio\Rest\Client;
-use Illuminate\Contracts\Validation\Validator;
-use App\Http\Requests\Master\SmsRequest;
 
 class SMSHelper{ 
 

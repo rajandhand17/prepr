@@ -34,7 +34,7 @@ class SendMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Forget Password',
+            subject: $this->user['subject'],
         );
     }
 
@@ -47,7 +47,7 @@ class SendMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'email.reset_password',
+            view: $this->user['blade'],
             with: [
                 'user' => $this->user,
             ],

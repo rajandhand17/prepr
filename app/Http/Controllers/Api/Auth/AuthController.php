@@ -532,10 +532,11 @@ class AuthController extends AppBaseController
     {
         try {
             $send_otp = $this->authRepository->sendOtp($request);
-            if($send_otp==5){
+            
+            if($send_otp===5){
                 return $this->sendError(__('notification.notification_uarvrf'), 403);
             }
-            if($send_otp==true){
+            if($send_otp===true){
                 return $this->sendResponse(null, __('responses.otp_send'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
