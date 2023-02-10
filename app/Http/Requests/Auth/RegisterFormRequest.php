@@ -26,6 +26,7 @@ class RegisterFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'preferred_language'=>'required',
             'first_name' => 'required|max:20|string',
             'last_name' => 'required|string|max:20',
             'username' => 'required|max:20|regex:/^[A-Za-z0-9_-]*$/|unique:users,username',
@@ -33,8 +34,7 @@ class RegisterFormRequest extends FormRequest
             'password_confirmation' => 'required|same:password',
             'email' => 'required|email|max:50|unique:users,email',
             'user_type' => 'required',
-            'status' => 'required',
-            'language_id'=>'required|numeric',
+            'purpose' => 'required',
             'phone_number' => 'required|numeric|unique:users,phone_number',
             'country_code'=>'required|numeric'
         ];
@@ -63,7 +63,7 @@ class RegisterFormRequest extends FormRequest
             'last_name.required'=>__("notification.notification_reg_lnr"),
             'last_name.max'=>__("notification.notification_reg_tlnmbg"),
             'last_name.string'=>__("responses.last_name_string"),
-            'status.required'=>__("notification.notification_sfired"),
+            'purpose.required'=>__("notification.notification_sfired"),
             'username.unique'=>__("responses.username_unique"),
             'username.max'=>__("notification.notification_reg_tunmbg"),
             'username.required'=>__("notification.notification_reg_unr"),
@@ -73,8 +73,7 @@ class RegisterFormRequest extends FormRequest
             "password.min"=>__("responses.min_password"),
             "password_confirmation.required"=>__("notification.notification_reg_cpr"),
             "password_confirmation.same"=>__("responses.password_confirm_password"),
-            "language_id.required"=>__("notification.notification_lfirs"),
-            "language_id.numeric"=>__("responses.language_numeric"),
+            "preferred_language.required"=>__("notification.notification_lfirs"),
             'phone_number.required' =>__("notification.notification_ypnie"),
             'phone_number.numeric'=>__("responses.numeric"),
             'phone_number.unique'=>__("responses.already_number"),

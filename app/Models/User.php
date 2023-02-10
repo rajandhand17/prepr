@@ -74,17 +74,17 @@ class User extends Authenticatable
         try {
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
-            if($user->is_verify==0){
+            if($user->verified_user==0){
                 return 2;
             }
             if($user){
                 /**check password same or not */
               if (Hash::check($request->password, $user->password)) {
                   $token = $user->createToken(env("APP_NAME"))->accessToken;
-                  if($user->two_factor=="allow"){
+                  if($user->two_factor_verification==1){
                        $otp=random_int(1000,9999);
                        $saveData = [
-                           "two_factor_otp" => $otp,
+                           "otp" => $otp,
                        ];
                        /**save otp in database */
                        User::updateOrCreate(["email"=>$user->email], $saveData);
@@ -116,28 +116,30 @@ class User extends Authenticatable
             DB::beginTransaction();
             $name=$request->first_name." ".$request->last_name;
             $otp=random_int(1000,9999);
-            $sting =  Str::random(30);
+            $string =  Str::random(30);
+            
             $receiver=$request->country_code.$request->phone_number;
             $user=new User;
-            $user->username = $request->username;
-            $user->email = $request->email;
-            $user->name = $name;
+            $user->preferred_language=$request->preferred_language;
             $user->first_name=$request->first_name;
             $user->last_name=$request->last_name;
-            $user->remember_token = $sting;
-            $user->verify_token = $sting;
-            $user->mycode = $request->username;
-            $user->password = Hash::make($request->password);
-            $user->phone_number = $request->phone_number;
-            $user->country_code = $request->country_code;
-            $user->two_factor_otp=$otp;
+            $user->full_name=$name;
+            $user->username=$request->username;
+            $user->email=$request->email;
+            $user->password=Hash::make($request->password);
+            $user->country_code=$request->country_code;
+            $user->phone_number=$request->phone_number;
+            $user->two_factor_verification= $request->two_factor_verification;
+            $user->otp=$otp;
+            $user->verify_token=$string;
+            $user->referal_code=$request->referal_code;
             $user->save();
             $user_id = $user->id;
-            $user_personals=new UserPersonal;
-            $user_personals->user_id=$user_id;
-            $user_personals->status=$request->status;
-            $user_personals->language=$request->language_id;
-            $user_personals->save();
+            $userpersonal=new UserPersonal();
+            $userpersonal->user_id=$user_id;
+            $userpersonal->purpose=$request->purpose;
+            $userpersonal->user_type=$request->user_type;
+            $userpersonal->save();
             /**sending otp on registeres number */
             $sms=SMSHelper::sendSms($receiver,$otp);
             if($user_id){
@@ -147,8 +149,8 @@ class User extends Authenticatable
             }
             return false;
         }catch (\Exception $e){
-            DB::rollback();
-            return false;
+              DB::rollback();
+              return false;
         }
     }
     

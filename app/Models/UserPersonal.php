@@ -12,10 +12,10 @@ class UserPersonal extends Model
     
     use SoftDeletes;
 
-    protected $table="user_personals";
+    protected $table="user_personal_details";
 
     protected $fillable =[
-        'user_id','about','gender','date_of_birth','age','status','user_type','language','recent_immigrant','visible_minority','disability',
+'user_id','about','gender','date_of_birth','age','purpose','user_type','recent_immigrant','indigenous_group','visible_minority','disability',
    ];
 
    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

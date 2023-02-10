@@ -20,6 +20,7 @@ use App\Http\Resources\Master\SkillGroupResource;
 use App\Http\Resources\Master\HostResource;
 use App\Http\Resources\Master\LabConditionResource;
 use App\Http\Resources\Master\FlexibleDateDurationResource;
+use App\Http\Resources\Master\SocialConnect;
 use App\Repositories\Api\Master\MasterRepository;
 use Illuminate\Http\Request;
 
@@ -1092,6 +1093,55 @@ class MasterController extends AppBaseController
                 return $this->sendResponse(LabConditionResource::collection($lab_condition), __('responses.found_lab_condition_list'));
             }
             return $this->sendError(__('responses.not_found_lab_condition_list'));
+        } catch (\Exception) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+    
+    /**
+     * @OA\Get(
+     *     path="/api/v1/master/social-connect",
+     *     tags={"Master API - Social Connect"},
+     *     summary="Finds lists of social connect",
+     *     description="Get all social connect list",
+     *     operationId="getSocialConnect",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *
+     *     ),
+     * )
+     */
+    public function getSocialConnect(Request $request){
+        try {
+            $socialconnect = $this->masterRepository->getSocialConnect($request);
+            if($socialconnect){
+                return $this->sendResponse(SocialConnect::collection($socialconnect), __('responses.social_connect_list'));
+            }
+            return $this->sendError(__('responses.not_found_social_connect_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }

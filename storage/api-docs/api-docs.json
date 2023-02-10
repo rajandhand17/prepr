@@ -1212,6 +1212,39 @@
                 }
             }
         },
+        "/api/v1/master/social-connect": {
+            "get": {
+                "tags": [
+                    "Master API - Social Connect"
+                ],
+                "summary": "Finds lists of social connect",
+                "description": "Get all social connect list",
+                "operationId": "getSocialConnect",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
         "/": {
             "get": {
                 "description": "Home page",

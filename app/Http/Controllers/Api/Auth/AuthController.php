@@ -16,6 +16,7 @@ use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\submitResetPasswordFormRequest;
 use App\Http\Resources\Auth\LoginResource;
+use App\Http\Resources\Auth\RegisterResource;
 class AuthController extends AppBaseController
 {
     private $authRepository;
@@ -85,6 +86,7 @@ class AuthController extends AppBaseController
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch(\Exception $e){
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

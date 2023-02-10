@@ -20,6 +20,5 @@ Interface MasterInterface{
     public function getFlexibleDateDurations($request);
     public function getPitchTemplates($request);
     public function getLabConditions($request);
-
-
+    public function getSocialConnect($request);
 }

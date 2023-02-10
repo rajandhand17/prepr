@@ -21,6 +21,7 @@ Route::middleware(['language'])->group(function () {
     Route::get('/flexible-date-duration',[MasterController::class,'getFlexibleDateDurations']);
     Route::get('/pitch-templates',[MasterController::class,'getPitchTemplates']);
     Route::get('/lab-conditions',[MasterController::class,'getLabConditions']);
+    Route::get('/social-connect',[MasterController::class,'getSocialConnect']);
 });
   
 

@@ -2,10 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers\Api\Master;
 
-use App\Http\Controllers\Api\Master\MasterController;
-use App\Repositories\Api\Master\MasterRepository;
-use Mockery;
-use Mockery\Mock;
 use Tests\TestCase;
 
 /**
@@ -15,7 +11,6 @@ use Tests\TestCase;
  */
 final class MasterControllerTest extends TestCase
 {
-
     /**Categories positive test */
     public function testGetCategoriesPositive(): void
     {
@@ -758,5 +753,27 @@ final class MasterControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/master/lab-conditions?language=en&search=null');
         $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    /**SocialConnect positive test case */
+    public function testSocialConnectPositive(): void
+    {
+        $response = $this->get('/api/v1/master/social-connect?language=en');
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['success']) {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+        } else {
+            $this->fail();
+        }
+    }
+
+    
+    /**SocialConnect negative test case */
+    public function testSocialConnectNagtive(): void
+    {
+        $response = $this->get('/api/v1/master/social-connect');
+        $this->assertEquals(400, $response->getStatusCode());
     }
 }
