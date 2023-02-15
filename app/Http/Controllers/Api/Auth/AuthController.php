@@ -17,6 +17,7 @@ use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\submitResetPasswordFormRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\Auth\RegisterResource;
+
 class AuthController extends AppBaseController
 {
     private $authRepository;
@@ -78,6 +79,7 @@ class AuthController extends AppBaseController
             if($login == 9){
                 return $this->sendResponse(null, __('responses.otp_send'), 200);
             }
+            dd($login);
             if($login['status'] == "success"){
                 return $this->sendResponse($login['token'], __('responses.user_login_sucess'), 200);
             }
@@ -127,8 +129,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *         
-     *     ),
-     *     @OA\Parameter(
+     *    *     @OA\Parameter(
      *         name="last_name",
      *         in="query",
      *         description="Enter last name of user for registered",
@@ -223,7 +224,7 @@ class AuthController extends AppBaseController
      * )
      */
     public function registerUser(RegisterFormRequest $request)
-    {
+    {   
         try {
             $register = $this->authRepository->register($request);
             if ($register == false) {
@@ -234,6 +235,7 @@ class AuthController extends AppBaseController
             }
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+          
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -279,6 +281,7 @@ class AuthController extends AppBaseController
     {
         try {
             $forgetpassword = $this->authRepository->forgetPassword($request);
+           
             if ($forgetpassword == false) {
                 return $this->sendError(__('notification.notification_swwptal'), 401);
             }
@@ -593,13 +596,16 @@ class AuthController extends AppBaseController
     {
         try {
             $verify = $this->authRepository->verifyOtp($request);
-            if ($verify == 5) {
+            if ($verify === 5) {
                 return $this->sendError(__('notification.notification_uarvrf'), 403);
             }
-            if ($verify == 4) {
+            if ($verify === 4) {
                 return $this->sendError(__('responses.otp_expried_required'), 403);
             }
-            if ($verify == true) {
+            if ($verify === 6) {
+                return $this->sendError(__('responses.otp_correct_required'), 403);
+            }
+            if ($verify === true) {
                 return $this->sendResponse(null, __('responses.verify_success'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
@@ -615,9 +621,9 @@ class AuthController extends AppBaseController
      *     summary="Send request for verify otp",
      *     operationId="referalCode",
      *     @OA\Parameter(
-     *         name="mycode",
+     *         name="referal_code",
      *         in="query",
-     *         description="check the mycode value that exists or not!",
+     *         description="check the referal code value that exists or not!",
      *         required=true,
      *         explode=true,
      *         
@@ -645,7 +651,7 @@ class AuthController extends AppBaseController
      * )
      */
     public function referalCode(VerifyInviteCodeRequest $request)
-    {
+    {    
         try{
             $referencecode = $this->authRepository->referalCode($request);
             if($referencecode==true){
@@ -713,23 +719,21 @@ class AuthController extends AppBaseController
      */
     public function resetPassword(submitResetPasswordFormRequest $request)
     {
-        try {
+        try{
             $resetcode = $this->authRepository->resetPassword($request);
-            if ($resetcode == 5){
+           
+            if ($resetcode === 5){
                 return $this->sendError(__('responses.account_not_verified'), 403);
             }
-            if($resetcode == 4){
+            if($resetcode === 4){
                 return $this->sendError(__('responses.otp_expried_required'), 403);
             }
-            if($resetcode==true) {
-                return $this->sendResponse(null, __('responses.verify_success'), 200);
-            }
-            if ($resetcode == true) {
+            if ($resetcode === true) {
                 return $this->sendResponse(null, __('notification.notification_yprs'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
-        } catch (\Exception $e) {
+         }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
-        }
+         }
     }
 }

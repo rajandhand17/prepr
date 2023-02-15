@@ -24,6 +24,7 @@ class SendMail extends Mailable
     public function __construct(User $user)
     {
         $this->user = $user;
+        $this->subject=$user->subject;
     }
 
     /**
@@ -34,7 +35,7 @@ class SendMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: $this->user['subject'],
+            subject: $this->subject,
         );
     }
 
@@ -47,7 +48,7 @@ class SendMail extends Mailable
     public function content()
     {
         return new Content(
-            view: $this->user['blade'],
+            view: "email.reset_password",
             with: [
                 'user' => $this->user,
             ],

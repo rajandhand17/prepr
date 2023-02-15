@@ -26,7 +26,7 @@ class ForgetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|max:50',
+            'email' => 'required|email|max:50|exists:users,email',
         ];
     }
 
@@ -46,6 +46,7 @@ class ForgetPasswordRequest extends FormRequest
             'email.required' => __('notification.notification_peeief'),
             'email.email'=>__('notification.notification_iea'),
             'email.max'=>__('responses.max_email'),
+            'email.exists'=>__('notification.notification_iea'),
         ];
     }
 

@@ -11,14 +11,15 @@ class SendMailHelper
     {
         try {
             if($type=="register_user"){
-               $user['blade']="email.reset_password";
-               $user['subject']="Verify User";    
+               $user->blade="email.reset_password";
+               $user->subject="Verify User";    
             }
             if($type=="forget_password"){
-                $user['blade']="email.reset_password";
-                $user['subject']="Forget Password";
+                $user->blade="email.reset_password";
+                $user->subject="Forget Password";
              }
-            $result= Mail::to($user->email)->send(new SendMail($user));
+             $result= Mail::to($user->email)->send(new SendMail($user));
+
             if($result){
                 return true;
             }

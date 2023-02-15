@@ -48,12 +48,11 @@ class User extends Authenticatable
         'is_verify',
         'is_email_sent',
         'verify_token',
-        'mycode',
+        'referal_code',
         'isReferralOpen',
         'manage_alerts',
         'is_subscribe',
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -63,7 +62,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-     
+    
     public function UserPersonal()
     {
         return $this->hasOne(UserPersonal::class);
@@ -80,23 +79,26 @@ class User extends Authenticatable
             }
             if($user){
                /**check password same or not */
-              if (Hash::check($request->password, $user->password)){
+              if(Hash::check($request->password, $user->password)){
                 $token=$user->createToken('Token Name')->accessToken;
-                if($user->two_factor_verification==1){
-                       $otp=random_int(1000,9999);
-                       $saveData = [
-                           "otp" => $otp,
-                       ];
-                       /**save otp in database */
-                       User::updateOrCreate(["email"=>$user->email], $saveData);
-                       $receiver=$user->country_code.$user->phone_number;  
-                       /**sending sms */
-                       //Mail::to($user->email)->send(new SendMail($user));
-                       $sms=SMSHelper::sendSms($receiver,$otp);
-                       if($sms){
-                          return 9; 
-                       }
-                  }
+                dd($token);
+                // if($user->two_factor_verification==1){
+                //        $otp=random_int(1000,9999);
+                //        $saveData = [
+                //            "otp" => $otp,
+                //        ];
+                //        /**save otp in database */
+                //        User::updateOrCreate(["email"=>$user->email], $saveData);
+                       
+                //        $receiver=$user->country_code.$user->phone_number;  
+                //        /**sending sms */
+                //        //Mail::to($user->email)->send(new SendMail($user));
+                //        $sms=SMSHelper::sendSms($receiver,$otp);
+                //        if($sms){
+                //           return 9; 
+                //        }
+                //   }
+
                   $response = ['status'=>'success','token' => $token];
                   return $response;
               }else{
@@ -113,7 +115,7 @@ class User extends Authenticatable
     
    /**Register user */
     public function register($request)
-    {   
+    {    
         try {
             DB::beginTransaction();
             $name=$request->first_name." ".$request->last_name;
@@ -200,7 +202,7 @@ class User extends Authenticatable
         {
             try {
                 /**getting records of user by using email */
-                $user=User::select("otp","verified_user","country_code","phone_number")->where(["email"=>$request->email])->first();
+                $user=User::select("id","otp","verified_user","country_code","phone_number")->where(["email"=>$request->email])->first();
                 if($user!=""){
                     /**check account is verified or not */
                    if($user->verified_user==1){
@@ -208,17 +210,18 @@ class User extends Authenticatable
                     }
                     /**generating otp */
                     $otp=random_int(1000,9999);
-                    $saveData = [
-                        "otp" => $otp,
-                    ];
-                    /**save otp in database */
-                    User::updateOrCreate(["email"=>$request->email], $saveData);
-                    $receiver=$user->country_code.$user->phone_number;  
-                    /**sending sms */
-                    $sms=SMSHelper::sendSms($receiver,$otp);
-                    if($sms){
-                       return true; 
+                    $user->otp = $otp;
+                    if($user->save()){
+                        $receiver=$user->country_code.$user->phone_number;  
+                        /**sending sms */
+                        $sms=SMSHelper::sendSms($receiver,$otp);
+                        if($sms){
+                        return true; 
+                        }
+                    }else{
+                        return false;
                     }
+                    
                 }
                 return false;
             } catch (\Exception $e){
@@ -242,18 +245,20 @@ class User extends Authenticatable
                 if($minutes > 10){
                     return 4;
                 }
+              
                 /**Matching otp is same or not */
-                if($user->two_factor_otp==$request->otp){
-                    $user = User::firstOrCreate(['id' => $user->id]);
-                    $user->is_verify = '1';
+                if($user->otp==$request->otp){
+                    $user = User::find($user->id);
+                    $user->verified_user = '1';
                     if($user->save()){
                        return true;
                     }
                     return false;
                  }else{
-                    return false;
+                    return 6;
                  }
             }catch(\Exception $e){
+                dd($e);
                 return false;
             }
         }
@@ -261,8 +266,8 @@ class User extends Authenticatable
         /**check referal code exists or not */
         public function referalCode($request)
         {   
-             try {
-                $userrecords=User::select("id","email","first_name","last_name")->where(["mycode"=>$request->mycode])->first();
+            try{
+                $userrecords=User::select("id","email","first_name","last_name")->where(["referal_code"=>$request->referal_code])->first();
                 if($userrecords){
                      return true;
                  }
@@ -277,13 +282,15 @@ class User extends Authenticatable
             try{
                  $user=User::where("email",$request->email)->first();
                  if(!$user){
-                   return false;
+                    return false;
                  }else{
                     $string = Str::random(60);
                     $otp=random_int(1000,9999);
                     $user->remember_token = $string;
-                    $user->two_factor_otp=$otp;
+                    $user->otp=$otp;
                     $user->save();
+                    $user->blade="email.reset_password";
+                    $user->subject="Forget Password";
                     $mail=SendMailHelper::sendMail($user,"forget_password");
                     return true;
                 }
@@ -296,19 +303,20 @@ class User extends Authenticatable
         {
             try{
                /**get records of particular user by using email */
-               $user=User::select("id","two_factor_otp","is_verify","country_code","phone_number","updated_at")->where(["email"=>$request->email])->first();
+               $user=User::select("id","otp","verified_user","country_code","phone_number","updated_at")->where(["email"=>$request->email])->first();
                $updated_user=$user->updated_at;
                /**check user account verified or not */
-               if($user->is_verify==0){
-                 return 5;    
+               if($user->verified_user==0){
+                return 5;    
                }
+               
                $currentTime = Carbon::now();
                $minutes = $currentTime->diffInMinutes($updated_user);
                /**check otp time 10 minutes expired or not */
                if($minutes > 10){
                    return 4;
                } 
-               if($user->two_factor_otp==$request->otp){
+               if($user->otp==$request->otp){
                     $user->password = Hash::make($request->password);
                     if($user->save()){
                         return true;
@@ -316,7 +324,7 @@ class User extends Authenticatable
                }
                 return false;
             }catch(\Exception $e){
-                return $this->sendError(__('responses.send_error'),500);
+               return $this->sendError(__('responses.send_error'),500);
             }
         }
 }
