@@ -10,18 +10,6 @@ class SendMailHelper
     public static function sendMail($user,$view,$data)
     {
         try {
-            // if($type=="register_user"){
-            //    $user->blade="email.reset_password";
-            //    $user->subject="Verify User";    
-            // }
-            // if($type=="forget_password"){
-            //     $user->blade="email.reset_password";
-            //     $user->subject="Forget Password";
-            //  }
-            //  if($type=="Two_Factor_Verification"){
-            //     $user->blade="email.reset_password";
-            //     $user->subject="Two Factor Verification";
-            //  }
             $user->blade=$view;
             $user->subject=$data["subject"];
 
