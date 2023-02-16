@@ -80,25 +80,22 @@ class User extends Authenticatable
             if($user){
                /**check password same or not */
               if(Hash::check($request->password, $user->password)){
-                $token=$user->createToken('Token Name')->accessToken;
-                dd($token);
-                // if($user->two_factor_verification==1){
-                //        $otp=random_int(1000,9999);
-                //        $saveData = [
-                //            "otp" => $otp,
-                //        ];
-                //        /**save otp in database */
-                //        User::updateOrCreate(["email"=>$user->email], $saveData);
-                       
-                //        $receiver=$user->country_code.$user->phone_number;  
-                //        /**sending sms */
-                //        //Mail::to($user->email)->send(new SendMail($user));
-                //        $sms=SMSHelper::sendSms($receiver,$otp);
-                //        if($sms){
-                //           return 9; 
-                //        }
-                //   }
-
+                $token=$user->createToken(env("APP_NAME"))->accessToken;
+                if($user->two_factor_verification==1){
+                       $otp=random_int(1000,9999);
+                       $saveData = [
+                           "otp" => $otp,
+                       ];
+                       /**save otp in database */
+                       User::updateOrCreate(["email"=>$user->email], $saveData);
+                       $receiver=$user->country_code.$user->phone_number;  
+                       /**sending otp on registeres number */
+                       $data=["subject"=>"Two Factor Verification"];
+                       $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
+                       if($mail){
+                          return 9; 
+                       }
+                  }
                   $response = ['status'=>'success','token' => $token];
                   return $response;
               }else{
@@ -112,7 +109,24 @@ class User extends Authenticatable
             return false;
         }  
    }
-    
+   
+   /**Verify two factor */
+   public function verifytwofactor($request)
+   {
+      try{
+        /**checking user exists or not */
+        $user = User::where(['email'=>$request->email,"otp"=>$request->otp])->first();
+        if($user){
+                $token=$user->createToken(env("APP_NAME"))->accessToken;
+                $response = ['status'=>'success','token' => $token];
+                return $response;
+        }else{
+            return 8;
+        }
+      }catch (\Exception $e) {
+        return false;
+      }  
+   }
    /**Register user */
     public function register($request)
     {    
@@ -143,8 +157,9 @@ class User extends Authenticatable
             $userpersonal->purpose=$request->purpose;
             $userpersonal->user_type=$request->user_type;
             $userpersonal->save();
-            /**sending otp on registeres number */
-            $mail=SendMailHelper::sendMail($user,"register_user");
+            /**sending otp on registeres email */
+            $data=["subject"=>"Verify User"];
+            $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
             if($user_id){
               DB::commit();
               $success=["success"=>true,"user"=>$user];
@@ -289,9 +304,11 @@ class User extends Authenticatable
                     $user->remember_token = $string;
                     $user->otp=$otp;
                     $user->save();
-                    $user->blade="email.reset_password";
-                    $user->subject="Forget Password";
-                    $mail=SendMailHelper::sendMail($user,"forget_password");
+                    // $user->blade="email.reset_password";
+                    // $user->subject="Forget Password";
+                    // $mail=SendMailHelper::sendMail($user,"forget_password");
+                    $data=["subject"=>"Forget Password"];
+                    $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
                     return true;
                 }
             }catch(\Exception $e){

@@ -16,7 +16,7 @@
         "/api/v1/auth/login": {
             "post": {
                 "tags": [
-                    "Auth API -login"
+                    "Auth API - Login"
                 ],
                 "summary": "Send request for check login",
                 "operationId": "login",
@@ -52,16 +52,55 @@
                 }
             }
         },
+        "/api/v1/auth/verify-two-factor": {
+            "post": {
+                "tags": [
+                    "Auth API - Verify Two Factor"
+                ],
+                "summary": "Send request for check Verify Two Factor",
+                "operationId": "verifytwofactor",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Enter email of related to account!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "otp",
+                        "in": "query",
+                        "description": "Enter two factor otp!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
         "/api/v1/auth/register": {
             "post": {
                 "tags": [
-                    "Auth API - check register"
+                    "Auth API - Check Register"
                 ],
                 "summary": "Send request for check register",
                 "operationId": "registerUser",
                 "parameters": [
                     {
-                        "name": "language_id",
+                        "name": "preferred_language",
                         "in": "query",
                         "description": "Enter langauge id for registered!",
                         "required": true,
@@ -84,14 +123,14 @@
                     {
                         "name": "first_name",
                         "in": "query",
-                        "description": "Enter first name of user for registered",
+                        "description": "Enter first name for registered!",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "last_name",
                         "in": "query",
-                        "description": "Enter last name of user for registered",
+                        "description": "Enter last name for registered!",
                         "required": true,
                         "explode": true
                     },
@@ -110,6 +149,13 @@
                         "explode": true
                     },
                     {
+                        "name": "device_platform",
+                        "in": "query",
+                        "description": "Enter device platform for registered!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
                         "name": "user_type",
                         "in": "query",
                         "description": "Enter user type for registered!",
@@ -117,9 +163,9 @@
                         "explode": true
                     },
                     {
-                        "name": "status",
+                        "name": "purpose",
                         "in": "query",
-                        "description": "Enter the status for registered!",
+                        "description": "Enter purpose for registered!",
                         "required": true,
                         "explode": true
                     },
@@ -138,9 +184,16 @@
                         "explode": true
                     },
                     {
+                        "name": "two_factor_verification",
+                        "in": "query",
+                        "description": "Enter the two factor verification for registered!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
                         "name": "organization_name",
                         "in": "query",
-                        "description": "Enter the organization name for registered!",
+                        "description": "Enter organization name for registered!",
                         "required": true,
                         "explode": true
                     },
@@ -148,6 +201,13 @@
                         "name": "vanity_link",
                         "in": "query",
                         "description": "Enter the vanity link for registered!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "referal_code",
+                        "in": "query",
+                        "description": "Enter the referal code for registered!",
                         "required": true,
                         "explode": true
                     }
@@ -171,7 +231,7 @@
         "/api/v1/auth/forget-password": {
             "post": {
                 "tags": [
-                    "Auth API -forget-password"
+                    "Auth API - Forget Password"
                 ],
                 "summary": "send email for forget-password",
                 "description": "send otp for forget-password",
@@ -297,38 +357,6 @@
                 }
             }
         },
-        "/api/v1/auth/checkorgnization": {
-            "post": {
-                "tags": [
-                    "Auth API - Check Orgnization"
-                ],
-                "summary": "Send request for check Organization",
-                "operationId": "checkOrgnization",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "check organization name that exists or not!",
-                        "required": true,
-                        "explode": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    },
-                    "404": {
-                        "description": "Not found!"
-                    },
-                    "400": {
-                        "description": "Bad request!"
-                    },
-                    "500": {
-                        "description": "Internal Server Error!"
-                    }
-                }
-            }
-        },
         "/api/v1/auth/send-otp": {
             "post": {
                 "tags": [
@@ -403,15 +431,15 @@
         "/api/v1/auth/verify-invite-code": {
             "post": {
                 "tags": [
-                    "Auth API - Verify Otp"
+                    "Auth API - Verify Referal Code"
                 ],
                 "summary": "Send request for verify otp",
                 "operationId": "referalCode",
                 "parameters": [
                     {
-                        "name": "mycode",
+                        "name": "referal_code",
                         "in": "query",
-                        "description": "check the mycode value that exists or not!",
+                        "description": "check the referal code value that exists or not!",
                         "required": true,
                         "explode": true
                     }

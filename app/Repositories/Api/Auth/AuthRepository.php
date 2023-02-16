@@ -24,6 +24,17 @@ class AuthRepository implements AuthInterface{
          }
     }
 
+    public function verifytwofactor($request)
+    {
+        try{ 
+            return $this->user->verifytwofactor($request);
+         }
+         catch (\Exception $e){
+           
+            return false;
+         }
+    }
+
     public function register($request)
     {   
         try{ 
@@ -61,15 +72,6 @@ class AuthRepository implements AuthInterface{
       } catch (\Exception $e){
         return false;
       }
-    }
-
-    public function checkOrgnization($request)
-    {
-        try {
-            return $this->organisation->checkorgnization($request);
-        } catch (\Exception $e) {
-            return false;
-        }
     }
 
     public function sendOtp($request)

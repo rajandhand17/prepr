@@ -2935,7 +2935,7 @@
     "responses.not_mycode":"This reference code is not exists!",
     "responses.receiver_required":"Please enter receiver!",
     "responses.receiver_unique":"This receiver already registered with us!",
-    "responses.found_social_connect_list":"social connect list fetched",
-    "responses.not_found_social_connect_list":"social connect list not found!"
+    "responses.found_social_connect_list":"Social connect list fetched",
+    "responses.not_found_social_connect_list":"Social connect list not found!"
 }
   
