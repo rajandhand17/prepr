@@ -273,7 +273,6 @@ class User extends Authenticatable
                     return 6;
                  }
             }catch(\Exception $e){
-                dd($e);
                 return false;
             }
         }
