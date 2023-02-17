@@ -20,11 +20,14 @@ class SendMail extends Mailable
      * @return void
      */
     public $user;
+    public $data;
      
-    public function __construct(User $user)
+    public function __construct(User $user,$view,$data)
     {
         $this->user = $user;
-        $this->subject=$user->subject;
+        $this->subject=$data["subject"];
+        $this->view=$view;
+        $this->data=$data;
     }
 
     /**
@@ -48,9 +51,9 @@ class SendMail extends Mailable
     public function content()
     {
         return new Content(
-            view: "email.reset_password",
+            view: $this->view,
             with: [
-                'user' => $this->user,
+                'data' => $this->data,
             ],
         );
     }

@@ -10,11 +10,7 @@ class SendMailHelper
     public static function sendMail($user,$view,$data)
     {
         try {
-            $user->blade=$view;
-            $user->subject=$data["subject"];
-
-             $result= Mail::to($user->email)->send(new SendMail($user));
-
+            $result= Mail::to($user->email)->send(new SendMail($user,$view,$data));
             if($result){
                 return true;
             }

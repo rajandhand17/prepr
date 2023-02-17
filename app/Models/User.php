@@ -90,9 +90,9 @@ class User extends Authenticatable
                        User::updateOrCreate(["email"=>$user->email], $saveData);
                        $receiver=$user->country_code.$user->phone_number;  
                        /**sending otp on registeres number */
-                       $data=["subject"=>"Two Factor Verification"];
+                       $data=["subject"=>"Forget Password","first_name"=>$user['first_name'],"last_name"=>$user['last_name'],"otp"=>$user['otp']];
                        $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
-                       if($mail){
+                      if($mail){
                           return 9; 
                        }
                   }
@@ -158,7 +158,7 @@ class User extends Authenticatable
             $userpersonal->user_type=$request->user_type;
             $userpersonal->save();
             /**sending otp on registeres email */
-            $data=["subject"=>"Verify User"];
+            $data=["subject"=>"Forget Password","first_name"=>$user['first_name'],"last_name"=>$user['last_name'],"otp"=>$user['otp']];
             $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
             if($user_id){
               DB::commit();
@@ -236,7 +236,6 @@ class User extends Authenticatable
                     }else{
                         return false;
                     }
-                    
                 }
                 return false;
             } catch (\Exception $e){
@@ -260,7 +259,6 @@ class User extends Authenticatable
                 if($minutes > 10){
                     return 4;
                 }
-              
                 /**Matching otp is same or not */
                 if($user->otp==$request->otp){
                     $user = User::find($user->id);
@@ -303,11 +301,9 @@ class User extends Authenticatable
                     $user->remember_token = $string;
                     $user->otp=$otp;
                     $user->save();
-                    // $user->blade="email.reset_password";
-                    // $user->subject="Forget Password";
-                    // $mail=SendMailHelper::sendMail($user,"forget_password");
-                    $data=["subject"=>"Forget Password"];
+                    $data=["subject"=>"Forget Password","first_name"=>$user['first_name'],"last_name"=>$user['last_name'],"otp"=>$user['otp']];
                     $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
+                   
                     return true;
                 }
             }catch(\Exception $e){

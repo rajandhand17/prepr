@@ -160,7 +160,6 @@ class AuthController extends AppBaseController
      *         description="Enter langauge id for registered!",
      *         required=true,
      *         explode=true,
-     *         
      *     ),
      *     @OA\Parameter(
      *         name="username",
@@ -309,11 +308,10 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('notification.notification_swwptal'), 401);
             }
             if ($register['success'] == "success") {
-                return $this->sendResponse($register, __('responses.user_register'), 200);
+                return $this->sendResponse($register['user'], __('responses.user_register'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
-        } catch (\Exception $e) {
-          
+        } catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -359,7 +357,6 @@ class AuthController extends AppBaseController
     {
         try {
             $forgetpassword = $this->authRepository->forgetPassword($request);
-           
             if ($forgetpassword == false) {
                 return $this->sendError(__('notification.notification_swwptal'), 401);
             }

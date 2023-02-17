@@ -405,13 +405,13 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/skill-groups?language=en');
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
-        if ($data['success']) {
+        if ($data['success']){
             $this->assertArrayHasKey('id', $data['data'][0]);
             $this->assertArrayHasKey('title', $data['data'][0]);
             $this->assertArrayHasKey('skill_stacks', $data['data'][0]);
             $this->assertArrayHasKey('skills', $data['data'][0]);
             $this->assertArrayHasKey('description', $data['data'][0]);
-        } else {
+        }else {
             $this->fail();
         }
     }
