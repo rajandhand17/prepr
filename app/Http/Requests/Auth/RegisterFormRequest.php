@@ -12,7 +12,7 @@ class RegisterFormRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      *
      * @return bool
-     */ 
+     */
     public function authorize()
     {
         return true;
@@ -45,16 +45,16 @@ class RegisterFormRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],403));
+            'errors'      => $validator->errors()
+        ],422));
     }
 
-    
+
     public function messages()
     {
         return [
             'email.required' => __('notification.notification_peeief'),
-            'email.unique'=>__('responses.unique_email'), 
+            'email.unique'=>__('responses.unique_email'),
             'email.email'=>__('notification.notification_iea'),
             'email.max'=>__('responses.max_email'),
             'first_name.required'=>__("notification.notification_reg_fnr"),

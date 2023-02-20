@@ -23,7 +23,7 @@ class AuthController extends AppBaseController
     {
         $this->authRepository = $authRepository;
     }
-    
+
     /**
      * @OA\Post(
      *     path="/api/v1/auth/login",
@@ -43,27 +43,27 @@ class AuthController extends AppBaseController
      *         description="Enter password of account!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -100,7 +100,7 @@ class AuthController extends AppBaseController
      *         description="Enter email of related to account!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="otp",
@@ -108,27 +108,27 @@ class AuthController extends AppBaseController
      *         description="Enter two factor otp!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -166,7 +166,7 @@ class AuthController extends AppBaseController
      *         description="Enter username for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="email",
@@ -174,7 +174,7 @@ class AuthController extends AppBaseController
      *         description="Enter email for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="first_name",
@@ -182,7 +182,7 @@ class AuthController extends AppBaseController
      *         description="Enter first name for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="last_name",
@@ -190,7 +190,7 @@ class AuthController extends AppBaseController
      *         description="Enter last name for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="password",
@@ -198,7 +198,7 @@ class AuthController extends AppBaseController
      *         description="Enter password for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="password_confirmation",
@@ -206,7 +206,7 @@ class AuthController extends AppBaseController
      *         description="confirm password same as password!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="device_platform",
@@ -235,7 +235,7 @@ class AuthController extends AppBaseController
      *         description="Enter the country code for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="phone_number",
@@ -243,7 +243,7 @@ class AuthController extends AppBaseController
      *         description="Enter the phone number for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="two_factor_verification",
@@ -251,7 +251,7 @@ class AuthController extends AppBaseController
      *         description="Enter the two factor verification for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="organization_name",
@@ -259,7 +259,7 @@ class AuthController extends AppBaseController
      *         description="Enter organization name for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="vanity_link",
@@ -267,7 +267,7 @@ class AuthController extends AppBaseController
      *         description="Enter the vanity link for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="referal_code",
@@ -275,32 +275,32 @@ class AuthController extends AppBaseController
      *         description="Enter the referal code for registered!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
     public function registerUser(RegisterFormRequest $request)
-    {   
+    {
         try {
             $register = $this->authRepository->register($request);
             if ($register == false) {
@@ -314,7 +314,7 @@ class AuthController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    
+
     /**
      * @OA\Post(
      *     path="/api/v1/auth/forget-password",
@@ -328,27 +328,27 @@ class AuthController extends AppBaseController
      *         description="Email uses for send otp",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -372,34 +372,34 @@ class AuthController extends AppBaseController
      *     path="/api/v1/auth/checkusername",
      *     tags={"Auth API - Username"},
      *     summary="Send request for check user name",
-     *     operationId="checkUsername", 
+     *     operationId="checkUsername",
      *     @OA\Parameter(
      *         name="username",
      *         in="query",
      *         description="Check user name exists or not!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -429,27 +429,27 @@ class AuthController extends AppBaseController
      *         description="check the email value that exists or not!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -478,27 +478,27 @@ class AuthController extends AppBaseController
      *         description="check the phone number that exists or not!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -528,27 +528,27 @@ class AuthController extends AppBaseController
      *         description="Uses emails to get account!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -556,7 +556,7 @@ class AuthController extends AppBaseController
     {
         try {
             $send_otp = $this->authRepository->sendOtp($request);
-            
+
             if($send_otp===5){
                 return $this->sendError(__('notification.notification_uarvrf'), 403);
             }
@@ -580,7 +580,7 @@ class AuthController extends AppBaseController
      *         description="Uses email to get account details!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="otp",
@@ -588,27 +588,27 @@ class AuthController extends AppBaseController
      *         description="Uses otp for verify account!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
@@ -645,33 +645,33 @@ class AuthController extends AppBaseController
      *         description="check the referal code value that exists or not!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
- 
+
     public function referalCode(VerifyInviteCodeRequest $request)
-    {    
+    {
         try{
             $referencecode = $this->authRepository->referalCode($request);
             if($referencecode==true){
@@ -697,7 +697,7 @@ class AuthController extends AppBaseController
      *         description="Email used for get details of account!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Parameter(
      *         name="password",
@@ -705,7 +705,7 @@ class AuthController extends AppBaseController
      *         description="Check the password value that exists or not!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *    @OA\Parameter(
      *         name="password_confirmation",
@@ -713,27 +713,27 @@ class AuthController extends AppBaseController
      *         description="Check the password value that exists or not!",
      *         required=true,
      *         explode=true,
-     *         
+     *
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Not found!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Bad request!",
-     *    
+     *
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error!",
-     *    
+     *
      *     ),
      * )
      */
