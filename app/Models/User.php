@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Laratrust\Traits\LaratrustUserTrait;
 use App\Helpers\SMSHelper;
 use Carbon\Carbon;
-use Mail;
-use App\Mail\SendMail;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
@@ -111,7 +109,7 @@ class User extends Authenticatable
    }
 
    /**Verify two factor */
-   public function verifytwofactor($request)
+   public function verifyTwoFactor($request)
    {
       try{
         /**checking user exists or not */
