@@ -24,10 +24,10 @@ class AuthRepository implements AuthInterface{
          }
     }
 
-    public function verifytwofactor($request)
+    public function verifyTwoFactor($request)
     {
         try{ 
-            return $this->user->verifytwofactor($request);
+            return $this->user->verifyTwoFactor($request);
          }
          catch (\Exception $e){
            
@@ -101,7 +101,7 @@ class AuthRepository implements AuthInterface{
             return false;
         }
     }
-    
+
     public function forgetPassword($request)
     {
         try {

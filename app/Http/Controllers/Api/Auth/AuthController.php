@@ -132,10 +132,10 @@ class AuthController extends AppBaseController
      *     ),
      * )
      */
-    public function verifytwofactor(VerifyTwoFactorRequest $request)
+    public function verifyTwoFactor(VerifyTwoFactorRequest $request)
     {
         try{
-            $verifytwofactor = $this->authRepository->verifytwofactor($request);
+            $verifytwofactor = $this->authRepository->verifyTwoFactor($request);
             if($verifytwofactor===8){
                 return $this->sendError(__('responses.otp_correct_required'), 401);
             }

@@ -13,7 +13,7 @@ Interface AuthInterface{
   public function verifyOtp($request);
   public function referalCode($request);
   public function resetPassword($request);
-  public function verifytwofactor($request);
+  public function verifyTwoFactor($request);
 }
 
 ?>
