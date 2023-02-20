@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Helpers\SendMailHelper;
 use App\Models\User;
 
 class UserObserver
@@ -15,9 +14,7 @@ class UserObserver
      */
     public function created(User $user)
     {
-        /**sending otp on registeres email */
-        $data=["subject" => "Verify Your Email" ,"first_name"=>$user->first_name,"last_name"=>$user->last_name,"otp"=>$user->otp];
-        $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
+        //
     }
 
     /**

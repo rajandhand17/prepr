@@ -153,18 +153,18 @@ class User extends Authenticatable
             $user->referal_code = $request->referal_code;
             $user->save();
 
-            $userpersonal = new UserPersonal();
-            $userpersonal->user_id=$user->id;
-            $userpersonal->purpose=$request->purpose;
-            $userpersonal->user_type=$request->user_type;
-            $userpersonal->save();
-            /**sending otp on registeres email */
-            $data=["subject" => "Forget Password" ,"first_name"=>$user->first_name,"last_name"=>$user->last_name,"otp"=>$user->otp];
-            $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
             if($user->id){
-              DB::commit();
-              $success=["success"=>true,"user"=>$user];
-              return $success;
+                $userpersonal = new UserPersonal();
+                $userpersonal->user_id=$user->id;
+                $userpersonal->purpose=$request->purpose;
+                $userpersonal->user_type=$request->user_type;
+                $userpersonal->save();
+                DB::commit();
+                /**sending otp on registeres email */
+                $data=["subject" => "Verify Your Email" ,"first_name"=>$user->first_name,"last_name"=>$user->last_name,"otp"=>$user->otp];
+                $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
+                $success=["success"=>true,"user"=>$user];
+                return $success;
             }
             DB::rollback();
             return false;
