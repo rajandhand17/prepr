@@ -10,7 +10,6 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laratrust\Traits\LaratrustUserTrait;
-use App\Helpers\SMSHelper;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -66,6 +65,11 @@ class User extends Authenticatable
         return $this->hasOne(UserPersonal::class);
     }
 
+    public function UserSetting()
+    {
+        return $this->hasOne(UserSetting::class);
+    }
+
     /**login apis */
     public function login($request)
     {
@@ -85,10 +89,6 @@ class User extends Authenticatable
                        $user->otp = $otp;
                        $user->save();
                        DB::commit();
-
-                       $receiver=$user->country_code.$user->phone_number;
-
-
                        /**sending otp on registeres number */
                        $data=["subject"=>"Forget Password","first_name"=>$user['first_name'],"last_name"=>$user['last_name'],"otp"=>$user['otp']];
                        $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
@@ -137,7 +137,7 @@ class User extends Authenticatable
             $name=$request->first_name." ".$request->last_name;
             $otp=random_int(1000,9999);
             $string =  Str::random(30);
-            $receiver=$request->country_code.$request->phone_number;
+            $referencecode=$request->username.Str::random(5);
             $user=new User;
             $user->preferred_language = $request->language;
             $user->first_name = $request->first_name;
@@ -150,19 +150,22 @@ class User extends Authenticatable
             $user->phone_number = $request->phone_number;
             $user->otp = $otp;
             $user->verify_token = $string;
-            $user->referal_code = $request->referal_code;
+            $user->referal_code = $referencecode;
             $user->save();
-
             if($user->id){
                 $userpersonal = new UserPersonal();
                 $userpersonal->user_id=$user->id;
                 $userpersonal->purpose=$request->purpose;
                 $userpersonal->user_type=$request->user_type;
                 $userpersonal->save();
+                $usersetting=new UserSetting();
+                $usersetting->user_id =$user->id;
+                $usersetting->save();
+
                 DB::commit();
                 /**sending otp on registeres email */
                 $data=["subject" => "Verify Your Email" ,"first_name"=>$user->first_name,"last_name"=>$user->last_name,"otp"=>$user->otp];
-                $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
+                $mail=SendMailHelper::sendMail($user,"email.verify_otp",$data);
                 $success=["success"=>true,"user"=>$user];
                 return $success;
             }
@@ -218,22 +221,19 @@ class User extends Authenticatable
         {
             try {
                 /**getting records of user by using email */
-                $user=User::select("id","otp","verified_user","country_code","phone_number")->where(["email"=>$request->email])->first();
+                $user=User::where(["email"=>$request->email])->first();
                 if($user!=""){
-                    /**check account is verified or not */
-                   if($user->verified_user==1){
-                       return 5;
-                    }
                     /**generating otp */
                     $otp=random_int(1000,9999);
                     $user->otp = $otp;
                     if($user->save()){
-                        $receiver=$user->country_code.$user->phone_number;
-                        /**sending sms */
-                        $sms=SMSHelper::sendSms($receiver,$otp);
-                        if($sms){
-                        return true;
-                        }
+                         /**sending otp on registeres email */
+                    $data=["subject" => "Forget Password" ,"first_name"=>$user->first_name,"last_name"=>$user->last_name,"otp"=>$user->otp];
+                    $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
+                    if($mail){
+                       return true;
+                    }
+                    return false;
                     }else{
                         return false;
                     }
@@ -257,15 +257,20 @@ class User extends Authenticatable
                 $currentTime = Carbon::now();
                 $minutes = $currentTime->diffInMinutes($updated_user);
                 /**check otp time 10 minutes expired or not */
-                if($minutes > 10){
-                    return 4;
-                }
+                // if($minutes > 10){
+                //     return 4;
+                // }
                 /**Matching otp is same or not */
+              
                 if($user->otp==$request->otp){
                     $user = User::find($user->id);
                     $user->verified_user = '1';
                     if($user->save()){
-                       return true;
+                       $data=["subject" => "Verified Successfully!" ,"first_name"=>$user->first_name,"last_name"=>$user->last_name,"otp"=>$user->otp];
+                        $mail=SendMailHelper::sendMail($user,"email.verified_successfully",$data);
+                        if($mail){
+                           return true;
+                        }
                     }
                     return false;
                  }else{
@@ -303,9 +308,11 @@ class User extends Authenticatable
                     $user->otp=$otp;
                     $user->save();
                     $data=["subject"=>"Forget Password","first_name"=>$user['first_name'],"last_name"=>$user['last_name'],"otp"=>$user['otp']];
-                    $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
-
+                    $mail=SendMailHelper::sendMail($user,"email.forget_password_otp",$data);
+                   if($mail){
                     return true;
+                   }
+                    return false;
                 }
             }catch(\Exception $e){
                 return false;
@@ -316,24 +323,24 @@ class User extends Authenticatable
         {
             try{
                /**get records of particular user by using email */
-               $user=User::select("id","otp","verified_user","country_code","phone_number","updated_at")->where(["email"=>$request->email])->first();
-               $updated_user=$user->updated_at;
-               /**check user account verified or not */
+               $user=User::where(["email"=>$request->email])->first();
+             /**check user account verified or not */
                if($user->verified_user==0){
-                return 5;
+                return 1;
                }
-
-               $currentTime = Carbon::now();
-               $minutes = $currentTime->diffInMinutes($updated_user);
-               /**check otp time 10 minutes expired or not */
-               if($minutes > 10){
-                   return 4;
-               }
-               if($user->otp==$request->otp){
+               /**checking otp same or not */
+            if($user->otp==$request->otp){
                     $user->password = Hash::make($request->password);
                     if($user->save()){
+                        $data=["subject"=>"Reset Password Successfull!","first_name"=>$user['first_name'],"last_name"=>$user['last_name'],"otp"=>$user['otp']];
+                        $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
+                       if($mail){
                         return true;
+                       }
+                       return false;
                     }
+               }else{
+                 return 2;
                }
                 return false;
             }catch(\Exception $e){

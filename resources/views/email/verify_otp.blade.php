@@ -30,8 +30,18 @@
 					<tr>
 						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }},<br>
 						  <br>
-						  After the lost password is successfully reset, Please Login with your new password.</td>
+                            We’ve received a request for registeration,Please verify your account.</td>
                     </tr>
+					<tr>
+                        <td style="padding: 20px;" align="center">
+							<a style="color: #000; text-decoration: none; font-size: 18px; padding: 10px 50px; border-radius: 4px; " href="">Verification OTP is {{$data['otp']}}</a>
+						</td>
+					</tr>
+
+					<tr>
+						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">if you have not requested for registeration, than ignore the message.<br><br>Regards,<br>
+					     team </td>
+					</tr>
 					<tr>
 						<td style="border-bottom: 1px #cecece solid;">&nbsp;</td>
 					</tr>

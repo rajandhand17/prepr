@@ -13,7 +13,7 @@ class SendMailHelper
             $result= Mail::to($user->email)->send(new SendMail($user,$view,$data));
             if($result){
                 return true;
-            }
+            } 
             return false;
         }catch(\Exception $e){
             return false;

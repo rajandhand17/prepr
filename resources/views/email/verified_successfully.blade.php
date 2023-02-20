@@ -30,7 +30,7 @@
 					<tr>
 						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }},<br>
 						  <br>
-						  After the lost password is successfully reset, Please Login with your new password.</td>
+                            Your account is successfully verified. Please Login with your credential</td>
                     </tr>
 					<tr>
 						<td style="border-bottom: 1px #cecece solid;">&nbsp;</td>
