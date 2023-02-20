@@ -73,7 +73,7 @@ class User extends Authenticatable
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
             if($user->verified_user==0){
-                return 2;
+                return ['status'=> false, 'code' => 1];
             }
             if($user){
                /**check password same or not */
@@ -81,30 +81,34 @@ class User extends Authenticatable
                 $token=$user->createToken(env("APP_NAME"))->accessToken;
                 if($user->two_factor_verification==1){
                        $otp=random_int(1000,9999);
-                       $saveData = [
-                           "otp" => $otp,
-                       ];
-                       /**save otp in database */
-                       User::updateOrCreate(["email"=>$user->email], $saveData);
+                       DB::beginTransaction();
+                       $user->otp = $otp;
+                       $user->save();
+                       DB::commit();
+
                        $receiver=$user->country_code.$user->phone_number;
+
+
                        /**sending otp on registeres number */
                        $data=["subject"=>"Forget Password","first_name"=>$user['first_name'],"last_name"=>$user['last_name'],"otp"=>$user['otp']];
                        $mail=SendMailHelper::sendMail($user,"email.reset_password",$data);
                       if($mail){
-                          return 9;
-                       }
+                          return ['status'=>true, 'code' => 2];
+                      }
                   }
-                  $response = ['status'=>'success','token' => $token];
+                  $response = ['status'=>true,'code' => 3, 'token' => $token];
                   return $response;
               }else{
-                $response = ['status'=>'false','error' =>'Wrong Password'];
+                $response = ['status'=>false, 'code' => 4];
                 return $response;
               }
             }else{
-                return false;
-             }
+                $response = ['status'=>false, 'code' => 5];
+                return $response;
+            }
         }catch (\Exception $e) {
-            return false;
+            $response = ['status'=>false, 'code' => 6];
+            return $response;
         }
    }
 

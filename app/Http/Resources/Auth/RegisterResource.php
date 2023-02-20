@@ -24,9 +24,6 @@ class RegisterResource extends JsonResource
             'email'=>$this->email,
             'country_code'=>$this->country_code,
             'phone_number'=>$this->phone_number,
-            'two_factor_verification'=>$this->two_factor_verification,
-            'otp'=>$this->otp,
-            'verify_token'=>$this->verify_token,
             'referal_code'=>$this->referal_code
         ];
     }

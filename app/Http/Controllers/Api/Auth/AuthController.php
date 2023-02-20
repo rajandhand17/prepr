@@ -71,17 +71,24 @@ class AuthController extends AppBaseController
     {
         try {
             $login = $this->authRepository->login($request);
-            if($login===2){
+
+            if($login['code'] === 1){
                 return $this->sendError(__('notification.notification_pvyeatpl'), 403);
             }
-            if($login === 9){
+            if($login['code'] === 2){
                 return $this->sendResponse(null, __('notification.notification_pcoiym'), 200);
             }
-            if($login['status'] == "success"){
+            if($login['code'] == 3){
                 return $this->sendResponse($login['token'], __('responses.user_login_sucess'), 200);
             }
-            if($login['status'] == "false"){
-                return $this->sendError(__('responses.incorrect_password'), 401);
+            if($login['code'] == 4){
+                return $this->sendError(__('responses.notification_icpta'), 401);
+            }
+            if($login['code'] == 5){
+                return $this->sendError(__('responses.notification_usernot_found'), 401);
+            }
+            if($login['code'] == 6){
+                return $this->sendError(__('responses.send_error'), 401);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch(\Exception $e){

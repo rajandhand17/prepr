@@ -86,7 +86,7 @@ class AuthControllerTest extends TestCase
         $response=$this->post("/api/v1/auth/checkusername");
         $this->assertEquals(403, $response->getStatusCode());
     }
-     
+
     /**Check email positive */
     public function test_post_check_email_positive()
     {
@@ -124,21 +124,21 @@ class AuthControllerTest extends TestCase
             $this->fail();
         }
     }
-   
+
     /**Check user name negative */
     public function test_post_check_phone_notexists_negative()
     {
         $response=$this->post("/api/v1/auth/checkphone",["phone_number"=>"9646080802"]);
         $this->assertEquals(403, $response->getStatusCode());
     }
-    
+
     /**Check user name negative */
     public function test_post_check_phone_negative()
     {
         $response=$this->post("/api/v1/auth/checkphone");
         $this->assertEquals(403, $response->getStatusCode());
     }
-    
+
     /**send otp */
     public function test_post_send_otp_positive()
     {
@@ -149,7 +149,7 @@ class AuthControllerTest extends TestCase
              $response->assertOk();
         }else{
             $this->fail();
-        }   
+        }
     }
 
     /**send otp */
@@ -161,7 +161,7 @@ class AuthControllerTest extends TestCase
 
     /**verify otp */
     public function test_post_verify_otp_positive()
-    {   
+    {
         $response=$this->post("/api/v1/auth/verify-otp",["email"=>"rajan@prepr.org","otp"=>"4565"]);
         $response->assertStatus(200);
         $data = $response->json();
@@ -169,7 +169,7 @@ class AuthControllerTest extends TestCase
              $response->assertOk();
         }else{
             $this->fail();
-        }   
+        }
     }
       /** Forget Password */
     public function test_post_forget_password_positive()
@@ -209,14 +209,14 @@ class AuthControllerTest extends TestCase
     {
         $response=$this->post("/api/v1/auth/reset-password",["email"=>"rajan@prepr.org","password"=>"Prepr@123","password_confirmation"=>"Prepr@123","otp"=>"4565"]);
         $this->assertEquals(403, $response->getStatusCode());
-        
+
     }
 
     /** Reset Password */
     public function test_post_verify_invite_code_positive()
     {
         $response=$this->post("/api/v1/auth/verify-invite-code",["referal_code"=>"rajan20"]);
-        $response->assertStatus(200);   
+        $response->assertStatus(200);
         $data = $response->json();
         if($data['success']===true){
              $response->assertOk();
@@ -236,7 +236,7 @@ class AuthControllerTest extends TestCase
     public function test_post_verify_two_factor_positive()
     {
         $response=$this->post("/api/v1/auth/verify-two-factor",["email"=>"rajan@prepr.org","otp"=>"6814"]);
-        $response->assertStatus(200);   
+        $response->assertStatus(200);
         $data = $response->json();
         if($data['success']===true){
              $response->assertOk();

@@ -40,14 +40,14 @@ class LoginFormRequest extends FormRequest
         ],403));
     }
 
-     
+
     public function messages()
     {
         return [
             'email.required' => __('notification.notification_peeief'),
             'email.email'=>__('notification.notification_iea'),
             'email.max'=>__('responses.max_email'),
-            'email.exists'=>__('notification.notification_iea'),
+            'email.exists'=>__('notification.notification_usernot_found'),
             "password.required"=>__('notification.notification_reg_pass'),
             "password.min"=>__('notification.min_password'),
         ];
