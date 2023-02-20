@@ -26,7 +26,7 @@ class RegisterFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'preferred_language'=>'required',
+            'language'=>'required',
             'first_name' => 'required|max:20|string',
             'last_name' => 'required|string|max:20',
             'username' => 'required|max:20|regex:/^[A-Za-z0-9_-]*$/|unique:users,username',
@@ -73,7 +73,7 @@ class RegisterFormRequest extends FormRequest
             "password.min"=>__("responses.min_password"),
             "password_confirmation.required"=>__("notification.notification_reg_cpr"),
             "password_confirmation.same"=>__("responses.password_confirm_password"),
-            "preferred_language.required"=>__("notification.notification_lfirs"),
+            "language.required"=>__("notification.notification_lfirs"),
             'phone_number.required' =>__("notification.notification_ypnie"),
             'phone_number.numeric'=>__("responses.numeric"),
             'phone_number.unique'=>__("responses.already_number"),

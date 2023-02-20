@@ -33,7 +33,7 @@
                             We’ve received a request to reset your password. You can reset your password using this OTP: </td>
                     </tr>
 					<tr>
-					
+
 						<td style="padding: 20px;" align="center">
 							<a style="color: #000; text-decoration: none; font-size: 18px; padding: 10px 50px; border-radius: 4px; " href="">Reset Password OTP is {{$data['otp']}}</a>
 						</td>
@@ -49,12 +49,12 @@
 
 					<tr>
 	                    <td bgcolor="#dbdada" style="font-family:Helvetica, Arial, sans-serif; font-size:11px; color:#7b7b7b; padding:5px 20px 15px; vertical-align:middle; text-align:center;" width="100%">
-	                        You received this email to inform / update you about your 
+	                        You received this email to inform / update you about your
 	                        product or account.<br>
 	                        <a style="text-decoration:underline; color:#7b7b7b;" target="_blank" href="https://prepr.org/contact/">
 	                            Click here
 	                        </a>
-	                            to view our contact details | Read our 
+	                            to view our contact details | Read our
 	                        <a style="text-decoration:underline; color:#7b7b7b;" target="_blank" href="https://prepr.org/privacy-policy/">
 	                            Privacy Policy
 	                        </a>

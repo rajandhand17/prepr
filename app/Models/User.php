@@ -139,7 +139,7 @@ class User extends Authenticatable
             $string =  Str::random(30);
             $receiver=$request->country_code.$request->phone_number;
             $user=new User;
-            $user->preferred_language = $request->preferred_language;
+            $user->preferred_language = $request->language;
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->full_name = $name;
