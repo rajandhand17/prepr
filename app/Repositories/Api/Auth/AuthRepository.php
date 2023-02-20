@@ -101,7 +101,6 @@ class AuthRepository implements AuthInterface{
             return false;
         }
     }
-
     
     public function forgetPassword($request)
     {

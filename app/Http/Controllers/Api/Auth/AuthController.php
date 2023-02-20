@@ -6,7 +6,6 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\RegisterFormRequest;
 use App\Http\Requests\Auth\CheckUsernameRequest;
 use App\Http\Requests\Auth\CheckEmailRequest;
-use App\Http\Requests\Auth\CheckOrganizationRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
 use App\Http\Requests\Auth\LoginFormRequest;
 use App\Repositories\Api\Auth\AuthRepository;
@@ -311,7 +310,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse($register['user'], __('responses.user_register'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
-        } catch (\Exception $e){
+        }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -364,7 +363,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse(null, __('notification.notification_yprlsoyrea'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -406,7 +405,7 @@ class AuthController extends AppBaseController
      */
     public function checkUsername(CheckUsernameRequest $request)
     {
-        try {
+        try{
             $username = $this->authRepository->checkUsername($request);
             if($username == false){
                 return $this->sendResponse(null, __('responses.username_available'), 200);
@@ -414,7 +413,7 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('responses.username_unique'), 403);
             }
             return $this->sendError(__('responses.send_error'), 500);
-        } catch (\Exception $e) {
+        }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -742,7 +741,6 @@ class AuthController extends AppBaseController
     {
         try{
             $resetcode = $this->authRepository->resetPassword($request);
-           
             if ($resetcode === 5){
                 return $this->sendError(__('responses.account_not_verified'), 403);
             }
