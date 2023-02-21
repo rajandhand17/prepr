@@ -16,7 +16,7 @@ class RegisterResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'preferred_language'=>$this->preferred_language,
+            'language'=>$this->preferred_language,
             'first_name'=>$this->first_name,
             'last_name'=>$this->last_name,
             'full_name'=>$this->full_name,

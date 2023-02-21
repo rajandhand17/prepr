@@ -15,7 +15,9 @@ use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\ResetPasswordFormRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
-
+use App\Http\Resources\Auth\LoginResource;
+use App\Http\Resources\Auth\RegisterResource;
+use App\Models\User;
 class AuthController extends AppBaseController
 {
     private $authRepository;
@@ -71,24 +73,28 @@ class AuthController extends AppBaseController
     {
         try {
             $login = $this->authRepository->login($request);
-
+            
             if($login['code'] === 1){
                 return $this->sendError(__('notification.notification_pvyeatpl'), 403);
             }
             if($login['code'] === 2){
-                return $this->sendResponse(null, __('notification.notification_pcoiym'), 200);
+                return $this->sendResponse(null, __('responses.two_factor_otp'), 200);
             }
             if($login['code'] == 3){
+                
                 return $this->sendResponse($login['token'], __('responses.user_login_sucess'), 200);
             }
             if($login['code'] == 4){
-                return $this->sendError(__('responses.notification_icpta'), 401);
+                return $this->sendError(__('notification.notification_icpta'), 401);
             }
             if($login['code'] == 5){
                 return $this->sendError(__('responses.notification_usernot_found'), 401);
             }
             if($login['code'] == 6){
                 return $this->sendError(__('responses.send_error'), 401);
+            }
+            if ($login['success'] == false){
+                return $this->sendError($login['message'], 401);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch(\Exception $e){
@@ -146,9 +152,10 @@ class AuthController extends AppBaseController
             if($verifytwofactor===8){
                 return $this->sendError(__('responses.otp_correct_required'), 401);
             }
-            if($verifytwofactor['status'] == "success"){
+            if($verifytwofactor['success'] == true){
                 return $this->sendResponse($verifytwofactor['token'], __('responses.user_login_sucess'), 200);
             }
+            
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
@@ -310,12 +317,13 @@ class AuthController extends AppBaseController
     {
         try {
             $register = $this->authRepository->register($request);
-            if ($register == false) {
-                return $this->sendError(__('notification.notification_swwptal'), 401);
+            if ($register['success'] == false) {
+                return $this->sendError($register['message'], 401);
             }
-            if ($register['success'] == "success") {
-                return $this->sendResponse($register['user'], __('responses.registeration_successfully'), 200);
-            }
+            if ($register['success'] == true) {
+              
+                return $this->sendResponse(RegisterResource::collection($register['user']),__('responses.registeration_successfully'), 200);
+             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
@@ -363,10 +371,10 @@ class AuthController extends AppBaseController
     {
         try {
             $forgetpassword = $this->authRepository->forgetPassword($request);
-            if ($forgetpassword == false) {
-                return $this->sendError(__('notification.notification_swwptal'), 401);
+            if($forgetpassword['success'] == false) {
+                return $this->sendError($forgetpassword['message'], 401);
             }
-            if ($forgetpassword == true) {
+            if($forgetpassword['success'] == true) {
                 return $this->sendResponse(null, __('notification.notification_yprlsoyrea'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
@@ -417,7 +425,7 @@ class AuthController extends AppBaseController
             if($username == false){
                 return $this->sendResponse(null, __('responses.username_available'), 200);
             }else{
-                return $this->sendError(__('responses.username_unique'), 403);
+                return $this->sendError(__('responses.username_unique'), .403);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch(\Exception $e){
@@ -574,6 +582,10 @@ class AuthController extends AppBaseController
                 return $this->sendResponse(null, __('notification.notification_pcoiym'), 200);
                }
             }
+            if ($send_otp["success"] === false){
+                return $this->sendError($send_otp['message'], 401);
+            }
+            
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -636,8 +648,11 @@ class AuthController extends AppBaseController
             if ($verify === 6) {
                 return $this->sendError(__('responses.otp_correct_required'), 403);
             }
-            if ($verify === true) {
+            if ($verify['success'] === true) {
                 return $this->sendResponse(null, __('responses.verify_success'), 200);
+            }
+            if($verify['success']===false){
+                return $this->sendResponse(null,$verify['message'],403);
             }
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
@@ -758,8 +773,11 @@ class AuthController extends AppBaseController
             if($resetcode === 2){
                 return $this->sendError(__('responses.otp_correct_required'), 403);
             }
-            if ($resetcode === true) {
+            if ($resetcode['success'] === true) {
                 return $this->sendResponse(null, __('notification.notification_yprs'), 200);
+            }
+            if ($resetcode['success'] === false) {
+                return $this->sendResponse(null,$resetcode['message'],403);
             }
             return $this->sendError(__('responses.send_error'), 500);
          }catch (\Exception $e) {

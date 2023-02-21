@@ -72,7 +72,7 @@ class User extends Authenticatable
 
     /**login apis */
     public function login($request)
-    {
+    {    
         try {
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
@@ -95,6 +95,7 @@ class User extends Authenticatable
                         if ($mail) {
                             return ['status' => true, 'code' => 2];
                         }
+                        return ["success" => false, "message" => __('responses.failed_email'),"code"=>null];
                     }
                     $response = ['status' => true, 'code' => 3, 'token' => $token];
                     return $response;
@@ -120,7 +121,7 @@ class User extends Authenticatable
             $user = User::where(['email' => $request->email, "otp" => $request->otp])->first();
             if ($user) {
                 $token = $user->createToken(env("APP_NAME"))->accessToken;
-                $response = ['status' => 'success', 'token' => $token];
+                $response = ['success' => true, 'token' => $token];
                 return $response;
             } else {
                 return 8;
@@ -131,13 +132,13 @@ class User extends Authenticatable
     }
     /**Register user */
     public function register($request)
-    {
+    {    
         try {
             DB::beginTransaction();
             $name = $request->first_name . " " . $request->last_name;
             $otp = random_int(1000, 9999);
             $string =  Str::random(30);
-            $referencecode = $request->username . Str::random(5);
+            $referencecode = $request->username . Carbon::now()->format('Y');
             $user = new User;
             $user->preferred_language = $request->language;
             $user->first_name = $request->first_name;
@@ -161,19 +162,19 @@ class User extends Authenticatable
                 $usersetting = new UserSetting();
                 $usersetting->user_id = $user->id;
                 $usersetting->save();
-
                 $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                 $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
                 if($mail){
                     DB::commit();
                     /**sending otp on registeres email */
-                    $success = ["success" => true, "user" => $user];
+                    $userresponse=User::get()->where("email",$user->email);
+                    $success = ["success" => true, "user" => $userresponse];
                     return $success;
                 }
-                return ["success" => false, "message" => 'Unable to send mail.'];
+                return ["success" => false, "message" => __('responses.failed_email')];
             }
             DB::rollback();
-            return ["success" => false, "message" => 'Unable to register user.'];
+            return ["success" => false, "message" => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
             return ["success" => false, "message" => 'Something went wrong.'];
@@ -221,7 +222,7 @@ class User extends Authenticatable
     }
 
     public function sendOtp($request)
-    {
+    {   
         try {
             /**getting records of user by using email */
             $user = User::where(["email" => $request->email])->first();
@@ -234,10 +235,11 @@ class User extends Authenticatable
                     if ($request->purpose === "forget_password") {
                         $data = ["subject" => "Forget Password", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                         $mail = SendMailHelper::sendMail($user, "email.forget_password_otp", $data);
-                        if ($mail) {
+                        if ($mail){
                             $response = ["success" => true, "purpose" => "forget_password"];
                             return $response;
                         }
+                        return ["success" => false, "message" => __('responses.failed_email')];
                     }
                     /**sending otp for verify email*/
                     if ($request->purpose === "verify_email") {
@@ -247,6 +249,7 @@ class User extends Authenticatable
                             $response = ["success" => true, "purpose" => "verify_email"];
                             return $response;
                         }
+                        return ["success" => false, "message" => __('responses.failed_email')];
                     }
                     /**send otp for two factor verification */
                     if ($request->purpose === "two_factor_verification") {
@@ -256,6 +259,7 @@ class User extends Authenticatable
                             $response = ["success" => true, "purpose" => "two_factor_verification"];
                             return $response;
                         }
+                        return ["success" => false, "message" => __('responses.failed_email')];
                     }
                     return false;
                 } else {
@@ -269,7 +273,7 @@ class User extends Authenticatable
     }
     /**Verify otp */
     public function verifyOtp($request)
-    {
+    {    
         try {
             /**get records of particular user by using email */
             $user = User::select("id", "otp", "verified_user", "country_code", "phone_number", "updated_at")->where(["email" => $request->email])->first();
@@ -287,8 +291,10 @@ class User extends Authenticatable
                     $data = ["subject" => "Verified Successfully!", "first_name" => $user->first_name, "last_name" => $user->last_name];
                     $mail = SendMailHelper::sendMail($user, "email.verified_successfully", $data);
                     if ($mail) {
-                        return true;
+                        $success = ["success" => true, "user" => $user];
+                        return $success;
                     }
+                    return ["success" => false, "message" => __('responses.failed_email')];
                 }
                 return false;
             } else {
@@ -314,7 +320,7 @@ class User extends Authenticatable
     }
     /**Forget Password */
     public function forgetPassword($request)
-    {
+    {   
         try {
             $user = User::where("email", $request->email)->first();
             if (!$user) {
@@ -328,9 +334,10 @@ class User extends Authenticatable
                 $data = ["subject" => "Forget Password", "first_name" => $user['first_name'], "last_name" => $user['last_name'], "otp" => $user['otp']];
                 $mail = SendMailHelper::sendMail($user, "email.forget_password_otp", $data);
                 if ($mail) {
-                    return true;
+                    $success = ["success" => true, "user" => $user];
+                    return $success;
                 }
-                return false;
+                return ["success" => false, "message" => __('responses.failed_email')];
             }
         } catch (\Exception $e) {
             return false;
@@ -338,7 +345,7 @@ class User extends Authenticatable
     }
     /**Reset password */
     public function resetPassword($request)
-    {
+    {    
         try {
             /**get records of particular user by using email */
             $user = User::where(["email" => $request->email])->first();
@@ -353,9 +360,10 @@ class User extends Authenticatable
                     $data = ["subject" => "Reset Password Successfull!", "first_name" => $user['first_name'], "last_name" => $user['last_name']];
                     $mail = SendMailHelper::sendMail($user, "email.reset_password", $data);
                     if ($mail) {
-                        return true;
+                        $success = ["success" => true, "user" => $user];
+                        return $success;
                     }
-                    return false;
+                    return ["success" => false, "message" => __('responses.failed_email')];
                 }
             } else {
                 return 2;

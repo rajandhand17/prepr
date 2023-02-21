@@ -11,11 +11,12 @@ class SendMailHelper
     {
         try {
             $result= Mail::to($user->email)->send(new SendMail($user,$view,$data));
-            if(count(Mail::failures()) > 0){
-                return false;
+            if($result){
+                return true;
             }
             return false;
         }catch(\Exception $e){
+            return $e;
             return false;
         }
     }
