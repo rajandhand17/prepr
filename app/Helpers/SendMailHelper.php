@@ -11,9 +11,9 @@ class SendMailHelper
     {
         try {
             $result= Mail::to($user->email)->send(new SendMail($user,$view,$data));
-            if($result){
-                return true;
-            } 
+            if(count(Mail::failures()) > 0){
+                return false;
+            }
             return false;
         }catch(\Exception $e){
             return false;

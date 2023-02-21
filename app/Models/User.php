@@ -162,18 +162,21 @@ class User extends Authenticatable
                 $usersetting->user_id = $user->id;
                 $usersetting->save();
 
-                DB::commit();
-                /**sending otp on registeres email */
                 $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                 $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
-                $success = ["success" => true, "user" => $user];
-                return $success;
+                if($mail){
+                    DB::commit();
+                    /**sending otp on registeres email */
+                    $success = ["success" => true, "user" => $user];
+                    return $success;
+                }
+                return ["success" => false, "message" => 'Unable to send mail.'];
             }
             DB::rollback();
-            return false;
+            return ["success" => false, "message" => 'Unable to register user.'];
         } catch (\Exception $e) {
             DB::rollback();
-            return false;
+            return ["success" => false, "message" => 'Something went wrong.'];
         }
     }
 
