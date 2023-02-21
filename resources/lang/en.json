@@ -2936,6 +2936,7 @@
     "responses.receiver_required":"Please enter receiver!",
     "responses.receiver_unique":"This receiver already registered with us!",
     "responses.found_social_connect_list":"Social connect list fetched",
-    "responses.not_found_social_connect_list":"Social connect list not found!"
+    "responses.not_found_social_connect_list":"Social connect list not found!",
+    "responses.user_verify_email_otp":"Please check email to get otp for verification!"
 }
   

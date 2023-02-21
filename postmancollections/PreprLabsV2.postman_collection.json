@@ -10329,25 +10329,18 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "user_id",
-									"value": "11995",
+									"key": "email",
+									"value": "rajan@prepr.org",
 									"type": "default"
 								},
 								{
-									"key": "country_code",
-									"value": "+91",
-									"type": "default",
-									"disabled": true
+									"key": "purpose",
+									"value": "two_factor_verification",
+									"type": "default"
 								},
 								{
-									"key": "phone_number",
-									"value": "9646080802",
-									"type": "default",
-									"disabled": true
-								},
-								{
-									"key": "email",
-									"value": "rajan@prepr.org",
+									"key": "language",
+									"value": "en",
 									"type": "default"
 								}
 							]
@@ -10371,105 +10364,6 @@
 						}
 					},
 					"response": [
-						{
-							"name": "Send Otp - Successfull",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "user_id",
-											"value": "1",
-											"type": "default",
-											"disabled": true
-										},
-										{
-											"key": "country_code",
-											"value": "+91",
-											"type": "default",
-											"disabled": true
-										},
-										{
-											"key": "phone_number",
-											"value": "9646080802",
-											"type": "default",
-											"disabled": true
-										},
-										{
-											"key": "email",
-											"value": "rajan@prepr.org",
-											"type": "default"
-										}
-									]
-								},
-								"url": {
-									"raw": "http://127.0.0.1:8000/api/v1/auth/send-otp",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"v1",
-										"auth",
-										"send-otp"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Host",
-									"value": "127.0.0.1:8000"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:22:52 GMT"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:22:52 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "close"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/8.1.12"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "59"
-								},
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"success\": true,\n    \"data\": null,\n    \"message\": \"Please check your phone for otp!\"\n}"
-						},
 						{
 							"name": "Send Otp - Email Not Registered",
 							"originalRequest": {
@@ -10668,6 +10562,279 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"data\": {\n        \"email\": [\n            \"Please enter email in email field\"\n        ]\n    }\n}"
+						},
+						{
+							"name": "Send Otp - Success Forget Password",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "rajan@prepr.org",
+											"type": "default"
+										},
+										{
+											"key": "purpose",
+											"value": "forget_password",
+											"type": "default"
+										},
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/auth/send-otp",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"send-otp"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 21 Feb 2023 06:25:55 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 21 Feb 2023 06:25:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": null,\n    \"message\": \"Your password reset link sent on your registered email address\"\n}"
+						},
+						{
+							"name": "Send Otp - Successfull Verifiy Email",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "rajan@prepr.org",
+											"type": "default"
+										},
+										{
+											"key": "purpose",
+											"value": "verify_email",
+											"type": "default"
+										},
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/auth/send-otp",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"send-otp"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 21 Feb 2023 08:35:46 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 21 Feb 2023 08:35:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": null,\n    \"message\": \"Please check email to get otp for verification!\"\n}"
+						},
+						{
+							"name": "Send Otp- Successfull Two Factor Verification",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "rajan@prepr.org",
+											"type": "default"
+										},
+										{
+											"key": "purpose",
+											"value": "two_factor_verification",
+											"type": "default"
+										},
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/auth/send-otp",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"send-otp"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 21 Feb 2023 08:37:31 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 21 Feb 2023 08:37:31 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": null,\n    \"message\": \"Please check otp in your mail\"\n}"
 						}
 					]
 				},

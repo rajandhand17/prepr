@@ -314,7 +314,7 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('notification.notification_swwptal'), 401);
             }
             if ($register['success'] == "success") {
-                return $this->sendResponse($register['user'], __('responses.user_register'), 200);
+                return $this->sendResponse($register['user'], __('responses.registeration_successfully'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){
@@ -563,8 +563,16 @@ class AuthController extends AppBaseController
     {
         try {
             $send_otp = $this->authRepository->sendOtp($request);
-            if($send_otp===true){
-                return $this->sendResponse(null, __('responses.otp_send'), 200);
+            if ($send_otp["success"] === true) {
+               if($send_otp["purpose"]==="forget_password"){
+                  return $this->sendResponse(null, __('notification.notification_yprlsoyrea'), 200);
+               }
+               if($send_otp["purpose"]==="verify_email"){
+                  return $this->sendResponse(null, __('responses.user_verify_email_otp'), 200);
+               }
+               if($send_otp["purpose"]==="two_factor_verification"){
+                return $this->sendResponse(null, __('notification.notification_pcoiym'), 200);
+               }
             }
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
