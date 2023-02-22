@@ -16,7 +16,6 @@ class SendMailHelper
             }
             return false;
         }catch(\Exception $e){
-            return $e;
             return false;
         }
     }

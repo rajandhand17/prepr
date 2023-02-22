@@ -73,25 +73,14 @@ class AuthController extends AppBaseController
     {
         try {
             $login = $this->authRepository->login($request);
-            
-            if($login['code'] === 1){
-                return $this->sendError(__('notification.notification_pvyeatpl'), 403);
-            }
-            if($login['code'] === 2){
-                return $this->sendResponse(null, __('responses.two_factor_otp'), 200);
-            }
-            if($login['code'] == 3){
-                
-                return $this->sendResponse($login['token'], __('responses.user_login_sucess'), 200);
-            }
-            if($login['code'] == 4){
-                return $this->sendError(__('notification.notification_icpta'), 401);
-            }
-            if($login['code'] == 5){
-                return $this->sendError(__('responses.notification_usernot_found'), 401);
-            }
-            if($login['code'] == 6){
-                return $this->sendError(__('responses.send_error'), 401);
+            if ($login['success'] == true){
+                if($login['code'] ===2){
+                    return $this->sendResponse(null, $login['message'], 200);
+                }
+                if($login['code'] === 3){
+                   
+                    return $this->sendResponse($login['token'], $login['message'], 200);
+                }
             }
             if ($login['success'] == false){
                 return $this->sendError($login['message'], 401);
@@ -149,13 +138,14 @@ class AuthController extends AppBaseController
     {
         try{
             $verifytwofactor = $this->authRepository->verifyTwoFactor($request);
-            if($verifytwofactor===8){
-                return $this->sendError(__('responses.otp_correct_required'), 401);
-            }
             if($verifytwofactor['success'] == true){
                 return $this->sendResponse($verifytwofactor['token'], __('responses.user_login_sucess'), 200);
             }
-            
+            if($verifytwofactor['success'] == false){
+                if($verifytwofactor['code']===8){
+                    return $this->sendError(__('responses.otp_correct_required'), 401);
+                }
+            }
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
@@ -378,7 +368,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse(null, __('notification.notification_yprlsoyrea'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
-        }catch (\Exception $e) {
+        }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -425,7 +415,7 @@ class AuthController extends AppBaseController
             if($username == false){
                 return $this->sendResponse(null, __('responses.username_available'), 200);
             }else{
-                return $this->sendError(__('responses.username_unique'), .403);
+                return $this->sendError(__('responses.username_unique'), 403);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch(\Exception $e){
@@ -521,9 +511,9 @@ class AuthController extends AppBaseController
     {
         try {
             $checkphone = $this->authRepository->checkPhone($request);
-            if ($checkphone == false) {
+            if($checkphone == false) {
                 return $this->sendResponse(null, __('responses.found_exists_phone_list'), 200);
-            } else {
+            }else{
                 return $this->sendError(__("responses.already_number"), 403);
             }
         } catch (\Exception $e) {
@@ -639,15 +629,6 @@ class AuthController extends AppBaseController
     {
         try {
             $verify = $this->authRepository->verifyOtp($request);
-            if ($verify === 5) {
-                return $this->sendError(__('notification.notification_uarvrf'), 403);
-            }
-            if ($verify === 4) {
-                return $this->sendError(__('responses.otp_expried_required'), 403);
-            }
-            if ($verify === 6) {
-                return $this->sendError(__('responses.otp_correct_required'), 403);
-            }
             if ($verify['success'] === true) {
                 return $this->sendResponse(null, __('responses.verify_success'), 200);
             }
@@ -767,12 +748,6 @@ class AuthController extends AppBaseController
     {
         try{
             $resetcode = $this->authRepository->resetPassword($request);
-            if ($resetcode === 1){
-                return $this->sendError(__('responses.account_not_verified'), 403);
-            }
-            if($resetcode === 2){
-                return $this->sendError(__('responses.otp_correct_required'), 403);
-            }
             if ($resetcode['success'] === true) {
                 return $this->sendResponse(null, __('notification.notification_yprs'), 200);
             }

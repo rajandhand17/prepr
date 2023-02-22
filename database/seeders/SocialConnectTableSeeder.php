@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\SocialConnect;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use App\Models\Role;
 class SocialConnectTableSeeder extends Seeder
 {
     /**
@@ -17,43 +17,50 @@ class SocialConnectTableSeeder extends Seeder
     {
         $social_connect_list = [
             [
-                'name' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
+                'name' => 'Organization Owner',
+                'display_name' => 'Organization Owner',
+                'description'=>'Owner of organization, who invite orgnaization manager to manage organization'
             ],
             [
-                'name' => 'instagram',
-                'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2048px-Instagram_logo_2016.svg.png'
-            ],
-            [
-                'name' => 'microsoft',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/732/732221.png'
-            ],
-            [
-                'name' => 'twitter',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124021.png'
-            ],
-            [
-                'name' => 'linkedin',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/174/174857.png'
-            ],
-            [
-                'name' => 'google',
-                'logo' => 'https://www.incidentiq.com/wp-content/uploads/2022/09/GoogleSSO-logo.png'
-            ],
-            [
-                'name' => 'apple',
-                'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png'
-            ],
-            [
-                'name' => 'magnet',
-                'logo' => 'https://bfrc.magnet.today/wp-content/uploads/2022/01/magnet-icon-rgb.png'
-            ],
-        ];
+                'name' => 'Organization Manager',
+                'display_name' => 'Organization Manager',
+                'description'=>'Organization manager manage the organizations'
+            ],[
+                'name' => 'Lab Manager',
+                'display_name' => 'Lab Manager',
+                'description'=>''
+            ],[
+                'name' => 'Challenge Manager',
+                'display_name' => 'Challenge Manager',
+                'description'=>''
+            ],[
+                'name' => 'Resource Manager',
+                'display_name' => 'Resource Manager',
+                'description'=>''
+            ],[
+                'name' => 'Assessor',
+                'display_name' => 'Assessor',
+                'description'=>''
+            ],[
+                'name' => 'Super Admin',
+                'display_name' => 'Super Admin',
+                'description'=>''
+            ],[
+                'name' => 'Customer Success',
+                'display_name' => 'Customer Success',
+                'description'=>''
+            ],[
+                'name' => 'Developer',
+                'display_name' => 'Developer',
+                'description'=>''
+            ]
+            ];
 
         foreach ($social_connect_list as $key => $single_social_conect){
-            SocialConnect::updateOrCreate(
+            Role::updateOrCreate(
                 ['name' =>  $single_social_conect['name']],
-                ['logo' => $single_social_conect['logo']]
+                ['display_name' => $single_social_conect['display_name']],
+                ['description' => $single_social_conect['description']],
             );
         }
     }

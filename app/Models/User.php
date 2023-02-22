@@ -77,13 +77,14 @@ class User extends Authenticatable
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
-                return ['status' => false, 'code' => 1];
+               $response= ['success' => false, 'message' => __('notification.notification_pvyeatpl')];
+               return $response;
             }
             if ($user) {
                 /**check password same or not */
                 if (Hash::check($request->password, $user->password)) {
                     $token = $user->createToken(env("APP_NAME"))->accessToken;
-                    if ($user->two_factor_verification == 1) {
+                    if ($user->two_factor_verification == 1){
                         $otp = random_int(1000, 9999);
                         DB::beginTransaction();
                         $user->otp = $otp;
@@ -93,22 +94,22 @@ class User extends Authenticatable
                         $data = ["subject" => "Two Factor Verification", "first_name" => $user['first_name'], "last_name" => $user['last_name'], "otp" => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, "email.two_factor_otp", $data);
                         if ($mail) {
-                            return ['status' => true, 'code' => 2];
+                            return ['success' => true, "message"=> __('responses.two_factor_otp'), 'code' => 2];
                         }
                         return ["success" => false, "message" => __('responses.failed_email'),"code"=>null];
                     }
-                    $response = ['status' => true, 'code' => 3, 'token' => $token];
+                    $response = ['success' => true, 'code' => 3, 'token' => $token,"message" => __('responses.user_login_sucess')];
                     return $response;
                 } else {
-                    $response = ['status' => false, 'code' => 4];
+                    $response = ['success' => false, "message"=>__('notification.notification_icpta'), 'code' => 4];
                     return $response;
                 }
             } else {
-                $response = ['status' => false, 'code' => 5];
+                $response = ['success' => false, "message"=>__('responses.notification_usernot_found'), 'code' => 5];
                 return $response;
             }
         } catch (\Exception $e) {
-            $response = ['status' => false, 'code' => 6];
+            $response = ['success' => false, "message"=>__('responses.send_error'), 'code' => 6];
             return $response;
         }
     }
@@ -124,7 +125,9 @@ class User extends Authenticatable
                 $response = ['success' => true, 'token' => $token];
                 return $response;
             } else {
-                return 8;
+                $response = ['success' => false, 'code' => 8];
+                return $response;
+                
             }
         } catch (\Exception $e) {
             return false;
@@ -171,6 +174,7 @@ class User extends Authenticatable
                     $success = ["success" => true, "user" => $userresponse];
                     return $success;
                 }
+                DB::rollback();
                 return ["success" => false, "message" => __('responses.failed_email')];
             }
             DB::rollback();
@@ -274,16 +278,16 @@ class User extends Authenticatable
     /**Verify otp */
     public function verifyOtp($request)
     {    
-        try {
+        try{
             /**get records of particular user by using email */
             $user = User::select("id", "otp", "verified_user", "country_code", "phone_number", "updated_at")->where(["email" => $request->email])->first();
             $updated_user = $user->updated_at;
             /**check user account verified or not */
-            if ($user->verified_user == 1) {
-                return 5;
-            }
+            if ($user->verified_user === "1"){
+                $response=["success" => false, "message" => __('notification.notification_uarvrf')];
+                return $response;
+             }
             /**Matching otp is same or not */
-
             if ($user->otp == $request->otp) {
                 $user = User::find($user->id);
                 $user->verified_user = '1';
@@ -298,7 +302,9 @@ class User extends Authenticatable
                 }
                 return false;
             } else {
-                return 6;
+                $response=["success" => false, "message" =>__('responses.otp_correct_required')];
+                return $response;
+               
             }
         } catch (\Exception $e) {
             return false;
@@ -351,7 +357,8 @@ class User extends Authenticatable
             $user = User::where(["email" => $request->email])->first();
             /**check user account verified or not */
             if ($user->verified_user == 0) {
-                return 1;
+                $response= ["success" => false, "message" =>__('responses.account_not_verified')];
+                return $response;
             }
             /**checking otp same or not */
             if ($user->otp == $request->otp) {
@@ -366,7 +373,8 @@ class User extends Authenticatable
                     return ["success" => false, "message" => __('responses.failed_email')];
                 }
             } else {
-                return 2;
+                $response= ["success" => false, "message" =>__('responses.otp_correct_required')];
+                return $response;
             }
             return false;
         } catch (\Exception $e) {
