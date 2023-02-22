@@ -2940,6 +2940,10 @@
     "responses.user_verify_email_otp":"Please check email to get otp for verification!",
     "responses.failed_email":"Unable to send mail.",
     "responses.failed_registeration":"Unable to register user.",
-    "responses.two_factor_otp":"Two factor otp is send on your registered email!,Please verify with otp."
+    "responses.two_factor_otp":"Two factor otp is send on your registered email!,Please verify with otp.",
+    "responses.forget_password_email":"We’ve received a request for forget-password. You can reset your password using this OTP:",
+    "responses.reset_password_email":"After the lost password is successfully reset, Please Login with your new password.",
+    "responses.two_factor_email":"We’ve received a request for Login,Please enter this otp to login:",
+    "responses.verified_successfull":"Your account is successfully verified. Please Login with your credential"
 }
   

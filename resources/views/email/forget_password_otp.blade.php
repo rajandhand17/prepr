@@ -29,8 +29,7 @@
 					</tr>
 					<tr>
 						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }},<br>
-						  <br>
-                            We’ve received a request for forget-password. You can reset your password using this OTP: </td>
+						  <br>{{__("responses.forget_password_email")}} </td>
                     </tr>
 					<tr>
 

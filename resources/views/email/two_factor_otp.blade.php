@@ -30,7 +30,7 @@
 					<tr>
 						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }},<br>
 						  <br>
-                            We’ve received a request for Login,Please enter this otp to login: </td>
+                            {{__("responses.two_factor_email")}} </td>
                     </tr>
 					<tr>
 
