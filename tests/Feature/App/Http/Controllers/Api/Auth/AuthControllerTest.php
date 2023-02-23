@@ -14,8 +14,6 @@ class AuthControllerTest extends TestCase
      *
      * @return void
      */
-    public $wrong_password;
-    public $wrong_username;
      public function setUp(): void
      {
             parent::setUp();
