@@ -196,6 +196,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Repositories\Api\Master\MasterServiceProvider::class,
+        App\Repositories\Api\Auth\AuthServiceProvider::class,
 
     ],
 

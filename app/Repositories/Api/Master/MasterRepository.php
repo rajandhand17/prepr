@@ -19,6 +19,7 @@ use App\Models\Host;
 use App\Models\FlexibleExpireDateDuration;
 use App\Models\PitchTemplate;
 use App\Models\LabCondition;
+use App\Models\SocialConnect;
 class MasterRepository implements MasterInterface{
 
     private $category;
@@ -39,7 +40,8 @@ class MasterRepository implements MasterInterface{
     private $flexible_expireDate_duration;
     private $pitch_template;
     private $lab_condition;
-    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration,PitchTemplate $pitch_template, LabCondition $lab_condition) {
+    private $social_connect;
+    function __construct(Category $category,Skill $skill,Tag $tag,ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration,PitchTemplate $pitch_template, LabCondition $lab_condition,SocialConnect $social_connect) {
         $this->category = $category;
         $this->skill = $skill;
         $this->tag=$tag;
@@ -58,6 +60,7 @@ class MasterRepository implements MasterInterface{
         $this->flexible_expireDate_duration=$flexible_expireDate_duration;
         $this->pitch_template=$pitch_template;
         $this->lab_condition=$lab_condition;
+        $this->social_connect=$social_connect;
     }
 
     public function getCategories($request)
@@ -231,6 +234,14 @@ class MasterRepository implements MasterInterface{
     {
         try {
             return $this->lab_condition->getLabConditions($request->language,$request->search);
+        } catch (\Exception) {
+            return false;
+        }
+    }
+
+    public function getSocialConnect($request){
+        try {
+            return $this->social_connect->getSocialConnect($request->language,$request->search);
         } catch (\Exception) {
             return false;
         }

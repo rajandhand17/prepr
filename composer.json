@@ -7,14 +7,15 @@
     "require": {
         "php": "^8.0.2",
         "darkaonline/l5-swagger": "^8.4",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.5",
         "infyomlabs/laravel-generator": "^5.4",
         "infyomlabs/laravel-ui-adminlte": "^5.1",
         "laravel/framework": "^9.19",
         "laravel/passport": "^11.3",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "predis/predis": "^2.0"
+        "predis/predis": "^2.0",
+        "twilio/sdk": "^6.44"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -22,7 +23,7 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10",
+        "phpunit/phpunit": "^9.6",
         "phpunitgen/console": "^4.2",
         "spatie/laravel-ignition": "^1.0"
     },

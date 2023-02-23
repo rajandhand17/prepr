@@ -1,0 +1,15 @@
+php artisan migrate-old-data:achievement-condition-list
+php artisan migrate-old-data:categories
+php artisan migrate-old-data:host
+php artisan migrate-old-data:languages
+php artisan migrate-old-data:pitch-template
+php artisan migrate-old-data:project-industry
+php artisan migrate-old-data:project-stages
+php artisan migrate-old-data:project-status
+php artisan migrate-old-data:project-type
+php artisan migrate-old-data:project-verticals
+php artisan migrate-old-data:ranks
+php artisan migrate-old-data:skills
+php artisan migrate-old-data:skill-stacks
+php artisan migrate-old-data:social-link
+php artisan migrate-old-data:tags
