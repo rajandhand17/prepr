@@ -74,11 +74,12 @@ class AuthController extends AppBaseController
             $login = $this->authRepository->login($request);
             if ($login['success'] == true){
                 if($login['code'] ===2){
-                    return $this->sendResponse(null, $login['message'], 200);
+                    $response=["message"=>$login['message'],"code"=>$login['code']];
+                    return $this->sendResponse($response, $login['message'], 200);
                 }
                 if($login['code'] === 3){
-                   
-                    return $this->sendResponse($login['token'], $login['message'], 200);
+                   $response=["token"=>$login['token'],"code"=>$login['code']];
+                    return $this->sendResponse($response, $login['message'], 200);
                 }
             }
             if ($login['success'] == false){
@@ -138,10 +139,10 @@ class AuthController extends AppBaseController
         try{
             $verifytwofactor = $this->authRepository->verifyTwoFactor($request);
             if($verifytwofactor['success'] == true){
-                return $this->sendResponse($verifytwofactor['token'], __('responses.user_login_sucess'), 200);
+                return $this->sendResponse($verifytwofactor, __('responses.user_login_sucess'), 200);
             }
             if($verifytwofactor['success'] == false){
-                if($verifytwofactor['code']===8){
+                if($verifytwofactor['code']===1){
                     return $this->sendError(__('responses.otp_correct_required'), 401);
                 }
             }
@@ -364,7 +365,7 @@ class AuthController extends AppBaseController
                 return $this->sendError($forgetpassword['message'], 401);
             }
             if($forgetpassword['success'] == true) {
-                return $this->sendResponse(null, __('notification.notification_yprlsoyrea'), 200);
+                return $this->sendResponse($forgetpassword, __('notification.notification_yprlsoyrea'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){
@@ -562,13 +563,13 @@ class AuthController extends AppBaseController
             $send_otp = $this->authRepository->sendOtp($request);
             if ($send_otp["success"] === true) {
                if($send_otp["purpose"]==="forget_password"){
-                  return $this->sendResponse(null, __('notification.notification_yprlsoyrea'), 200);
+                  return $this->sendResponse($send_otp, __('notification.notification_yprlsoyrea'), 200);
                }
                if($send_otp["purpose"]==="verify_email"){
-                  return $this->sendResponse(null, __('responses.user_verify_email_otp'), 200);
+                  return $this->sendResponse($send_otp, __('responses.user_verify_email_otp'), 200);
                }
                if($send_otp["purpose"]==="two_factor_verification"){
-                return $this->sendResponse(null, __('notification.notification_pcoiym'), 200);
+                return $this->sendResponse($send_otp, __('notification.notification_pcoiym'), 200);
                }
             }
             if ($send_otp["success"] === false){
@@ -629,10 +630,10 @@ class AuthController extends AppBaseController
         try {
             $verify = $this->authRepository->verifyOtp($request);
             if ($verify['success'] === true) {
-                return $this->sendResponse(null, __('responses.verify_success'), 200);
+                return $this->sendResponse($verify, __('responses.verify_success'), 200);
             }
             if($verify['success']===false){
-                return $this->sendResponse(null,$verify['message'],403);
+                return $this->sendResponse($verify,$verify['message'],403);
             }
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {

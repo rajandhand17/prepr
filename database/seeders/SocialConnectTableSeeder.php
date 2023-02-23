@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\SocialConnect;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Role;
+
 class SocialConnectTableSeeder extends Seeder
 {
     /**
@@ -17,50 +16,40 @@ class SocialConnectTableSeeder extends Seeder
     {
         $social_connect_list = [
             [
-                'name' => 'Organization Owner',
-                'display_name' => 'Organization Owner',
-                'description'=>'Owner of organization, who invite orgnaization manager to manage organization'
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ],
             [
-                'name' => 'Organization Manager',
-                'display_name' => 'Organization Manager',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ],[
-                'name' => 'Lab Manager',
-                'display_name' => 'Lab Manager',
-                'description'=>''
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ],[
-                'name' => 'Challenge Manager',
-                'display_name' => 'Challenge Manager',
-                'description'=>''
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ],[
-                'name' => 'Resource Manager',
-                'display_name' => 'Resource Manager',
-                'description'=>''
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ],[
-                'name' => 'Assessor',
-                'display_name' => 'Assessor',
-                'description'=>''
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ],[
-                'name' => 'Super Admin',
-                'display_name' => 'Super Admin',
-                'description'=>''
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ],[
-                'name' => 'Customer Success',
-                'display_name' => 'Customer Success',
-                'description'=>''
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ],[
-                'name' => 'Developer',
-                'display_name' => 'Developer',
-                'description'=>''
+                'name' => 'facebook',
+                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png'
             ]
             ];
 
         foreach ($social_connect_list as $key => $single_social_conect){
-            Role::updateOrCreate(
+            SocialConnect::updateOrCreate(
                 ['name' =>  $single_social_conect['name']],
-                ['display_name' => $single_social_conect['display_name']],
-                ['description' => $single_social_conect['description']],
+                ['logo' => $single_social_conect['logo']],            
             );
         }
     }

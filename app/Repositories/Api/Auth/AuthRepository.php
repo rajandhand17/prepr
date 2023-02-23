@@ -1,16 +1,13 @@
 <?php
 namespace App\Repositories\Api\Auth;
 use App\Models\User;
-use App\Models\Organisation;
 
 class AuthRepository implements AuthInterface{
   
     private $user;
-    private $organisation;
-    function __construct(User $user,Organisation $organisation)
+    function __construct(User $user)
     {
         $this->user=$user;
-        $this->organisation=$organisation;
     }
     
     public function login($request)

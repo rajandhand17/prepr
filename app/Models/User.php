@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -114,7 +113,7 @@ class User extends Authenticatable
 
     /**Verify two factor */
     public function verifyTwoFactor($request)
-    {
+    { 
         try {
             /**checking user exists or not */
             $user = User::where(['email' => $request->email, "otp" => $request->otp])->first();
@@ -123,7 +122,7 @@ class User extends Authenticatable
                 $response = ['success' => true, 'token' => $token];
                 return $response;
             } else {
-                $response = ['success' => false, 'code' => 8];
+                $response = ['success' => false, 'code' => 1];
                 return $response;
                 
             }
@@ -238,7 +237,7 @@ class User extends Authenticatable
                         $data = ["subject" => "Forget Password", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                         $mail = SendMailHelper::sendMail($user, "email.forget_password_otp", $data);
                         if ($mail){
-                            $response = ["success" => true, "purpose" => "forget_password"];
+                            $response = ["success" => true, "purpose" => "forget_password", "code" => 1];
                             return $response;
                         }
                         return ["success" => false, "message" => __('responses.failed_email')];
@@ -248,7 +247,7 @@ class User extends Authenticatable
                         $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                         $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
                         if ($mail) {
-                            $response = ["success" => true, "purpose" => "verify_email"];
+                            $response = ["success" => true, "purpose" => "verify_email", "code" => 2];
                             return $response;
                         }
                         return ["success" => false, "message" => __('responses.failed_email')];
@@ -258,7 +257,7 @@ class User extends Authenticatable
                         $data = ["subject" => "Two Factor Verification", "first_name" => $user['first_name'], "last_name" => $user['last_name'], "otp" => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, "email.two_factor_otp", $data);
                         if ($mail) {
-                            $response = ["success" => true, "purpose" => "two_factor_verification"];
+                            $response = ["success" => true, "purpose" => "two_factor_verification", "code" => 3];
                             return $response;
                         }
                         return ["success" => false, "message" => __('responses.failed_email')];
@@ -282,7 +281,7 @@ class User extends Authenticatable
             $updated_user = $user->updated_at;
             /**check user account verified or not */
             if ($user->verified_user === "1"){
-                $response=["success" => false, "message" => __('notification.notification_uarvrf')];
+                $response=["success" => false, "message" => __('notification.notification_uarvrf'), "code" => 1];
                 return $response;
              }
             /**Matching otp is same or not */
@@ -293,14 +292,14 @@ class User extends Authenticatable
                     $data = ["subject" => "Verified Successfully!", "first_name" => $user->first_name, "last_name" => $user->last_name];
                     $mail = SendMailHelper::sendMail($user, "email.verified_successfully", $data);
                     if ($mail) {
-                        $success = ["success" => true, "user" => $user];
+                        $success = ["success" => true, "user" => $user, "code" => 2];
                         return $success;
                     }
-                    return ["success" => false, "message" => __('responses.failed_email')];
+                    return ["success" => false, "message" => __('responses.failed_email'), "code" => 3];
                 }
                 return false;
             } else {
-                $response=["success" => false, "message" =>__('responses.otp_correct_required')];
+                $response=["success" => false, "message" =>__('responses.otp_correct_required'), "code" => 4];
                 return $response;
                
             }
@@ -338,10 +337,10 @@ class User extends Authenticatable
                 $data = ["subject" => "Forget Password", "first_name" => $user['first_name'], "last_name" => $user['last_name'], "otp" => $user['otp']];
                 $mail = SendMailHelper::sendMail($user, "email.forget_password_otp", $data);
                 if ($mail) {
-                    $success = ["success" => true, "user" => $user];
+                    $success = ["success" => true, "user" => $user, "code" => 1];
                     return $success;
                 }
-                return ["success" => false, "message" => __('responses.failed_email')];
+                return ["success" => false, "message" => __('responses.failed_email'), "code" => 2];
             }
         } catch (\Exception $e) {
             return false;
@@ -355,7 +354,7 @@ class User extends Authenticatable
             $user = User::where(["email" => $request->email])->first();
             /**check user account verified or not */
             if ($user->verified_user == 0) {
-                $response= ["success" => false, "message" =>__('responses.account_not_verified')];
+                $response= ["success" => false, "message" =>__('responses.account_not_verified'), "code" => 1];
                 return $response;
             }
             /**checking otp same or not */
@@ -368,10 +367,10 @@ class User extends Authenticatable
                         $success = ["success" => true, "user" => $user];
                         return $success;
                     }
-                    return ["success" => false, "message" => __('responses.failed_email')];
+                    return ["success" => false, "message" => __('responses.failed_email'), "code" => 2];
                 }
             } else {
-                $response= ["success" => false, "message" =>__('responses.otp_correct_required')];
+                $response= ["success" => false, "message" =>__('responses.otp_correct_required'), "code" => 3];
                 return $response;
             }
             return false;
