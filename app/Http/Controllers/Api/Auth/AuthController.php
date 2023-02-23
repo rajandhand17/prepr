@@ -322,7 +322,7 @@ class AuthController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="Enter langauge id for registered!",
+     *         description="Language values that needed to be considered for choose languages",
      *         required=true,
      *         explode=true,
      *     ),
@@ -380,7 +380,7 @@ class AuthController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="Enter langauge id for registered!",
+     *         description="Enter langauge for checkusername!",
      *         required=true,
      *         explode=true,
      *     ),
@@ -437,7 +437,7 @@ class AuthController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="Enter langauge id for registered!",
+     *         description="Enter langauge for email!",
      *         required=true,
      *         explode=true,
      *     ),
@@ -493,7 +493,7 @@ class AuthController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="Enter langauge id for registered!",
+     *         description="Enter langauge for checkphone!",
      *         required=true,
      *         explode=true,
      *     ),
@@ -550,7 +550,7 @@ class AuthController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="Enter langauge id for registered!",
+     *         description="Enter langauge id for send-otp!",
      *         required=true,
      *         explode=true,
      *     ),
@@ -625,7 +625,7 @@ class AuthController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="Enter langauge id for registered!",
+     *         description="Enter langauge id for verify otp!",
      *         required=true,
      *         explode=true,
      *     ),
@@ -683,7 +683,7 @@ class AuthController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="Enter langauge id for registered!",
+     *         description="Enter langauge id for referal-code!",
      *         required=true,
      *         explode=true,
      *     ),
@@ -765,7 +765,7 @@ class AuthController extends AppBaseController
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
-     *         description="Enter langauge!",
+     *         description="Enter langauge for reset password!",
      *         required=true,
      *         explode=true,
      *     ),
