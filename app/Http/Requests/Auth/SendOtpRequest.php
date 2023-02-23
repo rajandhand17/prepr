@@ -27,6 +27,7 @@ class SendOtpRequest extends FormRequest
     {
         return [
             'email' => 'required|email|max:50|exists:users,email',
+            'purpose'=>'required'
         ];
     }
 
@@ -47,6 +48,7 @@ class SendOtpRequest extends FormRequest
             'email.exists'=>__('responses.not_exists_email'), 
             'email.email'=>__('notification.notification_iea'),
             'email.max'=>__('responses.max_email'),
+            'purpose'=>__('responses.purpose'),
 
         ];
     }

@@ -19,8 +19,8 @@ class AuthControllerTest extends TestCase
     public function test_register_positive()
     {
         $language = "en";
-        $username = "Rajandhanda";
-        $email = "rajan@prepr.orga";
+        $username = "Rajandhand";
+        $email = "rajan@prepr.orgs";
         $first_name = "rajan";
         $last_name = "dhand";
         $password = "Prepr@123";
@@ -29,7 +29,7 @@ class AuthControllerTest extends TestCase
         $user_type = "teacher";
         $purpose = "looking_team";
         $country_code = "+91";
-        $phone_number = "964608080288";
+        $phone_number = "9646080808";
         $two_factor_verification = "1";
         $organization_name = "organization";
         $vanity_link = "prepr";
@@ -112,19 +112,19 @@ class AuthControllerTest extends TestCase
     /**Wrong email address */
     public function test_post_login_wrong_email_negative()
     {
-        $email = "rajan@prepr.orgs";
+        $email = "rajan@prepr.or";
         $password = "Prepr@123";
         $response = $this->post('/api/v1/auth/login', ["email" => $email, "password" => $password, "language" => "en"]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /**Wrong email address */
+    /**Wrong password address */
     public function test_post_login_wrong_password_negative()
     {
-        $email = "rajan@prepr.orgs";
-        $password = "Prepr@1234";
+        $email = "rajan@prepr.org";
+        $password = "Prepr@12345";
         $response = $this->post('/api/v1/auth/login', ["email" => $email, "password" => $password, "language" => "en"]);
-        $this->assertEquals(422, $response->getStatusCode());
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     
@@ -145,9 +145,8 @@ class AuthControllerTest extends TestCase
     /**Check user name negative */
     public function test_post_check_username_notexists_negative()
     {
-        $username = "rajandhand";
         $language = "en";
-        $response = $this->post("/api/v1/auth/checkusername", ["username" => $username, "language" => $language]);
+        $response = $this->post("/api/v1/auth/checkusername", ["language" => $language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
     /**Check user name negative */
@@ -296,7 +295,7 @@ class AuthControllerTest extends TestCase
     /** Reset Password */
     public function test_post_verify_invite_code_positive()
     {   
-        $referal_code="rajandhand2023";
+        $referal_code="rajandhanda2023";
         $language="en";
         $response = $this->post("/api/v1/auth/verify-invite-code", ["referal_code" =>$referal_code, "language" =>$language]);
         $response->assertStatus(200);
@@ -311,7 +310,7 @@ class AuthControllerTest extends TestCase
     /** Reset Password negative*/
     public function test_post_verify_invite_code_negative()
     {
-        $referal_code="rajandhand2";
+        $referal_code="Rajandhand";
         $language="en";
         $response = $this->post("/api/v1/auth/verify-invite-code", ["referal_code" =>$referal_code, "language" =>$language]);
         $this->assertEquals(422, $response->getStatusCode());
