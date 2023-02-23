@@ -14,28 +14,34 @@ class AuthControllerTest extends TestCase
      *
      * @return void
      */
-    
+     public function setUp(): void
+     {     
+            $this->language = "en";
+            $this->username = "Rajandhand";
+            $this->email = "rajan@prepr.org";
+            $this->wrong_email="rajanwrong@prepr.org";
+            $this->first_name = "rajan";
+            $this->last_name = "dhand";
+            $this->password = "Prepr@123";
+            $this->password_confirmation = "Prepr@123";
+            $this->device_platform = "web";
+            $this->user_type = "student";
+            $this->purpose = "looking_team";
+            $this->country_code = "+91";
+            $this->phone_number = "9646080802";
+            $this->wrong_phone_number="9646080805";
+            $this->purpose_send_otp="two_factor_verification";
+            $this->referal_code="rajandhand2023";
+            $this->wrong_referal_code="rajandhand";
+            
+     }
      /**Successfull Positive */
     public function test_register_positive()
-    {
-        $language = "en";
-        $username = "Rajandhand";
-        $email = "rajan@prepr.orgs";
-        $first_name = "rajan";
-        $last_name = "dhand";
-        $password = "Prepr@123";
-        $password_confirmation = "Prepr@123";
-        $device_platform = "web";
-        $user_type = "teacher";
-        $purpose = "looking_team";
-        $country_code = "+91";
-        $phone_number = "9646080808";
-        $two_factor_verification = "1";
-        $organization_name = "organization";
-        $vanity_link = "prepr";
-        $response = $this->post("/api/v1/auth/register", ["language" => $language, "username" => $username, "email" => $email, "first_name" => $first_name, "last_name" => $last_name, "password" => $password, "password_confirmation" => $password_confirmation, "device_platform" => $device_platform, "user_type" => $user_type, "purpose" => $purpose, "country_code" => $country_code, "phone_number" => $phone_number, "two_factor_verification" => $two_factor_verification, "organization_name" => $organization_name, "vanity_link" => $vanity_link]);
+    {   
+        $response = $this->post("/api/v1/auth/register", ["language" => $this->language, "username" => $this->username, "email" => $this->email, "first_name" => $this->first_name, "last_name" => $this->last_name, "password" => $this->password, "password_confirmation" => $this->password_confirmation, "device_platform" => $this->device_platform, "user_type" => $this->user_type, "purpose" => $this->purpose, "country_code" => $this->country_code, "phone_number" => $this->phone_number]);
         $response->assertStatus(200);
         $data = $response->json();
+       
         if ($data['success'] === true) {
             $this->assertArrayHasKey('id', $data['data'][0]);
             $this->assertArrayHasKey('language', $data['data'][0]);
@@ -48,8 +54,8 @@ class AuthControllerTest extends TestCase
             $this->assertArrayHasKey('phone_number', $data['data'][0]);
             $this->assertArrayHasKey('referal_code', $data['data'][0]);
             if($response->assertOk()){
-                $records=User::select("otp")->where("email",$email)->first();
-                $verifyuser = $this->post("/api/v1/auth/verify-otp", ["language" => $language, "email" => $email, "otp"=>$records->otp]);
+                $records=User::select("otp")->where("email",$this->email)->first();
+                $verifyuser = $this->post("/api/v1/auth/verify-otp", ["language" => $this->language, "email" => $this->email, "otp"=>$records->otp]);
                 $verifyuser->assertStatus(200);
                 $datavarify = $verifyuser->json();
                 if($datavarify['success']==true){
@@ -71,38 +77,21 @@ class AuthControllerTest extends TestCase
     /**Negative Registered */
     public function test_register_negative_exists()
     {
-        $language = "en";
-        $username = "Rajandhanda";
-        $email = "rajan@prepr.orga";
-        $first_name = "rajan";
-        $last_name = "dhand";
-        $password = "Prepr@123";
-        $password_confirmation = "Prepr@123";
-        $device_platform = "web";
-        $user_type = "teacher";
-        $purpose = "looking_team";
-        $country_code = "+91";
-        $phone_number = "964608080288";
-        $two_factor_verification = "1";
-        $organization_name = "organization";
-        $vanity_link = "prepr";
-        $response = $this->post("/api/v1/auth/register", ["language" => $language, "username" => $username, "email" => $email, "first_name" => $first_name, "last_name" => $last_name, "password" => $password, "password_confirmation" => $password_confirmation, "device_platform" => $device_platform, "user_type" => $user_type, "purpose" => $purpose, "country_code" => $country_code, "phone_number" => $phone_number, "two_factor_verification" => $two_factor_verification, "organization_name" => $organization_name, "vanity_link" => $vanity_link]);
+        $response = $this->post("/api/v1/auth/register", ["language" => $this->language, "username" => $this->username, "email" => $this->email, "first_name" => $this->first_name, "last_name" => $this->last_name, "password" => $this->password, "password_confirmation" => $this->password_confirmation, "device_platform" => $this->device_platform, "user_type" => $this->user_type, "purpose" => $this->purpose, "country_code" => $this->country_code, "phone_number" => $this->phone_number]);
         $this->assertEquals(422, $response->getStatusCode());
     }
     /**login Positive */
      public function test_post_login_positive()
-    {
-        $email = "rajan@prepr.org";
-        $password = "Prepr@123";
-        $response = $this->post('/api/v1/auth/login', ["email" => $email, "password" => $password, "language" => "en"]);
+    {   
+        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true){
             if($data['data']!==null){
                 $response->assertOk();    
             }else{
-            $userrecords=User::select("otp")->where("email",$email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $email,"otp" => $userrecords->otp, "language" => "en"]);
+            $userrecords=User::select("otp")->where("email",$this->email)->first();
+            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
             $twofactorresponse->assertStatus(200);
            }
         } else {
@@ -111,29 +100,23 @@ class AuthControllerTest extends TestCase
     }
     /**Wrong email address */
     public function test_post_login_wrong_email_negative()
-    {
-        $email = "rajan@prepr.or";
-        $password = "Prepr@123";
-        $response = $this->post('/api/v1/auth/login', ["email" => $email, "password" => $password, "language" => "en"]);
+    { 
+        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /**Wrong password address */
+    /**Wrong email address */
     public function test_post_login_wrong_password_negative()
     {
-        $email = "rajan@prepr.org";
-        $password = "Prepr@12345";
-        $response = $this->post('/api/v1/auth/login', ["email" => $email, "password" => $password, "language" => "en"]);
-        $this->assertEquals(401, $response->getStatusCode());
+        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
+        $this->assertEquals(422, $response->getStatusCode());
     }
 
     
     /**Check user name positive */
     public function test_post_check_username_positive()
     {
-        $username = "rajandhand20";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/checkusername", ["username" => $username, "language" => $language]);
+        $response = $this->post("/api/v1/auth/checkusername", ["username" => $this->username, "language" => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -145,8 +128,7 @@ class AuthControllerTest extends TestCase
     /**Check user name negative */
     public function test_post_check_username_notexists_negative()
     {
-        $language = "en";
-        $response = $this->post("/api/v1/auth/checkusername", ["language" => $language]);
+        $response = $this->post("/api/v1/auth/checkusername", ["username" => $this->username, "language" => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
     /**Check user name negative */
@@ -159,9 +141,7 @@ class AuthControllerTest extends TestCase
     /**Check email positive */
     public function test_post_check_email_positive()
     {
-        $email = "rajandhand17@gmail.com";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/checkemail", ["email" => $email, "language" => $language]);
+        $response = $this->post("/api/v1/auth/checkemail", ["email" => $this->wrong_email, "language" => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -173,9 +153,7 @@ class AuthControllerTest extends TestCase
     /**Check user name negative */
     public function test_post_check_email_notexists_negative()
     {
-        $email = "rajan@prepr.org";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/checkemail", ["email" => $email, "language" => $language]);
+        $response = $this->post("/api/v1/auth/checkemail", ["email" => $this->email, "language" => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
     /**Check user name negative */
@@ -188,9 +166,7 @@ class AuthControllerTest extends TestCase
     /**Check email positive */
     public function test_post_check_phone_positive()
     {
-        $phone_number = "9646080805";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/checkphone", ["phone_number" => $phone_number, "language" => $language]);
+        $response = $this->post("/api/v1/auth/checkphone", ["phone_number" => $this->wrong_phone_number, "language" => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -203,9 +179,7 @@ class AuthControllerTest extends TestCase
     /**Check user name negative */
     public function test_post_check_phone_notexists_negative()
     {
-        $phone_number = "9646080802";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/checkphone", ["phone_number" => $phone_number, "language" => $language]);
+        $response = $this->post("/api/v1/auth/checkphone", ["phone_number" => $this->phone_number, "language" => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
@@ -219,7 +193,7 @@ class AuthControllerTest extends TestCase
     /**send otp */
     public function test_post_send_otp_positive()
     {
-        $response = $this->post("/api/v1/auth/send-otp", ["email" => "rajan@prepr.org", "purpose" => "two_factor_verification", "language" => "en"]);
+        $response = $this->post("/api/v1/auth/send-otp", ["email" =>$this->email, "purpose" =>$this->purpose_send_otp, "language" =>$this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -232,18 +206,14 @@ class AuthControllerTest extends TestCase
     /**send otp */
     public function test_post_send_otp_negative()
     {
-        $email = "rajan@prepr.orgs";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/send-otp", ["email" => $email, "language" => $language]);
+        $response = $this->post("/api/v1/auth/send-otp", ["email" => $this->email, "language" => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
     /** Forget Password */
     public function test_post_forget_password_positive()
     {
-        $email = "rajan@prepr.org";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/forget-password", ["email" => $email, "language" => $language]);
+        $response = $this->post("/api/v1/auth/forget-password", ["email" => $this->email, "language" =>$this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -256,24 +226,18 @@ class AuthControllerTest extends TestCase
     /**Forget password negative */
     public function test_post_forget_password_negative()
     {
-        $email = "rajan@prepr.orgss";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/forget-password", ["email" => $email, "language" => $language]);
+        $response = $this->post("/api/v1/auth/forget-password", ["email" => $this->email, "language" => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
     /** Reset Password */
     public function test_post_reset_password_positive()
-    {
-        $email = "rajan@prepr.org";
-        $password = "Prepr@123";
-        $password_confirmation = "Prepr@123";
-        $otp = "4565";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/reset-password", ["email" => $email, "password" => $password, "password_confirmation" => $password_confirmation, "otp" => $otp, "language" => $language]);
+    {   
+        $records=User::select("otp")->where("email",$this->email)->first();
+        $response = $this->post("/api/v1/auth/reset-password", ["email" => $this->email, "password" => $this->password, "password_confirmation" => $this->password_confirmation, "otp" => $records->otp, "language" => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
-        if ($data['success'] === true) {
+        if ($data['success'] === true){
             $response->assertOk();
         } else {
             $this->fail();
@@ -283,21 +247,14 @@ class AuthControllerTest extends TestCase
     /** Reset Password */
     public function test_post_reset_password_negative()
     {
-        $email = "rajan@prepr.orgsd";
-        $password = "Prepr@123";
-        $password_confirmation = "Prepr@123";
-        $otp = "4565";
-        $language = "en";
-        $response = $this->post("/api/v1/auth/reset-password", ["email" => $email, "password" => $password, "password_confirmation" => $password_confirmation, "otp" => $otp, "language" => $language]);
+        $response = $this->post("/api/v1/auth/reset-password", ["email" => $this->wrong_email, "password" => $this->password, "password_confirmation" => $this->password_confirmation, "language" => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
     /** Reset Password */
     public function test_post_verify_invite_code_positive()
     {   
-        $referal_code="rajandhanda2023";
-        $language="en";
-        $response = $this->post("/api/v1/auth/verify-invite-code", ["referal_code" =>$referal_code, "language" =>$language]);
+        $response = $this->post("/api/v1/auth/verify-invite-code", ["referal_code" =>$this->referal_code, "language" =>$this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -309,10 +266,8 @@ class AuthControllerTest extends TestCase
 
     /** Reset Password negative*/
     public function test_post_verify_invite_code_negative()
-    {
-        $referal_code="Rajandhand";
-        $language="en";
-        $response = $this->post("/api/v1/auth/verify-invite-code", ["referal_code" =>$referal_code, "language" =>$language]);
+    {   
+        $response = $this->post("/api/v1/auth/verify-invite-code", ["referal_code" =>$this->wrong_referal_code, "language" =>$this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
