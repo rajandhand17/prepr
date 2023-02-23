@@ -34,6 +34,13 @@
                         "description": "Enter password of account!",
                         "required": true,
                         "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
                     }
                 ],
                 "responses": {
@@ -73,6 +80,13 @@
                         "description": "Enter two factor otp!",
                         "required": true,
                         "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
                     }
                 ],
                 "responses": {
@@ -100,7 +114,7 @@
                 "operationId": "registerUser",
                 "parameters": [
                     {
-                        "name": "preferred_language",
+                        "name": "language",
                         "in": "query",
                         "description": "Enter langauge id for registered!",
                         "required": true,
@@ -182,34 +196,6 @@
                         "description": "Enter the phone number for registered!",
                         "required": true,
                         "explode": true
-                    },
-                    {
-                        "name": "two_factor_verification",
-                        "in": "query",
-                        "description": "Enter the two factor verification for registered!",
-                        "required": true,
-                        "explode": true
-                    },
-                    {
-                        "name": "organization_name",
-                        "in": "query",
-                        "description": "Enter organization name for registered!",
-                        "required": true,
-                        "explode": true
-                    },
-                    {
-                        "name": "vanity_link",
-                        "in": "query",
-                        "description": "Enter the vanity link for registered!",
-                        "required": true,
-                        "explode": true
-                    },
-                    {
-                        "name": "referal_code",
-                        "in": "query",
-                        "description": "Enter the referal code for registered!",
-                        "required": true,
-                        "explode": true
                     }
                 ],
                 "responses": {
@@ -241,6 +227,13 @@
                         "name": "email",
                         "in": "query",
                         "description": "Email uses for send otp",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Enter langauge id for registered!",
                         "required": true,
                         "explode": true
                     }
@@ -275,6 +268,13 @@
                         "description": "Check user name exists or not!",
                         "required": true,
                         "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Enter langauge id for registered!",
+                        "required": true,
+                        "explode": true
                     }
                 ],
                 "responses": {
@@ -305,6 +305,13 @@
                         "name": "email",
                         "in": "query",
                         "description": "check the email value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Enter langauge id for registered!",
                         "required": true,
                         "explode": true
                     }
@@ -339,6 +346,13 @@
                         "description": "check the phone number that exists or not!",
                         "required": true,
                         "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Enter langauge id for registered!",
+                        "required": true,
+                        "explode": true
                     }
                 ],
                 "responses": {
@@ -369,6 +383,13 @@
                         "name": "email",
                         "in": "query",
                         "description": "Uses emails to get account!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Enter langauge id for registered!",
                         "required": true,
                         "explode": true
                     }
@@ -410,6 +431,13 @@
                         "description": "Uses otp for verify account!",
                         "required": true,
                         "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Enter langauge id for registered!",
+                        "required": true,
+                        "explode": true
                     }
                 ],
                 "responses": {
@@ -440,6 +468,13 @@
                         "name": "referal_code",
                         "in": "query",
                         "description": "check the referal code value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Enter langauge id for registered!",
                         "required": true,
                         "explode": true
                     }
@@ -486,6 +521,20 @@
                         "name": "password_confirmation",
                         "in": "query",
                         "description": "Check the password value that exists or not!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "otp",
+                        "in": "query",
+                        "description": "Enter otp for reset password!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Enter langauge!",
                         "required": true,
                         "explode": true
                     }
