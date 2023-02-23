@@ -46,6 +46,14 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -112,6 +120,14 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -158,7 +174,7 @@ class AuthController extends AppBaseController
      *     summary="Send request for check register",
      *     operationId="registerUser",
      *     @OA\Parameter(
-     *         name="preferred_language",
+     *         name="language",
      *         in="query",
      *         description="Enter langauge id for registered!",
      *         required=true,
@@ -249,38 +265,6 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
-     *     @OA\Parameter(
-     *         name="two_factor_verification",
-     *         in="query",
-     *         description="Enter the two factor verification for registered!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="organization_name",
-     *         in="query",
-     *         description="Enter organization name for registered!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="vanity_link",
-     *         in="query",
-     *         description="Enter the vanity link for registered!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="referal_code",
-     *         in="query",
-     *         description="Enter the referal code for registered!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -335,6 +319,13 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -386,6 +377,13 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Enter langauge for checkusername!",
+     *         required=true,
+     *         explode=true,
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -436,6 +434,13 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Enter langauge for email!",
+     *         required=true,
+     *         explode=true,
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -484,6 +489,13 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Enter langauge for checkphone!",
+     *         required=true,
+     *         explode=true,
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -534,6 +546,13 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Enter langauge id for send-otp!",
+     *         required=true,
+     *         explode=true,
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -603,6 +622,13 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Enter langauge id for verify otp!",
+     *         required=true,
+     *         explode=true,
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -653,6 +679,13 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Enter langauge id for referal-code!",
+     *         required=true,
+     *         explode=true,
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -721,6 +754,20 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *
+     *     ),
+     *     @OA\Parameter(
+     *         name="otp",
+     *         in="query",
+     *         description="Enter otp for reset password!",
+     *         required=true,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Enter langauge for reset password!",
+     *         required=true,
+     *         explode=true,
      *     ),
      *     @OA\Response(
      *         response=200,
