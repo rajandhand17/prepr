@@ -9,13 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Laratrust\Traits\LaratrustUserTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    use LaratrustUserTrait;
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
