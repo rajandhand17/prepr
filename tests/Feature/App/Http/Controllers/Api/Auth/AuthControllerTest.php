@@ -15,7 +15,8 @@ class AuthControllerTest extends TestCase
      * @return void
      */
      public function setUp(): void
-     {     
+     {
+            parent::setUp();
             $this->language = "en";
             $this->username = "Rajandhand";
             $this->email = "rajan@prepr.org";
@@ -33,15 +34,15 @@ class AuthControllerTest extends TestCase
             $this->purpose_send_otp="two_factor_verification";
             $this->referal_code="rajandhand2023";
             $this->wrong_referal_code="rajandhand";
-            
+
      }
      /**Successfull Positive */
     public function test_register_positive()
-    {   
+    {
         $response = $this->post("/api/v1/auth/register", ["language" => $this->language, "username" => $this->username, "email" => $this->email, "first_name" => $this->first_name, "last_name" => $this->last_name, "password" => $this->password, "password_confirmation" => $this->password_confirmation, "device_platform" => $this->device_platform, "user_type" => $this->user_type, "purpose" => $this->purpose, "country_code" => $this->country_code, "phone_number" => $this->phone_number]);
         $response->assertStatus(200);
         $data = $response->json();
-       
+
         if ($data['success'] === true) {
             $this->assertArrayHasKey('id', $data['data'][0]);
             $this->assertArrayHasKey('language', $data['data'][0]);
@@ -82,13 +83,13 @@ class AuthControllerTest extends TestCase
     }
     /**login Positive */
      public function test_post_login_positive()
-    {   
+    {
         $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true){
             if($data['data']!==null){
-                $response->assertOk();    
+                $response->assertOk();
             }else{
             $userrecords=User::select("otp")->where("email",$this->email)->first();
             $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
@@ -100,7 +101,7 @@ class AuthControllerTest extends TestCase
     }
     /**Wrong email address */
     public function test_post_login_wrong_email_negative()
-    { 
+    {
         $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
@@ -112,7 +113,7 @@ class AuthControllerTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    
+
     /**Check user name positive */
     public function test_post_check_username_positive()
     {
@@ -232,7 +233,7 @@ class AuthControllerTest extends TestCase
 
     /** Reset Password */
     public function test_post_reset_password_positive()
-    {   
+    {
         $records=User::select("otp")->where("email",$this->email)->first();
         $response = $this->post("/api/v1/auth/reset-password", ["email" => $this->email, "password" => $this->password, "password_confirmation" => $this->password_confirmation, "otp" => $records->otp, "language" => $this->language]);
         $response->assertStatus(200);
@@ -253,7 +254,7 @@ class AuthControllerTest extends TestCase
 
     /** Reset Password */
     public function test_post_verify_invite_code_positive()
-    {   
+    {
         $response = $this->post("/api/v1/auth/verify-invite-code", ["referal_code" =>$this->referal_code, "language" =>$this->language]);
         $response->assertStatus(200);
         $data = $response->json();
@@ -266,14 +267,14 @@ class AuthControllerTest extends TestCase
 
     /** Reset Password negative*/
     public function test_post_verify_invite_code_negative()
-    {   
+    {
         $response = $this->post("/api/v1/auth/verify-invite-code", ["referal_code" =>$this->wrong_referal_code, "language" =>$this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
     /** Two Factor negative*/
     public function test_post_verify_two_factor_negative()
-    {   
+    {
         $language="en";
         $response = $this->post("/api/v1/auth/verify-invite-code", ["language" =>$language]);
         $this->assertEquals(422, $response->getStatusCode());
