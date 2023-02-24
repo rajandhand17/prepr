@@ -8277,6 +8277,21 @@
 				{
 					"name": "login",
 					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "headerPrefix",
+									"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiYTQwNDE1Yzc1MTQ4ZTJiMWFkMjM5NGZkMzZiNzFhMjk4NDI1Y2ZjODVkNDY4M2Q1MjIwNGQyMWQxZTUzMDQ2YTkyYzcwOTAyYzBlYWM1YjQiLCJpYXQiOjE2Njg2ODI1MTEuNTMyNzc3LCJuYmYiOjE2Njg2ODI1MTEuNTMyNzgyLCJleHAiOjE3MDAyMTg1MTEuNTAzMzExLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.T3LLmIVG3RRFh-UMggVKQRwoIxqYf-bwCr1E8EPkBWZUnf4uhZu7umhx2VgSlxro6aSt7xvKVyHb0qarLDRNLVixvkI024tj9XaVcS-Fsz3ZQY4U-Pu30UrD6AaJYqFNSLVcevTgezgY9U4w1XwBR3BQGdg3QtnmhG86MUsBijnggTz6sOIgu8xVEOpHZghXdHsjR9FkGAjwaR5kL-RHTvLB-goXW8VpTWm6W4GjCaNYxq0GkX2yWTlRAvGbP7ZWxrK5aRHar-b_LF5jSZGpKCXajMyDr3GJW17QpJ4lCnNHqqFKVqGMDqDcgVE_uJnhEX9oggAkyF2qYBpVper9Klf6FzvgXVPqSidYjoU_FtlZik15gHMAE2zvYAhOnxi-LWpgHTSXQj2lVsn1f1PKJqajM9OhrFbG_D2sHOhudcIVf6OzB2kAfpfX8gQ7-abpNlaGCCCqWieBMtfS450Emx3SfFtvPaeefy0pNrl6BDwIo1UmqXT86-D5ZxMXExRyieSi0lMAKvUiirHEFD_EAhGWxkVyQcfdyWS6CT4CszHStMjh8MMGjlejm1JMxHW0F_hw3G29KI1MPmwr1cBBTO02V1En8q1drtWthYig9lppn3Aw3bOMof-PW0-jbExrb3EYNJ0YosVWSEmk2OJ90QbIeel1-UHg6OxKnshw5fU",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -8289,21 +8304,21 @@
 								},
 								{
 									"key": "password",
-									"value": "Prepr@1234",
+									"value": "Prepr@123",
+									"type": "default"
+								},
+								{
+									"key": "language",
+									"value": "en",
 									"type": "default"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/auth/login",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/auth/login",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -8683,13 +8698,13 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "preferred_language",
+									"key": "language",
 									"value": "en",
 									"type": "default"
 								},
 								{
 									"key": "username",
-									"value": "Rajandhands",
+									"value": "Rajandhanda",
 									"type": "default"
 								},
 								{
@@ -8724,7 +8739,7 @@
 								},
 								{
 									"key": "user_type",
-									"value": "teacher",
+									"value": "student",
 									"type": "default"
 								},
 								{
@@ -8739,41 +8754,16 @@
 								},
 								{
 									"key": "phone_number",
-									"value": "9646080802",
-									"type": "default"
-								},
-								{
-									"key": "two_factor_verification",
-									"value": "1",
-									"type": "default"
-								},
-								{
-									"key": "organization_name",
-									"value": "organizatoin",
-									"type": "default"
-								},
-								{
-									"key": "vanity_link",
-									"value": "prepr",
-									"type": "default"
-								},
-								{
-									"key": "referal_code",
-									"value": "rajan20",
+									"value": "964608080288",
 									"type": "default"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/auth/register",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/auth/register",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -9490,21 +9480,21 @@
 							"urlencoded": [
 								{
 									"key": "username",
-									"value": "rajandhand1",
+									"value": "rajandhanda",
+									"type": "default"
+								},
+								{
+									"key": "language",
+									"value": "en",
 									"type": "default"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/auth/checkusername",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/auth/checkusername",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -9770,21 +9760,16 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "rajan@prepr.org",
+									"value": "rajan@prepr.orgj",
 									"type": "default"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/auth/checkemail",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/auth/checkemail",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -10046,25 +10031,25 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "phone_number",
 									"value": "9646080802",
+									"type": "default"
+								},
+								{
+									"key": "language",
+									"value": "en",
 									"type": "default"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/auth/checkphone",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/auth/checkphone",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -10336,7 +10321,8 @@
 								{
 									"key": "purpose",
 									"value": "two_factor_verification",
-									"type": "default"
+									"type": "default",
+									"disabled": true
 								},
 								{
 									"key": "language",
@@ -10346,15 +10332,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/auth/send-otp",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/auth/send-otp",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -11297,12 +11278,17 @@
 									"key": "email",
 									"value": "rajan@prepr.org",
 									"type": "default"
+								},
+								{
+									"key": "language",
+									"value": "en",
+									"type": "default"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/auth/forget-password",
-							"protocol": "http",
+							"raw": "{{localhost}}http://127.0.0.1:8000/api/v1/auth/forget-password",
+							"protocol": "{{localhost}}http",
 							"host": [
 								"127",
 								"0",
@@ -12067,13 +12053,18 @@
 							"mode": "formdata",
 							"formdata": [
 								{
+									"key": "language",
+									"value": "en",
+									"type": "default"
+								},
+								{
 									"key": "email",
 									"value": "rajan@prepr.org",
 									"type": "default"
 								},
 								{
 									"key": "otp",
-									"value": "6814",
+									"value": "1254",
 									"type": "default"
 								}
 							]
@@ -12288,19 +12279,19 @@
 											"key": "otp",
 											"value": "6816",
 											"type": "default"
+										},
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/v1/auth/verify-two-factor",
-									"protocol": "http",
+									"raw": "{{localhost}}/api/v1/auth/verify-two-factor",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"{{localhost}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"v1",
