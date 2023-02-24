@@ -13,7 +13,7 @@ class PermissionSeeder extends Seeder
      * @return void
      */
     public function run()
-    { 
+    {
         $permission=[
             [
                 'name' => 'view_organization',
@@ -35,22 +35,22 @@ class PermissionSeeder extends Seeder
                 'description'=>'Organization delete permission to who can delete organization'
             ],
             [
-                'name' => 'view_organization_member',
+                'name' => 'view_organization_members',
                 'display_name' => 'View Organization Member',
                 'description'=>'Allow to user to view organization member'
             ],
             [
-                'name' => 'create_organization_member',
+                'name' => 'create_organization_members',
                 'display_name' => 'Create Organization Member',
                 'description'=>'Allow to user to create organization member'
             ],
             [
-                'name' => 'edit_organization_member',
+                'name' => 'edit_organization_members',
                 'display_name' => 'Edit Organization Member',
                 'description'=>'Allow to user to edit organization member'
             ],
             [
-                'name' => 'delete_organization_member_management',
+                'name' => 'delete_organization_members',
                 'display_name' => 'Delete Organization Member Manager',
                 'description'=>'Allow to user to delete organization member'
             ],
@@ -73,7 +73,7 @@ class PermissionSeeder extends Seeder
                 'name' => 'delete_lab',
                 'display_name' => 'Delete Lab',
                 'description'=>'Allow to user to delete lab'
-            ], 
+            ],
             [
                 'name' => 'generate_lab_report',
                 'display_name' => 'Generate Lab Report',
@@ -137,7 +137,7 @@ class PermissionSeeder extends Seeder
                 'name' => 'delete_challenge',
                 'display_name' => 'Delete Challenge',
                 'description'=>'Allow user to delete challenge'
-            ], 
+            ],
             [
                 'name' => 'generate_challenge_report',
                 'display_name' => 'Generate Challenge Report',
@@ -148,7 +148,7 @@ class PermissionSeeder extends Seeder
                 'display_name' => 'Clone Challenge',
                 'description'=>'Allow user to create clone challenge'
             ],
-            
+
             [
                 'name' => 'create_challenge_annoucements',
                 'display_name' => 'Create Challenge Annoucements',
@@ -163,7 +163,7 @@ class PermissionSeeder extends Seeder
                 'name' => 'delete_challenge_annoucements',
                 'display_name' => 'Delete Challenge Annoucements',
                 'description'=>'Allow user to challenge annoucements'
-            ], 
+            ],
             [
                 'name' => 'create_challenge_assessment',
                 'display_name' => 'Create Challenge Assessment',
@@ -173,49 +173,49 @@ class PermissionSeeder extends Seeder
                 'name' => 'view_project_submission',
                 'display_name' => 'View Project Submission',
                 'description'=>'Allow user to view project sumission',
-            ], 
+            ],
             [
                 'name' => 'remove_project_submission',
                 'display_name' => 'Remove Project Submission',
                 'description'=>'Allow user to remove project submission',
-            ], 
+            ],
             [
                 'name' => 'view_challenges_members',
                 'display_name' => 'View Challenges Members',
                 'description'=>'Allow user to view challenges members',
-            ], 
-            
+            ],
+
             [
                 'name' => 'create_challenges_members',
                 'display_name' => 'Create Challenges Members',
                 'description'=>'Allow user to create challenges members',
-            ], 
+            ],
             [
                 'name' => 'edit_challenges_members',
                 'display_name' => 'Edit Challenges Members',
                 'description'=>'Allow user to edit challenges members',
-            ], 
+            ],
             [
                 'name' => 'delete_challenges_members',
                 'display_name' => 'Delete Challenges Members',
                 'description'=>'Allow user to delete challenges members',
-            ], 
-            
+            ],
+
             [
                 'name' => 'view_challenges_path',
                 'display_name' => 'View Challenge Path',
                 'description'=>'Allow user to view challenge path',
-            ], 
+            ],
             [
                 'name' => 'create_challenges_path',
                 'display_name' => 'Create Challenge Path',
                 'description'=>'Allow user to create challenge path',
-            ], 
+            ],
             [
                 'name' => 'edit_challenges_path',
                 'display_name' => 'Edit Challenge Path',
                 'description'=>'Allow user to edit challenge path',
-            ], 
+            ],
             [
                 'name' => 'delete_challenges_path',
                 'display_name' => 'Delete Challenge Path',
@@ -225,7 +225,7 @@ class PermissionSeeder extends Seeder
                 'name' => 'view_resource_module',
                 'display_name' => 'View Resource Module',
                 'description'=>'Allow user to view resource module',
-            ], 
+            ],
             [
                 'name' => 'create_resource_module',
                 'display_name' => 'Create Resource Module',
@@ -234,7 +234,7 @@ class PermissionSeeder extends Seeder
                 'name' => 'edit_resource_module',
                 'display_name' => 'Edit Resource Module',
                 'description'=>'Allow user to edit resource module',
-            ], 
+            ],
             [
                 'name' => 'delete_resource_module',
                 'display_name' => 'Delete Resource Module',
@@ -244,7 +244,7 @@ class PermissionSeeder extends Seeder
                 'name' => 'view_resource_collection',
                 'display_name' => 'View Resource Collection',
                 'description'=>'Allow user to view resource collection',
-            ], 
+            ],
             [
                 'name' => 'create_resource_collection',
                 'display_name' => 'Create Resource Collection',
@@ -253,17 +253,17 @@ class PermissionSeeder extends Seeder
                 'name' => 'edit_resource_collection',
                 'display_name' => 'Edit Resource Collection',
                 'description'=>'Allow user to edit resource Collection',
-            ], 
+            ],
             [
                 'name' => 'delete_resource_collection',
                 'display_name' => 'Delete Resource Collection',
                 'description'=>'Allow user to delete resource collection',
-            ], 
+            ],
             [
                 'name' => 'view_resource_group',
                 'display_name' => 'View Resource Group',
                 'description'=>'Allow user to view resource group',
-            ], 
+            ],
             [
                 'name' => 'create_resource_group',
                 'display_name' => 'Create Resource Group',
@@ -272,13 +272,18 @@ class PermissionSeeder extends Seeder
                 'name' => 'edit_resource_group',
                 'display_name' => 'Edit Resource Group',
                 'description'=>'Allow user to edit resource group',
-            ], 
+            ],
             [
                 'name' => 'delete_resource_group',
                 'display_name' => 'Delete Resource Group',
                 'description'=>'Allow user to delete resource group',
             ],
-                     
+            [
+                'name' => 'impersonate_user',
+                'display_name' => 'Impersonate User',
+                'description'=>"One User can switch login into another user's account",
+            ],
+
            ];
 
            foreach ($permission as $key => $permission_array){

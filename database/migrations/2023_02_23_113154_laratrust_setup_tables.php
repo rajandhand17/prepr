@@ -45,14 +45,14 @@ class LaratrustSetupTables extends Migration
             $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('user_id');
             $table->string('user_type');
-            $table->unsignedBigInteger('organization_id')->nullable();
+            $table->unsignedBigInteger('org_id')->nullable();
 
             $table->foreign('role_id')->references('id')->on('roles')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('organization_id')->references('id')->on('organizations')
+            $table->foreign('org_id')->references('id')->on('organizations')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->unique(['user_id', 'role_id', 'user_type', 'organization_id']);
+            $table->unique(['user_id', 'role_id', 'user_type', 'org_id']);
         });
 
         // Create table for associating permissions to users (Many To Many Polymorphic)
@@ -60,14 +60,14 @@ class LaratrustSetupTables extends Migration
             $table->unsignedBigInteger('permission_id');
             $table->unsignedBigInteger('user_id');
             $table->string('user_type');
-            $table->unsignedBigInteger('organization_id')->nullable();
+            $table->unsignedBigInteger('org_id')->nullable();
 
             $table->foreign('permission_id')->references('id')->on('permissions')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('organization_id')->references('id')->on('organizations')
+            $table->foreign('org_id')->references('id')->on('organizations')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->unique(['user_id', 'permission_id', 'user_type', 'organization_id']);
+            $table->unique(['user_id', 'permission_id', 'user_type', 'org_id']);
         });
 
         // Create table for associating permissions to roles (Many-to-Many)
