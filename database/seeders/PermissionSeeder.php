@@ -13,7 +13,7 @@ class PermissionSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
+    { 
         $permission=[
             [
                 'name' => 'view_organization',
