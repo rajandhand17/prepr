@@ -16,42 +16,42 @@ class RolesSeeder extends Seeder
     {
         $roles = [
             [
-                'name' => 'Organization Owner',
+                'name' => 'organization_owner',
                 'display_name' => 'Organization Owner',
                 'description'=>'Owner of organization, who invite orgnaization manager to manage organization'
             ],
             [
-                'name' => 'Organization Manager',
+                'name' => 'organization_manager',
                 'display_name' => 'Organization Manager',
                 'description'=>'Organization manager manage the organizations'
             ],[
-                'name' => 'Lab Manager',
+                'name' => 'lab_manager',
                 'display_name' => 'Lab Manager',
                 'description'=>'Lab Manager for lab managers'
             ],[
-                'name' => 'Challenge Manager',
+                'name' => 'challenge_manager',
                 'display_name' => 'Challenge Manager',
-                'description'=>'Challenge Managers to '
+                'description'=>'Challenge managers manage to challenge'
             ],[
-                'name' => 'Resource Manager',
+                'name' => 'resource_manager',
                 'display_name' => 'Resource Manager',
-                'description'=>''
+                'description'=>'Resource manager manage the resurces'
             ],[
-                'name' => 'Assessor',
-                'display_name' => 'Assessor',
-                'description'=>''
+                'name' => 'user',
+                'display_name' => 'User',
+                'description'=>'User manage for users'
             ],[
-                'name' => 'Super Admin',
+                'name' => 'super_admin',
                 'display_name' => 'Super Admin',
-                'description'=>''
+                'description'=>'Who manage everything'
             ],[
-                'name' => 'Customer Success',
+                'name' => 'customer_success',
                 'display_name' => 'Customer Success',
-                'description'=>''
+                'description'=>'Manage the customer success'
             ],[
-                'name' => 'Developer',
+                'name' => 'developer',
                 'display_name' => 'Developer',
-                'description'=>''
+                'description'=>'Manage the developers work'
             ]
             ];
 

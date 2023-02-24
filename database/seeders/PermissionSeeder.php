@@ -35,259 +35,249 @@ class PermissionSeeder extends Seeder
                 'description'=>'Organization delete permission to who can delete organization'
             ],
             [
-                'name' => 'view_organization_member_management',
-                'display_name' => 'View Organization Member Manager',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'view_organization_member',
+                'display_name' => 'View Organization Member',
+                'description'=>'Allow to user to view organization member'
             ],
             [
-                'name' => 'create_organization_member_management',
-                'display_name' => 'Create Organization Member Manager',
-                'description'=>'Organization member manager manage the organizations'
+                'name' => 'create_organization_member',
+                'display_name' => 'Create Organization Member',
+                'description'=>'Allow to user to create organization member'
             ],
             [
-                'name' => 'edit_organization_member_management',
-                'display_name' => 'Edit Organization Member Manager',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'edit_organization_member',
+                'display_name' => 'Edit Organization Member',
+                'description'=>'Allow to user to edit organization member'
             ],
             [
                 'name' => 'delete_organization_member_management',
                 'display_name' => 'Delete Organization Member Manager',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow to user to delete organization member'
             ],
             [
                 'name' => 'view_lab',
                 'display_name' => 'View Lab',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow to user to view lab'
             ],
             [
                 'name' => 'create_lab',
                 'display_name' => 'Create Lab',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow to user to create lab'
             ],
             [
                 'name' => 'edit_lab',
                 'display_name' => 'Edit Lab',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow to user to edit lab'
             ],
             [
                 'name' => 'delete_lab',
                 'display_name' => 'Delete Lab',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow to user to delete lab'
             ], 
             [
-                'name' => 'generate_report_lab',
-                'display_name' => 'Generate Report Lab',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'generate_lab_report',
+                'display_name' => 'Generate Lab Report',
+                'description'=>'Allow to user to generate lab report'
             ],
             [
-                'name' => 'view_lab_member_management',
-                'display_name' => 'View Lab Member Management',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'view_lab_member',
+                'display_name' => 'View Lab Member',
+                'description'=>'Allow to user to view lab member'
             ],
             [
-                'name' => 'create_lab_member_management',
-                'display_name' => 'Create Lab Member Management',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'create_lab_member',
+                'display_name' => 'Create Lab Member',
+                'description'=>'Allow to create lab member'
             ],
             [
-                'name' => 'edit_lab_member_management',
-                'display_name' => 'Edit Lab Member Management',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'edit_lab_member',
+                'display_name' => 'Edit Lab Member',
+                'description'=>'Allow user to edit lab member'
             ],
             [
-                'name' => 'delete_lab_member_management',
-                'display_name' => 'Delete Lab Memeber Management',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'delete_lab_member',
+                'display_name' => 'Delete Lab Memeber',
+                'description'=>'Allow user to delete lab member'
             ], [
                 'name' => 'view_lab_programs',
                 'display_name' => 'View Lab Programs',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to view lab program'
             ],
             [
                 'name' => 'create_lab_programs',
                 'display_name' => 'Create Lab Programs',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to create lab program'
             ],
             [
                 'name' => 'edit_lab_programs',
                 'display_name' => 'Edit Lab Programs',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to edit lab program'
             ],
             [
                 'name' => 'delete_lab_programs',
                 'display_name' => 'Delete Lab programs',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to delete lab program'
             ],
             [
                 'name' => 'view_challenge',
                 'display_name' => 'View Challenge',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow to user to challenge'
             ],
             [
                 'name' => 'create_challenge',
                 'display_name' => 'Create Challenge',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to create challenge'
             ],
             [
                 'name' => 'edit_challenge',
                 'display_name' => 'Edit Challenge',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to edit challenge'
             ],
             [
                 'name' => 'delete_challenge',
                 'display_name' => 'Delete Challenge',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to delete challenge'
             ], 
             [
-                'name' => 'generate_report_challenge',
-                'display_name' => 'Generate Report Challenge',
-                'description'=>'Organization manager manage the organizations'
+                'name' => 'generate_challenge_report',
+                'display_name' => 'Generate Challenge Report',
+                'description'=>'Allow user to generate challenge report'
             ],
             [
                 'name' => 'clone_challenge',
                 'display_name' => 'Clone Challenge',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to create clone challenge'
             ],
             
             [
                 'name' => 'create_challenge_annoucements',
                 'display_name' => 'Create Challenge Annoucements',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to create challenge annoucements'
             ],
             [
                 'name' => 'edit_challenge_annoucements',
                 'display_name' => 'Edit Challenge Annoucements',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to edit challenge annoucements'
             ],
             [
                 'name' => 'delete_challenge_annoucements',
                 'display_name' => 'Delete Challenge Annoucements',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to challenge annoucements'
             ], 
             [
                 'name' => 'create_challenge_assessment',
                 'display_name' => 'Create Challenge Assessment',
-                'description'=>'Organization manager manage the organizations'
+                'description'=>'Allow user to create challenge assessment'
             ],
             [
                 'name' => 'view_project_submission',
                 'display_name' => 'View Project Submission',
-                'description'=>'View Project Submission',
+                'description'=>'Allow user to view project sumission',
             ], 
             [
                 'name' => 'remove_project_submission',
                 'display_name' => 'Remove Project Submission',
-                'description'=>'Remove Project Submission',
+                'description'=>'Allow user to remove project submission',
             ], 
             [
-                'name' => 'view_challenges_members_management',
-                'display_name' => 'View Challenges Members Management',
-                'description'=>'View Challenges Members Management',
+                'name' => 'view_challenges_members',
+                'display_name' => 'View Challenges Members',
+                'description'=>'Allow user to view challenges members',
             ], 
             
             [
-                'name' => 'create_challenges_members_management',
-                'display_name' => 'Create Challenges Members Management',
-                'description'=>'Create Challenges Members Management',
+                'name' => 'create_challenges_members',
+                'display_name' => 'Create Challenges Members',
+                'description'=>'Allow user to create challenges members',
             ], 
             [
-                'name' => 'edit_challenges_members_management',
-                'display_name' => 'Edit Challenges Members Management',
-                'description'=>'Edit Challenges Members Management',
+                'name' => 'edit_challenges_members',
+                'display_name' => 'Edit Challenges Members',
+                'description'=>'Allow user to edit challenges members',
             ], 
             [
-                'name' => 'delete_challenges_members_management',
-                'display_name' => 'Delete Challenges Members Management',
-                'description'=>'Delete Challenges Members Management',
+                'name' => 'delete_challenges_members',
+                'display_name' => 'Delete Challenges Members',
+                'description'=>'Allow user to delete challenges members',
             ], 
             
             [
                 'name' => 'view_challenges_path',
                 'display_name' => 'View Challenge Path',
-                'description'=>'View Challenge Path',
+                'description'=>'Allow user to view challenge path',
             ], 
             [
                 'name' => 'create_challenges_path',
                 'display_name' => 'Create Challenge Path',
-                'description'=>'Create Challenge Path',
+                'description'=>'Allow user to create challenge path',
             ], 
             [
                 'name' => 'edit_challenges_path',
                 'display_name' => 'Edit Challenge Path',
-                'description'=>'Edit Challenge Path',
+                'description'=>'Allow user to edit challenge path',
             ], 
             [
                 'name' => 'delete_challenges_path',
                 'display_name' => 'Delete Challenge Path',
-                'description'=>'Delete Challenge Path',
+                'description'=>'Allow user to delete challenge path',
             ],
             [
-                'name' => 'view_resource_module_management',
-                'display_name' => 'View Resource Module Management',
-                'description'=>'View Resource Module Management',
+                'name' => 'view_resource_module',
+                'display_name' => 'View Resource Module',
+                'description'=>'Allow user to view resource module',
             ], 
             [
-                'name' => 'create_resource_module_management',
-                'display_name' => 'Create Resource Module Management',
-                'description'=>'Create Resource Module Management',
+                'name' => 'create_resource_module',
+                'display_name' => 'Create Resource Module',
+                'description'=>'Allow user to create resource module',
             ], [
-                'name' => 'edit_resource_module_management',
-                'display_name' => 'Edit Resource Module Management',
-                'description'=>'Edit Resource Module Management',
+                'name' => 'edit_resource_module',
+                'display_name' => 'Edit Resource Module',
+                'description'=>'Allow user to edit resource module',
             ], 
             [
-                'name' => 'delete_resource_module_management',
-                'display_name' => 'Delete Resource Module Management',
-                'description'=>'Delete Resource Module Management',
+                'name' => 'delete_resource_module',
+                'display_name' => 'Delete Resource Module',
+                'description'=>'Allow user to delete resource module',
             ],
             [
-                'name' => 'view_resource_collection_management',
-                'display_name' => 'View Resource Collection Management',
-                'description'=>'View Resource Collection Management',
+                'name' => 'view_resource_collection',
+                'display_name' => 'View Resource Collection',
+                'description'=>'Allow user to view resource collection',
             ], 
             [
-                'name' => 'create_resource_collection_management',
-                'display_name' => 'Create Resource Collection Management',
-                'description'=>'Create Resource Collection Management',
+                'name' => 'create_resource_collection',
+                'display_name' => 'Create Resource Collection',
+                'description'=>'Allow user to create resource collection',
             ], [
-                'name' => 'edit_resource_collection_management',
-                'display_name' => 'Edit Resource Collection Management',
-                'description'=>'Edit Resource Collection Management',
+                'name' => 'edit_resource_collection',
+                'display_name' => 'Edit Resource Collection',
+                'description'=>'Allow user to edit resource Collection',
             ], 
             [
-                'name' => 'delete_resource_collection_management',
-                'display_name' => 'Delete Resource Collection Management',
-                'description'=>'Delete Resource Collection Management',
+                'name' => 'delete_resource_collection',
+                'display_name' => 'Delete Resource Collection',
+                'description'=>'Allow user to delete resource collection',
             ], 
             [
-                'name' => 'view_resource_group_management',
-                'display_name' => 'View Resource Group Management',
-                'description'=>'View Resource Group Management',
+                'name' => 'view_resource_group',
+                'display_name' => 'View Resource Group',
+                'description'=>'Allow user to view resource group',
             ], 
             [
-                'name' => 'create_resource_group_management',
-                'display_name' => 'Create Resource Group Management',
-                'description'=>'Create Resource Group Management',
+                'name' => 'create_resource_group',
+                'display_name' => 'Create Resource Group',
+                'description'=>'Allow user to create resource group',
             ], [
-                'name' => 'edit_resource_group_management',
-                'display_name' => 'Edit Resource Group Management',
-                'description'=>'Edit Resource Group Management',
+                'name' => 'edit_resource_group',
+                'display_name' => 'Edit Resource Group',
+                'description'=>'Allow user to edit resource group',
             ], 
             [
-                'name' => 'delete_resource_group_management',
-                'display_name' => 'Delete Resource Group Management',
-                'description'=>'Delete Resource Group Management',
-            ], 
-            [
-                'name' => 'subscription_management_billing_managment',
-                'display_name' => 'Subscription Management Billing Managment',
-                'description'=>'Subscription Management Billing Managment',
-            ], 
-            [
-                'name' => 'impersonate_user_impersonate_user',
-                'display_name' => 'Impersonate User Impersonate User',
-                'description'=>'Impersonate User Impersonate User',
-            ], 
+                'name' => 'delete_resource_group',
+                'display_name' => 'Delete Resource Group',
+                'description'=>'Allow user to delete resource group',
+            ],
                      
            ];
 
