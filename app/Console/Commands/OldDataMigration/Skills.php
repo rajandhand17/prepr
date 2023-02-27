@@ -55,8 +55,7 @@ class Skills extends Command
                     $check_skills = Skill::where($skills_details)->first();
                     if(!$check_skills){
                         Skill::create($skills_details);
-                    }
-                  
+                    } 
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skills table completed.');
