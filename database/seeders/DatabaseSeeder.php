@@ -15,7 +15,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            SocialConnectTableSeeder::class
+            SocialConnectTableSeeder::class,
+            PermissionSeeder::class,
+            RolesSeeder::class,
+            AssignPermissionToRolesSeeder::class
         ]);
     }
 }
