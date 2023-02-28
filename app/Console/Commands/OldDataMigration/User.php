@@ -3,6 +3,7 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Models\User as users;
+use App\Models\UserAddress;
 use App\Models\UserPersonal;
 use App\Models\UserSetting;
 use Illuminate\Console\Command;
@@ -77,11 +78,11 @@ Class User extends Command
                         'referal_code'=>$single_user->referal_code,
                         'remember_token'=>$single_user->remember_token,
                     ];
-                    $check_users = User::where($users_details)->first();
+                    $check_users = User::where("email",$single_user->email)->first();
                     if(!$check_users){
                         $user=User::create($users_details);
                         $user_address=[
-                            "user_id"=>$single_user->user_id,
+                            "user_id"=>$user->id,
                             "latitude"=>$single_user->latitude,
                             "longitude"=>$single_user->longitude,
                             "address"=>$single_user->address,
@@ -89,9 +90,12 @@ Class User extends Command
                             "state"=>$single_user->state,
                             "country"=>$single_user->country,
                         ];
-                        $user_personal=UserSetting::create($user_address);
-                        if($user_personal){
-                           $user_setting=[
+                        $check_user_address = UserAddress::where("user_id",$user->id)->first();
+                        if(!$check_user_address){
+                            $user_personal=UserAddress::create($user_address);
+                        }
+                         $user_setting=[
+                              "user_id"=>$user->id,
                               "project_privacy" => $single_user->project_privacy,
                               "manage_alerts"=>$single_user->manage_alerts,
                               "is_subscribe"=>$single_user->is_subscribe,
@@ -105,15 +109,33 @@ Class User extends Command
                               "fcm_notification_permission"=>$single_user->fcm_notification_permission,
                               "fcm_device_token"=>$single_user->fcm_device_token,
                            ];
-                           $user_setting=UserSetting::create($user_setting);
-                           if(!$user_setting){
-                            DB::rollback();
-                           }
-                           
-                        }else{
-                            DB::rollback();
-                        }                  
+                            $usersetting=UserSetting::where("user_id",$user->id)->first();
+                            if(!$usersetting){
+                                $user_setting=UserSetting::create($user_setting);
+                            }
                     }
+                    $users_personal = DB::connection('mysql2')->table('user_personals')->where("user_id",$single_user->id)->first();
+                    if($users_personal->count() > 0){
+                       
+                        $users_details=[
+                            'user_id'=>$single_user->user_id,    
+                            'about' => $users_personal->about,
+                            'gender' => $users_personal->gender,
+                            'date_of_birth' => $users_personal->date_of_birth,
+                            'age' => $users_personal->age,
+                            'purpose' => $users_personal->purpose,
+                            'user_type'=>$users_personal->user_type,
+                            'recent_immigrant'=>$users_personal->recent_immigrant,
+                            'indigenous_group'=>$users_personal->indigenous_group,
+                            'visible_minority'=>$users_personal->visible_minority,
+                            'disability'=>$users_personal->disability,
+                        ];
+                        $check_users = UserPersonal::where("user_id",$single_user->user_id)->first();
+                        if(!$check_users){
+                            $userPersonal=UserPersonal::create($users_details);
+                        }
+                    }
+                    
                 }
                 DB::commit();
                 $this->info('Migrating of old data for users table completed.');
