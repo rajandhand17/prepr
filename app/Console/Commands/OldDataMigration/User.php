@@ -52,7 +52,7 @@ Class User extends Command
                     $language="";
                     $twofactor="";
                     if($single_user->language_id===1 || $single_user->language_id===0){
-                        $language="en";
+                        $language="fr-CA";
                     }elseif($single_user->language_id===1){
                         $language="fr";
                     }
@@ -92,9 +92,9 @@ Class User extends Command
                         ];
                         $check_user_address = UserAddress::where("user_id",$user->id)->first();
                         if(!$check_user_address){
-                            $user_personal=UserAddress::create($user_address);
+                             UserAddress::create($user_address);
                         }
-                         $user_setting=[
+                         $user_setting_data=[
                               "user_id"=>$user->id,
                               "project_privacy" => $single_user->project_privacy,
                               "manage_alerts"=>$single_user->manage_alerts,
@@ -109,15 +109,14 @@ Class User extends Command
                               "fcm_notification_permission"=>$single_user->fcm_notification_permission,
                               "fcm_device_token"=>$single_user->fcm_device_token,
                            ];
-                            $usersetting=UserSetting::where("user_id",$user->id)->first();
-                            if(!$usersetting){
-                                $user_setting=UserSetting::create($user_setting);
+                            $user_setting=UserSetting::where("user_id",$user->id)->first();
+                            if(!$user_setting){
+                                 UserSetting::create($user_setting_data);
                             }
                     }
                     $users_personal = DB::connection('mysql2')->table('user_personals')->where("user_id",$single_user->id)->first();
-                    if($users_personal->count() > 0){
-                       
-                        $users_details=[
+                    if($users_personal->count() > 0){                       
+                        $users_personal_details=[
                             'user_id'=>$single_user->user_id,    
                             'about' => $users_personal->about,
                             'gender' => $users_personal->gender,
@@ -130,9 +129,9 @@ Class User extends Command
                             'visible_minority'=>$users_personal->visible_minority,
                             'disability'=>$users_personal->disability,
                         ];
-                        $check_users = UserPersonal::where("user_id",$single_user->user_id)->first();
-                        if(!$check_users){
-                            $userPersonal=UserPersonal::create($users_details);
+                        $check_users_personal = UserPersonal::where("user_id",$single_user->user_id)->first();
+                        if(!$check_users_personal){
+                              UserPersonal::create($users_personal_details);
                         }
                     }
                     
