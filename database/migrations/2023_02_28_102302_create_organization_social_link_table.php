@@ -20,10 +20,8 @@ return new class extends Migration
             $table->varchar('social_link_id');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('organization_id')->references('id')->on('organizations')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('social_link_id')->references('id')->on('social_connect')
-                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('social_link_id')->references('id')->on('social_connect')->onDelete('cascade');
         });
     }
 

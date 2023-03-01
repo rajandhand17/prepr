@@ -16,18 +16,17 @@ return new class extends Migration
         Schema::table('organizations', function (Blueprint $table) {
             $table->string('language')->default('en');
             $table->integer('user_id');
-            $table->string('name');
             $table->string('slug');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('cover_image')->nullable();
             $table->string('profile_image')->nullable();
             $table->string('website')->nullable();
-            $table->text('about');
+            $table->text('about')->nullable();
             $table->integer('category')->nullable();
-            $table->enum('status', ['0','1','2'])->comment("0 -> draft 1-> published 2-> deactivated")->default('1');
+            $table->enum('status', ['0','1','2'])->comment("0 -> draft, 1-> published, 2-> deactivated")->default('1');
+            $table->enum('is_verified', ['0','1'])->comment("0 -> not-verify, 1-> verify")->default('0');
             $table->integer('magnet_community_id')->nullable();
-            $table->integer('total_employees');
-            $table->dropColumn('display_name');
+            $table->integer('total_employees')->nullable();
             $table->softDeletes();
         });
     }
