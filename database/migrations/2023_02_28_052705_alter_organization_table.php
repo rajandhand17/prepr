@@ -14,19 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::table('organizations', function (Blueprint $table) {
-            $table->string('language')->default('en');
-            $table->integer('user_id');
-            $table->string('slug');
-            $table->string('description')->nullable();
-            $table->string('cover_image')->nullable();
-            $table->string('profile_image')->nullable();
-            $table->string('website')->nullable();
-            $table->text('about')->nullable();
-            $table->integer('category')->nullable();
-            $table->enum('status', ['0','1','2'])->comment("0 -> draft, 1-> published, 2-> deactivated")->default('1');
-            $table->enum('is_verified', ['0','1'])->comment("0 -> not-verify, 1-> verify")->default('0');
-            $table->integer('magnet_community_id')->nullable();
-            $table->integer('total_employees')->nullable();
+            $table->string('language')->default('en')->after('id');
+            $table->integer('user_id')->after('language');
+            $table->string('slug')->after('display_name');
+            $table->string('cover_image')->nullable()->after('description');
+            $table->string('profile_image')->nullable()->after('cover_image');
+            $table->string('website')->nullable()->after('profile_image');
+            $table->text('about')->nullable()->after('website');
+            $table->integer('category')->nullable()->after('about');
+            $table->enum('status', ['0','1','2'])->comment("0 -> draft, 1-> published, 2-> deactivated")->default('1')->after('category');
+            $table->enum('is_verified', ['0','1'])->comment("0 -> not-verify, 1-> verify")->default('0')->after('status');
+            $table->integer('magnet_community_id')->nullable()->after('is_verified');
+            $table->integer('total_employees')->nullable()->after('magnet_community_id');
             $table->softDeletes();
         });
     }
