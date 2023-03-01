@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('organization_social_links', function (Blueprint $table) {
+        Schema::create('organization_members', function (Blueprint $table) {
             $table->id();
-            $table->integer('organization_id');
-            $table->varchar('social_media_link');
-            $table->varchar('social_link_id');
+            $table->integer("organization_id");
+            $table->text("name");
+            $table->text("description")->nullable();
+            $table->text('position')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('organization_id')->references('id')->on('organizations')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('social_link_id')->references('id')->on('social_connect')
                 ->onUpdate('cascade')->onDelete('cascade');
         });
     }
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organization_social_link');
+        Schema::dropIfExists('organization_members');
     }
 };
