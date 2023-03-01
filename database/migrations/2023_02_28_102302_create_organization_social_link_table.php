@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
-            $table->foreign('social_link_id')->references('id')->on('social_connect')->onDelete('cascade');
+            $table->foreign('social_link_id')->references('id')->on('social_links')->onDelete('cascade');
         });
     }
 
