@@ -233,7 +233,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "Enter langauge id for registered!",
+                        "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     }
@@ -272,7 +272,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "Enter langauge id for registered!",
+                        "description": "Enter langauge for checkusername!",
                         "required": true,
                         "explode": true
                     }
@@ -311,7 +311,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "Enter langauge id for registered!",
+                        "description": "Enter langauge for email!",
                         "required": true,
                         "explode": true
                     }
@@ -350,7 +350,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "Enter langauge id for registered!",
+                        "description": "Enter langauge for checkphone!",
                         "required": true,
                         "explode": true
                     }
@@ -389,7 +389,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "Enter langauge id for registered!",
+                        "description": "Enter langauge id for send-otp!",
                         "required": true,
                         "explode": true
                     }
@@ -435,7 +435,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "Enter langauge id for registered!",
+                        "description": "Enter langauge id for verify otp!",
                         "required": true,
                         "explode": true
                     }
@@ -474,7 +474,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "Enter langauge id for registered!",
+                        "description": "Enter langauge id for referal-code!",
                         "required": true,
                         "explode": true
                     }
@@ -534,7 +534,7 @@
                     {
                         "name": "language",
                         "in": "query",
-                        "description": "Enter langauge!",
+                        "description": "Enter langauge for reset password!",
                         "required": true,
                         "explode": true
                     }
@@ -1318,6 +1318,46 @@
                     },
                     "500": {
                         "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/organization/organization-list": {
+            "get": {
+                "tags": [
+                    "Organization API - Organization List"
+                ],
+                "summary": "Finds lists of Organization List",
+                "description": "Get all the Organization List",
+                "operationId": "getOrganization",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
                     }
                 }
             }
