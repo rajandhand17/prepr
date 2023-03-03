@@ -96,7 +96,7 @@ class OrganizationController extends AppBaseController
         try {
             $organization=$this->organizationRepository->updateOrganization($request);
             if ($organization) {
-                return $this->sendResponse(OrganizationResource::collection($organization), __('responses.updated_organization'));
+                return $this->sendResponse(null, __('responses.updated_organization'));
             }
             return $this->sendError(__('responses.updated_organization_failed'));
         } catch (\Exception $e) {
