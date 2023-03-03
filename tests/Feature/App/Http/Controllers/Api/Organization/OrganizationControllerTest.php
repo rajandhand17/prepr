@@ -13,7 +13,7 @@ class OrganizationControllerTest extends TestCase
      */
     
     /**Organization create */
-    public function test_create_organization()
+    public function test_create_organization_positive()
     {
         $response = $this->post('/api/v1/organization/create-organization',['language'=>"en","user_id"=>5,"name"=>"prepr", "description"=>"description", "website"=>"prepr.org", "about"=>"testing the test", "category"=>"2", "status"=>"1", "total_employees"=>"12"]);
         $this->assertEquals(200, $response->getStatusCode());
@@ -25,8 +25,16 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
+    /**Organization create negative*/
+    public function test_create_organization_negative()
+    {
+        $response = $this->post('/api/v1/organization/create-organization',['language'=>"en","user_id"=>5,"name"=>"prepr", "description"=>"description", "website"=>"prepr.org", "about"=>"testing the test", "category"=>"2", "status"=>"1", "total_employees"=>"12"]);
+        $this->assertEquals(422, $response->getStatusCode());
+        
+    }
+
     /**Organization Update */
-    public function test_update_organization()
+    public function test_update_organization_positive()
     {
         $response = $this->post('/api/v1/organization/update-organization',['language'=>"en", "status"=>"1", "total_employees"=>"12","organization_id"=>"1"]);
         $this->assertEquals(200, $response->getStatusCode());
@@ -36,6 +44,15 @@ class OrganizationControllerTest extends TestCase
         } else {
             $this->fail();
         }
+    }
+
+    
+    /**Organization Update negative*/
+    public function test_update_organization_negative()
+    {
+        $response = $this->post('/api/v1/organization/update-organization',['language'=>"en", "status"=>"1", "total_employees"=>"12","organization_id"=>"1"]);
+        $this->assertEquals(422, $response->getStatusCode());
+        
     }
     
     /**Organization Listing */
@@ -63,8 +80,17 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
+
+    /**Organization Listing negative*/
+    public function test_organization_list_negative()
+    {
+        $response = $this->get('/api/v1/organization/organization-list');
+        $this->assertEquals(400, $response->getStatusCode());
+       
+    }
+
     /**Organization Delete */
-    public function test_delete_organization()
+    public function test_delete_organization_postive()
     {
         $response = $this->post('/api/v1/organization/delete-organization',['language'=>"en","organization_id"=>"1"]);
         $this->assertEquals(200, $response->getStatusCode());
@@ -76,8 +102,17 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
+    
+    /**Organization Delete negative*/
+    public function test_delete_organization_negative()
+    {
+        $response = $this->post('/api/v1/organization/delete-organization',['language'=>"en"]);
+        $this->assertEquals(422, $response->getStatusCode());
+        
+    }
+
      /** Organization view */
-    public function test_organization_view()
+    public function test_organization_view_positive()
     {
         $response = $this->post('/api/v1/organization/view-organization',['slug'=>'prepr','language'=>'en']);
         $this->assertEquals(200, $response->getStatusCode());
@@ -101,6 +136,11 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-
-   
+    /** Organization view */
+    public function test_organization_view_negative()
+    {
+        $response = $this->post('/api/v1/organization/view-organization',['language'=>'en']);
+        $this->assertEquals(422, $response->getStatusCode());
+        
+    }
 }
