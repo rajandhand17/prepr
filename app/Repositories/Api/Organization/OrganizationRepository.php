@@ -49,4 +49,13 @@ class OrganizationRepository implements OrganizationInterface{
         }
     }
 
+    public function viewOrganization($request)
+    {
+        try {
+            return $this->organization->viewOrganization($request->language,$request->slug);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 }

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class CreateOrganizationRequest extends FormRequest
+class ViewOrganizationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,15 +26,10 @@ class CreateOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'=>'required',
-            'name' => 'required|max:255|unique:organizations,name',
-            'description'=>'string',
-            'profile_image'=>'image',
-            'cover_image'=>'image',
+            'slug'=>'required',
         ];
     }
 
-    
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
@@ -47,13 +42,7 @@ class CreateOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'user_id.required' => __('responses.user_id_required'),
-            'name.unique'=>__('responses.organization_name_unique'), 
-            'name.required'=>__('responses.organization_name_required'),
-            'name.max'=>__('responses.organization_name_max'),
-            'profile_image.image'=>__('responses.cover_image'),
-            'cover_image.image'=>__('responses.profile_image'),
+            'slug.required' => __('responses.user_id_required'),
         ];
     }
-
 }

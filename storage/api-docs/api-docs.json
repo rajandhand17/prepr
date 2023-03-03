@@ -1362,6 +1362,299 @@
                 }
             }
         },
+        "/api/v1/organization/create-organization": {
+            "get": {
+                "tags": [
+                    "Organization API - Create Organization"
+                ],
+                "summary": "Create Organization with different parameters",
+                "description": "Create Organization with different parameters",
+                "operationId": "createOrganization",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "User id for get the user",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Organization name for create the name",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Organization description for describe the organization",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "profile_image",
+                        "in": "query",
+                        "description": "Organization profile Image for choose profile image",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "cover_image",
+                        "in": "query",
+                        "description": "Organization cover Image for choose cover image",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "website",
+                        "in": "query",
+                        "description": "Website for the organization",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "about",
+                        "in": "query",
+                        "description": "About for the organization",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Category values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Status values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "total_employees",
+                        "in": "query",
+                        "description": "Total Employees for the show total employees",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/organization/update-organization": {
+            "get": {
+                "tags": [
+                    "Organization API - Update Organization"
+                ],
+                "summary": "Update Organization with different parameters",
+                "description": "Update Organization with different parameters",
+                "operationId": "updateOrganization",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "User id for get the user",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "organization_id",
+                        "in": "query",
+                        "description": "User id for get the user",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Organization name for create the name",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Organization description for describe the organization",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "profile_image",
+                        "in": "query",
+                        "description": "Organization profile Image for choose profile image",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "cover_image",
+                        "in": "query",
+                        "description": "Organization cover Image for choose cover image",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "website",
+                        "in": "query",
+                        "description": "Website for the organization",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "about",
+                        "in": "query",
+                        "description": "About for the organization",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Category values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Status values that needed to be considered for filter",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "total_employees",
+                        "in": "query",
+                        "description": "Total Employees for the show total employees",
+                        "required": false,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/organization/delete-organization": {
+            "get": {
+                "tags": [
+                    "Organization API - delete Organization"
+                ],
+                "summary": "Delete Organization with different parameters",
+                "description": "Delete Organization with different parameters",
+                "operationId": "deleteOrganization",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "organization_id",
+                        "in": "query",
+                        "description": "Organization id for get the user",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/organization/view-organization": {
+            "get": {
+                "tags": [
+                    "Organization API - view Organization"
+                ],
+                "summary": "View Organization with different parameters",
+                "description": "View Organization with different parameters",
+                "operationId": "viewOrganization",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "slug",
+                        "in": "query",
+                        "description": "Organization id for get the user",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
+                    }
+                }
+            }
+        },
         "/": {
             "get": {
                 "description": "Home page",

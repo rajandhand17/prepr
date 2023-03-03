@@ -2961,6 +2961,8 @@
     "responses.cover_image":"The cover image must be an image",
     "responses.profile_image":"The profile image must be an image",
     "responses.required_organization_id":"Please enter organisation id",
-    "responses.organization_id_exists":"Organisation id does not exists"
+    "responses.organization_id_exists":"Organisation id does not exists!",
+    "responses.organization_view_get":"Organisation view get successfully!",
+    "responses.organization_view_get_failed":"Organisation view not get successfully!"
 }
   
