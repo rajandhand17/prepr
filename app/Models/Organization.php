@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Models\LaratrustTeam;
+use Monolog\Processor\WebProcessor;
+use Illuminate\Support\Facades\Storage;
 
 class Organization extends LaratrustTeam
 {   
@@ -50,19 +52,21 @@ class Organization extends LaratrustTeam
     }
     
     public function createOrganization($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null)
-    {
-       try {  
+    {   
+       try {
         if($profile_image!==null){
-            $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
-            $profile_image->move(public_path('organization_images'), $profile_image_name);
-            $profile_images_path=public_path('organization_images').$profile_image;
+            $profile_image_name = "profile_image_".time().'.'.$profile_image->extension(); 
+            $path = Storage::disk('s3')->put('organizations/profile_images', $profile_image_name);
+            $path = Storage::disk('s3')->url($path);
+            $profile_images_path=$path;
         }else{
             $profile_images_path=null;
         }
         if($cover_image!==null){
             $cover_image_name = "cover_image_".time().'.'.$cover_image->extension();
-            $cover_image->move(public_path('organization_images'), $cover_image_name);
-            $cover_images_path=public_path('organization_images').$cover_image;
+            $cover_image_path = Storage::disk('s3')->put('organizations/cover_images', $cover_image_name);
+            $cover_image_path = Storage::disk('s3')->url($cover_image_path);
+            $cover_images_path=$cover_image_path;
         }else{
              $cover_images_path=null;
         }
@@ -93,19 +97,23 @@ class Organization extends LaratrustTeam
       
     /**update organizations */
     public function updateOrganization($language='en',$organization_id,$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null)
-    {
-       try {  
+    {      
+
+       try{  
         if($profile_image!==null){
             $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
-            $profile_image->move(public_path('organization_images'), $profile_image_name);
+            $path = Storage::disk('s3')->put('organizations/profile_images', $profile_image);
+            $path = Storage::disk('s3')->url($path);
             $profile_images_path=public_path('organization_images').$profile_image;
         }else{
             $profile_images_path=null;
         }
         if($cover_image!==null){
             $cover_image_name = "cover_image_".time().'.'.$cover_image->extension();
-            $cover_image->move(public_path('organization_images'), $cover_image_name);
-            $cover_images_path=public_path('organization_images').$cover_image;
+            $cover_image_path = Storage::disk('s3')->put('organizations/cover_images', $profile_image);
+            $cover_image_path = Storage::disk('s3')->url($cover_image_path);
+            //$cover_image->move(public_path('organization_images'), $cover_image_name);
+            $cover_images_path=$cover_image_path;//public_path('organization_images').$cover_image;
         }else{
              $cover_images_path=null;
         }

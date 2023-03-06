@@ -30,7 +30,8 @@ class UpdateOrganizationRequest extends FormRequest
             'description'=>'string',
             'profile_image'=>'image',
             'cover_image'=>'image',
-            'organization_id'=>'required|exists:organizations,id'
+            'organization_id'=>'required|exists:organizations,id',
+            'category'=>'exists:categories,id'
         ];
     }
 
@@ -52,6 +53,7 @@ class UpdateOrganizationRequest extends FormRequest
             'cover_image.image'=>__('responses.profile_image'),
             'organization_id.required'=>__('responses.required_organization_id'),
             'organization_id.exists'=>__('responses.organization_id_exists'),
+            'category.exists'=>__('responses.organization_category_exists'),
             
         ];
     }

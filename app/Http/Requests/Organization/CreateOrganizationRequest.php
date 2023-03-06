@@ -31,6 +31,7 @@ class CreateOrganizationRequest extends FormRequest
             'description'=>'string',
             'profile_image'=>'image',
             'cover_image'=>'image',
+            'category'=>'required|exists:categories,id'
         ];
     }
 
@@ -53,6 +54,9 @@ class CreateOrganizationRequest extends FormRequest
             'name.max'=>__('responses.organization_name_max'),
             'profile_image.image'=>__('responses.cover_image'),
             'cover_image.image'=>__('responses.profile_image'),
+            'category.required'=>__('responses.organization_category_required'),
+            'category.exists'=>__('responses.organization_category_exists'),
+
         ];
     }
 
