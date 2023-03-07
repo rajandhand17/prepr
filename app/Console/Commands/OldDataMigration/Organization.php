@@ -120,7 +120,7 @@ class Organization extends Command
             $this->error('No organizations found.');
 
         } catch (\Exception $e) {
-            dd($e);
+           
             DB::rollback();
             $this->error('Something went wrong.');
             return;

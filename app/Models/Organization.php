@@ -51,6 +51,20 @@ class Organization extends LaratrustTeam
        }
     }
     
+    function hs_png2webp($source_file, $destination_file, $compression_quality = 100)
+    {   
+        if($source_file->extension()=="jpg" || $source_file->extension()=="jpeg"){
+            $image = imagecreatefromjpeg($source_file);
+            $result = imagewebp($image, $destination_file, $compression_quality);
+            if (false === $result) {
+                return false;
+            }
+            imagedestroy($image);
+            return $destination_file;
+        }
+        
+    }
+
     public function createOrganization($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null)
     {   
        try {
@@ -98,7 +112,6 @@ class Organization extends LaratrustTeam
     /**update organizations */
     public function updateOrganization($language='en',$organization_id,$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null)
     {      
-
        try{  
         if($profile_image!==null){
             $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
