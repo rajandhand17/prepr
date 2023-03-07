@@ -198,8 +198,6 @@ return [
         App\Repositories\Api\Organization\OrganizationServiceProvider::class,
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
-        Buglinjo\LaravelWebp\WebpServiceProvider::class,
     ],
 
     /*
@@ -215,8 +213,6 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'Webp' => Buglinjo\LaravelWebp\Facades\Webp::class,
-        'Image' => Intervention\Image\Facades\Image::class,
 
     ])->toArray(),
 

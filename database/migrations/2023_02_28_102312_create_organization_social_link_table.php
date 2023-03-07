@@ -13,19 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('organization_addresses', function (Blueprint $table) {
+        Schema::create('organization_social_links', function (Blueprint $table) {
             $table->id();
-            $table->integer('organization_id');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->text('address');
-            $table->text('city');
-            $table->text('state');
-            $table->text('country');
-            $table->text('zip_code');
+            $table->unsignedBigInteger('organization_id');
+            $table->string('social_media_link');
+            $table->unsignedBigInteger('social_link_id');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('social_link_id')->references('id')->on('social_links')->onDelete('cascade');
         });
     }
 
@@ -36,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organization_addresses');
+        Schema::dropIfExists('organization_social_link');
     }
 };
