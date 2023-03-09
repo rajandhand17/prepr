@@ -32,9 +32,6 @@ class UserPersonal extends Model
             $userpersonal->purpose = $request->purpose;
             $userpersonal->user_type = $request->user_type;
             $userpersonal->save();
-            $usersetting = new UserSetting();
-            $usersetting->user_id = $user->id;
-            $usersetting->save();
             if ($userpersonal){
                 DB::commit();
                 return true;

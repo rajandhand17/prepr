@@ -157,7 +157,8 @@ class User extends Authenticatable
             $user->save();
             if ($user->id) {
                 $userpersonal = UserPersonal::create($user,$request);
-                if($userpersonal){
+                $usersetting = UserSetting::create($user,$request);
+                if($userpersonal && $usersetting){
                     $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                     $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
                     if($mail){

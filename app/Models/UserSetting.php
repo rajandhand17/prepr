@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class UserSetting extends Model
 {
@@ -18,4 +19,23 @@ class UserSetting extends Model
    ];
 
    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function create(User $user, $request)
+    {
+        try{
+            DB::beginTransaction();
+            $usersetting = new UserSetting();
+            $usersetting->user_id = $user->id;
+            $usersetting->save();
+            if ($usersetting){
+                DB::commit();
+                return true;
+            }
+            DB::rollback();
+            return false;
+        }catch (Exception $e){
+            DB::rollback();
+            return false;
+        }
+    }
 }
