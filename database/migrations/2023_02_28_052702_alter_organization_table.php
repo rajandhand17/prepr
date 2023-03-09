@@ -26,6 +26,7 @@ return new class extends Migration
             $table->enum('is_verified', ['0','1'])->comment("0 -> not-verify, 1-> verify")->default('0')->after('status');
             $table->integer('magnet_community_id')->nullable()->after('is_verified');
             $table->integer('total_employees')->nullable()->after('magnet_community_id');
+            $table->text('description')->nullable()->change();
             $table->softDeletes();
         });
     }

@@ -42,7 +42,7 @@ class ViewOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'slug.required' => __('responses.user_id_required'),
+            'slug.required' => __('responses.organization_slug_required'),
         ];
     }
 }

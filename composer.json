@@ -6,8 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
-        "buglinjo/laravel-webp": "^2.3",
         "darkaonline/l5-swagger": "^8.4",
+        "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.5",
         "infyomlabs/laravel-generator": "^5.4",
         "infyomlabs/laravel-ui-adminlte": "^5.1",

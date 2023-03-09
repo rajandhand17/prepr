@@ -26,7 +26,7 @@ class DeleteOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'organization_id'=>'required|exists:organizations,id',
+            'slug'=>'required|exists:organizations,slug',
             
         ];
     }
@@ -43,8 +43,8 @@ class DeleteOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'organization_id.required'=>__('responses.required_organization_id'),
-            'organization_id.exists'=>__('responses.organization_id_exists'),
+            'slug.required'=>__('responses.organization_slug_required'),
+            'slug.exists'=>__('responses.organization_slug_not_exists'),
             
         ];
     }

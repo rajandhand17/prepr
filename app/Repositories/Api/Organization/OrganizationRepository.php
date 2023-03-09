@@ -18,41 +18,40 @@ class OrganizationRepository implements OrganizationInterface{
 
     }
 
-    public function deleteOrganization($request)
+    public function delete($request)
     {
         try{
-            return $this->organization->deleteOrganization($request->language,$request->organization_id);
+            return $this->organization->delete($request->language,$request->slug);
 
          }catch (\Exception $e){
             return false;
          }
     }
 
-    public function createOrganization($request)
+    public function create($request)
     {
         try {
-            return $this->organization->createOrganization($request->language,$request->user_id,$request->name,$request->display_name,$request->description, $request->profile_image, $request->cover_image,$request->website,$request->about,$request->category, $request->status, $request->total_employees,$request->latitude,$request->longitude,$request->address,$request->city,$request->state,$request->country,$request->zip_code);
+            return $this->organization->create($request->language,$request->user_id,$request->name,$request->display_name,$request->description, $request->profile_image, $request->cover_image,$request->website,$request->about,$request->category, $request->status, $request->total_employees,$request->latitude,$request->longitude,$request->address,$request->city,$request->state,$request->country,$request->zip_code);
            
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function updateOrganization($request)
+    public function update($request)
     {
         try {
-            return $this->organization->updateOrganization($request->language,$request->organization_id,$request->user_id,$request->name,$request->display_name,$request->description, $request->profile_image, $request->cover_image,$request->website,$request->about,$request->category, $request->status, $request->total_employees);
+            return $this->organization->updates($request->language,$request->slug,$request->user_id,$request->name,$request->display_name,$request->description, $request->profile_image, $request->cover_image,$request->website,$request->about,$request->category, $request->status, $request->total_employees);
 
-           
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function viewOrganization($request)
+    public function view($request)
     {
         try {
-            return $this->organization->viewOrganization($request->language,$request->slug);
+            return $this->organization->view($request->language,$request->slug);
         } catch (\Exception $e) {
             return false;
         }

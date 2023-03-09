@@ -182,10 +182,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function createOrganization(CreateOrganizationRequest $request)
+    public function create(CreateOrganizationRequest $request)
     {   
         try {
-            $organization=$this->organizationRepository->createOrganization($request);
+            $organization=$this->organizationRepository->create($request);
             if ($organization) {
                 return $this->sendResponse(null, __('responses.create_organization'));
             }
@@ -306,10 +306,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function updateOrganization(UpdateOrganizationRequest $request)
+    public function update(UpdateOrganizationRequest $request)
     {
         try {
-            $organization=$this->organizationRepository->updateOrganization($request);
+            $organization=$this->organizationRepository->update($request);
             if ($organization) {
                 return $this->sendResponse(null, __('responses.updated_organization'));
             }
@@ -360,10 +360,11 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function deleteOrganization(DeleteOrganizationRequest $request)
+    public function delete(DeleteOrganizationRequest $request)
     { 
         try {
-            $organization=$this->organizationRepository->deleteOrganization($request);
+            $organization=$this->organizationRepository->delete($request);
+            dd($organization);
             if($organization==true){
                 return $this->sendResponse(null,__('responses.delete_organizations_success'));
             }
@@ -373,51 +374,10 @@ class OrganizationController extends AppBaseController
         }
     }
 
-   /**
-     * @OA\Get(
-     *     path="/api/v1/organization/view-organization",
-     *     tags={"Organization API - view Organization"},
-     *     summary="View Organization with different parameters",
-     *     description="View Organization with different parameters",
-     *     operationId="viewOrganization",
-     *     @OA\Parameter(
-     *         name="language",
-     *         in="query",
-     *         description="Language values that needed to be considered for choose languages",
-     *         required=true,
-     *         explode=true,
-     *      ),
-     *     @OA\Parameter(
-     *         name="slug",
-     *         in="query",
-     *         description="Organization id for get the user",
-     *         required=true,
-     *         explode=true,
-     *      ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Not found!",
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Bad request!",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error!",
-     *
-     *     ),
-     * )
-     */
-    public function viewOrganization(ViewOrganizationRequest $request)
-    { 
+   public function view(ViewOrganizationRequest $request)
+    {    
         try {
-            $organization=$this->organizationRepository->viewOrganization($request);
+            $organization=$this->organizationRepository->view($request); 
             if($organization!==false){
                 return $this->sendResponse($organization,__('responses.organization_view_get'));
             }

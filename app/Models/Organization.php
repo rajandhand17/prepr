@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Models\LaratrustTeam;
 use Monolog\Processor\WebProcessor;
 use Illuminate\Support\Facades\Storage;
-
+use DB;
+use App\Models\OrganizationAddress;
 class Organization extends LaratrustTeam
 {   
     use SoftDeletes;
@@ -65,8 +66,8 @@ class Organization extends LaratrustTeam
         
     }
 
-    public function createOrganization($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
-    {   
+    public function create($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
+    {    
        try {
         if($profile_image!==null){
             $profile_image_name = "profile_image_".time().'.'.$profile_image->extension(); 
@@ -84,11 +85,12 @@ class Organization extends LaratrustTeam
         }else{
              $cover_images_path=null;
         }
+        DB::beginTransaction();
         $organization=new Organization;
         $organization->language=$language;
         $organization->user_id=$user_id;
         $organization->name=$name;
-        $organization->description=$name;
+        $organization->description=$description;
         $organization->slug=strtolower($name);
         $organization->cover_image=$cover_images_path;
         $organization->profile_image=$profile_images_path;
@@ -100,67 +102,64 @@ class Organization extends LaratrustTeam
         }
         $organization->total_employees=$total_employees;
         if($organization->save()){
-            $organization=new OrganizationAddress();
-            $organization->organization_id=$organization->id;
-            $organization->latitude=$latitude;
-            $organization->longitude=$longitude;
-            $organization->address=$address;
-            $organization->city=$city;
-            $organization->state=$state;
-            $organization->country=$country;
-            $organization->zip_code=$zipcode;
-            if($organization->save()){
-                 return true;
+            $address=OrganizationAddress::Create($organization->id,$latitude,$longitude,$address,$city,$state,$country,$zipcode);
+            if($address){
+                DB::commit();
+              return true;
             }
         }else{
+            DB::rollback();
             return false;
         }
        } catch (\Exception $e) {
-           return false;
+        DB::rollback();
+        return false;
        }
     }
       
     /**update organizations */
-    public function updateOrganization($language='en',$organization_id,$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null)
+    public function updates($language='en',$slug,$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null)
     {      
        try{  
-        if($profile_image!==null){
-            $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
-            $path = Storage::disk('s3')->put('organizations/profile_images', $profile_image);
-            $path = Storage::disk('s3')->url($path);
-            $profile_images_path=public_path('organization_images').$profile_image;
-        }else{
-            $profile_images_path=null;
+        $organization= Organization::where("slug","like",$slug)->first();
+        if($organization){
+            if($profile_image!==null){
+                $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
+                $path = Storage::disk('s3')->put('organizations/profile_images', $profile_image);
+                $path = Storage::disk('s3')->url($path);
+                $profile_images_path=public_path('organization_images').$profile_image;
+            }else{
+                $profile_images_path=null;
+            }
+            if($cover_image!==null){
+                $cover_image_name = "cover_image_".time().'.'.$cover_image->extension();
+                $cover_image_path = Storage::disk('s3')->put('organizations/cover_images', $profile_image);
+                $cover_image_path = Storage::disk('s3')->url($cover_image_path);
+                //$cover_image->move(public_path('organization_images'), $cover_image_name);
+                $cover_images_path=$cover_image_path;//public_path('organization_images').$cover_image;
+            }else{
+                 $cover_images_path=null;
+            }
+            $organization->language=$language?$language:$organization->language;
+            $organization->name=$name?$name:$organization->name;
+            $organization->description=$description?$description:$organization->description;
+            $organization->slug=strtolower($name)?strtolower($name):$organization->slug;
+            $organization->cover_image=$cover_images_path?$cover_images_path:$organization->cover_image;
+            $organization->profile_image=$profile_images_path?$profile_images_path:$organization->profile_image;
+            $organization->website=$website?$website:$organization->website;
+            $organization->about=$about?$about:$organization->about;
+            $organization->category=$category?$category:$organization->category;
+            if($status!==null){
+                $organization->status=$status;
+            }
+            $organization->total_employees=$total_employees?$total_employees:$organization->total_employees;
+            if($organization->save()){
+                return true;
+            }else{
+                return false;
+            }
         }
-        if($cover_image!==null){
-            $cover_image_name = "cover_image_".time().'.'.$cover_image->extension();
-            $cover_image_path = Storage::disk('s3')->put('organizations/cover_images', $profile_image);
-            $cover_image_path = Storage::disk('s3')->url($cover_image_path);
-            //$cover_image->move(public_path('organization_images'), $cover_image_name);
-            $cover_images_path=$cover_image_path;//public_path('organization_images').$cover_image;
-        }else{
-             $cover_images_path=null;
-        }
-        $organization=Organization::find($organization_id);
-        $organization->language=$language?$language:$organization->language;
-        $organization->user_id=$user_id?$user_id:$organization->user_id;
-        $organization->name=$name?$name:$organization->name;
-        $organization->description=$description?$description:$organization->description;
-        $organization->slug=strtolower($name)?strtolower($name):$organization->slug;
-        $organization->cover_image=$cover_images_path?$cover_images_path:$organization->cover_image;
-        $organization->profile_image=$profile_images_path?$profile_images_path:$organization->profile_image;
-        $organization->website=$website?$website:$organization->website;
-        $organization->about=$about?$about:$organization->about;
-        $organization->category=$category?$category:$organization->category;
-        if($status!==null){
-            $organization->status=$status;
-        }
-        $organization->total_employees=$total_employees?$total_employees:$organization->total_employees;
-        if($organization->save()){
-            return true;
-        }else{
-            return false;
-        }
+        
        } catch (\Exception $e) {
            return false;
        }
@@ -168,21 +167,25 @@ class Organization extends LaratrustTeam
 
 
 
-    public function deleteOrganization($language='en',$organization_id=null)
-    {
-        $organization=Organization::find($organization_id);
-        $organization->is_deleted="1";
-        if($organization->save()){
-             return true;        
-        }else{
-            return false;
+    public function delete($language='en',$slug=null)
+    {   
+        try {
+            $organization=Organization::where("slug","like",$slug)->delete();
+            if($organization){
+                 return true;        
+            }else{
+                return false;
+            }
+        } catch (\Exception $e){
+            return false;        
         }
+       
     }
 
-    public function viewOrganization($language='en',$slug)
+    public function view($language='en',$slug)
     {
         try {
-            $organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->where("slug","like",$slug)->take(20)->get();
+                $organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->where("slug","like",$slug)->take(20)->get();
             if(!$organization_list->isEmpty()){
                 return $organization_list;
             }
