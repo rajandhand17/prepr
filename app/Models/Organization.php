@@ -65,7 +65,7 @@ class Organization extends LaratrustTeam
         
     }
 
-    public function createOrganization($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null)
+    public function createOrganization($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
     {   
        try {
         if($profile_image!==null){
@@ -100,7 +100,18 @@ class Organization extends LaratrustTeam
         }
         $organization->total_employees=$total_employees;
         if($organization->save()){
-            return true;
+            $organization=new OrganizationAddress();
+            $organization->organization_id=$organization->id;
+            $organization->latitude=$latitude;
+            $organization->longitude=$longitude;
+            $organization->address=$address;
+            $organization->city=$city;
+            $organization->state=$state;
+            $organization->country=$country;
+            $organization->zip_code=$zipcode;
+            if($organization->save()){
+                 return true;
+            }
         }else{
             return false;
         }

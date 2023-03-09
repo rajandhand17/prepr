@@ -2965,6 +2965,7 @@
     "responses.organization_view_get":"Organisation view get successfully!",
     "responses.organization_view_get_failed":"Organisation view not get successfully!",
     "responses.organization_category_required":"Organisation categories required!",
-    "responses.organization_category_exists":"Organisation categories not exists!"
+    "responses.organization_category_exists":"Organisation categories not exists!",
+    "responses.organization_address_required":"Organisation address is required!"
 }
   

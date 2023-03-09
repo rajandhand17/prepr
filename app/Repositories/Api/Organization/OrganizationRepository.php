@@ -31,7 +31,7 @@ class OrganizationRepository implements OrganizationInterface{
     public function createOrganization($request)
     {
         try {
-            return $this->organization->createOrganization($request->language,$request->user_id,$request->name,$request->display_name,$request->description, $request->profile_image, $request->cover_image,$request->website,$request->about,$request->category, $request->status, $request->total_employees);
+            return $this->organization->createOrganization($request->language,$request->user_id,$request->name,$request->display_name,$request->description, $request->profile_image, $request->cover_image,$request->website,$request->about,$request->category, $request->status, $request->total_employees,$request->latitude,$request->longitude,$request->address,$request->city,$request->state,$request->country,$request->zip_code);
            
         } catch (\Exception $e) {
             return false;
