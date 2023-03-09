@@ -3,49 +3,49 @@ namespace App\Repositories\Api\Auth;
 use App\Models\User;
 
 class AuthRepository implements AuthInterface{
-  
+
     private $user;
     function __construct(User $user)
     {
         $this->user=$user;
     }
-    
+
     public function login($request)
     {
-        try{ 
+        try{
             return $this->user->login($request);
          }
          catch (\Exception $e){
-           
+
             return false;
          }
     }
 
     public function verifyTwoFactor($request)
     {
-        try{ 
+        try{
             return $this->user->verifyTwoFactor($request);
          }
          catch (\Exception $e){
-           
+
             return false;
          }
     }
 
     public function register($request)
-    {   
-        try{ 
+    {
+        try{
             return $this->user->register($request);
          }
          catch (\Exception $e){
-           
+
             return false;
          }
     }
 
     public function checkUsername($request)
     {
-      try{ 
+      try{
             return $this->user->checkUsername($request);
          }catch (\Exception $e){
             return false;
@@ -59,7 +59,7 @@ class AuthRepository implements AuthInterface{
         } catch (\Exception $e) {
             return false;
         }
-       
+
     }
 
     public function checkPhone($request)
@@ -118,5 +118,5 @@ class AuthRepository implements AuthInterface{
     }
 
 }
- 
+
 ?>
