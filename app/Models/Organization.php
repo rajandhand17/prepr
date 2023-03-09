@@ -118,10 +118,11 @@ class Organization extends LaratrustTeam
     }
       
     /**update organizations */
-    public function updates($language='en',$slug,$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null)
+    public function updates($language='en',$slug,$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
     {      
        try{  
-        $organization= Organization::where("slug","like",$slug)->first();
+        $organization= Organization::where("slug","like",$slug)->get();
+        
         if($organization){
             if($profile_image!==null){
                 $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
@@ -153,19 +154,21 @@ class Organization extends LaratrustTeam
                 $organization->status=$status;
             }
             $organization->total_employees=$total_employees?$total_employees:$organization->total_employees;
-            if($organization->save()){
+            $organization->save();
+            if($organization){
+              
                 return true;
             }else{
                 return false;
             }
+        }else{
+            return false;
         }
         
        } catch (\Exception $e) {
            return false;
        }
     }
-
-
 
     public function delete($language='en',$slug=null)
     {   

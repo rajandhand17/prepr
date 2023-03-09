@@ -2968,6 +2968,7 @@
     "responses.organization_category_exists":"Organisation categories not exists!",
     "responses.organization_address_required":"Organisation address is required!",
     "responses.organization_slug_required":"Please enter slug!",
-    "responses.organization_slug_not_exists":"This slug does not exists!"
+    "responses.organization_slug_not_exists":"This slug does not exists!",
+    "responses.organization_slug_exists":"This slug already exists!"
 }
   
