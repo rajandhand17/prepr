@@ -310,7 +310,6 @@ class OrganizationController extends AppBaseController
     {
         try {
             $organization=$this->organizationRepository->update($request);
-            dd($organization);
             if ($organization) {
                 return $this->sendResponse(null, __('responses.updated_organization'));
             }
@@ -365,7 +364,6 @@ class OrganizationController extends AppBaseController
     { 
         try {
             $organization=$this->organizationRepository->delete($request);
-            dd($organization);
             if($organization==true){
                 return $this->sendResponse(null,__('responses.delete_organizations_success'));
             }

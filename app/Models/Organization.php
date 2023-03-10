@@ -118,12 +118,10 @@ class Organization extends LaratrustTeam
     }
       
     /**update organizations */
-    public function updates($language='en',$slug,$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
-    {      
-       try{  
-        $organization= Organization::where("slug","like",$slug)->get();
+    public function updates($language='en',$slug,$name=null, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null,$organization_id=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
+    {    
+       try{   
         
-        if($organization){
             if($profile_image!==null){
                 $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
                 $path = Storage::disk('s3')->put('organizations/profile_images', $profile_image);
@@ -141,6 +139,7 @@ class Organization extends LaratrustTeam
             }else{
                  $cover_images_path=null;
             }
+            $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->where("slug","like",$slug)->take(20)->first();
             $organization->language=$language?$language:$organization->language;
             $organization->name=$name?$name:$organization->name;
             $organization->description=$description?$description:$organization->description;
@@ -156,14 +155,11 @@ class Organization extends LaratrustTeam
             $organization->total_employees=$total_employees?$total_employees:$organization->total_employees;
             $organization->save();
             if($organization){
-              
+                $organization_address=OrganizationAddress::updates($organization_id, $latitude, $longitude, $address, $city, $state, $country, $zipcode);
                 return true;
             }else{
                 return false;
             }
-        }else{
-            return false;
-        }
         
        } catch (\Exception $e) {
            return false;
