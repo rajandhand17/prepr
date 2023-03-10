@@ -1465,14 +1465,14 @@
                 }
             }
         },
-        "/api/v1/organization/update-organization": {
-            "get": {
+        "/api/v1/organization/update": {
+            "post": {
                 "tags": [
                     "Organization API - Update Organization"
                 ],
                 "summary": "Update Organization with different parameters",
                 "description": "Update Organization with different parameters",
-                "operationId": "updateOrganization",
+                "operationId": "update",
                 "parameters": [
                     {
                         "name": "language",
@@ -1482,59 +1482,52 @@
                         "explode": true
                     },
                     {
-                        "name": "user_id",
+                        "name": "slug",
                         "in": "query",
-                        "description": "User id for get the user",
-                        "required": true,
-                        "explode": true
-                    },
-                    {
-                        "name": "organization_id",
-                        "in": "query",
-                        "description": "User id for get the user",
-                        "required": true,
+                        "description": "Organization slug for create the slug",
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "name",
                         "in": "query",
                         "description": "Organization name for create the name",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "description",
                         "in": "query",
                         "description": "Organization description for describe the organization",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "profile_image",
                         "in": "query",
                         "description": "Organization profile Image for choose profile image",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "cover_image",
                         "in": "query",
                         "description": "Organization cover Image for choose cover image",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "website",
                         "in": "query",
                         "description": "Website for the organization",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "about",
                         "in": "query",
                         "description": "About for the organization",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
@@ -1557,6 +1550,55 @@
                         "description": "Total Employees for the show total employees",
                         "required": false,
                         "explode": true
+                    },
+                    {
+                        "name": "latitude",
+                        "in": "query",
+                        "description": "latitude for organization location latitude",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "query",
+                        "description": "longitude for organization location longitude",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Address for organization location address",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "City for organizations city name",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "State for organizations state name",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "Country for organizations country name",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "zipcode",
+                        "in": "query",
+                        "description": "Zip-code for organizations zipcode!",
+                        "required": false,
+                        "explode": true
                     }
                 ],
                 "responses": {
@@ -1575,14 +1617,14 @@
                 }
             }
         },
-        "/api/v1/organization/delete-organization": {
+        "/api/v1/organization/delete": {
             "get": {
                 "tags": [
-                    "Organization API - delete Organization"
+                    "Organization API - Delete Organization"
                 ],
                 "summary": "Delete Organization with different parameters",
                 "description": "Delete Organization with different parameters",
-                "operationId": "deleteOrganization",
+                "operationId": "delete",
                 "parameters": [
                     {
                         "name": "language",
@@ -1592,9 +1634,9 @@
                         "explode": true
                     },
                     {
-                        "name": "organization_id",
+                        "name": "slug",
                         "in": "query",
-                        "description": "Organization id for get the user",
+                        "description": "Slug for get the user",
                         "required": true,
                         "explode": true
                     }

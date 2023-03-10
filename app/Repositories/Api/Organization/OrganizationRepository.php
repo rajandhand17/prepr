@@ -8,10 +8,10 @@ class OrganizationRepository implements OrganizationInterface{
         $this->organization=$organization;
     }
 
-    public function getOrganization($request)
+    public function list($request)
     {
         try{
-            return $this->organization->getOrganization($request->language,$request->search);
+            return $this->organization->list($request->language,$request->search);
          }catch (\Exception $e){
             return false;
          }

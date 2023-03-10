@@ -21,11 +21,11 @@ class OrganizationController extends AppBaseController
     
     /**
      * @OA\Get(
-     *     path="/api/v1/organization/organization-list",
+     *     path="/api/v1/organization/list",
      *     tags={"Organization API - Organization List"},
      *     summary="Finds lists of Organization List",
      *     description="Get all the Organization List",
-     *     operationId="getOrganization",
+     *     operationId="list",
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
@@ -64,27 +64,27 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function getOrganization(Request $request)
+    public function list(Request $request)
     {  
        try {
-          $organization=$this->organizationRepository->getOrganization($request);
-          if ($organization) {
+          $organization=$this->organizationRepository->list($request);
+          if ($organization) { 
             return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
           }
         return $this->sendError(__('responses.found_not_organizations_list'));
          
-       } catch (\Exception $e) {
+       } catch (\Exception $e) { 
          return $this->sendError(__('responses.send_error'), 500);
      }
     }
     
     /**
      * @OA\Get(
-     *     path="/api/v1/organization/create-organization",
+     *     path="/api/v1/organization/create",
      *     tags={"Organization API - Create Organization"},
      *     summary="Create Organization with different parameters",
      *     description="Create Organization with different parameters",
-     *     operationId="createOrganization",
+     *     operationId="create",
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
@@ -110,35 +110,35 @@ class OrganizationController extends AppBaseController
      *         name="description",
      *         in="query",
      *         description="Organization description for describe the organization",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="profile_image",
      *         in="query",
      *         description="Organization profile Image for choose profile image",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="cover_image",
      *         in="query",
      *         description="Organization cover Image for choose cover image",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="website",
      *         in="query",
      *         description="Website for the organization",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="about",
      *         in="query",
      *         description="About for the organization",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
@@ -158,7 +158,63 @@ class OrganizationController extends AppBaseController
      *     @OA\Parameter(
      *         name="total_employees",
      *         in="query",
-     *         description="Total Employees for the show total employees",
+     *         description="Total Employees for the show total employees!",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="magnet_community_id",
+     *         in="query",
+     *         description="Magnet community id for the magnet community id!",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="latitude",
+     *         in="query",
+     *         description="Latitude for the magnet community id!",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="longitude",
+     *         in="query",
+     *         description="Longitude for the organization location!",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="address",
+     *         in="query",
+     *         description="address for the organization!",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="city",
+     *         in="query",
+     *         description="city of the organization!",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="state",
+     *         in="query",
+     *         description="state of the organization!",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="country",
+     *         in="query",
+     *         description="country of the organization!",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="zip_code",
+     *         in="query",
+     *         description="zip_code of the organization!",
      *         required=false,
      *         explode=true,
      *     ),
@@ -196,12 +252,12 @@ class OrganizationController extends AppBaseController
     }
    
     /**
-     * @OA\Get(
-     *     path="/api/v1/organization/update-organization",
+     * @OA\Post(
+     *     path="/api/v1/organization/update",
      *     tags={"Organization API - Update Organization"},
      *     summary="Update Organization with different parameters",
      *     description="Update Organization with different parameters",
-     *     operationId="updateOrganization",
+     *     operationId="update",
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
@@ -210,59 +266,52 @@ class OrganizationController extends AppBaseController
      *         explode=true,
      *      ),
      *     @OA\Parameter(
-     *         name="user_id",
+     *         name="slug",
      *         in="query",
-     *         description="User id for get the user",
-     *         required=true,
-     *         explode=true,
-     *      ),
-     *     @OA\Parameter(
-     *         name="organization_id",
-     *         in="query",
-     *         description="User id for get the user",
-     *         required=true,
+     *         description="Organization slug for create the slug",
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="name",
      *         in="query",
      *         description="Organization name for create the name",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="description",
      *         in="query",
      *         description="Organization description for describe the organization",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="profile_image",
      *         in="query",
      *         description="Organization profile Image for choose profile image",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="cover_image",
      *         in="query",
      *         description="Organization cover Image for choose cover image",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="website",
      *         in="query",
      *         description="Website for the organization",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
      *         name="about",
      *         in="query",
      *         description="About for the organization",
-     *         required=true,
+     *         required=false,
      *         explode=true,
      *      ),
      *     @OA\Parameter(
@@ -283,6 +332,55 @@ class OrganizationController extends AppBaseController
      *         name="total_employees",
      *         in="query",
      *         description="Total Employees for the show total employees",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="latitude",
+     *         in="query",
+     *         description="latitude for organization location latitude",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="longitude",
+     *         in="query",
+     *         description="longitude for organization location longitude",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="address",
+     *         in="query",
+     *         description="Address for organization location address",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="city",
+     *         in="query",
+     *         description="City for organizations city name",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="state",
+     *         in="query",
+     *         description="State for organizations state name",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="country",
+     *         in="query",
+     *         description="Country for organizations country name",
+     *         required=false,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="zipcode",
+     *         in="query",
+     *         description="Zip-code for organizations zipcode!",
      *         required=false,
      *         explode=true,
      *     ),
@@ -315,17 +413,16 @@ class OrganizationController extends AppBaseController
             }
             return $this->sendError(__('responses.updated_organization_failed'));
         } catch (\Exception $e) {
-            
             return false;
         }
     }
    /**
      * @OA\Get(
-     *     path="/api/v1/organization/delete-organization",
-     *     tags={"Organization API - delete Organization"},
+     *     path="/api/v1/organization/delete",
+     *     tags={"Organization API - Delete Organization"},
      *     summary="Delete Organization with different parameters",
      *     description="Delete Organization with different parameters",
-     *     operationId="deleteOrganization",
+     *     operationId="delete",
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
@@ -334,9 +431,9 @@ class OrganizationController extends AppBaseController
      *         explode=true,
      *      ),
      *     @OA\Parameter(
-     *         name="organization_id",
+     *         name="slug",
      *         in="query",
-     *         description="Organization id for get the user",
+     *         description="Slug for get the user",
      *         required=true,
      *         explode=true,
      *      ),
@@ -372,7 +469,47 @@ class OrganizationController extends AppBaseController
            return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
+/**
+     * @OA\Get(
+     *     path="/api/v1/organization/view",
+     *     tags={"Organization API - View Organization"},
+     *     summary="View Organization with different parameters",
+     *     description="View Organization with different parameters",
+     *     operationId="delete",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *      ),
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="query",
+     *         description="Slug for get the user",
+     *         required=true,
+     *         explode=true,
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error!",
+     *
+     *     ),
+     * )
+     */
    public function view(ViewOrganizationRequest $request)
     {    
         try {
