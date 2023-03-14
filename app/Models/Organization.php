@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use DB;
 use App\Models\OrganizationAddress;
 use Aws\S3\S3Client;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class Organization extends LaratrustTeam
 {   
@@ -70,23 +71,26 @@ class Organization extends LaratrustTeam
 
     public function create($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
     {    
-       
        try {
         if($profile_image!==null){
-          // $profile_images_path=$profile_image->store('organizations/profile_images', 's3');
-          $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
-          $path = Storage::disk('s3')->put('organizations/profile_images', $profile_image);
-          $path = Storage::disk('s3')->url($path);
-          $profile_images_path=$path;
+            $image = Image::make($profile_image->getRealPath());
+            $image->encode('webp', 75);
+            $image_contents = $image->__toString();
+            $webp_path = 'organizations/profile_images/'.time().'.webp';
+            $path=Storage::disk('s3')->put($webp_path, $image_contents);
+            $path = Storage::disk('s3')->url($webp_path);
+            $profile_images_path=$path;
         }else{
             $profile_images_path=null;
         }
         if($cover_image!==null){
-             //$cover_images_path=$profile_image->store('organizations/cover_images', 's3');
-             $cover_image_name = "cover_image_".time().'.'.$cover_image->extension();
-                $cover_image_path = Storage::disk('s3')->put('organizations/cover_images', $cover_image);
-                $cover_image_path = Storage::disk('s3')->url($cover_image_path);
-                $cover_images_path=$cover_image_path;
+            $image_cover = Image::make($cover_image->getRealPath());
+            $image_cover->encode('webp', 75);
+            $image_contents_cover = $image_cover->__toString();
+            $webp_path_cover = 'organizations/cover_images/'.time().'.webp';
+            $path_cover=Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
+            $path_cover = Storage::disk('s3')->url($webp_path_cover);
+            $cover_images_path=$path_cover;
         }else{
              $cover_images_path=null;
         }
@@ -127,19 +131,25 @@ class Organization extends LaratrustTeam
     {    
        try{
             if($profile_image!==null){
-                $profile_image_name = "profile_image_".time().'.'.$profile_image->extension();
-                $path = Storage::disk('s3')->put('organizations/profile_images', $profile_image);
-                $path = Storage::disk('s3')->url($path);
-                $profile_images_path=$path;//public_path('organization_images').$profile_image;
+               
+        $image = Image::make($profile_image->getRealPath());
+        $image->encode('webp', 75);
+        $image_contents = $image->__toString();
+        $webp_path = 'organizations/profile_images/'.time().'.webp';
+        $path=Storage::disk('s3')->put($webp_path, $image_contents);
+        $path = Storage::disk('s3')->url($webp_path);
+        $profile_images_path=$path;
             }else{
                 $profile_images_path=null;
             }
             if($cover_image!==null){
-                $cover_image_name = "cover_image_".time().'.'.$cover_image->extension();
-                $cover_image_path = Storage::disk('s3')->put('organizations/cover_images', $cover_image);
-                $cover_image_path = Storage::disk('s3')->url($cover_image_path);
-                //$cover_image->move(public_path('organization_images'), $cover_image_name);
-                $cover_images_path=$cover_image_path;//public_path('organization_images').$cover_image;
+                $image_cover = Image::make($cover_image->getRealPath());
+            $image_cover->encode('webp', 75);
+            $image_contents_cover = $image_cover->__toString();
+            $webp_path_cover = 'organizations/cover_images/'.time().'.webp';
+            $path_cover=Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
+            $path_cover = Storage::disk('s3')->url($webp_path_cover);
+            $cover_images_path=$path_cover;
             }else{
                  $cover_images_path=null;
             }
