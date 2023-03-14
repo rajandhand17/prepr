@@ -27,18 +27,18 @@ class OrganizationAddress extends Model
     ];
 
 
-    static public function create($id, $latitude,$longitude,$address,$city,$state,$country,$zipcode)
+    static public function create($request)
     {      
         try {
                 $organization_address=new OrganizationAddress();
-                $organization_address->organization_id=$id;
-                $organization_address->latitude=$latitude;
-                $organization_address->longitude=$longitude;
-                $organization_address->address=$address;
-                $organization_address->city=$city;
-                $organization_address->state=$state;
-                $organization_address->country=$country;
-                $organization_address->zip_code=$zipcode;
+                $organization_address->organization_id=$request->id;
+                $organization_address->latitude=$request->latitude;
+                $organization_address->longitude=$request->longitude;
+                $organization_address->address=$request->address;
+                $organization_address->city=$request->city;
+                $organization_address->state=$request->state;
+                $organization_address->country=$request->country;
+                $organization_address->zip_code=$request->zipcode;
                 if($organization_address->save()){
                 DB::commit();
                 return true;
@@ -53,18 +53,18 @@ class OrganizationAddress extends Model
         
     }
 
-    static public function updates($organization_id, $latitude, $longitude, $address, $city, $state, $country, $zipcode)
+    static public function updates($request)
     {  
         try{  
-            $organization_address_records=OrganizationAddress::where("organization_id",$organization_id)->get();
-            $organization_address=OrganizationAddress::find($organization_id);
-            $organization_address->latitude=$latitude?$latitude:$organization_address_records->latitude;
-            $organization_address->longitude=$longitude?$longitude:$organization_address_records->longitude;
-            $organization_address->address=$address?$address:$organization_address_records->address;
-            $organization_address->city=$city?$city:$organization_address_records->city;
-            $organization_address->state=$state?$state:$organization_address_records->state;
-            $organization_address->country=$country?$country:$organization_address_records->country;
-            $organization_address->zip_code=$zipcode?$zipcode:$organization_address_records->zipcode;
+            $organization_address_records=OrganizationAddress::where("organization_id",$request->organization_id)->get();
+            $organization_address=OrganizationAddress::find($request->organization_id);
+            $organization_address->latitude=$request->latitude?$request->latitude:$organization_address_records->latitude;
+            $organization_address->longitude=$request->longitude?$request->longitude:$organization_address_records->longitude;
+            $organization_address->address=$request->address?$request->address:$organization_address_records->address;
+            $organization_address->city=$request->city?$request->city:$organization_address_records->city;
+            $organization_address->state=$request->state?$request->state:$organization_address_records->state;
+            $organization_address->country=$request->country?$request->country:$organization_address_records->country;
+            $organization_address->zip_code=$request->zipcode?$request->zipcode:$organization_address_records->zipcode;
             if($organization_address->save()){
             DB::commit();
                  return true;

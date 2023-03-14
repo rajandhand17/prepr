@@ -55,108 +55,78 @@ class Organization extends LaratrustTeam
        }
     }
   
-    public function create($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
+    public function create($request)
     {    
-        
        try {
-        if($profile_image!==null){
-            $image = Image::make($profile_image->getRealPath());
-            $image->encode('webp', 75);
-            $image_contents = $image->__toString();
-            $webp_path = 'organizations/profile_images/'.time().'.webp';
-            $path=Storage::disk('s3')->put($webp_path, $image_contents);
-            $path = Storage::disk('s3')->url($webp_path);
-            $profile_images_path=$path;
-        }else{
-            $profile_images_path=null;
+        $profile_images_path=null;
+        if($request->profile_image!==null){
+            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image);
         }
-        if($cover_image!==null){
-            $image_cover = Image::make($cover_image->getRealPath());
-            $image_cover->encode('webp', 75);
-            $image_contents_cover = $image_cover->__toString();
-            $webp_path_cover = 'organizations/cover_images/'.time().'.webp';
-            $path_cover=Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
-            $path_cover = Storage::disk('s3')->url($webp_path_cover);
-            $cover_images_path=$path_cover;
-        }else{
-             $cover_images_path=null;
+        $cover_images_path=null;
+        if($request->cover_image!==null){
+            $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image);
         }
-        DB::beginTransaction();
+        //DB::beginTransaction();
         $organization=new Organization;
-        $organization->language=$language;
-        $organization->user_id=$user_id;
-        $organization->name=$name;
-        $organization->description=$description;
-        $organization->slug=strtolower($name);
+        $organization->language=$request->language;
+        $organization->user_id=$request->user_id;
+        $organization->name=$request->name;
+        $organization->description=$request->description;
+        $organization->slug=strtolower($request->name);
         $organization->cover_image=$cover_images_path;
         $organization->profile_image=$profile_images_path;
-        $organization->website=$website;
-        $organization->about=$about;
-        $organization->category=$category;
-        if($status!==null){
-            $organization->status=$status;
+        $organization->website=$request->website;
+        $organization->about=$request->about;
+        $organization->category=$request->category;
+        if($request->status!==null){
+            $organization->status=$request->status;
         }
-        $organization->total_employees=$total_employees;
+        $organization->total_employees=$request->total_employees;
         if($organization->save()){
-            $address=OrganizationAddress::Create($organization->id,$latitude,$longitude,$address,$city,$state,$country,$zipcode);
+            $address=OrganizationAddress::Create($request);
             if($address){
-                DB::commit();
+          //      DB::commit();
               return true;
             }
         }else{
-            DB::rollback();
+           // DB::rollback();
             return false;
         }
        } catch (\Exception $e) {
-        DB::rollback();
+        //DB::rollback();
         return false;
        }
     }
       
     /**update organizations */
-    public function updates($language='en',$slug,$name=null, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null,$organization_id=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
+    public function updates($request)
     {    
        try{
-            if($profile_image!==null){
-               
-        $image = Image::make($profile_image->getRealPath());
-        $image->encode('webp', 75);
-        $image_contents = $image->__toString();
-        $webp_path = 'organizations/profile_images/'.time().'.webp';
-        $path=Storage::disk('s3')->put($webp_path, $image_contents);
-        $path = Storage::disk('s3')->url($webp_path);
-        $profile_images_path=$path;
-            }else{
-                $profile_images_path=null;
-            }
-            if($cover_image!==null){
-                $image_cover = Image::make($cover_image->getRealPath());
-            $image_cover->encode('webp', 75);
-            $image_contents_cover = $image_cover->__toString();
-            $webp_path_cover = 'organizations/cover_images/'.time().'.webp';
-            $path_cover=Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
-            $path_cover = Storage::disk('s3')->url($webp_path_cover);
-            $cover_images_path=$path_cover;
-            }else{
-                 $cover_images_path=null;
-            }
-            $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->where("slug","like",$slug)->take(20)->first();
-            $organization->language=$language?$language:$organization->language;
-            $organization->name=$name?$name:$organization->name;
-            $organization->description=$description?$description:$organization->description;
-            $organization->slug=strtolower($name)?strtolower($name):$organization->slug;
+        $profile_images_path=null;
+        if($request->profile_image!==null){
+            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image);
+        }
+        $cover_images_path=null;
+        if($request->cover_image!==null){
+            $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image);
+        }
+            $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$request->slug)->first();
+            $organization->language=$request->language?$request->language:$organization->language;
+            $organization->name=$request->name?$request->name:$organization->name;
+            $organization->description=$request->description?$request->description:$organization->description;
+            $organization->slug=strtolower($request->name)?strtolower($request->name):$organization->slug;
             $organization->cover_image=$cover_images_path?$cover_images_path:$organization->cover_image;
             $organization->profile_image=$profile_images_path?$profile_images_path:$organization->profile_image;
-            $organization->website=$website?$website:$organization->website;
-            $organization->about=$about?$about:$organization->about;
-            $organization->category=$category?$category:$organization->category;
-            if($status!==null){
-                $organization->status=$status;
+            $organization->website=$request->website?$request->website:$organization->website;
+            $organization->about=$request->about?$request->about:$organization->about;
+            $organization->category=$request->category?$request->category:$organization->category;
+            if($request->status!==null){
+                $organization->status=$request->status;
             }
-            $organization->total_employees=$total_employees?$total_employees:$organization->total_employees;
+            $organization->total_employees=$request->total_employees?$request->total_employees:$organization->total_employees;
             $organization->save();
             if($organization){
-                $organization_address=OrganizationAddress::updates($organization_id, $latitude, $longitude, $address, $city, $state, $country, $zipcode);
+                $organization_address=OrganizationAddress::updates($request);
                 return true;
             }else{
                 return false;
