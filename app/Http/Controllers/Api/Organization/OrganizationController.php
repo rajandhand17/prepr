@@ -412,7 +412,7 @@ class OrganizationController extends AppBaseController
                 return $this->sendResponse(null, __('responses.updated_organization'));
             }
             return $this->sendError(__('responses.updated_organization_failed'));
-        } catch (\Exception $e) {
+        }catch (\Exception $e){
             return false;
         }
     }

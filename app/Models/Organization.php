@@ -9,7 +9,7 @@ use Monolog\Processor\WebProcessor;
 use Illuminate\Support\Facades\Storage;
 use DB;
 use App\Models\OrganizationAddress;
-use Aws\S3\S3Client;
+use App\Helpers\FileUploadHelper;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class Organization extends LaratrustTeam
@@ -54,23 +54,10 @@ class Organization extends LaratrustTeam
           return false;
        }
     }
-    
-    function hs_png2webp($source_file, $destination_file, $compression_quality = 100)
-    {   
-        if($source_file->extension()=="jpg" || $source_file->extension()=="jpeg"){
-            $image = imagecreatefromjpeg($source_file);
-            $result = imagewebp($image, $destination_file, $compression_quality);
-            if (false === $result) {
-                return false;
-            }
-            imagedestroy($image);
-            return $destination_file;
-        }
-        
-    }
-
+  
     public function create($language='en',$user_id,$name, $display_name, $description=null, $profile_image=null, $cover_image=null, $website=null, $about=null, $category=null, $status=null, $total_employees=null, $latitude=null, $longitude=null, $address=null, $city=null, $state=null, $country=null, $zipcode=null)
     {    
+        
        try {
         if($profile_image!==null){
             $image = Image::make($profile_image->getRealPath());
@@ -192,13 +179,13 @@ class Organization extends LaratrustTeam
         } catch (\Exception $e){
             return false;        
         }
-       
+        
     }
 
     public function view($language='en',$slug)
     {
         try {
-            $organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees');
+$organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees');
             if($slug!=null){
                 $organization_list=$organization_list->where("name","like",'%'.$slug.'%');
              }
