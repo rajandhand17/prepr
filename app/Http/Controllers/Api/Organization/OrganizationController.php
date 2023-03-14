@@ -512,8 +512,9 @@ class OrganizationController extends AppBaseController
      */
    public function view(ViewOrganizationRequest $request)
     {    
-        try {
+        try { 
             $organization=$this->organizationRepository->view($request); 
+            
             if($organization!==false){
                 return $this->sendResponse($organization,__('responses.organization_view_get'));
             }
