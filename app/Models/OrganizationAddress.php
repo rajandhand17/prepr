@@ -29,25 +29,23 @@ class OrganizationAddress extends Model
 
     static public function create($request)
     {      
-        try {
+        try {   
                 $organization_address=new OrganizationAddress();
-                $organization_address->organization_id=$request->id;
+                $organization_address->organization_id=$request->organization_id;
                 $organization_address->latitude=$request->latitude;
                 $organization_address->longitude=$request->longitude;
                 $organization_address->address=$request->address;
                 $organization_address->city=$request->city;
                 $organization_address->state=$request->state;
                 $organization_address->country=$request->country;
-                $organization_address->zip_code=$request->zipcode;
+                $organization_address->zip_code=$request->zip_code;
                 if($organization_address->save()){
-                DB::commit();
                 return true;
                 }
                 DB::rollback();
                 return false;
         } catch (\Exception $e) {
             DB::rollback();
-            return $e;
             return false;
         }
         
@@ -64,15 +62,12 @@ class OrganizationAddress extends Model
             $organization_address->city=$request->city?$request->city:$organization_address_records->city;
             $organization_address->state=$request->state?$request->state:$organization_address_records->state;
             $organization_address->country=$request->country?$request->country:$organization_address_records->country;
-            $organization_address->zip_code=$request->zipcode?$request->zipcode:$organization_address_records->zipcode;
+            $organization_address->zip_code=$request->zip_code?$request->zip_code:$organization_address_records->zip_code;
             if($organization_address->save()){
-            DB::commit();
                  return true;
             }
-            DB::rollback();
                 return false;
             } catch (\Exception $e) {
-                DB::rollback();
                 return false;
             }
     }

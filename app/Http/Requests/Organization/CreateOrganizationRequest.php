@@ -27,12 +27,16 @@ class CreateOrganizationRequest extends FormRequest
     {
         return [
             'user_id'=>'required',
-            'name' => 'required|max:255|unique:organizations,name',
+            'name' => 'required|max:255',
             'description'=>'string',
             'profile_image'=>'image',
             'cover_image'=>'image',
             'category'=>'required|exists:categories,id',
             'address'=>'required',
+            'city'=>'required',
+            'state'=>'required',
+            'country'=>'required',
+            'zip_code'=>'required',
         ];
     }
 
@@ -49,8 +53,7 @@ class CreateOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'user_id.required' => __('responses.user_id_required'),
-            'name.unique'=>__('responses.organization_name_unique'), 
+            'user_id.required' => __('responses.user_id_required'), 
             'name.required'=>__('responses.organization_name_required'),
             'name.max'=>__('responses.organization_name_max'),
             'profile_image.image'=>__('responses.cover_image'),
@@ -58,6 +61,10 @@ class CreateOrganizationRequest extends FormRequest
             'category.required'=>__('responses.organization_category_required'),
             'category.exists'=>__('responses.organization_category_exists'),
             'address.required'=>__('responses.organization_address_required'),
+            'city.required'=>__('responses.organization_city_required'),
+            'state.required'=>__('responses.organization_state_required'),
+            'country.required'=>__('responses.organization_zip_code_required'),
+            'zip_code.required'=>__('responses.zip_code_required'),
         ];
     }
 }

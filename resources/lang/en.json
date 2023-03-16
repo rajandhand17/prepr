@@ -2969,6 +2969,9 @@
     "responses.organization_address_required":"Organisation address is required!",
     "responses.organization_slug_required":"Please enter slug!",
     "responses.organization_slug_not_exists":"This slug does not exists!",
-    "responses.organization_slug_exists":"This slug already exists!"
+    "responses.organization_slug_exists":"This slug already exists!",
+    "responses.organization_city_required":"Please enter organization city!",
+    "responses.organization_state_required":"Please enter organization state!",
+    "responses.organization_country":"Please enter organization country!",
+    "responses.organization_zip_code_required":"Please enter organization zip-code!"
 }
-  

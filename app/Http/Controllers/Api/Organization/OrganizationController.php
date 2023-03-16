@@ -237,15 +237,16 @@ class OrganizationController extends AppBaseController
      *
      *     ),
      * )
-     */
+     */ 
     public function create(CreateOrganizationRequest $request)
     {   
         try {
             $organization=$this->organizationRepository->create($request);
-            if ($organization) {
-                return $this->sendResponse(null, __('responses.create_organization'));
+           if($organization['success']==true) {
+                return $this->sendResponse(null,$organization['message']);
+            }else{
+                return $this->sendError($organization['message']);
             }
-            return $this->sendError(__('responses.create_organization_failed'));
         } catch (\Exception $e) {
          return $this->sendError(__('responses.send_error'), 500);
         }
@@ -408,8 +409,10 @@ class OrganizationController extends AppBaseController
     {
         try {
             $organization=$this->organizationRepository->update($request);
-            if ($organization) {
-                return $this->sendResponse(null, __('responses.updated_organization'));
+            if ($organization['success']==true){
+                return $this->sendResponse(null,$organization['message']);
+            }else{
+                return $this->sendError($organization['message']);
             }
             return $this->sendError(__('responses.updated_organization_failed'));
         }catch (\Exception $e){
