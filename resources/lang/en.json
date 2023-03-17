@@ -2973,5 +2973,7 @@
     "responses.organization_city_required":"Please enter organization city!",
     "responses.organization_state_required":"Please enter organization state!",
     "responses.organization_country":"Please enter organization country!",
-    "responses.organization_zip_code_required":"Please enter organization zip-code!"
+    "responses.organization_zip_code_required":"Please enter organization zip-code!",
+    "responses.fail_organization_image_upload":"Organization Image upload failed!",
+    "responses.trashed_records":"This Organization name is already registered with us, tO get same name, Please contact with support!"
 }

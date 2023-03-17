@@ -9,10 +9,11 @@ use Monolog\Processor\WebProcessor;
 use Illuminate\Support\Facades\Storage;
 use DB;
 use App\Models\OrganizationAddress;
+use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\FileDeleteHelper;
-use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 
 class Organization extends LaratrustTeam
 {   
@@ -38,15 +39,19 @@ class Organization extends LaratrustTeam
         'magnet_community_id',
         'total_employees',
     ];
-  
+    public function category(): HasOne
+    {
+        return $this->hasOne(Category::class,'id');
+    }
+
     public function list($language='en',$search=null)
     {
        try {
-            $organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees');
+           $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees');
             if($search!=null){
-                $organization_list=$organization_list->where("name","like",'%'.$search.'%');
+               $organization_list=$organization_list->where("name","like",'%'.$search.'%');
              }
-             $organization_list=$organization_list->take(20)->get();
+             $organization_list=$organization_list->get();
              //check if there are any results
              if(!$organization_list->isEmpty()){
                 return $organization_list;
@@ -59,29 +64,36 @@ class Organization extends LaratrustTeam
   
     public function create($request)
     {   
-        
         try {
-        $organization_exists=static::select('id')->where("name",$request->name)->first();
+        $organization_exists=static::select('id')->where("name",$request->name)->withTrashed()->first();
         if($organization_exists==null){
            $profile_images_path=null;
         if($request->profile_image!==null){
-            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image);
+            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image,"organization");
+            if($profile_images_path==false){
+                $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
+                return $response;
+            }
         }
         $cover_images_path=null;
         if($request->cover_image!==null){
-            $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image);
+            $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image,"organization");
+            if($cover_images_path==false){
+                $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
+                return $response;
+            }
         }
         DB::beginTransaction();
         $organization=new Organization;
-        $organization->language=$request->language;
+        $organization->language=($request->has('language'))?$request->language:null;
         $organization->user_id=$request->user_id;
         $organization->name=$request->name;
-        $organization->description=$request->description;
-        $organization->slug=strtolower($request->name);
+        $organization->description=($request->has('description'))?$request->description:null;
+        $organization->slug=UtilityHelper::generateSlug(strtolower($request->name));
         $organization->cover_image=$cover_images_path;
         $organization->profile_image=$profile_images_path;
-        $organization->website=$request->website;
-        $organization->about=$request->about;
+        $organization->website=($request->has('website'))?$request->website:null;
+        $organization->about=($request->has('about'))?$request->about:null;
         $organization->category=$request->category;
         if($request->status!==null){
             $organization->status=$request->status;
@@ -101,6 +113,11 @@ class Organization extends LaratrustTeam
            return $response;
         }
        }else{
+        $organization_trashed_exists=static::select('id')->where("name",$request->name)->onlyTrashed()->first();
+        if($organization_trashed_exists!=null){
+            $response= ['success' => false, 'message' => __('responses.trashed_records')];
+            return $response;
+        }
         $response= ['success' => false, 'message' => __('responses.organization_name_unique')];
         return $response;
        }
@@ -118,11 +135,15 @@ class Organization extends LaratrustTeam
        try{
         $profile_images_path=null;
         if($request->profile_image!==null){
-            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image);
+            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image,"organization");
+            if($profile_images_path==false){
+                $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
+                return $response;
+            }
         }
         $cover_images_path=null;
         if($request->cover_image!==null){
-            $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image);
+            $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image,"organization");
         }
             $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$request->slug)->first();
             $organization->language=($request->has('language')) ?$request->language : $organization->language;
@@ -134,9 +155,7 @@ class Organization extends LaratrustTeam
             $organization->website=($request->has('website'))?$request->website:$organization->website;
             $organization->about=($request->has('about'))?$request->about:$organization->about;
             $organization->category=($request->has('category'))?$request->category:$organization->category;
-           // if($request->status!==null){
             $organization->status=($request->has('status'))?$request->status:$organization->status;
-            //}
             $organization->total_employees=($request->has('total_employees'))?$request->total_employees:$organization->total_employees;
             $organization->save();
             if($organization){
@@ -158,7 +177,7 @@ class Organization extends LaratrustTeam
     public function delete($language='en',$slug=null)
     {   
         try {
-            $organization=Organization::where("slug","like",$slug)->delete();
+            $organization=Organization::where("slug",$slug)->delete();
             if($organization){
                  return true;        
             }else{
@@ -174,9 +193,9 @@ class Organization extends LaratrustTeam
         try {
 $organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees');
             if($slug!=null){
-                $organization_list=$organization_list->where("name","like",'%'.$slug.'%');
+                $organization_list=$organization_list->where("slug",$slug);
              }
-             $organization_list=$organization_list->take(20)->get();
+             $organization_list=$organization_list->get();
              //check if there are any results
              if(!$organization_list->isEmpty()){
                 return $organization_list;
