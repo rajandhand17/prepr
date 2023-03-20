@@ -100,13 +100,22 @@ class Organization extends LaratrustTeam
         }
         $organization->total_employees=$request->total_employees;
         if($organization->save()){
-            $request->organization_id=$organization->id;
-            $address=OrganizationAddress::Create($request);
-            if($address){
-          DB::commit();
-          $response= ['success' => true, 'message' => __('responses.create_organization')];
-          return $response;
+            if($request->has('address') && $request->has('city') && $request->has('state') && $request->has('country') && $request->has('zip_code')){
+                $request->organization_id=$organization->id;
+                $address=OrganizationAddress::Create($request);
+                if($address){
+                    DB::commit();
+                    $response= ['success' => true, 'message' => __('responses.create_organization')];
+                    return $response;
+               }else{
+                    DB::rollback();
+                    $response= ['success' => false, 'message' => __('responses.create_organization_failed')];
+                    return $response;
+               }
             }
+            DB::commit();
+            $response= ['success' => true, 'message' => __('responses.create_organization')];
+            return $response;
         }else{
             DB::rollback();
            $response= ['success' => false, 'message' => __('responses.create_organization_failed')];
