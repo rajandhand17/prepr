@@ -6,9 +6,13 @@ use Illuminate\Support\Str;
 
 class UtilityHelper{
     
-    public static function generateSlug($name)
+    public static function generateSlug($request)
     {   
-       $list=Organization::where("slug",$name)->pluck("name")->first();
+      $name=strtolower($request->name);
+       if($request->model=="Organization"){
+           $model=new Organization();
+       }
+       $list=$model::where("slug",$name)->pluck("name")->first();
        if($list!==null){
             $slug=$slug_format=Str::slug($list);
             $next=1;

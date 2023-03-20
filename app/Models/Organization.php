@@ -84,12 +84,13 @@ class Organization extends LaratrustTeam
             }
         }
         DB::beginTransaction();
+        $request->model="Organization";
         $organization=new Organization;
         $organization->language=($request->has('language'))?$request->language:null;
         $organization->user_id=$request->user_id;
         $organization->name=$request->name;
         $organization->description=($request->has('description'))?$request->description:null;
-        $organization->slug=UtilityHelper::generateSlug(strtolower($request->name));
+        $organization->slug=UtilityHelper::generateSlug($request);
         $organization->cover_image=$cover_images_path;
         $organization->profile_image=$profile_images_path;
         $organization->website=($request->has('website'))?$request->website:null;
