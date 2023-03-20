@@ -39,7 +39,7 @@ class Organization extends LaratrustTeam
         'magnet_community_id',
         'total_employees',
     ];
-    public function category(): HasOne
+    public function categoryDetail(): HasOne
     {
         return $this->hasOne(Category::class,'id');
     }
@@ -47,17 +47,31 @@ class Organization extends LaratrustTeam
     public function list($language='en',$search=null)
     {
        try {
-           $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees');
+           $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->with('categoryDetail');
             if($search!=null){
                $organization_list=$organization_list->where("name","like",'%'.$search.'%');
              }
              $organization_list=$organization_list->get();
              //check if there are any results
              if(!$organization_list->isEmpty()){
+                 return $organization_list;
+            $organization_list->transform(function ($item) {
+                if( $item['status']==0){
+                    $item['status'] = 'draft'; 
+                }
+                if( $item['status']==1){
+                    $item['status'] = 'published'; 
+                }
+                if( $item['status']==2){
+                    $item['status'] = 'deactivated'; 
+                }
+                return $item;
+            });
                 return $organization_list;
             }
             return false;
        } catch (\Exception $e) {
+        return $e;
           return false;
        }
     }

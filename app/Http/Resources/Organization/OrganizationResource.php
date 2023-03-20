@@ -25,7 +25,7 @@ class OrganizationResource extends JsonResource
             'profile_image' => $this->profile_image,
             'website' => $this->website,
             'about' => $this->about,
-            'category' => $this->category,
+            'category' => $this->categoryDetail->name,
             'status' => $this->status,
             'total_employees' => $this->total_employees,
         ];

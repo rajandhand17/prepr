@@ -10,6 +10,10 @@ class FileDeleteHelper{
   
     public static function deleteImageFromS3($request)
     {
-      return Storage::disk('s3')->delete($request);
+      $response=false;
+      if(Storage::disk('s3')->exists($request)) {
+        $response=Storage::disk('s3')->delete($request);
+      }
+      return $response;
     }
 }
