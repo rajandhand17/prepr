@@ -98,13 +98,13 @@ class Organization extends LaratrustTeam
             }
         }
         DB::beginTransaction();
-        $request->model="Organization";
+        $model=new Organization;
         $organization=new Organization;
         $organization->language=($request->has('language'))?$request->language:null;
         $organization->user_id=$request->user_id;
         $organization->name=$request->name;
         $organization->description=($request->has('description'))?$request->description:null;
-        $organization->slug=UtilityHelper::generateSlug($request);
+        $organization->slug=UtilityHelper::generateSlug($request->name,$model);
         $organization->cover_image=$cover_images_path;
         $organization->profile_image=$profile_images_path;
         $organization->website=($request->has('website'))?$request->website:null;
@@ -117,7 +117,7 @@ class Organization extends LaratrustTeam
         if($organization->save()){
             if($request->has('address') && $request->has('city') && $request->has('state') && $request->has('country') && $request->has('zip_code')){
                 $request->organization_id=$organization->id;
-                $address=OrganizationAddress::Create($request);
+                $address=OrganizationAddress::create($request);
                 if($address){
                     DB::commit();
                     $response= ['success' => true, 'message' => __('responses.create_organization')];
