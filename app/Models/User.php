@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laratrust\Traits\LaratrustUserTrait;
+use App\Helpers\UtilityHelper;
+
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -58,6 +60,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    
 
     public function UserPersonal()
     {
@@ -68,6 +71,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserSetting::class);
     }
+
 
     /**login apis */
     public function login($request)
@@ -156,9 +160,16 @@ class User extends Authenticatable
             $user->referal_code = $referencecode;
             $user->save();
             if ($user->id) {
+                if($request->register_type=="organization"){
+                    $organization=new Organization;
+                    $organization->slug=UtilityHelper::generateSlug($request->organization_name,$organization);
+                    $organization->user_id=$user->id;
+                    $organization->name=$request->organization_name;
+                    $organization->save();
+                }
                 $userpersonal = UserPersonal::create($user,$request);
                 $usersetting = UserSetting::create($user,$request);
-                if($userpersonal && $usersetting){
+                if($userpersonal && $usersetting && $organization){
                     $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                     $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
                     if($mail){

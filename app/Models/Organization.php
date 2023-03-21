@@ -5,15 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Models\LaratrustTeam;
-use Monolog\Processor\WebProcessor;
-use Illuminate\Support\Facades\Storage;
 use DB;
 use App\Models\OrganizationAddress;
 use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
-use App\Helpers\FileDeleteHelper;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
 
 class Organization extends LaratrustTeam
 {   
@@ -44,8 +40,12 @@ class Organization extends LaratrustTeam
         return $this->hasOne(Category::class,'id');
     }
 
+    public function Organization(){
+        return $this->belongsTo(User::class);
+    }
+
     public function list($language='en',$search=null)
-    {
+    {       
        try {
            $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->with('categoryDetail');
             if($search!=null){
@@ -71,13 +71,12 @@ class Organization extends LaratrustTeam
             }
             return false;
        } catch (\Exception $e) {
-        return $e;
           return false;
        }
     }
   
     public function create($request)
-    {   
+    {    
         try {
         $organization_exists=static::select('id')->where("name",$request->name)->withTrashed()->first();
         if($organization_exists==null){
@@ -86,7 +85,7 @@ class Organization extends LaratrustTeam
             $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image,"organization");
             if($profile_images_path==false){
                 $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
-                return $response;
+                return $response;   
             }
         }
         $cover_images_path=null;

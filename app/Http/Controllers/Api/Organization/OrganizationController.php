@@ -460,6 +460,7 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
+
     public function delete(DeleteOrganizationRequest $request)
     { 
         try {
@@ -517,7 +518,6 @@ class OrganizationController extends AppBaseController
     {    
         try { 
             $organization=$this->organizationRepository->view($request); 
-            
             if($organization!==false){
                 return $this->sendResponse($organization,__('responses.organization_view_get'));
             }

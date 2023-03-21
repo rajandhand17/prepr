@@ -37,6 +37,7 @@ class CreateOrganizationRequest extends FormRequest
             'state'=>'required',
             'country'=>'required',
             'zip_code'=>'required',
+            'register_type'=>'required',
         ];
     }
 
@@ -65,6 +66,7 @@ class CreateOrganizationRequest extends FormRequest
             'state.required'=>__('responses.organization_state_required'),
             'country.required'=>__('responses.organization_zip_code_required'),
             'zip_code.required'=>__('responses.zip_code_required'),
+            'register_type.required'=>__('responses.register_type_required'),
         ];
     }
 }

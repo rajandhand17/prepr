@@ -23,7 +23,7 @@ class UserPersonal extends Model
    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
 
-    public function create(User $user, $request)
+    public static function create(User $user, $request)
     {
         try{
             DB::beginTransaction();

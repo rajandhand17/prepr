@@ -2975,5 +2975,11 @@
     "responses.organization_country":"Please enter organization country!",
     "responses.organization_zip_code_required":"Please enter organization zip-code!",
     "responses.fail_organization_image_upload":"Organization Image upload failed!",
-    "responses.trashed_records":"This Organization name is already registered with us, tO get same name, Please contact with support!"
+    "responses.trashed_records":"This Organization name is already registered with us, tO get same name, Please contact with support!",
+    "responses.role_required":"Please enter role!",
+    "responses.role_assigned_sucessfully":"Role assigned successfully!",
+    "responses.role_assigned_failed":"Role assigned failed!",
+    "responses.role_removed_sucessfully":"Role assigned successfully!",
+    "responses.role_removed_failed":"Role assigned failed!",
+    "responses.register_type_required":"Register type required!"
 }
