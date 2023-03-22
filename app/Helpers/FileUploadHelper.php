@@ -10,7 +10,7 @@ class FileUploadHelper {
     public static function uploadImageToS3($request,$type)
     {           
         try {
-            $pathsarray=config('S3Path');
+            $pathsarray=config('s3-upload-path');
             $image_cover = Image::make($request->getRealPath());
             $image_cover->encode('webp', 75);
             $image_contents_cover = $image_cover->__toString();

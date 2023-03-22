@@ -1322,14 +1322,14 @@
                 }
             }
         },
-        "/api/v1/organization/organization-list": {
+        "/api/v1/organization/list": {
             "get": {
                 "tags": [
                     "Organization API - Organization List"
                 ],
                 "summary": "Finds lists of Organization List",
                 "description": "Get all the Organization List",
-                "operationId": "getOrganization",
+                "operationId": "list",
                 "parameters": [
                     {
                         "name": "language",
@@ -1362,14 +1362,14 @@
                 }
             }
         },
-        "/api/v1/organization/create-organization": {
+        "/api/v1/organization/create": {
             "get": {
                 "tags": [
                     "Organization API - Create Organization"
                 ],
                 "summary": "Create Organization with different parameters",
                 "description": "Create Organization with different parameters",
-                "operationId": "createOrganization",
+                "operationId": "create",
                 "parameters": [
                     {
                         "name": "language",
@@ -1396,35 +1396,35 @@
                         "name": "description",
                         "in": "query",
                         "description": "Organization description for describe the organization",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "profile_image",
                         "in": "query",
                         "description": "Organization profile Image for choose profile image",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "cover_image",
                         "in": "query",
                         "description": "Organization cover Image for choose cover image",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "website",
                         "in": "query",
                         "description": "Website for the organization",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
                         "name": "about",
                         "in": "query",
                         "description": "About for the organization",
-                        "required": true,
+                        "required": false,
                         "explode": true
                     },
                     {
@@ -1444,7 +1444,63 @@
                     {
                         "name": "total_employees",
                         "in": "query",
-                        "description": "Total Employees for the show total employees",
+                        "description": "Total Employees for the show total employees!",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "magnet_community_id",
+                        "in": "query",
+                        "description": "Magnet community id for the magnet community id!",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "latitude",
+                        "in": "query",
+                        "description": "Latitude for the magnet community id!",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "query",
+                        "description": "Longitude for the organization location!",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "address for the organization!",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "city of the organization!",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "state of the organization!",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "country of the organization!",
+                        "required": false,
+                        "explode": true
+                    },
+                    {
+                        "name": "zip_code",
+                        "in": "query",
+                        "description": "zip_code of the organization!",
                         "required": false,
                         "explode": true
                     }
@@ -1625,6 +1681,46 @@
                 "summary": "Delete Organization with different parameters",
                 "description": "Delete Organization with different parameters",
                 "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "slug",
+                        "in": "query",
+                        "description": "Slug for get the user",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/organization/view": {
+            "get": {
+                "tags": [
+                    "Organization API - View Organization"
+                ],
+                "summary": "View Organization with different parameters",
+                "description": "View Organization with different parameters",
+                "operationId": "view",
                 "parameters": [
                     {
                         "name": "language",

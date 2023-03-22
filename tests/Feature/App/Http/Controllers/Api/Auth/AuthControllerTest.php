@@ -18,10 +18,10 @@ class AuthControllerTest extends TestCase
      {
             parent::setUp();
             $this->language = "en";
-            $this->username = "Rajandhand";
-            $this->wrong_username = "Rajandhandsa";
-            $this->email = "rajan@prepr.org";
-            $this->wrong_email="rajanwrong@prepr.org";
+            $this->username = "Rajandhands";
+            $this->wrong_username = "Rajandhandsas";
+            $this->email = "rajan@prepr.orgs";
+            $this->wrong_email="rajanwrong@prepr.orgs";
             $this->first_name = "rajan";
             $this->last_name = "dhand";
             $this->password = "Prepr@123";
@@ -34,28 +34,30 @@ class AuthControllerTest extends TestCase
             $this->phone_number = "9646080802";
             $this->wrong_phone_number="9646080805";
             $this->purpose_send_otp="two_factor_verification";
-            $this->referal_code="rajandhand2023";
-            $this->wrong_referal_code="rajandhand";
+            $this->referal_code="Rajandhands2023";
+            $this->wrong_referal_code="rajandhandd";
+            $this->register_type="organization";
+            $this->organization_name="prepr sds";
 
      }
      /**Successfull Positive */
     public function test_register_positive()
     {
-        $response = $this->post("/api/v1/auth/register", ["language" => $this->language, "username" => $this->username, "email" => $this->email, "first_name" => $this->first_name, "last_name" => $this->last_name, "password" => $this->password, "password_confirmation" => $this->password_confirmation, "device_platform" => $this->device_platform, "user_type" => $this->user_type, "purpose" => $this->purpose, "country_code" => $this->country_code, "phone_number" => $this->phone_number]);
+        $response = $this->post("/api/v1/auth/register", ["language" => $this->language, "username" => $this->username, "email" => $this->email, "first_name" => $this->first_name, "last_name" => $this->last_name, "password" => $this->password, "password_confirmation" => $this->password_confirmation, "device_platform" => $this->device_platform, "user_type" => $this->user_type, "purpose" => $this->purpose, "country_code" => $this->country_code, "phone_number" => $this->phone_number,"register_type"=>$this->register_type,"organization_name"=>$this->organization_name]);
         $response->assertStatus(200);
         $data = $response->json();
 
         if ($data['success'] === true) {
-            $this->assertArrayHasKey('id', $data['data'][0]);
-            $this->assertArrayHasKey('language', $data['data'][0]);
-            $this->assertArrayHasKey('first_name', $data['data'][0]);
-            $this->assertArrayHasKey('last_name', $data['data'][0]);
-            $this->assertArrayHasKey('full_name', $data['data'][0]);
-            $this->assertArrayHasKey('username', $data['data'][0]);
-            $this->assertArrayHasKey('email', $data['data'][0]);
-            $this->assertArrayHasKey('country_code', $data['data'][0]);
-            $this->assertArrayHasKey('phone_number', $data['data'][0]);
-            $this->assertArrayHasKey('referal_code', $data['data'][0]);
+            $this->assertArrayHasKey('id', $data['user'][0]);
+            $this->assertArrayHasKey('preferred_language', $data['user'][0]);
+            $this->assertArrayHasKey('first_name', $data['user'][0]);
+            $this->assertArrayHasKey('last_name', $data['user'][0]);
+            $this->assertArrayHasKey('full_name', $data['user'][0]);
+            $this->assertArrayHasKey('username', $data['user'][0]);
+            $this->assertArrayHasKey('email', $data['user'][0]);
+            $this->assertArrayHasKey('country_code', $data['user'][0]);
+            $this->assertArrayHasKey('phone_number', $data['user'][0]);
+            $this->assertArrayHasKey('referal_code', $data['user'][0]);
             if($response->assertOk()){
                 $records=User::select("otp")->where("email",$this->email)->first();
                 $verifyuser = $this->post("/api/v1/auth/verify-otp", ["language" => $this->language, "email" => $this->email, "otp"=>$records->otp]);
@@ -90,14 +92,16 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true){
-            if($data['data']!==null){
+            if(isset($data['data']['token'])){
+                
                 $response->assertOk();
             }else{
             $userrecords=User::select("otp")->where("email",$this->email)->first();
             $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
+           
             $twofactorresponse->assertStatus(200);
            }
-        } else {
+        }else {
             $this->fail();
         }
     }

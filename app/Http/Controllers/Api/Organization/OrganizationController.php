@@ -479,7 +479,7 @@ class OrganizationController extends AppBaseController
      *     tags={"Organization API - View Organization"},
      *     summary="View Organization with different parameters",
      *     description="View Organization with different parameters",
-     *     operationId="delete",
+     *     operationId="view",
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
