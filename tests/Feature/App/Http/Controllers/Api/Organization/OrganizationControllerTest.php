@@ -3,7 +3,8 @@
 namespace Tests\Feature\App\Http\Controllers\Api\Organization;
 
 use Tests\TestCase;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 class OrganizationControllerTest extends TestCase
 {
     /**
@@ -34,70 +35,31 @@ class OrganizationControllerTest extends TestCase
             $this->user_type="organization";
             $this->email = "rajan@prepr.orgs";
             $this->password = "Prepr@123";
-            $this->token="";
+            $data=Auth::attempt(['email' => $this->email, 'password' => $this->password]);
+            $user = Auth::user(); 
+            $this->token=$user->createToken('MyApp')->accessToken;
+            $this->headers = [
+                'Accept'        => 'application/vnd.laravel.v1+json',
+                'AUTHORIZATION' => 'Bearer '.$this->token,
+                ];
      }
     /**Organization create */
     public function test_create_organization_positive()
     {   
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-          $response = $this->post('/api/v1/organization/create',['language'=> $this->language,"user_id"=>$this->user_id,"name"=>$this->name, "description"=> $this->description, "website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "latitude"=>$this->latitude,"longitude"=>$this->longitude,"address"=>$this->address,"city"=>$this->city,"state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code], $headers);
-       
-            $this->assertEquals(200, $response->getStatusCode());
-            $data = $response->json();  
+          $response = $this->post('/api/v1/organization/create',['language'=> $this->language,"user_id"=>$this->user_id,"name"=>$this->name, "description"=> $this->description, "website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "latitude"=>$this->latitude,"longitude"=>$this->longitude,"address"=>$this->address,"city"=>$this->city,"state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code], $this->headers);
+          $this->assertEquals(200, $response->getStatusCode());
+          $data = $response->json();  
             if ($data['success']) {
                     $response->assertOk();
             } else {
                 $this->fail();
             }
-           
-       
     }
     
     /**Organization create */
     public function test_create_organization_negative_with_header()
     {   
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-          $response = $this->post('/api/v1/organization/create',['language'=> $this->language,"user_id"=>$this->user_id,"name"=>$this->name, "description"=> $this->description, "website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "latitude"=>$this->latitude,"longitude"=>$this->longitude,"address"=>$this->address,"city"=>$this->city,"state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code], $headers);
+          $response = $this->post('/api/v1/organization/create',['language'=> $this->language,"user_id"=>$this->user_id,"name"=>$this->name, "description"=> $this->description, "website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "latitude"=>$this->latitude,"longitude"=>$this->longitude,"address"=>$this->address,"city"=>$this->city,"state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code], $this->headers);
             $this->assertEquals(422, $response->getStatusCode());
             
     }
@@ -111,34 +73,11 @@ class OrganizationControllerTest extends TestCase
 
     /**Organization Listing */
     public function test_organization_list()
-    {   
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-        $response = $this->get('/api/v1/organization/?search='.$this->name.'&language=en',$headers);
-     
+    {     
+        $response = $this->get('/api/v1/organization/?search='.$this->name.'&language=en',$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
-       
         if ($data['success']) {
-            
             $this->assertArrayHasKey('id', $data['data'][0]);
             $this->assertArrayHasKey('language', $data['data'][0]);
             $this->assertArrayHasKey('display_name', $data['data'][0]);
@@ -161,28 +100,7 @@ class OrganizationControllerTest extends TestCase
     /**Organization Update */
     public function test_update_organization_positive()
     {   
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-          $response = $this->post('/api/v1/organization/update',['language'=> $this->language,"slug"=>$this->slug, "description"=> $this->description,"zip_code"=>$this->zip_code], $headers);
+          $response = $this->post('/api/v1/organization/update',['language'=> $this->language,"slug"=>$this->slug, "description"=> $this->description,"zip_code"=>$this->zip_code], $this->headers);
          
             $this->assertEquals(200, $response->getStatusCode());
             $data = $response->json(); 
@@ -197,84 +115,22 @@ class OrganizationControllerTest extends TestCase
     
     /**Organization Update negative*/
     public function test_update_organization_negative()
-    {    
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-        $response = $this->post('/api/v1/organization/update',['language'=> $this->language,"user_id"=>$this->user_id,"website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code],$headers);
+    {   
+        $response = $this->post('/api/v1/organization/update',['language'=> $this->language,"user_id"=>$this->user_id,"website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code],$this->headers);
         $this->assertEquals(422, $response->getStatusCode());
-        
     }
     
     /**Organization Listing negative*/
     public function test_organization_list_negative()
     {   
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-        $response = $this->get('/api/v1/organization/',$headers);
+        $response = $this->get('/api/v1/organization/',$this->headers);
         $this->assertEquals(400, $response->getStatusCode());
-       
     }
 
      /** Organization view */
     public function test_organization_view_positive()
     {   
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-        $response = $this->get('/api/v1/organization/view?language='.$this->language.'&slug='.$this->slug,$headers);
+        $response = $this->get('/api/v1/organization/view?language='.$this->language.'&slug='.$this->slug,$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if($data['success']) {
@@ -299,27 +155,7 @@ class OrganizationControllerTest extends TestCase
     /** Organization view */
     public function test_organization_view_negative()
     {    
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-        $response = $this->get('/api/v1/organization/view?language=en',$headers);
+        $response = $this->get('/api/v1/organization/view?language=en',$this->headers);
         $this->assertEquals(422, $response->getStatusCode());
         
     }
@@ -327,28 +163,7 @@ class OrganizationControllerTest extends TestCase
     /**Organization Delete */
     public function test_delete_organization_postive()
     {   
-        
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-        $response = $this->post('/api/v1/organization/delete', ["slug" => $this->slug, "language" => $this->language],$headers);
+        $response = $this->post('/api/v1/organization/delete', ["slug" => $this->slug, "language" => $this->language],$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
@@ -362,28 +177,7 @@ class OrganizationControllerTest extends TestCase
     /**Organization Delete negative*/
     public function test_delete_organization_negative()
     {   
-        
-        $response = $this->post('/api/v1/auth/login', ["email" => $this->email, "password" => $this->password, "language" => $this->language]);
-        $response->assertStatus(200);
-        $data = $response->json();
-        if ($data['success'] === true){
-            if(isset($data['data']['token'])){
-                $this->token=$data['data']['token'];
-                $response->assertOk();
-            }else{
-            $userrecords=User::select("otp")->where("email",$this->email)->first();
-            $twofactorresponse= $this->post('/api/v1/auth/verify-two-factor', ["email" => $this->email,"otp" => $userrecords->otp, "language" => $this->language]);
-            $twofactorresponse->assertStatus(200);
-            $this->token=$twofactorresponse['data']['token'];
-           }
-        }else {
-            $this->fail();
-        }  
-        $headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
-            'AUTHORIZATION' => 'Bearer '.$this->token,
-            ];
-        $response = $this->post('/api/v1/organization/delete', ["language" => $this->language],$headers);
+        $response = $this->post('/api/v1/organization/delete', ["language" => $this->language],$this->headers);
         $this->assertEquals(422, $response->getStatusCode());
         
     }
