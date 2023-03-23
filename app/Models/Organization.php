@@ -48,11 +48,6 @@ class Organization extends LaratrustTeam
     public function list($language='en',$search=null)
     {       
        try {
-        $user=User::find(2)->first();
-        $team = Organization::where('name', 'prepr _testsd')->first();
-        $admin = Role::where('name', 'super_admin')->first();
-        
-        $user->attachRole($admin, $team);
         $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->with('categoryDetail');
             if($search!=null){
                $organization_list=$organization_list->where("name","like",'%'.$search.'%');

@@ -245,7 +245,7 @@ class OrganizationController extends AppBaseController
             if($organization['success']==true) {
                 return $this->sendResponse(null,$organization['message']);
             }else{
-                return $this->sendError($organization['message']);
+                return $this->sendError($organization['message'],422);
             }
         } catch (\Exception $e) {
          return $this->sendError(__('responses.send_error'), 500);
