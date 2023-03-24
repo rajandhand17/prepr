@@ -74,6 +74,7 @@ class OrganizationController extends AppBaseController
         return $this->sendError(__('responses.found_not_organizations_list'));
          
        } catch (\Exception $e){ 
+        dd($e);
          return $this->sendError(__('responses.send_error'), 500);
      }
     }
@@ -243,7 +244,7 @@ class OrganizationController extends AppBaseController
         try {
             $organization=$this->organizationRepository->create($request);
             if($organization['success']==true) {
-                return $this->sendResponse(null,$organization['message']);
+                return $this->sendResponse($organization['data'],$organization['message']);
             }else{
                 return $this->sendError($organization['message'],422);
             }

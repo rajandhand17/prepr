@@ -15,29 +15,36 @@ class OrganizationControllerTest extends TestCase
     public function setUp(): void
      {
             parent::setUp();
+            
+            $this->parameters= [
+                'language'=> 'en',
+                'user_id' =>'2',
+                'name' =>'Prepr',
+                'slug' =>'2',
+                'description'=>"Describing the test cases of apis",
+                'website'=>"prepr.org",
+                'about'=>"testing",
+                "category"=>"2",
+                "status"=>"1",
+                "total_employees"=>"12",
+                "latitude"=>"43.467517",
+                "longitude"=>"-79.6876659",
+                "address"=>"Oakville, ON, Canada",
+                "city"=>"Oakville",
+                "state"=>"Ontario",
+                "country"=>"Canada",
+                "zip_code"=>"L6M 3N5",
+                "user_type"=>"organization",
+                
+                ];
             $this->language = "en";
-            $this->user_id = 7;
             $this->name="Prepr";
             $this->slug="prepr";
             $this->description="Describing the test cases of apis";
-            $this->website="prepr.org";
-            $this->about="testing";
-            $this->category="2";
-            $this->status="1";
-            $this->total_employees="12";
-            $this->latitude="43.467517";
-            $this->longitude="-79.6876659";
-            $this->address="Oakville, ON, Canada";
-            $this->city="Oakville";
-            $this->state="Ontario";
-            $this->country="Canada";
             $this->zip_code="L6M 3N5";
-            $this->user_type="organization";
-            $this->email = "rajan@prepr.orgs";
-            $this->password = "Prepr@123";
-            $data=Auth::attempt(['email' => $this->email, 'password' => $this->password]);
+            $data=Auth::attempt(['email' =>"rajan@prepr.orgs", 'password' =>"Prepr@123"]);
             $user = Auth::user(); 
-            $this->token=$user->createToken('MyApp')->accessToken;
+            $this->token=$user->createToken(env("APP_NAME"))->accessToken;
             $this->headers = [
                 'Accept'        => 'application/vnd.laravel.v1+json',
                 'AUTHORIZATION' => 'Bearer '.$this->token,
@@ -46,11 +53,14 @@ class OrganizationControllerTest extends TestCase
     /**Organization create */
     public function test_create_organization_positive()
     {   
-          $response = $this->post('/api/v1/organization/create',['language'=> $this->language,"user_id"=>$this->user_id,"name"=>$this->name, "description"=> $this->description, "website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "latitude"=>$this->latitude,"longitude"=>$this->longitude,"address"=>$this->address,"city"=>$this->city,"state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code], $this->headers);
+          $response = $this->post('/api/v1/organization/create',$this->parameters, $this->headers);
           $this->assertEquals(200, $response->getStatusCode());
           $data = $response->json();  
-            if ($data['success']) {
-                    $response->assertOk();
+            if ($data['success']){
+                $this->assertArrayHasKey('name', $data['data']);
+                $this->assertArrayHasKey('slug', $data['data']);
+                $response->assertOk();
+                    
             } else {
                 $this->fail();
             }
@@ -59,23 +69,23 @@ class OrganizationControllerTest extends TestCase
     /**Organization create */
     public function test_create_organization_negative_with_header()
     {   
-          $response = $this->post('/api/v1/organization/create',['language'=> $this->language,"user_id"=>$this->user_id,"name"=>$this->name, "description"=> $this->description, "website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "latitude"=>$this->latitude,"longitude"=>$this->longitude,"address"=>$this->address,"city"=>$this->city,"state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code], $this->headers);
+          $response = $this->post('/api/v1/organization/create',$this->parameters, $this->headers);
             $this->assertEquals(422, $response->getStatusCode());
             
     }
     /**Organization create negative*/
-    public function test_create_organization_negative()
+    public function test_create_organization_negative_without_header()
     {  
-            $response = $this->post('/api/v1/organization/create',['language'=> $this->language,"user_id"=>$this->user_id,"name"=>$this->name, "description"=> $this->description, "website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "latitude"=>$this->latitude,"longitude"=>$this->longitude,"address"=>$this->address,"city"=>$this->city,"state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code]);
-        
-            $this->assertEquals(500, $response->getStatusCode());
+        $response = $this->post('/api/v1/organization/create',$this->parameters);
+         $this->assertEquals(500, $response->getStatusCode());
     }
 
     /**Organization Listing */
     public function test_organization_list()
-    {     
-        $response = $this->get('/api/v1/organization/?search='.$this->name.'&language=en',$this->headers);
+    {   
+        $response = $this->get('/api/v1/organization/?language='.$this->language.'',$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
+        
         $data = $response->json();
         if ($data['success']) {
             $this->assertArrayHasKey('id', $data['data'][0]);
@@ -116,7 +126,7 @@ class OrganizationControllerTest extends TestCase
     /**Organization Update negative*/
     public function test_update_organization_negative()
     {   
-        $response = $this->post('/api/v1/organization/update',['language'=> $this->language,"user_id"=>$this->user_id,"website"=>$this->website, "about"=>$this->about, "category"=>$this->category, "status"=>$this->status, "total_employees"=>$this->total_employees, "state"=>$this->state,"country"=>$this->country,"zip_code"=>$this->zip_code],$this->headers);
+        $response = $this->post('/api/v1/organization/update',['language'=> $this->language, "description"=> $this->description,"zip_code"=>$this->zip_code],$this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
     

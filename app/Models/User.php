@@ -166,6 +166,7 @@ class User extends Authenticatable
                     $organization->user_id=$user->id;
                     $organization->name=$request->organization_name;
                     $organization->save();
+                    $request->user_type="employee";
                 }
                 $userpersonal = UserPersonal::create($user,$request);
                 $usersetting = UserSetting::create($user,$request);

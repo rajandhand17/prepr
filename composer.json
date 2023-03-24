@@ -19,6 +19,7 @@
         "league/flysystem-aws-s3-v3": "^3.12",
         "predis/predis": "^2.0",
         "santigarcor/laratrust": "^7.2",
+        "spatie/laravel-activitylog": "^4.7",
         "twilio/sdk": "^6.44"
     },
     "require-dev": {

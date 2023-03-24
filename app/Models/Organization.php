@@ -120,7 +120,8 @@ class Organization extends LaratrustTeam
                 $address=OrganizationAddress::create($request);
                 if($address){
                     DB::commit();
-                    $response= ['success' => true, 'message' => __('responses.create_organization')];
+                    $data=["name"=>$organization->name,"slug"=> $organization->slug];
+                    $response= ['success' => true,"data"=>$data, 'message' => __('responses.create_organization')];
                     return $response;
                }else{
                     DB::rollback();
@@ -211,7 +212,7 @@ class Organization extends LaratrustTeam
             return false;        
         }
     }
-
+ 
     public function view($language='en',$slug)
     {
         try {
