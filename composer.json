@@ -19,7 +19,6 @@
         "league/flysystem-aws-s3-v3": "^3.12",
         "predis/predis": "^2.0",
         "santigarcor/laratrust": "^7.2",
-        "spatie/laravel-activitylog": "^4.7",
         "twilio/sdk": "^6.44"
     },
     "require-dev": {
@@ -29,8 +28,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.6",
-        "phpunitgen/console": "^4.2",
-        "spatie/laravel-ignition": "^1.0"
+        "phpunitgen/console": "^4.2"
     },
     "autoload": {
         "psr-4": {

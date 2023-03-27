@@ -10,6 +10,7 @@ Route::middleware(['language','auth:api'])->group(function (){
     Route::post('/create',[OrganizationController::class, 'create'])->middleware('permission:create_organization');
     Route::post('/update',[OrganizationController::class, 'update'])->middleware('permission:edit_organization');
     Route::post('/delete',[OrganizationController::class, 'delete'])->middleware('permission:delete_organization');
+    
 });
 
 ?>
