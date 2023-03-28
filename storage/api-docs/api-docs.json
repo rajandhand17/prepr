@@ -1322,7 +1322,7 @@
                 }
             }
         },
-        "/api/v1/organization/list": {
+        "/api/v1/organization/{language}/{slug}": {
             "get": {
                 "tags": [
                     "Organization API - Organization List"
@@ -1333,17 +1333,15 @@
                 "parameters": [
                     {
                         "name": "language",
-                        "in": "query",
-                        "description": "Language values that needed to be considered for choose languages",
-                        "required": true,
-                        "explode": true
+                        "in": "path",
+                        "description": "slug of the user to retrieve data",
+                        "required": true
                     },
                     {
-                        "name": "search",
-                        "in": "query",
-                        "description": "Search values that needed to be considered for filter",
-                        "required": false,
-                        "explode": true
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug of the user to retrieve data",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1359,7 +1357,12 @@
                     "500": {
                         "description": "Internal server error!"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/api/v1/organization/create": {
@@ -1518,11 +1521,16 @@
                     "500": {
                         "description": "Internal server error!"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
-        "/api/v1/organization/update": {
-            "post": {
+        "/api/v1/organization/update/{language}/{slug}": {
+            "put": {
                 "tags": [
                     "Organization API - Update Organization"
                 ],
@@ -1532,14 +1540,14 @@
                 "parameters": [
                     {
                         "name": "language",
-                        "in": "query",
+                        "in": "path",
                         "description": "Language values that needed to be considered for choose languages",
                         "required": true,
                         "explode": true
                     },
                     {
                         "name": "slug",
-                        "in": "query",
+                        "in": "path",
                         "description": "Organization slug for create the slug",
                         "required": false,
                         "explode": true
@@ -1670,7 +1678,12 @@
                     "500": {
                         "description": "Internal server error!"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/api/v1/organization/delete": {
@@ -1710,7 +1723,12 @@
                     "500": {
                         "description": "Internal server error!"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/api/v1/organization/view": {
@@ -1750,7 +1768,12 @@
                     "500": {
                         "description": "Internal server error!"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
         "/": {

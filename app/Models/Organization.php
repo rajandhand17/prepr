@@ -155,8 +155,8 @@ class Organization extends LaratrustTeam
     }
       
     /**update organizations */
-    public function updates($request)
-    {    
+    public function updates($language,$slug,$request)
+    {   
        try{
         $profile_images_path=null;
         if($request->profile_image!==null){
@@ -169,9 +169,10 @@ class Organization extends LaratrustTeam
         $cover_images_path=null;
         if($request->cover_image!==null){
             $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image,"organization");
-        }
-            $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$request->slug)->first();
-            $organization->language=($request->has('language')) ?$request->language : $organization->language;
+        }  
+            $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$slug)->first();
+            if($organization!==null){
+            $organization->language=$language;
             $organization->name=($request->has('name')) ?$request->name : $organization->name;
             $organization->description=($request->has('description')) ?$request->description : $organization->description;
             $organization->slug=($request->has('name'))?strtolower($request->name):$organization->slug;
@@ -192,7 +193,9 @@ class Organization extends LaratrustTeam
                 $response= ['success' => false, 'message' => __('responses.updated_organization_failed')];
                  return $response;
             }
-        
+        }
+        $response= ['success' => false, 'message' => __('responses.updated_organization_failed')];
+                 return $response;
        }catch (\Exception $e) {
             $response= ['success' => false, 'message' => __('responses.send_error')];
             return $response;
@@ -213,22 +216,4 @@ class Organization extends LaratrustTeam
         }
     }
  
-    public function view($language='en',$slug)
-    {
-        try {
-$organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees');
-            if($slug!=null){
-                $organization_list=$organization_list->where("slug",$slug);
-             }
-             $organization_list=$organization_list->get();
-             //check if there are any results
-             if(!$organization_list->isEmpty()){
-                return $organization_list;
-            }
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
 }
