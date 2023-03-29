@@ -46,7 +46,7 @@ class Organization extends LaratrustTeam
         return $this->belongsTo(User::class);
     }
 
-    public function list($language='en',$search=null)
+    public function list($search=null,$language='en')
     {       
        try {
         $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->with('categoryDetail');
@@ -156,7 +156,7 @@ class Organization extends LaratrustTeam
     }
       
     /**update organizations */
-    public function updates($language,$slug,$request)
+    public function updates($slug,$request)
     {   
        try{
         $profile_images_path=null;
@@ -173,7 +173,7 @@ class Organization extends LaratrustTeam
         }  
             $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$slug)->first();
             if($organization!==null){
-            $organization->language=$language;
+            $organization->language=($request->has('language')) ?$request->language : $organization->language;
             $organization->name=($request->has('name')) ?$request->name : $organization->name;
             $organization->description=($request->has('description')) ?$request->description : $organization->description;
             $organization->slug=($request->has('name'))?strtolower($request->name):$organization->slug;
@@ -204,7 +204,7 @@ class Organization extends LaratrustTeam
        }
     }
 
-    public function delete($language='en',$slug=null)
+    public function delete($slug=null,$language='en')
     {   
         try {
             $exists=Organization::select("id")->where("slug",$slug)->first();

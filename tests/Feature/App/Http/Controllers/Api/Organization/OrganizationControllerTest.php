@@ -78,7 +78,7 @@ class OrganizationControllerTest extends TestCase
        /** Organization view */
       public function test_organization_view_positive()
       {   
-          $response = $this->get('/api/v1/organization/en/view',$this->headers);
+          $response = $this->get('/api/v1/organization/view?language='.$this->parameters['language'],$this->headers);
           $this->assertEquals(200, $response->getStatusCode());
           $data = $response->json();
           if($data['success']) {
@@ -110,7 +110,7 @@ class OrganizationControllerTest extends TestCase
     /**Organization Listing */
     public function test_organization_list()
     {   
-        $response = $this->get('/api/v1/organization/'.$this->parameters['language'].'/'.$this->parameters['slug'],$this->headers);
+        $response = $this->get('/api/v1/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'],$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
@@ -137,7 +137,7 @@ class OrganizationControllerTest extends TestCase
     /**Organization Listing negative*/
     public function test_organization_list_negative()
     {   
-        $response = $this->get('/api/v1/organization/'.$this->parameters['wrong_language'].'/'.$this->parameters['slug'],$this->headers);
+        $response = $this->get('/api/v1/organization/'.$this->parameters['slug'],$this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
     
@@ -145,7 +145,7 @@ class OrganizationControllerTest extends TestCase
     public function test_update_organization_positive()
     {     
         $this->parameters['name']="Prepr_testcase";
-        $response = $this->put('/api/v1/organization/'.$this->parameters['language'].'/'.$this->parameters['slug'].'/update',['language'=> $this->parameters['language'],"slug"=>$this->parameters['slug'],"zip_code"=>$this->parameters['zip_code']], $this->headers);
+        $response = $this->put('/api/v1/organization/'.$this->parameters['slug'].'/update',['language'=> $this->parameters['language'],"slug"=>$this->parameters['slug'],"zip_code"=>$this->parameters['zip_code']], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
             $data = $response->json(); 
             if ($data['success']) {
@@ -159,7 +159,7 @@ class OrganizationControllerTest extends TestCase
     /**Organization Update negative*/
     public function test_update_organization_negative()
     {   
-        $response = $this->put('/api/v1/organization/'.$this->parameters['language'].'/'.$this->parameters['slug'].'/update',$this->parameters,$this->headers);
+        $response = $this->put('/api/v1/organization/'.$this->parameters['slug'].'/update',$this->parameters,$this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
     

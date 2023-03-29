@@ -64,10 +64,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function list($language,$slug=null)
+    public function list($slug,Request $request)
     {      
        try {
-          $organization=$this->organizationRepository->list($language,$slug);
+          $organization=$this->organizationRepository->list($slug,$request->language);
           if($organization==="not_exists"){
             return $this->sendResponse(null,__('responses.organization_not_exists'));
         }
@@ -410,10 +410,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function update($language,$slug,UpdateOrganizationRequest $request)
+    public function update($slug,UpdateOrganizationRequest $request)
     {   
         try {
-            $organization=$this->organizationRepository->update($language,$slug,$request);
+            $organization=$this->organizationRepository->update($slug,$request);
             if($organization['success']==true){
                 return $this->sendResponse(null,$organization['message']);
             }else{
@@ -467,10 +467,10 @@ class OrganizationController extends AppBaseController
      * )
      */
 
-    public function delete($language,$slug)
+    public function delete($slug,Request $request)
     {   
         try {
-            $organization=$this->organizationRepository->delete($language,$slug);
+            $organization=$this->organizationRepository->delete($slug,$request->language);
             if($organization==="not_exists"){
                 return $this->sendResponse(null,__('responses.organization_not_exists'));
             }
@@ -525,11 +525,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-   public function view($language)
+   public function view(Request $request)
    {    
        try { 
-           $organization=$this->organizationRepository->view($language);
-           
+           $organization=$this->organizationRepository->view($request->language);
            if($organization!==false){
                return $this->sendResponse($organization,__('responses.organization_view_get'));
            }

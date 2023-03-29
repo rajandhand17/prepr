@@ -1731,6 +1731,46 @@
                 ]
             }
         },
+        "/api/v1/organization/view": {
+            "get": {
+                "tags": [
+                    "Organization API - View Organization"
+                ],
+                "summary": "View Organization with different parameters",
+                "description": "View Organization with different parameters",
+                "operationId": "view",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Language values that needed to be considered for choose languages",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "slug",
+                        "in": "query",
+                        "description": "Slug for get the user",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
+                    }
+                }
+            }
+        },
         "/": {
             "get": {
                 "description": "Home page",
