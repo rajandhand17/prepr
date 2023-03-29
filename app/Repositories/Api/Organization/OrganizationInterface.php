@@ -6,5 +6,6 @@ Interface OrganizationInterface{
     public function list($language,$slug);
     public function create($request);
     public function update($language,$slug,$request);
-    public function delete($request);
+    public function delete($language,$slug);
+    public function view($language);
 }

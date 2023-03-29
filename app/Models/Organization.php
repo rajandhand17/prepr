@@ -10,6 +10,7 @@ use DB;
 use App\Models\OrganizationAddress;
 use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
+use App\Http\Requests\Organization\DeleteOrganizationRequest;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Organization extends LaratrustTeam
@@ -70,7 +71,7 @@ class Organization extends LaratrustTeam
             });
                 return $organization_list;
             }
-            return false;
+            return "not_exists";
        } catch (\Exception $e) {
           return false;
        }
@@ -194,7 +195,8 @@ class Organization extends LaratrustTeam
                  return $response;
             }
         }
-        $response= ['success' => false, 'message' => __('responses.updated_organization_failed')];
+
+        $response= ['success' => false, 'message' => __('responses.organization_not_exists')];
                  return $response;
        }catch (\Exception $e) {
             $response= ['success' => false, 'message' => __('responses.send_error')];
@@ -205,14 +207,35 @@ class Organization extends LaratrustTeam
     public function delete($language='en',$slug=null)
     {   
         try {
-            $organization=Organization::where("slug",$slug)->delete();
-            if($organization){
-                 return true;        
+            $exists=Organization::select("id")->where("slug",$slug)->first();
+            if($exists!==null){
+                $organization=Organization::where("slug",$slug)->delete();
+                if($organization){
+                     return true;        
+                }else{
+                    return false;
+                }
             }else{
-                return false;
+                return "not_exists";
             }
+          
         } catch (\Exception $e){
             return false;        
+        }
+    }
+
+    public function view($language='en')
+    {
+        try {
+$organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees');
+             $organization_list=$organization_list->get();
+             //check if there are any results
+             if(!$organization_list->isEmpty()){
+                return $organization_list;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
         }
     }
  

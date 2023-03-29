@@ -18,10 +18,10 @@ class OrganizationRepository implements OrganizationInterface{
 
     }
 
-    public function delete($request)
+    public function delete($language,$slug)
     {
         try{
-            return $this->organization->delete($request->language,$request->slug);
+            return $this->organization->delete($language,$slug);
 
          }catch (\Exception $e){
             return false;
@@ -47,5 +47,15 @@ class OrganizationRepository implements OrganizationInterface{
             return false;
         }
     }
+
+
+    public function view($language)
+    {
+        try {
+        return $this->organization->view($language);
+        } catch (\Exception $e) {
+        return false;
+        }
+    }      
 
 }

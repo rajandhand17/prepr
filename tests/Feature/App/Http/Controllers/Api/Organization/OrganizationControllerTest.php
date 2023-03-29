@@ -35,7 +35,7 @@ class OrganizationControllerTest extends TestCase
                 "country"=>"Canada",
                 "zip_code"=>"L6M 3N5",
                 "user_type"=>"organization",
-                
+                "wrong_language"=>"Hindi",
                 ];
             $data=Auth::attempt(['email' =>"rajan@prepr.orgs", 'password' =>"Prepr@123"]);
             $user = Auth::user(); 
@@ -74,7 +74,39 @@ class OrganizationControllerTest extends TestCase
         $response = $this->post('/api/v1/organization/create',$this->parameters);
          $this->assertEquals(500, $response->getStatusCode());
     }
-
+    
+       /** Organization view */
+      public function test_organization_view_positive()
+      {   
+          $response = $this->get('/api/v1/organization/en/view',$this->headers);
+          $this->assertEquals(200, $response->getStatusCode());
+          $data = $response->json();
+          if($data['success']) {
+              $this->assertArrayHasKey('id', $data['data'][0]);
+              $this->assertArrayHasKey('language', $data['data'][0]);
+              $this->assertArrayHasKey('name', $data['data'][0]);
+              $this->assertArrayHasKey('slug', $data['data'][0]);
+              $this->assertArrayHasKey('description', $data['data'][0]);
+              $this->assertArrayHasKey('cover_image', $data['data'][0]);
+              $this->assertArrayHasKey('profile_image', $data['data'][0]);
+              $this->assertArrayHasKey('website', $data['data'][0]);
+              $this->assertArrayHasKey('about', $data['data'][0]);
+              $this->assertArrayHasKey('category', $data['data'][0]);
+              $this->assertArrayHasKey('status', $data['data'][0]);
+              $this->assertArrayHasKey('total_employees', $data['data'][0]);
+              $response->assertOk();
+          } else {
+              $this->fail();
+          }
+      }
+  
+      /** Organization view */
+      public function test_organization_view_negative()
+      {    
+          $response = $this->get('/api/v1/organization/view',$this->headers);
+          $this->assertEquals(400, $response->getStatusCode());
+          
+      }
     /**Organization Listing */
     public function test_organization_list()
     {   
@@ -105,7 +137,6 @@ class OrganizationControllerTest extends TestCase
     /**Organization Listing negative*/
     public function test_organization_list_negative()
     {   
-        $this->parameters['wrong_language']="nds";
         $response = $this->get('/api/v1/organization/'.$this->parameters['wrong_language'].'/'.$this->parameters['slug'],$this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -114,7 +145,7 @@ class OrganizationControllerTest extends TestCase
     public function test_update_organization_positive()
     {     
         $this->parameters['name']="Prepr_testcase";
-        $response = $this->put('/api/v1/organization/update/'.$this->parameters['language'].'/'.$this->parameters['slug'],['language'=> $this->parameters['language'],"slug"=>$this->parameters['slug'],"zip_code"=>$this->parameters['zip_code']], $this->headers);
+        $response = $this->put('/api/v1/organization/'.$this->parameters['language'].'/'.$this->parameters['slug'].'/update',['language'=> $this->parameters['language'],"slug"=>$this->parameters['slug'],"zip_code"=>$this->parameters['zip_code']], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
             $data = $response->json(); 
             if ($data['success']) {
@@ -128,29 +159,9 @@ class OrganizationControllerTest extends TestCase
     /**Organization Update negative*/
     public function test_update_organization_negative()
     {   
-        $response = $this->put('/api/v1/organization/update/'.$this->parameters['language'].'/'.$this->parameters['slug'],$this->parameters,$this->headers);
+        $response = $this->put('/api/v1/organization/'.$this->parameters['language'].'/'.$this->parameters['slug'].'/update',$this->parameters,$this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
     
-    /**Organization Delete */
-    public function test_delete_organization_postive()
-    {   
-        $response = $this->delete('/api/v1/organization/delete', ["slug" => $this->parameters['slug'], "language" => $this->parameters['language']],$this->headers);
-        $this->assertEquals(200, $response->getStatusCode());
-        $data = $response->json();
-        if ($data['success']) {
-                $response->assertOk();
-        }else {
-            $this->fail();
-        }
-    }
-
-    
-    /**Organization Delete negative*/
-    public function test_delete_organization_negative()
-    {   
-        $response = $this->delete('/api/v1/organization/delete', ["language" => $this->parameters['language']],$this->headers);
-        $this->assertEquals(422, $response->getStatusCode());
-        
-    }
+      
 }

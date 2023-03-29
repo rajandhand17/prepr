@@ -24,11 +24,6 @@ class OrganizationController extends AppBaseController
      * @OA\Get(
      *     path="/api/v1/organization/{language}/{slug}",
      *     tags={"Organization API - Organization List"},
-     *     @OA\SecurityScheme(
-     *          type="http",
-     *          scheme="bearer",
-     *          bearerFormat="JWT"
-     *      )
      *     summary="Finds lists of Organization List",
      *     description="Get all the Organization List",
      *     security={{"bearerAuth":{}}},
@@ -73,6 +68,9 @@ class OrganizationController extends AppBaseController
     {      
        try {
           $organization=$this->organizationRepository->list($language,$slug);
+          if($organization==="not_exists"){
+            return $this->sendResponse(null,__('responses.organization_not_exists'));
+        }
           if ($organization) { 
             return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
           }
@@ -469,17 +467,76 @@ class OrganizationController extends AppBaseController
      * )
      */
 
-    public function delete(DeleteOrganizationRequest $request)
+    public function delete($language,$slug)
     {   
         try {
-            $organization=$this->organizationRepository->delete($request);
-            if($organization==true){
+            $organization=$this->organizationRepository->delete($language,$slug);
+            if($organization==="not_exists"){
+                return $this->sendResponse(null,__('responses.organization_not_exists'));
+            }
+            if($organization===true){
                 return $this->sendResponse(null,__('responses.delete_organizations_success'));
             }
+            
             return $this->sendError(__('responses.delete_organizations_failed'));
         } catch (\Exception $e) {
            return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/organization/view",
+     *     tags={"Organization API - View Organization"},
+     *     summary="View Organization with different parameters",
+     *     description="View Organization with different parameters",
+     *     operationId="view",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *      ),
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="query",
+     *         description="Slug for get the user",
+     *         required=true,
+     *         explode=true,
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error!",
+     *
+     *     ),
+     * )
+     */
+   public function view($language)
+   {    
+       try { 
+           $organization=$this->organizationRepository->view($language);
+           
+           if($organization!==false){
+               return $this->sendResponse($organization,__('responses.organization_view_get'));
+           }
+           return $this->sendError(__('responses.organization_view_get_failed'));
+       } catch (\Exception $e) {
+          return $this->sendError(__('responses.send_error'), 500);
+       }
+   }
 
 }
