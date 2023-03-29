@@ -46,12 +46,12 @@ class Organization extends LaratrustTeam
         return $this->belongsTo(User::class);
     }
 
-    public function list($search=null,$language='en')
+    public function view($search=null,$language='en')
     {       
        try {
         $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->with('categoryDetail');
             if($search!=null){
-               $organization_list=$organization_list->where("name","like",'%'.$search.'%');
+               $organization_list=$organization_list->where("slug",$search);
              }
              $organization_list=$organization_list->get();
              //check if there are any results
@@ -224,7 +224,7 @@ class Organization extends LaratrustTeam
         }
     }
 
-    public function view($language='en')
+    public function list($language='en')
     {
         try {
 $organization_list=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees');

@@ -8,16 +8,24 @@ class OrganizationRepository implements OrganizationInterface{
         $this->organization=$organization;
     }
 
-    public function list($slug,$language)
+    public function view($slug,$language)
     {
         try{
-            return $this->organization->list($slug,$language);
+            return $this->organization->view($slug,$language);
          }catch (\Exception $e){
             return false;
          }
 
     }
 
+    public function list($language)
+    {
+        try {
+         return $this->organization->list($language);
+        } catch (\Exception $e) {
+        return false;
+        }
+    }   
     public function delete($slug,$request)
     {
         try{
@@ -47,15 +55,6 @@ class OrganizationRepository implements OrganizationInterface{
             return false;
         }
     }
-
-
-    public function view($language)
-    {
-        try {
-        return $this->organization->view($language);
-        } catch (\Exception $e) {
-        return false;
-        }
-    }      
+   
 
 }

@@ -78,7 +78,7 @@ class OrganizationControllerTest extends TestCase
        /** Organization view */
       public function test_organization_view_positive()
       {   
-          $response = $this->get('/api/v1/organization/view?language='.$this->parameters['language'],$this->headers);
+          $response = $this->get('/api/v1/organization/?language='.$this->parameters['language'],$this->headers);
           $this->assertEquals(200, $response->getStatusCode());
           $data = $response->json();
           if($data['success']) {
@@ -103,7 +103,7 @@ class OrganizationControllerTest extends TestCase
       /** Organization view */
       public function test_organization_view_negative()
       {    
-          $response = $this->get('/api/v1/organization/view',$this->headers);
+          $response = $this->get('/api/v1/organization/',$this->headers);
           $this->assertEquals(400, $response->getStatusCode());
           
       }

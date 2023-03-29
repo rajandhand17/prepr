@@ -27,7 +27,7 @@ class OrganizationController extends AppBaseController
      *     summary="Finds lists of Organization List",
      *     description="Get all the Organization List",
      *     security={{"bearerAuth":{}}},
-     *     operationId="list",
+     *     operationId="view",
      *     @OA\Parameter(
      *         name="language",
      *         in="path",
@@ -64,10 +64,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function list($slug,Request $request)
-    {      
+    public function view($slug,Request $request)
+    {   
        try {
-          $organization=$this->organizationRepository->list($slug,$request->language);
+          $organization=$this->organizationRepository->view($slug,$request->language);
           if($organization==="not_exists"){
             return $this->sendResponse(null,__('responses.organization_not_exists'));
         }
@@ -490,7 +490,7 @@ class OrganizationController extends AppBaseController
      *     tags={"Organization API - View Organization"},
      *     summary="View Organization with different parameters",
      *     description="View Organization with different parameters",
-     *     operationId="view",
+     *     operationId="list",
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
@@ -525,10 +525,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-   public function view(Request $request)
+   public function list(Request $request)
    {    
        try { 
-           $organization=$this->organizationRepository->view($request->language);
+           $organization=$this->organizationRepository->list($request->language);
            if($organization!==false){
                return $this->sendResponse($organization,__('responses.organization_view_get'));
            }
