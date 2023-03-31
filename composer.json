@@ -7,13 +7,16 @@
     "require": {
         "php": "^8.0.2",
         "darkaonline/l5-swagger": "^8.4",
+        "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.5",
         "infyomlabs/laravel-generator": "^5.4",
         "infyomlabs/laravel-ui-adminlte": "^5.1",
+        "intervention/image": "^2.7",
         "laravel/framework": "^9.19",
         "laravel/passport": "^11.3",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "league/flysystem-aws-s3-v3": "^3.12",
         "predis/predis": "^2.0",
         "santigarcor/laratrust": "^7.2",
         "twilio/sdk": "^6.44"
@@ -25,8 +28,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.6",
-        "phpunitgen/console": "^4.2",
-        "spatie/laravel-ignition": "^1.0"
+        "phpunitgen/console": "^4.2"
     },
     "autoload": {
         "psr-4": {

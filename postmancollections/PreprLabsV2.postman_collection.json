@@ -8756,6 +8756,16 @@
 									"key": "phone_number",
 									"value": "964608080288",
 									"type": "default"
+								},
+								{
+									"key": "register_type",
+									"value": "organization",
+									"type": "default"
+								},
+								{
+									"key": "organization_name",
+									"value": "new org",
+									"type": "default"
 								}
 							]
 						},
@@ -8774,7 +8784,7 @@
 					},
 					"response": [
 						{
-							"name": "Register - Successfull",
+							"name": "Register -Successfull",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
@@ -8782,13 +8792,13 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "preferred_language",
+											"key": "language",
 											"value": "en",
 											"type": "default"
 										},
 										{
 											"key": "username",
-											"value": "Rajandhand",
+											"value": "Rajandhanda",
 											"type": "default"
 										},
 										{
@@ -8823,7 +8833,7 @@
 										},
 										{
 											"key": "user_type",
-											"value": "teacher",
+											"value": "student",
 											"type": "default"
 										},
 										{
@@ -8838,41 +8848,26 @@
 										},
 										{
 											"key": "phone_number",
-											"value": "9646080802",
+											"value": "964608080288",
 											"type": "default"
 										},
 										{
-											"key": "two_factor_verification",
-											"value": "1",
+											"key": "register_type",
+											"value": "organization",
 											"type": "default"
 										},
 										{
 											"key": "organization_name",
-											"value": "organizatoin",
-											"type": "default"
-										},
-										{
-											"key": "vanity_link",
-											"value": "prepr",
-											"type": "default"
-										},
-										{
-											"key": "referal_code",
-											"value": "rajan20",
+											"value": "new org",
 											"type": "default"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/v1/auth/register",
-									"protocol": "http",
+									"raw": "{{localhost}}/api/v1/auth/register",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"{{localhost}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"v1",
@@ -8891,11 +8886,11 @@
 								},
 								{
 									"key": "Date",
-									"value": "Wed, 15 Feb 2023 08:33:14 GMT"
+									"value": "Thu, 23 Mar 2023 03:08:11 GMT"
 								},
 								{
 									"key": "Date",
-									"value": "Wed, 15 Feb 2023 08:33:14 GMT"
+									"value": "Thu, 23 Mar 2023 03:08:11 GMT"
 								},
 								{
 									"key": "Connection",
@@ -8927,81 +8922,10 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"success\": true,\n        \"user\": {\n            \"preferred_language\": \"en\",\n            \"first_name\": \"rajan\",\n            \"last_name\": \"dhand\",\n            \"full_name\": \"rajan dhand\",\n            \"username\": \"Rajandhand\",\n            \"email\": \"rajan@prepr.org\",\n            \"country_code\": \"+91\",\n            \"phone_number\": \"9646080802\",\n            \"two_factor_verification\": \"1\",\n            \"otp\": 1618,\n            \"verify_token\": \"aIYr1FsrG0BwVR73LNmuZgRuiMeMBM\",\n            \"referal_code\": \"rajan20\",\n            \"updated_at\": \"2023-02-15T08:33:10.000000Z\",\n            \"created_at\": \"2023-02-15T08:33:10.000000Z\",\n            \"id\": 1,\n            \"blade\": \"email.reset_password\",\n            \"subject\": \"Verify User\"\n        }\n    },\n    \"message\": \"User registered successfully!\"\n}"
+							"body": "{\n    \"success\": true,\n    \"user\": {\n        \"1\": {\n            \"id\": 3,\n            \"preferred_language\": \"en\",\n            \"first_name\": \"rajan\",\n            \"last_name\": \"dhand\",\n            \"full_name\": \"rajan dhand\",\n            \"username\": \"Rajandhanda\",\n            \"email\": \"rajan@prepr.org\",\n            \"email_verified_at\": null,\n            \"country_code\": \"+91\",\n            \"phone_number\": \"964608080288\",\n            \"two_factor_verification\": \"0\",\n            \"otp\": \"2664\",\n            \"profile_image\": null,\n            \"user_points\": null,\n            \"user_rank\": null,\n            \"verified_user\": \"0\",\n            \"verify_token\": \"WON1qyzP3CeHeBxVBYBUDD3Unt8pmW\",\n            \"referal_code\": \"Rajandhanda2023\",\n            \"is_profile_completed\": \"0\",\n            \"created_at\": \"2023-03-23T03:08:07.000000Z\",\n            \"updated_at\": \"2023-03-23T03:08:07.000000Z\",\n            \"deleted_at\": null\n        }\n    }\n}"
 						},
 						{
-							"name": "Register - Provide columns",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:8000/api/v1/auth/register",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"v1",
-										"auth",
-										"register"
-									]
-								}
-							},
-							"status": "Forbidden",
-							"code": 403,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Host",
-									"value": "127.0.0.1:8000"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:53:49 GMT"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:53:49 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "close"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/8.1.12"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "58"
-								},
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"data\": {\n        \"preferred_language\": [\n            \"The language field is required.\"\n        ],\n        \"first_name\": [\n            \"First name require\"\n        ],\n        \"last_name\": [\n            \"Last name require\"\n        ],\n        \"username\": [\n            \"User name is require\"\n        ],\n        \"password\": [\n            \"password is required\"\n        ],\n        \"password_confirmation\": [\n            \"Confirm password is require\"\n        ],\n        \"email\": [\n            \"Please enter email in email field\"\n        ],\n        \"user_type\": [\n            \"Please select the user type\"\n        ],\n        \"purpose\": [\n            \"The status field is required\"\n        ],\n        \"phone_number\": [\n            \"Your phone number is empty\"\n        ],\n        \"country_code\": [\n            \"Please enter Country code!\"\n        ]\n    }\n}"
-						},
-						{
-							"name": "Register - Username Already Registered",
+							"name": "Register- Username Already Registered",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
@@ -9009,169 +8933,13 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "preferred_language",
+											"key": "language",
 											"value": "en",
 											"type": "default"
 										},
 										{
 											"key": "username",
-											"value": "Rajandhand",
-											"type": "default"
-										},
-										{
-											"key": "email",
-											"value": "rajan@prepr.orgs",
-											"type": "default"
-										},
-										{
-											"key": "first_name",
-											"value": "rajan",
-											"type": "default"
-										},
-										{
-											"key": "last_name",
-											"value": "dhand",
-											"type": "default"
-										},
-										{
-											"key": "password",
-											"value": "Prepr@123",
-											"type": "default"
-										},
-										{
-											"key": "password_confirmation",
-											"value": "Prepr@123",
-											"type": "default"
-										},
-										{
-											"key": "device_platform",
-											"value": "web",
-											"type": "default"
-										},
-										{
-											"key": "user_type",
-											"value": "teacher",
-											"type": "default"
-										},
-										{
-											"key": "purpose",
-											"value": "looking_team",
-											"type": "default"
-										},
-										{
-											"key": "country_code",
-											"value": "+91",
-											"type": "default"
-										},
-										{
-											"key": "phone_number",
-											"value": "9646080801",
-											"type": "default"
-										},
-										{
-											"key": "two_factor_verification",
-											"value": "1",
-											"type": "default"
-										},
-										{
-											"key": "organization_name",
-											"value": "organizatoin",
-											"type": "default"
-										},
-										{
-											"key": "vanity_link",
-											"value": "prepr",
-											"type": "default"
-										},
-										{
-											"key": "referal_code",
-											"value": "rajan20",
-											"type": "default"
-										}
-									]
-								},
-								"url": {
-									"raw": "http://127.0.0.1:8000/api/v1/auth/register",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"v1",
-										"auth",
-										"register"
-									]
-								}
-							},
-							"status": "Forbidden",
-							"code": 403,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Host",
-									"value": "127.0.0.1:8000"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:55:03 GMT"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:55:03 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "close"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/8.1.12"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "58"
-								},
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"data\": {\n        \"username\": [\n            \"Username already taken,please choose another-one!\"\n        ]\n    }\n}"
-						},
-						{
-							"name": "Register - Email Already Registered",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "preferred_language",
-											"value": "en",
-											"type": "default"
-										},
-										{
-											"key": "username",
-											"value": "Rajandhands",
+											"value": "Rajandhanda",
 											"type": "default"
 										},
 										{
@@ -9206,7 +8974,7 @@
 										},
 										{
 											"key": "user_type",
-											"value": "teacher",
+											"value": "student",
 											"type": "default"
 										},
 										{
@@ -9221,41 +8989,26 @@
 										},
 										{
 											"key": "phone_number",
-											"value": "9646080801",
+											"value": "964608080288",
 											"type": "default"
 										},
 										{
-											"key": "two_factor_verification",
-											"value": "1",
+											"key": "register_type",
+											"value": "organization",
 											"type": "default"
 										},
 										{
 											"key": "organization_name",
-											"value": "organizatoin",
-											"type": "default"
-										},
-										{
-											"key": "vanity_link",
-											"value": "prepr",
-											"type": "default"
-										},
-										{
-											"key": "referal_code",
-											"value": "rajan20",
+											"value": "new org",
 											"type": "default"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/v1/auth/register",
-									"protocol": "http",
+									"raw": "{{localhost}}/api/v1/auth/register",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"{{localhost}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"v1",
@@ -9264,8 +9017,8 @@
 									]
 								}
 							},
-							"status": "Forbidden",
-							"code": 403,
+							"status": "Unprocessable Content",
+							"code": 422,
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
@@ -9274,11 +9027,11 @@
 								},
 								{
 									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:55:55 GMT"
+									"value": "Thu, 23 Mar 2023 03:09:20 GMT"
 								},
 								{
 									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:55:55 GMT"
+									"value": "Thu, 23 Mar 2023 03:09:20 GMT"
 								},
 								{
 									"key": "Connection",
@@ -9310,10 +9063,10 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"data\": {\n        \"email\": [\n            \"This email is already registered with us!\"\n        ]\n    }\n}"
+							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"errors\": {\n        \"username\": [\n            \"Username already taken,please choose another-one!\"\n        ],\n        \"email\": [\n            \"This email is already registered with us!\"\n        ],\n        \"phone_number\": [\n            \"This phone number already registered with us!\"\n        ]\n    }\n}"
 						},
 						{
-							"name": "Register - Phone Number Already Registered",
+							"name": "Register - Email Already Successfull",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
@@ -9321,18 +9074,18 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "preferred_language",
+											"key": "language",
 											"value": "en",
 											"type": "default"
 										},
 										{
 											"key": "username",
-											"value": "Rajandhands",
+											"value": "Rajandhanda",
 											"type": "default"
 										},
 										{
 											"key": "email",
-											"value": "rajan@prepr.orgs",
+											"value": "rajan@prepr.org",
 											"type": "default"
 										},
 										{
@@ -9362,7 +9115,7 @@
 										},
 										{
 											"key": "user_type",
-											"value": "teacher",
+											"value": "student",
 											"type": "default"
 										},
 										{
@@ -9377,41 +9130,26 @@
 										},
 										{
 											"key": "phone_number",
-											"value": "9646080802",
+											"value": "964608080288",
 											"type": "default"
 										},
 										{
-											"key": "two_factor_verification",
-											"value": "1",
+											"key": "register_type",
+											"value": "organization",
 											"type": "default"
 										},
 										{
 											"key": "organization_name",
-											"value": "organizatoin",
-											"type": "default"
-										},
-										{
-											"key": "vanity_link",
-											"value": "prepr",
-											"type": "default"
-										},
-										{
-											"key": "referal_code",
-											"value": "rajan20",
+											"value": "new org",
 											"type": "default"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/v1/auth/register",
-									"protocol": "http",
+									"raw": "{{localhost}}/api/v1/auth/register",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"{{localhost}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"v1",
@@ -9420,8 +9158,8 @@
 									]
 								}
 							},
-							"status": "Forbidden",
-							"code": 403,
+							"status": "Unprocessable Content",
+							"code": 422,
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
@@ -9430,11 +9168,11 @@
 								},
 								{
 									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:57:17 GMT"
+									"value": "Thu, 23 Mar 2023 03:09:20 GMT"
 								},
 								{
 									"key": "Date",
-									"value": "Wed, 15 Feb 2023 10:57:17 GMT"
+									"value": "Thu, 23 Mar 2023 03:09:20 GMT"
 								},
 								{
 									"key": "Connection",
@@ -9466,7 +9204,435 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"data\": {\n        \"phone_number\": [\n            \"This phone number already registered with us!\"\n        ]\n    }\n}"
+							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"errors\": {\n        \"username\": [\n            \"Username already taken,please choose another-one!\"\n        ],\n        \"email\": [\n            \"This email is already registered with us!\"\n        ],\n        \"phone_number\": [\n            \"This phone number already registered with us!\"\n        ]\n    }\n}"
+						},
+						{
+							"name": "Register - Phone Number Already Registered",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										},
+										{
+											"key": "username",
+											"value": "Rajandhanda",
+											"type": "default"
+										},
+										{
+											"key": "email",
+											"value": "rajan@prepr.org",
+											"type": "default"
+										},
+										{
+											"key": "first_name",
+											"value": "rajan",
+											"type": "default"
+										},
+										{
+											"key": "last_name",
+											"value": "dhand",
+											"type": "default"
+										},
+										{
+											"key": "password",
+											"value": "Prepr@123",
+											"type": "default"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "Prepr@123",
+											"type": "default"
+										},
+										{
+											"key": "device_platform",
+											"value": "web",
+											"type": "default"
+										},
+										{
+											"key": "user_type",
+											"value": "student",
+											"type": "default"
+										},
+										{
+											"key": "purpose",
+											"value": "looking_team",
+											"type": "default"
+										},
+										{
+											"key": "country_code",
+											"value": "+91",
+											"type": "default"
+										},
+										{
+											"key": "phone_number",
+											"value": "964608080288",
+											"type": "default"
+										},
+										{
+											"key": "register_type",
+											"value": "organization",
+											"type": "default"
+										},
+										{
+											"key": "organization_name",
+											"value": "new org",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{localhost}}/api/v1/auth/register",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Mar 2023 03:09:20 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Mar 2023 03:09:20 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"errors\": {\n        \"username\": [\n            \"Username already taken,please choose another-one!\"\n        ],\n        \"email\": [\n            \"This email is already registered with us!\"\n        ],\n        \"phone_number\": [\n            \"This phone number already registered with us!\"\n        ]\n    }\n}"
+						},
+						{
+							"name": "Registered - Provide Language",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "username",
+											"value": "Rajandhanda",
+											"type": "default"
+										},
+										{
+											"key": "email",
+											"value": "rajan@prepr.org",
+											"type": "default"
+										},
+										{
+											"key": "first_name",
+											"value": "rajan",
+											"type": "default"
+										},
+										{
+											"key": "last_name",
+											"value": "dhand",
+											"type": "default"
+										},
+										{
+											"key": "password",
+											"value": "Prepr@123",
+											"type": "default"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "Prepr@123",
+											"type": "default"
+										},
+										{
+											"key": "device_platform",
+											"value": "web",
+											"type": "default"
+										},
+										{
+											"key": "user_type",
+											"value": "student",
+											"type": "default"
+										},
+										{
+											"key": "purpose",
+											"value": "looking_team",
+											"type": "default"
+										},
+										{
+											"key": "country_code",
+											"value": "+91",
+											"type": "default"
+										},
+										{
+											"key": "phone_number",
+											"value": "964608080288",
+											"type": "default"
+										},
+										{
+											"key": "register_type",
+											"value": "organization",
+											"type": "default"
+										},
+										{
+											"key": "organization_name",
+											"value": "new org",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{localhost}}/api/v1/auth/register",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Mar 2023 03:11:12 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Mar 2023 03:11:12 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Please provide the language.\"\n}"
+						},
+						{
+							"name": "Registered - Provide Column",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										},
+										{
+											"key": "username",
+											"value": "Rajandhanda",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "email",
+											"value": "rajan@prepr.org",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "first_name",
+											"value": "rajan",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "last_name",
+											"value": "dhand",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "Prepr@123",
+											"type": "default"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "Prepr@123",
+											"type": "default"
+										},
+										{
+											"key": "device_platform",
+											"value": "web",
+											"type": "default"
+										},
+										{
+											"key": "user_type",
+											"value": "student",
+											"type": "default"
+										},
+										{
+											"key": "purpose",
+											"value": "looking_team",
+											"type": "default"
+										},
+										{
+											"key": "country_code",
+											"value": "+91",
+											"type": "default"
+										},
+										{
+											"key": "phone_number",
+											"value": "964608080288",
+											"type": "default"
+										},
+										{
+											"key": "register_type",
+											"value": "organization",
+											"type": "default"
+										},
+										{
+											"key": "organization_name",
+											"value": "new org",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{localhost}}/api/v1/auth/register",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Mar 2023 03:12:00 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Mar 2023 03:12:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"errors\": {\n        \"first_name\": [\n            \"First name require\"\n        ],\n        \"last_name\": [\n            \"Last name require\"\n        ],\n        \"username\": [\n            \"User name is require\"\n        ],\n        \"email\": [\n            \"Please enter email in email field\"\n        ],\n        \"phone_number\": [\n            \"This phone number already registered with us!\"\n        ]\n    }\n}"
 						}
 					]
 				},
@@ -12347,6 +12513,2020 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"success\": false,\n    \"message\": \"Please enter correct otp!\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Organization Api",
+			"item": [
+				{
+					"name": "Organization List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/v1/organization/?search=prepr&language=en",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"organization",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "prepr"
+								},
+								{
+									"key": "language",
+									"value": "en"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Organization List - Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/?language=en",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										""
+									],
+									"query": [
+										{
+											"key": "language",
+											"value": "en"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:47:30 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:47:30 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 25,\n            \"language\": \"en\",\n            \"name\": \"Prepr\",\n            \"slug\": \"prepr\",\n            \"description\": \"Describing the test cases of apis\",\n            \"cover_image\": null,\n            \"profile_image\": null,\n            \"website\": \"prepr.org\",\n            \"about\": \"testing\",\n            \"category\": 2,\n            \"status\": \"1\",\n            \"is_verified\": \"0\",\n            \"total_employees\": 12\n        },\n        {\n            \"id\": 26,\n            \"language\": \"en\",\n            \"name\": \"prepr _testsd\",\n            \"slug\": \"preprtestsd\",\n            \"description\": \"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour\",\n            \"cover_image\": \"https://preprlocaldevelopmentnew.s3.ca-central-1.amazonaws.com/organizations/upload/1680096704.webp\",\n            \"profile_image\": \"https://preprlocaldevelopmentnew.s3.ca-central-1.amazonaws.com/organizations/upload/1680096702.webp\",\n            \"website\": \"prepr.org\",\n            \"about\": \"testing\",\n            \"category\": 2,\n            \"status\": \"1\",\n            \"is_verified\": \"0\",\n            \"total_employees\": 12\n        }\n    ],\n    \"message\": \"Organisation view get successfully!\"\n}"
+						},
+						{
+							"name": "Organization List - Provide Language",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:56:26 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:56:26 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Please provide the language.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Organization",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNTU4ZDdkMjA3NTdhNjllYmU0N2M4MDBkNTkwMDEwMTBiNTFjZTEyMzYzNTE0Nzg0NDZiOTUwNDFlMTE4ZTRiNjM2YmEyNmY4ZTNmZGZmZTUiLCJpYXQiOjE2Nzk1MDQwOTEuMTIyODA3LCJuYmYiOjE2Nzk1MDQwOTEuMTIyODEyLCJleHAiOjE3MTExMjY0OTEuMTA3MDcxLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.TApX3Jxh_vtqMyuZaf0LoPhndpx-NcHDxiQfJ9COqJ4MGtP_A0ZkCo8s0Wa2x_pi0hkwGGJ6Sdrrs_uOeR5CNAf17UvWUTQ1ZHXZrFfrC-QWb0G9xv_bok0BSFiHIRMAcRJZHuqQnyZMdh_kotwvx0TjmLIpFOryHrB4HH6HwI2ni0jw_zAS0BEhgeDQlGmo4cOXgDdIc67t9a7jZPYwShVD2ebBk-5M2wQdaSoSsOvm8IW7xgBkNHNpG6B55Hr4YmuZBXHQgESsHIxKbHybq4vPk4qJXi1RzgX8UAb6Qiib1cv0SmRNm-uMF98mNyqgfUYuGMKTTo4hQwqso5CUpGtIbZGmc3TdaTpj9BuWv0pVIN_SvpdMOzFdCCWmH67Kuy7nI2LhKnUXBAIquEelqFqhE8SwxX_XChog3nnhzmbKlA74Cz4D2ButLlZuHtRdydx3uzmZvETkIoxV6SJ2tCT2fCPLjq7OwSFhmptZh-FfV05tlkPnHLRe9D4CcZuB-YgCkIcAQXXE0m-GdmoxnHWz8RHOfXr3Fzt_g8JWHh9njhcmemIgKtjzwJ3O8CrCPWQg40VlFvpgPRiXZzLbV-jtCge41BOGZTRZPIxFJ4cAcuZs4ozFgifJ1qSd1naW4rdFvmpCCDj44mMUDnXzMwtrMtfRVNnQLd1KyEq8CHo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"language\":\"en\",\r\n   \"name\":\"prep\",\r\n   \"description\":\"There are jected humour\",\r\n   \"website\":\"prepr.org\",\r\n   \"about\":\"testing\", \r\n   \"category\":\"2\",\r\n   \"status\":\"1\",\r\n   \"total_employees\":\"12\",\r\n   \"slug\":\"preprkk\",\r\n\"zipcode\":\"L6M 3N5\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/v1/organization/prepr/update",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"organization",
+								"prepr",
+								"update"
+							],
+							"query": [
+								{
+									"key": "language",
+									"value": "en",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "preprr",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "There are jected humour",
+									"disabled": true
+								},
+								{
+									"key": "website",
+									"value": "prepr.org",
+									"disabled": true
+								},
+								{
+									"key": "about",
+									"value": "testing ",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "total_employees",
+									"value": "12",
+									"disabled": true
+								},
+								{
+									"key": "total_employees",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "slug",
+									"value": "preprkk",
+									"disabled": true
+								},
+								{
+									"key": "zipcode",
+									"value": "L6M 3N5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Organization - Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"language\":\"en\",\r\n   \r\n   \"description\":\"There are jected humour\",\r\n   \"website\":\"prepr.org\",\r\n   \"about\":\"testing\", \r\n   \"category\":\"2\",\r\n   \"status\":\"1\",\r\n   \"total_employees\":\"12\",\r\n   \"slug\":\"preprkk\",\r\n\"zipcode\":\"L6M 3N5\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/prepr/update",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"prepr",
+										"update"
+									],
+									"query": [
+										{
+											"key": "language",
+											"value": "en",
+											"disabled": true
+										},
+										{
+											"key": "user_id",
+											"value": "5",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "preprr",
+											"disabled": true
+										},
+										{
+											"key": "description",
+											"value": "There are jected humour",
+											"disabled": true
+										},
+										{
+											"key": "website",
+											"value": "prepr.org",
+											"disabled": true
+										},
+										{
+											"key": "about",
+											"value": "testing ",
+											"disabled": true
+										},
+										{
+											"key": "category",
+											"value": "2",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "total_employees",
+											"value": "12",
+											"disabled": true
+										},
+										{
+											"key": "total_employees",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "slug",
+											"value": "preprkk",
+											"disabled": true
+										},
+										{
+											"key": "zipcode",
+											"value": "L6M 3N5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:57:18 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:57:18 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": null,\n    \"message\": \"Organization updated successfully!\"\n}"
+						},
+						{
+							"name": "Update Organization - Provide Language",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \r\n   \r\n   \"description\":\"There are jected humour\",\r\n   \"website\":\"prepr.org\",\r\n   \"about\":\"testing\", \r\n   \"category\":\"2\",\r\n   \"status\":\"1\",\r\n   \"total_employees\":\"12\",\r\n   \"slug\":\"preprkk\",\r\n\"zipcode\":\"L6M 3N5\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/prepr/update",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"prepr",
+										"update"
+									],
+									"query": [
+										{
+											"key": "language",
+											"value": "en",
+											"disabled": true
+										},
+										{
+											"key": "user_id",
+											"value": "5",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "preprr",
+											"disabled": true
+										},
+										{
+											"key": "description",
+											"value": "There are jected humour",
+											"disabled": true
+										},
+										{
+											"key": "website",
+											"value": "prepr.org",
+											"disabled": true
+										},
+										{
+											"key": "about",
+											"value": "testing ",
+											"disabled": true
+										},
+										{
+											"key": "category",
+											"value": "2",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "total_employees",
+											"value": "12",
+											"disabled": true
+										},
+										{
+											"key": "total_employees",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "slug",
+											"value": "preprkk",
+											"disabled": true
+										},
+										{
+											"key": "zipcode",
+											"value": "L6M 3N5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:57:51 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:57:51 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Please provide the language.\"\n}"
+						},
+						{
+							"name": "Update Organization - Not Registered company",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"language\":\"en\",\r\n   \"name\":\"prep\",\r\n   \"description\":\"There are jected humour\",\r\n   \"website\":\"prepr.org\",\r\n   \"about\":\"testing\", \r\n   \"category\":\"2\",\r\n   \"status\":\"1\",\r\n   \"total_employees\":\"12\",\r\n   \"slug\":\"preprkk\",\r\n\"zipcode\":\"L6M 3N5\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/preprs/update",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"preprs",
+										"update"
+									],
+									"query": [
+										{
+											"key": "language",
+											"value": "en",
+											"disabled": true
+										},
+										{
+											"key": "user_id",
+											"value": "5",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "preprr",
+											"disabled": true
+										},
+										{
+											"key": "description",
+											"value": "There are jected humour",
+											"disabled": true
+										},
+										{
+											"key": "website",
+											"value": "prepr.org",
+											"disabled": true
+										},
+										{
+											"key": "about",
+											"value": "testing ",
+											"disabled": true
+										},
+										{
+											"key": "category",
+											"value": "2",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "total_employees",
+											"value": "12",
+											"disabled": true
+										},
+										{
+											"key": "total_employees",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "slug",
+											"value": "preprkk",
+											"disabled": true
+										},
+										{
+											"key": "zipcode",
+											"value": "L6M 3N5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:58:17 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:58:17 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"This organization is not registered with us!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Organization",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "language",
+									"value": "en",
+									"type": "default"
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "name",
+									"value": "prepr",
+									"type": "default"
+								},
+								{
+									"key": "description",
+									"value": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
+									"type": "default"
+								},
+								{
+									"key": "profile_image",
+									"type": "file",
+									"src": "/C:/Users/Rajan/Downloads/APISec_photonphoto_AdobeStock.jpeg"
+								},
+								{
+									"key": "cover_image",
+									"type": "file",
+									"src": "/C:/Users/Rajan/Downloads/sanghu-resorts-gt-road-ludhiana.webp"
+								},
+								{
+									"key": "website",
+									"value": "prepr.org",
+									"type": "default"
+								},
+								{
+									"key": "about",
+									"value": "testing ",
+									"type": "default"
+								},
+								{
+									"key": "category",
+									"value": "2",
+									"type": "default"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "total_employees",
+									"value": "12",
+									"type": "default"
+								},
+								{
+									"key": "latitude",
+									"value": "43.467517",
+									"type": "default"
+								},
+								{
+									"key": "longitude",
+									"value": "-79.6876659",
+									"type": "default"
+								},
+								{
+									"key": "address",
+									"value": "Oakville, ON, Canada",
+									"type": "default"
+								},
+								{
+									"key": "city",
+									"value": "Oakville",
+									"type": "default"
+								},
+								{
+									"key": "state",
+									"value": "Ontario",
+									"type": "default"
+								},
+								{
+									"key": "country",
+									"value": "Canada",
+									"type": "default"
+								},
+								{
+									"key": "zip_code",
+									"value": "L6M 3N5",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/v1/organization/create",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"organization",
+								"create"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Organization- Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										},
+										{
+											"key": "user_id",
+											"value": "7",
+											"type": "default"
+										},
+										{
+											"key": "name",
+											"value": "prepr _testsd",
+											"type": "default"
+										},
+										{
+											"key": "description",
+											"value": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
+											"type": "default"
+										},
+										{
+											"key": "profile_image",
+											"type": "file",
+											"src": "/C:/Users/Rajan/Downloads/2019-11-30.jpg"
+										},
+										{
+											"key": "cover_image",
+											"type": "file",
+											"src": "/C:/Users/Rajan/Downloads/sanghu-resorts-gt-road-ludhiana.webp"
+										},
+										{
+											"key": "website",
+											"value": "prepr.org",
+											"type": "default"
+										},
+										{
+											"key": "about",
+											"value": "testing ",
+											"type": "default"
+										},
+										{
+											"key": "category",
+											"value": "2",
+											"type": "default"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"type": "default"
+										},
+										{
+											"key": "total_employees",
+											"value": "12",
+											"type": "default"
+										},
+										{
+											"key": "latitude",
+											"value": "43.467517",
+											"type": "default"
+										},
+										{
+											"key": "longitude",
+											"value": "-79.6876659",
+											"type": "default"
+										},
+										{
+											"key": "address",
+											"value": "Oakville, ON, Canada",
+											"type": "default"
+										},
+										{
+											"key": "city",
+											"value": "Oakville",
+											"type": "default"
+										},
+										{
+											"key": "state",
+											"value": "Ontario",
+											"type": "default"
+										},
+										{
+											"key": "country",
+											"value": "Canada",
+											"type": "default"
+										},
+										{
+											"key": "zip_code",
+											"value": "L6M 3N6",
+											"type": "default"
+										},
+										{
+											"key": "user_type",
+											"value": "organization",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "organization_name",
+											"value": "prepr",
+											"type": "default",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/create",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"create"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:31:44 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:31:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"name\": \"prepr _testsd\",\n        \"slug\": \"preprtestsd\"\n    },\n    \"message\": \"Organization created successfully!\"\n}"
+						},
+						{
+							"name": "Create Organization - Organization Name should be Unique",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										},
+										{
+											"key": "user_id",
+											"value": "7",
+											"type": "default"
+										},
+										{
+											"key": "name",
+											"value": "prepr _testsd",
+											"type": "default"
+										},
+										{
+											"key": "description",
+											"value": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
+											"type": "default"
+										},
+										{
+											"key": "profile_image",
+											"type": "file",
+											"src": "/C:/Users/Rajan/Downloads/2019-11-30.jpg"
+										},
+										{
+											"key": "cover_image",
+											"type": "file",
+											"src": "/C:/Users/Rajan/Downloads/sanghu-resorts-gt-road-ludhiana.webp"
+										},
+										{
+											"key": "website",
+											"value": "prepr.org",
+											"type": "default"
+										},
+										{
+											"key": "about",
+											"value": "testing ",
+											"type": "default"
+										},
+										{
+											"key": "category",
+											"value": "2",
+											"type": "default"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"type": "default"
+										},
+										{
+											"key": "total_employees",
+											"value": "12",
+											"type": "default"
+										},
+										{
+											"key": "latitude",
+											"value": "43.467517",
+											"type": "default"
+										},
+										{
+											"key": "longitude",
+											"value": "-79.6876659",
+											"type": "default"
+										},
+										{
+											"key": "address",
+											"value": "Oakville, ON, Canada",
+											"type": "default"
+										},
+										{
+											"key": "city",
+											"value": "Oakville",
+											"type": "default"
+										},
+										{
+											"key": "state",
+											"value": "Ontario",
+											"type": "default"
+										},
+										{
+											"key": "country",
+											"value": "Canada",
+											"type": "default"
+										},
+										{
+											"key": "zip_code",
+											"value": "L6M 3N6",
+											"type": "default"
+										},
+										{
+											"key": "user_type",
+											"value": "organization",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "organization_name",
+											"value": "prepr",
+											"type": "default",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/create",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"create"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:59:10 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:59:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Organization name should be unique!\"\n}"
+						},
+						{
+							"name": "Create Organization - Provide Language",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "user_id",
+											"value": "7",
+											"type": "default"
+										},
+										{
+											"key": "name",
+											"value": "prepr _testsd",
+											"type": "default"
+										},
+										{
+											"key": "description",
+											"value": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
+											"type": "default"
+										},
+										{
+											"key": "profile_image",
+											"type": "file",
+											"src": "/C:/Users/Rajan/Downloads/2019-11-30.jpg"
+										},
+										{
+											"key": "cover_image",
+											"type": "file",
+											"src": "/C:/Users/Rajan/Downloads/sanghu-resorts-gt-road-ludhiana.webp"
+										},
+										{
+											"key": "website",
+											"value": "prepr.org",
+											"type": "default"
+										},
+										{
+											"key": "about",
+											"value": "testing ",
+											"type": "default"
+										},
+										{
+											"key": "category",
+											"value": "2",
+											"type": "default"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"type": "default"
+										},
+										{
+											"key": "total_employees",
+											"value": "12",
+											"type": "default"
+										},
+										{
+											"key": "latitude",
+											"value": "43.467517",
+											"type": "default"
+										},
+										{
+											"key": "longitude",
+											"value": "-79.6876659",
+											"type": "default"
+										},
+										{
+											"key": "address",
+											"value": "Oakville, ON, Canada",
+											"type": "default"
+										},
+										{
+											"key": "city",
+											"value": "Oakville",
+											"type": "default"
+										},
+										{
+											"key": "state",
+											"value": "Ontario",
+											"type": "default"
+										},
+										{
+											"key": "country",
+											"value": "Canada",
+											"type": "default"
+										},
+										{
+											"key": "zip_code",
+											"value": "L6M 3N6",
+											"type": "default"
+										},
+										{
+											"key": "user_type",
+											"value": "organization",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "organization_name",
+											"value": "prepr",
+											"type": "default",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/create",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"create"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:01:34 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:01:34 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Please provide the language.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Organization Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZTdjNzkzYTE1NmY1M2E1YmEyMWY1ZmUzZDZhNzRmNmM0MGJkN2MyOTMxNzUzY2I2NjJlYTI3ZTRmNzk0MjM0ZTdhZDllYTcyMzcwZTYzOTUiLCJpYXQiOjE2Nzk5OTc4NzQuNjkwNTA2LCJuYmYiOjE2Nzk5OTc4NzQuNjkwNTEzLCJleHAiOjE3MTE2MjAyNzQuNjYzMTkzLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.DWPq5_5uY00pHeV4GFmBD5mXJ30KO4sGNZ7ACZ33aD6JPFm9YhovIC_PqwuIwGYN3qRZeIHK5GZeWgm-iJ0KbBRV_tXom1AOYKw9psUeoarF3J8BOUJ0hvZXuen3B7rWJ1xxB8w8b9THkot9LN6-mSCaCb8YsHc6TvGCMZE5i8iMtApw1SBvKsQWbYwCU97Pa-cXOXGTyjh_K--o63PXUItNvI1-i6567Or7vOKCfLJxiQA38zBr1g9SUKA3GoQA_2AJlHzXzwsWMYfttzVFJtuZLljGIL1qgI7HzoDFyYzJlHm7kuA1mwk9LsDskUpFLgeRqPj-0EzyiGeV6qlK9y_E9GOQUmXQxVp-M4BykhKmzEciAb4GlHfkF0lCsApr5KCiOovvMSN-rsY3xQnIR2DK7Bwloy8yTnwEAoHJEq4rpwTNdWGCBWQpf6I1py6wQ0Df9r9l4pKHSOTjjr0-x1ZvPNpPD33DE-ziY0_gajSFLycB6HrrW_tOMxCLSK8-FHceVzUHmGSSYWjyNu5_gnkFOfG5RWz14pv7Xnc6-lg95kOscsacwtRje1JlwL90B7PqUOWdQ0_QbvN8Ryu-bYcAW4wadv1revKEaXX_1mB2z_dRp0YvH4Ynk7iLFACcSI7igDCA5aVD3u5TS9B9a4EptNqHT62purC4931VQW8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/v1/organization/en/prepr/delete",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"organization",
+								"en",
+								"prepr",
+								"delete"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Organization Delete - Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"language\":\"en\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/prep/delete",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"prep",
+										"delete"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:07:32 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:07:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": null,\n    \"message\": \"Organization Deleted successfully!\"\n}"
+						},
+						{
+							"name": "Organization Delete - Not Registered company",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"language\":\"en\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/prep/delete",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"prep",
+										"delete"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:00:10 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:00:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": null,\n    \"message\": \"This organization is not registered with us!\"\n}"
+						},
+						{
+							"name": "Organization Delete - Provide Language",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/prep/delete",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"prep",
+										"delete"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:02:04 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:02:04 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Please provide the language.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Organization View",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "slug",
+									"value": "prepr",
+									"type": "default"
+								},
+								{
+									"key": "language",
+									"value": "en",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/v1/organization/view?language=en",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"organization",
+								"view"
+							],
+							"query": [
+								{
+									"key": "language",
+									"value": "en"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Organization View - Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "slug",
+											"value": "prepr",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/preprtestsd?language=en",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"preprtestsd"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "prep",
+											"disabled": true
+										},
+										{
+											"key": "language",
+											"value": "en"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:48:36 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 13:48:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 26,\n            \"language\": \"en\",\n            \"display_name\": null,\n            \"name\": \"prepr _testsd\",\n            \"slug\": \"preprtestsd\",\n            \"description\": \"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour\",\n            \"cover_image\": \"https://preprlocaldevelopmentnew.s3.ca-central-1.amazonaws.com/organizations/upload/1680096704.webp\",\n            \"profile_image\": \"https://preprlocaldevelopmentnew.s3.ca-central-1.amazonaws.com/organizations/upload/1680096702.webp\",\n            \"website\": \"prepr.org\",\n            \"about\": \"testing\",\n            \"category\": \"Polytechnic\",\n            \"status\": \"1\",\n            \"total_employees\": 12\n        }\n    ],\n    \"message\": \"Organization List Found!\"\n}"
+						},
+						{
+							"name": "Organization View - Not Registered with us",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "slug",
+											"value": "prepr",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/prepr_testsd?language=en",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"prepr_testsd"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "prep",
+											"disabled": true
+										},
+										{
+											"key": "language",
+											"value": "en"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:01:06 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:01:06 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": null,\n    \"message\": \"This organization is not registered with us!\"\n}"
+						},
+						{
+							"name": "Organization View - Provide Language",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "slug",
+											"value": "prepr",
+											"type": "default",
+											"disabled": true
+										},
+										{
+											"key": "language",
+											"value": "en",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/organization/prepr_testsd",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"organization",
+										"prepr_testsd"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "prep",
+											"disabled": true
+										},
+										{
+											"key": "language",
+											"value": "en",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:02:23 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 29 Mar 2023 14:02:23 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Please provide the language.\"\n}"
 						}
 					]
 				}

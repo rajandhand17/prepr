@@ -73,6 +73,7 @@
         })
         @endif
     }
+    
 </script>
 </body>
 </html>

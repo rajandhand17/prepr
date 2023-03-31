@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laratrust\Traits\LaratrustUserTrait;
+use App\Helpers\UtilityHelper;
+
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -58,6 +60,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    
 
     public function UserPersonal()
     {
@@ -69,9 +72,10 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class);
     }
 
+
     /**login apis */
     public function login($request)
-    {    
+    {
         try {
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
@@ -115,7 +119,7 @@ class User extends Authenticatable
 
     /**Verify two factor */
     public function verifyTwoFactor($request)
-    { 
+    {
         try {
             /**checking user exists or not */
             $user = User::where(['email' => $request->email, "otp" => $request->otp])->first();
@@ -126,7 +130,7 @@ class User extends Authenticatable
             } else {
                 $response = ['success' => false, 'code' => 1];
                 return $response;
-                
+
             }
         } catch (\Exception $e) {
             return false;
@@ -134,7 +138,7 @@ class User extends Authenticatable
     }
     /**Register user */
     public function register($request)
-    {    
+    {
         try {
             DB::beginTransaction();
             $name = $request->first_name . " " . $request->last_name;
@@ -156,25 +160,31 @@ class User extends Authenticatable
             $user->referal_code = $referencecode;
             $user->save();
             if ($user->id) {
-                $userpersonal = new UserPersonal();
-                $userpersonal->user_id = $user->id;
-                $userpersonal->purpose = $request->purpose;
-                $userpersonal->user_type = $request->user_type;
-                $userpersonal->save();
-                $usersetting = new UserSetting();
-                $usersetting->user_id = $user->id;
-                $usersetting->save();
-                $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
-                $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
-                if($mail){
-                    DB::commit();
-                    /**sending otp on registeres email */
-                    $userresponse=User::get()->where("email",$user->email);
-                    $success = ["success" => true, "user" => $userresponse];
-                    return $success;
+                if($request->register_type=="organization"){
+                    $organization=new Organization;
+                    $organization->slug=UtilityHelper::generateSlug($request->organization_name,$organization);
+                    $organization->user_id=$user->id;
+                    $organization->name=$request->organization_name;
+                    $organization->save();
+                    $request->user_type="employee";
+                }
+                $userpersonal = UserPersonal::create($user,$request);
+                $usersetting = UserSetting::create($user,$request);
+                if($userpersonal && $usersetting && $organization){
+                    $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
+                    $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
+                    if($mail){
+                        DB::commit();
+                        /**sending otp on registeres email */
+                        $userresponse=User::get()->where("email",$user->email);
+                        $success = ["success" => true, "user" => $userresponse];
+                        return $success;
+                    }
+                    DB::rollback();
+                    return ["success" => false, "message" => __('responses.failed_email')];
                 }
                 DB::rollback();
-                return ["success" => false, "message" => __('responses.failed_email')];
+                return ["success" => false, "message" => __('responses.failed_registeration')];
             }
             DB::rollback();
             return ["success" => false, "message" => __('responses.failed_registeration')];
@@ -225,7 +235,7 @@ class User extends Authenticatable
     }
 
     public function sendOtp($request)
-    {   
+    {
         try {
             /**getting records of user by using email */
             $user = User::where(["email" => $request->email])->first();
@@ -276,7 +286,7 @@ class User extends Authenticatable
     }
     /**Verify otp */
     public function verifyOtp($request)
-    {    
+    {
         try{
             /**get records of particular user by using email */
             $user = User::select("id", "otp", "verified_user", "country_code", "phone_number", "updated_at")->where(["email" => $request->email])->first();
@@ -303,7 +313,7 @@ class User extends Authenticatable
             } else {
                 $response=["success" => false, "message" =>__('responses.otp_correct_required'), "code" => 4];
                 return $response;
-               
+
             }
         } catch (\Exception $e) {
             return false;
@@ -325,7 +335,7 @@ class User extends Authenticatable
     }
     /**Forget Password */
     public function forgetPassword($request)
-    {   
+    {
         try {
             $user = User::where("email", $request->email)->first();
             if (!$user) {
@@ -350,7 +360,7 @@ class User extends Authenticatable
     }
     /**Reset password */
     public function resetPassword($request)
-    {    
+    {
         try {
             /**get records of particular user by using email */
             $user = User::where(["email" => $request->email])->first();
