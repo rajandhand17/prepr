@@ -138,7 +138,7 @@ class User extends Authenticatable
     }
     /**Register user */
     public function register($request)
-    {
+    { 
         try {
             DB::beginTransaction();
             $name = $request->first_name . " " . $request->last_name;

@@ -196,6 +196,20 @@
                         "description": "Enter the phone number for registered!",
                         "required": true,
                         "explode": true
+                    },
+                    {
+                        "name": "organization_name",
+                        "in": "query",
+                        "description": "Enter the organization name for registered!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "register_type",
+                        "in": "query",
+                        "description": "Enter the register type for registered!",
+                        "required": true,
+                        "explode": true
                     }
                 ],
                 "responses": {
@@ -1329,7 +1343,7 @@
                 ],
                 "summary": "Finds lists of Organization List",
                 "description": "Get all the Organization List",
-                "operationId": "list",
+                "operationId": "view",
                 "parameters": [
                     {
                         "name": "language",
@@ -1738,7 +1752,7 @@
                 ],
                 "summary": "View Organization with different parameters",
                 "description": "View Organization with different parameters",
-                "operationId": "view",
+                "operationId": "list",
                 "parameters": [
                     {
                         "name": "language",
@@ -1781,5 +1795,54 @@
                 }
             }
         }
-    }
+    },
+    "components": {
+        "securitySchemes": {
+            "api_key_security_example": {
+                "type": "apiKey",
+                "description": "A short description for security scheme",
+                "name": "api_key",
+                "in": "header"
+            },
+            "oauth2_security_example": {
+                "type": "oauth2",
+                "description": "A short description for oauth2 security scheme.",
+                "flow": "implicit",
+                "authorizationUrl": "http://example.com/auth",
+                "scopes": {
+                    "read:projects": "read your projects",
+                    "write:projects": "modify projects in your account"
+                }
+            },
+            "passport": {
+                "type": "oauth2",
+                "description": "Laravel passport oauth2 security.",
+                "in": "header",
+                "scheme": "https",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://localhost/oauth/authorize",
+                        "tokenUrl": "http://localhost/oauth/token",
+                        "refreshUrl": "http://localhost/token/refresh",
+                        "scopes": []
+                    }
+                }
+            },
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        {
+            "oauth2_security_example": [
+                "read",
+                "write"
+            ],
+            "passport": []
+        }
+    ]
 }

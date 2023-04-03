@@ -156,7 +156,7 @@ return [
                 /*
                  * Examples of Security schemes
                 */
-                /*
+                
                 'api_key_security_example' => [ // Unique name of security
                     'type' => 'apiKey', // The type of the security scheme. Valid values are "basic", "apiKey" or "oauth2".
                     'description' => 'A short description for security scheme',
@@ -174,9 +174,9 @@ return [
                         'write:projects' => 'modify projects in your account',
                     ]
                 ],
-                */
+                
 
-                /* Open API 3.0 support
+               //  Open API 3.0 support
                 'passport' => [ // Unique name of security
                     'type' => 'oauth2', // The type of the security scheme. Valid values are "basic", "apiKey" or "oauth2".
                     'description' => 'Laravel passport oauth2 security.',
@@ -197,21 +197,20 @@ return [
                     'name' => 'Authorization', // The name of the header or query parameter to be used.
                     'in' => 'header', // The location of the API key. Valid values are "query" or "header".
                 ],
-                */
+                
             ],
             'security' => [
                 /*
                  * Examples of Securities
                 */
                 [
-                    /*
                     'oauth2_security_example' => [
                         'read',
                         'write'
                     ],
 
                     'passport' => []
-                    */
+                    
                 ],
             ],
         ],

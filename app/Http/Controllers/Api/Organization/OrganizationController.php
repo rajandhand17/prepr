@@ -19,9 +19,9 @@ class OrganizationController extends AppBaseController
         $this->organizationRepository = $organizationRepository;
     }
     
- 
+    
     /**
-     * @OA\Get(
+   * @OA\Get(
      *     path="/api/v1/organization/{language}/{slug}",
      *     tags={"Organization API - Organization List"},
      *     summary="Finds lists of Organization List",
@@ -70,7 +70,7 @@ class OrganizationController extends AppBaseController
           $organization=$this->organizationRepository->view($slug,$request->language);
           if($organization==="not_exists"){
             return $this->sendResponse(null,__('responses.organization_not_exists'));
-        }
+         }
           if ($organization) { 
             return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
           }
@@ -78,7 +78,7 @@ class OrganizationController extends AppBaseController
          
        } catch (\Exception $e){ 
          return $this->sendError(__('responses.send_error'), 500);
-     }
+       }
     }
     
     /**
