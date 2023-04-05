@@ -2981,5 +2981,9 @@
     "responses.role_assigned_failed":"Role assigned failed!",
     "responses.role_removed_sucessfully":"Role assigned successfully!",
     "responses.role_removed_failed":"Role assigned failed!",
-    "responses.register_type_required":"Register type required!"
+    "responses.register_type_required":"Register type required!",
+    "responses.member_manager_found":"Member manager list found!",
+    "responses.member_manager_not_found":"Member manager not found!",
+    "responses.member_manager_delete":"Member manager deleted!",
+    "responses.member_manager_not_delete":"Member manager not deleted!"
 }

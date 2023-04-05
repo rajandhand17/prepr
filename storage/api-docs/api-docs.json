@@ -1371,12 +1371,7 @@
                     "500": {
                         "description": "Internal server error!"
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             }
         },
         "/api/v1/organization/create": {
@@ -1798,24 +1793,8 @@
     },
     "components": {
         "securitySchemes": {
-            "api_key_security_example": {
-                "type": "apiKey",
-                "description": "A short description for security scheme",
-                "name": "api_key",
-                "in": "header"
-            },
-            "oauth2_security_example": {
-                "type": "oauth2",
-                "description": "A short description for oauth2 security scheme.",
-                "flow": "implicit",
-                "authorizationUrl": "http://example.com/auth",
-                "scopes": {
-                    "read:projects": "read your projects",
-                    "write:projects": "modify projects in your account"
-                }
-            },
             "passport": {
-                "type": "oauth2",
+                "type": "basic",
                 "description": "Laravel passport oauth2 security.",
                 "in": "header",
                 "scheme": "https",
@@ -1835,14 +1814,5 @@
                 "in": "header"
             }
         }
-    },
-    "security": [
-        {
-            "oauth2_security_example": [
-                "read",
-                "write"
-            ],
-            "passport": []
-        }
-    ]
+    }
 }

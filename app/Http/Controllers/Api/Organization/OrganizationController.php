@@ -26,7 +26,6 @@ class OrganizationController extends AppBaseController
      *     tags={"Organization API - Organization List"},
      *     summary="Finds lists of Organization List",
      *     description="Get all the Organization List",
-     *     security={{"bearerAuth":{}}},
      *     operationId="view",
      *     @OA\Parameter(
      *         name="language",
