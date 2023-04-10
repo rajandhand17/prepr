@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('member_managements', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['0', '1', '2'])->comment('0=>invite,1=>join_request,2=>auto_created');
-            $table->enum('invite_type', ['0', '1', '2'])->comment('0=>email,1=>network,2=>other');
+            $table->enum('invite_type', ['0', '1', '2','3'])->comment('0=>email,1=>network,2=>join_request','auto_created'); 
             $table->bigInteger('module_id');
             $table->enum('module_type', ['0', '1', '2', '3'])->comment('0=>organisation,1=>lab,2=>challenge,3=>project');
             $table->bigInteger('inviter_id')->comment('if join request auto add the component user id');

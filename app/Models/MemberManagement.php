@@ -73,8 +73,18 @@ class MemberManagement extends Model
             }else{
                 return false;
             }
-        } catch (\Exception $e){
+        }catch (\Exception $e){
             return false;        
         }
+    }
+
+    public function create($component,$slug,$request)
+    {
+       try{
+         $member_manger=new MemberManagement();
+
+       } catch (\Exception $e) {
+        return false;      
+       }
     }
 }
