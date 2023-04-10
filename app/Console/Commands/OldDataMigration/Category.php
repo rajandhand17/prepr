@@ -8,7 +8,7 @@ use App\Models\Category as Categories;
 
 class Category extends Command
 {
-    /** 
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -68,7 +68,7 @@ class Category extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

@@ -46,7 +46,7 @@ class Skills extends Command
 
             $skills = DB::connection('mysql2')->table('skills')->get();
             if($skills->count() > 0){
-                
+
                 foreach ($skills as $key => $single_skill){
                    $skills_details=[
                         'name' => $single_skill->skill,
@@ -55,7 +55,7 @@ class Skills extends Command
                     $check_skills = Skill::where($skills_details)->first();
                     if(!$check_skills){
                         Skill::create($skills_details);
-                    } 
+                    }
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skills table completed.');
@@ -66,7 +66,7 @@ class Skills extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

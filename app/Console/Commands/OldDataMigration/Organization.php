@@ -62,7 +62,7 @@ class Organization extends Command
                         'profile_image' => $single_organization->profile_image,
                         'website' => $single_organization->website,
                     ];
-                  
+
                     $check_organization = Organizations::where(["name"=>$single_organization->name])->first();
                     if(!$check_organization){
                         $organization_create=Organizations::create($organization_details);
@@ -79,11 +79,11 @@ class Organization extends Command
                                         'country'=>$detailed->country,
                                         'zip_code'=>$detailed->postal_code,
                              ];
-                            $organization_address_create=OrganizationAddress::create($organization_address);   
+                            $organization_address_create=OrganizationAddress::create($organization_address);
                             }
                             if($single_organization->facebook!==null){
                                 $getid=SocialLink::where("name","Facebook")->first();
-                             
+
                                 $social_data=[
                                     "organization_id"=>$organization_create->id,
                                     "social_media_link"=>$single_organization->facebook,
@@ -120,9 +120,9 @@ class Organization extends Command
             $this->error('No organizations found.');
 
         } catch (\Exception $e) {
-           
+
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }
