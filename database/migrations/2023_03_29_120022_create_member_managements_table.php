@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('module_type', ['0', '1', '2', '3'])->comment('0=>organisation,1=>lab,2=>challenge,3=>project');
             $table->bigInteger('inviter_id')->comment('if join request auto add the component user id');
             $table->bigInteger('invitee_id')->nullable();
-            $table->unsignedBigInteger('role')->nullable();
+            $table->string('role')->nullable();
             $table->enum('invite_status', ['0', '1', '2', '3','4'])->default('2')->comment('0=>invited,1=>accepted,2=>pending,3=>declined 4 auto_created');
             $table->string('email')->nullable();
             $table->enum('email_status', ['0', '1', '2', '3'])->default('2')->comment('0=>scheduled 1 => sent, 2=>fail');

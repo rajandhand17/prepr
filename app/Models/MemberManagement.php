@@ -81,9 +81,36 @@ class MemberManagement extends Model
     public function create($component,$slug,$request)
     {
        try{
-         $member_manger=new MemberManagement();
+        if($component=="organisation"){
+            $component="0";
+            $module_id=Organization::select('id')->where("slug",$slug)->first()->id;
+        }else{
+            $module_id=""; 
+        } 
+          $member_manger=new MemberManagement();
+          $member_manger->type=$request->type;
+          $member_manger->invite_type=$request->invite_type;
+          $member_manger->module_id=$request->module_id;
+          $member_manger->module_type=$request->module_type;
+          $member_manger->inviter_id=$request->inviter_id;
+  //        $member_manger->invitee_id=$request->invitee_id;
+          $member_manger->role=$request->role;
+          $member_manger->invite_status=$request->invite_status;
+          $member_manger->email=$request->email;
+          $member_manger->email_status=$request->email_status;
+//          $member_manger->email_response=$request->email_response;
+   //       $member_manger->email_resend_status=$request->email_resend_status;
+          $member_manger->email_resend_count=$request->email_resend_count;
+          $member_manger->subject_line=$request->subject_line;
+          $member_manger->email_body=$request->email_body;
+          $member_manger->save();
+          return $member_manger->id;
+          if($member_manger->id){
+             return true; 
+          }
 
        } catch (\Exception $e) {
+        return $e;
         return false;      
        }
     }

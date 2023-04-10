@@ -47,6 +47,7 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
+            dd($member_mangement);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
