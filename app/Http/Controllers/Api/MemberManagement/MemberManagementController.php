@@ -10,28 +10,30 @@ use App\Http\Resources\MemberManagement\MemberManagementResource;
 
 class MemberManagementController extends AppBaseController
 {   
-    private $MemberManagementRepository;
-    public function __construct(MemberManagementRepository $MemberManagementRepository)
+    private $memberManagementRepository;
+    public function __construct(MemberManagementRepository $memberManagementRepository)
     {
-        $this->MemberManagementRepository = $MemberManagementRepository;
+        $this->memberManagementRepository = $memberManagementRepository;
     }
-    public function view(Request $request)
-    {  
+    
+    public function index($component,$slug)
+    {   
         try {
-            $member_mangement = $this->MemberManagementRepository->view($request->language);
+            $member_mangement = $this->memberManagementRepository->index($component,$slug);
             if($member_mangement){
                   return $this->sendResponse(MemberManagementResource::collection($member_mangement), __('responses.member_manager_found'));
             }
             return $this->sendError(__('responses.member_manager_not_found'));
         }catch (\Exception $e){
+            
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function delete($slug,Request $request)
-    {
+    public function deleteMultiple($component,$slug,Request $request)
+    {   
         try {
-            $member_mangement=$this->MemberManagementRepository->delete($slug,$request->language);
+            $member_mangement=$this->memberManagementRepository->deleteMultiple($component,$slug,$request);
             if($member_mangement){
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
                }
@@ -41,15 +43,11 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function deleteMultiple(Request $request)
+    public function create($component,$slug,Request $request)
     {
         try {
-            $member_mangement=$this->MemberManagementRepository->deleteMultiple($request->slug);
-            if($member_mangement){
-                return $this->sendResponse(null, __('responses.member_manager_delete'));
-               }
-               return $this->sendError(__('responses.member_manager_not_delete'));
-        }catch(\Exception $e){
+            $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

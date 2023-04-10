@@ -3,7 +3,7 @@ namespace App\Repositories\Api\MemberManagement;
 
 Interface MemberManagementInterface{
    
-    public function view($language);
-    public function delete($slug,$language);
-    public function deleteMultiple($slug);
+    public function index($component,$slug);
+    public function deleteMultiple($component,$slug,$request);
+    public function create($component,$slug,$request);
 }

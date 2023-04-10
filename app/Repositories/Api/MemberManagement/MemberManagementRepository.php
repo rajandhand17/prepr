@@ -11,31 +11,31 @@ class MemberManagementRepository implements MemberManagementInterface{
    {
       $this->member_mangement=$member_mangement;
    }
-    public function view($language)
+    public function index($component,$slug)
     {  
         try{
-            return $this->member_mangement->view($language);
+            return $this->member_mangement->index($component,$slug);
          }
          catch (\Exception $e){
             return false;
          }   
     }
 
-    public function delete($slug,$language)
+    public function deleteMultiple($component,$slug,$request)
     {
         try {
-            return $this->member_mangement->deletes($slug,$language);
-        }catch(\Exception $e) {
-            return $e;
+            return $this->member_mangement->deleteMultiple($component,$slug,$request);
+        } catch (\Exception $e) {
+            return false;
         }
     }
-    
-    public function deleteMultiple($slug)
+
+    public function create($component,$slug,$request)
     {
         try {
-            return $this->member_mangement->deleteMultiple($slug);
+            return $this->member_mangement->create($component,$slug,$request);
         } catch (\Exception $e) {
-            return $e;
+            return false;
         }
     }
 }
