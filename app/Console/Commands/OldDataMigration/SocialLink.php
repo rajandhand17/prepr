@@ -46,7 +46,7 @@ class SocialLink extends Command
 
             $social_link = DB::connection('mysql2')->table('social_link')->get();
             if($social_link->count() > 0){
-                
+
                 foreach ($social_link as $key => $single_social_link){
                    $social_link_details=[
                         'name' => $single_social_link->link_name,
@@ -56,7 +56,7 @@ class SocialLink extends Command
                     if(!$check_skills){
                         Link::create($social_link_details);
                     }
-                  
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for social link table completed.');
@@ -67,7 +67,7 @@ class SocialLink extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

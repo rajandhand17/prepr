@@ -4,7 +4,7 @@ namespace App\Console\Commands\OldDataMigration;
 
 use Illuminate\Console\Command;
 use DB;
-use App\Models\ProjectStatus as Status; 
+use App\Models\ProjectStatus as Status;
 
 class ProjectStatus extends Command
 {
@@ -46,7 +46,7 @@ class ProjectStatus extends Command
 
             $project_status = DB::connection('mysql2')->table('project_status')->get();
             if($project_status->count() > 0){
-                
+
                 foreach ($project_status as $key => $single_status){
                    $project_status_details=[
                         'name' => $single_status->name,
@@ -66,7 +66,7 @@ class ProjectStatus extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

@@ -46,7 +46,7 @@ class SkillStack extends Command
 
             $skill_stack = DB::connection('mysql2')->table('skill_stacks')->get();
             if($skill_stack->count() > 0){
-                
+
                 foreach ($skill_stack as $key => $single_skill_stack){
                    $skill_stack_details=[
                         'title' => $single_skill_stack->title,
@@ -59,7 +59,7 @@ class SkillStack extends Command
                     if(!$check_skills){
                         SkillStacks::create($skill_stack_details);
                     }
-                  
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skill stack table completed.');
@@ -70,7 +70,7 @@ class SkillStack extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

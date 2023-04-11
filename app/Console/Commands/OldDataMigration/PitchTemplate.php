@@ -46,7 +46,7 @@ class PitchTemplate extends Command
 
             $pitch_templates = DB::connection('mysql2')->table('pitch_templates')->get();
             if($pitch_templates->count() > 0){
-                 
+
                 foreach ($pitch_templates as $key => $single_pitch_templates){
                    $pitch_templates_details=[
                         'title' => $single_pitch_templates->title,
@@ -56,7 +56,7 @@ class PitchTemplate extends Command
                     if(!$check_pitch_templates){
                         PitchTemplates::create($pitch_templates_details);
                     }
-                  
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for pitch template table completed.');
@@ -67,7 +67,7 @@ class PitchTemplate extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

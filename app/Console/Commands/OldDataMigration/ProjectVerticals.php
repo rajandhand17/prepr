@@ -46,7 +46,7 @@ class ProjectVerticals extends Command
 
             $project_verticals = DB::connection('mysql2')->table('project_verticals')->get();
             if($project_verticals->count() > 0){
-                
+
                 foreach ($project_verticals as $key => $single_verticals){
                    $project_verticals_details=[
                         'name' => $single_verticals->name,
@@ -56,7 +56,7 @@ class ProjectVerticals extends Command
                     if(!$check_project_verticals){
                         ProjectVertical::create($project_verticals_details);
                     }
-                  
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project verticals table completed.');
@@ -67,7 +67,7 @@ class ProjectVerticals extends Command
 
         } catch (\Exception $e) {
           DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

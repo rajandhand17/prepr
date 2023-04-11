@@ -68,7 +68,7 @@ class Languages extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

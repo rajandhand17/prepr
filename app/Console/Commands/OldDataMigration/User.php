@@ -11,14 +11,14 @@ use DB;
 use PhpParser\Builder\Class_;
 
 Class User extends Command
-{  
+{
      /**
      * The name and signature of the console command.
      *
      * @var string
      */
     protected $signature = 'migrate-old-data:users';
-    
+
     /**
      * The console command description.
      *
@@ -61,9 +61,9 @@ Class User extends Command
                     }else{
                          $twofactor=0;
                     }
-                     
+
                    $users_details=[
-                        'preferred_language'=>$language,    
+                        'preferred_language'=>$language,
                         'first_name' => $single_user->first_name,
                         'last_name' => $single_user->last_name,
                         'full_name' => $single_user->name,
@@ -115,9 +115,9 @@ Class User extends Command
                             }
                     }
                     $users_personal = DB::connection('mysql2')->table('user_personals')->where("user_id",$single_user->id)->first();
-                    if($users_personal->count() > 0){                       
+                    if($users_personal->count() > 0){
                         $users_personal_details=[
-                            'user_id'=>$single_user->user_id,    
+                            'user_id'=>$single_user->user_id,
                             'about' => $users_personal->about,
                             'gender' => $users_personal->gender,
                             'date_of_birth' => $users_personal->date_of_birth,
@@ -134,7 +134,7 @@ Class User extends Command
                               UserPersonal::create($users_personal_details);
                         }
                     }
-                    
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for users table completed.');
@@ -145,7 +145,7 @@ Class User extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }
