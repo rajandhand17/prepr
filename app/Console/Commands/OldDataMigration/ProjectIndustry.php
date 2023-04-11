@@ -46,7 +46,7 @@ class ProjectIndustry extends Command
 
             $project_industry = DB::connection('mysql2')->table('project_industry')->get();
             if($project_industry->count() > 0){
-                 
+
                 foreach ($project_industry as $key => $single_industry){
                    $project_industry_details=[
                         'name' => $single_industry->name,
@@ -56,7 +56,7 @@ class ProjectIndustry extends Command
                     if(!$check_project_industry){
                         Industry::create($project_industry_details);
                     }
-                  
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project industry table completed.');
@@ -67,7 +67,7 @@ class ProjectIndustry extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

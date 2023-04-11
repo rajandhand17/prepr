@@ -38,7 +38,6 @@ class AuthRepository implements AuthInterface{
             return $this->user->register($request);
          }
          catch (\Exception $e){
-
             return false;
          }
     }

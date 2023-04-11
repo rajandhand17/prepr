@@ -46,7 +46,7 @@ class ProjectType extends Command
 
             $project_type = DB::connection('mysql2')->table('project_type')->get();
             if($project_type->count() > 0){
-                
+
                 foreach ($project_type as $key => $single_type){
                    $project_type_details=[
                         'name' => $single_type->name,
@@ -56,7 +56,7 @@ class ProjectType extends Command
                     if(!$check_project_type){
                         Type::create($project_type_details);
                     }
-                  
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project type table completed.');
@@ -67,7 +67,7 @@ class ProjectType extends Command
 
         } catch (\Exception $e) {
           DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

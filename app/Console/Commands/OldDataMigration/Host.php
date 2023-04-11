@@ -46,7 +46,7 @@ class Host extends Command
 
             $hosts = DB::connection('mysql2')->table('hosts')->get();
             if($hosts->count() > 0){
-                
+
                 foreach ($hosts as $key => $single_host){
                    $hosts_details=[
                         'name' => $single_host->name,
@@ -57,7 +57,7 @@ class Host extends Command
                     if(!$check_hosts){
                         Hosts::create($hosts_details);
                     }
-                  
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for hosts table completed.');
@@ -68,7 +68,7 @@ class Host extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

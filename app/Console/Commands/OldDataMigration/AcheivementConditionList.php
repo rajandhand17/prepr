@@ -8,7 +8,7 @@ use App\Models\AchievementConditionList as AchievementConditionLists;
 
 class AcheivementConditionList extends Command
 {
-    /** 
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -16,7 +16,7 @@ class AcheivementConditionList extends Command
     protected $signature = 'migrate-old-data:achievement-condition-list';
 
     /**
-     * The console command description.  
+     * The console command description.
      *
      * @var string
      */
@@ -45,7 +45,7 @@ class AcheivementConditionList extends Command
             DB::beginTransaction();
 
             $achievement_condition_list = DB::connection('mysql2')->table('achievement_condition_lists')->get();
-             
+
             if($achievement_condition_list->count() > 0){
                 foreach ($achievement_condition_list as $key => $single_acheivement_condition_list){
                     $achievement_condition_list_details=[
@@ -65,7 +65,7 @@ class AcheivementConditionList extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            $this->error('Something went wrong.');
+            $this->error($e->getMessage());
             return;
         }
     }

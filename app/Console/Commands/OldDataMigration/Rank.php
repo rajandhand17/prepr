@@ -46,7 +46,7 @@ class Rank extends Command
 
             $ranks = DB::connection('mysql2')->table('ranks')->get();
             if($ranks->count() > 0){
-                
+
                 foreach ($ranks as $key => $single_rank){
                    $rank_details=[
                         'name' => $single_rank->name,
@@ -63,7 +63,7 @@ class Rank extends Command
                     if(!$check_ranks){
                         Ranks::create($rank_details);
                     }
-                  
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for ranks table completed.');
@@ -73,8 +73,8 @@ class Rank extends Command
             $this->error('No ranks found.');
 
         } catch (\Exception $e) {
-           DB::rollback();
-            $this->error('Something went wrong.');
+            DB::rollback();
+            $this->error($e->getMessage());
             return;
         }
     }
