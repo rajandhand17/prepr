@@ -161,7 +161,7 @@ class User extends Authenticatable
             $user->save();
             if ($user->id) {
                 if($request->register_type=="organization"){
-                    $organization=new Organization;
+                    $organization = new Organization;
                     $organization->slug=UtilityHelper::generateSlug($request->organization_name,$organization);
                     $organization->user_id=$user->id;
                     $organization->name=$request->organization_name;
@@ -170,7 +170,7 @@ class User extends Authenticatable
                 }
                 $userpersonal = UserPersonal::create($user,$request);
                 $usersetting = UserSetting::create($user,$request);
-                if($userpersonal && $usersetting && $organization){
+                if($userpersonal && $usersetting){
                     $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                     $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
                     if($mail){
