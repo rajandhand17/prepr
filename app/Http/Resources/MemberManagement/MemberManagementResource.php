@@ -27,8 +27,10 @@ class MemberManagementResource extends JsonResource
             'join_request_status' => $this->join_request_status,
             'auto_invite_status' => $this->auto_invite_status,
             'user_status' => $this->user_status,
+            "user_name"=>$this->user->full_name,
+            "user_profile_image"=>$this->user->profile_image,
         ];
-
+   
         if($this->type==0){
             $arrayData['type']="Invite";
         }
@@ -79,6 +81,8 @@ class MemberManagementResource extends JsonResource
         if($this->invite_status==4){
             $arrayData['invite_status']="auto_created";
         }
+
+
         return $arrayData;
         
     }

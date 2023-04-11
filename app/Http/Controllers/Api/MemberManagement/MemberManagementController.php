@@ -19,33 +19,33 @@ class MemberManagementController extends AppBaseController
         $this->memberManagementRepository = $memberManagementRepository;
     }
     
-    public function index($component,$slug)
-    {   
+    public function index($component,$slug,Request $request)
+    {     
         try {
-            $member_mangement = $this->memberManagementRepository->index($component,$slug);
+            $member_mangement = $this->memberManagementRepository->index($component,$slug,$request);
             if($member_mangement){
-                  return $this->sendResponse(MemberManagementResource::collection($member_mangement), __('responses.member_manager_found'));
+              return $this->sendResponse(MemberManagementResource::collection($member_mangement), __('responses.member_manager_found'));
             }
-            return $this->sendError(__('responses.member_manager_not_found'));
+            return $this->sendError(__('responses.member_manager_not_found'),500);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function deleteMultiple($component,$slug,DeleteMemberManagementRequest $request)
+    public function delete($component,$slug,Request $request)
     {   
         try {
-            $member_mangement=$this->memberManagementRepository->deleteMultiple($component,$slug,$request);
+            $member_mangement=$this->memberManagementRepository->delete($component,$slug,$request);
             if($member_mangement){
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
                }
-               return $this->sendError(__('responses.member_manager_not_delete'));
+               return $this->sendError(__('responses.member_manager_not_delete'),500);
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function create($component,$slug,CreateMemberManagementRequest $request)
+    public function create($component,$slug,Request $request)
     {
         try {
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
@@ -58,16 +58,16 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function uploadCsv($component,$slug,UploadCsvFileMemberManagementRequest $request)
-    { 
-        try {
-            $member_mangement=$this->memberManagementRepository->uploadCsv($component,$slug,$request);
-            if($member_mangement){
-                return $this->sendResponse(null, __('responses.create_member_manger_csv_success'));
-               }
-               return $this->sendError(__('responses.create_member_manger_csv_failed'));
-        } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
+    // public function uploadCsv($component,$slug,UploadCsvFileMemberManagementRequest $request)
+    // { 
+    //     try {
+    //         $member_mangement=$this->memberManagementRepository->uploadCsv($component,$slug,$request);
+    //         if($member_mangement){
+    //             return $this->sendResponse(null, __('responses.create_member_manger_csv_success'));
+    //            }
+    //            return $this->sendError(__('responses.create_member_manger_csv_failed'));
+    //     } catch (\Exception $e) {
+    //         return $this->sendError(__('responses.send_error'), 500);
+    //     }
+    // }
 }

@@ -14,20 +14,20 @@ class MemberManagementRepository implements MemberManagementInterface{
       $this->member_mangement=$member_mangement;
       $this->member_mangement_csv=$member_mangement_csv;
    }
-    public function index($component,$slug)
+    public function index($component,$slug,$request)
     {  
         try{
-            return $this->member_mangement->index($component,$slug);
+            return $this->member_mangement->index($component,$slug,$request);
          }
          catch (\Exception $e){
             return false;
          }   
     }
 
-    public function deleteMultiple($component,$slug,$request)
+    public function delete($component,$slug,$request)
     {
         try {
-            return $this->member_mangement->deleteMultiple($component,$slug,$request);
+            return $this->member_mangement->deletes($component,$slug,$request);
         } catch (\Exception $e) {
             return false;
         }

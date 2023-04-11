@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('member_managements', function (Blueprint $table) {
+        Schema::create('member_management', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['0', '1', '2'])->comment('0=>invite,1=>join_request,2=>auto_created');
             $table->enum('invite_type', ['0', '1', '2','3'])->comment('0=>email,1=>network,2=>join_request','auto_created'); 
@@ -43,6 +43,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('member_managements');
+        Schema::dropIfExists('member_management');
     }
 };
