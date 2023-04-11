@@ -2985,5 +2985,22 @@
     "responses.member_manager_found":"Member manager list found!",
     "responses.member_manager_not_found":"Member manager not found!",
     "responses.member_manager_delete":"Member manager deleted!",
-    "responses.member_manager_not_delete":"Member manager not deleted!"
+    "responses.member_manager_not_delete":"Member manager not deleted!",
+    "responses.member_manager_id_required":"Please enter Member manager Id!",
+    "responses.member_manager_not_exists":"All Member manager Ids are not exists!",
+    "responses.create_member_manger_success":"Member Manager created successfully!",
+    "responses.create_member_manger_failed":"Member Manager creation failed!",
+    "responses.type_required":"Member Manager type required!",
+    "responses.invite_type_required" :"Member Manager invite type required!",
+    "responses.module_id_required" :"Member Manager module id required!",
+    "responses.module_type_required":"Member Manager module type required!",
+    "responses.inviter_id_required":"Member Manager inviter id required!",
+    "responses.invitee_id_required":"Member Manager invitee id required!",
+    "responses.invite_status_required":"Member Manager invite status required!",
+    "responses.email_required":"Member Manager email required!",
+    "responses.email_status_required":"Member Manager email status required!",
+    "responses.subject_line_required":"Member Manager subject line required!",
+    "responses.email_body_required":"Member Manager email body required!",
+    "responses.csv_upload":"Please choose csv type only",
+    "responses.csv_required":"Please choose csv file, Its required"
 }
