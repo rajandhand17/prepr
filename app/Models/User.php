@@ -60,7 +60,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-    
+
 
     public function UserPersonal()
     {
@@ -189,6 +189,7 @@ class User extends Authenticatable
             DB::rollback();
             return ["success" => false, "message" => __('responses.failed_registeration')];
         } catch (\Exception $e) {
+            dd($e);
             DB::rollback();
             return ["success" => false, "message" => 'Something went wrong.'];
         }
