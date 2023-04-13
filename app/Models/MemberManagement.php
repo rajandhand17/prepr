@@ -13,9 +13,10 @@ class MemberManagement extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'member_managements';
+    protected $table = 'member_management';
 
     protected $fillable = [
+        'type',
         'invite_type',
         'module_id',
         'module_type',
@@ -25,21 +26,11 @@ class MemberManagement extends Model
         'invite_status',
         'email',
         'email_status',
-        'email_responce',
+        'email_response',
         'email_resend_status',
+        'email_resend_count',
         'subject_line',
-        'email_message',
-        'fail_schedule',
-        'is_exist',
-        'is_evaluator',
-        'is_join_request',
-        'join_request_status',
-        'lab_users_id',
-        'privacy',
-        'auto_invite_status',
-        'assign_role',
-        'is_auto_created',
-        'user_status',
+        'email_body',
     ];
     
   /***
@@ -60,6 +51,9 @@ class MemberManagement extends Model
                 $module_type="0";
                 $module_id=Organization::select('id')->where("slug",$slug)->first()->id;
             }
+            if($module_id===null && $module_id==""){
+                return false;
+            }
             $listing=static::with(['user'])->where(["module_id"=>$module_id,"module_type"=>$module_type]);
             if(!empty($request->org_id)){
                 $listing->where('id', $request->org_id);
@@ -77,7 +71,7 @@ class MemberManagement extends Model
                 }
                 $listing->where('email_status', $email_status);
             }
-            if (!empty($request->searchname)) {
+            if (!empty($request->searchname)){
                 $listing->where(function ($q) use ($request) {
                     $q->whereHas('user', function ($q) use ($request){
                         $q->where('username', 'like', '%' . $request->searchname . '%')->orWhere('full_name', 'like', '%' . $request->searchname . '%');
@@ -97,7 +91,8 @@ class MemberManagement extends Model
     }
     public function deletes($component,$slug,$request)
     {     
-        try{
+        
+        try{ 
             $member_manger=static::whereIn("id",$request->id)->delete();
             if($member_manger){
                 return true;
@@ -107,38 +102,92 @@ class MemberManagement extends Model
         }catch(\Exception $e){
             return false;        
         }
+        
     }
 
     public function create($component,$slug,$request)
     {   
        try{
-        if ($request->invite_type == 'email') {
+        if ($request->invite_type == 'email'){
+            $invite_type="0";
             $request['role'] = $request->role;
-            $invitedMembers = array();
-            $invalidEmailData = array();
-            $alreadyExistEmailData = array();
-            if (!empty($request->user_invite_email)) {
-                $userInviteEmailData = explode(',', $request->user_invite_email);
-                foreach($userInviteEmailData as $inviteEmail){
-                    if (filter_var(trim($inviteEmail), FILTER_VALIDATE_EMAIL)){
-                        if (!static::where(['organisation_id' => (int) $request->organisation_id, 'role' => $request->orgRole, 'email' => trim($inviteEmail)])->exists()){
-                           
-                        } else {
-                            $alreadyExistEmailData[] = trim($inviteEmail);
-                            $responce = ['success' => false, 'error' => true, 'alreadyExistEmailData' => $alreadyExistEmailData, 'invalidEmailData' => $invalidEmailData, 'message' => __('notification.notification_peveiel')];
+            $invited_members = array();
+            $invalid_email_data = array();
+            $already_exist_email_data = array();
+            if (!empty($request->user_invite_email)){
+                $user_invite_email_data = explode(',', $request->user_invite_email);
+           foreach ($user_invite_email_data as $invite_email){
+            if (filter_var(trim($invite_email), FILTER_VALIDATE_EMAIL)){
+                if (!static::where(['module_id' => (int) $request->organisation_id, 'role' => $request->role, 'email' => trim($invite_email)])->exists()){
+                        if($request->type=="invite"){
+                            $type="0";
+                        }elseif($request->type=="join_request"){
+                            $type="1";
+                        }
+                        $invite_data['type']             = $request->type;
+                        $invite_data['invite_type']      = $invite_type;
+                        $invite_data['role']             = $request->role;
+                        $invite_data['email']            = trim($invite_email);
+                        $invite_data['module_id']        = (int) $request->organisation_id;
+                        $invite_data['inviter_id']       = (int) $request->inviter_id;
+                        $invite_data['subject_line']     = $request->subject_line;
+                        $invite_data['email_body']       = $request->email_message;
+                        $invite_data['invite_status']    = $request->auto_invite_status;
+                        $invite_data['invite_status']    = "0";
+                        $invite_data['email_status']     = "0";
+                        $invite_data['email_resend_count']="0";
+                        $invited_members[]= $invite_data;
+                 }else{
+                    $already_exist_email_data[] = trim($invite_email);
+                }
+            }else{
+                $invalid_email_data[] = trim($invite_email);
+            }
+
+            }
+            if(!empty($invited_members)){
+                if (static::insert($invited_members)) {
+                    $responce = ['success' => true, 'error' => false, 'already_exist_email_data' => $already_exist_email_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('notification.notification_edas')];
+                }
+            }else{
+                $responce = ['success' => false, 'error' => true, 'already_exist_email_data' => $already_exist_email_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('notification.notification_ntcedad')];
+            }
+            return $responce;
+        }
+       }elseif ($request->invite_type == 'network'){
+            $invited_members = array();
+            $already_exist_network_data = array();
+            if(!empty($request->inviteUsers)){
+                foreach ($request->inviteUsers as $invite_member){
+                    $user_data = User::select('email')->where(['id' => (int) $invite_member])->first();
+                    if (!empty($user_data)){
+                        if(!static::where(['module_id' => (int) $request->organisation_id, 'role' => $request->role, 'email' => trim($user_data['email'])])->exists()){
+                            $invite_data['type']             = $request->type;
+                            $invite_data['invite_type']      = $request->invite_type;
+                            $invite_data['role']             = $request->role;
+                            $invite_data['module_id']        = (int) $request->organisation_id;
+                            $invite_data['inviter_id']       = (int) $request->inviter_id;
+                            $invite_data['invitee_id']       = $invite_member;
+                            $invite_data['subject_line']     = $request->subject_line;
+                            $invite_data['email']            = trim($user_data['email']);
+                            $invite_data['email_message']    = $request->email_message;
+                            $invite_data['invitation_status']= $request->auto_invite_status;
+                            $invite_data['invite_status']    = '0';
+                            $invite_data['email_status']     = '0';
+                            $invited_members[]                = $invite_data;
+                        }else{
+                            $already_exist_network_data[]      = trim($user_data['email']);
+                            $responce = ['success' => false, 'error' => true, 'alreadyExistNetworkData' => $already_exist_network_data, 'invalidNetworkData' => [], 'message' => __('notification.notification_ara') . $request->role . __('labels.labels_mm_role')];
                         }
                     }
-                    
                 }
+            }else{
+                $responce = ['success' => false, 'error' => true, 'already_exist_email_data' => $already_exist_network_data, 'invalid_email_data' =>[], 'message' => __('notification.notification_ntcedad')];
             }
-        } elseif ($request->invite_type == 'network'){
-            $request['role'] =$request->role;
-        }
-
-
-       } catch (\Exception $e) {
-        return $e;
+        
+       }
+    } catch (\Exception $e) {
         return false;      
        }
-    }
+}
 }

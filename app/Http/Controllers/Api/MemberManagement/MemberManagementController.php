@@ -45,15 +45,15 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function create($component,$slug,Request $request)
+    public function create($component,$slug,CreateMemberManagementRequest $request)
     {
         try {
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
             if($member_mangement){
-                return $this->sendResponse(null, __('responses.create_member_manger_success'));
+                return $member_mangement;
                }
-               return $this->sendError(__('responses.member_manager_not_delete'));
-        } catch (\Exception $e) {
+               return $this->sendError(__('responses.member_manager_not_delete'),500);
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

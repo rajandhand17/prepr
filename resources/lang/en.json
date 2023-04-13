@@ -3002,5 +3002,6 @@
     "responses.subject_line_required":"Member Manager subject line required!",
     "responses.email_body_required":"Member Manager email body required!",
     "responses.csv_upload":"Please choose csv type only",
-    "responses.csv_required":"Please choose csv file, Its required"
+    "responses.csv_required":"Please choose csv file, Its required",
+    "responses.auto_invite_status":"Please enter auto invite status"
 }

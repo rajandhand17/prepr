@@ -27,10 +27,7 @@ class DeleteMemberManagementRequest extends FormRequest
     public function rules()
     {
         return [
-            'id.*' => [
-                'required',
-                Rule::in(MemberManagements::pluck('id')->toArray())
-            ]
+            'id' =>'required|array'
         ];
     }
 
@@ -46,9 +43,7 @@ class DeleteMemberManagementRequest extends FormRequest
     public function messages()
     {
         return[
-            'id.*.required'=>__('responses.member_manager_id_required'),
-            'id.*.exists'=>__('responses.member_manager_not_exists'),
-            
+            'id.required'=>__('responses.member_manager_id_required'),
         ];
     }
 }
