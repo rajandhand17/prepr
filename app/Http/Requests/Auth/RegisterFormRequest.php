@@ -26,7 +26,7 @@ class RegisterFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'language'=>'required',
+            'language' => 'required',
             'first_name' => 'required|max:20|string',
             'last_name' => 'required|string|max:20',
             'username' => 'required|max:20|regex:/^[A-Za-z0-9_-]*$/|unique:users,username',
@@ -35,10 +35,14 @@ class RegisterFormRequest extends FormRequest
             'email' => 'required|email|max:50|unique:users,email',
             'user_type' => 'required',
             'purpose' => 'required',
-            'phone_number' => 'required|numeric|unique:users,phone_number',
-            'country_code'=>'required|numeric',
+            'phone_number' => 'numeric|unique:users,phone_number',
+            'country_code' => 'numeric',
             'register_type'=>'required',
+<<<<<<< HEAD
             'organization_name'=>'unique:organizations,name',
+=======
+            'organization_name' => 'required_if:register_type,==,organization'
+>>>>>>> 81dd5bc917aa19e2d57716168bd79258b70c32e8
         ];
     }
 
@@ -76,10 +80,8 @@ class RegisterFormRequest extends FormRequest
             "password_confirmation.required"=>__("notification.notification_reg_cpr"),
             "password_confirmation.same"=>__("responses.password_confirm_password"),
             "language.required"=>__("notification.notification_lfirs"),
-            'phone_number.required' =>__("notification.notification_ypnie"),
             'phone_number.numeric'=>__("responses.numeric"),
             'phone_number.unique'=>__("responses.already_number"),
-            'country_code.required'=>__("responses.country_code_required"),
             'country_code.numeric'=>__("responses.country_code_numeric"),
             'register_type.required'=>__('responses.register_type_required'),
             'organization_name.unique'=>__("responses.organization_exists"),

@@ -49,25 +49,13 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
+          
             if($member_mangement){
                 return $member_mangement;
                }
-               return $this->sendError(__('responses.member_manager_not_delete'),500);
+               return $this->sendError(__('responses.create_member_manger_failed'),500);
         }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
-    // public function uploadCsv($component,$slug,UploadCsvFileMemberManagementRequest $request)
-    // { 
-    //     try {
-    //         $member_mangement=$this->memberManagementRepository->uploadCsv($component,$slug,$request);
-    //         if($member_mangement){
-    //             return $this->sendResponse(null, __('responses.create_member_manger_csv_success'));
-    //            }
-    //            return $this->sendError(__('responses.create_member_manger_csv_failed'));
-    //     } catch (\Exception $e) {
-    //         return $this->sendError(__('responses.send_error'), 500);
-    //     }
-    // }
 }

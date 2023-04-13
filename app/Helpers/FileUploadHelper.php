@@ -22,14 +22,4 @@ class FileUploadHelper {
             return false;
         }  
     }
-
-    public static function uploadCsvToS3($request,$type)
-    { 
-        try {
-            $pathsarray=config('s3-upload-path');
-        } catch (\Exception $e) {
-           return false;
-        }
-    }
-
 }

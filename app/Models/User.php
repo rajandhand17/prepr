@@ -153,8 +153,8 @@ class User extends Authenticatable
             $user->username = $request->username;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
-            $user->country_code = $request->country_code;
-            $user->phone_number = $request->phone_number;
+            $user->country_code = ($request->has('country_code')) ? $request->country_code : NULL;
+            $user->phone_number = ($request->has('phone_number')) ? $request->phone_number : NULL;
             $user->otp = $otp;
             $user->verify_token = $string;
             $user->referal_code = $referencecode;

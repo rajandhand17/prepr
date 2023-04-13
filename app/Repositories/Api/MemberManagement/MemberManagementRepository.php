@@ -42,12 +42,4 @@ class MemberManagementRepository implements MemberManagementInterface{
         }
     }
 
-    public function uploadCsv($component,$slug,$request)
-    {
-        try {
-            return $this->member_mangement_csv->uploadCsv($component,$slug,$request);
-        } catch (\Exception $e){
-            return false;
-        }
-    }
 }

@@ -28,7 +28,7 @@ class CreateMemberManagementRequest extends FormRequest
         return [
             "type"=> 'required',
             "invite_type"=> 'required',
-            "organisation_id"=> 'required',
+            "organisation_id"=> 'required|exists:organizations,id',
             "user_invite_email"=>'required',
             "role"=> 'required',
             "inviter_id"=> 'required',
@@ -54,6 +54,7 @@ class CreateMemberManagementRequest extends FormRequest
             'type.required' => __('responses.type_required'),
             'invite_type.required' => __('responses.invite_type_required'),
             'organisation_id.required' => __('responses.module_id_required'),
+            'organisation_id.exists'=>__('notification.notification_onf'),
             "inviter_id.required"=> __('responses.inviter_id_required'),
             "role.required"=> __('responses.role_required'),
             "user_invite_email.required"=> __('responses.email_required'),
