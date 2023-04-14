@@ -119,6 +119,7 @@ class MemberManagement extends Model
            foreach ($user_invite_email_data as $invite_email){
             if (filter_var(trim($invite_email), FILTER_VALIDATE_EMAIL)){
                 if (!static::where(['module_id' => (int) $request->organisation_id, 'role' => $request->role, 'email' => trim($invite_email)])->exists()){
+                         $type="0";
                         if($request->type=="invite"){
                             $type="0";
                         }elseif($request->type=="join_request"){
@@ -136,7 +137,7 @@ class MemberManagement extends Model
                             $auto_invite_status="4";
                         }
                         $user_data = User::select('id')->where(['email'=>$invite_email])->first();
-                        dd($user_data);
+                       
                     if(isset($user_data->id)){
                         $invite_data['invitee_id']             = $user_data->id;
                     }
@@ -181,6 +182,7 @@ class MemberManagement extends Model
                     if(($user_data->email)){
                         $invite_data['type']             = $request->type;
                         if(!static::where(['module_id' => (int)$request->organisation_id, 'role' => $request->role, 'email' => trim($user_data->email)])->exists()){
+                            $type="0";
                             if($request->type=="invite"){
                                 $type="0";
                             }elseif($request->type=="join_request"){
@@ -235,7 +237,6 @@ class MemberManagement extends Model
         $already_invited_email_data = array();
         $csv_email_data = array();
         $mimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
-    
         if (in_array($request->file('invitee_id')->getClientMimeType(), $mimes)){
             if (!empty($request->file('invitee_id'))) {
                 $csv_result_data = array();
@@ -265,6 +266,8 @@ class MemberManagement extends Model
                                             }elseif($request->auto_invite_status=="auto_created"){
                                                 $auto_invite_status="4";
                                             }
+                                            $type="0";
+                                            $invite_data['type']             = $type;
                                             $invite_data['invite_type']      = $invite_type;
                                             $invite_data['role']             = $request->role;
                                             $invite_data['email']            = trim($csv_data[1]);
@@ -307,7 +310,6 @@ class MemberManagement extends Model
         }
        }
     } catch (\Exception $e) {
-        return $e;
         return false;      
        }
 }
