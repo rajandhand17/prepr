@@ -32,7 +32,7 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function delete($component,$slug,Request $request)
+    public function delete($component,$slug,DeleteMemberManagementRequest $request)
     {   
         try {
             $member_mangement=$this->memberManagementRepository->delete($component,$slug,$request);
@@ -49,7 +49,7 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
-          
+             
             if($member_mangement){
                 return $member_mangement;
                }

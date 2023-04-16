@@ -45,6 +45,7 @@ class MemberManagement extends Model
     public function index($component,$slug,$request)
     {    
         try {
+           
             $module_type="0";
             $module_id="";
             if($component=="organisation"){
@@ -61,7 +62,7 @@ class MemberManagement extends Model
             if(!empty($request->role)){
                 $listing->where('role', $request->role);
             }
-            if (!empty($request->email_status)) {
+            if (!empty($request->email_status)){    
                 if($request->email_status=="scheduled"){
                     $email_status="0";
                 }elseif($request->email_status=="sent"){
@@ -74,7 +75,7 @@ class MemberManagement extends Model
             if (!empty($request->searchname)){
                 $listing->where(function ($q) use ($request) {
                     $q->whereHas('user', function ($q) use ($request){
-                        $q->where('username', 'like', '%' . $request->searchname . '%')->orWhere('full_name', 'like', '%' . $request->searchname . '%');
+                        $q->where('username', 'like', '%' . $request->searchname . '%')->orWhere('first_name', 'like', '%' . $request->searchname . '%');
                     })->orWhere('email', 'like', '%' .$request->searchname .'%');
                 });
             }
@@ -85,7 +86,7 @@ class MemberManagement extends Model
                 return false;
             }
        
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             return false;       
         }
     }

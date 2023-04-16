@@ -27,7 +27,7 @@ class DeleteMemberManagementRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' =>'required|array'
+            'id' =>'required|array|exists:member_management,id'
         ];
     }
 
@@ -44,6 +44,8 @@ class DeleteMemberManagementRequest extends FormRequest
     {
         return[
             'id.required'=>__('responses.member_manager_id_required'),
+            'id.array'=>__('responses.member_manager_id_required'),
+            'id.exists'=>__('responses.member_manager_not_exists'),
         ];
     }
 }
