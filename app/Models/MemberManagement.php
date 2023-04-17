@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Organization;
 use App\Models\User;
+use DB;
 
 class MemberManagement extends Model
 {
@@ -109,209 +110,94 @@ class MemberManagement extends Model
     public function create($component,$slug,$request)
     {   
        try{
-        if ($request->invite_type == 'email'){
-            $invite_type="0";
-            $request['role'] = $request->role;
-            $invited_members = array();
-            $invalid_email_data = array();
-            $already_exist_email_data = array();
-            if (!empty($request->user_invite_email)){
-                $user_invite_email_data = explode(',', $request->user_invite_email);
-           foreach ($user_invite_email_data as $invite_email){
-            if (filter_var(trim($invite_email), FILTER_VALIDATE_EMAIL)){
-                if (!static::where(['module_id' => (int) $request->organisation_id, 'role' => $request->role, 'email' => trim($invite_email)])->exists()){
-                         $type="0";
-                        if($request->type=="invite"){
-                            $type="0";
-                        }elseif($request->type=="join_request"){
-                            $type="1";
-                        }
-                        if($request->auto_invite_status=="invited"){
-                            $auto_invite_status="0";
-                        }elseif($request->auto_invite_status=="accepted"){
-                            $auto_invite_status="1";
-                        }elseif($request->auto_invite_status=="pending"){
-                            $auto_invite_status="2";
-                        }elseif($request->auto_invite_status=="declined"){
-                            $auto_invite_status="3";
-                        }elseif($request->auto_invite_status=="auto_created"){
-                            $auto_invite_status="4";
-                        }
-                        $user_data = User::select('id')->where(['email'=>$invite_email])->first();
-                       
-                    if(isset($user_data->id)){
-                        $invite_data['invitee_id']             = $user_data->id;
-                    }
-                        $invite_data['type']             = $type;
-                        $invite_data['invite_type']      = $invite_type;
-                        $invite_data['role']             = $request->role;
-                        $invite_data['email']            = trim($invite_email);
-                        $invite_data['module_id']        = (int) $request->organisation_id;
-                        $invite_data['inviter_id']       = (int) $request->inviter_id;
-                        $invite_data['subject_line']     = $request->subject_line;
-                        $invite_data['email_body']       = $request->email_message;
-                        $invite_data['invite_status']    = $auto_invite_status;
-                        $invite_data['email_status']     = "0";
-                        $invite_data['email_resend_count']="0";
-                        $invited_members[]= $invite_data;
-                 }else{
-                    $already_exist_email_data[] = trim($invite_email);
-                }
-            }else{
-                $invalid_email_data[] = trim($invite_email);
-            }
-
-            }
-            if(!empty($invited_members)){
-                if (static::insert($invited_members)) {
-                    $response = ['success' => true, 'error' => false, 'already_exist_email_data' => $already_exist_email_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('notification.notification_edas')];
-                }
-            }else{
-                $response = ['success' => false, 'error' => true, 'already_exist_email_data' => $already_exist_email_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('notification.notification_ntcedad')];
-            }
-            return $response;
-        }
-       }elseif($request->invite_type == 'network'){
-            $invite_type="1";
-             $invited_members = array();
-            $already_exist_network_data = array();
-            if(!empty($request->user_invite_email)){ 
-                $user_invite_email_data = explode(',', $request->user_invite_email);
-              
-                foreach ($user_invite_email_data as $invite_member){
-                    $user_data = User::select('email')->where(['id' => (int) $invite_member])->first();
-                    if(($user_data->email)){
-                        $invite_data['type']             = $request->type;
-                        if(!static::where(['module_id' => (int)$request->organisation_id, 'role' => $request->role, 'email' => trim($user_data->email)])->exists()){
-                            $type="0";
-                            if($request->type=="invite"){
-                                $type="0";
-                            }elseif($request->type=="join_request"){
-                                $type="1";
-                            }
-                            if($request->auto_invite_status=="invited"){
-                                $auto_invite_status="0";
-                            }elseif($request->auto_invite_status=="accepted"){
-                                $auto_invite_status="1";
-                            }elseif($request->auto_invite_status=="pending"){
-                                $auto_invite_status="2";
-                            }elseif($request->auto_invite_status=="declined"){
-                                $auto_invite_status="3";
-                            }elseif($request->auto_invite_status=="auto_created"){
-                                $auto_invite_status="4";
-                            }
-                             $invite_data['type']             = $type;
-                            $invite_data['invite_type']      = $invite_type;
-                            $invite_data['role']             = $request->role;
-                            $invite_data['module_id']        = (int) $request->organisation_id;
-                            $invite_data['inviter_id']       = (int) $request->inviter_id;
-                            $invite_data['invitee_id']       = (int)$invite_member;
-                            $invite_data['subject_line']     = $request->subject_line;
-                            $invite_data['email']            = trim($user_data->email);
-                            $invite_data['email_body']       = $request->email_message;
-                            $invite_data['invite_status']    = $auto_invite_status;
-                            $invite_data['email_status']     = "0";
-                            $invite_data['email_resend_count']="0";
-                            $invited_members[]                = $invite_data;
-                           
+        $records=array();
+        $already_exists_data=array();
+        $invalid_email_data=array();
+        $user_data=array();
+        $request->type="0";
+        $request->invite_status="0";
+        if($request->invite_type == 'csv'){
+            $invite_type="3";
+            $csv_email_data = array();
+            $mimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
+            if (in_array($request->file('invitee_email')->getClientMimeType(), $mimes)){
+                if (!empty($request->file('invitee_email'))){
+                    $invitee = array();
+                    if (($handle = fopen($request->invitee_email, "r")) !== false) {
+                        $header = fgetcsv($handle, 0, ',');
+                        $count_header = count($header);
+                        if ($count_header == 2  && in_array('Name', $header) && in_array('Email', $header)) {
+                           if($header[0]=="Email"){
+                               $a=0;
+                           }else{
+                                $a=1;
+                           }
                         }else{
-                            $already_exist_network_data[]      = trim($user_data->email);
-                        
+                            $response = ['success' => false,'already_exist_email_data' => $already_exists_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('notification.notification_ycsvfdfrf')];
                         }
-                    }
+                        while (($csv_get_data = fgetcsv($handle, 1000, ",")) !== false) {
+                            $invitee[] = $csv_get_data[$a];
+                        }
+                        fclose($handle);
+                  }
                 }
-                if(!empty($invited_members)){
-                    if (static::insert($invited_members)) {
-                        $response = ['success' => true, 'error' => false, 'already_exist_email_data' => $already_exist_network_data, 'invalid_email_data' =>[], 'message' => __('notification.notification_edas')];
+            }
+        }else{
+           $invitee = explode(',', $request->invitee_email);
+        }
+        if($request->invite_type=="email"){
+            $invite_type="0";
+        }
+        if($request->invite_type == 'network'){
+            $invite_type="1";
+            foreach ($invitee as $invite_member){
+                $user_data[] = User::select('email')->where(['id' => (int) $invite_member])->first()->email;
+            }      
+            $invitee=$user_data;
+        }
+        $invitee_email=$invitee;
+            foreach ($invitee_email as $key => $invite_email){
+                if (filter_var(trim($invite_email), FILTER_VALIDATE_EMAIL)){
+                    if(!static::where(['module_id' => (int) $request->module_id, 'role' => $request->role, 'email' => trim($invite_email)])->exists()){
+                        $user_data = User::select('id')->where(['email'=>$invite_email])->first();
+                        if(isset($user_data->id)){
+                           $member_management_data['invitee_id']    = $user_data->id;
+                        }
+                        $member_management_data['type']             = $request->type;
+                        $member_management_data['invite_type']      = $invite_type;
+                        $member_management_data['role']             = $request->role;
+                        $member_management_data['email']            = trim($invite_email);
+                        $member_management_data['module_id']        = (int) $request->module_id;
+                        $member_management_data['inviter_id']       = (int) $request->inviter_id;
+                        $member_management_data['subject_line']     = $request->subject_line;
+                        $member_management_data['email_body']       = $request->email_body;
+                        $member_management_data['invite_status']    = $request->invite_status;
+                        $member_management_data['email_status']     = "0";
+                        $member_management_data['email_resend_count']="0";
+                        $invited_members[]= $member_management_data;
+                    }else{
+                       $already_exists_data[]=trim($invite_email);
                     }
                 }else{
-                    $response = ['success' => false, 'error' => true, 'already_exist_email_data' => $already_exist_network_data, 'invalid_email_data' =>[], 'message' => __('notification.notification_ntcedad')];
+                    $invalid_email_data[] = trim($invite_email);
+                }
+            }
+            if(!empty($invited_members)){
+               DB::beginTransaction();
+                if(static::insert($invited_members)){
+                    DB::commit();
+                    $response = ['success' => true,'already_exist_email_data' => $already_exists_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('notification.notification_edas')];
+                }else{
+                    DB::rollback();
+                    $response = ['success' => false, 'already_exist_email_data' => $already_exists_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('notification.notification_ntcedad')];
                 }
             }else{
-                $response = ['success' => false, 'error' => true, 'already_exist_email_data' => $already_exist_network_data, 'invalid_email_data' =>[], 'message' => __('notification.notification_ntcedad')];
+                $response = ['success' => false, 'already_exist_email_data' => $already_exists_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('notification.notification_ntcedad')];
             }
-            return $response;
-       }elseif($request->invite_type =='csv'){
-        $invite_type="0";
-        $invited_members = array();
-        $invalid_email_invited_data = array();
-        $already_invited_email_data = array();
-        $csv_email_data = array();
-        $mimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
-        if (in_array($request->file('invitee_id')->getClientMimeType(), $mimes)){
-            if (!empty($request->file('invitee_id'))) {
-                $csv_result_data = array();
-                if (($handle = fopen($request->invitee_id, "r")) !== false) {
-                    $header = fgetcsv($handle, 0, ',');
-                    $count_header = count($header);
-                   while (($csv_get_data = fgetcsv($handle, 1000, ",")) !== false) {
-                        $csv_result_data[] = $csv_get_data;
-                    }
-                    fclose($handle);
-                    if ($count_header == 2  && in_array('Name', $header) && in_array('Email', $header)) {
-                        if(!empty($csv_result_data)) {
-                            foreach ($csv_result_data as $key => $csv_data) {
-                                if (filter_var(trim($csv_data[1]), FILTER_VALIDATE_EMAIL)) {
-                                    // check if duplicate email in csv
-                                    if (!in_array(trim($csv_data[1]), $csv_email_data)) {
-                                        // check if duplicate email in already invited data
-                                        if (!static::where(['module_id' => (int) $request->organisation_id, 'role' => $request->role, 'email' => trim($csv_data[1])])->exists()) {
-                                            if($request->auto_invite_status=="invited"){
-                                                $auto_invite_status="0";
-                                            }elseif($request->auto_invite_status=="accepted"){
-                                                $auto_invite_status="1";
-                                            }elseif($request->auto_invite_status=="pending"){
-                                                $auto_invite_status="2";
-                                            }elseif($request->auto_invite_status=="declined"){
-                                                $auto_invite_status="3";
-                                            }elseif($request->auto_invite_status=="auto_created"){
-                                                $auto_invite_status="4";
-                                            }
-                                            $type="0";
-                                            $invite_data['type']             = $type;
-                                            $invite_data['invite_type']      = $invite_type;
-                                            $invite_data['role']             = $request->role;
-                                            $invite_data['email']            = trim($csv_data[1]);
-                                            $invite_data['module_id']        = (int) $request->organisation_id;
-                                            $invite_data['inviter_id']       = (int) $request->inviter_id;
-                                            $invite_data['subject_line']     = $request->subject_line;
-                                            $invite_data['email_body']       = $request->email_message;
-                                            $invite_data['invite_status']    = $auto_invite_status;
-                                            $invite_data['email_resend_count']    = '0';
-                                            $invite_data['email_status']     = '0';
-                                            $invited_org_members[]            = $invite_data;
-                                            $invited_members[] = $invite_data;
-                                            $csv_email_data[] = trim($csv_data[1]);
-                                           
-                                        } else {
-                                            $already_invited_email_data[] = trim($csv_data[1]);
-                                            $response = ['success' => false, 'error' => true, 'already_invited_email_data' => $already_invited_email_data, 'invalid_email_invited_data' => $invalid_email_invited_data, 'message' => __('notification.notification_teiycsvnv')];
-                                        }
-                                    } else {
-                                        $already_invited_email_data[] = trim($csv_data[1]);
-                                        $response = ['success' => false, 'error' => true, 'already_invited_email_data' => $already_invited_email_data, 'invalid_email_invited_data' => $invalid_email_invited_data, 'message' => __('notification.notification_teiycsvnv')];
-                                    }
-                                }else{
-                                    $invalid_email_invited_data[] = trim($csv_data[1]);
-                                    $response = ['success' => false, 'error' => true, 'already_invited_email_data' => $already_invited_email_data, 'invalid_email_invited_data' => $invalid_email_invited_data, 'message' => __('notification.notification_teiycsvnv')];
-                                }
-                            }
-                        }
-                    }
-                }
-                if (!empty($invited_members)) {
-                    if (static::insert($invited_members)) {
-                        $response = ['success' => true, 'error' => false, 'invalidEmailinvitedData' => $invalid_email_invited_data, 'alreadyInvitedEmailData' => $already_invited_email_data, 'message' => __('notification.notification_csvdds')];
-                    }
-                } else {
-                    $response = ['success' => false, 'error' => true, 'invalidEmailinvitedData' => $invalid_email_invited_data, 'alreadyInvitedEmailData' => $already_invited_email_data, 'message' => __('notification.notification_ntcsvd')];
-                }
-                return $response;
-           }
-        }
-       }
+            return  $response;
     } catch (\Exception $e) {
+        DB::rollback();
         return false;      
        }
-}
+    }
 }

@@ -369,10 +369,10 @@ class AuthController extends AppBaseController
     {
         try {
             $forgetpassword = $this->authRepository->forgetPassword($request);
-            if($forgetpassword['success'] == false) {
+            if($forgetpassword['success'] == false){
                 return $this->sendError($forgetpassword['message'], 401);
             }
-            if($forgetpassword['success'] == true) {
+            if($forgetpassword['success'] == true){
                 return $this->sendResponse($forgetpassword, __('notification.notification_yprlsoyrea'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
@@ -816,7 +816,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse(null, __('notification.notification_yprs'), 200);
             }
             if ($resetcode['success'] === false) {
-                return $this->sendResponse(null,$resetcode['message'],403);
+                return $this->sendError($resetcode['message'], 403);
             }
             return $this->sendError(__('responses.send_error'), 500);
          }catch (\Exception $e) {

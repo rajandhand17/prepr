@@ -28,13 +28,13 @@ class CreateMemberManagementRequest extends FormRequest
         return [
             "type"=> 'required',
             "invite_type"=> 'required',
-            "organisation_id"=> 'required|exists:organizations,id',
-            "user_invite_email"=>'required',
+            "module_id"=> 'required|exists:organizations,id',
+            "invitee_email"=>'required',
             "role"=> 'required',
             "inviter_id"=> 'required|exists:users,id',
             "subject_line"=> 'required',
-            "email_message"=> 'required',
-            "auto_invite_status"=> 'required',
+            "email_body"=> 'required',
+            "invite_status"=> 'required',
         ];
     }
 
