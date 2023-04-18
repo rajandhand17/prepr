@@ -35,6 +35,7 @@ class CreateMemberManagementRequest extends FormRequest
             "subject_line"=> 'required',
             "email_body"=> 'required',
             "invite_status"=> 'required',
+       
         ];
     }
 
@@ -54,8 +55,8 @@ class CreateMemberManagementRequest extends FormRequest
             'type.required' => __('responses.type_required'),
             'invite_type.required' => __('responses.invite_type_required'),
             'inviter_id.exists' => __('responses.user_id_not_exists'),
-            'organisation_id.required' => __('responses.module_id_required'),
-            'organisation_id.exists'=>__('notification.notification_onf'),
+            'module_id.required' => __('responses.module_id_required'),
+            'module_id.exists'=>__('notification.notification_onf'),
             "inviter_id.required"=> __('responses.inviter_id_required'),
             "role.required"=> __('responses.role_required'),
             "user_invite_email.required"=> __('responses.email_required'),

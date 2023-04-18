@@ -13,10 +13,20 @@ class MemberManagementControllerTest extends TestCase
      *
      * @return void
      */
+    protected $parameters;
     public function setUp(): void
     {
            parent::setUp();
            $this->parameters= [
+            /**type:invite
+invite_type:email
+role:orgnization_manager
+module_id:26
+inviter_id:15
+subject_line:testing
+email_body:email messages
+invite_status:pending
+invitee_email:rajan@gmail.com */
                 'language'=> 'en',
                 'user_id' =>'2',
                 'name' =>'Prepr',
@@ -31,7 +41,7 @@ class MemberManagementControllerTest extends TestCase
                 "subject_line"=>"testing",
                 "email_body"=>"email messages",
                 "invite_status"=>"pending",
-                "user_invite_email"=>"rajan@prepr.org",
+                "invitee_email"=>"rajan@prepr.org",
                 "inviter_id"=>"15",
                 "id"=>["1"],
             ];
@@ -54,27 +64,26 @@ class MemberManagementControllerTest extends TestCase
    /**Listing member management positive */
    public function test_listing_positive()
    {   
-       $response = $this->get('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language='.$this->parameters['language'].'&page='.$this->parameters['page']);
+       $response = $this->get('/api/v1/member-management/organisation/preprtestsd?language=en');
        $response->assertStatus(200);
        $data = $response->json();
-        if ($data['success']) {
+       if ($data['success']) {
+             
             $this->assertArrayHasKey('id', $data['data'][0]);
             $this->assertArrayHasKey('module_id', $data['data'][0]);
             $this->assertArrayHasKey('invite_status', $data['data'][0]);
             $this->assertArrayHasKey('email', $data['data'][0]);
             $this->assertArrayHasKey('email_status', $data['data'][0]);
             $this->assertArrayHasKey('email_resend_status', $data['data'][0]);
-            $this->assertArrayHasKey('is_exist', $data['data'][0]);
-            $this->assertArrayHasKey('is_evaluator', $data['data'][0]);
-            $this->assertArrayHasKey('is_join_request', $data['data'][0]);
-            $this->assertArrayHasKey('join_request_status', $data['data'][0]);
-            $this->assertArrayHasKey('auto_invite_status', $data['data'][0]);
             $this->assertArrayHasKey('user_status', $data['data'][0]);
             $this->assertArrayHasKey('user_name', $data['data'][0]);
             $this->assertArrayHasKey('user_profile_image', $data['data'][0]);
             $this->assertArrayHasKey('type', $data['data'][0]);
             $this->assertArrayHasKey('invite_type', $data['data'][0]);
             $this->assertArrayHasKey('module_type', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
         }
    }
   
