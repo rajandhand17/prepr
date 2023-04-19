@@ -85,7 +85,7 @@ class MasterController extends AppBaseController
                 return $this->sendResponse(CategoryResource::collection($category), __('responses.found_category_list'));
 
             }
-            return $this->sendError(__('responses.not_found_category_list'));
+            return $this->sendError(__('responses.not_found_category_list'),404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

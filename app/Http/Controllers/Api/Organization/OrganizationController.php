@@ -69,14 +69,14 @@ class OrganizationController extends AppBaseController
        try {
           $organization=$this->organizationRepository->view($slug,$request->language);
           if($organization==="not_exists"){
-            return $this->sendResponse(null,__('responses.organization_not_exists'));
+            return $this->sendResponse(null,__('responses.organization_not_exists'),404);
         }
           if ($organization) { 
             return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
           }
-        return $this->sendError(__('responses.found_not_organizations_list'));
+        return $this->sendError(__('responses.found_not_organizations_list'),404);
          
-       } catch (\Exception $e){ 
+       }catch (\Exception $e){ 
          return $this->sendError(__('responses.send_error'), 500);
      }
     }
@@ -417,7 +417,7 @@ class OrganizationController extends AppBaseController
             if($organization['success']==true){
                 return $this->sendResponse(null,$organization['message']);
             }else{
-                return $this->sendError($organization['message']);
+                return $this->sendError($organization['message'],204);
             }
             return $this->sendError(__('responses.updated_organization_failed'));
         }catch (\Exception $e){
@@ -472,13 +472,13 @@ class OrganizationController extends AppBaseController
         try {
             $organization=$this->organizationRepository->delete($slug,$request->language);
             if($organization==="not_exists"){
-                return $this->sendResponse(null,__('responses.organization_not_exists'));
+                return $this->sendError(__('responses.organization_not_exists'),404);
             }
             if($organization===true){
                 return $this->sendResponse(null,__('responses.delete_organizations_success'));
             }
             
-            return $this->sendError(__('responses.delete_organizations_failed'));
+            return $this->sendError(__('responses.delete_organizations_failed'),400);
         } catch (\Exception $e) {
            return $this->sendError(__('responses.send_error'), 500);
         }
@@ -532,7 +532,7 @@ class OrganizationController extends AppBaseController
            if($organization!==false){
                return $this->sendResponse($organization,__('responses.organization_view_get'));
            }
-           return $this->sendError(__('responses.organization_view_get_failed'));
+           return $this->sendError(__('responses.organization_view_get_failed'),400);
        } catch (\Exception $e) {
           return $this->sendError(__('responses.send_error'), 500);
        }
