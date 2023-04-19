@@ -18,30 +18,21 @@ class MemberManagementControllerTest extends TestCase
     {
            parent::setUp();
            $this->parameters= [
-            /**type:invite
-invite_type:email
-role:orgnization_manager
-module_id:26
-inviter_id:15
-subject_line:testing
-email_body:email messages
-invite_status:pending
-invitee_email:rajan@gmail.com */
                 'language'=> 'en',
                 'user_id' =>'2',
                 'name' =>'Prepr',
-                'slug' =>'preprtestsd',
+                'slug' =>'prepr',
                 "wrong_language"=>"Hindi",
                 "page"=>"1",
                 "component"=>"organisation",
                 "type"=>"email",
                 "invite_type"=>"email",
                 "role"=>"orgnization_manager",
-                "module_id"=>"26",
+                "module_id"=>"27",
                 "subject_line"=>"testing",
                 "email_body"=>"email messages",
                 "invite_status"=>"pending",
-                "invitee_email"=>"rajan@prepr.org",
+                "invite_email"=>"rajan@prepr.org",
                 "inviter_id"=>"15",
                 "id"=>["1"],
             ];
@@ -49,14 +40,14 @@ invitee_email:rajan@gmail.com */
    }
    /**create member management positive */
    public function test_create_positive(){
-    $response = $this->post('/api/v1/member-management/organization/prepr/create?language=en',$this->parameters);
+    $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en',$this->parameters);
     $this->assertEquals(200, $response->getStatusCode());
    }
    
    
    /**create member management negative */
    public function test_create_negative(){
-            $response = $this->post('/api/v1/member-management/organization/prepr/create?language=en',[]);
+            $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en',[]);
             $this->assertEquals(422, $response->getStatusCode());
    }
 
@@ -64,11 +55,10 @@ invitee_email:rajan@gmail.com */
    /**Listing member management positive */
    public function test_listing_positive()
    {   
-       $response = $this->get('/api/v1/member-management/organisation/preprtestsd?language=en');
+       $response = $this->get('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language=en');
        $response->assertStatus(200);
        $data = $response->json();
-       if ($data['success']) {
-             
+       if ($data['success']){
             $this->assertArrayHasKey('id', $data['data'][0]);
             $this->assertArrayHasKey('module_id', $data['data'][0]);
             $this->assertArrayHasKey('invite_status', $data['data'][0]);
@@ -98,7 +88,7 @@ invitee_email:rajan@gmail.com */
    
    /**Delete member management positive */
    public function test_delete_positive(){
-    $response = $this->post('/api/v1/member-management/organization/prepr/delete?language=en',
+    $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
     [
     "id"=>$this->parameters['id'],
     ]);
@@ -108,11 +98,11 @@ invitee_email:rajan@gmail.com */
    
    /**Delete member management negative */
     public function test_delete_negative(){
-        $response = $this->post('/api/v1/member-management/organization/prepr/delete?language=en',
+        $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
         [
         "id"=>$this->parameters['id'],
         ]);
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
 }

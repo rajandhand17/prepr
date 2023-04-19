@@ -2996,7 +2996,7 @@
     "responses.module_id_required" :"Member Manager module id required!",
     "responses.module_type_required":"Member Manager module type required!",
     "responses.inviter_id_required":"Member Manager inviter id required!",
-    "responses.invitee_id_required":"Member Manager invitee id required!",
+    "responses.invitee_id_required":"Member Manager invite column required!",
     "responses.invite_status_required":"Member Manager invite status required!",
     "responses.email_required":"Member Manager email required!",
     "responses.email_status_required":"Member Manager email status required!",
@@ -3005,5 +3005,6 @@
     "responses.csv_upload":"Please choose csv type only",
     "responses.csv_required":"Please choose csv file, Its required",
     "responses.auto_invite_status":"Please enter auto invite status",
-    "responses.user_id_not_exists":"This user id not exists!"
+    "responses.user_id_not_exists":"This user id not exists!",
+    "responses.member_manage_type":"Provided member manager type is not valid"
 }

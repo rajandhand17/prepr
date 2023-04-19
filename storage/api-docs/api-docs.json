@@ -1336,6 +1336,55 @@
                 }
             }
         },
+        "/api/v1/member-management/{component}/{slug}?language=en": {
+            "get": {
+                "tags": [
+                    "Member Management API -  List"
+                ],
+                "summary": "Finds lists of Member Management",
+                "description": "Get all the Member Management",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "path",
+                        "description": "language define the choosen language",
+                        "required": true
+                    },
+                    {
+                        "name": "component",
+                        "in": "path",
+                        "description": "component define type",
+                        "required": true
+                    },
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug define the organization slug",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/organization/{language}/{slug}": {
             "get": {
                 "tags": [
@@ -1371,11 +1420,16 @@
                     "500": {
                         "description": "Internal server error!"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/v1/organization/create": {
-            "get": {
+            "post": {
                 "tags": [
                     "Organization API - Create Organization"
                 ],
@@ -1696,7 +1750,7 @@
             }
         },
         "/api/v1/organization/delete": {
-            "get": {
+            "delete": {
                 "tags": [
                     "Organization API - Delete Organization"
                 ],

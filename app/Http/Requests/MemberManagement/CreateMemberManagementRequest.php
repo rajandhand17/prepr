@@ -29,7 +29,7 @@ class CreateMemberManagementRequest extends FormRequest
             "type"=> 'required',
             "invite_type"=> 'required',
             "module_id"=> 'required|exists:organizations,id',
-            "invitee_email"=>'required',
+            "invite_email"=>'required',//mimes:csv
             "role"=> 'required',
             "inviter_id"=> 'required|exists:users,id',
             "subject_line"=> 'required',
@@ -52,17 +52,19 @@ class CreateMemberManagementRequest extends FormRequest
     public function messages()
     {
         return[
+            'invite_email.required'=>__('responses.invitee_id_required'),
             'type.required' => __('responses.type_required'),
             'invite_type.required' => __('responses.invite_type_required'),
-            'inviter_id.exists' => __('responses.user_id_not_exists'),
             'module_id.required' => __('responses.module_id_required'),
             'module_id.exists'=>__('notification.notification_onf'),
+            'inviter_id.exists' => __('responses.user_id_not_exists'),
             "inviter_id.required"=> __('responses.inviter_id_required'),
             "role.required"=> __('responses.role_required'),
             "user_invite_email.required"=> __('responses.email_required'),
             "subject_line.required"=> __('responses.subject_line'),
-            "email_message.required"=> __('responses.email_body'),
-            "auto_invite_status"=>__('responses.auto_invite_status'),
+            "email_body.required"=> __('responses.email_body'),
+            "invite_status"=>__('responses.auto_invite_status'),
+         
         ];
     }
 }

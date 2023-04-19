@@ -46,7 +46,6 @@ class MemberManagement extends Model
     public function index($component,$slug,$request)
     {    
         try {
-           
             $module_type="0";
             $module_id="";
             if($component=="organisation"){
@@ -116,10 +115,15 @@ class MemberManagement extends Model
         $user_data=array();
         $request->type="0";
         $request->invite_status="0";
+        if(!in_array($request->invite_type,["csv","email","network"])){
+            $response = ['success' => false, 'already_exist_email_data' => $already_exists_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('responses.member_manage_type')];
+            return $response;
+        }
         if($request->invite_type == 'csv'){
             $invite_type="3";
             $csv_email_data = array();
             $mimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
+            
             if (in_array($request->file('invitee_email')->getClientMimeType(), $mimes)){
                 if (!empty($request->file('invitee_email'))){
                     $invitee = array();
@@ -141,10 +145,14 @@ class MemberManagement extends Model
                         fclose($handle);
                   }
                 }
+            }else{
+                return  $response = ['success' => false,'already_exist_email_data' => $already_exists_data, 'invalid_email_data' => $invalid_email_data, 'message' => __('labels.labels_lab_tiufmbaf')];
             }
+            
         }else{
-           $invitee = explode(',', $request->invitee_email);
+           $invitee = explode(',', $request->invite_email);
         }
+       
         if($request->invite_type=="email"){
             $invite_type="0";
         }
@@ -154,6 +162,9 @@ class MemberManagement extends Model
                 $user_data[] = User::select('email')->where(['id' => (int) $invite_member])->first()->email;
             }      
             $invitee=$user_data;
+        }
+        if(!$invitee){
+            $response = ['success' => false,'already_exist_email_data' => $already_exists_data, 'invalid_email_data' => $invalid_email_data, 'message' =>__('notification.notification_ntcedad')];
         }
         $invitee_email=$invitee;
             foreach ($invitee_email as $key => $invite_email){
