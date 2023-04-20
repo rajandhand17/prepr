@@ -82,7 +82,57 @@ class MemberManagementController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    
+    /**
+     * @OA\Post(
+     *     path="/api/v1/member-management/{component}/{slug}/create?language=en",
+     *     tags={"Member Management API -  List"},
+     *     summary="Finds lists of Member Management",
+     *     description="Get all the Member Management",
+     *     security={{"bearerAuth":{}}},
+     *     operationId="index",
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="path",
+     *         required=true,
+     *         description="language define the choosen language",
+     *        
+     *     ),
+     *     @OA\Parameter(
+     *         name="component",
+     *         in="path",
+     *         required=true,
+     *         description="component define type",
+     *        
+     *     ),
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="path",
+     *         required=true,
+     *         description="slug define the organization slug",
+     *        
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error!",
+     *
+     *     ),
+     * )
+     */
     public function create($component,$slug,CreateMemberManagementRequest $request)
     {  
         try {
