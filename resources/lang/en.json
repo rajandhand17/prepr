@@ -2997,6 +2997,8 @@
     "responses.module_type_required":"Member Manager module type required!",
     "responses.inviter_id_required":"Member Manager inviter id required!",
     "responses.invitee_id_required":"Member Manager invite column required!",
+    "responses.invite_email_required":"Member Manager invite email required!!",
+    "responses.invitee_email_csv":"Please choose csv file only!",
     "responses.invite_status_required":"Member Manager invite status required!",
     "responses.email_required":"Member Manager email required!",
     "responses.email_status_required":"Member Manager email status required!",

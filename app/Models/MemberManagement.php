@@ -124,10 +124,10 @@ class MemberManagement extends Model
             $csv_email_data = array();
             $mimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
             
-            if (in_array($request->file('invitee_email')->getClientMimeType(), $mimes)){
-                if (!empty($request->file('invitee_email'))){
+            if (in_array($request->file('invite_email')->getClientMimeType(), $mimes)){
+                if (!empty($request->file('invite_email'))){
                     $invitee = array();
-                    if (($handle = fopen($request->invitee_email, "r")) !== false) {
+                    if (($handle = fopen($request->invite_email, "r")) !== false) {
                         $header = fgetcsv($handle, 0, ',');
                         $count_header = count($header);
                         if ($count_header == 2  && in_array('Name', $header) && in_array('Email', $header)) {
@@ -166,8 +166,8 @@ class MemberManagement extends Model
         if(!$invitee){
             $response = ['success' => false,'already_exist_email_data' => $already_exists_data, 'invalid_email_data' => $invalid_email_data, 'message' =>__('notification.notification_ntcedad')];
         }
-        $invitee_email=$invitee;
-            foreach ($invitee_email as $key => $invite_email){
+        $invite_email=$invitee;
+            foreach ($invite_email as $key => $invite_email){
                 if (filter_var(trim($invite_email), FILTER_VALIDATE_EMAIL)){
                     if(!static::where(['module_id' => (int) $request->module_id, 'role' => $request->role, 'email' => trim($invite_email)])->exists()){
                         $user_data = User::select('id')->where(['email'=>$invite_email])->first();

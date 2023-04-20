@@ -24,12 +24,13 @@ class CreateMemberManagementRequest extends FormRequest
      * @return array<string, mixed>
      */
     public function rules()
-    {
-        return [
+    {   
+       $check_csv_request=$this->request->get('invite_type');
+        $rules= [
             "type"=> 'required',
             "invite_type"=> 'required',
             "module_id"=> 'required|exists:organizations,id',
-            "invite_email"=>'required',//mimes:csv
+            "invite_email"=>'required',
             "role"=> 'required',
             "inviter_id"=> 'required|exists:users,id',
             "subject_line"=> 'required',
@@ -37,6 +38,11 @@ class CreateMemberManagementRequest extends FormRequest
             "invite_status"=> 'required',
        
         ];
+        if($check_csv_request=="csv"){
+            $rules["invite_email"]='required|mimes:csv';
+        }
+        
+        return $rules;
     }
 
 
@@ -53,6 +59,7 @@ class CreateMemberManagementRequest extends FormRequest
     {
         return[
             'invite_email.required'=>__('responses.invitee_id_required'),
+            'invite_email.mimes'=>__('responses.invitee_id_required'),
             'type.required' => __('responses.type_required'),
             'invite_type.required' => __('responses.invite_type_required'),
             'module_id.required' => __('responses.module_id_required'),
@@ -64,7 +71,6 @@ class CreateMemberManagementRequest extends FormRequest
             "subject_line.required"=> __('responses.subject_line'),
             "email_body.required"=> __('responses.email_body'),
             "invite_status"=>__('responses.auto_invite_status'),
-         
         ];
     }
 }
