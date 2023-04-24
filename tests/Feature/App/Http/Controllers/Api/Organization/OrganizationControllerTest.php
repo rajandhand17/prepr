@@ -12,6 +12,8 @@ class OrganizationControllerTest extends TestCase
      *
      * @return void
      */
+
+     protected $parameters;
     public function setUp(): void
      {
             parent::setUp();

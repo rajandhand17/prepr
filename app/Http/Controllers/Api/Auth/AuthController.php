@@ -180,6 +180,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     * 
      *     @OA\Parameter(
      *         name="username",
      *         in="query",
@@ -265,6 +266,22 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *     @OA\Parameter(
+     *         name="organization_name",
+     *         in="query",
+     *         description="Enter the organization name for registered!",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Parameter(
+     *         name="register_type",
+     *         in="query",
+     *         description="Enter the register type for registered!",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -288,7 +305,7 @@ class AuthController extends AppBaseController
      * )
      */
     public function registerUser(RegisterFormRequest $request)
-    {
+    {  
         try {
             $register = $this->authRepository->register($request);
             if ($register['success'] == false) {
@@ -299,6 +316,7 @@ class AuthController extends AppBaseController
              }
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){
+            
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -351,11 +369,13 @@ class AuthController extends AppBaseController
     {
         try {
             $forgetpassword = $this->authRepository->forgetPassword($request);
-            if($forgetpassword['success'] == false) {
+            if($forgetpassword['success'] == false){
                 return $this->sendError($forgetpassword['message'], 401);
             }
             if($forgetpassword['success'] == true) {
                 return $this->sendResponse(null, __('responses.send_otp_success'), 200);
+            if($forgetpassword['success'] == true){
+                return $this->sendResponse($forgetpassword, __('notification.notification_yprlsoyrea'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){

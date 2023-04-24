@@ -82,7 +82,7 @@ class OrganizationController extends AppBaseController
     }
     
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     path="/api/v1/organization/create",
      *     tags={"Organization API - Create Organization"},
      *     summary="Create Organization with different parameters",
@@ -425,7 +425,7 @@ class OrganizationController extends AppBaseController
         }
     }
    /**
-     * @OA\Get(
+     * @OA\Delete(
      *     path="/api/v1/organization/delete",
      *     tags={"Organization API - Delete Organization"},
      *     summary="Delete Organization with different parameters",

@@ -22,5 +22,4 @@ class FileUploadHelper {
             return false;
         }  
     }
-
 }

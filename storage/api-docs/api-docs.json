@@ -196,6 +196,20 @@
                         "description": "Enter the phone number for registered!",
                         "required": true,
                         "explode": true
+                    },
+                    {
+                        "name": "organization_name",
+                        "in": "query",
+                        "description": "Enter the organization name for registered!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "register_type",
+                        "in": "query",
+                        "description": "Enter the register type for registered!",
+                        "required": true,
+                        "explode": true
                     }
                 ],
                 "responses": {
@@ -1322,6 +1336,182 @@
                 }
             }
         },
+        "/api/v1/member-management/{component}/{slug}?language=en": {
+            "get": {
+                "tags": [
+                    "Member Management API -  List"
+                ],
+                "summary": "Finds lists of Member Management",
+                "description": "Get all the Member Management",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "path",
+                        "description": "language define the choosen language",
+                        "required": true
+                    },
+                    {
+                        "name": "component",
+                        "in": "path",
+                        "description": "component define type",
+                        "required": true
+                    },
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug define the organization slug",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal server error!"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/member-management/organization/prepr/create?language=en": {
+            "post": {
+                "tags": [
+                    "Member Management API -  create"
+                ],
+                "summary": "Send request for create member management",
+                "operationId": "creates",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Enter type for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "invite_type",
+                        "in": "query",
+                        "description": "Enter invite-type for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Enter role for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "module_id",
+                        "in": "query",
+                        "description": "Enter module_id for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "inviter_id",
+                        "in": "query",
+                        "description": "Enter inviter id for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "subject_line",
+                        "in": "query",
+                        "description": "Enter subject line for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "email_body",
+                        "in": "query",
+                        "description": "Enter email body for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "invite_status",
+                        "in": "query",
+                        "description": "Enter invite status for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "invite_email",
+                        "in": "query",
+                        "description": "Enter invite email for member management!",
+                        "required": true,
+                        "explode": true
+                    },
+                    {
+                        "name": "inviter_id",
+                        "in": "query",
+                        "description": "Enter inviter id for member management!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
+        "/api/v1/member-management/organization/prepr/delete?language=en": {
+            "post": {
+                "tags": [
+                    "Member Management API - delete"
+                ],
+                "summary": "Member management apis delete",
+                "operationId": "deletes",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Enter inviter id for member management!",
+                        "required": true,
+                        "explode": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not found!"
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error!"
+                    }
+                }
+            }
+        },
         "/api/v1/organization/{language}/{slug}": {
             "get": {
                 "tags": [
@@ -1329,7 +1519,7 @@
                 ],
                 "summary": "Finds lists of Organization List",
                 "description": "Get all the Organization List",
-                "operationId": "list",
+                "operationId": "view",
                 "parameters": [
                     {
                         "name": "language",
@@ -1366,7 +1556,7 @@
             }
         },
         "/api/v1/organization/create": {
-            "get": {
+            "post": {
                 "tags": [
                     "Organization API - Create Organization"
                 ],
@@ -1687,7 +1877,7 @@
             }
         },
         "/api/v1/organization/delete": {
-            "get": {
+            "delete": {
                 "tags": [
                     "Organization API - Delete Organization"
                 ],
@@ -1738,7 +1928,7 @@
                 ],
                 "summary": "View Organization with different parameters",
                 "description": "View Organization with different parameters",
-                "operationId": "view",
+                "operationId": "list",
                 "parameters": [
                     {
                         "name": "language",
@@ -1779,6 +1969,30 @@
                         "description": "Welcome page"
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "passport": {
+                "type": "basic",
+                "description": "Laravel passport oauth2 security.",
+                "in": "header",
+                "scheme": "https",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://localhost/oauth/authorize",
+                        "tokenUrl": "http://localhost/oauth/token",
+                        "refreshUrl": "http://localhost/token/refresh",
+                        "scopes": []
+                    }
+                }
+            },
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
             }
         }
     }

@@ -138,7 +138,7 @@ class User extends Authenticatable
     }
     /**Register user */
     public function register($request)
-    {
+    { 
         try {
             DB::beginTransaction();
             $name = $request->first_name . " " . $request->last_name;
@@ -159,11 +159,11 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
-            if ($user->id) {
+            if($user->id){
                 if($request->register_type=="organization"){
                     $organization = new Organization;
                     $organization->slug=UtilityHelper::generateSlug($request->organization_name,$organization);
-                    $organization->user_id=$user->id;
+                    $organization->user_id=$user->id; 
                     $organization->name=$request->organization_name;
                     $organization->save();
                     $request->user_type="employee";
@@ -189,6 +189,7 @@ class User extends Authenticatable
             DB::rollback();
             return ["success" => false, "message" => __('responses.failed_registeration')];
         } catch (\Exception $e) {
+            return $e;
             DB::rollback();
             return ["success" => false, "message" => 'Something went wrong.'];
         }
