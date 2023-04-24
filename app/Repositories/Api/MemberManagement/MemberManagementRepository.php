@@ -124,7 +124,6 @@ class MemberManagementRepository implements MemberManagementInterface{
             return $response;  
         }
         } catch (\Exception $e) {
-            return $e;
             return false;
         }
     }
