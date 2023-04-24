@@ -82,34 +82,89 @@ class MemberManagementController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    /**
+    
+     /**
      * @OA\Post(
-     *     path="/api/v1/member-management/{component}/{slug}/create?language=en",
-     *     tags={"Member Management API -  List"},
-     *     summary="Finds lists of Member Management",
-     *     description="Get all the Member Management",
-     *     security={{"bearerAuth":{}}},
-     *     operationId="index",
+     *     path="/api/v1/member-management/organization/prepr/create?language=en",
+     *     tags={"Member Management API -  create"},
+     *     summary="Send request for create member management",
+     *     operationId="creates",
      *     @OA\Parameter(
-     *         name="language",
-     *         in="path",
+     *         name="type",
+     *         in="query",
+     *         description="Enter type for member management!",
      *         required=true,
-     *         description="language define the choosen language",
-     *        
+     *         explode=true,
+     *     ),
+     * 
+     *     @OA\Parameter(
+     *         name="invite_type",
+     *         in="query",
+     *         description="Enter invite-type for member management!",
+     *         required=true,
+     *         explode=true,
+     *
      *     ),
      *     @OA\Parameter(
-     *         name="component",
-     *         in="path",
+     *         name="role",
+     *         in="query",
+     *         description="Enter role for member management!",
      *         required=true,
-     *         description="component define type",
-     *        
+     *         explode=true,
+     *
      *     ),
      *     @OA\Parameter(
-     *         name="slug",
-     *         in="path",
+     *         name="module_id",
+     *         in="query",
+     *         description="Enter module_id for member management!",
      *         required=true,
-     *         description="slug define the organization slug",
-     *        
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Parameter(
+     *         name="inviter_id",
+     *         in="query",
+     *         description="Enter inviter id for member management!",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Parameter(
+     *         name="subject_line",
+     *         in="query",
+     *         description="Enter subject line for member management!",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Parameter(
+     *         name="email_body",
+     *         in="query",
+     *         description="Enter email body for member management!",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Parameter(
+     *         name="invite_status",
+     *         in="query",
+     *         description="Enter invite status for member management!",
+     *         required=true,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="invite_email",
+     *         in="query",
+     *         description="Enter invite email for member management!",
+     *         required=true,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="inviter_id",
+     *         in="query",
+     *         description="Enter inviter id for member management!",
+     *         required=true,
+     *         explode=true,
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -128,15 +183,17 @@ class MemberManagementController extends AppBaseController
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal server error!",
+     *         description="Internal Server Error!",
      *
      *     ),
      * )
      */
-    public function create($component,$slug,CreateMemberManagementRequest $request)
+    
+    public function creates($component,$slug,CreateMemberManagementRequest $request)
     {  
         try {
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
+            dd($member_mangement);
             if($member_mangement){
                 return $member_mangement;
             }
@@ -145,8 +202,43 @@ class MemberManagementController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    
-    public function delete($component,$slug,DeleteMemberManagementRequest $request)
+ 
+     /**
+     * @OA\Post(
+     *     path="/api/v1/member-management/organization/prepr/delete?language=en",
+     *     tags={"Member Management API - delete"},
+     *     summary="Member management apis delete",
+     *     operationId="deletes",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="query",
+     *         description="Enter inviter id for member management!",
+     *         required=true,
+     *         explode=true,
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *
+     *     ),
+     * )
+     */   
+    public function deletes($component,$slug,DeleteMemberManagementRequest $request)
     {   
         try {
             $member_mangement=$this->memberManagementRepository->delete($component,$slug,$request);

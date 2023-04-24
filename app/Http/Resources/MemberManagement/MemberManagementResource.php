@@ -28,13 +28,13 @@ class MemberManagementResource extends JsonResource
         ];
       
         if($this->type==0){
-            $member_management['type']="Invite";
+            $member_management['type']="invite";
         }
         if($this->type==1){
-            $member_management['type']="Join_request";
+            $member_management['type']="join-request";
         }
         if($this->type==2){
-            $member_management['type']="auto_Created";
+            $member_management['type']="auto-created";
         }
           //Invite type changing
           $inviteType=config("member-manager-invite-type");
