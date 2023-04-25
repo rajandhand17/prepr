@@ -372,8 +372,8 @@ class AuthController extends AppBaseController
             if($forgetpassword['success'] == false){
                 return $this->sendError($forgetpassword['message'], 401);
             }
-            if($forgetpassword['success'] == true){
-                return $this->sendResponse($forgetpassword, __('notification.notification_yprlsoyrea'), 200);
+            if($forgetpassword['success'] == true) {
+                return $this->sendResponse(null, __('responses.send_otp_success'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){
@@ -599,7 +599,7 @@ class AuthController extends AppBaseController
             $send_otp = $this->authRepository->sendOtp($request);
             if ($send_otp["success"] === true) {
                if($send_otp["purpose"]==="forget_password"){
-                  return $this->sendResponse($send_otp, __('notification.notification_yprlsoyrea'), 200);
+                  return $this->sendResponse($send_otp, __('responses.send_otp_success'), 200);
                }
                if($send_otp["purpose"]==="verify_email"){
                   return $this->sendResponse($send_otp, __('responses.user_verify_email_otp'), 200);
@@ -676,7 +676,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse($verify, __('responses.verify_success'), 200);
             }
             if($verify['success']===false){
-                return $this->sendResponse($verify,$verify['message'],403);
+               return $this->sendError($verify['message'], 208);
             }
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
@@ -735,7 +735,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse(null, __('responses.verify_reference_success'), 200);
             }
             if($referencecode==false){
-                return $this->sendResponse(null, __('responses.verify_reference_error'), 200);
+                return $this->sendError(null, __('responses.verify_reference_error'), 404);
             }
             return $this->sendError(__('responses.send_error'), 500);
         }catch(\Exception $e){
@@ -816,7 +816,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse(null, __('notification.notification_yprs'), 200);
             }
             if ($resetcode['success'] === false) {
-                return $this->sendError($resetcode['message'], 403);
+                return $this->sendError($resetcode['message'],403);
             }
             return $this->sendError(__('responses.send_error'), 500);
          }catch (\Exception $e) {

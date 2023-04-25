@@ -193,7 +193,6 @@ class MemberManagementController extends AppBaseController
     {  
         try {
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
-            dd($member_mangement);
             if($member_mangement){
                 return $member_mangement;
             }

@@ -294,7 +294,7 @@ class User extends Authenticatable
             $updated_user = $user->updated_at;
             /**check user account verified or not */
             if ($user->verified_user === "1"){
-                $response=["success" => false, "message" => __('notification.notification_uarvrf'), "code" => 1];
+                $response=["success" => false, "message" => __('responses.verify_success_already'), "code" => 1];
                 return $response;
              }
             /**Matching otp is same or not */

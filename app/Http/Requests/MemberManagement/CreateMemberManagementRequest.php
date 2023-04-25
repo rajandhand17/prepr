@@ -58,7 +58,7 @@ class CreateMemberManagementRequest extends FormRequest
     public function messages()
     {
         return[
-            'invite_email.required'=>__('responses.invitee_id_required'),
+            'invite_email.required'=>__('responses.invite_email_required'),
             'invite_email.mimes'=>__('responses.invitee_id_required'),
             'type.required' => __('responses.type_required'),
             'invite_type.required' => __('responses.invite_type_required'),
