@@ -193,7 +193,6 @@ class MemberManagementController extends AppBaseController
     {  
         try {
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
-            dd($member_mangement);
             if($member_mangement){
                 return $member_mangement;
             }
@@ -210,11 +209,12 @@ class MemberManagementController extends AppBaseController
      *     summary="Member management apis delete",
      *     operationId="deletes",
      *     @OA\Parameter(
-     *         name="id",
+     *         name="id[]",
      *         in="query",
-     *         description="Enter inviter id for member management!",
+     *         description="Member management delete id",
      *         required=true,
      *         explode=true,
+     *         @OA\Schema(type="array", @OA\Items(type="integer")),
      *     ),
      *     @OA\Response(
      *         response=200,

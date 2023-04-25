@@ -1489,11 +1489,17 @@
                 "operationId": "deletes",
                 "parameters": [
                     {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Enter inviter id for member management!",
+                        "name": "id[]",
+                        "in": "query",
+                        "description": "Member management delete id",
                         "required": true,
-                        "explode": true
+                        "explode": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
                     }
                 ],
                 "responses": {

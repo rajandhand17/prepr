@@ -378,10 +378,11 @@ class AuthController extends AppBaseController
                 return $this->sendResponse($forgetpassword, __('notification.notification_yprlsoyrea'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
+        }
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
-    }
+    }   
     /**
      * @OA\Post(
      *     path="/api/v1/auth/checkusername",
