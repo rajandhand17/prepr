@@ -189,14 +189,17 @@ class MemberManagementController extends AppBaseController
      * )
      */
     
-    public function creates($component,$slug,CreateMemberManagementRequest $request)
+    public function create($component,$slug,CreateMemberManagementRequest $request)
     {  
         try {
+            if(!in_array($request->invite_type,["csv","email","network"])){
+                return $this->sendError(__('responses.member_manage_type'),400);
+            }
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
             if($member_mangement){
-                return $member_mangement;
+                return $this->sendResponse(null, __('responses.create_member_manger_success'));
             }
-            return $this->sendError(__('responses.create_member_manger_failed'),201);
+            return $this->sendError(__('responses.create_member_manger_failed'),403);
         }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -237,7 +240,7 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */   
-    public function deletes($component,$slug,DeleteMemberManagementRequest $request)
+    public function delete($component,$slug,DeleteMemberManagementRequest $request)
     {   
         try {
             $member_mangement=$this->memberManagementRepository->delete($component,$slug,$request);
