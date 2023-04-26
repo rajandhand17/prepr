@@ -40,26 +40,34 @@ class MemberManagementRepository implements MemberManagementInterface{
             $request->type="0";
             $request->invite_status="0";
             $invitee = array();
-            $invitee = explode(',', $request->invite_email);
-            if($request->invite_type=="email"){
-                foreach ($invitee as $invite_member){
-                    if(filter_var(trim($invite_member), FILTER_VALIDATE_EMAIL)){
-                        $user_email[]=$invite_member;
-                    }else{
-                        $invalid_email_data[]=$invite_member;
+            if($request->invite_type!="csv"){
+                    if(gettype($request->invite_email)!="string"){
+                        return false;
                     }
-                }
-                $request['invite_type']="0";
-            }
-            if($request->invite_type == 'network'){
-                $request['invite_type']="1";
-                foreach ($invitee as $invite_member){
-                    $user_data = User::select('email')->where(['id' => (int) $invite_member])->first();
-                    if($user_data && filter_var(trim($user_data->email), FILTER_VALIDATE_EMAIL)){
-                        $user_email[]=$user_data->email;
+                    $invitee = explode(',', $request->invite_email);
+                    if(gettype($invitee)!=="array"){
+                        return false;
                     }
-                }
-            }
+                    if($request->invite_type=="email"){
+                        foreach ($invitee as $invite_member){
+                            if(filter_var(trim($invite_member), FILTER_VALIDATE_EMAIL)){
+                                $user_email[]=$invite_member;
+                            }else{
+                                $invalid_email_data[]=$invite_member;
+                            }
+                        }
+                        $request['invite_type']="0";
+                    }
+                    if($request->invite_type == 'network'){
+                        $request['invite_type']="1";
+                        foreach ($invitee as $invite_member){
+                            $user_data = User::select('email')->where(['id' => (int) $invite_member])->first();
+                            if($user_data && filter_var(trim($user_data->email), FILTER_VALIDATE_EMAIL)){
+                                $user_email[]=$user_data->email;
+                            }
+                        }
+                    }
+        }
             if($request->invite_type == 'csv'){
                 $request['invite_type']="3";
                 /**get records from csv */

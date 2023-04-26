@@ -1490,7 +1490,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "path",
+                        "in": "query",
                         "description": "Enter inviter id for member management!",
                         "required": true,
                         "explode": true

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @OA\Tag(
+ *     name="MemberManagementController",
+ *     description="Operations related to MemberManagementController"
+ * )
+ */
 namespace App\Http\Controllers\Api\MemberManagement;
 
 use App\Http\Controllers\AppBaseController;
@@ -88,7 +93,7 @@ class MemberManagementController extends AppBaseController
      *     path="/api/v1/member-management/organization/prepr/create?language=en",
      *     tags={"Member Management API -  create"},
      *     summary="Send request for create member management",
-     *     operationId="creates",
+     *     operationId="create",
      *     @OA\Parameter(
      *         name="type",
      *         in="query",
@@ -200,7 +205,7 @@ class MemberManagementController extends AppBaseController
                 return $this->sendResponse(null, __('responses.create_member_manger_success'));
             }
             return $this->sendError(__('responses.create_member_manger_failed'),403);
-        }catch (\Exception $e) {
+        }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -210,7 +215,7 @@ class MemberManagementController extends AppBaseController
      *     path="/api/v1/member-management/organization/prepr/delete?language=en",
      *     tags={"Member Management API - delete"},
      *     summary="Member management apis delete",
-     *     operationId="deletes",
+     *     operationId="delete",
      *     @OA\Parameter(
      *         name="id",
      *         in="query",

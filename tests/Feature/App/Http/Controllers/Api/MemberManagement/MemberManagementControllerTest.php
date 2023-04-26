@@ -4,6 +4,7 @@ namespace Tests\Feature\App\Http\Controllers\Api\MemberManagement;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Util\Csv\CsvFileIterator;
 use Tests\TestCase;
 
 class MemberManagementControllerTest extends TestCase
@@ -36,22 +37,36 @@ class MemberManagementControllerTest extends TestCase
                 "inviter_id"=>"15",
                 "id"=>["1"],
             ];
-
    }
    /**create member management positive */
    public function test_create_positive(){
     $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en',$this->parameters);
     $this->assertEquals(200, $response->getStatusCode());
    }
-   
-   
+
    /**create member management negative */
    public function test_create_negative(){
             $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en',[]);
             $this->assertEquals(422, $response->getStatusCode());
    }
+   
+   /**create member management positive */
+   public function test_create_with_network_positive(){
+    $this->parameters['invite_type']="network";
+    $this->parameters['invite_email']="15";
+    $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en',$this->parameters);
+    $this->assertEquals(200, $response->getStatusCode());
+   }
 
+     /**create member management positive */
+     public function test_create_with_network_negative(){
+        $this->parameters['invite_type']="network";
+        $this->parameters['invite_email']="5";
 
+        $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en',$this->parameters);
+        $this->assertEquals(403, $response->getStatusCode());
+       }
+  
    /**Listing member management positive */
    public function test_listing_positive()
    {   
