@@ -1385,7 +1385,7 @@
                 ]
             }
         },
-        "/api/v1/member-management/organization/prepr/create?language=en": {
+        "/api/v1/member-management/{component}/{slug}/create?language=en": {
             "post": {
                 "tags": [
                     "Member Management API -  create"
@@ -1480,7 +1480,7 @@
                 }
             }
         },
-        "/api/v1/member-management/organization/prepr/delete?language=en": {
+        "/api/v1/member-management/{component}/{slug}/delete?language=en": {
             "post": {
                 "tags": [
                     "Member Management API - delete"
@@ -1489,11 +1489,15 @@
                 "operationId": "deletes",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "id[]",
                         "in": "query",
                         "description": "Enter inviter id for member management!",
                         "required": true,
-                        "explode": true
+                        "explode": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
                     }
                 ],
                 "responses": {

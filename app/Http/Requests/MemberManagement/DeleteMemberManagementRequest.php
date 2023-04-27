@@ -44,7 +44,7 @@ class DeleteMemberManagementRequest extends FormRequest
     {
         return[
             'id.required'=>__('responses.member_manager_id_required'),
-            'id.array'=>__('responses.member_manager_id_required'),
+            'id.array'=>__('responses.member_manager_array'),
             'id.exists'=>__('responses.member_manager_not_exists'),
         ];
     }

@@ -1,7 +1,12 @@
 <?php
-
+/**
+ * @OA\Tag(
+ *     name="OrganizationController",
+ *     description="Operations related to OrganizationController"
+ * )
+ */
 namespace App\Http\Controllers\Api\organization;
-
+ 
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use App\Repositories\Api\Organization\OrganizationRepository;

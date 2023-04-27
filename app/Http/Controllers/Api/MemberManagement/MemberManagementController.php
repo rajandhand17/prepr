@@ -90,10 +90,10 @@ class MemberManagementController extends AppBaseController
     
      /**
      * @OA\Post(
-     *     path="/api/v1/member-management/organization/prepr/create?language=en",
+     *     path="/api/v1/member-management/{component}/{slug}/create?language=en",
      *     tags={"Member Management API -  create"},
      *     summary="Send request for create member management",
-     *     operationId="create",
+     *     operationId="creates",
      *     @OA\Parameter(
      *         name="type",
      *         in="query",
@@ -194,7 +194,7 @@ class MemberManagementController extends AppBaseController
      * )
      */
     
-    public function create($component,$slug,CreateMemberManagementRequest $request)
+    public function creates($component,$slug,CreateMemberManagementRequest $request)
     {  
         try {
             if(!in_array($request->invite_type,["csv","email","network"])){
@@ -212,16 +212,22 @@ class MemberManagementController extends AppBaseController
  
      /**
      * @OA\Post(
-     *     path="/api/v1/member-management/organization/prepr/delete?language=en",
+     *     path="/api/v1/member-management/{component}/{slug}/delete?language=en",
      *     tags={"Member Management API - delete"},
      *     summary="Member management apis delete",
-     *     operationId="delete",
+     *     operationId="deletes",
      *     @OA\Parameter(
-     *         name="id",
+     *         name="id[]",
      *         in="query",
-     *         description="Enter inviter id for member management!",
+     *         description="Enter id of member management!",
      *         required=true,
      *         explode=true,
+     *  @OA\Schema( 
+     *              type="array", 
+     *              @OA\Items( 
+     *                        
+     *                       ),
+     *          )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -245,7 +251,7 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */   
-    public function delete($component,$slug,DeleteMemberManagementRequest $request)
+    public function deletes($component,$slug,DeleteMemberManagementRequest $request)
     {   
         try {
             $member_mangement=$this->memberManagementRepository->delete($component,$slug,$request);
