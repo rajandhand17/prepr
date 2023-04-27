@@ -33,19 +33,19 @@ class MemberManagementRepository implements MemberManagementInterface{
     public function create($component,$slug,$request)
     {
         try{ 
-            $invalid_email_data=array();
-            $not_inserted_emails=array();
-            $inserted_emails=array();
-            $user_email=array();
+            $invalid_email_data=[];
+            $not_inserted_emails=[];
+            $inserted_emails=[];
+            $user_email=[];
             $request->type="0";
             $request->invite_status="0";
-            $invitee = array();
+            $invitee = [];
             if($request->invite_type!="csv"){
                     if(gettype($request->invite_email)!="string"){
                         return false;
                     }
                     $invitee = explode(',', $request->invite_email);
-                    if(gettype($invitee)!=="array"){
+                    if(!is_array($invitee)){
                         return false;
                     }
                     if($request->invite_type=="email"){
