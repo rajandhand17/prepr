@@ -1491,7 +1491,7 @@
                     {
                         "name": "id[]",
                         "in": "query",
-                        "description": "Enter inviter id for member management!",
+                        "description": "Enter id of member management!",
                         "required": true,
                         "explode": true,
                         "schema": {

@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Api\MemberManagement;
 
+use App\Helpers\SendMailHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use Illuminate\Http\Request;
@@ -15,6 +16,8 @@ use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Requests\MemberManagement\UploadCsvFileMemberManagementRequest;
+use App\Models\MemberManagement;
+use App\Models\User;
 
 class MemberManagementController extends AppBaseController
 {   
@@ -196,13 +199,13 @@ class MemberManagementController extends AppBaseController
     
     public function creates($component,$slug,CreateMemberManagementRequest $request)
     {  
-        try {
+        try{
             if(!in_array($request->invite_type,["csv","email","network"])){
                 return $this->sendError(__('responses.member_manage_type'),400);
             }
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
-            if($member_mangement){
-                return $this->sendResponse(null, __('responses.create_member_manger_success'));
+            if($member_mangement->status===true){
+                return $this->sendResponse($member_mangement, __('responses.create_member_manger_success'));
             }
             return $this->sendError(__('responses.create_member_manger_failed'),403);
         }catch (\Exception $e){
@@ -253,7 +256,7 @@ class MemberManagementController extends AppBaseController
      */   
     public function deletes($component,$slug,DeleteMemberManagementRequest $request)
     {   
-        try {
+        try{
             $member_mangement=$this->memberManagementRepository->delete($component,$slug,$request);
             if($member_mangement){
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
@@ -263,5 +266,4 @@ class MemberManagementController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
 }

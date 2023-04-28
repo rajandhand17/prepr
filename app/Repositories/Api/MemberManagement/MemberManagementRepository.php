@@ -34,9 +34,10 @@ class MemberManagementRepository implements MemberManagementInterface{
     {
         try{ 
             $invalid_email_data=[];
-            $not_inserted_emails=[];
+            $invalid_users=[];
             $inserted_emails=[];
-            $user_email=[];
+            $not_inserted_emails=[];
+            $already_exists_emails=[];
             $request->type="0";
             $request->invite_status="0";
             $invitee = [];
@@ -48,47 +49,63 @@ class MemberManagementRepository implements MemberManagementInterface{
                     if(!is_array($invitee)){
                         return false;
                     }
-                    if($request->invite_type=="email"){
-                        foreach ($invitee as $invite_member){
-                            if(filter_var(trim($invite_member), FILTER_VALIDATE_EMAIL)){
-                                $user_email[]=$invite_member;
-                            }else{
-                                $invalid_email_data[]=$invite_member;
-                            }
-                        }
-                        $request['invite_type']="0";
+                    if($request->invite_type == 'email'){
+                        $request->invite_type="0"; 
                     }
                     if($request->invite_type == 'network'){
-                        $request['invite_type']="1";
-                        foreach ($invitee as $invite_member){
-                            $user_data = User::select('email')->where(['id' => (int) $invite_member])->first();
-                            if($user_data && filter_var(trim($user_data->email), FILTER_VALIDATE_EMAIL)){
-                                $user_email[]=$user_data->email;
-                            }
-                        }
+                        $request->invite_type="1"; 
                     }
         }
+
             if($request->invite_type == 'csv'){
                 $request['invite_type']="3";
                 /**get records from csv */
-                $user_email=$this->member_mangement->getRecordsFromCsv($request);
-                if(!$user_email){
+                $invitee=$this->member_mangement->getRecordsFromCsv($request);
+                if(!$invitee){
                     return false;
                 }
             }
-            foreach ($user_email as $key => $email) {
-                $result=$this->member_mangement->create($email,$request);
-                if($result==true){
-                    $inserted_emails[]=$email;
+            /**convert string to array */
+            foreach ($invitee as $invite_member){
+                /**in case invite type email */
+                if($request->invite_type == '1'){
+                    $user_data = User::select('email')->where(['id' => (int) $invite_member])->first();
+                    if($user_data==null){
+                        $invalid_users[]=$invite_member;
+                        continue;
+                    }
+                    $invite_member=$user_data->email;
                 }
-                if($result==false){
-                    $not_inserted_emails[]=$email;
+                if(filter_var(trim($invite_member), FILTER_VALIDATE_EMAIL)){
+                    $result=$this->member_mangement->insert($invite_member,$request);
+                   
+                    if($result===true){
+                        $inserted_emails[]=$invite_member;
+                    }
+                    if($result===false){
+                         $not_inserted_emails[]=$invite_member;
+                    }
+                    if($result==="already_exists"){
+                        $already_exists_emails[]=$invite_member;
+                    }
+                }else{
+                    $invalid_email_data[]=$invite_member;
                 }
             }
-            if(!empty($inserted_emails)){
-              return true;
+            $invalid_users=implode(",", $invalid_users);
+            $response= new \stdClass;
+            if(!empty($inserted_emails) || !empty($already_exists_emails)){
+                 $response->status=true;
+                 $response->already_exists_emails=$already_exists_emails;
+                 $response->inserted_emails=$inserted_emails;
+                 $response->invalid_email_data=$invalid_email_data;
+                 if($request->invite_type == '1'){
+                    $response->invalid_users=$invalid_users;
+                 }
+                 return $response;
             }
-            return false;
+            $response->status=false;
+            return $response;
         } catch (\Exception $e) {
             return false;
         }

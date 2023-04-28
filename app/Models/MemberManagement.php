@@ -113,7 +113,7 @@ class MemberManagement extends Model
         
     }
 
-    public function create($invitee,$request)
+    public function insert($invitee,$request)
     {   
        try{
         if(!MemberManagement::where(['module_id' => (int) $request->module_id, 'role' => $request->role, 'email' => trim($invitee)])->exists()){
@@ -133,6 +133,8 @@ class MemberManagement extends Model
              return true;
            }
            return false;
+        }else{
+            return "already_exists";
         }
        }catch (\Exception $e) {
         return false;      
