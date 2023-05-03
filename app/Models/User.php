@@ -165,6 +165,7 @@ class User extends Authenticatable
             if($member_manager){
                 foreach($member_manager as $member){
                     $user->attachRole($member->role,$member->module_id);
+                    $member_manager=MemberManagement::where('id',$member->id)->update(['invite_status'=>'1']);
                 }
             }
             if($user->id){
