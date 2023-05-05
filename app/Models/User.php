@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Helpers\PlanSubscriptionHelper;
 use Laratrust\Traits\LaratrustUserTrait;
 use App\Helpers\UtilityHelper;
 
@@ -159,6 +160,8 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
+            $userCreated = PlanSubscriptionHelper::createCustomer($user,$request->language);
+            $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($userCreated);
             if ($user->id) {
                 if($request->register_type=="organization"){
                     $organization = new Organization;
