@@ -12,6 +12,11 @@ use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
 use App\Http\Requests\Organization\DeleteOrganizationRequest;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Helpers\PlanSubscriptionHelper;
+use ChargeBee\ChargeBee\Environment;
+use ChargeBee\ChargeBee\Models\Subscription;
+use ChargeBee\ChargeBee\Models\Customer;
+use ChargeBee\ChargeBee\Models\ItemEntitlement;
 
 class Organization extends LaratrustTeam
 {   
@@ -116,6 +121,10 @@ class Organization extends LaratrustTeam
         }
         $organization->total_employees=$request->total_employees;
         if($organization->save()){
+            $cust_id = PlanSubscriptionHelper::getCustomer(auth()->user()->email);
+            if($cust_id != []){
+                $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($cust_id, 'free-plan-CAD-Yearly', $organization->id);
+            }
             if($request->has('address') && $request->has('city') && $request->has('state') && $request->has('country') && $request->has('zip_code')){
                 $request->organization_id=$organization->id;
                 $address=OrganizationAddress::create($request);
@@ -150,6 +159,7 @@ class Organization extends LaratrustTeam
 
        } catch (\Exception $e) {
         DB::rollback();
+        return $e;
         $response= ['success' => false, 'message' => __('responses.send_error')];
         return $response;
        }

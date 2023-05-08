@@ -16,7 +16,9 @@ use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\ResetPasswordFormRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
 use App\Http\Resources\Auth\RegisterResource;
-
+use ChargeBee\ChargeBee\Environment;
+use ChargeBee\ChargeBee\Models\Subscription;
+use App\Helpers\PlanSubscriptionHelper;
 class AuthController extends AppBaseController
 {
     private $authRepository;
@@ -288,7 +290,7 @@ class AuthController extends AppBaseController
      * )
      */
     public function registerUser(RegisterFormRequest $request)
-    {
+    {    
         try {
             $register = $this->authRepository->register($request);
             if ($register['success'] == false) {

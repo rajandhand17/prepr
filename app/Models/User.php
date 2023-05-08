@@ -139,7 +139,7 @@ class User extends Authenticatable
     }
     /**Register user */
     public function register($request)
-    {
+    {    
         try {
             DB::beginTransaction();
             $name = $request->first_name . " " . $request->last_name;
@@ -160,6 +160,7 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
+            
             $userCreated = PlanSubscriptionHelper::createCustomer($user,$request->language);
             $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($userCreated);
             if ($user->id) {
@@ -193,6 +194,7 @@ class User extends Authenticatable
             return ["success" => false, "message" => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
+            return $e;
             return ["success" => false, "message" => 'Something went wrong.'];
         }
     }
