@@ -16,7 +16,7 @@ use Laratrust\Traits\LaratrustUserTrait;
 use App\Helpers\UtilityHelper;
 
 class User extends Authenticatable
-{
+{   
     use LaratrustUserTrait;
     use HasApiTokens, HasFactory, Notifiable;
 

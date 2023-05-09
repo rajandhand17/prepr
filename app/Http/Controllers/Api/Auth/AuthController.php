@@ -529,7 +529,7 @@ class AuthController extends AppBaseController
             }else{
                 return $this->sendError(__("responses.already_number"), 403);
             }
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
