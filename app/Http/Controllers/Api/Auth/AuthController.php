@@ -19,6 +19,7 @@ use App\Http\Resources\Auth\RegisterResource;
 use ChargeBee\ChargeBee\Environment;
 use ChargeBee\ChargeBee\Models\Subscription;
 use App\Helpers\PlanSubscriptionHelper;
+
 class AuthController extends AppBaseController
 {
     private $authRepository;
@@ -79,7 +80,7 @@ class AuthController extends AppBaseController
      * )
      */
     public function login(LoginFormRequest $request)
-    {
+    {    
         try {
             $login = $this->authRepository->login($request);
             if ($login['success'] == true){
