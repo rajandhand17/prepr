@@ -381,7 +381,7 @@ class OrganizationController extends AppBaseController
      *         name="country",
      *         in="query",
      *         description="Country for organizations country name",
-     *         required=false,
+     *      .   required=false,
      *         explode=true,
      *     ),
      *     @OA\Parameter(

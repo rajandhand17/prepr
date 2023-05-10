@@ -45,11 +45,11 @@ class AssignChargebeePlansToUsers extends Command{
             foreach ($all_organizations as $key => $org){
                 $user=User::where("id",$org->user_id)->first();
                 if($user){
-                    if($user->hasRole(['free_organisation_manager'])){
-                        $user->removeRole("free_organisation_manager");
-                        $user->assignRole("org_admin_manager");
-                        $userCreated = PlanSubscriptionHelper::createCustomer($user,$user->preferred_language);
-                        $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($userCreated);
+                  if($user->hasRole(['free_organisation_manager'],$org->id)){
+                      $user->detachRole("free_organisation_manager",$org->id);
+                      $user->attachRole("organization_manager",$org->id);
+                      $userCreated = PlanSubscriptionHelper::createCustomer($user,$user->preferred_language);
+                      $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($userCreated);
                     }   
                 }
             }
