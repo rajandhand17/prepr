@@ -478,7 +478,6 @@ class OrganizationController extends AppBaseController
             if($organization===true){
                 return $this->sendResponse(null,__('responses.delete_organizations_success'));
             }
-            
             return $this->sendError(__('responses.delete_organizations_failed'),400);
         } catch (\Exception $e) {
            return $this->sendError(__('responses.send_error'), 500);
