@@ -28,7 +28,7 @@ class PlanSubscriptionHelper
       Environment::configure(config('chargebee.Chargebee_Site'), config('chargebee.Chargebee_Key'));
       $result = Subscription::createWithItems($customer->id,array(
       "subscriptionItems" => array(array(
-        "itemPriceId" => "free-plan-CAD-Yearly",
+        "itemPriceId" => config('chargebeeplans.Started_Plan'),
         "unitPrice" => 0,
         "quantity" => 1)
       )
@@ -92,5 +92,61 @@ class PlanSubscriptionHelper
         return false;
       }
     }
+
+     // get feature limits (created lab, challenge, group count)
+  public static function getFeatureLimits($org_id)
+  {
+   try {
+    $data = self::getSubscribedPlanDetailForOrg($org_id);
+      foreach($data['featureList'] as $feature) {
+        $subscriptionEntitlement = $feature->subscriptionEntitlement();
+        if($subscriptionEntitlement->featureId == 'resource-creation' )
+        $Limits['resourceLimit'] = $subscriptionEntitlement->value;
+        if($subscriptionEntitlement->featureId == 'challenge-creation')
+        $Limits['challengeLimit'] = $subscriptionEntitlement->value;
+        if($subscriptionEntitlement->featureId == 'lab-creation')
+        $Limits['labLimit'] = $subscriptionEntitlement->value;
+        if($subscriptionEntitlement->featureId == 'resource-collection-creation')
+        $Limits['resourceCollectionLimit'] = $subscriptionEntitlement->value;
+        if($subscriptionEntitlement->featureId == 'resource-group-creation')
+        $Limits['resourceGroupLimit'] = $subscriptionEntitlement->value;
+        if($subscriptionEntitlement->featureId == 'challenge-path-creation')
+        $Limits['challengePathLimit'] = $subscriptionEntitlement->value;
+      }
+      return $Limits;
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+  
+   // get created things count (created lab, challenge, group count)
+   public static function getCreatedValuesCount($id, $component)
+   {
+     try {
+       $organisation = Organisation::where('id', $id)->first();
+       $orgValueCount = [];
+       if($component == 'lab' || $component == 'all')
+       $orgValueCount['lab'] = Lab::where('organisation', $id)->where('is_auto_created', '0')->count();
+       if($component == 'challenge' || $component == 'all')
+       $orgValueCount['challenge'] = Challange::where(['organisation' => $id])->count();
+       if($component == 'challenge_path' || $component == 'all')
+       $orgValueCount['challenge_path'] = Group::where('organisation', $id)->where('type', 'challenge')->count();
+       if($component == 'lab_program' || $component == 'all')
+       $orgValueCount['lab_program'] = Group::where('organisation', $id)->where('type', 'lab')->count();
+       if($component == 'resource_group' || $component == 'all')
+       $orgValueCount['resource_group'] = Group::where('organisation', $id)->where('type', 'resource')->count();
+       if($component == 'resource_module_count' || $component == 'all')
+       $orgValueCount['resource_module_count'] = Resource::where('org_id', $id)->where('is_auto_created', '0')->count();
+       if($component == 'resource_collection_count' || $component == 'all')
+       $orgValueCount['resource_collection_count'] = ResourceGroup::where('org_id', $id)->count();
+       if($component == 'org_org_manager_count' || $component == 'all')
+       $orgValueCount['org_org_manager_count'] = OrganizationInviteUser::where('organisation_id', $id)->count();
+       if($component == 'user_count' || $component == 'all')
+       $orgValueCount['user_count'] = OrganizationInviteUser::where('organisation_id', $id)->where('role', 'user')->count();
+       return $orgValueCount;
+     } catch(Exception $e) {
+       return false;
+     } 
+   }
 
 }
