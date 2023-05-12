@@ -26,7 +26,7 @@ class PlanSubscriptionHelper
     //assigning free plan to new user when he register
     public static function freePlanSubscribe($customer) {
       Environment::configure(config('chargebee.Chargebee_Site'), config('chargebee.Chargebee_Key'));
-    $result = Subscription::createWithItems($customer->id,array(
+      $result = Subscription::createWithItems($customer->id,array(
       "subscriptionItems" => array(array(
         "itemPriceId" => "free-plan-CAD-Yearly",
         "unitPrice" => 0,
@@ -70,7 +70,7 @@ class PlanSubscriptionHelper
       }
     }
 
-    public static function getFeaturesList($request)
+    public static function getSubscribedPlanForOrg($request)
     {
       try {
         Environment::configure(config('chargebee.Chargebee_Site'), config('chargebee.Chargebee_Key'));
