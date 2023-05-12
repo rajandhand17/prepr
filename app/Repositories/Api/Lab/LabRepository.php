@@ -50,7 +50,7 @@ class LabRepository extends LabInterface{
     public function delete($request)
     {
         try {
-            return $this->lab->delete($request);
+            return $this->lab->deletes($request);
         } catch (\Exception $e) {
             return false;
         }

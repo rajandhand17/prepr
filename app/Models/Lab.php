@@ -19,4 +19,19 @@ class Lab extends Model
     {
         
     }
+
+    public function deletes($request)
+    {
+        try{ 
+            $labs=static::whereIn("id",$request->id)->delete();
+            if($labs){
+                return true;
+            }else{
+                return false;
+            }
+        }catch(\Exception $e){
+            return false;        
+        }
+    }
+    
 }
