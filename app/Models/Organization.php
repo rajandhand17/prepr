@@ -56,7 +56,7 @@ class Organization extends LaratrustTeam
              $organization_list=$organization_list->get();
              //check if there are any results
              if(!$organization_list->isEmpty()){
-                 return $organization_list;
+                // return $organization_list;
             $organization_list->transform(function ($item) {
                 if( $item['status']==0){
                     $item['status'] = 'draft'; 
