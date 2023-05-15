@@ -165,6 +165,10 @@ class User extends Authenticatable
             $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($userCreated);
             if ($user->id) {
                 if($request->register_type=="organization"){
+                    // $user->syncRoles(['org_admin_manager', 'user']);
+                    // $user->admin_lab_limit = '1';
+                    // $user->admin_challenge_limit = '1';
+                    // $user->save();
                     $organization = new Organization;
                     $organization->slug=UtilityHelper::generateSlug($request->organization_name,$organization);
                     $organization->user_id=$user->id;
