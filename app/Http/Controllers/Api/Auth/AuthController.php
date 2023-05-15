@@ -86,7 +86,8 @@ class AuthController extends AppBaseController
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if($login['code'] === 3){
-                   $response=["token"=>$login['token'],"code"=>$login['code']];
+                   
+                   $response=["token"=>$login['token'],"data"=>$login['user'],"code"=>$login['code']];
                     return $this->sendResponse($response, $login['message'], 200);
                 }
             }

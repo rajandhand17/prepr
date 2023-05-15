@@ -84,9 +84,11 @@ class User extends Authenticatable
                return $response;
             }
             if ($user) {
+             
                 /**check password same or not */
                 if (Hash::check($request->password, $user->password)) {
                     $token = $user->createToken(env("APP_NAME"))->accessToken;
+                   
                     if ($user->two_factor_verification == 1){
                         $otp = random_int(1000, 9999);
                         DB::beginTransaction();
@@ -101,7 +103,8 @@ class User extends Authenticatable
                         }
                         return ["success" => false, "message" => __('responses.failed_email'),"code"=>null];
                     }
-                    $response = ['success' => true, 'code' => 3, 'token' => $token,"message" => __('responses.user_login_sucess')];
+                    $data = User::where('email', $request->email)->first();
+                    $response = ['success' => true,  "user" => $data, 'code' => 3, 'token' => $token,"message" => __('responses.user_login_sucess')];
                     return $response;
                 } else {
                     $response = ['success' => false, "message"=>__('notification.notification_icpta'), 'code' => 4];
