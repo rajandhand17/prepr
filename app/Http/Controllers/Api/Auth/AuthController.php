@@ -501,7 +501,7 @@ class AuthController extends AppBaseController
      *     summary="Send request for check email",
      *     operationId="checkPhone",
      *     @OA\Parameter(
-     *         name="phone_number",
+     *         name="phone_number",0
      *         in="query",
      *         description="check the phone number that exists or not!",
      *         required=true,
