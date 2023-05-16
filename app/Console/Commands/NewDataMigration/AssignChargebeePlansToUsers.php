@@ -49,7 +49,7 @@ class AssignChargebeePlansToUsers extends Command{
                       $user->detachRole("free_organisation_manager",$org->id);
                       $user->attachRole("organization_manager",$org->id);
                       $userCreated = PlanSubscriptionHelper::createCustomer($user,$user->preferred_language);
-                      $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($userCreated);
+                      $planSubscribed  = PlanSubscriptionHelper::subscribePlan($userCreated);
                     }   
                 }
             }

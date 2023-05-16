@@ -10,8 +10,9 @@ class PlanSubscriptionHelper
 {  
    
     // create customer everytime when new user register 
-    public static function createCustomer($user, $language){
-      Environment::configure(config('chargebee.Chargebee_Site'), config('chargebee.Chargebee_Key'));
+    public static function createCustomer($user, $language) {
+      try {
+        Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
         $result = Customer::create(array(
           "firstName" =>  $user->first_name,
           "lastName" => $user->last_name,
@@ -21,79 +22,76 @@ class PlanSubscriptionHelper
         $customer = $result->customer();
         $card = $result->card();
         return $customer;
+      } catch(Exception $e) {
+        return false;
+      }
     }
     
-    //assigning free plan to new user when he register
-    public static function freePlanSubscribe($customer) {
-      Environment::configure(config('chargebee.Chargebee_Site'), config('chargebee.Chargebee_Key'));
-      $result = Subscription::createWithItems($customer->id,array(
-      "subscriptionItems" => array(array(
-        "itemPriceId" => config('chargebeeplans.Started_Plan'),
-        "unitPrice" => 0,
-        "quantity" => 1)
-      )
-      ));
-      $subscription = $result->subscription();
-      if($subscription){
-          return $subscription;
+    //assigning free plan to new user when he register or create new org  //subscribePlan
+    public static function subscribePlan($customer, $plan_name, $org_id) {
+      try {
+        Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+        $result = Subscription::createWithItems($customer->id,array(
+          "subscriptionItems" => array(array(
+            "itemPriceId" => $plan_name,
+            "unitPrice" => 0,
+            "quantity" => 1,
+          )
+          ),
+          "cf_org_id" => $org_id,
+          ));
+        $subscription = $result->subscription();
+      } catch(Exception $e) {
+        return false;
       }
     }
 
-    //fetech particular subscription plan
-    public static function fetechSubscriptionPlan($request)
-    {  
-      Environment::configure(config('chargebee.Chargebee_Site'), config('chargebee.Chargebee_Key'));
-        $all = Subscription::all(array(
-          "cf_org_id[is]" =>$request->org_id
-              ));
-            
-        return $all;
-    }
-
-    // get customer id
-    public static function getCustomer($userEmail) {
-      try {
-        Environment::configure(config('chargebee.Chargebee_Site'), config('chargebee.Chargebee_Key'));
-        $customer = [];
-        $all = Customer::all(array(
-        "email[is]" => $userEmail,
-        ));
-        if( $all->count() != 0) {
-          foreach($all as $entry){
-            $customer = $entry->customer();
-            $card = $entry->card();
+        // get customer id
+        public static function getCustomer($userEmail) {
+          try {
+            Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            $customer = [];
+            $all = Customer::all(array(
+            "email[is]" => $userEmail,
+            ));
+            if( $all->count() != 0) {
+              foreach($all as $entry){
+                $customer = $entry->customer();
+                $card = $entry->card();
+              }
+            }
+            return $customer;
+          } catch(Exception $e) {
+            return false;
           }
         }
-        return $customer;
-      } catch(\Exception $e) {
-        return false;
-      }
-    }
-
-    public static function getSubscribedPlanForOrg($request)
-    {
+         // getSubscribedPlanDetails  //getSubscribedPlanForOrg
+    //fetch subscription and their features limit based on org id
+  public static function getSubscribedPlanDetailForOrg($org_id)
+  {
       try {
-        Environment::configure(config('chargebee.Chargebee_Site'), config('chargebee.Chargebee_Key'));
-                     $all = Subscription::all(array(
-                        "cf_org_id[is]" =>$request->org_id
-                            ));
-               if($all->count() > 0){
-               foreach($all as $entry){
-                   $subscription = $entry->subscription();
-                   $customer = $entry->customer();
-                   $card = $entry->card();
-                   $alll = SubscriptionEntitlement::subscriptionEntitlementsForSubscription( $subscription->id);
-               }
-               $data = ['featureList' => $alll, 'subscriptionDetail' => $subscription];
-               return $data;
-           }
-      }catch(\Exception $e){
-        return $e;
-        return false;
+          Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+              $all_Subscription = Subscription::all(array(
+                  "cf_org_id[is]" => $org_id
+                      ));
+          if($all_Subscription->count() > 0) {
+              foreach($all_Subscription as $entry) {
+                $subscription = $entry->subscription();
+                  // $customer = $entry->customer();
+                  // $card = $entry->card();
+                  $alll = SubscriptionEntitlement::subscriptionEntitlementsForSubscription( $subscription->id);
+              }
+              $data = ['featureList' => $alll, 'subscriptionDetail' => $subscription];
+              return $data;
+          }
+          else {
+              return $data = [];
+          } 
+      } catch (Exception $e) {
+          return false;
       }
-    }
-
-     // get feature limits (created lab, challenge, group count)
+  }
+    // get feature limits (created lab, challenge, group count)
   public static function getFeatureLimits($org_id)
   {
    try {
@@ -101,7 +99,7 @@ class PlanSubscriptionHelper
       foreach($data['featureList'] as $feature) {
         $subscriptionEntitlement = $feature->subscriptionEntitlement();
         if($subscriptionEntitlement->featureId == 'resource-creation' )
-        $Limits['resourceLimit'] = $subscriptionEntitlement->value;
+        $Limits['resourceModuleLimit'] = $subscriptionEntitlement->value;
         if($subscriptionEntitlement->featureId == 'challenge-creation')
         $Limits['challengeLimit'] = $subscriptionEntitlement->value;
         if($subscriptionEntitlement->featureId == 'lab-creation')
@@ -112,6 +110,12 @@ class PlanSubscriptionHelper
         $Limits['resourceGroupLimit'] = $subscriptionEntitlement->value;
         if($subscriptionEntitlement->featureId == 'challenge-path-creation')
         $Limits['challengePathLimit'] = $subscriptionEntitlement->value;
+        if($subscriptionEntitlement->featureId == 'lab-program-creation')
+        $Limits['labProgramLimit'] = $subscriptionEntitlement->value;
+        if($subscriptionEntitlement->featureId == 'organisation-manager-invite')
+        $Limits['managerInviteLimit'] = $subscriptionEntitlement->value;
+        if($subscriptionEntitlement->featureId == 'user-invite')
+        $Limits['userInviteLimit'] = $subscriptionEntitlement->value;
       }
       return $Limits;
     } catch (Exception $e) {
@@ -119,34 +123,39 @@ class PlanSubscriptionHelper
     }
   }
   
-   // get created things count (created lab, challenge, group count)
-   public static function getCreatedValuesCount($id, $component)
-   {
-     try {
-       $organisation = Organisation::where('id', $id)->first();
-       $orgValueCount = [];
-       if($component == 'lab' || $component == 'all')
-       $orgValueCount['lab'] = Lab::where('organisation', $id)->where('is_auto_created', '0')->count();
-       if($component == 'challenge' || $component == 'all')
-       $orgValueCount['challenge'] = Challange::where(['organisation' => $id])->count();
-       if($component == 'challenge_path' || $component == 'all')
-       $orgValueCount['challenge_path'] = Group::where('organisation', $id)->where('type', 'challenge')->count();
-       if($component == 'lab_program' || $component == 'all')
-       $orgValueCount['lab_program'] = Group::where('organisation', $id)->where('type', 'lab')->count();
-       if($component == 'resource_group' || $component == 'all')
-       $orgValueCount['resource_group'] = Group::where('organisation', $id)->where('type', 'resource')->count();
-       if($component == 'resource_module_count' || $component == 'all')
-       $orgValueCount['resource_module_count'] = Resource::where('org_id', $id)->where('is_auto_created', '0')->count();
-       if($component == 'resource_collection_count' || $component == 'all')
-       $orgValueCount['resource_collection_count'] = ResourceGroup::where('org_id', $id)->count();
-       if($component == 'org_org_manager_count' || $component == 'all')
-       $orgValueCount['org_org_manager_count'] = OrganizationInviteUser::where('organisation_id', $id)->count();
-       if($component == 'user_count' || $component == 'all')
-       $orgValueCount['user_count'] = OrganizationInviteUser::where('organisation_id', $id)->where('role', 'user')->count();
-       return $orgValueCount;
-     } catch(Exception $e) {
-       return false;
-     } 
-   }
+  // get created things count (created lab, challenge, group count)  //getCreatedValuesCount
+  public static function getFeatureUsage($id, $component)
+  {
+    try {
+      $organisation = Organisation::where('id', $id)->first();
+      $orgValueCount = [];
+      if($component == 'lab' || $component == 'all')
+      $orgValueCount['lab'] = Lab::where('organisation', $id)->where('is_auto_created', '0')->count();
+      if($component == 'challenge' || $component == 'all')
+      $orgValueCount['challenge'] = Challange::where(['organisation' => $id])->count();
+      if($component == 'challenge_path' || $component == 'group')
+      $orgValueCount['challenge_path'] = Group::where('organisation', $id)->where('type', 'challenge')->count();
+      if($component == 'lab_program' || $component == 'group')
+      $orgValueCount['lab_program'] = Group::where('organisation', $id)->where('type', 'lab')->count();
+      if($component == 'resource_group' || $component == 'group')
+      $orgValueCount['resource_group'] = Group::where('organisation', $id)->where('type', 'resource')->count();
+      if($component == 'resource_module_count' || $component == 'resource')
+      $orgValueCount['resource_module_count'] = Resource::where('org_id', $id)->where('is_auto_created', '0')->count();
+      if($component == 'resource_collection_count' || $component == 'resource')
+      $orgValueCount['resource_collection_count'] = ResourceGroup::where('org_id', $id)->count();
+      if($component == 'org_org_manager_count' || $component == 'managerUsersCount')
+      $orgValueCount['org_org_manager_count'] = OrganizationInviteUser::where('organisation_id', $id)->count();
+      if($component == 'user_count' || $component == 'managerUsersCount') {
+        $orgValueCount['userorg_count'] = OrganizationInviteUser::where('organisation_id', $id)->where('role', 'user')->count();
+        $labs= Lab::select('id')->where('organisation', $id)->where('is_auto_created', '0')->pluck('id');
+        $orgValueCount['user_count'] = MemberManagement::whereIn('module_id', $labs)->count();
+        $orgValueCount['user_count']=  $orgValueCount['userorg_count'] + $orgValueCount['user_count'];
+      }
+      
+      return $orgValueCount;
+    } catch(Exception $e) {
+      return false;
+    } 
+  }
 
 }

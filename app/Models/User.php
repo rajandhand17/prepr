@@ -162,7 +162,7 @@ class User extends Authenticatable
             $user->save();
             
             $userCreated = PlanSubscriptionHelper::createCustomer($user,$request->language);
-            $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($userCreated);
+            $planSubscribed  = PlanSubscriptionHelper::subscribePlan($userCreated);
             if ($user->id) {
                 if($request->register_type=="organization"){
                     // $user->syncRoles(['org_admin_manager', 'user']);

@@ -123,7 +123,7 @@ class Organization extends LaratrustTeam
         if($organization->save()){
             $cust_id = PlanSubscriptionHelper::getCustomer(auth()->user()->email);
             if($cust_id != []){
-                $planSubscribed  = PlanSubscriptionHelper::freePlanSubscribe($cust_id, 'free-plan-CAD-Yearly', $organization->id);
+                $planSubscribed  = PlanSubscriptionHelper::subscribePlan($cust_id, 'free-plan-CAD-Yearly', $organization->id);
             }
             if($request->has('address') && $request->has('city') && $request->has('state') && $request->has('country') && $request->has('zip_code')){
                 $request->organization_id=$organization->id;
