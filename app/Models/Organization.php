@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Models\LaratrustTeam;
 use DB;
 use App\Models\OrganizationAddress;
+use App\Models\People;
 use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
 use App\Http\Requests\Organization\DeleteOrganizationRequest;
@@ -120,6 +121,19 @@ class Organization extends LaratrustTeam
                 $request->organization_id=$organization->id;
                 $address=OrganizationAddress::create($request);
                 if($address){
+               $add_members=json_decode($request->people);
+                    if(isset($add_members) && count($add_members)!==0){
+                        foreach ($add_members as $key => $value) {
+                             $people=new People;
+                             $people->org_id=$organization->id;
+                             $people->name=$value->name;
+                             $people->description=$value->description;
+                             $people->image=$value->image;
+                             if(!$people->save()){
+                                DB::rollback();
+                             }
+                        }
+                    }
                     DB::commit();
                     $data=["name"=>$organization->name,"slug"=> $organization->slug];
                     $response= ['success' => true,"data"=>$data, 'message' => __('responses.create_organization')];
@@ -130,6 +144,7 @@ class Organization extends LaratrustTeam
                     return $response;
                }
             }
+        
             DB::commit();
             $response= ['success' => true, 'message' => __('responses.create_organization')];
             return $response;

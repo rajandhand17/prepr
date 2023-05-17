@@ -249,7 +249,7 @@ class OrganizationController extends AppBaseController
      * )
      */ 
     public function create(CreateOrganizationRequest $request)
-    {   
+    {    
         try {
             $organization=$this->organizationRepository->create($request);
             if($organization['success']==true) {
