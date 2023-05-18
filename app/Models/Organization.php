@@ -128,7 +128,8 @@ class Organization extends LaratrustTeam
                              $people->org_id=$organization->id;
                              $people->name=$value->name;
                              $people->description=$value->description;
-                             $people->image=$value->image;
+                             $image=FileUploadHelper::uploadbase64ImageToS3($value->image,"employee");
+                             $people->image=$image;
                              if(!$people->save()){
                                 DB::rollback();
                              }
@@ -164,6 +165,7 @@ class Organization extends LaratrustTeam
        }
 
        } catch (\Exception $e) {
+        return $e;
         DB::rollback();
         $response= ['success' => false, 'message' => __('responses.send_error')];
         return $response;

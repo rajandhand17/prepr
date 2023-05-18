@@ -22,4 +22,30 @@ class FileUploadHelper {
             return false;
         }  
     }
+
+    public static function uploadbase64ImageToS3($request,$type)
+    {
+        try {   
+            $pathsarray=config('s3-upload-path');
+               $base64Image=$request;
+                // Remove the "data:image/png;base64," prefix from the base64 string
+                $imageData = str_replace('data:image/png;base64,', '', $base64Image);
+                // Decode the Base64 string
+                $imageData = base64_decode($imageData);
+                // Generate a unique file name
+                $webp_path_cover = $pathsarray[$type].time().'.png';
+                $path_cover=Storage::disk('s3')->put($webp_path_cover, $imageData);
+                $path_cover = Storage::disk('s3')->url($webp_path_cover);
+                return $webp_path_cover;
+                // // Generate a unique file name
+                // $fileName = uniqid() . '.png';
+                // // Define the file path 
+                // $filePath = public_path() . $fileName;
+                // // Save the image to the local system
+                // $storedimage= file_put_contents($filePath, $imageData);
+                // return $filePath;
+        } catch (\Exception $e){
+           return false;
+        }
+    }
 }
