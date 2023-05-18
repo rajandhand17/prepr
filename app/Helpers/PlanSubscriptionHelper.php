@@ -74,7 +74,7 @@ class PlanSubscriptionHelper
               $all_Subscription = Subscription::all(array(
                   "cf_org_id[is]" => $org_id
                       ));
-          if($all_Subscription->count() > 0) {
+          if($all_Subscription->count() > 0){
               foreach($all_Subscription as $entry) {
                 $subscription = $entry->subscription();
                   // $customer = $entry->customer();
@@ -121,6 +121,56 @@ class PlanSubscriptionHelper
     } catch (Exception $e) {
       return false;
     }
+  }
+
+   // get Addons limits (created lab, challenge, group count)
+   public static function getAddonsLimits($org_id) 
+   {
+     try{
+       Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+       $all_Subscription = Subscription::all(array(
+         "cf_org_id[is]" => $org_id
+         ));
+       if($all_Subscription->count() > 0) {
+         $addon = [];
+         $subscription = $all_Subscription[0]->subscription();
+         foreach ($subscription->subscriptionItems as $item) {
+           if ($item->itemType === 'addon'){
+             if($item->itemPriceId == 'challenge-creation-CAD-Monthly')
+             $addon['challengeLimit'] = $item->quantity;
+             elseif($item->itemPriceId == 'Resource-Creation-CAD-Monthly')
+             $addon['resourceModuleLimit'] = $item->quantity;
+             elseif($item->itemPriceId == 'lab-creation-CAD-Monthly')
+             $addon['labLimit'] = $item->quantity;
+           }
+         }
+         return $addon;
+       }
+     }catch(Exception $e){
+       return false;
+     }
+ }
+
+  // get total limits (created lab, challenge, group count)
+  public static function getTotalLimits($org_id) 
+  {
+    try {
+     $featureLimit = self::getFeatureLimits($org_id);
+     $addonLimit = self::getAddonsLimits($org_id);
+     $totalLimit = [];
+     $totalLimit['challengeLimit'] = (array_key_exists('challengeLimit', $featureLimit) ? $featureLimit['challengeLimit'] : 0) + (array_key_exists('challengeLimit', $addonLimit) ?  $addonLimit['challengeLimit'] : 0);
+     $totalLimit['labLimit'] =  (array_key_exists('labLimit', $featureLimit) ? $featureLimit['labLimit'] : 0) + (array_key_exists('labLimit', $addonLimit) ?  $addonLimit['labLimit'] : 0);
+     $totalLimit['resourceModuleLimit'] = (array_key_exists('resourceModuleLimit', $featureLimit) ? $featureLimit['resourceModuleLimit'] : 0) + (array_key_exists('resourceModuleLimit', $addonLimit) ?  $addonLimit['resourceModuleLimit'] : 0);
+     $totalLimit['labProgramLimit'] = (array_key_exists('labProgramLimit', $featureLimit) ? $featureLimit['labProgramLimit'] : 0) + (array_key_exists('resourceModuleLimit', $addonLimit) ?  $addonLimit['resourceModuleLimit'] : 0);
+     $totalLimit['challengePathLimit'] = (array_key_exists('challengePathLimit', $featureLimit) ? $featureLimit['challengePathLimit'] : 0) + (array_key_exists('challengePathLimit', $addonLimit) ?  $addonLimit['challengePathLimit'] : 0);
+     $totalLimit['resourceGroupLimit'] = (array_key_exists('resourceGroupLimit', $featureLimit) ? $featureLimit['resourceGroupLimit'] : 0) + (array_key_exists('resourceGroupLimit', $addonLimit) ?  $addonLimit['resourceGroupLimit'] : 0);
+     $totalLimit['resourceCollectionLimit'] = (array_key_exists('resourceCollectionLimit', $featureLimit) ? $featureLimit['resourceCollectionLimit'] : 0) + (array_key_exists('resourceCollectionLimit', $addonLimit) ?  $addonLimit['resourceCollectionLimit'] : 0);
+     $totalLimit['managerInviteLimit'] = (array_key_exists('managerInviteLimit', $featureLimit) ? $featureLimit['managerInviteLimit'] : 0) + (array_key_exists('managerInviteLimit', $addonLimit) ?  $addonLimit['managerInviteLimit'] : 0);
+     $totalLimit['userInviteLimit'] = (array_key_exists('userInviteLimit', $featureLimit) ? $featureLimit['userInviteLimit'] : 0) + (array_key_exists('resourceCollectionLimit', $addonLimit) ?  $addonLimit['resourceCollectionLimit'] : 0);
+     return $totalLimit;
+   } catch (Exception $e) {
+        return false;
+     }
   }
   
   // get created things count (created lab, challenge, group count)  //getCreatedValuesCount
