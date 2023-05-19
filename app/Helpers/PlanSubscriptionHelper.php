@@ -27,7 +27,7 @@ class PlanSubscriptionHelper
       }
     }
     
-    //assigning free plan to new user when he register or create new org  //subscribePlan
+    //assigning free plan to new user when he register or create new org  //subscribePlan 1010171-553680884
     public static function subscribePlan($customer, $plan_name, $org_id) {
       try {
         Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
@@ -67,7 +67,7 @@ class PlanSubscriptionHelper
         }
          // getSubscribedPlanDetails  //getSubscribedPlanForOrg
     //fetch subscription and their features limit based on org id
-  public static function getSubscribedPlanDetailForOrg($org_id)
+  public static function getSubscribedPlanDetails($org_id)
   {
       try {
           Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
