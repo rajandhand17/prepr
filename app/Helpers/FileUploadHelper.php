@@ -33,7 +33,7 @@ class FileUploadHelper {
                 // Decode the Base64 string
                 $imageData = base64_decode($imageData);
                 // Generate a unique file name
-                $webp_path_cover = $pathsarray[$type].time().'.png';
+                $webp_path_cover = $pathsarray[$type].time().'.webp';
                 $path_cover=Storage::disk('s3')->put($webp_path_cover, $imageData);
                 $path_cover = Storage::disk('s3')->url($webp_path_cover);
                 return $webp_path_cover;

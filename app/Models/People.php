@@ -11,7 +11,7 @@ class People extends Model
     use HasFactory; 
     use SoftDeletes;
 
-    protected $table = 'people';
+    protected $table = 'people'; //organization_members
     
     protected $fillable = [
         'org_id',
