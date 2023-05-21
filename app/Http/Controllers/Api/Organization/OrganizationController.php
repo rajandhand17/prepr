@@ -252,14 +252,12 @@ class OrganizationController extends AppBaseController
     {    
         try {
             $organization=$this->organizationRepository->create($request);
-            dd($organization);
             if($organization['success']==true) {
                 return $this->sendResponse($organization['data'],$organization['message']);
             }else{
                 return $this->sendError($organization['message'],422);
             }
         } catch (\Exception $e) {
-            return $e;
          return $this->sendError(__('responses.send_error'), 500);
         }
     }

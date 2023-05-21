@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Models\LaratrustTeam;
 use DB;
 use App\Models\OrganizationAddress;
+use App\Models\OrganizationMember;
 use App\Models\People;
 use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
@@ -124,11 +125,11 @@ class Organization extends LaratrustTeam
                $add_members=json_decode($request->people);
                     if(isset($add_members) && count($add_members)!==0){
                         foreach ($add_members as $key => $value) {
-                             $people=new People;
-                             $people->org_id=$organization->id;
+                             $people=new OrganizationMember;
+                             $people->organization_id=$organization->id;
                              $people->name=$value->name;
                              $people->description=$value->description;
-                             $image=FileUploadHelper::uploadbase64ImageToS3($value->image,"employee");
+                             $image=FileUploadHelper::uploadbase64ImageToS3($value->image,"organization");
                              $people->image=$image;
                              if(!$people->save()){
                                 DB::rollback();
@@ -165,7 +166,7 @@ class Organization extends LaratrustTeam
        }
 
        } catch (\Exception $e) {
-        return $e;
+     
         DB::rollback();
         $response= ['success' => false, 'message' => __('responses.send_error')];
         return $response;

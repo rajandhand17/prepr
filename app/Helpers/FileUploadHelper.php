@@ -45,6 +45,7 @@ class FileUploadHelper {
                 // $storedimage= file_put_contents($filePath, $imageData);
                 // return $filePath;
         } catch (\Exception $e){
+            return $e;
            return false;
         }
     }
