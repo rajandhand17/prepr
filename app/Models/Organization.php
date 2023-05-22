@@ -9,7 +9,6 @@ use Laratrust\Models\LaratrustTeam;
 use DB;
 use App\Models\OrganizationAddress;
 use App\Models\OrganizationMember;
-use App\Models\People;
 use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
 use App\Http\Requests\Organization\DeleteOrganizationRequest;
