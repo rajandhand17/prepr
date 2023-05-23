@@ -204,7 +204,7 @@ class Organization extends LaratrustTeam
                 $response= ['success' => false, 'message' => __('responses.updated_organization_failed')];
                  return $response;
             }
-        }
+        }]
 
         $response= ['success' => false, 'message' => __('responses.organization_not_exists')];
                  return $response;
@@ -248,5 +248,64 @@ $organization_list=static::select('id','language','name','slug','description','c
             return false;
         }
     }
- 
+
+    public function organizationMemberView($id,$language)
+    {
+        try {
+            $organization_member_list=OrganizationMember::where("organization_id",$id)->get();
+            return $organization_member_list;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function organizationMemberdelete($id,$language)
+    {
+        try {
+            $exists=OrganizationMember::select("id")->where("organization_id",$id)->first();
+            if($exists!==null){
+                $organization=OrganizationMember::where("organization_id",$id)->delete();
+                if($organization){
+                     return true;        
+                }else{
+                    return false;
+                }
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function organizationMemberupdate($id,$request)
+    {
+        $profile_images_path=null;
+        if($request->profile_image!==null){
+            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image,"organization");
+            if($profile_images_path==false){
+                $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
+                return $response;
+            }
+        }
+        
+    }
+
+    public function organizationMemberCreate($request)
+    {  
+        try {
+           $organization_members=new OrganizationMember;
+           $organization_members->name=$request->organization_id;
+           $organization_members->name=$request->name;
+           $organization_members->description=$request->description;
+           $organization_members->position=$request->position;
+           $organization_members->image=$request->image;
+           if($organization_members->save()){
+            return true;
+           }
+           return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+
+    }
 }

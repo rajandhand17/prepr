@@ -10,6 +10,7 @@ use App\Http\Requests\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Organization\UpdateOrganizationRequest;
 use App\Http\Requests\Organization\DeleteOrganizationRequest;
 use App\Http\Requests\Organization\ViewOrganizationRequest;
+use Laravel\Ui\Presets\React;
 
 class OrganizationController extends AppBaseController
 {   
@@ -537,5 +538,17 @@ class OrganizationController extends AppBaseController
           return $this->sendError(__('responses.send_error'), 500);
        }
    }
-
+  
+   public function organizationMemberView(Request $request)
+   { 
+    try {
+        $organization=$this->organizationRepository->organizationMemberView($request->id,$request->language);
+        if($organization!==false){
+            return $this->sendResponse($organization,__('responses.organization_view_get'));
+        }
+        return $this->sendError(__('responses.organization_view_get_failed'),400);
+    } catch (\Exception $e) {
+        return $this->sendError(__('responses.send_error'), 500);
+    }
+   }
 }
