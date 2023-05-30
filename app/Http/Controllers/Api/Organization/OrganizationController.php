@@ -532,7 +532,7 @@ class OrganizationController extends AppBaseController
            $organization=$this->organizationRepository->list($request->language);
            if($organization!==false){
                return $this->sendResponse($organization,__('responses.organization_view_get'));
-           }
+           } 
            return $this->sendError(__('responses.organization_view_get_failed'),400);
        } catch (\Exception $e) {
           return $this->sendError(__('responses.send_error'), 500);
