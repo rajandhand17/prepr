@@ -28,6 +28,11 @@ class LabController extends AppBaseController{
         }
    }
 
+   public function view(Request $request)
+   {  
+       dd("Ds");
+   }
+
    public function create($request)
    {
     try {
@@ -230,16 +235,5 @@ class LabController extends AppBaseController{
         return false;
     }
    }
-   public function view($request)
-   {
-    try {
-        $view=$this->labRepository->view($request);
-        if($view){
-              return true;
-        }
-        return false;
-    } catch (\Exception $e) {
-        return false;
-    }
-   }
+  
 }

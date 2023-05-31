@@ -3,10 +3,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Lab\LabController;
 Route::middleware(['language'])->group(function () {
      Route::get('/',[LabController::class,'index']);
+     Route::delete('/{slug}/delete',[LabController::class,'delete']);
+     Route::get('/{slug}/view',[LabController::class,'view']); 
      Route::get('/create',[LabController::class,'create']);
      Route::get('/draft',[LabController::class,'draft']);
      Route::get('/edit',[LabController::class,'edit']);
-     Route::delete('/{slug}/delete',[LabController::class,'delete']);
      Route::get('/lab-detail',[LabController::class,'labDetail']);
      Route::get('/check-lab-slug',[LabController::class,'checkLabSlug']);
      Route::get('/check-lab-name',[LabController::class,'checkLabName']);
@@ -20,5 +21,4 @@ Route::middleware(['language'])->group(function () {
      Route::get('/follow-unfollow',[LabController::class,'followUnfollow']);
      Route::get('/join-unjoin',[LabController::class,'joinUnjoin']);
      Route::get('/share',[LabController::class,'share']);
-     Route::get('/{slug}/view',[LabController::class,'view']);
 });

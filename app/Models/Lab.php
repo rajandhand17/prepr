@@ -78,9 +78,21 @@ class Lab extends Model
                 return false;
             }
         }catch(\Exception $e){
-            return $e;
             return false;        
         }
     }
     
+    public function view($request)
+    {  
+        dd($request);
+       try {
+        $lab=static::select("title","slug","description","image","member","address","city","country")->where("slug",$request->slug)->first();
+       if(!$lab->isEmpty()){
+           return $lab;
+       }
+       return false;
+       } catch (\Exception $e) {
+        return false;
+       }
+    }
 }
