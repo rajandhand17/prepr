@@ -3,7 +3,7 @@ namespace App\Repositories\Api\Lab;
 
 use App\Models\Lab;
 
-class LabRepository extends LabInterface{
+class LabRepository implements LabInterface{
    private $lab;
    function __construct(Lab $lab)
    {

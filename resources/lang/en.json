@@ -3009,5 +3009,8 @@
     "responses.csv_required":"Please choose csv file, Its required!",
     "responses.auto_invite_status":"Please enter auto invite status!",
     "responses.user_id_not_exists":"This user id not exists!",
-    "responses.member_manage_type":"Provided member manager type is not valid!"
+    "responses.member_manage_type":"Provided member manager type is not valid!",
+    "responses.lab":"Lab list found successfully!",
+    "responses.lab_delete":"Lab deleted successfully!"
+
 }

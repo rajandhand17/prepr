@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Lab;
 use App\Repositories\Api\Lab\LabInterface;
 use App\Repositories\Api\Lab\LabRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Lab\LabResource;
+use Illuminate\Http\Request;
 
 class LabController extends AppBaseController{
     private $labRepository;
@@ -13,12 +15,12 @@ class LabController extends AppBaseController{
       $this->labRepository=$labRepository;
    }
 
-   public function index($request)
-   {
+   public function index(Request $request)
+   {   
     try {
         $list=$this->labRepository->list($request);
         if($list){
-          return true;
+           return $this->sendResponse(LabResource::collection($list), __('responses.lab'));
         }
         return false;
         } catch (\Exception $e) {
@@ -65,13 +67,13 @@ class LabController extends AppBaseController{
         }
    }
 
-   public function delete($request)
+   public function delete(Request $request)
    {
     try {
         $delete=$this->labRepository->delete($request);
-            if($delete){
-                  return true;
-            }
+        if($delete){
+            return $delete;
+        }
             return false;
     } catch (\Exception $e) {
         return false;
