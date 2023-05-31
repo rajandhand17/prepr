@@ -84,9 +84,9 @@ class Lab extends Model
     
     public function view($request)
     {  
-        dd($request);
        try {
         $lab=static::select("title","slug","description","image","member","address","city","country")->where("slug",$request->slug)->first();
+        return $lab;
        if(!$lab->isEmpty()){
            return $lab;
        }
