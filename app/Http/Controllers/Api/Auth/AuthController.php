@@ -86,7 +86,8 @@ class AuthController extends AppBaseController
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if($login['code'] === 3){
-                   $response=["token"=>$login['token'],"code"=>$login['code']];
+                   
+                   $response=["token"=>$login['token'],"data"=>$login['user'],"code"=>$login['code']];
                     return $this->sendResponse($response, $login['message'], 200);
                 }
             }
@@ -180,6 +181,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     * 
      *     @OA\Parameter(
      *         name="username",
      *         in="query",
@@ -265,6 +267,22 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *     @OA\Parameter(
+     *         name="organization_name",
+     *         in="query",
+     *         description="Enter the organization name for registered!",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Parameter(
+     *         name="register_type",
+     *         in="query",
+     *         description="Enter the register type for registered!",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -288,7 +306,7 @@ class AuthController extends AppBaseController
      * )
      */
     public function registerUser(RegisterFormRequest $request)
-    {
+    {  
         try {
             $register = $this->authRepository->register($request);
             if ($register['success'] == false) {
@@ -299,6 +317,7 @@ class AuthController extends AppBaseController
              }
             return $this->sendError(__('responses.send_error'), 500);
         }catch (\Exception $e){
+            
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -351,7 +370,7 @@ class AuthController extends AppBaseController
     {
         try {
             $forgetpassword = $this->authRepository->forgetPassword($request);
-            if($forgetpassword['success'] == false) {
+            if($forgetpassword['success'] == false){
                 return $this->sendError($forgetpassword['message'], 401);
             }
             if($forgetpassword['success'] == true) {
@@ -482,7 +501,7 @@ class AuthController extends AppBaseController
      *     summary="Send request for check email",
      *     operationId="checkPhone",
      *     @OA\Parameter(
-     *         name="phone_number",
+     *         name="phone_number",0
      *         in="query",
      *         description="check the phone number that exists or not!",
      *         required=true,

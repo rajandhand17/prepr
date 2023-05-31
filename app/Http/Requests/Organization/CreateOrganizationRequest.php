@@ -56,6 +56,7 @@ class CreateOrganizationRequest extends FormRequest
             'user_id.required' => __('responses.user_id_required'), 
             'name.required'=>__('responses.organization_name_required'),
             'name.max'=>__('responses.organization_name_max'),
+            'description.required'=>__('notification.notification_tdfdfir'),
             'profile_image.image'=>__('responses.cover_image'),
             'cover_image.image'=>__('responses.profile_image'),
             'category.required'=>__('responses.organization_category_required'),

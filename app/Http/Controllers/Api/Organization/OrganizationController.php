@@ -1,7 +1,12 @@
 <?php
-
+/**
+ * @OA\Tag(
+ *     name="OrganizationController",
+ *     description="Operations related to OrganizationController"
+ * )
+ */
 namespace App\Http\Controllers\Api\organization;
-
+ 
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use App\Repositories\Api\Organization\OrganizationRepository;
@@ -77,12 +82,13 @@ class OrganizationController extends AppBaseController
         return $this->sendError(__('responses.found_not_organizations_list'),404);
          
        }catch (\Exception $e){ 
+        return $e;
          return $this->sendError(__('responses.send_error'), 500);
      }
     }
     
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     path="/api/v1/organization/create",
      *     tags={"Organization API - Create Organization"},
      *     summary="Create Organization with different parameters",
@@ -243,7 +249,7 @@ class OrganizationController extends AppBaseController
      * )
      */ 
     public function create(CreateOrganizationRequest $request)
-    {   
+    {    
         try {
             $organization=$this->organizationRepository->create($request);
             if($organization['success']==true) {
@@ -425,7 +431,7 @@ class OrganizationController extends AppBaseController
         }
     }
    /**
-     * @OA\Get(
+     * @OA\Delete(
      *     path="/api/v1/organization/delete",
      *     tags={"Organization API - Delete Organization"},
      *     summary="Delete Organization with different parameters",

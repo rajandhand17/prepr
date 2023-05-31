@@ -20,6 +20,7 @@ class Language
     public function handle(Request $request, Closure $next)
     {  
         try{
+            
             if(isset($request->language) && !empty($request->language)){
                 $check_language = \App\Models\Language::where('iso',$request->language)->first();
                 if($check_language){

@@ -84,9 +84,11 @@ class User extends Authenticatable
                return $response;
             }
             if ($user) {
+             
                 /**check password same or not */
                 if (Hash::check($request->password, $user->password)) {
                     $token = $user->createToken(env("APP_NAME"))->accessToken;
+                   
                     if ($user->two_factor_verification == 1){
                         $otp = random_int(1000, 9999);
                         DB::beginTransaction();
@@ -101,7 +103,8 @@ class User extends Authenticatable
                         }
                         return ["success" => false, "message" => __('responses.failed_email'),"code"=>null];
                     }
-                    $response = ['success' => true, 'code' => 3, 'token' => $token,"message" => __('responses.user_login_sucess')];
+                    $data = User::where('email', $request->email)->first();
+                    $response = ['success' => true,  "user" => $data, 'code' => 3, 'token' => $token,"message" => __('responses.user_login_sucess')];
                     return $response;
                 } else {
                     $response = ['success' => false, "message"=>__('notification.notification_icpta'), 'code' => 4];
@@ -138,7 +141,7 @@ class User extends Authenticatable
     }
     /**Register user */
     public function register($request)
-    {
+    { 
         try {
             DB::beginTransaction();
             $name = $request->first_name . " " . $request->last_name;
@@ -159,11 +162,11 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
-            if ($user->id) {
+            if($user->id){
                 if($request->register_type=="organization"){
                     $organization = new Organization;
                     $organization->slug=UtilityHelper::generateSlug($request->organization_name,$organization);
-                    $organization->user_id=$user->id;
+                    $organization->user_id=$user->id; 
                     $organization->name=$request->organization_name;
                     $organization->save();
                     $request->user_type="employee";
@@ -189,6 +192,7 @@ class User extends Authenticatable
             DB::rollback();
             return ["success" => false, "message" => __('responses.failed_registeration')];
         } catch (\Exception $e) {
+            return $e;
             DB::rollback();
             return ["success" => false, "message" => 'Something went wrong.'];
         }

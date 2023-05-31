@@ -22,7 +22,7 @@ class SendMail extends Mailable
     public $user;
     public $data;
      
-    public function __construct(User $user,$view,$data)
+    public function __construct($user,$view,$data)
     {
         $this->user = $user;
         $this->subject=$data["subject"];

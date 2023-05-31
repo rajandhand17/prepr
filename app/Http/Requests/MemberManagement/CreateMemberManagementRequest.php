@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class CreateMemberManagementRequest extends FormRequest
 {
-    /**
+    /** 
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -59,7 +59,7 @@ class CreateMemberManagementRequest extends FormRequest
     {
         return[
             'invite_email.required'=>__('responses.invite_email_required'),
-            'invite_email.mimes'=>__('responses.invitee_id_required'),
+            'invite_email.mimes'=>__('responses.invitee_email_csv'),
             'type.required' => __('responses.type_required'),
             'invite_type.required' => __('responses.invite_type_required'),
             'module_id.required' => __('responses.module_id_required'),
