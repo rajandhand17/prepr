@@ -43,7 +43,6 @@ class LabController extends AppBaseController{
 
    public function create(Request $request)
    {  
-    dd("sdf");
     try {
       $create=$this->labRepository->create($request);
       if($create){
