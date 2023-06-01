@@ -28,7 +28,7 @@ class CreateOrganizationRequest extends FormRequest
         return [
             'user_id'=>'required',
             'name' => 'required|max:255',
-            'description'=>'string',
+            'description'=>'required',
             'profile_image'=>'image',
             'cover_image'=>'image',
             'category'=>'required|exists:categories,id',
