@@ -49,7 +49,7 @@ class LabController extends AppBaseController{
             return $create;
       }
       return false;
-    }catch (\Exception $e) {
+    }catch (\Exception $e){
         return false;
     }
    }
