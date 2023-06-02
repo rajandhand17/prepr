@@ -7,7 +7,8 @@ use App\Repositories\Api\Lab\LabRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Lab\LabResource;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\Lab\CheckLabNameRequest;
+use App\Http\Requests\Lab\CheckLabSlugRequest;
 class LabController extends AppBaseController{
     private $labRepository;
    public function __construct(LabRepository $labRepository)
@@ -41,15 +42,15 @@ class LabController extends AppBaseController{
     }
    }
 
-   public function create($request)
+   public function create(Request $request)
    {
     try {
       $create=$this->labRepository->create($request);
       if($create){
-            return true;
+            return $create;
       }
       return false;
-    }catch (\Exception $e) {
+    }catch (\Exception $e){
         return false;
     }
    }
@@ -106,12 +107,12 @@ class LabController extends AppBaseController{
     }
    }
 
-   public function checkLabSlug($request)
-   {
+   public function checkLabSlug(CheckLabSlugRequest $request)
+   {  
     try {
         $check_lab_slug=$this->labRepository->checkLabSlug($request);
         if($check_lab_slug){
-              return true;
+              return $check_lab_slug;
         }
         return false;
     } catch (\Exception $e) {
@@ -119,12 +120,12 @@ class LabController extends AppBaseController{
     }
    }
 
-   public function checkLabName($request)
-   {
+   public function checkLabName(CheckLabNameRequest $request)
+   {   
     try {
         $check_lab_name=$this->labRepository->checkLabName($request);
         if($check_lab_name){
-              return true;
+              return $check_lab_name;
         }
         return false;
     } catch (\Exception $e) {

@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('lab_tag', function (Blueprint $table) {
+        Schema::create('lab_resources', function (Blueprint $table) {
             $table->id();
-            $table->integer("user_id")->index();
-            $table->integer("lab_id")->index();
-            $table->integer("tag");
+            $table->bigInteger('lab_id')->unsigned()->index();
+            $table->bigInteger('resources_id')->unsigned()->index();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lab_tag');
+        Schema::dropIfExists('lab_resources');
     }
 };
