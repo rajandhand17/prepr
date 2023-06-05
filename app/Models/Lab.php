@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\LabChallenges;
 use App\Models\LabResources;
+use App\Helpers\LabHelper;
+use App\Models\OrganizationInviteUser;
+use App\Models\Category;
 
 class Lab extends Model
 {
@@ -443,6 +446,28 @@ class Lab extends Model
         } catch (\Exception $e) {
            return false;
         }
+    }
+
+    public function createform($request)
+    {  
+        $social_name = SocialLink::pluck('link_name', 'id');
+        $todo_achievement_list = LabHelper::getLabAchievementCondition();
+        $social_all = SocialLink::where('link_icon', '!=', null);
+        $social_attributes = collect($social_all->get())->mapWithKeys(static function ($item) {
+            return [$item->id => ['data-image' => $item->link_icon]];
+        })->all();
+        $social_link_i = SocialLink::where('link_icon', '!=', null)->pluck('link_icon', 'id');
+        $tags=Tag::where('lab', '1')->pluck('tag', 'id')->get();
+        $labSkills = Skill::pluck('skill', 'id')->take(20);
+        // $organisations_invited= OrganizationInviteUser::where(['user_id' => $id])->where(function ($query) {
+        //     $query->where('role', '=', 'challengemanager')
+        //         ->orWhere('role', '=', 'labmanager')
+        //         ->orWhere('role', '=', 'resourcemanager')
+        //         ->orWhere('role', '=', 'organisation_manager')
+        //         ->orWhere('role', '=', 'org_admin_manager');
+        // })->pluck('organisation_id')->toArray();
+        $organisations_list= Organization::whereIn('id', $organisations_final)->where('status', '1')->pluck('name', 'id')->toArray();
+        $categories = category::Where('components', 'like', '%lab%')->pluck('text', 'id');
     }
 
 
