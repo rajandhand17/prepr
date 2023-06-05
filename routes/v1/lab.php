@@ -6,6 +6,7 @@ Route::middleware(['language'])->group(function () {
      Route::delete('/{slug}/delete',[LabController::class,'delete']);
      Route::get('/{slug}/view',[LabController::class,'view']); 
      Route::post('/create',[LabController::class,'create']);
+     Route::post('/store',[LabController::class,'store']);
      Route::get('/draft',[LabController::class,'draft']);
      Route::get('/edit',[LabController::class,'edit']);
      Route::get('/lab-detail',[LabController::class,'labDetail']);

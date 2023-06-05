@@ -678,7 +678,8 @@ class LabHelper
     public static function getLabAchievementCondition()
     {
         try {
-            $todo_achievement_list = AchievementConditionList::pluck('condition_title', 'id');
+            $todo_achievement_list = AchievementConditionList::pluck('title', 'id')->all();
+            
             $elementTrans = [];
             if (!empty($todo_achievement_list)){
                 foreach ($todo_achievement_list as $element) {

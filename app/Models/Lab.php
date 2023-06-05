@@ -450,24 +450,14 @@ class Lab extends Model
 
     public function createform($request)
     {  
-        $social_name = SocialLink::pluck('link_name', 'id');
+        $social_name = SocialLink::pluck('name', 'id')->all();
         $todo_achievement_list = LabHelper::getLabAchievementCondition();
-        $social_all = SocialLink::where('link_icon', '!=', null);
-        $social_attributes = collect($social_all->get())->mapWithKeys(static function ($item) {
-            return [$item->id => ['data-image' => $item->link_icon]];
-        })->all();
-        $social_link_i = SocialLink::where('link_icon', '!=', null)->pluck('link_icon', 'id');
-        $tags=Tag::where('lab', '1')->pluck('tag', 'id')->get();
-        $labSkills = Skill::pluck('skill', 'id')->take(20);
-        // $organisations_invited= OrganizationInviteUser::where(['user_id' => $id])->where(function ($query) {
-        //     $query->where('role', '=', 'challengemanager')
-        //         ->orWhere('role', '=', 'labmanager')
-        //         ->orWhere('role', '=', 'resourcemanager')
-        //         ->orWhere('role', '=', 'organisation_manager')
-        //         ->orWhere('role', '=', 'org_admin_manager');
-        // })->pluck('organisation_id')->toArray();
-        $organisations_list= Organization::whereIn('id', $organisations_final)->where('status', '1')->pluck('name', 'id')->toArray();
-        $categories = category::Where('components', 'like', '%lab%')->pluck('text', 'id');
+        $social_all = SocialLink::where('icon', '!=', null)->get()->toArray();
+        $tags=Tag::where('components','like','lab')->pluck('name', 'id')->all();
+        $lab_skills = Skill::pluck('name','id')->all();
+        $categories = category::Where('components', 'like', '%lab%')->pluck('name', 'id');
+        return ["social_links"=>$social_name,"todo_achievement_list"=>$todo_achievement_list,"social_all"=>$social_all,"tags"=>$tags,"lab_skills"=>$lab_skills,"categories"=>$categories];
+      
     }
 
 

@@ -24,7 +24,7 @@ class LabRepository implements LabInterface{
     public function create($request)
     {
         try {
-            return $this->lab->store($request);
+            return $this->lab->createform($request);
         } catch (\Exception $e) {
             return false;
         }
