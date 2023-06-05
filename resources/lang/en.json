@@ -2950,7 +2950,7 @@
     "responses.found_not_organizations_list":"Sorry, the requested organization list was not found!",
     "responses.delete_organizations_success":"The organization has been successfully deleted!",
     "responses.delete_organizations_failed":"We were unable to delete the organization. Please check your settings and try again.",
-    "responses.create_organization":"The organization created successfully!",
+    "responses.create_organization":"Organization created successfully!",
     "responses.create_organization_failed":"Organization creation failed!",
     "responses.updated_organization":"Organization updated successfully!",
     "responses.updated_organization_failed":"Organization updatation failed!",
