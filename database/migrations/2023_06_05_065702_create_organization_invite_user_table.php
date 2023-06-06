@@ -14,7 +14,6 @@ return new class extends Migration
     public function up()
     {
         Schema::create('organization_invite_user', function (Blueprint $table) {
-            $table->id();
             $table->bigIncrements('id');
             $table->integer('organisation_id')->nullable();
             $table->integer('user_id')->nullable();

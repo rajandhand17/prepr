@@ -21,6 +21,7 @@ return new class extends Migration
             $table->index(['user_id']);
             $table->index(['lab_id']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

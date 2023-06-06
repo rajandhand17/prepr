@@ -30,6 +30,15 @@ class LabRepository implements LabInterface{
         }
     }
 
+    public function store($request)
+    {
+        try {
+            return $this->lab->store($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function draft($request)
     {
         try {
@@ -151,10 +160,10 @@ class LabRepository implements LabInterface{
             return false;
         }
      }
-     public function share($request)
+     public function share($id)
      {
         try {
-            return $this->lab->share($request);
+            return $this->lab->share($id);
         } catch (\Exception $e) {
             return false;
         }

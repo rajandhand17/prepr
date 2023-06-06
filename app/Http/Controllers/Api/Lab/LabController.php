@@ -55,31 +55,17 @@ class LabController extends AppBaseController{
     }
    }
 
-   public function draft($request)
-   {
-        try {
-            $create=$this->labRepository->draft($request);
-            if($create){
-                  return true;
-            }
-            return false;
-        } catch (\Exception $e) {
-            return false;
+  public function store(Request $request)
+  {
+    try {
+        $store=$this->labRepository->store($request);
+        if($store){
+            return $store;
         }
-   }
-
-   public function edit($request)
-   {
-        try {
-            $edit=$this->labRepository->edit($request);
-            if($edit){
-                  return true;
-            }
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-   }
+    } catch (\Exception $e) {
+        return $e;
+    }
+  }
 
    public function delete(Request $request)
    {
@@ -94,12 +80,12 @@ class LabController extends AppBaseController{
     }
    }
 
-   public function labDetail($request)
+   public function labDetail(Request $request)
    {
     try {
-        $lab_detail=$this->labRepository->labDetail($request);
+        $lab_detail=$this->labRepository->labDetail($request->id);
         if($lab_detail){
-              return true;
+              return $lab_detail;
         }
         return false;
     } catch (\Exception $e) {
@@ -145,18 +131,19 @@ class LabController extends AppBaseController{
         return false;
     }
    }
-   public function getTags($request)
+   public function getTags(Request $request)
    {
     try {
-        $tags=$this->labRepository->getTags($request);
-        if($tags){
-              return true;
+        $tags=$this->labRepository->getTags($request->lab_id);
+        if($tags){  
+              return $tags;
         }
         return false;
     } catch (\Exception $e) {
        return false;
     }
    }
+
    public function getLabPrograms($request)
    {
     try {
@@ -232,12 +219,12 @@ class LabController extends AppBaseController{
     }
    }
 
-   public function share($request)
+   public function share(Request $request)
    {
     try {
-        $share=$this->labRepository->share($request);
+        $share=$this->labRepository->share($request->id);
         if($share){
-              return true;
+              return $share;
         }
         return false;
     } catch (\Exception $e) {

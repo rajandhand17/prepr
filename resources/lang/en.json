@@ -3014,6 +3014,9 @@
     "responses.lab_delete":"Lab deleted successfully!",
     "responses.lab_name_required":"The Lab name is required!",
     "responses.lab_name_exists":"This Lab name is exists!",
-    "responses.lab_name_not_exists":"This Lab name is not exists!"
+    "responses.lab_name_not_exists":"This Lab name is not exists!",
+    "responses.lab_detailed_fetech":"Lab detailed fetched successfully!",
+    "responses.lab_share_message":"Lab shared successfully",
+    "responses.lab_tags":"Lab tags fetched successfully!"
 
 }

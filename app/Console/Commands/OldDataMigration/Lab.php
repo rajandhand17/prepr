@@ -46,7 +46,6 @@ class Lab extends Command
 
             $labs = DB::connection('mysql2')->table('labs')->get();
             if($labs->count() > 0){
-
                 foreach ($labs as $key => $single_lab){
                    $lab_details=[
                     'language'=> $single_lab->language,
@@ -76,7 +75,16 @@ class Lab extends Command
                     'email'=> $single_lab->email,
                     'website'=> $single_lab->website,
                     'facebook'=> $single_lab->facebook,
-                    'linked'=> $single_lab->linked,
+                    'linked'=> $single_lab->linked, 
+                    'twitter'=> $single_lab->twitter, 
+                    'total_share'=> $single_lab->total_share, 
+                    'user_count'=> $single_lab->user_count, 
+                    'is_auto_created'=>$single_lab->is_auto_created,
+                    'res_sequence'=>$single_lab->res_sequence,
+                    'cha_sequence'=>$single_lab->cha_sequence,
+                    'enable_achievement'=>$single_lab->enable_achievement,
+                    'skill_groups'=>$single_lab->skill_groups,
+                    'skill_stacks'=>$single_lab->skill_stacks,
                     ];
                     $check_labs = Labs::where($lab_details)->first();
                     if(!$check_labs){

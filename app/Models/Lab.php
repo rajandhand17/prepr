@@ -18,6 +18,7 @@ use App\Models\LabResources;
 use App\Helpers\LabHelper;
 use App\Models\OrganizationInviteUser;
 use App\Models\Category;
+use AWS\CRT\HTTP\Request;
 
 class Lab extends Model
 {
@@ -55,6 +56,9 @@ class Lab extends Model
         'website',
         'facebook',
         'linked',
+        'total_share',
+        'twitter',
+
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     
@@ -69,7 +73,6 @@ class Lab extends Model
            }
            return false;
        } catch(\Exception $e){
-        return $e;
            return false;
        }
     }
@@ -99,7 +102,6 @@ class Lab extends Model
     {  
        try {
         $lab=static::select("title","slug","description","image","member","address","city","country")->where("slug",$request->slug)->first();
-        return $lab;
        if(!$lab->isEmpty()){
            return $lab;
        }
@@ -112,9 +114,9 @@ class Lab extends Model
     public function store($request)
     {  
         try { 
-            DB::beginTransaction();
+           // DB::beginTransaction();
             if (!empty($request->organisation)) {
-                $organisations_lab_limit = Lab::select('id')->where('organisation', $request->organisation)->where('is_auto_created', '0')->count();
+                $organisations_lab_limit = Lab::select('id')->where('organisation', $request->organisation)->count();
                 $organisation_limit = Organization::select('labs_limit')->where('id', $request->organisation)->first();
                 if ($organisation_limit->labs_limit <= $organisations_lab_limit) {
                     return  "error";
@@ -460,5 +462,48 @@ class Lab extends Model
       
     }
 
+    public function share($id)
+    {
+        try {
+         $total_share=Lab::select("total_share",'slug')->where("id",$id)->first();
+        $new_value=$total_share->total_share+1;
+        $lab=Lab::find($id);
+        $lab->total_share=(int)$new_value;
+        if($lab->save()){
+            $response= ['success' => true, 'message' => __('responses.lab_share_message')];
+            return $response;
+        }
+        } catch (\Exception $e) {
+            return false;
+        }
+   
+    }
+    
+    public function getTags($lab_id)
+    {
+        try {
+            $lab_tag=LabTag::get()->where("lab_id",$lab_id);
+            if($lab_tag){
+                $response= ['success' => true,'data'=>$lab_tag, 'message' => __('responses.lab_tags')];
+                return $response;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
+    public function labDetail($lab_id)
+    {
+        try {
+            $lab_detailed=Lab::where("id",$lab_id)->first();
+            if($lab_detailed){
+                $response= ['success' => true,'data'=>$lab_detailed, 'message' => __('responses.lab_detailed_fetech')];
+                return $response;
+            }
+            return false;
+        } catch (\Exception $e) {
+           return false;
+        }
+    }
 }
