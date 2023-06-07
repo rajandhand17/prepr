@@ -171,7 +171,6 @@ class Organization extends LaratrustTeam
        }
 
        } catch (\Exception $e) {
-     
         DB::rollback();
         $response= ['success' => false, 'message' => __('responses.send_error')];
         return $response;
