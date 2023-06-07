@@ -184,7 +184,7 @@ class Organization extends LaratrustTeam
        try{
         $profile_images_path=null;
         if($request->profile_image!==null){
-            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image,"organization");
+            $profile_images_path=FileUploadHelper::uploadbase64ImageToS3($request->profile_image,"organization");
             if($profile_images_path==false){
                 $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
                 return $response;
@@ -192,7 +192,7 @@ class Organization extends LaratrustTeam
         }
         $cover_images_path=null;
         if($request->cover_image!==null){
-            $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image,"organization");
+            $cover_images_path=FileUploadHelper::uploadbase64ImageToS3($request->cover_image,"organization");
         }   
             $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$slug)->first();
             if($organization!==null){
