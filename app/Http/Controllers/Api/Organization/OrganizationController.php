@@ -68,11 +68,13 @@ class OrganizationController extends AppBaseController
     {   
        try {
           $organization=$this->organizationRepository->view($slug,$request->language);
+          
           if($organization==="not_exists"){
             return $this->sendError(__('responses.organization_not_exists'),404);
         }
-          if ($organization) { 
+          if ($organization) {
             return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
+          //  return $this->sendResponse($organization, __('responses.found_organizations_list'));
           }
         return $this->sendError(__('responses.found_not_organizations_list'),404);
          
