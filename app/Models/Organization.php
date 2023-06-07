@@ -37,27 +37,33 @@ class Organization extends LaratrustTeam
         'is_verified',
         'magnet_community_id',
         'total_employees',
+
     ];
     public function categoryDetail(): HasOne
     {
         return $this->hasOne(Category::class,'id');
     }
 
-    public function Organization(){
+    public function organization(){
         return $this->belongsTo(User::class);
     }
+
+    public function organizationAddress()
+    {
+        return $this->hasMany(OrganizationAddress::class,'organization_id','id');
+    }
+
 
     public function view($search=null,$language='en')
     {       
        try {
-        $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->with('categoryDetail');
+        $organization_list=Organization::with('categoryDetail')->with('organizationAddress');
             if($search!=null){
                $organization_list=$organization_list->where("slug",$search);
              }
              $organization_list=$organization_list->get();
              //check if there are any results
              if(!$organization_list->isEmpty()){
-                // return $organization_list;
             $organization_list->transform(function ($item) {
                 if( $item['status']==0){
                     $item['status'] = 'draft'; 
@@ -187,13 +193,12 @@ class Organization extends LaratrustTeam
         $cover_images_path=null;
         if($request->cover_image!==null){
             $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image,"organization");
-        }  
+        }   
             $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$slug)->first();
             if($organization!==null){
             $organization->language=($request->has('language')) ?$request->language : $organization->language;
             $organization->name=($request->has('name')) ?$request->name : $organization->name;
             $organization->description=($request->has('description')) ?$request->description : $organization->description;
-            $organization->slug=($request->has('name'))?strtolower($request->name):$organization->slug;
             $organization->cover_image=$cover_images_path?$cover_images_path:$organization->cover_image;
             $organization->profile_image=$profile_images_path?$profile_images_path:$organization->profile_image;
             $organization->website=($request->has('website'))?$request->website:$organization->website;
