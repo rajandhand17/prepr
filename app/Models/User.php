@@ -141,11 +141,7 @@ class User extends Authenticatable
     }
     /**Register user */
     public function register($request)
-<<<<<<< HEAD
     { 
-=======
-    {    
->>>>>>> feature/LLAI-821-chargebee-implementation-for-pl
         try {
             DB::beginTransaction();
             $name = $request->first_name . " " . $request->last_name;
@@ -166,7 +162,6 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
-<<<<<<< HEAD
             $member_manager=MemberManagement::where("email",$request->email)->get();
             if($member_manager){
                 foreach($member_manager as $member){
@@ -174,13 +169,10 @@ class User extends Authenticatable
                     $member_manager=MemberManagement::where('id',$member->id)->update(['invite_status'=>'1']);
                 }
             }
-            if($user->id){
-=======
             
-            $userCreated = PlanSubscriptionHelper::createCustomer($user,$request->language);
-            $planSubscribed  = PlanSubscriptionHelper::subscribePlan($userCreated);
+            // $userCreated = PlanSubscriptionHelper::createCustomer($user,$request->language);
+            // $planSubscribed  = PlanSubscriptionHelper::subscribePlan($userCreated,);
             if ($user->id) {
->>>>>>> feature/LLAI-821-chargebee-implementation-for-pl
                 if($request->register_type=="organization"){
                     // $user->syncRoles(['org_admin_manager', 'user']);
                     // $user->admin_lab_limit = '1';

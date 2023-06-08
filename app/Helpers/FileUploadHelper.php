@@ -19,6 +19,7 @@ class FileUploadHelper {
             $path_cover = Storage::disk('s3')->url($webp_path_cover);
             return $path_cover;
         }catch(\Exception $e){
+            return $e;
             return false;
         }  
     }

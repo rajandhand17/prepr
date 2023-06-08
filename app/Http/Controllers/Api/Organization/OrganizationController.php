@@ -253,7 +253,7 @@ class OrganizationController extends AppBaseController
                 return $this->sendError($organization['message'],422);
             }
         } catch (\Exception $e) {
-            return $e;
+           
          return $this->sendError(__('responses.send_error'), 500);
         }
     }

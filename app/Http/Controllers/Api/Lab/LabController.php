@@ -62,6 +62,7 @@ class LabController extends AppBaseController{
         if($store){
             return $store;
         }
+        return false;
     } catch (\Exception $e) {
         return $e;
     }
