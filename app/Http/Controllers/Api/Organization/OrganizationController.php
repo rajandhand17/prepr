@@ -10,6 +10,7 @@ use App\Http\Requests\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Organization\UpdateOrganizationRequest;
 use App\Http\Requests\Organization\DeleteOrganizationRequest;
 use App\Http\Requests\Organization\ViewOrganizationRequest;
+use Laravel\Ui\Presets\React;
 
 class OrganizationController extends AppBaseController
 {   
@@ -252,6 +253,7 @@ class OrganizationController extends AppBaseController
                 return $this->sendError($organization['message'],422);
             }
         } catch (\Exception $e) {
+            return $e;
          return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -380,7 +382,7 @@ class OrganizationController extends AppBaseController
      *         name="country",
      *         in="query",
      *         description="Country for organizations country name",
-     *         required=false,
+     *      .   required=false,
      *         explode=true,
      *     ),
      *     @OA\Parameter(
@@ -477,7 +479,6 @@ class OrganizationController extends AppBaseController
             if($organization===true){
                 return $this->sendResponse(null,__('responses.delete_organizations_success'));
             }
-            
             return $this->sendError(__('responses.delete_organizations_failed'),400);
         } catch (\Exception $e) {
            return $this->sendError(__('responses.send_error'), 500);
@@ -531,11 +532,23 @@ class OrganizationController extends AppBaseController
            $organization=$this->organizationRepository->list($request->language);
            if($organization!==false){
                return $this->sendResponse($organization,__('responses.organization_view_get'));
-           }
+           } 
            return $this->sendError(__('responses.organization_view_get_failed'),400);
        } catch (\Exception $e) {
           return $this->sendError(__('responses.send_error'), 500);
        }
    }
-
+  
+   public function organizationMemberView(Request $request)
+   { 
+    try {
+        $organization=$this->organizationRepository->organizationMemberView($request->id,$request->language);
+        if($organization!==false){
+            return $this->sendResponse($organization,__('responses.organization_view_get'));
+        }
+        return $this->sendError(__('responses.organization_view_get_failed'),400);
+    } catch (\Exception $e) {
+        return $this->sendError(__('responses.send_error'), 500);
+    }
+   }
 }

@@ -16,6 +16,9 @@ use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\ResetPasswordFormRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
 use App\Http\Resources\Auth\RegisterResource;
+use ChargeBee\ChargeBee\Environment;
+use ChargeBee\ChargeBee\Models\Subscription;
+use App\Helpers\PlanSubscriptionHelper;
 
 class AuthController extends AppBaseController
 {
@@ -77,7 +80,7 @@ class AuthController extends AppBaseController
      * )
      */
     public function login(LoginFormRequest $request)
-    {
+    {    
         try {
             $login = $this->authRepository->login($request);
             if ($login['success'] == true){
@@ -308,6 +311,7 @@ class AuthController extends AppBaseController
     {  
         try {
             $register = $this->authRepository->register($request);
+            
             if ($register['success'] == false) {
                 return $this->sendError($register['message'], 401);
             }
@@ -548,7 +552,7 @@ class AuthController extends AppBaseController
             }else{
                 return $this->sendError(__("responses.already_number"), 403);
             }
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

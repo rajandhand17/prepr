@@ -142,7 +142,7 @@ class MasterController extends AppBaseController
             if ($skills) {
                 return $this->sendResponse(SkillResource::collection($skills), __('responses.found_skill_list'));
             }
-            return $this->sendError(__('responses.not_found_skill_list'));
+            return $this->sendResponse(null,__('responses.not_found_skill_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -201,7 +201,7 @@ class MasterController extends AppBaseController
             if ($tag) {
                 return $this->sendResponse(TagResource::collection($tag), __('responses.found_tag_list'));
             }
-            return $this->sendError(__('responses.not_found_tag_list'));
+            return $this->sendResponse(null,__('responses.not_found_tag_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -258,7 +258,7 @@ class MasterController extends AppBaseController
             if ($industry) {
                 return $this->sendResponse(ProjectIndustryResource::collection($industry), __('responses.found_project_industry_list'));
             }
-            return $this->sendError(__('responses.not_found_project_industry_list'));
+            return $this->sendResponse(null,__('responses.not_found_project_industry_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -315,7 +315,7 @@ class MasterController extends AppBaseController
             if ($type) {
                 return $this->sendResponse(ProjectTypeResource::collection($type), __('responses.found_project_industry_list'));
             }
-            return $this->sendError(__('responses.not_found_project_industry_list'));
+            return $this->sendResponse(null,__('responses.not_found_project_industry_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -372,7 +372,7 @@ class MasterController extends AppBaseController
             if ($stages) {
                 return $this->sendResponse(ProjectStageResource::collection($stages), __('responses.found_project_stages_list'));
             }
-            return $this->sendError(__('responses.not_found_project_stages_list'));
+            return $this->sendResponse(null,__('responses.not_found_project_stages_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -430,7 +430,7 @@ class MasterController extends AppBaseController
             if ($project_verticals) {
                 return $this->sendResponse(ProjectVerticalsResource::collection($project_verticals), __('responses.found_project_verticals_list'));
             }
-            return $this->sendError(__('responses.not_found_project_verticals_list'));
+            return $this->sendResponse(null,__('responses.not_found_project_verticals_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -489,12 +489,11 @@ class MasterController extends AppBaseController
             if ($project_status) {
                 return $this->sendResponse(ProjectStatusResource::collection($project_status), __('responses.found_project_status_list'));
             }
-            return $this->sendError(__('responses.not_found_project_status_list'));
+            return $this->sendResponse(null,__('responses.not_found_project_status_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
     /**
      * @OA\Get(
      *     path="/api/v1/master/links",
@@ -547,7 +546,7 @@ class MasterController extends AppBaseController
             if ($status) {
                 return $this->sendResponse(SocialLinkResource::collection($status), __('responses.found_social_links_list'));
             }
-            return $this->sendError(__('responses.not_found_social_links_list'));
+            return $this->sendResponse(null,__('responses.not_found_social_links_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -622,7 +621,7 @@ class MasterController extends AppBaseController
             if ($get_skill_groups) {
                 return $this->sendResponse(SkillGroupResource::collection($get_skill_groups), __('responses.found_skill_groups_list'));
             }
-            return $this->sendError(__('responses.not_found_skill_groups_list'));
+            return $this->sendResponse(null,__('responses.not_found_skill_groups_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -681,7 +680,7 @@ class MasterController extends AppBaseController
             if ($get_skill_stacks) {
                 return $this->sendResponse(SkillStackResource::collection($get_skill_stacks), __('responses.found_skill_stacks_list'));
             }
-            return $this->sendError(__('responses.not_found_skill_stacks_list'));
+            return $this->sendResponse(null,__('responses.not_found_skill_stacks_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -741,7 +740,7 @@ class MasterController extends AppBaseController
             if ($get_ranks) {
                 return $this->sendResponse(RankResource::collection($get_ranks), __('responses.found_rank_list'));
             }
-            return $this->sendError(__('responses.not_found_rank_list'));
+            return $this->sendResponse(null,__('responses.not_found_rank_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -800,7 +799,7 @@ class MasterController extends AppBaseController
             if ($project_submission_requirements) {
                 return $this->sendResponse(ProjectSubmissionRequirementResource::collection($project_submission_requirements), __('responses.found_project_submission_requirements_list'));
             }
-            return $this->sendError(__('responses.not_found_project_submission_requirements_list'));
+            return $this->sendResponse(null,__('responses.not_found_project_submission_requirements_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -859,7 +858,7 @@ class MasterController extends AppBaseController
             if ($acheivement_condition_list) {
                 return $this->sendResponse(AcheivementConditionListResource::collection($acheivement_condition_list), __('responses.found_acheivement_condition_list'));
             }
-            return $this->sendError(__('responses.not_found_acheivement_condition_list'));
+            return $this->sendResponse(null,__('responses.not_found_acheivement_condition_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -916,7 +915,7 @@ class MasterController extends AppBaseController
             if ($host_list) {
                 return $this->sendResponse(HostResource::collection($host_list), __('responses.found_host_list'));
             }
-            return $this->sendError(__('responses.not_found_host_list'));
+            return $this->sendResponse(null,__('responses.not_found_host_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -973,7 +972,7 @@ class MasterController extends AppBaseController
             if ($flexible_date_duration) {
                 return $this->sendResponse(FlexibleDateDurationResource::collection($flexible_date_duration), __('responses.found_flexible_list'));
             }
-            return $this->sendError(__('responses.found_flexible_list'));
+            return $this->sendResponse(null,__('responses.found_flexible_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -1032,7 +1031,7 @@ class MasterController extends AppBaseController
             if ($pitch_templates) {
                 return $this->sendResponse(FlexibleDateDurationResource::collection($pitch_templates), __('responses.found_pitch_templates_list'));
             }
-            return $this->sendError(__('responses.not_found_pitch_templates_list'));
+            return $this->sendResponse(null,__('responses.not_found_pitch_templates_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -1091,7 +1090,7 @@ class MasterController extends AppBaseController
             if ($lab_condition) {
                 return $this->sendResponse(LabConditionResource::collection($lab_condition), __('responses.found_lab_condition_list'));
             }
-            return $this->sendError(__('responses.not_found_lab_condition_list'));
+            return $this->sendResponse(null,__('responses.not_found_lab_condition_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -1140,7 +1139,7 @@ class MasterController extends AppBaseController
             if($socialconnect){
                 return $this->sendResponse(SocialConnect::collection($socialconnect), __('responses.social_connect_list'));
             }
-            return $this->sendError(__('responses.not_found_social_connect_list'));
+            return $this->sendResponse(null,__('responses.not_found_social_connect_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }

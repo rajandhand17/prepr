@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Helpers\PlanSubscriptionHelper;
 use Laratrust\Traits\LaratrustUserTrait;
 use App\Helpers\UtilityHelper;
 
@@ -140,7 +141,11 @@ class User extends Authenticatable
     }
     /**Register user */
     public function register($request)
+<<<<<<< HEAD
     { 
+=======
+    {    
+>>>>>>> feature/LLAI-821-chargebee-implementation-for-pl
         try {
             DB::beginTransaction();
             $name = $request->first_name . " " . $request->last_name;
@@ -161,6 +166,7 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
+<<<<<<< HEAD
             $member_manager=MemberManagement::where("email",$request->email)->get();
             if($member_manager){
                 foreach($member_manager as $member){
@@ -169,7 +175,17 @@ class User extends Authenticatable
                 }
             }
             if($user->id){
+=======
+            
+            $userCreated = PlanSubscriptionHelper::createCustomer($user,$request->language);
+            $planSubscribed  = PlanSubscriptionHelper::subscribePlan($userCreated);
+            if ($user->id) {
+>>>>>>> feature/LLAI-821-chargebee-implementation-for-pl
                 if($request->register_type=="organization"){
+                    // $user->syncRoles(['org_admin_manager', 'user']);
+                    // $user->admin_lab_limit = '1';
+                    // $user->admin_challenge_limit = '1';
+                    // $user->save();
                     $organization = new Organization;
                     $organization->slug=UtilityHelper::generateSlug($request->organization_name,$organization);
                     $organization->user_id=$user->id; 
@@ -200,6 +216,7 @@ class User extends Authenticatable
             return ["success" => false, "message" => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
+            return $e;
             return ["success" => false, "message" => 'Something went wrong.'];
         }
     }

@@ -183,6 +183,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         L5Swagger\L5SwaggerServiceProvider::class,
         \PhpUnitGen\Console\Adapters\Laravel\PhpUnitGenServiceProvider::class,
+       // Spatie\Activitylog\ActivitylogServiceProvider::class,
+
         /*
          * Package Service Providers...
          */
