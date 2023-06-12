@@ -74,7 +74,7 @@ class OrganizationController extends AppBaseController
         }
           if ($organization) {
             return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
-          //  return $this->sendResponse($organization, __('responses.found_organizations_list'));
+          
           }
         return $this->sendError(__('responses.found_not_organizations_list'),404);
          
