@@ -32,6 +32,7 @@ class OrganizationResource extends JsonResource
             'city'=>$this->organizationAddress[0]->city,
             'state'=>$this->organizationAddress[0]->state,
             'country'=>$this->organizationAddress[0]->country,
+            'members'=>$this->organizationMembers,
             'lab'=>0,
             'challanges'=>0,
             'resources'=>0,

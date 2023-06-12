@@ -53,11 +53,15 @@ class Organization extends LaratrustTeam
         return $this->hasMany(OrganizationAddress::class,'organization_id','id');
     }
 
+    public function organizationMembers()
+    {
+        return $this->hasMany(OrganizationMember::class,'organization_id','id');
+    }
 
     public function view($search=null,$language='en')
     {       
        try {
-        $organization_list=Organization::with('categoryDetail')->with('organizationAddress');
+        $organization_list=Organization::with('categoryDetail')->with('organizationAddress')->with('organizationMembers');
             if($search!=null){
                $organization_list=$organization_list->where("slug",$search);
              }
@@ -171,7 +175,6 @@ class Organization extends LaratrustTeam
        }
 
        } catch (\Exception $e) {
-     
         DB::rollback();
         $response= ['success' => false, 'message' => __('responses.send_error')];
         return $response;
