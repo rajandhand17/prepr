@@ -20,6 +20,7 @@ use App\Models\OrganizationInviteUser;
 use App\Models\Category;
 use AWS\CRT\HTTP\Request;
 use App\Helpers\PlanSubscriptionHelper;
+
 class Lab extends Model
 {
     use HasFactory;
@@ -262,9 +263,8 @@ class Lab extends Model
          //   }
 
             // For Notification Release
-            $organisation=Organization::where('id', $request->organisation)->first();
-            
-            if (!empty($organisation)) {
+            $organisation = Organization::where('id', $request->organisation)->first();
+           if (!empty($organisation)) {
                 $org_users = FollowersOrganisation::select('user_id')->where('organisation_id', $organisation->id)->where('followers', '1')->get();
                 foreach ($org_users as $fav) {
                     $user = User::find($fav->user_id, ['id', 'name', 'email', 'username', 'is_subscribe', 'device_platform', 'device_token']);
