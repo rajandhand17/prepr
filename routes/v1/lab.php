@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Lab\LabController;
-Route::middleware(['language','auth:api'])->group(function () {
+Route::middleware(['language','auth:api'])->group(function () { 
      Route::get('/',[LabController::class,'index']);
      Route::delete('/{slug}/delete',[LabController::class,'delete']);
      Route::get('/{slug}/view',[LabController::class,'view']); 
@@ -12,4 +12,5 @@ Route::middleware(['language','auth:api'])->group(function () {
      Route::post('/share',[LabController::class,'share']);
      Route::post('/get-tags',[LabController::class,'getTags']);
      Route::get('/{id}/lab-detail',[LabController::class,'labDetail']);
+     Route::post('/join-lab',[LabController::class,'joinLab']);
 });

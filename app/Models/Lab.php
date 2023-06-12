@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use app\Models\Organization;
 use App\Helpers\FileUploadHelper;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +19,10 @@ use App\Models\OrganizationInviteUser;
 use App\Models\Category;
 use AWS\CRT\HTTP\Request;
 use App\Helpers\PlanSubscriptionHelper;
-
+use App\Helpers\MemberManagementHelper;
+use App\Models\FollowersOrganisation;
+use App\Models\LabAchievement;
+use App\Models\Organization;
 class Lab extends Model
 {
     use HasFactory;
@@ -63,6 +65,11 @@ class Lab extends Model
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     
+    public function labUsers()
+    {
+        return $this->hasOne(User::class,'id','user_id');
+    }
+
     public function list($request)
     {
         try { 
@@ -115,6 +122,8 @@ class Lab extends Model
     public function store($request)
     {  
         try { 
+            
+        DB::beginTransaction();
             $lab_count = Lab::where('user_id', Auth::id())->where('is_auto_created', '0')->count();
             if (!empty($request->organisation)) {
                $organisations_lab_limit = Lab::where('organisation', $request->organisation)->where('is_auto_created', '0')->count();
@@ -123,10 +132,10 @@ class Lab extends Model
                  return "testing";
                  }
              }
-             $labSlug = $labSlug_format = str::slug($request->title);
+             $lab_slug = $lab_slug_format = str::slug($request->title);
         $next = 1;
-        while (Lab::select('id')->where('slug', '=', $labSlug)->first()) {
-            $labSlug = "{$labSlug_format}{$next}";
+        while (Lab::select('id')->where('slug', '=', $lab_slug)->first()) {
+            $lab_slug = "{$lab_slug_format}{$next}";
             $next++;
         }
 
@@ -144,21 +153,21 @@ class Lab extends Model
             $lab->image = $request->embeddedVideoUrl;
             $lab->mediaType = 'embeddedCode';
         }
-        if ($request->challengeSwitch == '1') {
-            $challengeSequence = '1';
+        if ($request->challenge_switch == '1') {
+            $challenge_sequence = '1';
         } else {
-            $challengeSequence = '0';
+            $challenge_sequence = '0';
         }
-        if ($request->resourceSwitch == '1') {
-            $resourceSequence = '1';
+        if ($request->resource_switch == '1') {
+            $resource_sequence = '1';
         } else {
-            $resourceSequence = '0';
+            $resource_sequence = '0';
         }
 
-        if ($request->achievementEnSwitch == '1') {
-            $achievementSwitch = '1';
+        if ($request->achievement_en_switch == '1') {
+            $achievement_switch = '1';
         } else {
-            $achievementSwitch = '0';
+            $achievement_switch = '0';
         }
           
         $tags = (!empty($request->lab_tags)) ? json_encode($request->lab_tags) : null;
@@ -166,12 +175,12 @@ class Lab extends Model
         $lab->organisation        = $request->organisation;
         $lab->tag                = $tags;
         $lab->title               = $request->title;
-        $lab->description         = $request->editor_description;
+        $lab->description         = $request->description;
         $lab->category            = $request->category;
         $lab->privacy             = $request->privacy;
-        $lab->cha_sequence        = $challengeSequence;
-        $lab->res_sequence        = $resourceSequence;
-        $lab->enable_achievement  = $achievementSwitch;
+        $lab->cha_sequence        = $challenge_sequence;
+        $lab->res_sequence        = $resource_sequence;
+        $lab->enable_achievement  = $achievement_switch;
         $lab->member_type         = $request->member_type;
         $lab->member              = $request->member;
         $lab->country             = $request->country;
@@ -179,7 +188,7 @@ class Lab extends Model
         $lab->longitude           = $request->longitude;
         $lab->address             = $request->location;
         $lab->city                = $request->city;
-        $lab->slug                = $labSlug;
+        $lab->slug                = $lab_slug;
         $lab->language            = "en";
        
         if ($request->labSkill != '') {
@@ -237,34 +246,18 @@ class Lab extends Model
             // }
 
             $groups_for_mixpanel = [];
-            // if ($request->has('groups') && !empty($request->groups)) {
-            //     foreach ($request->groups as $value) {
-            //         $groupLabs = Group::select('title', 'lab_id')->Where('id', $value)->first();
-            //         $groups_for_mixpanel[] = $groupLabs->title;
-            //         $labIdsArray = explode(',', $groupLabs->lab_id);
-            //         if (in_array($lab->id, $labIdsArray)) {
-            //             $groupLabIds =  $groupLabs->lab_id;
-            //         } else {
-            //             $groupLabIds =  $groupLabs->lab_id . ',' . $lab->id;
-            //         }
-
-            //         Group::where('id', $value)->update([
-            //             'lab_id' => $groupLabIds
-            //         ]);
-            //     }
-            // }
+          
             // Assign lab invited member in member management
-           // if (auth()->user()->hasAnyPermission('manage lab invites', 'manage lab moderator & manager')) {
+         
                 // $request->module_id = $lab->id;
                 // $inviteMemberResponce = MemberManagementHelper::inviteMembers($request, 'no');
                 // if (!empty($inviteMemberResponce)) {
                 //     MemberManagementHelper::setAlertMessage($inviteMemberResponce);
                 // }
-         //   }
 
-            // For Notification Release
-            $organisation = Organization::where('id', $request->organisation)->first();
-           if (!empty($organisation)) {
+            // For Notification Release 
+            $organisation=Organization::where('id', $request->organisation)->first();
+            if (!empty($organisation)){
                 $org_users = FollowersOrganisation::select('user_id')->where('organisation_id', $organisation->id)->where('followers', '1')->get();
                 foreach ($org_users as $fav) {
                     $user = User::find($fav->user_id, ['id', 'name', 'email', 'username', 'is_subscribe', 'device_platform', 'device_token']);
@@ -288,31 +281,31 @@ class Lab extends Model
                             'title' => $organisation->name . 'Create Lab', 'subject_title' => $organisation->name . ' has just created a new lab',
                             'name' => $user->name
                         ];
-                        if (!empty($user->email)) {
-                            if ($user->is_subscribe == 'subscribe') {
-                                Event::dispatch('send-template', array($send_template_data));
-                            }
-                        }
+                        // if (!empty($user->email)) {
+                        //     if ($user->is_subscribe == 'subscribe') {
+                        //         Event::dispatch('send-template', array($send_template_data));
+                        //     }
+                        // }
 
-                        $send_notification = [
-                            'topic' => $organisation->name . '  has created a lab',
-                            'message' => 'Hello greetings ' . $organisation->name . '  has created a lab ' . $request->title
-                        ];
-                        if ($user->device_platform != null && $user->device_token != null) {
-                            if ($user->device_platform == 'Android') {
-                                Event::dispatch('send-notification', array($user->id, $send_notification));
-                            } elseif ($user->device_platform == 'IOS') {
-                                Event::dispatch('send-notification', array($user->id, $send_notification));
-                            }
-                        }
+                        // $send_notification = [
+                        //     'topic' => $organisation->name . '  has created a lab',
+                        //     'message' => 'Hello greetings ' . $organisation->name . '  has created a lab ' . $request->title
+                        // ];
+                        // if ($user->device_platform != null && $user->device_token != null) {
+                        //     if ($user->device_platform == 'Android') {
+                        //         Event::dispatch('send-notification', array($user->id, $send_notification));
+                        //     } elseif ($user->device_platform == 'IOS') {
+                        //         Event::dispatch('send-notification', array($user->id, $send_notification));
+                        //     }
+                        // }
 
                         // Send notification for create lab
-                        NotificationHelper::addNotification(auth()->user()->id, $user->id, 'lab', '0', 'lab_create_notification', '', '', '', '', '', ['organization_name' => $organisation->name,'lab_title' => $request->title]);
+                     //   NotificationHelper::addNotification(auth()->user()->id, $user->id, 'lab', '0', 'lab_create_notification', '', '', '', '', '', ['organization_name' => $organisation->name,'lab_title' => $request->title]);
                     }
                 }
             }
 
-            if ($request->achievementEnSwitch == '1') {
+            if ($request->achievement_en_switch == '1') {
                 if ($request->file('imageAchievement')) {
                     $filename = Str::random(25) . '.' . $request->file('imageAchievement')->getClientOriginalExtension();
                     $imageAchievement = Image::make($request->file('imageAchievement'))->resize(625, 355)->stream();
@@ -331,7 +324,7 @@ class Lab extends Model
             }
 
             // For associated challenge data
-            if (isset($request->selected_challenges) && $request->selected_challenges != '') {
+            if (isset($request->selected_challenges) && $request->selected_challenges != ''){
                 $selectedChallenge = explode(',', $request->selected_challenges);
                 $challengeCount = 1;
                 foreach ($selectedChallenge as $challenge_id) {
@@ -401,31 +394,32 @@ class Lab extends Model
             }
 
             // For User challenge create Function update
-            User::where('id', Auth::user()->id)->update(['is_lab_exist' => 'yes']);
+           // User::where('id', Auth::user()->id)->update(['is_lab_exist' => 'yes']);
 
             // Store activity logs
-            activity()->useLog('lab')->performedOn($lab)->causedBy(auth()->user()->id)->withProperties([
-                'user' => auth()->user(),
-                'lab' => $lab
-            ])->log($lab->title . ' Added by ' . auth()->user()->name);
+            // activity()->useLog('lab')->performedOn($lab)->causedBy(auth()->user()->id)->withProperties([
+            //     'user' => auth()->user(),
+            //     'lab' => $lab
+            // ])->log($lab->title . ' Added by ' . auth()->user()->name);
 
             // Mixpanel tracking code: create lab
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.create_lab'), $lab, Auth::user(), $request->ip(), $groups_for_mixpanel);
+            // MixpanelHelper::mixpanel_tracking(config('mixpanel.create_lab'), $lab, Auth::user(), $request->ip(), $groups_for_mixpanel);
 
-            // Env unit testing
-            if ('yes' == \Session::get('unit_test_env', false)) {
-                return 'Unit test completed!';
-            }
+            // // Env unit testing
+            // if ('yes' == \Session::get('unit_test_env', false)) {
+            //     return 'Unit test completed!';
+            // }
 
             DB::commit();
 
-            return redirect()->route('userlab.show', $lab->slug)->with('success', __('notification.notification_las'));
+            return "true";
         }else{
+            DB::rollBack();
             return "false";
         } 
        
       } catch (\Exception $e) {
-           // DB::rollBack();
+            DB::rollBack();
            return $e;
             abort(500);
         }
@@ -511,6 +505,32 @@ class Lab extends Model
                 return $response;
             }
             return false;
+        } catch (\Exception $e) {
+           return false;
+        }
+    }
+
+    public function joinLab($request)
+    {
+        try {
+            $lab = Lab::where('labs.id',(int)$request->lab_id)->with("labUsers")->first();
+            if (!empty($lab)){
+                $labMember = MemberManagement::where(['invitee_id' => $lab->labUsers->id,'module_type' => 'lab','module_id' => (int) $request->lab_id])->first();
+                dd($labMember);
+                if (!empty($labMember)) {
+                    return response()->json(['status' => 'fail', 'message' => 'You have already sent request to join it.'], 400);
+                } else {
+                    $labData['public']  = $lab->privacy === 'private' ? '0' : '1';
+                    $labData['lab_id']  = $lab->id;
+                    $labData['user_id'] = $lab->user_id;
+                    $labData['invitee_id'] = $user->id;
+                    MemberManagementHelper::labRequestAcceptReject($request, $labData, 'request');
+                    MemberManagementHelper::joinRequestUserActivity($lab, 'request');
+                    return response()->json(['status' => 'success', 'message' => 'Lab Joined successfully'], 200);
+                }
+            } else {
+                return response()->json(['status' => 'fail', 'message' => 'Lab not found.'], 400);
+            }
         } catch (\Exception $e) {
            return false;
         }

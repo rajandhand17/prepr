@@ -204,7 +204,7 @@ class Organization extends LaratrustTeam
                 $response= ['success' => false, 'message' => __('responses.updated_organization_failed')];
                  return $response;
             }
-        }]
+        }
 
         $response= ['success' => false, 'message' => __('responses.organization_not_exists')];
                  return $response;

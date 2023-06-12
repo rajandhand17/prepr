@@ -9,6 +9,10 @@ use App\Http\Resources\Lab\LabResource;
 use Illuminate\Http\Request;
 use App\Http\Requests\Lab\CheckLabNameRequest;
 use App\Http\Requests\Lab\CheckLabSlugRequest;
+use App\Http\Requests\Lab\LabDeleteRequest;
+use App\Http\Requests\Lab\LabJoinRequest;
+use App\Http\Requests\Lab\LabStoreRequest;
+
 class LabController extends AppBaseController{
     private $labRepository;
    public function __construct(LabRepository $labRepository)
@@ -51,11 +55,11 @@ class LabController extends AppBaseController{
       }
       return false;
     }catch (\Exception $e){
-        return false;
+        return false; 
     }
    }
 
-  public function store(Request $request)
+  public function store(LabStoreRequest $request)
   {
     try {
         $store=$this->labRepository->store($request);
@@ -64,19 +68,19 @@ class LabController extends AppBaseController{
         }
         return false;
     } catch (\Exception $e) {
-        return $e;
+        return false;
     }
   }
 
    public function delete(Request $request)
-   {
+   {   
     try {
         $delete=$this->labRepository->delete($request);
         if($delete){
             return $delete;
         }
             return false;
-    } catch (\Exception $e) {
+    }catch (\Exception $e) {
         return false;
     }
    }
@@ -207,10 +211,10 @@ class LabController extends AppBaseController{
         return false;
     }
    }
-   public function joinUnjoin($request)
-   {
+   public function joinLab(LabJoinRequest $request)
+   {   
     try {
-        $join_unjoin=$this->labRepository->joinUnjoin($request);
+        $join_unjoin=$this->labRepository->joinLab($request);
         if($join_unjoin){
               return true;
         }

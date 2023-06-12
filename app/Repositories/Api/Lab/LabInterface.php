@@ -18,7 +18,7 @@ Interface LabInterface{
   public function genrateReportPdf($request);
   public function likeUnlike($request);
   public function followUnfollow($request);
-  public function joinUnjoin($request);
+  public function joinLab($request);
   public function share($request);
   public function view($request);
 }

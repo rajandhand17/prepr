@@ -16,9 +16,15 @@ return new class extends Migration
         Schema::create('lab_resources', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('lab_id')->unsigned()->index();
-            $table->bigInteger('resources_id')->unsigned()->index();
+            $table->bigInteger('resources_id')->nullable()->index();
+            $table->bigInteger('collection_id')->nullable();
+            $table->bigInteger('group_id')->nullable();
+            $table->enum('status', ['0', '1'])->default(0);
+            $table->string('sequence_no')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            
         });
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories\Api\Lab;
 
+use App\Http\Requests\Lab\LabJoinRequest;
 use App\Models\Lab;
 
 class LabRepository implements LabInterface{
@@ -152,10 +153,10 @@ class LabRepository implements LabInterface{
             return false;
         }
      }
-     public function joinUnjoin($request)
-     {
+     public function joinLab($request)
+     {  
         try {
-            return $this->lab->joinUnjoin($request);
+            return $this->lab->joinLab($request);
         } catch (\Exception $e) {
             return false;
         }

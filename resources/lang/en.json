@@ -3017,6 +3017,7 @@
     "responses.lab_name_not_exists":"This Lab name is not exists!",
     "responses.lab_detailed_fetech":"Lab detailed fetched successfully!",
     "responses.lab_share_message":"Lab shared successfully",
-    "responses.lab_tags":"Lab tags fetched successfully!"
-
+    "responses.lab_tags":"Lab tags fetched successfully!",
+    "responses.lab_id_required":"Lab id is required!",
+    "responses.lab_id_not_exists":"This lab id is not exists!"
 }
