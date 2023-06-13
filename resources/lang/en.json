@@ -3009,5 +3009,18 @@
     "responses.auto_invite_status":"Please enter auto invite status",
     "responses.user_id_not_exists":"This user id not exists!",
     "responses.member_manage_type":"Provided member manager type is not valid",
-    "responses.send_otp_success":"Please check your email for the one-time password."
+    "responses.send_otp_success":"Please check your email for the one-time password.",
+    "responses.lab":"Lab list found successfully!", 
+    "responses.lab_delete":"Lab deleted successfully!",
+    "responses.lab_name_required":"The Lab name is required!",
+    "responses.lab_name_exists":"This Lab name is exists!",
+    "responses.lab_name_not_exists":"This Lab name is not exists!",
+    "responses.lab_detailed_fetech":"Lab detailed fetched successfully!",
+    "responses.lab_share_message":"Lab shared successfully",
+    "responses.lab_tags":"Lab tags fetched successfully!",
+    "responses.lab_id_required":"Lab id is required!",
+    "responses.lab_id_not_exists":"This lab id is not exists!",
+    "responses.lab_joined":"Congratulations you have joined  lab successfully.",
+    "responses.lab_stored":"Congratulations you have created  lab successfully.",
+    "responses.lab_already_joined":"You have already sent request to join it."
 }

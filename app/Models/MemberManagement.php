@@ -48,15 +48,15 @@ class MemberManagement extends Model
         try {
             $module_type="0";
             $module_id="";
-            if($component=="organisation"){
+            if($component=="organization"){
                 $module_type="0";
                 $module_id=Organization::select('id')->where("slug",$slug)->first()->id;
             }
-            
             if($module_id===null && $module_id==""){
                 
                 return false;
             }
+           
             $listing=static::with(['user'])->where(["module_id"=>$module_id,"module_type"=>$module_type]);
 
             if(!empty($request->org_id)){
@@ -93,7 +93,7 @@ class MemberManagement extends Model
             }
        
         }catch (\Exception $e) {
-            
+            return $e;
             return false;       
         }
     }
