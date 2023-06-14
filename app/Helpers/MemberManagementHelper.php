@@ -779,7 +779,6 @@ class MemberManagementHelper
                     'is_join_request' => 1,
                     'join_request_status' => 1,
                     'privacy'       => 1,
-                    //'lab_users_id'  => $labData['id'],
                     'challenge_auto_invite_from_lab'  => 0,
                 ];
             }

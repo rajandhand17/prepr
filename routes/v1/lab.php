@@ -13,4 +13,6 @@ Route::middleware(['language','auth:api'])->group(function () {
      Route::post('/get-tags',[LabController::class,'getTags']);
      Route::get('/{id}/lab-detail',[LabController::class,'labDetail']);
      Route::post('/join-lab',[LabController::class,'joinLab']);
+     Route::post('/like-unlike',[LabController::class,'likeLab']);
+     Route::post('/follow-unfollow',[LabController::class,'followunfollow']);
 });

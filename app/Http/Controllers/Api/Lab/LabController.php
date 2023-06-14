@@ -12,6 +12,8 @@ use App\Http\Requests\Lab\CheckLabSlugRequest;
 use App\Http\Requests\Lab\LabDeleteRequest;
 use App\Http\Requests\Lab\LabJoinRequest;
 use App\Http\Requests\Lab\LabStoreRequest;
+use App\Http\Requests\LabfollowRequest;
+use App\Http\Requests\LabLikeRequest;
 
 class LabController extends AppBaseController{
     private $labRepository;
@@ -187,24 +189,24 @@ class LabController extends AppBaseController{
     }
    }
 
-   public function likeUnlike($request)
+   public function likeLab(LabLikeRequest $request)
    {
     try {
         $like_unlike=$this->labRepository->likeUnlike($request);
         if($like_unlike){
-              return true;
+            return $like_unlike;
         }
         return false;
     } catch (\Exception $e) {
         return false;
     }
    }
-   public function followUnfollow($request)
+   public function followUnfollow(LabfollowRequest $request)
    {
     try {
         $follow_unfollow=$this->labRepository->followUnfollow($request);
         if($follow_unfollow){
-              return true;
+              return $follow_unfollow;
         }
         return false;
     } catch (\Exception $e) {
@@ -216,10 +218,10 @@ class LabController extends AppBaseController{
     try {
         $join_unjoin=$this->labRepository->joinLab($request);
         if($join_unjoin){
-              return true;
+              return $join_unjoin;
         }
         return false;
-    } catch (\Exception $e) {
+    } catch (\Exception $e) { 
         return false;
     }
    }

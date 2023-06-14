@@ -3019,5 +3019,17 @@
     "responses.lab_share_message":"Lab shared successfully",
     "responses.lab_tags":"Lab tags fetched successfully!",
     "responses.lab_id_required":"Lab id is required!",
-    "responses.lab_id_not_exists":"This lab id is not exists!"
+    "responses.lab_id_not_exists":"This lab id is not exists!",
+    "responses.lab_liked":"The Lab is liked successfully!",
+    "responses.lab_liked_already":"The Lab is liked already!",
+    "responses.lab_unliked_already":"The Lab is unliked already!",
+    "responses.lab_unliked":"The Lab is unliked successfully!",
+    "responses.lab_joined_succcess":"Lab Joined successfully!",
+    "responses.lab_type_required":"Lab type is required!",
+    "responses.lab_action_required":"Lab action is required!",
+    "responses.lab_status_required":"Lab status is required!",
+    "responses.lab_followed":"The Lab is followed!",
+    "responses.lab_unfollowed":"Lab is followed!",
+    "responses.lab_followed_already":"Lab is already followed!",
+    "responses.lab_unfollowed_already":"Lab is already unfollowed!"
 }

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\LabChallenges;
 use App\Models\LabResources;
 use App\Helpers\LabHelper;
+use App\Helpers\MixpanelHelper;
 use App\Models\OrganizationInviteUser;
 use App\Models\Category;
 use AWS\CRT\HTTP\Request;
@@ -23,6 +24,7 @@ use App\Helpers\MemberManagementHelper;
 use App\Models\FollowersOrganisation;
 use App\Models\LabAchievement;
 use App\Models\Organization;
+use App\Models\Favorite;
 class Lab extends Model
 {
     use HasFactory;
@@ -512,27 +514,124 @@ class Lab extends Model
 
     public function joinLab($request)
     {
-        try {
+        try { 
             $lab = Lab::where('labs.id',(int)$request->lab_id)->with("labUsers")->first();
             if (!empty($lab)){
-                $labMember = MemberManagement::where(['invitee_id' => $lab->labUsers->id,'module_type' => 'lab','module_id' => (int) $request->lab_id])->first();
-                dd($labMember);
-                if (!empty($labMember)) {
+                $labMember = MemberManagement::where(['inviter_id' => $lab->labUsers->id,'module_type' => 'lab','module_id' => (int) $request->lab_id])->first();
+              
+                if(!empty($labMember)) {
                     return response()->json(['status' => 'fail', 'message' => 'You have already sent request to join it.'], 400);
-                } else {
-                    $labData['public']  = $lab->privacy === 'private' ? '0' : '1';
-                    $labData['lab_id']  = $lab->id;
-                    $labData['user_id'] = $lab->user_id;
-                    $labData['invitee_id'] = $user->id;
-                    MemberManagementHelper::labRequestAcceptReject($request, $labData, 'request');
-                    MemberManagementHelper::joinRequestUserActivity($lab, 'request');
-                    return response()->json(['status' => 'success', 'message' => 'Lab Joined successfully'], 200);
+                }else {
+                    
+                    //MemberManagementHelper::labRequestAcceptReject($request, $labData, 'request');
+                    //MemberManagementHelper::joinRequestUserActivity($lab, 'request');
+                   $member_mangement=new MemberManagement();
+                   $member_mangement->invite_type="network";
+                   $member_mangement->module_id=$request->lab_id;
+                   $member_mangement->module_type="lab";
+                   $member_mangement->inviter_id=$request->labUsers->id;
+                   $member_mangement->email=$request->labUsers->id;
+                   $member_mangement->invite_status=null;
+                   $member_mangement->email_status="network";
+                   $member_mangement->assign_role="network";
+                   $member_mangement->is_join_request="network";
+                   $member_mangement->join_request_status="network";
+                   $member_mangement->privacy="network";
+                   $member_mangement->challenge_auto_invite_from_lab="network";
+                   if($member_mangement->save()){
+                       return response()->json(['status' => 'success', 'message' => __('responses.lab_joined_succcess')], 200);
+                   }else{
+                    return response()->json(['status' => 'false', 'message' => __('responses.lab_joined_succcess')], 203);
+                   }
                 }
             } else {
-                return response()->json(['status' => 'fail', 'message' => 'Lab not found.'], 400);
+                return response()->json(['status' => 'fail', 'message' => __('notification.notification_lab_nf')], 404);
             }
         } catch (\Exception $e) {
+            return $e;
            return false;
         }
+    }
+
+    public function likeUnlike($request)
+    {
+     try {
+        $is_exists=Favorite::select("id","status")->where(["user_id"=>auth()->user()->id,"action"=>$request->action])->first();
+        if(isset($is_exists->id) && !empty($is_exists->id)){
+              if($is_exists->status==$request->status){
+                if($request->status==0 && $request->action==1){
+                    return response()->json(['status' => 'success', 'message' =>__('responses.lab_liked_already')], 403);
+               }elseif($request->status==1 && $request->action==1){
+                   return response()->json(['status' => 'success', 'message' =>__('responses.lab_unliked_already')], 403);
+              }
+              }else{
+                  $favorite=Favorite::find($is_exists->id);
+                  $favorite->status=$request->status;
+                  if($favorite->save()){
+                    if($request->status==0 && $request->action==1){
+                         return response()->json(['status' => 'success', 'message' =>__('responses.lab_liked')], 200);
+                    }elseif($request->status==1 && $request->action==1){
+                        return response()->json(['status' => 'success', 'message' =>__('responses.lab_unliked')], 200);
+                   }
+                  }
+              }
+        }else{
+            $data=new Favorite();
+            $data->user_id=auth()->user()->id;
+            $data->type=$request->type;
+            $data->action=$request->action;
+            $data->status=$request->status;
+            if(isset($request->refence_id) && !empty($request->refence_id)){
+            $data->refence_id;
+            }
+            if($data->save()){
+                return response()->json(['status' => 'success', 'message' =>__('responses.lab_liked')], 200);
+            }
+        }
+        return response()->json(['status' => 'false', 'message' =>__('responses.lab_unliked')], 503);
+     }catch (\Exception $e) {
+        return false;
+     }
+    }
+   
+    public function followUnfollow($request){
+        try {
+            $is_exists=Favorite::select("id","status")->where(["user_id"=>auth()->user()->id,"action"=>$request->action])->first(); 
+            if(isset($is_exists->id) && !empty($is_exists->id)){
+                
+                  if($is_exists->status==$request->status){
+                    if($request->status==0 && $request->action==2){
+                        return response()->json(['status' => 'success', 'message' =>__('responses.lab_followed_already')], 403);
+                   }elseif($request->status==1 && $request->action==2){
+                       return response()->json(['status' => 'success', 'message' =>__('responses.lab_unfollowed_already')], 403);
+                  }
+                  }else{
+                      $favorite=Favorite::find($is_exists->id);
+                      $favorite->status=$request->status;
+                      if($favorite->save()){
+                        if($request->status==0 && $request->action==1){
+                             return response()->json(['status' => 'success', 'message' =>__('responses.lab_followed')], 200);
+                        }elseif($request->status==1 && $request->action==1){
+                            return response()->json(['status' => 'success', 'message' =>__('responses.lab_unfollowed')], 200);
+                       }
+                      }
+                  }
+            }else{
+                $data=new Favorite();
+                $data->user_id=auth()->user()->id;
+                $data->type=$request->type;
+                $data->action=$request->action;
+                $data->status=$request->status;
+                if(isset($request->refence_id) && !empty($request->refence_id)){
+                $data->refence_id;
+                }
+                if($data->save()){
+                    return response()->json(['status' => 'success', 'message' =>__('responses.lab_followed')], 200);
+                }
+            }
+            return response()->json(['status' => 'false', 'message' =>__('responses.lab_unfollowed')], 503);
+         }catch (\Exception $e) {
+            return false;
+         }        
     }
 }
