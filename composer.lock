@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fdf49490431d2e182b03e297498cadf",
+    "content-hash": "68200428f197fce12df7d61f923d01dc",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -72,6 +72,16 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f8b191d1ab23dfdd1131017a6bfc58198fcd9393",
                 "reference": "f8b191d1ab23dfdd1131017a6bfc58198fcd9393",
+            "version": "3.269.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "b187de784f668f976345a9f11d5cae4af0c7be25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b187de784f668f976345a9f11d5cae4af0c7be25",
+                "reference": "b187de784f668f976345a9f11d5cae4af0c7be25",
                 "shasum": ""
             },
             "require": {
@@ -154,6 +164,8 @@
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.271.10"
             },
             "time": "2023-06-07T18:21:43+00:00"
+            },
+            "time": "2023-05-11T18:20:50+00:00"
         },
         {
             "name": "brick/math",

@@ -13,11 +13,10 @@ class OrganizationResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
+    {     
         return [
             'id' => $this->id,
             'language' => $this->language,
-            'display_name' => $this->display_name,
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
@@ -25,9 +24,18 @@ class OrganizationResource extends JsonResource
             'profile_image' => $this->profile_image,
             'website' => $this->website,
             'about' => $this->about,
-            'category' => $this->categoryDetail->name,
             'status' => $this->status,
             'total_employees' => $this->total_employees,
+            'latitude'=>$this->organizationAddress[0]->latitude,
+            'longitude'=>$this->organizationAddress[0]->longitude,
+            'address'=>$this->organizationAddress[0]->address,
+            'city'=>$this->organizationAddress[0]->city,
+            'state'=>$this->organizationAddress[0]->state,
+            'country'=>$this->organizationAddress[0]->country,
+            'members'=>$this->organizationMembers,
+            'lab'=>0,
+            'challanges'=>0,
+            'resources'=>0,
         ];
     }
 }

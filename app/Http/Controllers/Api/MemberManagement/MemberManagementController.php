@@ -1,7 +1,13 @@
 <?php
-
+/**
+ * @OA\Tag(
+ *     name="MemberManagementController",
+ *     description="Operations related to MemberManagementController"
+ * )
+ */
 namespace App\Http\Controllers\Api\MemberManagement;
 
+use App\Helpers\SendMailHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use Illuminate\Http\Request;
@@ -10,6 +16,9 @@ use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Requests\MemberManagement\UploadCsvFileMemberManagementRequest;
+use App\Models\MemberManagement;
+use App\Models\User;
+use Predis\Response\Status;
 
 class MemberManagementController extends AppBaseController
 {   
@@ -74,10 +83,10 @@ class MemberManagementController extends AppBaseController
     {     
         try {
             $member_mangement = $this->memberManagementRepository->index($component,$slug,$request);
-            if($member_mangement){
+            if($member_mangement["success"]==true && isset($member_mangement["data"])){
               return $this->sendResponse(MemberManagementResource::collection($member_mangement), __('responses.member_manager_found'));
             }
-            return $this->sendError(__('responses.member_manager_not_found'),404);
+            return $this->sendError($member_mangement['message'],$member_mangement['code']);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -85,7 +94,7 @@ class MemberManagementController extends AppBaseController
     
      /**
      * @OA\Post(
-     *     path="/api/v1/member-management/organization/prepr/create?language=en",
+     *     path="/api/v1/member-management/{component}/{slug}/create?language=en",
      *     tags={"Member Management API -  create"},
      *     summary="Send request for create member management",
      *     operationId="creates",
@@ -196,15 +205,19 @@ class MemberManagementController extends AppBaseController
             if($member_mangement){
                 return $member_mangement;
             }
-            return $this->sendError(__('responses.create_member_manger_failed'),201);
-        }catch (\Exception $e) {
+            $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
+            if($member_mangement['status']===true){
+                return $this->sendResponse($member_mangement, __('responses.create_member_manger_success'));
+            }
+            return $this->sendError(__('responses.create_member_manger_failed'),403);
+        }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
  
      /**
      * @OA\Post(
-     *     path="/api/v1/member-management/organization/prepr/delete?language=en",
+     *     path="/api/v1/member-management/{component}/{slug}/delete?language=en",
      *     tags={"Member Management API - delete"},
      *     summary="Member management apis delete",
      *     operationId="deletes",
@@ -240,7 +253,7 @@ class MemberManagementController extends AppBaseController
      */   
     public function deletes($component,$slug,DeleteMemberManagementRequest $request)
     {   
-        try {
+        try{
             $member_mangement=$this->memberManagementRepository->delete($component,$slug,$request);
             if($member_mangement){
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
@@ -250,5 +263,4 @@ class MemberManagementController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
 }

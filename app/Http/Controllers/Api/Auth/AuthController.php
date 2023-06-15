@@ -89,7 +89,8 @@ class AuthController extends AppBaseController
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if($login['code'] === 3){
-                   $response=["token"=>$login['token'],"code"=>$login['code']];
+                   
+                   $response=["token"=>$login['token'],"data"=>$login['user'],"code"=>$login['code']];
                     return $this->sendResponse($response, $login['message'], 200);
                 }
             }
@@ -507,7 +508,7 @@ class AuthController extends AppBaseController
      *     summary="Send request for check email",
      *     operationId="checkPhone",
      *     @OA\Parameter(
-     *         name="phone_number",
+     *         name="phone_number",0
      *         in="query",
      *         description="check the phone number that exists or not!",
      *         required=true,

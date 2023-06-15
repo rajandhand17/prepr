@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Models\LaratrustTeam;
 use DB;
 use App\Models\OrganizationAddress;
+use App\Models\OrganizationMember;
 use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
 use App\Http\Requests\Organization\DeleteOrganizationRequest;
@@ -41,27 +42,37 @@ class Organization extends LaratrustTeam
         'is_verified',
         'magnet_community_id',
         'total_employees',
+
     ];
     public function categoryDetail(): HasOne
     {
         return $this->hasOne(Category::class,'id');
     }
 
-    public function Organization(){
+    public function organization(){
         return $this->belongsTo(User::class);
+    }
+
+    public function organizationAddress()
+    {
+        return $this->hasMany(OrganizationAddress::class,'organization_id','id');
+    }
+
+    public function organizationMembers()
+    {
+        return $this->hasMany(OrganizationMember::class,'organization_id','id');
     }
 
     public function view($search=null,$language='en')
     {       
        try {
-        $organization_list=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified', 'magnet_community_id','total_employees')->with('categoryDetail');
+        $organization_list=Organization::with('categoryDetail')->with('organizationAddress')->with('organizationMembers');
             if($search!=null){
                $organization_list=$organization_list->where("slug",$search);
              }
              $organization_list=$organization_list->get();
              //check if there are any results
              if(!$organization_list->isEmpty()){
-                 return $organization_list;
             $organization_list->transform(function ($item) {
                 if( $item['status']==0){
                     $item['status'] = 'draft'; 
@@ -129,6 +140,20 @@ class Organization extends LaratrustTeam
                 $request->organization_id=$organization->id;
                 $address=OrganizationAddress::create($request);
                 if($address){
+               $add_members=json_decode($request->people);
+                    if(isset($add_members) && count($add_members)!==0){
+                        foreach ($add_members as $key => $value) {
+                             $people=new OrganizationMember;
+                             $people->organization_id=$organization->id;
+                             $people->name=$value->name;
+                             $people->description=$value->description;
+                             $image=FileUploadHelper::uploadbase64ImageToS3($value->image,"organization");
+                             $people->image=$image;
+                             if(!$people->save()){
+                                DB::rollback();
+                             }
+                        }
+                    }
                     DB::commit();
                     $data=["name"=>$organization->name,"slug"=> $organization->slug];
                     $response= ['success' => true,"data"=>$data, 'message' => __('responses.create_organization')];
@@ -139,6 +164,7 @@ class Organization extends LaratrustTeam
                     return $response;
                }
             }
+        
             DB::commit();
             $response= ['success' => true, 'message' => __('responses.create_organization')];
             return $response;
@@ -171,7 +197,7 @@ class Organization extends LaratrustTeam
        try{
         $profile_images_path=null;
         if($request->profile_image!==null){
-            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image,"organization");
+            $profile_images_path=FileUploadHelper::uploadbase64ImageToS3($request->profile_image,"organization");
             if($profile_images_path==false){
                 $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
                 return $response;
@@ -179,14 +205,13 @@ class Organization extends LaratrustTeam
         }
         $cover_images_path=null;
         if($request->cover_image!==null){
-            $cover_images_path=FileUploadHelper::uploadImageToS3($request->cover_image,"organization");
-        }  
+            $cover_images_path=FileUploadHelper::uploadbase64ImageToS3($request->cover_image,"organization");
+        }   
             $organization=static::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$slug)->first();
             if($organization!==null){
             $organization->language=($request->has('language')) ?$request->language : $organization->language;
             $organization->name=($request->has('name')) ?$request->name : $organization->name;
             $organization->description=($request->has('description')) ?$request->description : $organization->description;
-            $organization->slug=($request->has('name'))?strtolower($request->name):$organization->slug;
             $organization->cover_image=$cover_images_path?$cover_images_path:$organization->cover_image;
             $organization->profile_image=$profile_images_path?$profile_images_path:$organization->profile_image;
             $organization->website=($request->has('website'))?$request->website:$organization->website;
