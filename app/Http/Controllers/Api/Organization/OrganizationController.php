@@ -1,12 +1,7 @@
 <?php
-/**
- * @OA\Tag(
- *     name="OrganizationController",
- *     description="Operations related to OrganizationController"
- * )
- */
+
 namespace App\Http\Controllers\Api\organization;
- 
+
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use App\Repositories\Api\Organization\OrganizationRepository;
@@ -74,11 +69,13 @@ class OrganizationController extends AppBaseController
        try {
           $organization=$this->organizationRepository->view($slug,$request->language);
           return $organization;
+          
           if($organization==="not_exists"){
-            return $this->sendResponse(null,__('responses.organization_not_exists'),404);
+            return $this->sendError(__('responses.organization_not_exists'),404);
         }
-          if ($organization) { 
+          if ($organization) {
             return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
+          
           }
         return $this->sendError(__('responses.found_not_organizations_list'),404);
          
@@ -249,7 +246,7 @@ class OrganizationController extends AppBaseController
      * )
      */ 
     public function create(CreateOrganizationRequest $request)
-    {    
+    {   
         try {
             $organization=$this->organizationRepository->create($request);
             if($organization['success']==true) {

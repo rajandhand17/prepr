@@ -48,19 +48,24 @@ class MemberManagement extends Model
         try {
             $module_type="0";
             $module_id="";
+            
             if($component=="organization"){
                 $module_type="0";
-                $module_id=Organization::select('id')->where("slug",$slug)->first()->id;
-            }
+                $module_id=Organization::select('id')->where("slug",$slug)->first();
+                if($module_id){
+                    $module_id=$module_id->id;
+                }
+            }else{
+                $response= ['success' => false, 'message' => __('responses.wrong_component'),"code"=>404];
+                return $response; 
+            };
             if($module_id===null && $module_id==""){
-                
-                return false;
+                $response= ['success' => false, 'message' => __('labels.labels_org_noof'),"code"=>404];
+                return $response;
             }
            
             $listing=static::with(['user'])->where(["module_id"=>$module_id,"module_type"=>$module_type]);
-
             if(!empty($request->org_id)){
-              
                 $listing->where('id', $request->org_id);
             }
             if(!empty($request->role)){
@@ -87,9 +92,11 @@ class MemberManagement extends Model
             $listing=$listing->get();
             
             if(!$listing->isEmpty()){
-                return $listing;
+                $response= ['success' => true,"data"=>$listing, 'message' => __('labels.labels_org_noof'),"code"=>200 ];
+                return $response;
             }else{
-                return false;
+                $response= ['success' => true, 'message' => __('notification.notification_mnf'),"code"=>200];
+                return $response;
             }
        
         }catch (\Exception $e) {
