@@ -13,6 +13,11 @@ use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
 use App\Http\Requests\Organization\DeleteOrganizationRequest;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Helpers\PlanSubscriptionHelper;
+use ChargeBee\ChargeBee\Environment;
+use ChargeBee\ChargeBee\Models\Subscription;
+use ChargeBee\ChargeBee\Models\Customer;
+use ChargeBee\ChargeBee\Models\ItemEntitlement;
 
 class Organization extends LaratrustTeam
 {   
@@ -127,6 +132,10 @@ class Organization extends LaratrustTeam
         }
         $organization->total_employees=$request->total_employees;
         if($organization->save()){
+            $cust_id = PlanSubscriptionHelper::getCustomer(auth()->user()->email);
+            if($cust_id != []){
+                $planSubscribed  = PlanSubscriptionHelper::subscribePlan($cust_id, 'free-plan-CAD-Yearly', $organization->id);
+            }
             if($request->has('address') && $request->has('city') && $request->has('state') && $request->has('country') && $request->has('zip_code')){
                 $request->organization_id=$organization->id;
                 $address=OrganizationAddress::create($request);
@@ -176,6 +185,7 @@ class Organization extends LaratrustTeam
 
        } catch (\Exception $e) {
         DB::rollback();
+        return $e;
         $response= ['success' => false, 'message' => __('responses.send_error')];
         return $response;
        }
@@ -263,5 +273,64 @@ $organization_list=static::select('id','language','name','slug','description','c
             return false;
         }
     }
- 
+
+    public function organizationMemberView($id,$language)
+    {
+        try {
+            $organization_member_list=OrganizationMember::where("organization_id",$id)->get();
+            return $organization_member_list;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function organizationMemberdelete($id,$language)
+    {
+        try {
+            $exists=OrganizationMember::select("id")->where("organization_id",$id)->first();
+            if($exists!==null){
+                $organization=OrganizationMember::where("organization_id",$id)->delete();
+                if($organization){
+                     return true;        
+                }else{
+                    return false;
+                }
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function organizationMemberupdate($id,$request)
+    {
+        $profile_images_path=null;
+        if($request->profile_image!==null){
+            $profile_images_path=FileUploadHelper::uploadImageToS3($request->profile_image,"organization");
+            if($profile_images_path==false){
+                $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
+                return $response;
+            }
+        }
+        
+    }
+
+    public function organizationMemberCreate($request)
+    {  
+        try {
+           $organization_members=new OrganizationMember;
+           $organization_members->name=$request->organization_id;
+           $organization_members->name=$request->name;
+           $organization_members->description=$request->description;
+           $organization_members->position=$request->position;
+           $organization_members->image=$request->image;
+           if($organization_members->save()){
+            return true;
+           }
+           return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+
+    }
 }

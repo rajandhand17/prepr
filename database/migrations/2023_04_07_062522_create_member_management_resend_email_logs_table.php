@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up() 
     {
         Schema::create('member_management_resend_email_logs', function (Blueprint $table) {
             $table->id();

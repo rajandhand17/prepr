@@ -25,9 +25,9 @@ use Carbon\Carbon;
 class MemberManagementHelper
 {
     /* -----------------------------------------------------------------------------------------
-     @Description: This function can get module data based on slug
-     @Input: slug , moduleType
-     @Output: return module data array
+@Description: This function can get module data based on slug
+@Input: slug , moduleType
+@Output: return module data array
      -------------------------------------------------------------------------------------------- */
     public static function getModuleDataBySlug($slug, $moduleType)
     {
@@ -45,9 +45,9 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-     @Description: This function can get members data with filter
-     @Input: id
-     @Output: return labMemberData array
+@Description: This function can get members data with filter
+@Input: id
+@Output: return labMemberData array
      -------------------------------------------------------------------------------------------- */
     public static function getMembersData($request, $moduleId, $moduleType)
     {
@@ -69,9 +69,9 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can get project data with filter
-    @Input: id
-    @Output: return project array
+@Description: This function can get project data with filter
+@Input: id
+@Output: return project array
      -------------------------------------------------------------------------------------------- */
     public static function getProjectData($moduleId)
     {
@@ -83,9 +83,9 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can get project member data
-    @Input: teamIds
-    @Output: return user name
+@Description: This function can get project member data
+@Input: teamIds
+@Output: return user name
     -------------------------------------------------------------------------------------------- */
     public static function getProjectTeamMembers($teamIds)
     {
@@ -96,9 +96,9 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can get lab members with filter
-    @Input: id
-    @Output: return organisation_id array
+@Description: This function can get lab members with filter
+@Input: id
+@Output: return organisation_id array
     -------------------------------------------------------------------------------------------- */
     public static function removeMembers($request)
     {
@@ -123,8 +123,8 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can update invitation status after sent mail for lab
-    @Input: invite_status, email_status, queueDetails,status
+@Description: This function can update invitation status after sent mail for lab
+@Input: invite_status, email_status, queueDetails,status
     -------------------------------------------------------------------------------------------- */
     public static function labInvitationStatusUpdate($invite_status, $email_status, $queueDetails, $status, $inviteStatus)
     {
@@ -138,8 +138,8 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can update invitation status after sent mail for challenge
-    @Input: invite_status, email_status, queueDetails
+@Description: This function can update invitation status after sent mail for challenge
+@Input: invite_status, email_status, queueDetails
     -------------------------------------------------------------------------------------------- */
     public static function challengeInvitationStatusUpdate($invite_status, $email_status, $queueDetails)
     {
@@ -152,8 +152,8 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can update invitation status after fail email
-    @Input: invite_status, email_status, queueDetails
+@Description: This function can update invitation status after fail email
+@Input: invite_status, email_status, queueDetails
     -------------------------------------------------------------------------------------------- */
     public static function failInvitationStatusUpdate($invite_status, $email_status, $queueDetails)
     {
@@ -161,9 +161,9 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can delete challenge eveluator from challenge assessment table and member management table
-    @Input: request
-    @Output: status message
+@Description: This function can delete challenge eveluator from challenge assessment table and member management table
+@Input: request
+@Output: status message
     -------------------------------------------------------------------------------------------- */
     public static function removeEvaluatorMembers($request)
     {
@@ -192,8 +192,8 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can add invited member from network
-    @param: request
+@Description: This function can add invited member from network
+@param: request
     -------------------------------------------------------------------------------------------- */
     public static function inviteFromNetwork($request)
     {
@@ -238,8 +238,8 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can add invited member by email
-    @param: request
+@Description: This function can add invited member by email
+@param: request
     -------------------------------------------------------------------------------------------- */
     public static function inviteMemberByEmail($request)
     {
@@ -302,8 +302,8 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can add invited member by email using csv
-    @param: request
+@Description: This function can add invited member by email using csv
+@param: request
     -------------------------------------------------------------------------------------------- */
     public static function inviteByCsv($request)
     {
@@ -745,16 +745,44 @@ class MemberManagementHelper
     {
         if ($action === 'request') {
             // request for private lab
-            $member_data=new MemberManagement();
-            $member_data->invite_type  = 1;
-            $member_data->module_id     = (int) $labData['lab_id'];
-            $member_data->module_type   = "1";
-            $member_data->inviter_id    = (int) $labData['user_id'];
-            $member_data->email         = null;
-            $member_data->invite_status = "0";
-            $member_data->email_status  = '0';
-            $member_data->email_resend_count  = '0';
-            $member_data->save();
+            if ($labData['public'] == '0') {
+                $memberData = [
+                    'invite_type'   => 'network',
+                    'module_id'     => (int) $labData['lab_id'],
+                    'module_type'   => 'lab',
+                    'inviter_id'    => (int) $labData['user_id'],
+                    'invitee_id'    => (int) $labData['invitee_id'],
+                    'email'         => null,
+                    'invite_status' => 'invited',
+                    'email_status'  => 'other',
+                    'auto_invite_status' => 'other',
+                    'assign_role'   => 'user',
+                    'is_join_request' => 1,
+                    'join_request_status' => 0,
+                    'privacy'       => 0,
+                    //'lab_users_id'  => $labData['id'],
+                    'challenge_auto_invite_from_lab'  => 0,
+                ];
+            } elseif ($labData['public'] == '1') {
+                // request for public lab
+                $memberData = [
+                    'invite_type'   => 'network',
+                    'module_id'     => (int) $labData['lab_id'],
+                    'module_type'   => 'lab',
+                    'inviter_id'    => (int) $labData['user_id'],
+                    'invitee_id'    => (int) $labData['invitee_id'],
+                    'email'         => null,
+                    'invite_status' => 'accepted',
+                    'email_status'  => 'other',
+                    'auto_invite_status' => 'other',
+                    'assign_role'   => 'user',
+                    'is_join_request' => 1,
+                    'join_request_status' => 1,
+                    'privacy'       => 1,
+                    'challenge_auto_invite_from_lab'  => 0,
+                ];
+            }
+            MemberManagement::create($memberData);
         } elseif ($action === 'accept') {
             if (empty($labData)) {
                 // if request from member management page
@@ -778,6 +806,12 @@ class MemberManagementHelper
             MemberManagement::where(['id' => $request->memberId])->delete();
             ModuleProgressStatus::where(['module_id' => $request->lab_id, 'user_id' => auth()->user()->id])->forcedelete();
             
+            // $data = MemberManagement::where(['lab_users_id' => $labData['id']])->first();
+            // if ($data !== null) {
+            //     $data->forceDelete();
+            // }
+            //MemberManagement::where(['lab_users_id' => $labData['id']])->update(['join_request_status' => 3, 'invite_status' => 'declined', 'inviter_id' => auth()->user()->id]);
+            //self::requestRejectionMail($labData['id'], 'lab_request_cancel');
         }
     }
 
@@ -1055,8 +1089,8 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can get general members data for member listing on lab details page
-    @Input: labid
+@Description: This function can get general members data for member listing on lab details page
+@Input: labid
     -------------------------------------------------------------------------------------------- */
     public static function getGeneralMembers($moduleId, $moduleType)
     {
@@ -1069,8 +1103,8 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can check member joined or not
-    @Input: labid
+@Description: This function can check member joined or not
+@Input: labid
      -------------------------------------------------------------------------------------------- */
     public static function checkMemberIsJoined($moduleId, $moduleType, $inviteeId)
     {
@@ -1078,37 +1112,59 @@ class MemberManagementHelper
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: This function can get all request which is not accepted
-    @Input: labid
+@Description: This function can get all request which is not accepted
+@Input: labid
     -------------------------------------------------------------------------------------------- */
     public static function getJoinRequest($moduleId, $moduleType)
     {
         return MemberManagement::select('users.username as username', 'users.profile_image', 'users.name', 'users.first_name', 'users.last_name', 'member_management.invitee_id as invitee_id')
-            ->leftJoin('users', 'users.id', '=', 'member_managem$lab->labUsers->id$lab->labUsers->ident.invitee_id')
+            ->leftJoin('users', 'users.id', '=', 'member_management.invitee_id')
             ->where(['member_management.module_id' => $moduleId, 'member_management.module_type' => $moduleType,'invite_status' => 'pending','join_request_status' => 1])
             ->orderBy('member_management.id', 'desc')
             ->get();
     }
 
     /* -----------------------------------------------------------------------------------------
-    @Description: Function can send email after join request
-    @input: lab_id
+@Description: Function can send email after join request
+@input: lab_id
     -------------------------------------------------------------------------------------------- */
     public static function joinRequestUserActivity($lab, $action)
     {
         if (!empty($lab)) {
             if ($action ==='request') {
                 // Create point after join lab
-                $point = config('points.lab_join');
+                $point = Settings::get(config('points.lab_join'));
                 $user_points = UserPoint::create(['type' => 'lab_join', 'date' => date('Y-m-d'), 'user_id' => auth()->user()->id, 'point' => $point]);
 
+                // Send notification for join lab
+                NotificationHelper::addNotification(auth()->user()->id, auth()->user()->id, 'lab', '0', 'lab_join_notification', '', '', '', '', '', ['lab_point' => $point ,'lab_title' => $lab->title]);
+                // Send email only after join request also when lab is private
+                if ($lab->privacy === 'private') {
+                    Event::dispatch('send-template', array([
+                        'mail_template' => 'lab_request',
+                        'sender'        => auth()->user()->name,
+                        'name'          => auth()->user()->name,
+                        'sender_image'  => auth()->user()->profile_image,
+                        'time'          => Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now(), 'America/Toronto') . ' EST',
+                        "username"      => $lab->name,
+                        'email'         => $lab->emaiId,
+                        'to_email'      => $lab->emaiId,
+                        'to_name'       => $lab->username,
+                        'fullname'      => $lab->name,
+                        'sender_url'    => route('getProfile', [auth()->user()->username]),
+                        'lab_url'       => route('userlab.show', [$lab->slug]),
+                        'lab'           => $lab->title
+                    ]));
+                }
             } elseif ($action ==='cancel') {
                 // Remove point after cancel request
-                $point = config('points.lab_join');
+                $point = Settings::get(config('points.lab_join'));
                 $user_points = UserPoint::where(['type' => 'lab_join', 'user_id' => auth()->user()->id, 'point' => $point])->first();
                 if ($user_points) {
                     $user_points->forceDelete();
                 }
+                // Send notification for cancel request
+                NotificationHelper::addNotification(auth()->user()->id, auth()->user()->id, 'lab', '0', 'lab_left_notification', '', '', '', '', '', ['lab_title' => $lab->title]);
             }
         }
     }

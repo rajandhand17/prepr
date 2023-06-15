@@ -10,10 +10,10 @@ class UserPoint extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
+
     protected $table="user_point";
+
     protected $fillable=[
-        "id",
         "user_id",
         "type",
         "point",

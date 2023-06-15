@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Spatie\Permission\Traits\HasRoles;
+
 use App\Helpers\SendMailHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,14 +13,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Helpers\PlanSubscriptionHelper;
 use Laratrust\Traits\LaratrustUserTrait;
 use App\Helpers\UtilityHelper;
 
 class User extends Authenticatable
-{
+{   
     use LaratrustUserTrait;
     use HasApiTokens, HasFactory, Notifiable;
-
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -162,8 +165,22 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
-            if($user->id){
+            $member_manager=MemberManagement::where("email",$request->email)->get();
+            if($member_manager){
+                foreach($member_manager as $member){
+                    $user->attachRole($member->role,$member->module_id);
+                    $member_manager=MemberManagement::where('id',$member->id)->update(['invite_status'=>'1']);
+                }
+            }
+            
+            // $userCreated = PlanSubscriptionHelper::createCustomer($user,$request->language);
+            // $planSubscribed  = PlanSubscriptionHelper::subscribePlan($userCreated,);
+            if ($user->id) {
                 if($request->register_type=="organization"){
+                    // $user->syncRoles(['org_admin_manager', 'user']);
+                    // $user->admin_lab_limit = '1';
+                    // $user->admin_challenge_limit = '1';
+                    // $user->save();
                     $organization = new Organization;
                     $organization->slug=UtilityHelper::generateSlug($request->organization_name,$organization);
                     $organization->user_id=$user->id; 
@@ -174,6 +191,7 @@ class User extends Authenticatable
                 $userpersonal = UserPersonal::create($user,$request);
                 $usersetting = UserSetting::create($user,$request);
                 if($userpersonal && $usersetting){
+
                     $data = ["subject" => "Verify Your Email", "first_name" => $user->first_name, "last_name" => $user->last_name, "otp" => $user->otp];
                     $mail = SendMailHelper::sendMail($user, "email.verify_otp", $data);
                     if($mail){
@@ -192,8 +210,8 @@ class User extends Authenticatable
             DB::rollback();
             return ["success" => false, "message" => __('responses.failed_registeration')];
         } catch (\Exception $e) {
-            return $e;
             DB::rollback();
+            return $e;
             return ["success" => false, "message" => 'Something went wrong.'];
         }
     }

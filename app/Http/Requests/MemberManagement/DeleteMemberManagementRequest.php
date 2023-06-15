@@ -40,7 +40,7 @@ class DeleteMemberManagementRequest extends FormRequest
         ],422));
     }
 
-    public function messages()
+    public function messages() 
     {
         return[
             'id.required'=>__('responses.member_manager_id_required'),
