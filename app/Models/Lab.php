@@ -532,8 +532,8 @@ class Lab extends Model
                    $member_mangement->inviter_id=$request->labUsers->id;
                    $member_mangement->email=$request->labUsers->id;
                    $member_mangement->invite_status=null;
-                   $member_mangement->email_status="network";
-                   $member_mangement->assign_role="network";
+                   $member_mangement->email_status="other";
+                   $member_mangement->assign_role="user";
                    $member_mangement->is_join_request="network";
                    $member_mangement->join_request_status="network";
                    $member_mangement->privacy="network";
