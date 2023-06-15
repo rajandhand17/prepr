@@ -18,6 +18,7 @@ use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Requests\MemberManagement\UploadCsvFileMemberManagementRequest;
 use App\Models\MemberManagement;
 use App\Models\User;
+use Predis\Response\Status;
 
 class MemberManagementController extends AppBaseController
 {   
@@ -82,10 +83,10 @@ class MemberManagementController extends AppBaseController
     {     
         try {
             $member_mangement = $this->memberManagementRepository->index($component,$slug,$request);
-            if($member_mangement){
+            if($member_mangement["success"]==true && isset($member_mangement["data"])){
               return $this->sendResponse(MemberManagementResource::collection($member_mangement), __('responses.member_manager_found'));
             }
-            return $this->sendError(__('responses.member_manager_not_found'),404);
+            return $this->sendError($member_mangement['message'],$member_mangement['code']);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
