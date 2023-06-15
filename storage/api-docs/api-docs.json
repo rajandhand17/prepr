@@ -1491,12 +1491,19 @@
                     {
                         "name": "id[]",
                         "in": "query",
+                        "description": "Member management delete id",
                         "description": "Enter id of member management!",
                         "required": true,
                         "explode": true,
                         "schema": {
                             "type": "array",
+<<<<<<< HEAD
+                            "items": {
+                                "type": "integer"
+                            }
+=======
                             "items": {}
+>>>>>>> betadevelopment
                         }
                     }
                 ],

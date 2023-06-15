@@ -55,6 +55,14 @@ class OrganizationRepository implements OrganizationInterface{
             return false;
         }
     }
-   
+    
+    public function organizationMemberView($id,$language)
+    {
+        try {
+            return $this->organization->organizationMemberView($id,$language);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
 }

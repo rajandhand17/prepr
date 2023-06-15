@@ -83,8 +83,8 @@ class MasterController extends AppBaseController
             $category = $this->masterRepository->getCategories($request);
             if ($category){
                 return $this->sendResponse(CategoryResource::collection($category), __('responses.found_category_list'));
-            }
-            return $this->sendResponse(null,__('responses.not_found_category_list'));
+             }
+            return $this->sendError(__('responses.not_found_category_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

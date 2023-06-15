@@ -200,12 +200,13 @@ class MemberManagementController extends AppBaseController
     
     public function creates($component,$slug,CreateMemberManagementRequest $request)
     {  
-        try{
-            if(!in_array($request->invite_type,["csv","email","network"])){
-                return $this->sendError(__('responses.member_manage_type'),400);
+        try {
+            $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
+            if($member_mangement){
+                return $member_mangement;
             }
             $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
-            if($member_mangement->status===true){
+            if($member_mangement['status']===true){
                 return $this->sendResponse($member_mangement, __('responses.create_member_manger_success'));
             }
             return $this->sendError(__('responses.create_member_manger_failed'),403);
@@ -223,15 +224,10 @@ class MemberManagementController extends AppBaseController
      *     @OA\Parameter(
      *         name="id[]",
      *         in="query",
-     *         description="Enter id of member management!",
+     *         description="Member management delete id",
      *         required=true,
      *         explode=true,
-     *  @OA\Schema( 
-     *              type="array", 
-     *              @OA\Items( 
-     *                        
-     *                       ),
-     *          )
+     *         @OA\Schema(type="array", @OA\Items(type="integer")),
      *     ),
      *     @OA\Response(
      *         response=200,
