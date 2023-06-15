@@ -3009,5 +3009,6 @@
     "responses.auto_invite_status":"Please enter auto invite status",
     "responses.user_id_not_exists":"This user id not exists!",
     "responses.member_manage_type":"Provided member manager type is not valid",
-    "responses.send_otp_success":"Please check your email for the one-time password."
+    "responses.send_otp_success":"Please check your email for the one-time password.",
+    "responses.wrong_component":"You have entered wrong component"
 }
