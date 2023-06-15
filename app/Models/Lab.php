@@ -25,6 +25,7 @@ use App\Models\FollowersOrganisation;
 use App\Models\LabAchievement;
 use App\Models\Organization;
 use App\Models\Favorite;
+use App\Models\UserPoint;
 class Lab extends Model
 {
     use HasFactory;
@@ -517,39 +518,45 @@ class Lab extends Model
         try { 
             $lab = Lab::where('labs.id',(int)$request->lab_id)->with("labUsers")->first();
             if (!empty($lab)){
-                $labMember = MemberManagement::where(['inviter_id' => $lab->labUsers->id,'module_type' => 'lab','module_id' => (int) $request->lab_id])->first();
+                $labMember = MemberManagement::where(['inviter_id' => $lab->labUsers->id,'module_type' =>"0",'module_id' => (int) $request->lab_id])->first();
               
                 if(!empty($labMember)) {
                     return response()->json(['status' => 'fail', 'message' => 'You have already sent request to join it.'], 400);
                 }else {
-                    
-                    //MemberManagementHelper::labRequestAcceptReject($request, $labData, 'request');
-                    //MemberManagementHelper::joinRequestUserActivity($lab, 'request');
+                   DB::beginTransaction();
                    $member_mangement=new MemberManagement();
-                   $member_mangement->invite_type="network";
+                   $member_mangement->invite_type=1;
                    $member_mangement->module_id=$request->lab_id;
-                   $member_mangement->module_type="lab";
-                   $member_mangement->inviter_id=$request->labUsers->id;
-                   $member_mangement->email=$request->labUsers->id;
-                   $member_mangement->invite_status=null;
-                   $member_mangement->email_status="other";
-                   $member_mangement->assign_role="user";
-                   $member_mangement->is_join_request="network";
-                   $member_mangement->join_request_status="network";
-                   $member_mangement->privacy="network";
-                   $member_mangement->challenge_auto_invite_from_lab="network";
+                   $member_mangement->module_type="0";
+                   $member_mangement->inviter_id=$lab->labUsers->id;
+                   $member_mangement->email=null;
+                   $member_mangement->invite_status="0";
+                   $member_mangement->email_resend_count="0";
+                   $member_mangement->email_status="0";
                    if($member_mangement->save()){
-                       return response()->json(['status' => 'success', 'message' => __('responses.lab_joined_succcess')], 200);
+                        $point = config('points.lab_join');
+                        $user_points = new UserPoint;
+                        $user_points->type="lab_join";
+                        $user_points->date=date('Y-m-d');
+                        $user_points->user_id=auth()->user()->id;
+                        $user_points->point=$point;
+                        if($user_points->save()){
+                            DB::commit();
+                            return response()->json(['status' => 'success', 'message' => __('responses.lab_joined_succcess')], 200);
+                        }
+                         DB::rollBack();
                    }else{
+                    DB::rollBack();
                     return response()->json(['status' => 'false', 'message' => __('responses.lab_joined_succcess')], 203);
                    }
                 }
             } else {
+                DB::rollBack();
                 return response()->json(['status' => 'fail', 'message' => __('notification.notification_lab_nf')], 404);
             }
         } catch (\Exception $e) {
-            return $e;
-           return false;
+           DB::rollBack();
+            return false;
         }
     }
 
