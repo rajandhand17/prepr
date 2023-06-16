@@ -10,15 +10,15 @@ class FollowersOrganisation extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
+
     protected $table = 'followers_organisation';
 
-    protected $fillable=[
+    protected $fillable = [
         'id',
         'organisation_id',
         'user_id',
         'followers',
     ];
 
-    protected $hidden=['created_at','updated_at','deleted_at'];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

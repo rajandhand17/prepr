@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Organization;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class ViewOrganizationRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class ViewOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required',
+            'name'=> 'required',
         ];
     }
 
@@ -35,8 +35,8 @@ class ViewOrganizationRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()

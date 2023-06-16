@@ -1,9 +1,8 @@
 <?php
+
 namespace App\Repositories\Api\MemberManagement;
 
-
 use Illuminate\Support\ServiceProvider;
-
 
 class MemberManagementServiceProvider extends ServiceProvider
 {
@@ -14,9 +13,7 @@ class MemberManagementServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
-
 
     /**
      * Register the application services.

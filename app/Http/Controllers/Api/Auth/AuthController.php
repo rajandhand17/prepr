@@ -3,26 +3,23 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Auth\RegisterFormRequest;
-use App\Http\Requests\Auth\CheckUsernameRequest;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
-use App\Http\Requests\Auth\LoginFormRequest;
-use App\Repositories\Api\Auth\AuthRepository;
-use App\Http\Requests\Auth\SendOtpRequest;
-use App\Http\Requests\Auth\VerifyOtpRequest;
-use App\Http\Requests\Auth\VerifyInviteCodeRequest;
+use App\Http\Requests\Auth\CheckUsernameRequest;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
+use App\Http\Requests\Auth\LoginFormRequest;
+use App\Http\Requests\Auth\RegisterFormRequest;
 use App\Http\Requests\Auth\ResetPasswordFormRequest;
+use App\Http\Requests\Auth\SendOtpRequest;
+use App\Http\Requests\Auth\VerifyInviteCodeRequest;
+use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
-use App\Http\Resources\Auth\RegisterResource;
-use ChargeBee\ChargeBee\Environment;
-use ChargeBee\ChargeBee\Models\Subscription;
-use App\Helpers\PlanSubscriptionHelper;
+use App\Repositories\Api\Auth\AuthRepository;
 
 class AuthController extends AppBaseController
 {
     private $authRepository;
+
     public function __construct(AuthRepository $authRepository)
     {
         $this->authRepository = $authRepository;
@@ -34,6 +31,7 @@ class AuthController extends AppBaseController
      *     tags={"Auth API - Login"},
      *     summary="Send request for check login",
      *     operationId="login",
+     *
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
@@ -57,6 +55,7 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -80,34 +79,38 @@ class AuthController extends AppBaseController
      * )
      */
     public function login(LoginFormRequest $request)
-    {    
+    {
         try {
             $login = $this->authRepository->login($request);
-            if ($login['success'] == true){
-                if($login['code'] ===2){
-                    $response=["message"=>$login['message'],"code"=>$login['code']];
+            if ($login['success'] == true) {
+                if ($login['code'] === 2) {
+                    $response = ['message'=>$login['message'], 'code'=>$login['code']];
+
                     return $this->sendResponse($response, $login['message'], 200);
                 }
-                if($login['code'] === 3){
-                   
-                   $response=["token"=>$login['token'],"data"=>$login['user'],"code"=>$login['code']];
+                if ($login['code'] === 3) {
+                    $response = ['token'=>$login['token'], 'data'=>$login['user'], 'code'=>$login['code']];
+
                     return $this->sendResponse($response, $login['message'], 200);
                 }
             }
-            if ($login['success'] == false){
+            if ($login['success'] == false) {
                 return $this->sendError($login['message'], 401);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     /**
      * @OA\Post(
      *     path="/api/v1/auth/verify-two-factor",
      *     tags={"Auth API - Verify Two Factor"},
      *     summary="Send request for check Verify Two Factor",
      *     operationId="verifytwofactor",
+     *
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
@@ -132,6 +135,7 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -156,27 +160,30 @@ class AuthController extends AppBaseController
      */
     public function verifyTwoFactor(VerifyTwoFactorRequest $request)
     {
-        try{
+        try {
             $verifytwofactor = $this->authRepository->verifyTwoFactor($request);
-            if($verifytwofactor['success'] == true){
+            if ($verifytwofactor['success'] == true) {
                 return $this->sendResponse($verifytwofactor, __('responses.user_login_sucess'), 200);
             }
-            if($verifytwofactor['success'] == false){
-                if($verifytwofactor['code']===1){
+            if ($verifytwofactor['success'] == false) {
+                if ($verifytwofactor['code'] === 1) {
                     return $this->sendError(__('responses.otp_correct_required'), 401);
                 }
             }
+
             return $this->sendError(__('responses.send_error'), 500);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     /**
      * @OA\Post(
      *     path="/api/v1/auth/register",
      *     tags={"Auth API - Check Register"},
      *     summary="Send request for check register",
      *     operationId="registerUser",
+     *
      *     @OA\Parameter(
      *         name="language",
      *         in="query",
@@ -184,7 +191,6 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
-     * 
      *     @OA\Parameter(
      *         name="username",
      *         in="query",
@@ -286,6 +292,7 @@ class AuthController extends AppBaseController
      *         explode=true,
      *
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -309,19 +316,19 @@ class AuthController extends AppBaseController
      * )
      */
     public function registerUser(RegisterFormRequest $request)
-    {  
+    {
         try {
             $register = $this->authRepository->register($request);
-            
+
             if ($register['success'] == false) {
                 return $this->sendError($register['message'], 401);
             }
             if ($register['success'] == true) {
-                return $this->sendResponse(NULL,__('responses.registeration_successfully'), 200);
-             }
+                return $this->sendResponse(null, __('responses.registeration_successfully'), 200);
+            }
+
             return $this->sendError(__('responses.send_error'), 500);
-        }catch (\Exception $e){
-            
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -333,6 +340,7 @@ class AuthController extends AppBaseController
      *     summary="send email for forget-password",
      *     description="send otp for forget-password",
      *     operationId="forgetPassword",
+     *
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
@@ -348,6 +356,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -374,26 +383,29 @@ class AuthController extends AppBaseController
     {
         try {
             $forgetpassword = $this->authRepository->forgetPassword($request);
-            if($forgetpassword['success'] == false){
+            if ($forgetpassword['success'] == false) {
                 return $this->sendError($forgetpassword['message'], 401);
             }
-            if($forgetpassword['success'] == true) {
+            if ($forgetpassword['success'] == true) {
                 return $this->sendResponse(null, __('responses.send_otp_success'), 200);
-            if($forgetpassword['success'] == true){
-                return $this->sendResponse($forgetpassword, __('notification.notification_yprlsoyrea'), 200);
+                if ($forgetpassword['success'] == true) {
+                    return $this->sendResponse($forgetpassword, __('notification.notification_yprlsoyrea'), 200);
+                }
+
+                return $this->sendError(__('responses.send_error'), 500);
             }
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
-        }catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }   
+    }
+
     /**
      * @OA\Post(
      *     path="/api/v1/auth/checkusername",
      *     tags={"Auth API - Username"},
      *     summary="Send request for check user name",
      *     operationId="checkUsername",
+     *
      *     @OA\Parameter(
      *         name="username",
      *         in="query",
@@ -409,6 +421,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -433,24 +446,27 @@ class AuthController extends AppBaseController
      */
     public function checkUsername(CheckUsernameRequest $request)
     {
-        try{
+        try {
             $username = $this->authRepository->checkUsername($request);
-            if($username == false){
+            if ($username == false) {
                 return $this->sendResponse(null, __('responses.username_available'), 200);
-            }else{
+            } else {
                 return $this->sendError(__('responses.username_unique'), 403);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     /**
      * @OA\Post(
      *     path="/api/v1/auth/checkemail",
      *     tags={"Auth API - Check Email"},
      *     summary="Send request for check check email",
      *     operationId="checkEmail",
+     *
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
@@ -466,6 +482,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -501,12 +518,14 @@ class AuthController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-   /**
+
+    /**
      * @OA\Post(
      *     path="/api/v1/auth/checkphone",
      *     tags={"Auth API - Check Phone"},
      *     summary="Send request for check email",
      *     operationId="checkPhone",
+     *
      *     @OA\Parameter(
      *         name="phone_number",0
      *         in="query",
@@ -522,6 +541,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -548,12 +568,12 @@ class AuthController extends AppBaseController
     {
         try {
             $checkphone = $this->authRepository->checkPhone($request);
-            if($checkphone == false) {
+            if ($checkphone == false) {
                 return $this->sendResponse(null, __('responses.found_exists_phone_list'), 200);
-            }else{
-                return $this->sendError(__("responses.already_number"), 403);
+            } else {
+                return $this->sendError(__('responses.already_number'), 403);
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -564,6 +584,7 @@ class AuthController extends AppBaseController
      *     tags={"Auth API - Send Otp"},
      *     summary="Send request for send otp",
      *     operationId="sendOtp",
+     *
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
@@ -579,6 +600,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -605,18 +627,18 @@ class AuthController extends AppBaseController
     {
         try {
             $send_otp = $this->authRepository->sendOtp($request);
-            if ($send_otp["success"] === true) {
-               if($send_otp["purpose"]==="forget_password"){
-                  return $this->sendResponse($send_otp, __('responses.send_otp_success'), 200);
-               }
-               if($send_otp["purpose"]==="verify_email"){
-                  return $this->sendResponse($send_otp, __('responses.user_verify_email_otp'), 200);
-               }
-               if($send_otp["purpose"]==="two_factor_verification"){
-                return $this->sendResponse($send_otp, __('notification.notification_pcoiym'), 200);
-               }
+            if ($send_otp['success'] === true) {
+                if ($send_otp['purpose'] === 'forget_password') {
+                    return $this->sendResponse($send_otp, __('responses.send_otp_success'), 200);
+                }
+                if ($send_otp['purpose'] === 'verify_email') {
+                    return $this->sendResponse($send_otp, __('responses.user_verify_email_otp'), 200);
+                }
+                if ($send_otp['purpose'] === 'two_factor_verification') {
+                    return $this->sendResponse($send_otp, __('notification.notification_pcoiym'), 200);
+                }
             }
-            if ($send_otp["success"] === false){
+            if ($send_otp['success'] === false) {
                 return $this->sendError($send_otp['message'], 401);
             }
 
@@ -625,12 +647,14 @@ class AuthController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-/**
+
+    /**
      * @OA\Post(
      *     path="/api/v1/auth/verify-otp",
      *     tags={"Auth API - Verify Otp"},
      *     summary="Verifing Otp",
      *     operationId="verifyOtp",
+     *
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
@@ -654,6 +678,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -683,20 +708,23 @@ class AuthController extends AppBaseController
             if ($verify['success'] === true) {
                 return $this->sendResponse($verify, __('responses.verify_success'), 200);
             }
-            if($verify['success']===false){
-               return $this->sendError($verify['message'], 208);
+            if ($verify['success'] === false) {
+                return $this->sendError($verify['message'], 208);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     /**
      * @OA\Post(
      *     path="/api/v1/auth/verify-invite-code",
      *     tags={"Auth API - Verify Referal Code"},
      *     summary="Send request for verify otp",
      *     operationId="referalCode",
+     *
      *     @OA\Parameter(
      *         name="referal_code",
      *         in="query",
@@ -712,6 +740,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -734,28 +763,30 @@ class AuthController extends AppBaseController
      *     ),
      * )
      */
-
     public function referalCode(VerifyInviteCodeRequest $request)
     {
-        try{
+        try {
             $referencecode = $this->authRepository->referalCode($request);
-            if($referencecode==true){
+            if ($referencecode == true) {
                 return $this->sendResponse(null, __('responses.verify_reference_success'), 200);
             }
-            if($referencecode==false){
+            if ($referencecode == false) {
                 return $this->sendError(null, __('responses.verify_reference_error'), 404);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     /**
      * @OA\Post(
      *     path="/api/v1/auth/reset-password",
      *     tags={"Auth API - Reset Password"},
      *     summary="Send request for reset password",
      *     operationId="resetPassword",
+     *
      *     @OA\Parameter(
      *         name="email",
      *         in="query",
@@ -794,6 +825,7 @@ class AuthController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -818,17 +850,18 @@ class AuthController extends AppBaseController
      */
     public function resetPassword(ResetPasswordFormRequest $request)
     {
-        try{
+        try {
             $resetcode = $this->authRepository->resetPassword($request);
             if ($resetcode['success'] === true) {
                 return $this->sendResponse(null, __('notification.notification_yprs'), 200);
             }
             if ($resetcode['success'] === false) {
-                return $this->sendError($resetcode['message'],403);
+                return $this->sendError($resetcode['message'], 403);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
-         }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
-         }
+        }
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\ProjectStatus as Status;
+use DB;
+use Illuminate\Console\Command;
 
 class ProjectStatus extends Command
 {
@@ -40,33 +40,32 @@ class ProjectStatus extends Command
     public function handle()
     {
         try {
-
             $this->info('Migrating old data for project status table.');
             DB::beginTransaction();
 
             $project_status = DB::connection('mysql2')->table('project_status')->get();
-            if($project_status->count() > 0){
-
-                foreach ($project_status as $key => $single_status){
-                   $project_status_details=[
-                        'name' => $single_status->name,
+            if ($project_status->count() > 0) {
+                foreach ($project_status as $key => $single_status) {
+                    $project_status_details = [
+                        'name'       => $single_status->name,
                         'fr_CA_name' => $single_status->fr_CA_name,
                     ];
                     $check_project_status = Status::where($project_status_details)->first();
-                    if(!$check_project_status){
+                    if (!$check_project_status) {
                         Status::create($project_status_details);
                     }
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project status table completed.');
+
                 return;
             }
             DB::rollback();
             $this->error('No project type found.');
-
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

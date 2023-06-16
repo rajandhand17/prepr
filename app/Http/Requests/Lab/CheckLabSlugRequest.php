@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Lab;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+
 class CheckLabSlugRequest extends FormRequest
 {
     /**
@@ -34,16 +35,15 @@ class CheckLabSlugRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
-    
     public function messages()
     {
         return [
-            'slug.required'=>__("responses.organization_slug_required"),
-            'slug.unique'=>__("responses.organization_slug_exists"),
+            'slug.required'=> __('responses.organization_slug_required'),
+            'slug.unique'  => __('responses.organization_slug_exists'),
         ];
     }
 }

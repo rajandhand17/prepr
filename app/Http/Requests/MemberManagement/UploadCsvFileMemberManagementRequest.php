@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\MemberManagement;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class UploadCsvFileMemberManagementRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class UploadCsvFileMemberManagementRequest extends FormRequest
     public function rules()
     {
         return [
-            'csv'=>'mimes:csv|required',
+            'csv'=> 'mimes:csv|required',
         ];
     }
 
@@ -35,16 +35,15 @@ class UploadCsvFileMemberManagementRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
-    }
-    
-    public function messages()
-    {  
-        return[
-        "csv.required" => __("responses.csv_upload"),
-        "csv.mimes" => __("responses.csv_required"),
-        ];
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
+    public function messages()
+    {
+        return[
+            'csv.required' => __('responses.csv_upload'),
+            'csv.mimes'    => __('responses.csv_required'),
+        ];
+    }
 }

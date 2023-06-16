@@ -4,25 +4,23 @@ namespace App\Helpers;
 
 use App\Models\AchievementConditionList;
 use App\Models\AdminChallenge;
-use App\Models\ChallengeProject;
 use App\Models\Challange;
-use App\Models\ResourceSocialLink;
-use App\Models\Resource;
-use App\Models\ResourceGroup;
+use App\Models\ChallengeProject;
 use App\Models\Group;
-use App\Models\ResourceModuleVisit;
-use App\Models\Project;
 use App\Models\Lab;
-use App\Models\User;
-use App\Models\LabResources;
-use App\Models\LabChallenges;
 use App\Models\LabAchievement;
 use App\Models\LabAchievementWin;
+use App\Models\LabChallenges;
+use App\Models\LabResources;
 use App\Models\MemberManagement;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Resource;
+use App\Models\ResourceGroup;
+use App\Models\ResourceModuleVisit;
+use App\Models\ResourceSocialLink;
+use App\Models\User;
 use App\Traits\FCMTraitStatic;
 use Exception;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class LabHelper
 {
@@ -31,9 +29,9 @@ class LabHelper
         try {
             $status = 'In Progress';
 
-            $activeChallenge = AdminChallenge::where(['is_completed' => '1', 'status' => 'open'])->where('associat_lab', 'like', '%"' . $lab->id . '"%')->count();
-            $completedChallenge = AdminChallenge::where(['is_completed' => '1', 'status' => 'completed'])->where('associat_lab', 'like', '%"' . $lab->id . '"%')->count();
-            $closedChallenge = AdminChallenge::where(['is_completed' => '1', 'status' => 'closed'])->where('associat_lab', 'like', '%"' . $lab->id . '"%')->count();
+            $activeChallenge = AdminChallenge::where(['is_completed' => '1', 'status' => 'open'])->where('associat_lab', 'like', '%"'.$lab->id.'"%')->count();
+            $completedChallenge = AdminChallenge::where(['is_completed' => '1', 'status' => 'completed'])->where('associat_lab', 'like', '%"'.$lab->id.'"%')->count();
+            $closedChallenge = AdminChallenge::where(['is_completed' => '1', 'status' => 'closed'])->where('associat_lab', 'like', '%"'.$lab->id.'"%')->count();
 
             if ($activeChallenge == 0 && $completedChallenge > 0 && $closedChallenge == 0) {
                 $status = 'Completed';
@@ -41,11 +39,11 @@ class LabHelper
                 $status = 'Closed';
             }
 
-            return $challenges= [
-                'activeChallenge' => ($activeChallenge == false) ? 0 : $activeChallenge,
-                'closedChallenge' => ($closedChallenge == false) ? 0 : $closedChallenge,
+            return $challenges = [
+                'activeChallenge'    => ($activeChallenge == false) ? 0 : $activeChallenge,
+                'closedChallenge'    => ($closedChallenge == false) ? 0 : $closedChallenge,
                 'completedChallenge' => ($completedChallenge == false) ? 0 : $completedChallenge,
-                'status' => $status
+                'status'             => $status,
             ];
         } catch (\Exception $ex) {
             return false;
@@ -56,9 +54,8 @@ class LabHelper
     {
         $isMemberLab = MemberManagement::where('module_type', 'lab')->where('module_id', $lab->id)->where('invitee_id', $user_id)->first();
         if (!empty($isMemberLab)) {
-
             // For Challenge section
-            $challengesAssociated = Challange::with('getComment', 'creator', 'getCategory')->where('associat_lab', 'like', '%"' . $lab->id . '"%')->pluck('id')->toArray();
+            $challengesAssociated = Challange::with('getComment', 'creator', 'getCategory')->where('associat_lab', 'like', '%"'.$lab->id.'"%')->pluck('id')->toArray();
             $labChallenges = LabChallenges::where('lab_id', $isMemberLab->module_id)->whereNotNull('challenge_id')->pluck('challenge_id')->toArray();
             $challengeList = array_unique(array_merge($challengesAssociated, $labChallenges));
 
@@ -70,7 +67,7 @@ class LabHelper
             // For Challenge paths section
             $selectedPathList = LabChallenges::where('lab_id', $lab->id)->whereNotNull('challenge_path_id')->pluck('challenge_path_id')->toArray();
             $getChallengeList = Group::whereIn('id', $selectedPathList)->pluck('challenge_id')->toArray();
-            $pathList = array_unique(explode(',', implode(",", $getChallengeList)));
+            $pathList = array_unique(explode(',', implode(',', $getChallengeList)));
 
             $userPathList = [];
             foreach ($pathList as $value) {
@@ -94,8 +91,8 @@ class LabHelper
             $collectionModuleCount = 0;
             $collectionModuleCountVisited = 0;
             foreach ($collectionCount as $collection) {
-                $collectionModuleCount         += array_sum($collection['totalAttachModule']);
-                $collectionModuleCountVisited  += array_sum($collection['totalAttachModuleVisited']);
+                $collectionModuleCount += array_sum($collection['totalAttachModule']);
+                $collectionModuleCountVisited += array_sum($collection['totalAttachModuleVisited']);
             }
 
             // For Resource group section
@@ -103,8 +100,8 @@ class LabHelper
             $getResourceList = Group::select('id', 'resource_id', 'collection_id')->whereIn('id', $selectedGroupList)->get()->toArray();
             $groupCount = [];
             foreach ($getResourceList as $resourceList) {
-                $resourcesID    = explode(',', $resourceList['resource_id']);
-                $collectionIds  = array_filter(explode(',', $resourceList['collection_id']));
+                $resourcesID = explode(',', $resourceList['resource_id']);
+                $collectionIds = array_filter(explode(',', $resourceList['collection_id']));
                 $collectionsID = [];
                 if (!empty($collectionIds)) {
                     $collectionResourceList = ResourceGroup::whereIn('id', $collectionIds)->pluck('resource_id')->toArray();
@@ -124,8 +121,8 @@ class LabHelper
             $groupModuleCount = 0;
             $groupModuleCountVisited = 0;
             foreach ($groupCount as $group) {
-                $groupModuleCount         += array_sum($group['totalAttachModule']);
-                $groupModuleCountVisited  += array_sum($group['totalAttachModuleVisited']);
+                $groupModuleCount += array_sum($group['totalAttachModule']);
+                $groupModuleCountVisited += array_sum($group['totalAttachModuleVisited']);
             }
 
             // Total count of all lab achievement to be completed
@@ -135,7 +132,7 @@ class LabHelper
             $doneDataCount = count(array_filter($userChallengePrjt)) + count(array_filter($userPathList)) + array_sum($moduleCount['totalAttachModuleVisited']) + $collectionModuleCountVisited + $groupModuleCountVisited;
 
             if ($allDataCount > 0) {
-                $labPercent = round((($doneDataCount)/($allDataCount) * 100), 2);
+                $labPercent = round($doneDataCount / $allDataCount * 100, 2);
             } else {
                 $labPercent = 0;
             }
@@ -144,7 +141,6 @@ class LabHelper
         }
     }
 
-
     public static function getLabDetailedProgress($lab, $user_id)
     {
         try {
@@ -152,7 +148,7 @@ class LabHelper
             $achievement_notification_data = [];
             if (!empty($isMemberLab)) {
                 // For Challenge section
-                $challengesAssociated = Challange::with('getComment', 'creator', 'getCategory')->where('associat_lab', 'like', '%"' . $lab->id . '"%')->pluck('id')->toArray();
+                $challengesAssociated = Challange::with('getComment', 'creator', 'getCategory')->where('associat_lab', 'like', '%"'.$lab->id.'"%')->pluck('id')->toArray();
                 $labChallenges = LabChallenges::where('lab_id', $isMemberLab->module_id)->whereNotNull('challenge_id')->pluck('challenge_id')->toArray();
                 $challengeList = array_unique(array_merge($challengesAssociated, $labChallenges));
 
@@ -164,7 +160,7 @@ class LabHelper
                 // For Challenge paths section
                 $selectedPathList = LabChallenges::where('lab_id', $lab->id)->whereNotNull('challenge_path_id')->pluck('challenge_path_id')->toArray();
                 $getChallengeList = Group::whereIn('id', $selectedPathList)->pluck('challenge_id')->toArray();
-                $pathList = array_unique(explode(',', implode(",", $getChallengeList)));
+                $pathList = array_unique(explode(',', implode(',', $getChallengeList)));
 
                 $userPathList = [];
                 foreach ($pathList as $value) {
@@ -188,8 +184,8 @@ class LabHelper
                 $collectionModuleCount = 0;
                 $collectionModuleCountVisited = 0;
                 foreach ($collectionCount as $collection) {
-                    $collectionModuleCount         += array_sum($collection['totalAttachModule']);
-                    $collectionModuleCountVisited  += array_sum($collection['totalAttachModuleVisited']);
+                    $collectionModuleCount += array_sum($collection['totalAttachModule']);
+                    $collectionModuleCountVisited += array_sum($collection['totalAttachModuleVisited']);
                 }
 
                 // For Resource group section
@@ -197,8 +193,8 @@ class LabHelper
                 $getResourceList = Group::select('id', 'resource_id', 'collection_id')->whereIn('id', $selectedGroupList)->get()->toArray();
                 $groupCount = [];
                 foreach ($getResourceList as $resourceList) {
-                    $resourcesID    = explode(',', $resourceList['resource_id']);
-                    $collectionIds  = array_filter(explode(',', $resourceList['collection_id']));
+                    $resourcesID = explode(',', $resourceList['resource_id']);
+                    $collectionIds = array_filter(explode(',', $resourceList['collection_id']));
                     $collectionsID = [];
                     if (!empty($collectionIds)) {
                         $collectionResourceList = ResourceGroup::whereIn('id', $collectionIds)->pluck('resource_id')->toArray();
@@ -218,8 +214,8 @@ class LabHelper
                 $groupModuleCount = 0;
                 $groupModuleCountVisited = 0;
                 foreach ($groupCount as $group) {
-                    $groupModuleCount         += array_sum($group['totalAttachModule']);
-                    $groupModuleCountVisited  += array_sum($group['totalAttachModuleVisited']);
+                    $groupModuleCount += array_sum($group['totalAttachModule']);
+                    $groupModuleCountVisited += array_sum($group['totalAttachModuleVisited']);
                 }
 
                 // Total count of all lab achievement to be completed
@@ -229,7 +225,7 @@ class LabHelper
                 $doneDataCount = count(array_filter($userChallengePrjt)) + count(array_filter($userPathList)) + array_sum($moduleCount['totalAttachModuleVisited']) + $collectionModuleCountVisited + $groupModuleCountVisited;
 
                 if ($allDataCount > 0) {
-                    $labPercent = round((($doneDataCount)/($allDataCount) * 100), 2);
+                    $labPercent = round($doneDataCount / $allDataCount * 100, 2);
                 } else {
                     $labPercent = 0;
                 }
@@ -246,13 +242,13 @@ class LabHelper
                                     if ($challengeAchievement == true) {
                                         $getCriteriaID = AchievementConditionList::where('condition_title', $achievement_list->condition_title)->first();
                                         $getChallengeAchievement = LabAchievementWin::updateOrCreate([
-                                        'lab_id'                => $achievementData->lab_id,
-                                        'user_id'               => $user_id,
-                                        'lab_condition'         => $getCriteriaID->id,
-                                        'achievement_id'        => $achievementData->id,
-                                        'lab_points'            => null,
-                                        'lab_achievement_image' => $achievementData->achievement_image
-                                    ]);
+                                            'lab_id'                => $achievementData->lab_id,
+                                            'user_id'               => $user_id,
+                                            'lab_condition'         => $getCriteriaID->id,
+                                            'achievement_id'        => $achievementData->id,
+                                            'lab_points'            => null,
+                                            'lab_achievement_image' => $achievementData->achievement_image,
+                                        ]);
                                     }
                                 }
                             } elseif ($achievement_list->condition_title == 'Complete All Challenge Paths') {
@@ -261,13 +257,13 @@ class LabHelper
                                     if ($challengeAchievement == true) {
                                         $getCriteriaID = AchievementConditionList::where('condition_title', $achievement_list->condition_title)->first();
                                         $getPathAchievement = LabAchievementWin::updateOrCreate([
-                                        'lab_id'                => $achievementData->lab_id,
-                                        'user_id'               => $user_id,
-                                        'lab_condition'         => $getCriteriaID->id,
-                                        'achievement_id'        => $achievementData->id,
-                                        'lab_points'            => null,
-                                        'lab_achievement_image' => $achievementData->achievement_image
-                                    ]);
+                                            'lab_id'                => $achievementData->lab_id,
+                                            'user_id'               => $user_id,
+                                            'lab_condition'         => $getCriteriaID->id,
+                                            'achievement_id'        => $achievementData->id,
+                                            'lab_points'            => null,
+                                            'lab_achievement_image' => $achievementData->achievement_image,
+                                        ]);
                                     }
                                 }
                             } elseif ($achievement_list->condition_title == 'Complete All Resource Modules') {
@@ -276,13 +272,13 @@ class LabHelper
                                     if ($challengeAchievement == true) {
                                         $getCriteriaID = AchievementConditionList::where('condition_title', $achievement_list->condition_title)->first();
                                         $getModuleAchievement = LabAchievementWin::updateOrCreate([
-                                        'lab_id'                => $achievementData->lab_id,
-                                        'user_id'               => $user_id,
-                                        'lab_condition'         => $getCriteriaID->id,
-                                        'achievement_id'        => $achievementData->id,
-                                        'lab_points'            => null,
-                                        'lab_achievement_image' => $achievementData->achievement_image
-                                    ]);
+                                            'lab_id'                => $achievementData->lab_id,
+                                            'user_id'               => $user_id,
+                                            'lab_condition'         => $getCriteriaID->id,
+                                            'achievement_id'        => $achievementData->id,
+                                            'lab_points'            => null,
+                                            'lab_achievement_image' => $achievementData->achievement_image,
+                                        ]);
                                     }
                                 }
                             } elseif ($achievement_list->condition_title == 'Complete All Resource Collections') {
@@ -291,13 +287,13 @@ class LabHelper
                                     if ($challengeAchievement == true) {
                                         $getCriteriaID = AchievementConditionList::where('condition_title', $achievement_list->condition_title)->first();
                                         $getCollectionAchievement = LabAchievementWin::updateOrCreate([
-                                        'lab_id'                => $achievementData->lab_id,
-                                        'user_id'               => $user_id,
-                                        'lab_condition'         => $getCriteriaID->id,
-                                        'achievement_id'        => $achievementData->id,
-                                        'lab_points'            => null,
-                                        'lab_achievement_image' => $achievementData->achievement_image
-                                    ]);
+                                            'lab_id'                => $achievementData->lab_id,
+                                            'user_id'               => $user_id,
+                                            'lab_condition'         => $getCriteriaID->id,
+                                            'achievement_id'        => $achievementData->id,
+                                            'lab_points'            => null,
+                                            'lab_achievement_image' => $achievementData->achievement_image,
+                                        ]);
                                     }
                                 }
                             } elseif ($achievement_list->condition_title == 'Complete All Resource Groups') {
@@ -306,13 +302,13 @@ class LabHelper
                                     if ($challengeAchievement == true) {
                                         $getCriteriaID = AchievementConditionList::where('condition_title', $achievement_list->condition_title)->first();
                                         $getGroupAchievement = LabAchievementWin::updateOrCreate([
-                                        'lab_id'                => $achievementData->lab_id,
-                                        'user_id'               => $user_id,
-                                        'lab_condition'         => $getCriteriaID->id,
-                                        'achievement_id'        => $achievementData->id,
-                                        'lab_points'            => null,
-                                        'lab_achievement_image' => $achievementData->achievement_image
-                                    ]);
+                                            'lab_id'                => $achievementData->lab_id,
+                                            'user_id'               => $user_id,
+                                            'lab_condition'         => $getCriteriaID->id,
+                                            'achievement_id'        => $achievementData->id,
+                                            'lab_points'            => null,
+                                            'lab_achievement_image' => $achievementData->achievement_image,
+                                        ]);
                                     }
                                 }
                             } elseif ($achievement_list->condition_title == 'Complete All') {
@@ -321,13 +317,13 @@ class LabHelper
                                     if ($challengeAchievement == true) {
                                         $getCriteriaID = AchievementConditionList::where('condition_title', $achievement_list->condition_title)->first();
                                         $getAllAchievement = LabAchievementWin::updateOrCreate([
-                                        'lab_id'                => $achievementData->lab_id,
-                                        'user_id'               => $user_id,
-                                        'lab_condition'         => $getCriteriaID->id,
-                                        'achievement_id'        => $achievementData->id,
-                                        'lab_points'            => null,
-                                        'lab_achievement_image' => $achievementData->achievement_image
-                                    ]);
+                                            'lab_id'                => $achievementData->lab_id,
+                                            'user_id'               => $user_id,
+                                            'lab_condition'         => $getCriteriaID->id,
+                                            'achievement_id'        => $achievementData->id,
+                                            'lab_points'            => null,
+                                            'lab_achievement_image' => $achievementData->achievement_image,
+                                        ]);
                                     }
                                 }
                             }
@@ -337,16 +333,16 @@ class LabHelper
                         $winCheck = LabAchievementWin::where(['lab_id' => $lab->id, 'user_id' => $user_id, 'lab_points' => null])->count();
                         if (count(json_decode($achievementCheckCount)) == $winCheck) {
                             if ($achievementData) {
-                                $markAchievement = LabAchievementWin::where(['user_id' => $user_id ,'lab_id' => $achievementData->lab_id, 'achievement_id' => '0'])->count();
+                                $markAchievement = LabAchievementWin::where(['user_id' => $user_id, 'lab_id' => $achievementData->lab_id, 'achievement_id' => '0'])->count();
                                 if ($markAchievement == 0) {
                                     $giveAchievement = LabAchievementWin::Create([
-                                    'lab_id'                => $achievementData->lab_id,
-                                    'user_id'               => $user_id,
-                                    'lab_condition'         => 'All criteria completed and ' .$user_id. ' recieved lab achievement',
-                                    'achievement_id'        => '0',
-                                    'lab_points'            => $achievementData->achievement_points,
-                                    'lab_achievement_image' => $achievementData->achievement_image
-                                ]);
+                                        'lab_id'                => $achievementData->lab_id,
+                                        'user_id'               => $user_id,
+                                        'lab_condition'         => 'All criteria completed and '.$user_id.' recieved lab achievement',
+                                        'achievement_id'        => '0',
+                                        'lab_points'            => $achievementData->achievement_points,
+                                        'lab_achievement_image' => $achievementData->achievement_image,
+                                    ]);
                                     $userData = User::find($user_id);
                                     if ($userData) {
                                         $newPoint = ($userData->point + $achievementData->achievement_points);
@@ -356,12 +352,12 @@ class LabHelper
                                     // FCM Push Notification
                                     $fcm_token = User::find($user_id)->fcm_device_token;
                                     $lab_name = Lab::find($achievementData->lab_id)->title;
-                                    FCMTraitStatic::sendNotification('Congratulations!!', 'You have won the lab achievement for ' . $lab_name . '!', $fcm_token, '/achievements', $achievementData->achievement_image);
+                                    FCMTraitStatic::sendNotification('Congratulations!!', 'You have won the lab achievement for '.$lab_name.'!', $fcm_token, '/achievements', $achievementData->achievement_image);
                                     $achievement_notification_data = [
                                         'title' => 'Congratulations!!',
-                                        'body' => 'You have won the lab achievement for ' . $lab_name . '!',
-                                        'link' => '/achievements',
-                                        'image' => $achievementData->achievement_image
+                                        'body'  => 'You have won the lab achievement for '.$lab_name.'!',
+                                        'link'  => '/achievements',
+                                        'image' => $achievementData->achievement_image,
                                     ];
                                 }
                             }
@@ -369,15 +365,15 @@ class LabHelper
                     }
                 }
                 $result = [
-                    'labPercent' => $labPercent,
-                    'achievement_notification_data' => $achievement_notification_data
+                    'labPercent'                    => $labPercent,
+                    'achievement_notification_data' => $achievement_notification_data,
                 ];
 
                 return $result;
             } else { // if the user is not a member of the lab
                 $result = [
-                    'labPercent' => 0,
-                    'achievement_notification_data' => $achievement_notification_data
+                    'labPercent'                    => 0,
+                    'achievement_notification_data' => $achievement_notification_data,
                 ];
 
                 return $result;
@@ -407,7 +403,7 @@ class LabHelper
             }
 
             // For All Condition
-            if (in_array("Complete All", $getLabConditions)) {
+            if (in_array('Complete All', $getLabConditions)) {
                 $allCompleted = LabAchievementWin::where('lab_id', $lab->id)->where('user_id', $user_id)->where('lab_condition', '1')->count();
                 $is_AllCompleted = $allCompleted > 0 ? 'yes' : 'no';
             } else {
@@ -415,7 +411,7 @@ class LabHelper
             }
 
             // For All Challenges
-            if (in_array("Complete All Challenges", $getLabConditions)) {
+            if (in_array('Complete All Challenges', $getLabConditions)) {
                 $challengeCompleted = LabAchievementWin::where('lab_id', $lab->id)->where('user_id', $user_id)->where('lab_condition', '2')->count();
                 $is_ChallengeCompleted = $challengeCompleted > 0 ? 'yes' : 'no';
             } else {
@@ -423,7 +419,7 @@ class LabHelper
             }
 
             // For Path Condition
-            if (in_array("Complete All Challenge Paths", $getLabConditions)) {
+            if (in_array('Complete All Challenge Paths', $getLabConditions)) {
                 $pathCompleted = LabAchievementWin::where('lab_id', $lab->id)->where('user_id', $user_id)->where('lab_condition', '3')->count();
                 $is_PathCompleted = $pathCompleted > 0 ? 'yes' : 'no';
             } else {
@@ -431,7 +427,7 @@ class LabHelper
             }
 
             // For Resource Module Condition
-            if (in_array("Complete All Resource Modules", $getLabConditions)) {
+            if (in_array('Complete All Resource Modules', $getLabConditions)) {
                 $resourcesCompleted = LabAchievementWin::where('lab_id', $lab->id)->where('user_id', $user_id)->where('lab_condition', '4')->count();
                 $is_ResourcesCompleted = $resourcesCompleted > 0 ? 'yes' : 'no';
             } else {
@@ -439,7 +435,7 @@ class LabHelper
             }
 
             // For Resource Collection Condition
-            if (in_array("Complete All Resource Collections", $getLabConditions)) {
+            if (in_array('Complete All Resource Collections', $getLabConditions)) {
                 $collectionsCompleted = LabAchievementWin::where('lab_id', $lab->id)->where('user_id', $user_id)->where('lab_condition', '5')->count();
                 $is_CollectionsCompleted = $collectionsCompleted > 0 ? 'yes' : 'no';
             } else {
@@ -447,7 +443,7 @@ class LabHelper
             }
 
             // For Resource Group Condition
-            if (in_array("Complete All Resource Groups", $getLabConditions)) {
+            if (in_array('Complete All Resource Groups', $getLabConditions)) {
                 $groupsCompleted = LabAchievementWin::where('lab_id', $lab->id)->where('user_id', $user_id)->where('lab_condition', '6')->count();
                 $is_GroupsCompleted = $groupsCompleted > 0 ? 'yes' : 'no';
             } else {
@@ -468,14 +464,14 @@ class LabHelper
     {
         if ($moduleType == 'challenge') {
             $challenges = [];
-            $challenges = AdminChallenge::selectRaw("challanges.id as challangeID,
+            $challenges = AdminChallenge::selectRaw('challanges.id as challangeID,
                                                      challanges.title,
                                                      challanges.description,
                                                      challanges.mediaType,
                                                      challanges.cover_image,
                                                      challanges.slug,
                                                      projects.id as projectID,
-                                                     labs.cha_sequence as sequenceType")
+                                                     labs.cha_sequence as sequenceType')
                             ->whereNotNull('lab_challenges.challenge_id')
                             ->where('lab_challenges.lab_id', (int) $labId)
                             ->where('challanges.is_completed', '1')
@@ -489,14 +485,15 @@ class LabHelper
                                       ->where('labs.id', '=', (int) $labId);
                             })
                             ->orderBy('lab_challenges.sequence_no', 'ASC')->paginate(10);
+
             return $challenges;
         } elseif ($moduleType == 'challengepath') {
             $challengePaths = [];
-            $challengePaths = Group::selectRaw("groups.id,
+            $challengePaths = Group::selectRaw('groups.id,
                                                 groups.group_image,
                                                 groups.title,
                                                 groups.description,
-                                                labs.cha_sequence as sequenceType")
+                                                labs.cha_sequence as sequenceType')
                             ->whereNotNull('lab_challenges.challenge_path_id')
                             ->where('lab_challenges.lab_id', (int) $labId)
                             ->Join('lab_challenges', 'lab_challenges.challenge_path_id', '=', 'groups.id')
@@ -505,17 +502,18 @@ class LabHelper
                                       ->where('labs.id', '=', (int) $labId);
                             })
                             ->orderBy('lab_challenges.sequence_no', 'ASC')->paginate(10);
+
             return $challengePaths;
         } elseif ($moduleType == 'resourcemodule') {
-            $resourceModules    = [];
-            $resourceImg        = [];
-            $resourceModules = Resource::selectRaw("resources.id,
+            $resourceModules = [];
+            $resourceImg = [];
+            $resourceModules = Resource::selectRaw('resources.id,
                                                     resources.res_title,
                                                     resources.res_guid,
                                                     resources.res_type,
                                                     resources.res_desc,
                                                     resources.res_title_slug,
-                                                    labs.res_sequence as sequenceType")
+                                                    labs.res_sequence as sequenceType')
                                     ->whereNotNull('lab_resources.resources_id')
                                     ->where('lab_resources.lab_id', (int) $labId)
                                     ->Join('lab_resources', 'lab_resources.resources_id', '=', 'resources.id')
@@ -532,16 +530,17 @@ class LabHelper
                     $resourceImg[$v->id] = isset($getImageInfo->res_guid) ? $getImageInfo->res_guid : null;
                 }
             }
-            return ['resourceModules' => $resourceModules , 'resourceImg' => $resourceImg];
+
+            return ['resourceModules' => $resourceModules, 'resourceImg' => $resourceImg];
         } elseif ($moduleType == 'resourcecollection') {
             $resourceCollections = [];
-            $resourceCollections = ResourceGroup::selectRaw("resourcegroup.id,
+            $resourceCollections = ResourceGroup::selectRaw('resourcegroup.id,
                                                           resourcegroup.title,
                                                           resourcegroup.description,
                                                           resourcegroup.image,
                                                           resourcegroup.slug,
                                                           resourcegroup.resource_id,
-                                                          labs.res_sequence as sequenceType")
+                                                          labs.res_sequence as sequenceType')
                                             ->whereNotNull('lab_resources.collection_id')
                                             ->where('lab_resources.lab_id', (int) $labId)
                                             ->Join('lab_resources', 'lab_resources.collection_id', '=', 'resourcegroup.id')
@@ -550,15 +549,16 @@ class LabHelper
                                                       ->where('labs.id', '=', (int) $labId);
                                             })
                                             ->orderBy('lab_resources.sequence_no')->paginate(10);
+
             return $resourceCollections;
         } elseif ($moduleType == 'resourcegroup') {
             $resourceGroups = [];
-            $resourceGroups = Group::selectRaw("groups.id,
+            $resourceGroups = Group::selectRaw('groups.id,
                                                 groups.group_image,
                                                 groups.title,
                                                 groups.description,
                                                 groups.resource_id,
-                                                labs.res_sequence as sequenceType")
+                                                labs.res_sequence as sequenceType')
                                 ->whereNotNull('lab_resources.group_id')
                                 ->where('lab_resources.lab_id', (int) $labId)
                                 ->Join('lab_resources', 'lab_resources.group_id', '=', 'groups.id')
@@ -567,6 +567,7 @@ class LabHelper
                                           ->where('labs.id', '=', (int) $labId);
                                 })
                                 ->orderBy('lab_resources.sequence_no')->paginate(10);
+
             return $resourceGroups;
         }
     }
@@ -583,7 +584,7 @@ class LabHelper
 
     public static function getActiveChallengePath($challengeId)
     {
-        $paths = explode(",", $challengeId);
+        $paths = explode(',', $challengeId);
         $userProject = [];
         foreach ($paths as $value) {
             $challengeData = ChallengeProject::where('challange_id', $value)->where('user_id', Auth()->user()->id)->first();
@@ -613,9 +614,11 @@ class LabHelper
             }
         } elseif ($moduleSet == 'collection') {
             $moduleActive = LabHelper::getActiveModule($resourceId);
+
             return $moduleActive;
         } elseif ($moduleSet == 'group') {
             $moduleActive = LabHelper::getActiveModule($resourceId);
+
             return $moduleActive;
         }
     }
@@ -672,39 +675,41 @@ class LabHelper
             // for total module visited
             $totalAttachModuleVisited[] = ($userVisitedSocialLinks + $userVisitedDocument + $userVisitedAudio + $userVisitedVideo + $userVisitedEmbeddedVideo);
         }
-        return ['totalAttachModule' => $totalAttachModule , 'totalAttachModuleVisited'=> $totalAttachModuleVisited];
+
+        return ['totalAttachModule' => $totalAttachModule, 'totalAttachModuleVisited'=> $totalAttachModuleVisited];
     }
 
     public static function getLabAchievementCondition()
     {
         try {
             $todo_achievement_list = AchievementConditionList::pluck('title', 'id')->all();
-            
+
             $elementTrans = [];
-            if (!empty($todo_achievement_list)){
+            if (!empty($todo_achievement_list)) {
                 foreach ($todo_achievement_list as $element) {
                     switch ($element) {
                         case 'Complete All':
                             $elementTrans[] = __('labels.labels_lab_conditionsca');
-                        break;
+                            break;
                         case 'Complete All Challenges':
                             $elementTrans[] = __('labels.labels_lab_conditionscc');
-                        break;
+                            break;
                         case 'Complete All Challenge Paths':
                             $elementTrans[] = __('labels.labels_lab_conditionscp');
-                        break;
+                            break;
                         case 'Complete All Resource Modules':
                             $elementTrans[] = __('labels.labels_lab_conditionscrm');
-                        break;
+                            break;
                         case 'Complete All Resource Collections':
                             $elementTrans[] = __('labels.labels_lab_conditionscrc');
-                        break;
+                            break;
                         case 'Complete All Resource Groups':
                             $elementTrans[] = __('labels.labels_lab_conditionscarg');
-                        break;
+                            break;
                     }
                 }
             }
+
             return $elementTrans;
         } catch (\Exception $ex) {
             return [];

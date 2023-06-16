@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Lab;
 
-use App\Http\Resources\Lab\LabResource;
 use Tests\TestCase;
 
 /**

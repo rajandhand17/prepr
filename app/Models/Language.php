@@ -18,7 +18,7 @@ class Language extends Model
         'name',
         'iso',
         'status',
-        'is_imported'
+        'is_imported',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

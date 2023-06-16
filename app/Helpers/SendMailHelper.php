@@ -1,25 +1,27 @@
 <?php
 
 namespace App\Helpers;
-use Mail;
+
 use App\Mail\SendMail;
+use Mail;
 
 class SendMailHelper
 {
-
-    public static function sendMail($user,$view,$data)
+    public static function sendMail($user, $view, $data)
     {
-        try {   
-            $result= Mail::to($user->email)->send(new SendMail($user,$view,$data));
+        try {
+            $result = Mail::to($user->email)->send(new SendMail($user, $view, $data));
+
             return $result;
-            if($result){
+            if ($result) {
                 return true;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $e;
+
             return false;
         }
     }
-    
 }

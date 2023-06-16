@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Organization;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class CreateOrganizationRequest extends FormRequest
 {
@@ -26,46 +26,45 @@ class CreateOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'=>'required',
-            'name' => 'required|max:255',
-            'description'=>'required',
-            'profile_image'=>'image',
-            'cover_image'=>'image',
-            'category'=>'required|exists:categories,id',
-            'address'=>'required',
-            'city'=>'required',
-            'state'=>'required',
-            'country'=>'required',
-            'zip_code'=>'required',
+            'user_id'      => 'required',
+            'name'         => 'required|max:255',
+            'description'  => 'required',
+            'profile_image'=> 'image',
+            'cover_image'  => 'image',
+            'category'     => 'required|exists:categories,id',
+            'address'      => 'required',
+            'city'         => 'required',
+            'state'        => 'required',
+            'country'      => 'required',
+            'zip_code'     => 'required',
         ];
     }
 
-    
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()
     {
         return[
-            'user_id.required' => __('responses.user_id_required'), 
-            'name.required'=>__('responses.organization_name_required'),
-            'name.max'=>__('responses.organization_name_max'),
-            'description.required'=>__('notification.notification_tdfdfir'),
-            'profile_image.image'=>__('responses.cover_image'),
-            'cover_image.image'=>__('responses.profile_image'),
-            'category.required'=>__('responses.organization_category_required'),
-            'category.exists'=>__('responses.organization_category_exists'),
-            'address.required'=>__('responses.organization_address_required'),
-            'city.required'=>__('responses.organization_city_required'),
-            'state.required'=>__('responses.organization_state_required'),
-            'country.required'=>__('responses.organization_zip_code_required'),
-            'zip_code.required'=>__('responses.zip_code_required'),
+            'user_id.required'    => __('responses.user_id_required'),
+            'name.required'       => __('responses.organization_name_required'),
+            'name.max'            => __('responses.organization_name_max'),
+            'description.required'=> __('notification.notification_tdfdfir'),
+            'profile_image.image' => __('responses.cover_image'),
+            'cover_image.image'   => __('responses.profile_image'),
+            'category.required'   => __('responses.organization_category_required'),
+            'category.exists'     => __('responses.organization_category_exists'),
+            'address.required'    => __('responses.organization_address_required'),
+            'city.required'       => __('responses.organization_city_required'),
+            'state.required'      => __('responses.organization_state_required'),
+            'country.required'    => __('responses.organization_zip_code_required'),
+            'zip_code.required'   => __('responses.zip_code_required'),
         ];
     }
 }

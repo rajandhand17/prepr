@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Lab;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LabStoreRequest extends FormRequest
@@ -26,18 +26,18 @@ class LabStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            "organisation"=>"required",
-            "title"=>"required",
-            "description"=>"required",
-            "category"=>"required",
-            "privacy"=>"required",
-            "member_type"=>"required",
-            "member"=>"required",
-            "country"=>"required",
-            "latitute"=>"required",
-            "longitude"=>"required",
-            "address"=>"required",
-            "city"=>"required",
+            'organisation'=> 'required',
+            'title'       => 'required',
+            'description' => 'required',
+            'category'    => 'required',
+            'privacy'     => 'required',
+            'member_type' => 'required',
+            'member'      => 'required',
+            'country'     => 'required',
+            'latitute'    => 'required',
+            'longitude'   => 'required',
+            'address'     => 'required',
+            'city'        => 'required',
         ];
     }
 
@@ -46,14 +46,14 @@ class LabStoreRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
-    
+
     public function messages()
     {
-      return [
-        
-      ];   
+        return [
+
+        ];
     }
 }

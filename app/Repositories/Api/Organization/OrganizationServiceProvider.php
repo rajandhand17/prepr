@@ -1,9 +1,8 @@
 <?php
+
 namespace App\Repositories\Api\Organization;
 
-
 use Illuminate\Support\ServiceProvider;
-
 
 class OrganizationServiceProvider extends ServiceProvider
 {
@@ -14,9 +13,7 @@ class OrganizationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
-
 
     /**
      * Register the application services.

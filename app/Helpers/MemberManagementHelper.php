@@ -2,25 +2,24 @@
 
 namespace App\Helpers;
 
-use App\Models\ChallengeProject;
-use App\Models\MemberManagement;
-use App\Models\ChallangeAssessment;
-use App\Models\User;
-use App\Models\Lab;
-use Settings;
-use App\Models\UserPoint;
-use App\Models\Challange;
-use App\Models\Favorite;
-use App\Models\Project;
-use Illuminate\Support\Facades\Event;
-use Exception;
 use App\Jobs\LabInvitedUserAutomaticallyInvitePodcast;
-use Session;
-use DB;
-use Illuminate\Support\Facades\App;
-use App\Helpers\NotificationHelper;
+use App\Models\Challange;
+use App\Models\ChallangeAssessment;
+use App\Models\ChallengeProject;
+use App\Models\Favorite;
+use App\Models\Lab;
+use App\Models\MemberManagement;
 use App\Models\ModuleProgressStatus;
+use App\Models\Project;
+use App\Models\User;
+use App\Models\UserPoint;
 use Carbon\Carbon;
+use DB;
+use Exception;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Event;
+use Session;
+use Settings;
 
 class MemberManagementHelper
 {
@@ -34,12 +33,12 @@ class MemberManagementHelper
         if ($moduleType === 'lab') {
             return Lab::select('labs.id', 'labs.language', 'labs.organisation', 'labs.slug', 'labs.title', 'organisations.name as organisationName')
                 ->join('organisations', 'organisations.id', '=', 'labs.organisation')
-                ->where(['labs.slug'=> $slug,'labs.language'=> App::currentLocale()])
+                ->where(['labs.slug'=> $slug, 'labs.language'=> App::currentLocale()])
                 ->first();
         } elseif ($moduleType === 'challenge') {
             return Challange::select('challanges.id', 'challanges.language', 'challanges.organisation', 'challanges.slug', 'challanges.title', 'organisations.name as organisationName')
                 ->join('organisations', 'organisations.id', '=', 'challanges.organisation')
-                ->where(['challanges.slug'=> $slug,'challanges.language'=> App::currentLocale()])
+                ->where(['challanges.slug'=> $slug, 'challanges.language'=> App::currentLocale()])
                 ->first();
         }
     }
@@ -56,9 +55,9 @@ class MemberManagementHelper
             ->where(['member_management.module_id' => $moduleId, 'member_management.module_type' => $moduleType]);
         if (isset($request->searchname)) {
             if (filter_var(trim($request->searchname), FILTER_VALIDATE_EMAIL)) {
-                $memberData = $memberData->Where('member_management.email', 'like', '%' . $request->searchname . '%');
+                $memberData = $memberData->Where('member_management.email', 'like', '%'.$request->searchname.'%');
             } else {
-                $memberData = $memberData->Where('users.username', 'like', '%' . $request->searchname . '%');
+                $memberData = $memberData->Where('users.username', 'like', '%'.$request->searchname.'%');
             }
         }
         if (isset($request->email_status)) {
@@ -91,6 +90,7 @@ class MemberManagementHelper
     {
         if (!empty($teamIds)) {
             $explodedTeam = explode(',', $teamIds);
+
             return User::whereIn('id', $explodedTeam)->get()->implode('username', ',');
         }
     }
@@ -172,7 +172,7 @@ class MemberManagementHelper
             if (!empty($assessmentData)) {
                 MemberManagement::where(['id' => $request->memberId])->delete();
                 $memberEmails = json_decode($assessmentData['members']);
-                $updatedEmailList =[];
+                $updatedEmailList = [];
                 if (!empty($memberEmails)) {
                     foreach ($memberEmails as $key => $memberEmail) {
                         if ($request->emailId != $memberEmail) {
@@ -188,6 +188,7 @@ class MemberManagementHelper
                 $message = __('notification.notification_emnf');
             }
         }
+
         return $message;
     }
 
@@ -197,33 +198,33 @@ class MemberManagementHelper
     -------------------------------------------------------------------------------------------- */
     public static function inviteFromNetwork($request)
     {
-        $invitedMembers = array();
+        $invitedMembers = [];
         if (!empty($request->inviteUsers)) {
             foreach ($request->inviteUsers as $inviteMember) {
-                $inviteData['invite_type']  = $request->invite_type;
-                $inviteData['module_id']    = (int) $request->module_id;
-                $inviteData['module_type']  = $request->module_type;
-                $inviteData['inviter_id']   = (int) $request->inviter_id;
-                $inviteData['invitee_id']   = $inviteMember;
+                $inviteData['invite_type'] = $request->invite_type;
+                $inviteData['module_id'] = (int) $request->module_id;
+                $inviteData['module_type'] = $request->module_type;
+                $inviteData['inviter_id'] = (int) $request->inviter_id;
+                $inviteData['invitee_id'] = $inviteMember;
                 $inviteData['subject_line'] = $request->subject_line;
                 $inviteData['email_message'] = $request->email_message;
                 $inviteData['auto_invite_status'] = $request->auto_invite_status;
                 $inviteData['invite_status'] = 'pending';
                 $inviteData['email_status'] = 'schedule';
-                $inviteData['assign_role']  = $request->assign_role;
-                $inviteData['challenge_auto_invite_from_lab']  = 0;
+                $inviteData['assign_role'] = $request->assign_role;
+                $inviteData['challenge_auto_invite_from_lab'] = 0;
                 $invitedMembers[] = $inviteData;
             }
             if (!empty($invitedMembers)) {
                 $data = PlanSubscriptionHelper::getSubscribedPlanDetailForOrg($request->organisation);
-                if ($data['subscriptionDetail']->subscriptionItems[0]->itemPriceId !=  config('chargebee.unlimited_plan')) {
+                if ($data['subscriptionDetail']->subscriptionItems[0]->itemPriceId != config('chargebee.unlimited_plan')) {
                     $componentLimits = PlanSubscriptionHelper::getTotalLimits($request->organisation, 'userInvite');
                     $componentUsage = PlanSubscriptionHelper::getComponentUsage($request->organisation, 'userInvite');
-                    $limitsLeft =  $componentLimits - $componentUsage;
+                    $limitsLeft = $componentLimits - $componentUsage;
                     $invitedMembersCount = count($invitedMembers);
-                        if ($limitsLeft < $invitedMembersCount) {
-                            return ['success' => false, 'error' => true, 'invalidEmailData' => [], 'alreadyExistEmailData' => [], 'message' => 'you have ' .$limitsLeft. ' credits left for user invite. Please add users according to the Pending limits' ];
-                        }
+                    if ($limitsLeft < $invitedMembersCount) {
+                        return ['success' => false, 'error' => true, 'invalidEmailData' => [], 'alreadyExistEmailData' => [], 'message' => 'you have '.$limitsLeft.' credits left for user invite. Please add users according to the Pending limits'];
+                    }
                 }
                 if (MemberManagement::insert($invitedMembers)) {
                     $responce = ['success' => true, 'error' => false, 'alreadyExistNetworkData' => [], 'invalidNetworkData' => [], 'message' => __('notification.notification_mas')];
@@ -231,6 +232,7 @@ class MemberManagementHelper
             } else {
                 $responce = ['success' => false, 'error' => true, 'alreadyExistNetworkData' => [], 'invalidNetworkData' => [], 'message' => __('notification.notification_ntcudini')];
             }
+
             return $responce;
         } else {
             return ['success' => false, 'error' => true, 'alreadyExistNetworkData' => [], 'invalidNetworkData' => [], 'message' => __('notification.notification_psaou')];
@@ -243,27 +245,27 @@ class MemberManagementHelper
     -------------------------------------------------------------------------------------------- */
     public static function inviteMemberByEmail($request)
     {
-        $invitedMembers = array();
-        $invalidEmailData = array();
-        $alreadyExistEmailData = array();
+        $invitedMembers = [];
+        $invalidEmailData = [];
+        $alreadyExistEmailData = [];
         if (!empty($request->user_invite_email)) {
             $userInviteEmails = explode(',', $request->user_invite_email);
             foreach ($userInviteEmails as $inviteEmail) {
                 if (filter_var(trim($inviteEmail), FILTER_VALIDATE_EMAIL)) {
                     if (!in_array(trim($inviteEmail), $invitedMembers)) {
                         if (!MemberManagement::where(['module_id' => (int) $request->module_id, 'module_type' => $request->module_type, 'email' => trim($inviteEmail)])->exists()) {
-                            $inviteData['invite_type']  = $request->invite_type;
-                            $inviteData['email']        = trim($inviteEmail);
-                            $inviteData['module_id']    = (int) $request->module_id;
-                            $inviteData['module_type']  = $request->module_type;
-                            $inviteData['inviter_id']   = (int) $request->inviter_id;
+                            $inviteData['invite_type'] = $request->invite_type;
+                            $inviteData['email'] = trim($inviteEmail);
+                            $inviteData['module_id'] = (int) $request->module_id;
+                            $inviteData['module_type'] = $request->module_type;
+                            $inviteData['inviter_id'] = (int) $request->inviter_id;
                             $inviteData['subject_line'] = $request->subject_line;
                             $inviteData['email_message'] = $request->email_message;
                             $inviteData['auto_invite_status'] = $request->auto_invite_status;
                             $inviteData['invite_status'] = 'pending';
                             $inviteData['email_status'] = 'schedule';
-                            $inviteData['assign_role']  = $request->assign_role;
-                            $inviteData['challenge_auto_invite_from_lab']  = 0;
+                            $inviteData['assign_role'] = $request->assign_role;
+                            $inviteData['challenge_auto_invite_from_lab'] = 0;
                             $invitedMembers[] = $inviteData;
                         } else {
                             $alreadyExistEmailData[] = $inviteEmail;
@@ -280,13 +282,13 @@ class MemberManagementHelper
             }
             if (!empty($invitedMembers)) {
                 $data = PlanSubscriptionHelper::getSubscribedPlanDetailForOrg($request->organisation);
-                if ($data['subscriptionDetail']->subscriptionItems[0]->itemPriceId !=  config('chargebee.unlimited_plan')) {
-                $componentLimits = PlanSubscriptionHelper::getTotalLimits($request->organisation, 'userInvite');
-                $componentUsage = PlanSubscriptionHelper::getComponentUsage($request->organisation, 'userInvite');
-                $limitsLeft =  $componentLimits - $componentUsage;
-                $invitedMembersCount = count($invitedMembers);
+                if ($data['subscriptionDetail']->subscriptionItems[0]->itemPriceId != config('chargebee.unlimited_plan')) {
+                    $componentLimits = PlanSubscriptionHelper::getTotalLimits($request->organisation, 'userInvite');
+                    $componentUsage = PlanSubscriptionHelper::getComponentUsage($request->organisation, 'userInvite');
+                    $limitsLeft = $componentLimits - $componentUsage;
+                    $invitedMembersCount = count($invitedMembers);
                     if ($limitsLeft < $invitedMembersCount) {
-                        return ['success' => false, 'error' => true, 'invalidEmailData' => [], 'alreadyExistEmailData' => [], 'message' => 'you have ' .$limitsLeft. ' credits left for user invite. Please add users according to the Pending limits' ];
+                        return ['success' => false, 'error' => true, 'invalidEmailData' => [], 'alreadyExistEmailData' => [], 'message' => 'you have '.$limitsLeft.' credits left for user invite. Please add users according to the Pending limits'];
                     }
                 }
                 if (MemberManagement::insert($invitedMembers)) {
@@ -295,6 +297,7 @@ class MemberManagementHelper
             } else {
                 $responce = ['success' => false, 'error' => true, 'alreadyExistEmailData' => $alreadyExistEmailData, 'invalidEmailData' => $invalidEmailData, 'message' => __('notification.notification_ntcedad')];
             }
+
             return $responce;
         } else {
             return ['success' => false, 'error' => true, 'alreadyExistEmailData' => $alreadyExistEmailData, 'invalidEmailData' => $invalidEmailData, 'message' => __('notification.notification_peeief')];
@@ -307,24 +310,24 @@ class MemberManagementHelper
     -------------------------------------------------------------------------------------------- */
     public static function inviteByCsv($request)
     {
-        $invitedMembers = array();
-        $invalidEmailinvitedData = array();
-        $alreadyInvitedEmailData = array();
-        $csvEmailData = array();
-        $mimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
+        $invitedMembers = [];
+        $invalidEmailinvitedData = [];
+        $alreadyInvitedEmailData = [];
+        $csvEmailData = [];
+        $mimes = ['application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'];
         // If uploaded file is not a csv
         if (in_array($_FILES['user_invite_csv']['type'], $mimes)) {
             if (!empty($request->user_invite_csv)) {
-                $csvResultData = array();
-                if (($handle = fopen($request->user_invite_csv, "r")) !== false) {
+                $csvResultData = [];
+                if (($handle = fopen($request->user_invite_csv, 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
                     $countheader = count($header);
-                    while (($csvGetData = fgetcsv($handle, 1000, ",")) !== false) {
+                    while (($csvGetData = fgetcsv($handle, 1000, ',')) !== false) {
                         $csvResultData[] = $csvGetData;
                     }
                     fclose($handle);
                     // If csv not proper header formate
-                    if ($countheader == 2  && in_array('Name', $header) && in_array('Email', $header)) {
+                    if ($countheader == 2 && in_array('Name', $header) && in_array('Email', $header)) {
                         if (!empty($csvResultData)) {
                             foreach ($csvResultData as $key => $csvData) {
                                 // check if not a valid email
@@ -333,18 +336,18 @@ class MemberManagementHelper
                                     if (!in_array(trim($csvData[1]), $csvEmailData)) {
                                         // check if duplicate email in already invited data
                                         if (!MemberManagement::where(['module_id' => (int) $request->module_id, 'module_type' => $request->module_type, 'email' => trim($csvData[1])])->exists()) {
-                                            $inviteData['invite_type']  = $request->invite_type;
-                                            $inviteData['email']        = trim($csvData[1]);
-                                            $inviteData['module_id']    = (int) $request->module_id;
-                                            $inviteData['module_type']  = $request->module_type;
-                                            $inviteData['inviter_id']   = (int) $request->inviter_id;
+                                            $inviteData['invite_type'] = $request->invite_type;
+                                            $inviteData['email'] = trim($csvData[1]);
+                                            $inviteData['module_id'] = (int) $request->module_id;
+                                            $inviteData['module_type'] = $request->module_type;
+                                            $inviteData['inviter_id'] = (int) $request->inviter_id;
                                             $inviteData['subject_line'] = $request->subject_line;
                                             $inviteData['email_message'] = $request->email_message;
                                             $inviteData['auto_invite_status'] = $request->auto_invite_status;
                                             $inviteData['invite_status'] = 'pending';
-                                            $inviteData['email_status']  = 'schedule';
-                                            $inviteData['assign_role']   = $request->assign_role;
-                                            $inviteData['challenge_auto_invite_from_lab']  = 0;
+                                            $inviteData['email_status'] = 'schedule';
+                                            $inviteData['assign_role'] = $request->assign_role;
+                                            $inviteData['challenge_auto_invite_from_lab'] = 0;
                                             $invitedMembers[] = $inviteData;
                                             $csvEmailData[] = $csvData[1];
                                         } else {
@@ -362,13 +365,13 @@ class MemberManagementHelper
                             }
                             if (!empty($invitedMembers)) {
                                 $data = PlanSubscriptionHelper::getSubscribedPlanDetailForOrg($request->organisation);
-                                if ($data['subscriptionDetail']->subscriptionItems[0]->itemPriceId !=  config('chargebee.unlimited_plan')) {
-                                $componentLimits = PlanSubscriptionHelper::getTotalLimits($request->organisation, 'userInvite');
-                                $componentUsage = PlanSubscriptionHelper::getComponentUsage($request->organisation, 'userInvite');
-                                $limitsLeft =  $componentLimits - $componentUsage;
-                                $invitedMembersCount = count($invitedMembers);
+                                if ($data['subscriptionDetail']->subscriptionItems[0]->itemPriceId != config('chargebee.unlimited_plan')) {
+                                    $componentLimits = PlanSubscriptionHelper::getTotalLimits($request->organisation, 'userInvite');
+                                    $componentUsage = PlanSubscriptionHelper::getComponentUsage($request->organisation, 'userInvite');
+                                    $limitsLeft = $componentLimits - $componentUsage;
+                                    $invitedMembersCount = count($invitedMembers);
                                     if ($limitsLeft < $invitedMembersCount) {
-                                        return ['success' => false, 'error' => true, 'invalidEmailData' => [], 'alreadyExistEmailData' => [], 'message' => 'you have ' .$limitsLeft. ' credits left for user invite. Please add users according to the Pending limits' ];
+                                        return ['success' => false, 'error' => true, 'invalidEmailData' => [], 'alreadyExistEmailData' => [], 'message' => 'you have '.$limitsLeft.' credits left for user invite. Please add users according to the Pending limits'];
                                     }
                                 }
                                 if (MemberManagement::insert($invitedMembers)) {
@@ -377,6 +380,7 @@ class MemberManagementHelper
                             } else {
                                 $responce = ['success' => false, 'error' => true, 'invalidEmailinvitedData' => $invalidEmailinvitedData, 'alreadyInvitedEmailData' => $alreadyInvitedEmailData, 'message' => __('notification.notification_ntcsvd')];
                             }
+
                             return $responce;
                         } else {
                             return ['success' => false, 'error' => true, 'invalidEmailinvitedData' => [], 'alreadyInvitedEmailData' => [], 'message' => __('notification.notification_tucsvfdni')];
@@ -392,7 +396,7 @@ class MemberManagementHelper
     }
 
     /**
-     * This function use for get chedule and fail email data
+     * This function use for get chedule and fail email data.
      *
      * @param cheduleType,memberId
      */
@@ -403,90 +407,91 @@ class MemberManagementHelper
             ->leftJoin('users as userInviter', 'userInviter.id', '=', 'member_management.inviter_id')
             ->leftJoin('labs', 'labs.id', '=', 'member_management.module_id')
             ->leftJoin('challanges', 'challanges.id', '=', 'member_management.module_id');
+
         return $memberData->orderBy('member_management.id', 'ASC');
     }
 
     /**
-     * This function used for send email to lab member which is invited by email
+     * This function used for send email to lab member which is invited by email.
      *
      * @param memberData
      */
     public static function sentInviteLabByEmail($memberData)
     {
         $url = self::getRedirectUrl($memberData->auto_invite_status, $memberData->invite_type);
-        Event::dispatch('send-invitation', array([
-            'mail_template'     => 'invite_lab',
-            "member_id"         => $memberData->id,
-            "invitee_id"        => $memberData->invitee_id,
-            "module_id"         => $memberData->module_id,
-            "language"          => $memberData->labLanguage,
-            "privacy"           => $memberData->labsPrivacy,
-            "module_type"       => $memberData->module_type,
-            "invite_type"       => $memberData->invite_type,
-            "auto_invite_status" => $memberData->auto_invite_status,
-            "url"               => $url,
-            "cover_image"       => $memberData->labsImage,
-            "lab_user"          => $memberData->inviterName,
-            "username"          => 'Solver',
-            'lab'               => $memberData->labTitle,
-            "email_message"     => $memberData->email_message,
-            "slug"              => $memberData->labSlug,
-            'email'             => trim($memberData->email),
-            'to_email'          => trim($memberData->email),
-            'to_name'           => 'Solver',
-            'fullname'          => 'Solver',
-            'title'             => $memberData->labTitle,
-            'subject_title'     => isset($memberData->subject_line) ? $memberData->subject_line : 'Invitation Email',
-            'name'              => 'Solver',
-            'isSentByEmail'     => 'yes'
-        ]));
+        Event::dispatch('send-invitation', [[
+            'mail_template'      => 'invite_lab',
+            'member_id'          => $memberData->id,
+            'invitee_id'         => $memberData->invitee_id,
+            'module_id'          => $memberData->module_id,
+            'language'           => $memberData->labLanguage,
+            'privacy'            => $memberData->labsPrivacy,
+            'module_type'        => $memberData->module_type,
+            'invite_type'        => $memberData->invite_type,
+            'auto_invite_status' => $memberData->auto_invite_status,
+            'url'                => $url,
+            'cover_image'        => $memberData->labsImage,
+            'lab_user'           => $memberData->inviterName,
+            'username'           => 'Solver',
+            'lab'                => $memberData->labTitle,
+            'email_message'      => $memberData->email_message,
+            'slug'               => $memberData->labSlug,
+            'email'              => trim($memberData->email),
+            'to_email'           => trim($memberData->email),
+            'to_name'            => 'Solver',
+            'fullname'           => 'Solver',
+            'title'              => $memberData->labTitle,
+            'subject_title'      => isset($memberData->subject_line) ? $memberData->subject_line : 'Invitation Email',
+            'name'               => 'Solver',
+            'isSentByEmail'      => 'yes',
+        ]]);
     }
 
     /**
-     * This function used for send email to lab member which is invited from network
+     * This function used for send email to lab member which is invited from network.
      *
      * @param memberData
      */
     public static function sentInviteLabFromNetwork($memberData)
     {
         $url = self::getRedirectUrl($memberData->auto_invite_status, $memberData->invite_type);
-        Event::dispatch('send-invitation', array([
-                'mail_template' => 'invite_lab',
-                "member_id"     => $memberData->id,
-                "invitee_id"    => $memberData->invitee_id,
-                "module_id"     => $memberData->module_id,
-                "language"      => $memberData->labLanguage,
-                "privacy"       => $memberData->labsPrivacy,
-                "module_type"   => $memberData->module_type,
-                "invite_type"   => $memberData->invite_type,
-                "auto_invite_status" => $memberData->auto_invite_status,
-                "url"           => $url,
-                "cover_image"   => $memberData->labsImage,
-                "lab_user"      => $memberData->inviterName,
-                "username"      => $memberData->username,
-                'lab'           => $memberData->labTitle,
-                "email_message" => $memberData->email_message,
-                "slug"          => $memberData->labSlug,
-                'email'         => trim($memberData->userEmail),
-                'to_email'      => trim($memberData->userEmail),
-                'to_name'       => $memberData->username,
-                'fullname'      => $memberData->name,
-                'title'         => $memberData->labTitle,
-                'subject_title' => isset($memberData->subject_line) ? $memberData->subject_line : 'Invitation Email',
-                'name'          => $memberData->name,
-                'isSentByEmail' => 'no'
-            ]));
+        Event::dispatch('send-invitation', [[
+            'mail_template'      => 'invite_lab',
+            'member_id'          => $memberData->id,
+            'invitee_id'         => $memberData->invitee_id,
+            'module_id'          => $memberData->module_id,
+            'language'           => $memberData->labLanguage,
+            'privacy'            => $memberData->labsPrivacy,
+            'module_type'        => $memberData->module_type,
+            'invite_type'        => $memberData->invite_type,
+            'auto_invite_status' => $memberData->auto_invite_status,
+            'url'                => $url,
+            'cover_image'        => $memberData->labsImage,
+            'lab_user'           => $memberData->inviterName,
+            'username'           => $memberData->username,
+            'lab'                => $memberData->labTitle,
+            'email_message'      => $memberData->email_message,
+            'slug'               => $memberData->labSlug,
+            'email'              => trim($memberData->userEmail),
+            'to_email'           => trim($memberData->userEmail),
+            'to_name'            => $memberData->username,
+            'fullname'           => $memberData->name,
+            'title'              => $memberData->labTitle,
+            'subject_title'      => isset($memberData->subject_line) ? $memberData->subject_line : 'Invitation Email',
+            'name'               => $memberData->name,
+            'isSentByEmail'      => 'no',
+        ]]);
     }
 
     /**
-     * This function use for get unaccepted module data
+     * This function use for get unaccepted module data.
      *
      * @param userEmail ,userID ,moduleType
      */
     public static function getInvitedModule($userEmail, $userID, $moduleType)
     {
         return MemberManagement::select('member_management.id as memberId', 'member_management.module_id', 'labs.slug', 'labs.title', 'labs.user_id', 'labs.id', 'labs.user_count', 'labs.mediaType', 'labs.description', 'labs.image', 'users.name', 'users.username', 'users.profile_image', 'member_management.created_at')
-            ->where(['member_management.module_type' => $moduleType, 'member_management.email_status' => 'sent', 'member_management.auto_invite_status' => 'manual', 'member_management.invite_status' => 'pending','labs.language' => App::currentLocale()])
+            ->where(['member_management.module_type' => $moduleType, 'member_management.email_status' => 'sent', 'member_management.auto_invite_status' => 'manual', 'member_management.invite_status' => 'pending', 'labs.language' => App::currentLocale()])
             ->join('labs', 'labs.id', '=', 'member_management.module_id')
             ->leftJoin('users', 'users.id', '=', 'member_management.inviter_id')
             ->where(function ($q) use ($userEmail, $userID) {
@@ -495,14 +500,14 @@ class MemberManagementHelper
     }
 
     /**
-     * This function use for get accepted module data
+     * This function use for get accepted module data.
      *
      * @param  userID ,moduleType
      */
     public static function getAcceptedModule($userID, $moduleType)
     {
         return MemberManagement::select('member_management.id as memberId', 'labs.slug', 'labs.title', 'labs.user_id', 'labs.id', 'labs.user_count', 'labs.mediaType', 'labs.description', 'labs.image', 'member_management.created_at')
-            ->where(['member_management.module_type' => $moduleType, 'member_management.invite_status' => 'accepted','labs.language' => App::currentLocale()])
+            ->where(['member_management.module_type' => $moduleType, 'member_management.invite_status' => 'accepted', 'labs.language' => App::currentLocale()])
             ->join('labs', 'labs.id', '=', 'member_management.module_id')
             ->where(function ($q) use ($userID) {
                 $q->where(['member_management.invitee_id' => $userID]);
@@ -510,14 +515,14 @@ class MemberManagementHelper
     }
 
     /**
-     * This function use for get unaccepted Challenge module data
+     * This function use for get unaccepted Challenge module data.
      *
      * @param userEmail ,userID ,moduleType
      */
     public static function getInvitedChallengeModule($userEmail, $userID, $moduleType)
     {
         return MemberManagement::select('member_management.id as memberId', 'member_management.module_id', 'challanges.slug', 'challanges.cover_image', 'challanges.title', 'challanges.user_id', 'challanges.id', 'challanges.user_count', 'users.name', 'users.username', 'users.profile_image')
-            ->where(['member_management.module_type' => $moduleType, 'member_management.email_status' => 'sent', 'member_management.auto_invite_status' => 'manual', 'member_management.invite_status' => 'pending','challanges.language' => App::currentLocale()])
+            ->where(['member_management.module_type' => $moduleType, 'member_management.email_status' => 'sent', 'member_management.auto_invite_status' => 'manual', 'member_management.invite_status' => 'pending', 'challanges.language' => App::currentLocale()])
             ->join('challanges', 'challanges.id', '=', 'member_management.module_id')
             ->leftJoin('users', 'users.id', '=', 'member_management.inviter_id')
             ->where(function ($q) use ($userEmail, $userID) {
@@ -526,7 +531,7 @@ class MemberManagementHelper
     }
 
     /**
-     * This function use for get accepted and Submitted Challenge module data
+     * This function use for get accepted and Submitted Challenge module data.
      *
      * @param  userID ,moduleType
      */
@@ -541,77 +546,77 @@ class MemberManagementHelper
     }
 
     /**
-     * This function used for send email to Challenge member which is invited by email
+     * This function used for send email to Challenge member which is invited by email.
      *
      * @param memberData
      */
     public static function sentInviteChallengeByEmail($memberData)
     {
         $url = self::getRedirectUrl($memberData->auto_invite_status, $memberData->invite_type);
-        Event::dispatch('send-invitation', array([
-            'mail_template'     => 'invite_challenge',
-            "member_id"         => $memberData->id,
-            "invitee_id"        => $memberData->invitee_id,
-            "module_id"         => $memberData->module_id,
-            "language"          => $memberData->challengeLanguage,
-            "privacy"           => $memberData->privacy,
-            "module_type"       => $memberData->module_type,
-            "invite_type"       => $memberData->invite_type,
-            "auto_invite_status" => $memberData->auto_invite_status,
-            "url"               => $url,
-            "cover_image"       => $memberData->challengeCoverImage,
-            "challenge_user"    => $memberData->inviterName,
-            "username"          => 'Solver',
-            "type"              => 'challenge',
-            'challenge'         => $memberData->challengeTitle,
-            "email_message"     => $memberData->email_message,
-            "slug"              => $memberData->challengeSlug,
-            'email'             => trim($memberData->email),
-            'to_email'          => trim($memberData->email),
-            'to_name'           => 'Solver',
-            'fullname'          => 'Solver',
-            'title'             => $memberData->challengeTitle,
-            'subject_title'     => isset($memberData->subject_line) ? $memberData->subject_line : 'Invitation Email for challenge',
-            'name'              => 'Solver',
-            'isSentByEmail'     => 'yes'
-        ]));
+        Event::dispatch('send-invitation', [[
+            'mail_template'      => 'invite_challenge',
+            'member_id'          => $memberData->id,
+            'invitee_id'         => $memberData->invitee_id,
+            'module_id'          => $memberData->module_id,
+            'language'           => $memberData->challengeLanguage,
+            'privacy'            => $memberData->privacy,
+            'module_type'        => $memberData->module_type,
+            'invite_type'        => $memberData->invite_type,
+            'auto_invite_status' => $memberData->auto_invite_status,
+            'url'                => $url,
+            'cover_image'        => $memberData->challengeCoverImage,
+            'challenge_user'     => $memberData->inviterName,
+            'username'           => 'Solver',
+            'type'               => 'challenge',
+            'challenge'          => $memberData->challengeTitle,
+            'email_message'      => $memberData->email_message,
+            'slug'               => $memberData->challengeSlug,
+            'email'              => trim($memberData->email),
+            'to_email'           => trim($memberData->email),
+            'to_name'            => 'Solver',
+            'fullname'           => 'Solver',
+            'title'              => $memberData->challengeTitle,
+            'subject_title'      => isset($memberData->subject_line) ? $memberData->subject_line : 'Invitation Email for challenge',
+            'name'               => 'Solver',
+            'isSentByEmail'      => 'yes',
+        ]]);
     }
 
     /**
-     * This function used for send email to Challenge member which is invited from network
+     * This function used for send email to Challenge member which is invited from network.
      *
      * @param memberData
      */
     public static function sentInviteChallengeFromNetwork($memberData)
     {
         $url = self::getRedirectUrl($memberData->auto_invite_status, $memberData->invite_type);
-        Event::dispatch('send-invitation', array([
-                'mail_template' => 'invite_challenge',
-                "member_id"     => $memberData->id,
-                "invitee_id"    => $memberData->invitee_id,
-                "module_id"     => $memberData->module_id,
-                "language"      => $memberData->challengeLanguage,
-                "privacy"       => $memberData->privacy,
-                "module_type"   => $memberData->module_type,
-                "invite_type"   => $memberData->invite_type,
-                "auto_invite_status" => $memberData->auto_invite_status,
-                "url"           => $url,
-                "cover_image"   => $memberData->challengeCoverImage,
-                "challenge_user" => $memberData->inviterName,
-                "username"      => $memberData->username,
-                "type"          => 'challenge',
-                'challenge'     => $memberData->challengeTitle,
-                "email_message" => $memberData->email_message,
-                "slug"          => $memberData->challengeSlug,
-                'email'         => trim($memberData->userEmail),
-                'to_email'      => trim($memberData->userEmail),
-                'to_name'       => $memberData->username,
-                'fullname'      => $memberData->name,
-                'title'         => $memberData->challengeTitle,
-                'subject_title' => !empty($memberData->subject_line) ? $memberData->subject_line : __('labels.labels_yhbi'),
-                'name'          => $memberData->name,
-                'isSentByEmail'     => 'no'
-            ]));
+        Event::dispatch('send-invitation', [[
+            'mail_template'      => 'invite_challenge',
+            'member_id'          => $memberData->id,
+            'invitee_id'         => $memberData->invitee_id,
+            'module_id'          => $memberData->module_id,
+            'language'           => $memberData->challengeLanguage,
+            'privacy'            => $memberData->privacy,
+            'module_type'        => $memberData->module_type,
+            'invite_type'        => $memberData->invite_type,
+            'auto_invite_status' => $memberData->auto_invite_status,
+            'url'                => $url,
+            'cover_image'        => $memberData->challengeCoverImage,
+            'challenge_user'     => $memberData->inviterName,
+            'username'           => $memberData->username,
+            'type'               => 'challenge',
+            'challenge'          => $memberData->challengeTitle,
+            'email_message'      => $memberData->email_message,
+            'slug'               => $memberData->challengeSlug,
+            'email'              => trim($memberData->userEmail),
+            'to_email'           => trim($memberData->userEmail),
+            'to_name'            => $memberData->username,
+            'fullname'           => $memberData->name,
+            'title'              => $memberData->challengeTitle,
+            'subject_title'      => !empty($memberData->subject_line) ? $memberData->subject_line : __('labels.labels_yhbi'),
+            'name'               => $memberData->name,
+            'isSentByEmail'      => 'no',
+        ]]);
     }
 
     /**
@@ -621,22 +626,23 @@ class MemberManagementHelper
      */
     public static function getRedirectUrl($auto_invite_status, $invite_type)
     {
-        if ($auto_invite_status ==='manual' && $invite_type ==='email') {
+        if ($auto_invite_status === 'manual' && $invite_type === 'email') {
             $route = route('register');
-        } elseif ($auto_invite_status ==='manual' && $invite_type ==='network') {
+        } elseif ($auto_invite_status === 'manual' && $invite_type === 'network') {
             $route = route('login');
-        } elseif ($auto_invite_status ==='auto' && $invite_type ==='email') {
+        } elseif ($auto_invite_status === 'auto' && $invite_type === 'email') {
             $route = route('register');
-        } elseif ($auto_invite_status ==='auto' && $invite_type ==='network') {
+        } elseif ($auto_invite_status === 'auto' && $invite_type === 'network') {
             $route = route('login');
         } else {
             $route = route('userDashboardReport');
         }
+
         return $route;
     }
 
     /**
-     * This function can send reject email for requested user
+     * This function can send reject email for requested user.
      *
      * @param memberData
      */
@@ -644,26 +650,26 @@ class MemberManagementHelper
     {
         $labUserData = self::getScheduleData()->where('member_management.lab_users_id', $labUsersTableId)->first();
         if (!empty($labUserData)) {
-            Event::dispatch('send-template', array([
-                    'mail_template'     => $emailTemplate,
-                    'sender'            => auth()->user()->name,
-                    'name'              => auth()->user()->name,
-                    'sender_image'      => auth()->user()->profile_image,
-                    'time'              => date('M d,Y H:mA', strtotime($labUserData->created_at)) . ' EST',
-                    "username"          => $labUserData->name,
-                    'email'             => $labUserData->userEmail,
-                    'to_email'          => $labUserData->userEmail,
-                    'to_name'           => $labUserData->username,
-                    'fullname'          => $labUserData->name,
-                    'sender_url'        => route('getProfile', [auth()->user()->username]),
-                    'lab_url'           => route('userlab.show', [$labUserData->labSlug]),
-                    'lab'               => $labUserData->labTitle
-                ]));
+            Event::dispatch('send-template', [[
+                'mail_template'     => $emailTemplate,
+                'sender'            => auth()->user()->name,
+                'name'              => auth()->user()->name,
+                'sender_image'      => auth()->user()->profile_image,
+                'time'              => date('M d,Y H:mA', strtotime($labUserData->created_at)).' EST',
+                'username'          => $labUserData->name,
+                'email'             => $labUserData->userEmail,
+                'to_email'          => $labUserData->userEmail,
+                'to_name'           => $labUserData->username,
+                'fullname'          => $labUserData->name,
+                'sender_url'        => route('getProfile', [auth()->user()->username]),
+                'lab_url'           => route('userlab.show', [$labUserData->labSlug]),
+                'lab'               => $labUserData->labTitle,
+            ]]);
         }
     }
 
     /**
-     * This function used for insert evaluator data for challenge assesment
+     * This function used for insert evaluator data for challenge assesment.
      *
      * @param @chalengeId , @action
      */
@@ -677,15 +683,15 @@ class MemberManagementHelper
                 $membersArray = [];
                 if (!empty($assessmentData['members'])) {
                     $members = json_decode($assessmentData['members']);
-                    $networkMemberList= array_intersect($members, $data);
+                    $networkMemberList = array_intersect($members, $data);
                     if (isset($networkMemberList) && count($networkMemberList) > 0) {
                         foreach ($networkMemberList as $member) {
                             $userData = User::where('email', $member)->latest()->first('id');
                             $membersData['invite_type'] = 'network';
                             $membersData['module_id'] = $assessmentData['challenge_id'];
                             $membersData['module_type'] = 'challenge';
-                            $membersData['inviter_id']  = auth()->user()->id;
-                            $membersData['invitee_id']  = !empty($userData) ? $userData->id : null;
+                            $membersData['inviter_id'] = auth()->user()->id;
+                            $membersData['invitee_id'] = !empty($userData) ? $userData->id : null;
                             $membersData['email'] = $member;
                             $membersData['invite_status'] = 'invited';
                             $membersData['email_status'] = 'other';
@@ -695,15 +701,15 @@ class MemberManagementHelper
                             $membersArray[] = $membersData;
                         }
                     }
-                    $emailMemberList= array_diff($members, $data);
+                    $emailMemberList = array_diff($members, $data);
                     if (isset($emailMemberList) && count($emailMemberList) > 0) {
                         foreach ($emailMemberList as $member) {
                             $userData = User::where('email', $member)->latest()->first('id');
                             $membersData['invite_type'] = 'email';
                             $membersData['module_id'] = $assessmentData['challenge_id'];
                             $membersData['module_type'] = 'challenge';
-                            $membersData['inviter_id']  = auth()->user()->id;
-                            $membersData['invitee_id']  = !empty($userData) ? $userData->id : null;
+                            $membersData['inviter_id'] = auth()->user()->id;
+                            $membersData['invitee_id'] = !empty($userData) ? $userData->id : null;
                             $membersData['email'] = $member;
                             $membersData['invite_status'] = 'invited';
                             $membersData['email_status'] = 'other';
@@ -719,10 +725,10 @@ class MemberManagementHelper
                     MemberManagement::where(['module_id' => $assessmentData['challenge_id'], 'is_evaluator' => 1])->delete();
                 }
                 $data = PlanSubscriptionHelper::getSubscribedPlanDetailForOrg($org_id);
-                if ($data['subscriptionDetail']->subscriptionItems[0]->itemPriceId !=  config('chargebee.unlimited_plan')) {
+                if ($data['subscriptionDetail']->subscriptionItems[0]->itemPriceId != config('chargebee.unlimited_plan')) {
                     $componentLimits = PlanSubscriptionHelper::getTotalLimits($org_id, 'userInvite');
                     $componentUsage = PlanSubscriptionHelper::getComponentUsage($org_id, 'userInvite');
-                    $limitsLeft =  $componentLimits - $componentUsage;
+                    $limitsLeft = $componentLimits - $componentUsage;
                     $invitedMembersCount = count($membersArray);
                     if ($limitsLeft < $invitedMembersCount) {
                         return $limitsLeft;
@@ -730,6 +736,7 @@ class MemberManagementHelper
                 }
                 MemberManagement::insert($membersArray);
             }
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -737,7 +744,7 @@ class MemberManagementHelper
     }
 
     /**
-     * This function use for accept , decline , cancel request from lab member management
+     * This function use for accept , decline , cancel request from lab member management.
      *
      * @param  request ,labData,action
      */
@@ -747,38 +754,38 @@ class MemberManagementHelper
             // request for private lab
             if ($labData['public'] == '0') {
                 $memberData = [
-                    'invite_type'   => 'network',
-                    'module_id'     => (int) $labData['lab_id'],
-                    'module_type'   => 'lab',
-                    'inviter_id'    => (int) $labData['user_id'],
-                    'invitee_id'    => (int) $labData['invitee_id'],
-                    'email'         => null,
-                    'invite_status' => 'invited',
-                    'email_status'  => 'other',
-                    'auto_invite_status' => 'other',
-                    'assign_role'   => 'user',
-                    'is_join_request' => 1,
+                    'invite_type'         => 'network',
+                    'module_id'           => (int) $labData['lab_id'],
+                    'module_type'         => 'lab',
+                    'inviter_id'          => (int) $labData['user_id'],
+                    'invitee_id'          => (int) $labData['invitee_id'],
+                    'email'               => null,
+                    'invite_status'       => 'invited',
+                    'email_status'        => 'other',
+                    'auto_invite_status'  => 'other',
+                    'assign_role'         => 'user',
+                    'is_join_request'     => 1,
                     'join_request_status' => 0,
-                    'privacy'       => 0,
+                    'privacy'             => 0,
                     //'lab_users_id'  => $labData['id'],
                     'challenge_auto_invite_from_lab'  => 0,
                 ];
             } elseif ($labData['public'] == '1') {
                 // request for public lab
                 $memberData = [
-                    'invite_type'   => 'network',
-                    'module_id'     => (int) $labData['lab_id'],
-                    'module_type'   => 'lab',
-                    'inviter_id'    => (int) $labData['user_id'],
-                    'invitee_id'    => (int) $labData['invitee_id'],
-                    'email'         => null,
-                    'invite_status' => 'accepted',
-                    'email_status'  => 'other',
-                    'auto_invite_status' => 'other',
-                    'assign_role'   => 'user',
-                    'is_join_request' => 1,
-                    'join_request_status' => 1,
-                    'privacy'       => 1,
+                    'invite_type'                     => 'network',
+                    'module_id'                       => (int) $labData['lab_id'],
+                    'module_type'                     => 'lab',
+                    'inviter_id'                      => (int) $labData['user_id'],
+                    'invitee_id'                      => (int) $labData['invitee_id'],
+                    'email'                           => null,
+                    'invite_status'                   => 'accepted',
+                    'email_status'                    => 'other',
+                    'auto_invite_status'              => 'other',
+                    'assign_role'                     => 'user',
+                    'is_join_request'                 => 1,
+                    'join_request_status'             => 1,
+                    'privacy'                         => 1,
                     'challenge_auto_invite_from_lab'  => 0,
                 ];
             }
@@ -805,7 +812,7 @@ class MemberManagementHelper
         } elseif ($action === 'cancel') {
             MemberManagement::where(['id' => $request->memberId])->delete();
             ModuleProgressStatus::where(['module_id' => $request->lab_id, 'user_id' => auth()->user()->id])->forcedelete();
-            
+
             // $data = MemberManagement::where(['lab_users_id' => $labData['id']])->first();
             // if ($data !== null) {
             //     $data->forceDelete();
@@ -815,30 +822,29 @@ class MemberManagementHelper
         }
     }
 
-     /**
-     * This function use for accept , decline , cancel request from chalenge member management
+    /**
+     * This function use for accept , decline , cancel request from chalenge member management.
      *
      * @param  request ,challengeDataArry,action
      */
-    
     public static function chalRequestAcceptReject($request, $challengeDataArry, $action)
     {
         if ($action === 'request') {
             // request for private challenge
             $memberData = [
-                'invite_type'   => 'network',
-                'module_id'     => (int) $challengeDataArry['chl_id'],
-                'module_type'   => 'challenge',
-                'inviter_id'    => (int) $challengeDataArry['user_id'],
-                'invitee_id'    => (int) $challengeDataArry['invitee_id'],
-                'email'         => null,
-                'invite_status' => 'invited',
-                'email_status'  => 'other',
-                'auto_invite_status' => 'other',
-                'assign_role'   => 'user',
-                'is_join_request' => 1,
-                'join_request_status' => 0,
-                'privacy'       => 0,
+                'invite_type'                     => 'network',
+                'module_id'                       => (int) $challengeDataArry['chl_id'],
+                'module_type'                     => 'challenge',
+                'inviter_id'                      => (int) $challengeDataArry['user_id'],
+                'invitee_id'                      => (int) $challengeDataArry['invitee_id'],
+                'email'                           => null,
+                'invite_status'                   => 'invited',
+                'email_status'                    => 'other',
+                'auto_invite_status'              => 'other',
+                'assign_role'                     => 'user',
+                'is_join_request'                 => 1,
+                'join_request_status'             => 0,
+                'privacy'                         => 0,
                 'challenge_auto_invite_from_lab'  => 0,
             ];
             MemberManagement::create($memberData);
@@ -858,7 +864,7 @@ class MemberManagementHelper
     }
 
     /**
-     * This function can change status after verify there account
+     * This function can change status after verify there account.
      *
      * @param user
      */
@@ -871,7 +877,7 @@ class MemberManagementHelper
     }
 
     /**
-     * This function can lab invited user , automatically invite them to all the challenges associated to the lab
+     * This function can lab invited user , automatically invite them to all the challenges associated to the lab.
      *
      * @param user
      */
@@ -884,7 +890,7 @@ class MemberManagementHelper
     }
 
     /**
-     * This function can automatically invtie user to challenges associated to lab after edit challenge
+     * This function can automatically invtie user to challenges associated to lab after edit challenge.
      *
      * @param user
      */
@@ -897,7 +903,7 @@ class MemberManagementHelper
     }
 
     /**
-     * This function can invite member by based on invite type
+     * This function can invite member by based on invite type.
      *
      * @param request
      */
@@ -922,7 +928,7 @@ class MemberManagementHelper
                     $inviteByEmailResponce = ['success' => false, 'error' => true, 'message' => __('notification.notification_peeouc')];
                 }
             }
-        // if user invited from network
+            // if user invited from network
         } elseif ($request->invite_type == 'network') {
             if (!empty($request->inviteUsers)) {
                 $networkResponce = self::inviteFromNetwork($request);
@@ -932,11 +938,12 @@ class MemberManagementHelper
                 }
             }
         }
+
         return ['emailResponce' => $emailResponce, 'csvResponce' => $csvResponce, 'networkResponce' => $networkResponce, 'inviteByEmailResponce' => $inviteByEmailResponce, 'inviteNetworkResponce' => $inviteNetworkResponce];
     }
 
     /**
-     * This function set alert message after invite
+     * This function set alert message after invite.
      *
      * @param request
      */
@@ -986,7 +993,6 @@ class MemberManagementHelper
         }
     }
 
-
     public static function inviteMembersFromChannelAPI($value, $lab)
     {
         try {
@@ -994,83 +1000,85 @@ class MemberManagementHelper
             $invitedMembers = [];
 
             $value = (object) $value;
-            $user= User::where('magnet_user_id', $value->id)->first();
+            $user = User::where('magnet_user_id', $value->id)->first();
 
             if ($user) {
                 if (!MemberManagement::where(['module_id' => (int) $lab->id, 'module_type' => 'lab', 'invitee_id' => $user->id])->exists()) {
-                    $inviteData['invite_type']  = 'network';
-                    $inviteData['email']        = $user->email;
-                    $inviteData['module_id']    = (int) $lab->id;
-                    $inviteData['module_type']  = 'lab';
-                    $inviteData['inviter_id']   = (int) $lab->user_id;
-                    $inviteData['invitee_id']   = $user->id;
+                    $inviteData['invite_type'] = 'network';
+                    $inviteData['email'] = $user->email;
+                    $inviteData['module_id'] = (int) $lab->id;
+                    $inviteData['module_type'] = 'lab';
+                    $inviteData['inviter_id'] = (int) $lab->user_id;
+                    $inviteData['invitee_id'] = $user->id;
                     $inviteData['subject_line'] = 'Invitation to Prepr '.$lab->title;
                     $inviteData['email_message'] = 'Welcome to the '.$lab->title.'! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.';
                     $inviteData['auto_invite_status'] = 'manual';
                     $inviteData['invite_status'] = 'pending';
                     $inviteData['email_status'] = 'schedule';
-                    $inviteData['assign_role']  = 'user';
-                    $inviteData['challenge_auto_invite_from_lab']  = 0;
+                    $inviteData['assign_role'] = 'user';
+                    $inviteData['challenge_auto_invite_from_lab'] = 0;
                     $invitedMembers[] = $inviteData;
                 } else {
                     return (object) [
                         'message' => 'The specific user is already assigned to this content',
-                        'status' => false
+                        'status'  => false,
                     ];
                 }
             } else {
                 if (!MemberManagement::where(['module_id' => (int) $lab->id, 'module_type' => 'lab', 'email' => trim($value->email)])->exists()) {
-                    $inviteData['invite_type']  = 'email';
-                    $inviteData['email']        = $value->email;
-                    $inviteData['module_id']    = (int) $lab->id;
-                    $inviteData['module_type']  = 'lab';
-                    $inviteData['inviter_id']   = $lab->user_id;
-                    $inviteData['invitee_id']   = null;
+                    $inviteData['invite_type'] = 'email';
+                    $inviteData['email'] = $value->email;
+                    $inviteData['module_id'] = (int) $lab->id;
+                    $inviteData['module_type'] = 'lab';
+                    $inviteData['inviter_id'] = $lab->user_id;
+                    $inviteData['invitee_id'] = null;
                     $inviteData['subject_line'] = 'Invitation to Prepr '.$lab->title;
                     $inviteData['email_message'] = 'Welcome to the '.$lab->title.'! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.';
                     $inviteData['auto_invite_status'] = 'manual';
                     $inviteData['invite_status'] = 'pending';
                     $inviteData['email_status'] = 'schedule';
-                    $inviteData['assign_role']  = 'user';
-                    $inviteData['challenge_auto_invite_from_lab']  = 0;
+                    $inviteData['assign_role'] = 'user';
+                    $inviteData['challenge_auto_invite_from_lab'] = 0;
                     $invitedMembers[] = $inviteData;
                 } else {
                     return (object) [
                         'message' => 'The specific user is already assigned to this content',
-                        'status' => false
+                        'status'  => false,
                     ];
                 }
             }
             if (!empty($invitedMembers)) {
                 MemberManagement::insert($invitedMembers);
                 DB::commit();
+
                 return (object) [
-                        'status' => true
+                    'status' => true,
                 ];
             }
         } catch (\Exception $ex) {
             DB::rollback();
+
             return (object) [
-                        'message' => 'PREPR Internal Server Error',
-                        'status' => false
+                'message' => 'PREPR Internal Server Error',
+                'status'  => false,
             ];
         }
     }
 
     /**
-     * This function can update member invitation action
+     * This function can update member invitation action.
      *
      * @param user
      */
     public static function updateMemberInvitationActionData($moduleType, $memberId, $status, $inviteeId)
     {
-        if ($moduleType == "lab" || 'challenge') {
-            if ($status == "accepted") {
-                MemberManagement::where('id', $memberId)->update(['invite_status' => 'accepted','invitee_id' => $inviteeId]);
+        if ($moduleType == 'lab' || 'challenge') {
+            if ($status == 'accepted') {
+                MemberManagement::where('id', $memberId)->update(['invite_status' => 'accepted', 'invitee_id' => $inviteeId]);
                 if (auth()->user()->is_lab_joined === 'no') {
                     User::where('id', $inviteeId)->update(['is_lab_joined' => 'yes']);
                 }
-                if ($moduleType =='challenge') {
+                if ($moduleType == 'challenge') {
                     if (!empty($memberId)) {
                         $memberdata = MemberManagement::select('member_management.id as memberId', 'member_management.module_id', 'member_management.inviter_id', 'challanges.title')
                                                     ->where(['member_management.id' => $memberId])
@@ -1082,7 +1090,7 @@ class MemberManagementHelper
                         NotificationHelper::addNotification($inviteeId, $inviteeId, 'challenge', '0', 'challenge_join_success_notification', '', '', '', '', '', ['title' => $memberdata->title]);
                     }
                 }
-            } elseif ($status == "rejected") {
+            } elseif ($status == 'rejected') {
                 MemberManagement::where('id', $memberId)->update(['invite_status' => 'declined']);
             }
         }
@@ -1108,7 +1116,7 @@ class MemberManagementHelper
      -------------------------------------------------------------------------------------------- */
     public static function checkMemberIsJoined($moduleId, $moduleType, $inviteeId)
     {
-        return MemberManagement::select('id')->where(['module_type'=> $moduleType,'invite_status' => 'accepted','module_id' => $moduleId,'invitee_id' => $inviteeId])->first();
+        return MemberManagement::select('id')->where(['module_type'=> $moduleType, 'invite_status' => 'accepted', 'module_id' => $moduleId, 'invitee_id' => $inviteeId])->first();
     }
 
     /* -----------------------------------------------------------------------------------------
@@ -1119,7 +1127,7 @@ class MemberManagementHelper
     {
         return MemberManagement::select('users.username as username', 'users.profile_image', 'users.name', 'users.first_name', 'users.last_name', 'member_management.invitee_id as invitee_id')
             ->leftJoin('users', 'users.id', '=', 'member_management.invitee_id')
-            ->where(['member_management.module_id' => $moduleId, 'member_management.module_type' => $moduleType,'invite_status' => 'pending','join_request_status' => 1])
+            ->where(['member_management.module_id' => $moduleId, 'member_management.module_type' => $moduleType, 'invite_status' => 'pending', 'join_request_status' => 1])
             ->orderBy('member_management.id', 'desc')
             ->get();
     }
@@ -1131,32 +1139,32 @@ class MemberManagementHelper
     public static function joinRequestUserActivity($lab, $action)
     {
         if (!empty($lab)) {
-            if ($action ==='request') {
+            if ($action === 'request') {
                 // Create point after join lab
                 $point = Settings::get(config('points.lab_join'));
                 $user_points = UserPoint::create(['type' => 'lab_join', 'date' => date('Y-m-d'), 'user_id' => auth()->user()->id, 'point' => $point]);
 
                 // Send notification for join lab
-                NotificationHelper::addNotification(auth()->user()->id, auth()->user()->id, 'lab', '0', 'lab_join_notification', '', '', '', '', '', ['lab_point' => $point ,'lab_title' => $lab->title]);
+                NotificationHelper::addNotification(auth()->user()->id, auth()->user()->id, 'lab', '0', 'lab_join_notification', '', '', '', '', '', ['lab_point' => $point, 'lab_title' => $lab->title]);
                 // Send email only after join request also when lab is private
                 if ($lab->privacy === 'private') {
-                    Event::dispatch('send-template', array([
+                    Event::dispatch('send-template', [[
                         'mail_template' => 'lab_request',
                         'sender'        => auth()->user()->name,
                         'name'          => auth()->user()->name,
                         'sender_image'  => auth()->user()->profile_image,
-                        'time'          => Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now(), 'America/Toronto') . ' EST',
-                        "username"      => $lab->name,
+                        'time'          => Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now(), 'America/Toronto').' EST',
+                        'username'      => $lab->name,
                         'email'         => $lab->emaiId,
                         'to_email'      => $lab->emaiId,
                         'to_name'       => $lab->username,
                         'fullname'      => $lab->name,
                         'sender_url'    => route('getProfile', [auth()->user()->username]),
                         'lab_url'       => route('userlab.show', [$lab->slug]),
-                        'lab'           => $lab->title
-                    ]));
+                        'lab'           => $lab->title,
+                    ]]);
                 }
-            } elseif ($action ==='cancel') {
+            } elseif ($action === 'cancel') {
                 // Remove point after cancel request
                 $point = Settings::get(config('points.lab_join'));
                 $user_points = UserPoint::where(['type' => 'lab_join', 'user_id' => auth()->user()->id, 'point' => $point])->first();
