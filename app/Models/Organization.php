@@ -93,48 +93,12 @@ class Organization extends LaratrustTeam
     public function create($request)
     {
         try {
-            $organization_exists = static::select('id')->where('name', $request->name)->withTrashed()->first();
+
             if ($organization_exists == null) {
-                $profile_images_path = null;
-                if ($request->profile_image !== null) {
-                    $profile_images_path = FileUploadHelper::uploadImageToS3($request->profile_image, 'organization');
-                    if ($profile_images_path == false) {
-                        $response = ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
 
-                        return $response;
-                    }
-                }
-                $cover_images_path = null;
-                if ($request->cover_image !== null) {
-                    $cover_images_path = FileUploadHelper::uploadImageToS3($request->cover_image, 'organization');
-                    if ($cover_images_path == false) {
-                        $response = ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
 
-                        return $response;
-                    }
-                }
-                DB::beginTransaction();
-                $model = new Organization();
-                $organization = new Organization();
-                $organization->language = ($request->has('language')) ? $request->language : null;
-                $organization->user_id = $request->user_id;
-                $organization->name = $request->name;
-                $organization->description = ($request->has('description')) ? $request->description : null;
-                $organization->slug = UtilityHelper::generateSlug($request->name, $model);
-                $organization->cover_image = $cover_images_path;
-                $organization->profile_image = $profile_images_path;
-                $organization->website = ($request->has('website')) ? $request->website : null;
-                $organization->about = ($request->has('about')) ? $request->about : null;
-                $organization->category = $request->category;
-                if ($request->status !== null) {
-                    $organization->status = $request->status;
-                }
-                $organization->total_employees = $request->total_employees;
                 if ($organization->save()) {
-                    $cust_id = PlanSubscriptionHelper::getCustomer(auth()->user()->email);
-                    if ($cust_id != []) {
-                        $planSubscribed = PlanSubscriptionHelper::subscribePlan($cust_id, 'free-plan-CAD-Yearly', $organization->id);
-                    }
+
                     if ($request->has('address') && $request->has('city') && $request->has('state') && $request->has('country') && $request->has('zip_code')) {
                         $request->organization_id = $organization->id;
                         $address = OrganizationAddress::create($request);
@@ -176,17 +140,8 @@ class Organization extends LaratrustTeam
 
                     return $response;
                 }
-            } else {
-                $organization_trashed_exists = static::select('id')->where('name', $request->name)->onlyTrashed()->first();
-                if ($organization_trashed_exists != null) {
-                    $response = ['success' => false, 'message' => __('responses.trashed_records')];
-
-                    return $response;
-                }
-                $response = ['success' => false, 'message' => __('responses.organization_name_unique')];
-
-                return $response;
             }
+
         } catch (\Exception $e) {
             DB::rollback();
 

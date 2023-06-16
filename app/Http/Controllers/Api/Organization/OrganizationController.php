@@ -7,6 +7,8 @@ use App\Http\Requests\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Organization\OrganizationResource;
 use App\Repositories\Api\Organization\OrganizationRepository;
+use App\Services\OrganizationAddressService;
+use App\Services\OrganizationService;
 use Illuminate\Http\Request;
 
 class OrganizationController extends AppBaseController
@@ -247,11 +249,45 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function create(CreateOrganizationRequest $request)
+    public function create(CreateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organ)
     {
         try {
-            $organization = $this->organizationRepository->create($request);
-            if ($organization['success'] == true) {
+            $profile_image_path = null;
+            $cover_image_path = null;
+
+            $checkOrganization = $organizationService->checkOrganizationExist($request);
+            if ($checkOrganization) {
+                return $this->sendError(__('responses.organization_name_unique'), 422);
+            }
+
+            $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($request);
+            if ($checkOrganizationInTrash) {
+                return $this->sendError(__('responses.trashed_records'), 422);
+            }
+
+
+            if ($request->profile_image !== null) {
+                $upload_profile_image = $organizationService->uploadOrganizationCoverImage($request);
+                if($upload_profile_image == false){
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 500);
+                }
+                $profile_image_path = $upload_profile_image;
+            }
+
+
+            if ($request->cover_image !== null) {
+                $upload_cover_image = $organizationService->uploadOrganizationProfileImage($request);
+                if($upload_cover_image == false){
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 500);
+                }
+                $cover_image_path = $upload_cover_image;
+            }
+
+            $organization = $organizationService->createOrganization($request,$profile_image_path,$cover_image_path);
+
+
+
+            if ($organization) {
                 return $this->sendResponse($organization['data'], $organization['message']);
             } else {
                 return $this->sendError($organization['message'], 422);
