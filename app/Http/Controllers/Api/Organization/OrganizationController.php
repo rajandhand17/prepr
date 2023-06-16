@@ -265,27 +265,23 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.trashed_records'), 422);
             }
 
-
             if ($request->profile_image !== null) {
                 $upload_profile_image = $organizationService->uploadOrganizationCoverImage($request);
-                if($upload_profile_image == false){
+                if ($upload_profile_image == false) {
                     return $this->sendError(__('responses.fail_organization_image_upload'), 500);
                 }
                 $profile_image_path = $upload_profile_image;
             }
 
-
             if ($request->cover_image !== null) {
                 $upload_cover_image = $organizationService->uploadOrganizationProfileImage($request);
-                if($upload_cover_image == false){
+                if ($upload_cover_image == false) {
                     return $this->sendError(__('responses.fail_organization_image_upload'), 500);
                 }
                 $cover_image_path = $upload_cover_image;
             }
 
-            $organization = $organizationService->createOrganization($request,$profile_image_path,$cover_image_path);
-
-
+            $organization = $organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
 
             if ($organization) {
                 return $this->sendResponse($organization['data'], $organization['message']);

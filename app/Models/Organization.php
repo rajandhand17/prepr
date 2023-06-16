@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Helpers\FileUploadHelper;
-use App\Helpers\PlanSubscriptionHelper;
-use App\Helpers\UtilityHelper;
 use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -93,12 +91,8 @@ class Organization extends LaratrustTeam
     public function create($request)
     {
         try {
-
             if ($organization_exists == null) {
-
-
                 if ($organization->save()) {
-
                     if ($request->has('address') && $request->has('city') && $request->has('state') && $request->has('country') && $request->has('zip_code')) {
                         $request->organization_id = $organization->id;
                         $address = OrganizationAddress::create($request);
@@ -141,7 +135,6 @@ class Organization extends LaratrustTeam
                     return $response;
                 }
             }
-
         } catch (\Exception $e) {
             DB::rollback();
 

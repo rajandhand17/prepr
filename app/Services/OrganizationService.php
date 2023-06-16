@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
@@ -9,37 +10,47 @@ use Illuminate\Http\Request;
 
 class OrganizationService
 {
-    public function checkOrganizationExist(Request $request){
+    public function checkOrganizationExist(Request $request)
+    {
         $organization_exists = static::select('id')->where('name', $request->name)->withTrashed()->first();
         if ($organization_exists == null) {
             return true;
         }
+
         return false;
     }
 
-    public function checkOrganizationExistInTrash(Request $request){
+    public function checkOrganizationExistInTrash(Request $request)
+    {
         $organization_trashed_exists = static::select('id')->where('name', $request->name)->onlyTrashed()->first();
         if ($organization_trashed_exists == null) {
             return true;
         }
+
         return false;
     }
 
-    public function uploadOrganizationProfileImage(Request $request){
+    public function uploadOrganizationProfileImage(Request $request)
+    {
         $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
         if ($profile_image_path == false) {
             return false;
         }
+
         return $profile_image_path;
     }
-    public function uploadOrganizationCoverImage(Request $request){
+
+    public function uploadOrganizationCoverImage(Request $request)
+    {
         $cover_image_path = FileUploadHelper::uploadImageToS3($request->cover_image, 'organization');
         if ($cover_image_path == false) {
             return false;
         }
+
         return $cover_image_path;
     }
-    public function createOrganization(Request $request,$profile_image_path,$cover_image_path)
+
+    public function createOrganization(Request $request, $profile_image_path, $cover_image_path)
     {
         DB::beginTransaction();
         $model = new Organization();
@@ -63,12 +74,13 @@ class OrganizationService
         return $organization;
     }
 
-    public function subscribePlan($organization){
+    public function subscribePlan($organization)
+    {
         $cust_id = PlanSubscriptionHelper::getCustomer(auth()->user()->email);
         if ($cust_id != []) {
             $planSubscribed = PlanSubscriptionHelper::subscribePlan($cust_id, 'free-plan-CAD-Yearly', $organization->id);
         }
+
         return  $planSubscribed;
     }
-
 }
