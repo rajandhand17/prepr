@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests;
 
-use App\Http\Requests\LabfollowRequest;
 use Tests\TestCase;
 
 /**

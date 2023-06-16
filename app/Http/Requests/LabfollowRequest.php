@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class LabfollowRequest extends FormRequest
 {
@@ -26,9 +26,9 @@ class LabfollowRequest extends FormRequest
     public function rules()
     {
         return [
-            "type"=> 'required',
-            "action"=> 'required',
-            "status"=> 'required',
+            'type'  => 'required',
+            'action'=> 'required',
+            'status'=> 'required',
         ];
     }
 
@@ -37,16 +37,16 @@ class LabfollowRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()
     {
         return [
-            'type.required'=>__('responses.lab_type_required'),
-            'action.required'=>__('responses.lab_action_required'),
-            'status.required'=>__('responses.lab_status_required'),
-        ];   
+            'type.required'  => __('responses.lab_type_required'),
+            'action.required'=> __('responses.lab_action_required'),
+            'status.required'=> __('responses.lab_status_required'),
+        ];
     }
 }

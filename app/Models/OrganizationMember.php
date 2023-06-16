@@ -12,7 +12,7 @@ class OrganizationMember extends Model
     use SoftDeletes;
 
     protected $table = 'organization_members';
-    
+
     protected $fillable = [
         'organization_id',
         'name',

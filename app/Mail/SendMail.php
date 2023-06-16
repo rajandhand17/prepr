@@ -3,16 +3,15 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\User; 
 
 class SendMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
@@ -21,13 +20,13 @@ class SendMail extends Mailable
      */
     public $user;
     public $data;
-     
-    public function __construct($user,$view,$data)
+
+    public function __construct($user, $view, $data)
     {
         $this->user = $user;
-        $this->subject=$data["subject"];
-        $this->view=$view;
-        $this->data=$data;
+        $this->subject = $data['subject'];
+        $this->view = $view;
+        $this->data = $data;
     }
 
     /**
@@ -41,7 +40,6 @@ class SendMail extends Mailable
             subject: $this->subject,
         );
     }
-
 
     /**
      * Get the message content definition.

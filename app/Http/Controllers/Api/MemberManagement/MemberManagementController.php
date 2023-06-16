@@ -5,29 +5,25 @@
  *     description="Operations related to MemberManagementController"
  * )
  */
+
 namespace App\Http\Controllers\Api\MemberManagement;
 
-use App\Helpers\SendMailHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
-use Illuminate\Http\Request;
-use App\Repositories\Api\MemberManagement\MemberManagementInterface;
-use App\Repositories\Api\MemberManagement\MemberManagementRepository;
-use App\Http\Resources\MemberManagement\MemberManagementResource;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
-use App\Http\Requests\MemberManagement\UploadCsvFileMemberManagementRequest;
-use App\Models\MemberManagement;
-use App\Models\User;
-use Predis\Response\Status;
+use App\Http\Resources\MemberManagement\MemberManagementResource;
+use App\Repositories\Api\MemberManagement\MemberManagementRepository;
+use Illuminate\Http\Request;
 
 class MemberManagementController extends AppBaseController
-{   
+{
     private $memberManagementRepository;
+
     public function __construct(MemberManagementRepository $memberManagementRepository)
     {
         $this->memberManagementRepository = $memberManagementRepository;
     }
-    
+
     /**
      * @OA\Get(
      *     path="/api/v1/member-management/{component}/{slug}?language=en",
@@ -36,27 +32,29 @@ class MemberManagementController extends AppBaseController
      *     description="Get all the Member Management",
      *     security={{"bearerAuth":{}}},
      *     operationId="index",
+     *
      *     @OA\Parameter(
      *         name="language",
      *         in="path",
      *         required=true,
      *         description="language define the choosen language",
-     *        
+     *
      *     ),
      *     @OA\Parameter(
      *         name="component",
      *         in="path",
      *         required=true,
      *         description="component define type",
-     *        
+     *
      *     ),
      *     @OA\Parameter(
      *         name="slug",
      *         in="path",
      *         required=true,
      *         description="slug define the organization slug",
-     *        
+     *
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -79,25 +77,27 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */
-    public function index($component,$slug,Request $request)
-    {     
+    public function index($component, $slug, Request $request)
+    {
         try {
-            $member_mangement = $this->memberManagementRepository->index($component,$slug,$request);
-            if($member_mangement["success"]==true && isset($member_mangement["data"])){
-              return $this->sendResponse(MemberManagementResource::collection($member_mangement), __('responses.member_manager_found'));
+            $member_mangement = $this->memberManagementRepository->index($component, $slug, $request);
+            if ($member_mangement['success'] == true && isset($member_mangement['data'])) {
+                return $this->sendResponse(MemberManagementResource::collection($member_mangement), __('responses.member_manager_found'));
             }
-            return $this->sendError($member_mangement['message'],$member_mangement['code']);
-        }catch (\Exception $e){
+
+            return $this->sendError($member_mangement['message'], $member_mangement['code']);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    
-     /**
+
+    /**
      * @OA\Post(
      *     path="/api/v1/member-management/{component}/{slug}/create?language=en",
      *     tags={"Member Management API -  create"},
      *     summary="Send request for create member management",
      *     operationId="creates",
+     *
      *     @OA\Parameter(
      *         name="type",
      *         in="query",
@@ -105,7 +105,6 @@ class MemberManagementController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
-     * 
      *     @OA\Parameter(
      *         name="invite_type",
      *         in="query",
@@ -175,6 +174,7 @@ class MemberManagementController extends AppBaseController
      *         required=true,
      *         explode=true,
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -197,38 +197,41 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */
-    
-    public function creates($component,$slug,CreateMemberManagementRequest $request)
-    {  
+    public function creates($component, $slug, CreateMemberManagementRequest $request)
+    {
         try {
-            $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
-            if($member_mangement){
+            $member_mangement = $this->memberManagementRepository->create($component, $slug, $request);
+            if ($member_mangement) {
                 return $member_mangement;
             }
-            $member_mangement=$this->memberManagementRepository->create($component,$slug,$request);
-            if($member_mangement['status']===true){
+            $member_mangement = $this->memberManagementRepository->create($component, $slug, $request);
+            if ($member_mangement['status'] === true) {
                 return $this->sendResponse($member_mangement, __('responses.create_member_manger_success'));
             }
-            return $this->sendError(__('responses.create_member_manger_failed'),403);
-        }catch (\Exception $e){
+
+            return $this->sendError(__('responses.create_member_manger_failed'), 403);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
- 
-     /**
+
+    /**
      * @OA\Post(
      *     path="/api/v1/member-management/{component}/{slug}/delete?language=en",
      *     tags={"Member Management API - delete"},
      *     summary="Member management apis delete",
      *     operationId="deletes",
+     *
      *     @OA\Parameter(
      *         name="id[]",
      *         in="query",
      *         description="Member management delete id",
      *         required=true,
      *         explode=true,
+     *
      *         @OA\Schema(type="array", @OA\Items(type="integer")),
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -250,16 +253,17 @@ class MemberManagementController extends AppBaseController
      *
      *     ),
      * )
-     */   
-    public function deletes($component,$slug,DeleteMemberManagementRequest $request)
-    {   
-        try{
-            $member_mangement=$this->memberManagementRepository->delete($component,$slug,$request);
-            if($member_mangement){
+     */
+    public function deletes($component, $slug, DeleteMemberManagementRequest $request)
+    {
+        try {
+            $member_mangement = $this->memberManagementRepository->delete($component, $slug, $request);
+            if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
-               }
-               return $this->sendError(__('responses.member_manager_not_delete'),400);
-        }catch(\Exception $e){
+            }
+
+            return $this->sendError(__('responses.member_manager_not_delete'), 400);
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

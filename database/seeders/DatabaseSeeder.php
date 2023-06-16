@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             SocialConnectTableSeeder::class,
             PermissionSeeder::class,
             RolesSeeder::class,
-            AssignPermissionToRolesSeeder::class
+            AssignPermissionToRolesSeeder::class,
         ]);
     }
 }

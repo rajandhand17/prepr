@@ -1,9 +1,8 @@
 <?php
+
 namespace App\Repositories\Api\Master;
 
-
 use Illuminate\Support\ServiceProvider;
-
 
 class MasterServiceProvider extends ServiceProvider
 {
@@ -14,9 +13,7 @@ class MasterServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
-
 
     /**
      * Register the application services.

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Lab;
 
-use App\Http\Requests\Lab\CheckLabSlugRequest;
 use Tests\TestCase;
 
 /**

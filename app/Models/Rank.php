@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
 
-
 class Rank extends Model
 {
     use HasFactory;
@@ -16,7 +15,7 @@ class Rank extends Model
     use SoftDeletes;
 
     protected $table = 'ranks';
-    
+
     protected $fillable = [
         'name',
         'fr_CA_name',
@@ -26,47 +25,44 @@ class Rank extends Model
         'category',
         'point',
         'no_of_use',
-        'status'
+        'status',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-    public function getRanks($language="en",$search=null)
+    public function getRanks($language = 'en', $search = null)
     {
-        try{
-            if($language == 'en'){
-                $rank = static::select('id','name','description','image','category','point','no_of_use','status');
-            }else{
-                 //get column name based on language
-                 $column_name = LanguageColumnHelper::getLanguageColumnName($language,'name');
+        try {
+            if ($language == 'en') {
+                $rank = static::select('id', 'name', 'description', 'image', 'category', 'point', 'no_of_use', 'status');
+            } else {
+                //get column name based on language
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'name');
                 //check whether the column exist in the db or not
-                if(!$column_name || !Schema::hasColumn('ranks', $column_name)){
+                if (!$column_name || !Schema::hasColumn('ranks', $column_name)) {
                     return false;
                 }
-                $description=LanguageColumnHelper::getLanguageColumnName($language,'description');
-                
-                $rank = static::select('id', $column_name . ' as name',$description. ' as description','image','category','point','no_of_use','status');
+                $description = LanguageColumnHelper::getLanguageColumnName($language, 'description');
+
+                $rank = static::select('id', $column_name.' as name', $description.' as description', 'image', 'category', 'point', 'no_of_use', 'status');
             }
-                  //Search categories based on user input
-             if($search!=null){
-                $column_name = isset($column_name) ? $column_name : "name";
-                $rank = $rank->where($column_name,"like",'%'.$search.'%');
+            //Search categories based on user input
+            if ($search != null) {
+                $column_name = isset($column_name) ? $column_name : 'name';
+                $rank = $rank->where($column_name, 'like', '%'.$search.'%');
             }
 
-            
             //take 20 results based from the table
             $rank = $rank->take(20)->get();
 
             //check if there are any results
-            if(!$rank->isEmpty()){
+            if (!$rank->isEmpty()) {
                 return $rank;
             }
 
             return false;
-         }catch (\Exception $e){
-                return false;
-            }
+        } catch (\Exception $e) {
+            return false;
+        }
     }
-
-
 }

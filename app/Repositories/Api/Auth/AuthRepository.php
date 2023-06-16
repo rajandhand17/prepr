@@ -1,53 +1,52 @@
 <?php
+
 namespace App\Repositories\Api\Auth;
+
 use App\Models\User;
 
-class AuthRepository implements AuthInterface{
-
+class AuthRepository implements AuthInterface
+{
     private $user;
-    function __construct(User $user)
+
+    public function __construct(User $user)
     {
-        $this->user=$user;
+        $this->user = $user;
     }
 
     public function login($request)
     {
-        try{
+        try {
             return $this->user->login($request);
-         }
-         catch (\Exception $e){
-
+        } catch (\Exception $e) {
             return false;
-         }
+        }
     }
 
     public function verifyTwoFactor($request)
     {
-        try{
+        try {
             return $this->user->verifyTwoFactor($request);
-         }
-         catch (\Exception $e){
-
+        } catch (\Exception $e) {
             return false;
-         }
+        }
     }
 
     public function register($request)
     {
-        try{
+        try {
             return $this->user->register($request);
-         }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
-         }
+        }
     }
 
     public function checkUsername($request)
     {
-      try{
+        try {
             return $this->user->checkUsername($request);
-         }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
-         }
+        }
     }
 
     public function checkEmail($request)
@@ -57,35 +56,33 @@ class AuthRepository implements AuthInterface{
         } catch (\Exception $e) {
             return false;
         }
-
     }
 
     public function checkPhone($request)
     {
-      try {
-        return $this->user->checkPhone($request);
-      } catch (\Exception $e){
-        return false;
-      }
+        try {
+            return $this->user->checkPhone($request);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public function sendOtp($request)
     {
         try {
             return $this->user->sendOtp($request);
-          } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
-          }
-
+        }
     }
 
     public function verifyOtp($request)
     {
         try {
             return $this->user->verifyOtp($request);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
-          }
+        }
     }
 
     public function referalCode($request)
@@ -111,10 +108,7 @@ class AuthRepository implements AuthInterface{
         try {
             return $this->user->resetPassword($request);
         } catch (\Exception $e) {
-           return false;
+            return false;
         }
     }
-
 }
-
-?>

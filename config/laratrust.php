@@ -164,13 +164,13 @@ return [
     */
     'middleware' => [
         /**
-         * Define if the laratrust middleware are registered automatically in the service provider
+         * Define if the laratrust middleware are registered automatically in the service provider.
          */
         'register' => true,
 
         /**
          * Method to be called in the middleware return case.
-         * Available: abort|redirect
+         * Available: abort|redirect.
          */
         'handling' => 'abort',
 
@@ -180,11 +180,11 @@ return [
          */
         'handlers' => [
             /**
-             * Aborts the execution with a 403 code and allows you to provide the response text
+             * Aborts the execution with a 403 code and allows you to provide the response text.
              */
             'abort' => [
-                'code' => 403,
-                'message' => 'User does not have any of the necessary access rights.'
+                'code'    => 403,
+                'message' => 'User does not have any of the necessary access rights.',
             ],
 
             /**
@@ -194,13 +194,13 @@ return [
              * If the message content is empty it won't be added to the redirection.
              */
             'redirect' => [
-                'url' => '/home',
+                'url'     => '/home',
                 'message' => [
-                    'key' => 'error',
-                    'content' => ''
-                ]
-            ]
-        ]
+                    'key'     => 'error',
+                    'content' => '',
+                ],
+            ],
+        ],
     ],
 
     'teams' => [
@@ -340,5 +340,5 @@ return [
             // The user won't be able to delete the role.
             'not_deletable' => [],
         ],
-    ]
+    ],
 ];

@@ -10,5 +10,4 @@ class Group extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
 }

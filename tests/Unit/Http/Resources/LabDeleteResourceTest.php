@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources;
 
-use App\Http\Resources\LabDeleteResource;
 use Tests\TestCase;
 
 /**

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\Skill;
+use DB;
+use Illuminate\Console\Command;
 
 class Skills extends Command
 {
@@ -40,33 +40,32 @@ class Skills extends Command
     public function handle()
     {
         try {
-
             $this->info('Migrating old data for skills table.');
             DB::beginTransaction();
 
             $skills = DB::connection('mysql2')->table('skills')->get();
-            if($skills->count() > 0){
-
-                foreach ($skills as $key => $single_skill){
-                   $skills_details=[
-                        'name' => $single_skill->skill,
+            if ($skills->count() > 0) {
+                foreach ($skills as $key => $single_skill) {
+                    $skills_details = [
+                        'name'       => $single_skill->skill,
                         'fr_CA_name' => $single_skill->fr_CA_skill,
                     ];
                     $check_skills = Skill::where($skills_details)->first();
-                    if(!$check_skills){
+                    if (!$check_skills) {
                         Skill::create($skills_details);
                     }
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skills table completed.');
+
                 return;
             }
             DB::rollback();
             $this->error('No skill found.');
-
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

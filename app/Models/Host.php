@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Host extends Model
 {
-    use HasFactory; 
+    use HasFactory;
     use SoftDeletes;
 
     protected $table = 'hosts';
@@ -22,22 +22,21 @@ class Host extends Model
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-
-    public function getHosts($language="en",$search=null)
-    {    
-      try { 
-             $host=static::select("id","name","link","image","status");
-             if($search!=null){
-                $host=$host->where("name","like",'%'.$search.'%');
-             }
-             $host=$host->take(20)->get();
+    public function getHosts($language = 'en', $search = null)
+    {
+        try {
+            $host = static::select('id', 'name', 'link', 'image', 'status');
+            if ($search != null) {
+                $host = $host->where('name', 'like', '%'.$search.'%');
+            }
+            $host = $host->take(20)->get();
             //  return $host;
-            if(!$host->isEmpty()){
+            if (!$host->isEmpty()) {
                 return $host;
             }
 
             return false;
-        } catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

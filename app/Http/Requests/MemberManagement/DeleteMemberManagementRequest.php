@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests\MemberManagement;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
-use App\Models\MemberManagement as MemberManagements;
-use Illuminate\Validation\Rule;
+
 class DeleteMemberManagementRequest extends FormRequest
 {
     /**
@@ -27,7 +26,7 @@ class DeleteMemberManagementRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' =>'required|array|exists:member_management,id'
+            'id' => 'required|array|exists:member_management,id',
         ];
     }
 
@@ -36,16 +35,16 @@ class DeleteMemberManagementRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
-    public function messages() 
+    public function messages()
     {
         return[
-            'id.required'=>__('responses.member_manager_id_required'),
-            'id.array'=>__('responses.member_manager_array'),
-            'id.exists'=>__('responses.member_manager_not_exists'),
+            'id.required'=> __('responses.member_manager_id_required'),
+            'id.array'   => __('responses.member_manager_array'),
+            'id.exists'  => __('responses.member_manager_not_exists'),
         ];
     }
 }

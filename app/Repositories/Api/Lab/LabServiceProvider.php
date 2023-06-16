@@ -1,9 +1,8 @@
 <?php
+
 namespace App\Repositories\Api\Lab;
 
-
 use Illuminate\Support\ServiceProvider;
-
 
 class LabServiceProvider extends ServiceProvider
 {
@@ -14,9 +13,7 @@ class LabServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
-
 
     /**
      * Register the application services.

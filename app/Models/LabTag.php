@@ -11,7 +11,7 @@ class LabTag extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="lab_tag";
+    protected $table = 'lab_tag';
 
     protected $fillable = [
         'user_id',
