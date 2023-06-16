@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Organization;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class UpdateOrganizationRequest extends FormRequest
 {
@@ -26,11 +26,11 @@ class UpdateOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'max:255|unique:organizations,name',
-            'description'=>'string',
-       //     'profile_image'=>'image',
-           // 'cover_image'=>'image',
-            'category'=>'exists:categories,id'
+            'name'       => 'max:255|unique:organizations,name',
+            'description'=> 'string',
+            //     'profile_image'=>'image',
+            // 'cover_image'=>'image',
+            'category'=> 'exists:categories,id',
         ];
     }
 
@@ -39,19 +39,19 @@ class UpdateOrganizationRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()
     {
         return[
-            'name.unique'=>__('responses.organization_name_unique'), 
-            'name.max'=>__('responses.organization_name_max'),
-            'profile_image.image'=>__('responses.cover_image'),
-            'cover_image.image'=>__('responses.profile_image'),
-            'category.exists'=>__('responses.organization_category_exists'),
-            
+            'name.unique'        => __('responses.organization_name_unique'),
+            'name.max'           => __('responses.organization_name_max'),
+            'profile_image.image'=> __('responses.cover_image'),
+            'cover_image.image'  => __('responses.profile_image'),
+            'category.exists'    => __('responses.organization_category_exists'),
+
         ];
     }
 }

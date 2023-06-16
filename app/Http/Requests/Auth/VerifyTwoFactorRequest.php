@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class VerifyTwoFactorRequest extends FormRequest
 {
@@ -27,7 +27,7 @@ class VerifyTwoFactorRequest extends FormRequest
     {
         return [
             'email' => 'required|email|max:50|exists:users,email',
-            "otp"=>"required"
+            'otp'   => 'required',
         ];
     }
 
@@ -36,20 +36,18 @@ class VerifyTwoFactorRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
-
 
     public function messages()
     {
         return [
             'email.required' => __('notification.notification_peeief'),
-            'email.exists'=>__('responses.not_exists_email'), 
-            'email.email'=>__('notification.notification_iea'),
-            'email.max'=>__('responses.max_email'),
-            'otp.required'=>__("responses.otp_required"),
+            'email.exists'   => __('responses.not_exists_email'),
+            'email.email'    => __('notification.notification_iea'),
+            'email.max'      => __('responses.max_email'),
+            'otp.required'   => __('responses.otp_required'),
         ];
     }
-
 }

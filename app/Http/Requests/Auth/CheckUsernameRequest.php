@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class CheckUsernameRequest extends FormRequest
 {
@@ -35,18 +35,17 @@ class CheckUsernameRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
-    
     public function messages()
     {
         return [
-            'username.max'=>__("responses.username_max"),
-            'username.required'=>__("responses.username_required"),
-            'username.unique'=>__("responses.username_unique"),
-            'username.regex'=>__("notification.notification_reg_unc"),
+            'username.max'     => __('responses.username_max'),
+            'username.required'=> __('responses.username_required'),
+            'username.unique'  => __('responses.username_unique'),
+            'username.regex'   => __('notification.notification_reg_unc'),
         ];
     }
 }

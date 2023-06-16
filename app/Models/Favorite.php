@@ -10,15 +10,15 @@ class Favorite extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
-    protected $table="favorite";
 
-    protected $fillable=[
-        "user_id",
-        "ref_id",
-        "ref_type",
-        "favorite",
-        "like_it",
-        "is_follow",
+    protected $table = 'favorite';
+
+    protected $fillable = [
+        'user_id',
+        'ref_id',
+        'ref_type',
+        'favorite',
+        'like_it',
+        'is_follow',
     ];
 }

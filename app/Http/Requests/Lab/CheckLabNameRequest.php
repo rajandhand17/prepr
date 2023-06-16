@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Lab;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CheckLabNameRequest extends FormRequest
@@ -35,16 +35,15 @@ class CheckLabNameRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
-    
     public function messages()
     {
         return [
-            'name.required'=>__("responses.lab_name_required"),
-            'name.unique'=>__("responses.lab_name_exists"),
+            'name.required'=> __('responses.lab_name_required'),
+            'name.unique'  => __('responses.lab_name_exists'),
         ];
     }
 }

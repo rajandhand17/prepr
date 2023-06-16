@@ -171,6 +171,7 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/industries');
         $this->assertEquals(400, $response->getStatusCode());
     }
+
     /**ProjectIndustries positive test cases with search */
     public function test_get_project_industries_with_search_positive(): void
     {
@@ -191,6 +192,7 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/industries?language=en&search=null');
         $this->assertEquals(404, $response->getStatusCode());
     }
+
     /**ProjectTypes positive test cases */
     public function test_get_project_types_poisitive(): void
     {
@@ -204,12 +206,14 @@ final class MasterControllerTest extends TestCase
             $this->fail();
         }
     }
+
     /**ProjectTypes negative test cases */
     public function test_get_project_types_negative(): void
     {
         $response = $this->get('/api/v1/master/types');
         $this->assertEquals(400, $response->getStatusCode());
     }
+
     /**ProjectTypes Positive test cases with search */
     public function test_get_project_types_with_search_poisitive(): void
     {
@@ -223,6 +227,7 @@ final class MasterControllerTest extends TestCase
             $this->fail();
         }
     }
+
     /**ProjectTypes negative test cases with search */
     public function test_get_project_types_with_search_negative(): void
     {
@@ -322,14 +327,12 @@ final class MasterControllerTest extends TestCase
         }
     }
 
-
     /**ProjectStatus negative test cases*/
     public function test_get_project_status_negative(): void
     {
         $response = $this->get('/api/v1/master/status');
         $this->assertEquals(400, $response->getStatusCode());
     }
-
 
     /**ProjectStatus positive test cases with search*/
     public function test_get_project_status_with_search_positive(): void
@@ -345,14 +348,12 @@ final class MasterControllerTest extends TestCase
         }
     }
 
-
     /**ProjectStatus negative test cases with search*/
     public function test_get_project_status_with_search_negative(): void
     {
         $response = $this->get('/api/v1/master/status?language=en&search=Null');
         $this->assertEquals(404, $response->getStatusCode());
     }
-
 
     /**SocialLinks positive test cases */
     public function test_get_social_links_positive(): void
@@ -375,7 +376,6 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/links');
         $this->assertEquals(400, $response->getStatusCode());
     }
-
 
     /**SocialLinks positive test cases with search*/
     public function test_get_social_links_with_search_positive(): void
@@ -405,13 +405,13 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/skill-groups?language=en');
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
-        if ($data['success']){
+        if ($data['success']) {
             $this->assertArrayHasKey('id', $data['data'][0]);
             $this->assertArrayHasKey('title', $data['data'][0]);
             $this->assertArrayHasKey('skill_stacks', $data['data'][0]);
             $this->assertArrayHasKey('skills', $data['data'][0]);
             $this->assertArrayHasKey('description', $data['data'][0]);
-        }else {
+        } else {
             $this->fail();
         }
     }
@@ -601,12 +601,14 @@ final class MasterControllerTest extends TestCase
             $this->fail();
         }
     }
+
     /**Hosts negative test cases */
     public function test_get_hosts_negative(): void
     {
         $response = $this->get('/api/v1/master/host');
         $this->assertEquals(400, $response->getStatusCode());
     }
+
     /**Host positive test case with search */
     public function test_get_hosts_with_search_positive(): void
     {
@@ -630,6 +632,7 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/host?language=en&search=null');
         $this->assertEquals(404, $response->getStatusCode());
     }
+
     /**FlexibleDateDuration positive test case */
     public function test_get_flexible_date_durations_positive(): void
     {
@@ -706,6 +709,7 @@ final class MasterControllerTest extends TestCase
             $this->fail();
         }
     }
+
     /**PitchTemplates negative test case with search*/
     public function test_get_pitch_templates_with_search_negative(): void
     {
@@ -769,7 +773,6 @@ final class MasterControllerTest extends TestCase
         }
     }
 
-    
     /**SocialConnect negative test case */
     public function test_social_connect_nagtive(): void
     {

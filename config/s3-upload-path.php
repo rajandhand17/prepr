@@ -1,6 +1,6 @@
 <?php
+
 return [
-    "organization" => "organizations/upload/",
-    "lab"=>"uploads/labs/",    
+    'organization' => 'organizations/upload/',
+    'lab'          => 'uploads/labs/',
 ];
-?>

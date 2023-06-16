@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\ProjectType as Type;
+use DB;
+use Illuminate\Console\Command;
 
 class ProjectType extends Command
 {
@@ -40,34 +40,32 @@ class ProjectType extends Command
     public function handle()
     {
         try {
-
             $this->info('Migrating old data for project type table.');
             DB::beginTransaction();
 
             $project_type = DB::connection('mysql2')->table('project_type')->get();
-            if($project_type->count() > 0){
-
-                foreach ($project_type as $key => $single_type){
-                   $project_type_details=[
-                        'name' => $single_type->name,
+            if ($project_type->count() > 0) {
+                foreach ($project_type as $key => $single_type) {
+                    $project_type_details = [
+                        'name'       => $single_type->name,
                         'fr_CA_name' => $single_type->fr_CA_name,
                     ];
                     $check_project_type = Type::where($project_type_details)->first();
-                    if(!$check_project_type){
+                    if (!$check_project_type) {
                         Type::create($project_type_details);
                     }
-
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project type table completed.');
+
                 return;
             }
             DB::rollback();
             $this->error('No project type found.');
-
         } catch (\Exception $e) {
-          DB::rollback();
+            DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

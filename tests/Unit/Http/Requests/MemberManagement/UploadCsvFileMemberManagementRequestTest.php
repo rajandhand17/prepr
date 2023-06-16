@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\MemberManagement;
 
-use App\Http\Requests\MemberManagement\UploadCsvFileMemberManagementRequest;
 use Tests\TestCase;
 
 /**

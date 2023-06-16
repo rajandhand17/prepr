@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Lab;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LabJoinRequest extends FormRequest
@@ -26,25 +26,24 @@ class LabJoinRequest extends FormRequest
     public function rules()
     {
         return [
-           "lab_id"=>"required|exists:Labs,id",
+            'lab_id'=> 'required|exists:Labs,id',
         ];
     }
 
-    
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()
     {
         return [
-            'lab_id.required'=>__("responses.lab_id_required"),
-            'lab_id.exists'=>__("responses.lab_id_not_exists"),
+            'lab_id.required'=> __('responses.lab_id_required'),
+            'lab_id.exists'  => __('responses.lab_id_not_exists'),
         ];
     }
 }

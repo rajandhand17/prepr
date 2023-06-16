@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\Category as Categories;
+use DB;
+use Illuminate\Console\Command;
 
 class Category extends Command
 {
@@ -40,35 +40,35 @@ class Category extends Command
     public function handle()
     {
         try {
-
             $this->info('Migrating old data for categories table.');
             DB::beginTransaction();
 
             $categories = DB::connection('mysql2')->table('categories')->get();
 
-            if($categories->count() > 0){
-                foreach ($categories as $key => $single_category){
-                    $category_details=[
-                        'name' => $single_category->name,
+            if ($categories->count() > 0) {
+                foreach ($categories as $key => $single_category) {
+                    $category_details = [
+                        'name'       => $single_category->name,
                         'fr_CA_name' => $single_category->fr_CA_name,
                         'components' => $single_category->components,
-                        'parent_id' => $single_category->parent_id
+                        'parent_id'  => $single_category->parent_id,
                     ];
                     $check_category = Categories::where($category_details)->first();
-                    if(!$check_category){
+                    if (!$check_category) {
                         Categories::create($category_details);
                     }
                 }
                 DB::commit();
                 $this->info('Migrating of old data for categories table completed.');
+
                 return;
             }
             DB::rollback();
             $this->error('No categories found.');
-
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

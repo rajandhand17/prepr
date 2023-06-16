@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Master;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class SmsRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class SmsRequest extends FormRequest
     public function rules()
     {
         return [
-            "receiver"=> 'required|numeric|unique:users'
+            'receiver'=> 'required|numeric|unique:users',
         ];
     }
 
@@ -35,16 +35,16 @@ class SmsRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],403));
+            'data'      => $validator->errors(),
+        ], 403));
     }
 
     public function messages()
     {
         return[
-            'receiver.required' =>__("responses.receiver_unique"),
-            'receiver.numeric'=>__("responses.numeric"),
-            'receiver.unique'=>__("responses.receiver_unique"),
+            'receiver.required' => __('responses.receiver_unique'),
+            'receiver.numeric'  => __('responses.numeric'),
+            'receiver.unique'   => __('responses.receiver_unique'),
         ];
     }
 }

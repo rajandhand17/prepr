@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Organization;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class DeleteOrganizationRequest extends FormRequest
 {
@@ -26,8 +26,8 @@ class DeleteOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'slug'=>'required|exists:organizations,slug',
-            
+            'slug'=> 'required|exists:organizations,slug',
+
         ];
     }
 
@@ -36,16 +36,16 @@ class DeleteOrganizationRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()
     {
         return[
-            'slug.required'=>__('responses.organization_slug_required'),
-            'slug.exists'=>__('responses.organization_slug_not_exists'),
-            
+            'slug.required'=> __('responses.organization_slug_required'),
+            'slug.exists'  => __('responses.organization_slug_not_exists'),
+
         ];
     }
 }

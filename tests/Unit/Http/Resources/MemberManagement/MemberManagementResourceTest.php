@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\MemberManagement;
 
-use App\Http\Resources\MemberManagement\MemberManagementResource;
 use Tests\TestCase;
 
 /**

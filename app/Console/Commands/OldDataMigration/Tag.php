@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\Tag as Tags;
+use DB;
+use Illuminate\Console\Command;
 
 class Tag extends Command
 {
@@ -44,32 +44,31 @@ class Tag extends Command
             DB::beginTransaction();
 
             $tags = DB::connection('mysql2')->table('tags')->get();
-            if($tags->count() > 0){
-
-                foreach ($tags as $key => $single_tags){
-                   $tags_details=[
-                        'name' => $single_tags->tag,
-                        'fr_CA_name' => $single_tags->fr_CA_tag,
-                        'tag_image'=>$single_tags->tag_image,
-                        'fr_CA_tag_image'=>$single_tags->fr_CA_tag_image,
-                        'components'=>$single_tags->category,
+            if ($tags->count() > 0) {
+                foreach ($tags as $key => $single_tags) {
+                    $tags_details = [
+                        'name'           => $single_tags->tag,
+                        'fr_CA_name'     => $single_tags->fr_CA_tag,
+                        'tag_image'      => $single_tags->tag_image,
+                        'fr_CA_tag_image'=> $single_tags->fr_CA_tag_image,
+                        'components'     => $single_tags->category,
                     ];
                     $check_tags = Tags::where($tags_details)->first();
-                    if(!$check_tags){
+                    if (!$check_tags) {
                         Tags::create($tags_details);
                     }
-
                 }
                 DB::commit();
                 $this->info('Migrating of old data for tags table completed.');
+
                 return;
             }
             DB::rollback();
             $this->error('No tag found.');
-
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
