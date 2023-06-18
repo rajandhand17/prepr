@@ -10,7 +10,7 @@ use App\Repositories\Api\Organization\OrganizationRepository;
 use App\Services\OrganizationAddressService;
 use App\Services\OrganizationService;
 use Illuminate\Http\Request;
-
+use DB;
 class OrganizationController extends AppBaseController
 {
     private $organizationRepository;
@@ -250,20 +250,19 @@ class OrganizationController extends AppBaseController
      * )
      */
     public function create(CreateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organ)
-    {
+    {   
         try {
             $profile_image_path = null;
             $cover_image_path = null;
+            // $checkOrganization = $organizationService->checkOrganizationExist($request);
+            // if ($checkOrganization) {
+            //     return $this->sendError(__('responses.organization_name_unique'), 422);
+            // }
 
-            $checkOrganization = $organizationService->checkOrganizationExist($request);
-            if ($checkOrganization) {
-                return $this->sendError(__('responses.organization_name_unique'), 422);
-            }
-
-            $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($request);
-            if ($checkOrganizationInTrash) {
-                return $this->sendError(__('responses.trashed_records'), 422);
-            }
+            // $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($request);
+            // if ($checkOrganizationInTrash) {
+            //     return $this->sendError(__('responses.trashed_records'), 422);
+            // }
 
             if ($request->profile_image !== null) {
                 $upload_profile_image = $organizationService->uploadOrganizationCoverImage($request);
@@ -280,15 +279,18 @@ class OrganizationController extends AppBaseController
                 }
                 $cover_image_path = $upload_cover_image;
             }
-
             $organization = $organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
-
-            if ($organization) {
-                return $this->sendResponse($organization['data'], $organization['message']);
+            dd($organization);
+            if ($organization){
+               $planSubscription= $organizationService->subscribePlan($organization);
+              // $organization = $organizationService->organizationMemeber($request,$organization->id);
+              
+               return $this->sendResponse($organization['data'], $organization['message']);
             } else {
                 return $this->sendError($organization['message'], 422);
             }
         } catch (\Exception $e) {
+            return $e;
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
