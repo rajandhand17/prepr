@@ -252,17 +252,18 @@ class OrganizationController extends AppBaseController
     public function create(CreateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organ)
     {   
         try {
+            
             $profile_image_path = null;
             $cover_image_path = null;
-            // $checkOrganization = $organizationService->checkOrganizationExist($request);
-            // if ($checkOrganization) {
-            //     return $this->sendError(__('responses.organization_name_unique'), 422);
-            // }
+            $checkOrganization = $organizationService->checkOrganizationExist($request);
+            if (!$checkOrganization) {
+                return $this->sendError(__('responses.organization_name_unique'), 422);
+            }
 
-            // $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($request);
-            // if ($checkOrganizationInTrash) {
-            //     return $this->sendError(__('responses.trashed_records'), 422);
-            // }
+            $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($request);
+            if (!$checkOrganizationInTrash) {
+                return $this->sendError(__('responses.trashed_records'), 422);
+            }
 
             if ($request->profile_image !== null) {
                 $upload_profile_image = $organizationService->uploadOrganizationCoverImage($request);
@@ -280,12 +281,12 @@ class OrganizationController extends AppBaseController
                 $cover_image_path = $upload_cover_image;
             }
             $organization = $organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
-            dd($organization);
+            
             if ($organization){
                $planSubscription= $organizationService->subscribePlan($organization);
-              // $organization = $organizationService->organizationMemeber($request,$organization->id);
-              
-               return $this->sendResponse($organization['data'], $organization['message']);
+              $organization = $organizationService->organizationMemeber($request->people,$organization['id']);
+              $response=['success' => true,"data"=>$organization, 'message' => __('responses.create_organization')];
+               return $this->sendResponse($response['data'], $response['message']);
             } else {
                 return $this->sendError($organization['message'], 422);
             }

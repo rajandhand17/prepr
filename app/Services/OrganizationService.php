@@ -84,7 +84,7 @@ class OrganizationService
         $organization->total_employees = $request->total_employees;
         if($organization->save()){
             DB::commit();
-        $response= ['success' => true,"data"=>$organization, 'message' => __('responses.create_organization')];
+        $response=$organization; 
         return $response;
         }else{
         return false;
@@ -110,8 +110,9 @@ class OrganizationService
         }
     }
 
-    public function organizationMemeber($add_members,$organization_id){
-        try{
+    public function organizationMemeber($people,$organization_id){
+        try{ 
+            $add_members=json_decode($people);
             foreach ($add_members as $key => $value) {
                 $people=new OrganizationMember;
                 $people->name=$value->name;
