@@ -29,14 +29,14 @@ class CreateOrganizationRequest extends FormRequest
             'user_id'      => 'required',
             'name'         => 'required|max:255',
             'description'  => 'required',
-          //  'profile_image'=> 'image',
-          //  'cover_image'  => 'image',
+            //  'profile_image'=> 'image',
+            //  'cover_image'  => 'image',
             'category'     => 'required|exists:categories,id',
-        //    'address'      => 'required',
-        //    'city'         => 'required',
-        //    'state'        => 'required',
-        //    'country'      => 'required',
-        //    'zip_code'     => 'required',
+            //    'address'      => 'required',
+            //    'city'         => 'required',
+            //    'state'        => 'required',
+            //    'country'      => 'required',
+            //    'zip_code'     => 'required',
         ];
     }
 
