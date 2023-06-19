@@ -15,4 +15,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+  
 });
+
+// Route::get('/subscribe-plan', function(){
+//     $details['cust_id'] = '1';
+//     $details['organization_id'] = '1';
+//     $details['plan'] ='free-plan-CAD-Yearly';
+//     dispatch(new App\Jobs\subscribePlanJob($details));
+//     dd('done');
+// });

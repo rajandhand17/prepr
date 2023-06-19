@@ -8,19 +8,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
-class addOrganizationAddresses implements ShouldQueue
+use App\Helpers\PlanSubscriptionHelper;
+class subscribePlanJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $organization;
+    protected $details;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($organization)
+    public function __construct($details)
     {
-        $this->organization=$organization;
+        $this->details = $details;
+
     }
 
     /**
@@ -30,6 +31,6 @@ class addOrganizationAddresses implements ShouldQueue
      */
     public function handle()
     {
-        //
+        $planSubscribed  = PlanSubscriptionHelper::subscribePlan($this->details['cust_id'],$this->details['plan'], $this->details['organization_id']);
     }
 }
