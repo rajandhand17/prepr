@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\OrganizationAddress;
 use Illuminate\Http\Request;
-
+use DB;
 class OrganizationAddressService
 {
     public function createOrganizationAddress(Request $request, $profile_image_path, $cover_image_path)
@@ -20,17 +20,11 @@ class OrganizationAddressService
             $organization_address->country = $request->country;
             $organization_address->zip_code = $request->zip_code;
             if ($organization_address->save()) {
-                DB::commit();
-
                 return true;
             }
-            DB::rollback();
-
             return false;
         } catch (\Exception $e) {
-            DB::rollback();
-
-            return false;
+           return false;
         }
     }
 }

@@ -65,7 +65,7 @@ class OrganizationService
     public function createOrganization(Request $request, $profile_image_path, $cover_image_path)
     {  
         try {
-        DB::beginTransaction();
+        //DB::beginTransaction();
         $model = new Organization();
         $organization = new Organization();
         $organization->language = ($request->has('language')) ? $request->language : 'en';
@@ -83,15 +83,18 @@ class OrganizationService
         }
         $organization->total_employees = $request->total_employees;
         if($organization->save()){
-            DB::commit();
+         //   DB::commit();
         $response=$organization; 
         return $response;
         }else{
-        return false;
+            //::rollback();
+            $response= ['success' => false, 'message' => __('responses.create_organization_failed')];
+            return $response;
         }
         } catch (\Exception $e) {
-            return $e;
-        return false;
+           // DB::rollback();
+            $response= ['success' => false, 'message' => __('responses.send_error')];
+            return $response;
         }
     }
 
