@@ -468,7 +468,6 @@ class OrganizationController extends AppBaseController
                 }
                 $profile_images_path = $profile_image_path;
             }
-        
         $cover_images_path=null;
         if($request->cover_image!==null){
             $cover_images_path=$organizationService->updateOrganizationCoverImage($request);
