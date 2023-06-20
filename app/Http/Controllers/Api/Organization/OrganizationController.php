@@ -10,9 +10,7 @@ use App\Repositories\Api\Organization\OrganizationRepository;
 use App\Services\OrganizationAddressService;
 use App\Services\OrganizationService;
 use Illuminate\Http\Request;
-use App\Helpers\FileUploadHelper;
 use App\Services\OrganizationMemberService;
-use DB;
 use App\Jobs\subscribePlanJob;
 class OrganizationController extends AppBaseController
 {
@@ -461,9 +459,8 @@ class OrganizationController extends AppBaseController
             $exists_slug=$organizationService->existsSlug($slug);
             if(!$exists_slug){
                 $response = ['success' => false, 'message' => __('responses.organization_slug_not_exists')];
-                 return $response;
+                return $response;
             }
-           
             if ($request->profile_image !== null) {
                 $profile_image_path = $organizationService->updateOrganizationProfileImage($request);
                 if ($profile_image_path == false) {
@@ -593,30 +590,16 @@ class OrganizationController extends AppBaseController
     *     ),
     * )
     */
-   public function list(Request $request,OrganizationService $organizationService)
-   {
-       try {
-          $organization = $organizationService->list($request->language);
-           if ($organization !== false) {
-               return $this->sendResponse($organization, __('responses.organization_view_get'));
-           }
-           return $this->sendError(__('responses.organization_view_get_failed'), 400);
-       } catch (\Exception $e) {
-           return $this->sendError(__('responses.send_error'), 500);
-       }
-   }
-
-   public function organizationMemberView(Request $request)
-   {
-       try {
-           $organization = $this->organizationRepository->organizationMemberView($request->id, $request->language);
-           if ($organization !== false) {
-               return $this->sendResponse($organization, __('responses.organization_view_get'));
-           }
-
-           return $this->sendError(__('responses.organization_view_get_failed'), 400);
-       } catch (\Exception $e) {
-           return $this->sendError(__('responses.send_error'), 500);
-       }
-   }
+    public function list(Request $request,OrganizationService $organizationService)
+    {
+        try{
+            $organization = $organizationService->list($request->language);
+            if($organization !== false) {
+                return $this->sendResponse($organization, __('responses.organization_view_get'));
+            }
+            return $this->sendError(__('responses.organization_view_get_failed'), 400);
+        }catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

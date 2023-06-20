@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
-use App\Helpers\PlanSubscriptionHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use DB;
@@ -90,13 +89,13 @@ class OrganizationService
     
     public function existsSlug($slug){
         try {
-           $slug=Organization::where("slug",$slug)->first();
-           if($slug){
-             return true;
-           }
-           return false;
+            $slug=Organization::where("slug",$slug)->first();
+            if($slug){
+            return true;
+            }
+            return false;
         } catch (\Exception $e) {
-           return false;
+        return false;
         }
     }
     public function createOrganization($request, $profile_image_path, $cover_image_path)
@@ -125,7 +124,7 @@ class OrganizationService
         return $response;
         }else{
             DB::rollback();
-           return false;
+            return false;
         }
         } catch (\Exception $e) {
             DB::rollback();
@@ -157,7 +156,7 @@ class OrganizationService
             }
             return 'not_exists';
         }catch (\Exception $e){
-         return false;
+        return false;
         }
     }
 
@@ -194,7 +193,7 @@ class OrganizationService
     }
     public function updateOrganization($request,$cover_images_path,$profile_images_path,$slug){
         try{
-           $organization=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$slug)->first();
+            $organization=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$slug)->first();
             if($organization!==null){
             $organization->language=($request->has('language')) ?$request->language : $organization->language;
             $organization->name=($request->has('name')) ?$request->name : $organization->name;
@@ -211,8 +210,8 @@ class OrganizationService
             if($organization){
                 $request->organization_id=$organization->id;
                     return $organization;
-                } else {
-                   return false;
+                }else{
+                return false;
                 }
             }
             return false;
