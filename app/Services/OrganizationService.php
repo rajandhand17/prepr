@@ -60,6 +60,18 @@ class OrganizationService
             return false;
         }
     }
+    
+    public function existsSlug($slug){
+        try {
+           $slug=Organization::where("slug",$slug)->first();
+           if($slug){
+             return true;
+           }
+           return false;
+        } catch (\Exception $e) {
+           return false;
+        }
+    }
     public function createOrganization($request, $profile_image_path, $cover_image_path)
     {
         try {
@@ -93,7 +105,66 @@ class OrganizationService
             return false;
         }
     }
+    
+    public function view($search = null, $language = 'en'){
+        try {
+            $organization_list = Organization::with('categoryDetail')->with('organizationAddress')->with('organizationMembers');
+            if($search != null) {
+                $organization_list = $organization_list->where('slug', $search);
+            }
+            $organization_list = $organization_list->get();
+            if(!$organization_list->isEmpty()) {
+                $organization_list->transform(function ($item) {
+                    if ($item['status'] == 0) {
+                        $item['status'] = 'draft';
+                    }
+                    if ($item['status'] == 1) {
+                        $item['status'] = 'published';
+                    }
+                    if ($item['status'] == 2) {
+                        $item['status'] = 'deactivated';
+                    }
+                    return $item;
+                });
+                return $organization_list;
+            }
+            return 'not_exists';
+        }catch (\Exception $e){
+         return false;
+        }
+    }
 
+    public function list($language = 'en'){
+        try {
+            $organization_list = Organization::select('id', 'language', 'name', 'slug', 'description', 'cover_image', 'profile_image', 'website', 'about', 'category', 'status', 'is_verified', 'total_employees');
+            $organization_list = $organization_list->get();
+            if (!$organization_list->isEmpty()) {
+                return $organization_list;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function delete($slug = null, $language = 'en')
+    {
+        try {
+            $exists = Organization::select('id')->where('slug', $slug)->first();
+            if ($exists !== null) {
+                $organization = Organization::where('slug', $slug)->delete();
+                if ($organization) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return 'not_exists';
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
     public function updateOrganization($request,$cover_images_path,$profile_images_path,$slug){
         try{
            $organization=Organization::select('id','language','name','slug','description','cover_image','profile_image', 'website' ,'about', 'category', 'status', 'is_verified','total_employees')->where("slug",$slug)->first();
@@ -114,20 +185,12 @@ class OrganizationService
                 $request->organization_id=$organization->id;
                     return $organization;
                 } else {
-                    $response = ['success' => false, 'message' => __('responses.updated_organization_failed')];
-
-                    return $response;
+                   return false;
                 }
             }
-
-            $response = ['success' => false, 'message' => __('responses.organization_not_exists')];
-
-            return $response;
+            return false;
         } catch (\Exception $e) {
-            return $e;
-            $response = ['success' => false, 'message' => __('responses.send_error')];
-
-            return $response;
+            return false;
         }
     }
 }

@@ -28,8 +28,6 @@ class UpdateOrganizationRequest extends FormRequest
         return [
             'name'       => 'max:255|unique:organizations,name',
             'description'=> 'string',
-            //     'profile_image'=>'image',
-            // 'cover_image'=>'image',
             'category'=> 'exists:categories,id',
         ];
     }

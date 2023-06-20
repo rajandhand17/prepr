@@ -69,20 +69,16 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function view($slug, Request $request)
+    public function view(Request $request,OrganizationService $organizationService,$slug)
     {
         try {
-            $organization = $this->organizationRepository->view($slug, $request->language);
-
-            return $organization;
-
+            $organization = $organizationService->view($slug, $request->language);
             if ($organization === 'not_exists') {
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
             if ($organization) {
                 return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
             }
-
             return $this->sendError(__('responses.found_not_organizations_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -462,6 +458,11 @@ class OrganizationController extends AppBaseController
     {
         try {
             $profile_images_path = null;
+            $exists_slug=$organizationService->existsSlug($slug);
+            if(!$exists_slug){
+                $response = ['success' => false, 'message' => __('responses.organization_slug_not_exists')];
+                   return $response;
+            }
             if ($request->profile_image !== null) {
                 $profile_images_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
                 if ($profile_images_path == false) {
@@ -532,10 +533,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function delete($slug, Request $request)
+    public function delete($slug, Request $request,OrganizationService $organizationService)
     {
         try {
-            $organization = $this->organizationRepository->delete($slug, $request->language);
+            $organization=$organizationService->delete($slug, $request->language);
             if ($organization === 'not_exists') {
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
@@ -592,14 +593,13 @@ class OrganizationController extends AppBaseController
     *     ),
     * )
     */
-   public function list(Request $request)
+   public function list(Request $request,OrganizationService $organizationService)
    {
        try {
-           $organization = $this->organizationRepository->list($request->language);
+          $organization = $organizationService->list($request->language);
            if ($organization !== false) {
                return $this->sendResponse($organization, __('responses.organization_view_get'));
            }
-
            return $this->sendError(__('responses.organization_view_get_failed'), 400);
        } catch (\Exception $e) {
            return $this->sendError(__('responses.send_error'), 500);
