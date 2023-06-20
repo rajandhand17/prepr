@@ -3,12 +3,8 @@
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
-use App\Helpers\PlanSubscriptionHelper;
-use App\Helpers\UtilityHelper;
-use App\Models\Organization;
-use Illuminate\Http\Request;
-use DB;
 use App\Models\OrganizationMember;
+use DB;
 class OrganizationMemberService
 {
     public function organizationAddMemeber($request,$organization_id){
@@ -29,10 +25,10 @@ class OrganizationMemberService
             }
             DB::commit();
             return true;
-        }else{
-            return false;
-        }
-        } catch (\Exception $e) {
+            }else{
+                return false;
+            }
+        }catch (\Exception $e) {
             DB::rollback();
             return false;
         }

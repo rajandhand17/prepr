@@ -51,13 +51,14 @@ class LabController extends AppBaseController
 
     public function create(Request $request)
     {
-        try{
+        try {
             $create = $this->labRepository->create($request);
             if ($create) {
                 return $create;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

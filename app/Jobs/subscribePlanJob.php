@@ -2,17 +2,21 @@
 
 namespace App\Jobs;
 
+use App\Helpers\PlanSubscriptionHelper;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Helpers\PlanSubscriptionHelper;
+
 class subscribePlanJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
     protected $details;
+
     /**
      * Create a new job instance.
      *
@@ -21,7 +25,6 @@ class subscribePlanJob implements ShouldQueue
     public function __construct($details)
     {
         $this->details = $details;
-
     }
 
     /**
@@ -31,6 +34,6 @@ class subscribePlanJob implements ShouldQueue
      */
     public function handle()
     {
-        $planSubscribed  = PlanSubscriptionHelper::subscribePlan($this->details['cust_id'],$this->details['plan'], $this->details['organization_id']);
+        $planSubscribed = PlanSubscriptionHelper::subscribePlan($this->details['cust_id'], $this->details['plan'], $this->details['organization_id']);
     }
 }

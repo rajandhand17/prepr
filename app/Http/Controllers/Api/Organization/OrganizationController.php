@@ -264,11 +264,13 @@ class OrganizationController extends AppBaseController
             $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($request);
             if (!$checkOrganizationInTrash) {
                 return $this->sendError(__('responses.trashed_records'), 422);
-            }
+            } 
+
             if ($request->profile_image !== null) {
                 $upload_profile_image = $organizationService->uploadOrganizationProfileImage($request);
+               
                 if ($upload_profile_image == false) {
-                    return $this->sendError(__('responses.fail_organization_image_upload'), 500);
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
                 }
                 $profile_image_path = $upload_profile_image;
             }
@@ -456,17 +458,19 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function update($slug, UpdateOrganizationRequest $request,OrganizationService $organizationService, OrganizationAddressService $organizationaddresss)
+    public function update($slug, UpdateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organizationaddresss)
     {
-        try { 
-            $profile_images_path=null;
-        if($request->profile_image!==null){
-            $profile_images_path=FileUploadHelper::uploadbase64ImageToS3($request->profile_image,"organization");
-            if($profile_images_path==false){
-                $response= ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
-                return $response;
+        try {
+            $profile_images_path = null;
+            if ($request->profile_image !== null) {
+                $profile_images_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
+                if ($profile_images_path == false) {
+                    $response = ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
+
+                    return $response;
+                }
             }
-        }
+        
         $cover_images_path=null;
         if($request->cover_image!==null){
             $cover_images_path=FileUploadHelper::uploadbase64ImageToS3($request->cover_image,"organization");

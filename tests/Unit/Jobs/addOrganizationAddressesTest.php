@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Jobs;
 
-use App\Jobs\addOrganizationAddresses;
 use Tests\TestCase;
 
 /**

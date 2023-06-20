@@ -10,20 +10,19 @@ use DB;
 class OrganizationService
 {
     public function checkOrganizationExist($request)
-    { 
+    {
         try {
         $organization_exists = Organization::select('id')->where('name', $request->name)->withTrashed()->first();
         if ($organization_exists == null) {
             return true;
         }
-        return false;
     } catch (\Exception $e) {
         return false;
     }
     }
 
     public function checkOrganizationExistInTrash($request)
-    {  
+    {
         try {
         $organization_trashed_exists = Organization::select('id')->where('name', $request->name)->onlyTrashed()->first();
         if ($organization_trashed_exists == null) {
@@ -31,37 +30,38 @@ class OrganizationService
         }
         return false;
         } catch (\Exception $e) {
-           return false;
+            return false;
         }
     }
 
     public function uploadOrganizationProfileImage($request)
-    {   
+    {
         try {
-            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
+            $profile_image_path = FileUploadHelper::uploadImageToS3($request->profile_image, 'organization');
             if ($profile_image_path == false) {
                 return false;
             }
-            return $profile_image_path;   
-        }catch (\Exception $e){
+
+            return $profile_image_path;
+        } catch (\Exception $e) {
             return false;
         }
     }
 
     public function uploadOrganizationCoverImage($request)
-    {  try {
-        $cover_image_path = FileUploadHelper::uploadbase64ImageToS3($request->cover_image, 'organization');
-        if ($cover_image_path == false) {
+    {  
+        try {
+            $profile_image_path = FileUploadHelper::uploadImageToS3($request->cover_image, 'organization');
+            if ($profile_image_path == false) {
+                return false;
+            }
+            return $profile_image_path;
+        } catch (\Exception $e) {
             return false;
         }
-        return $cover_image_path;
-    } catch (\Exception $e) {
-        return false;
     }
-    }
-
     public function createOrganization($request, $profile_image_path, $cover_image_path)
-    {  
+    {
         try {
         DB::beginTransaction();
         $model = new Organization();
@@ -113,19 +113,21 @@ class OrganizationService
             if($organization){
                 $request->organization_id=$organization->id;
                     return $organization;
-            }else{
-                $response= ['success' => false, 'message' => __('responses.updated_organization_failed')];
+                } else {
+                    $response = ['success' => false, 'message' => __('responses.updated_organization_failed')];
+
                     return $response;
+                }
             }
-            }
-    
-            $response= ['success' => false, 'message' => __('responses.organization_not_exists')];
-                     return $response;
-           }catch (\Exception $e) {
+
+            $response = ['success' => false, 'message' => __('responses.organization_not_exists')];
+
+            return $response;
+        } catch (\Exception $e) {
             return $e;
-                $response= ['success' => false, 'message' => __('responses.send_error')];
-                return $response;
-           }
+            $response = ['success' => false, 'message' => __('responses.send_error')];
+
+            return $response;
+        }
     }
-    
 }
