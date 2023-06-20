@@ -3,6 +3,9 @@
 namespace App\Repositories\Api\Organization;
 
 use App\Models\Organization;
+use App\Services\OrganizationAddressService;
+use App\Services\OrganizationMemberService;
+use App\Services\OrganizationService;
 
 class OrganizationRepository implements OrganizationInterface
 {
@@ -11,6 +14,15 @@ class OrganizationRepository implements OrganizationInterface
     public function __construct(Organization $organization)
     {
         $this->organization = $organization;
+    }
+
+    public function checkOrganizationExist($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember)
+    {
+        $checkOrganization = $organizationService->checkOrganizationExist($request);
+        if (!$checkOrganization) {
+            return false;
+        }
+        return false;
     }
 
     public function view($slug, $language)

@@ -247,22 +247,22 @@ class OrganizationController extends AppBaseController
      * )
      */
     public function create(CreateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember)
-    {   
+    {
         try {
             $profile_image_path = null;
             $cover_image_path = null;
-            $checkOrganization = $organizationService->checkOrganizationExist($request);
+            $checkOrganization = $this->organizationRepository->checkOrganizationExist($request);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
             }
             $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($request);
             if (!$checkOrganizationInTrash) {
                 return $this->sendError(__('responses.trashed_records'), 422);
-            } 
+            }
 
             if ($request->profile_image !== null) {
                 $upload_profile_image = $organizationService->uploadOrganizationProfileImage($request);
-               
+
                 if ($upload_profile_image == false) {
                     return $this->sendError(__('responses.fail_organization_image_upload'), 400);
                 }
