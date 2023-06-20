@@ -47,14 +47,41 @@ class OrganizationService
             return false;
         }
     }
-
+    
     public function uploadOrganizationCoverImage($request)
     {  
         try {
-            $profile_image_path = FileUploadHelper::uploadImageToS3($request->cover_image, 'organization');
+            $cover_image_path = FileUploadHelper::uploadImageToS3($request->cover_image, 'organization');
+            if ($cover_image_path == false) {
+                return false;
+            }
+            return $cover_image_path;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function updateOrganizationProfileImage($request)
+    {
+        try {
+            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
             if ($profile_image_path == false) {
                 return false;
             }
+
+            return $profile_image_path;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateOrganizationCoverImage($request)
+    {
+        try {
+            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->cover_image, 'organization');
+            if ($profile_image_path == false) {
+                return false;
+            }
+
             return $profile_image_path;
         } catch (\Exception $e) {
             return false;

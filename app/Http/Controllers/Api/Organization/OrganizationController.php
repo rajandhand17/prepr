@@ -287,7 +287,7 @@ class OrganizationController extends AppBaseController
                 }
                 $details['cust_id'] = $request->user_id;
                 $details['organization_id'] = $organization->id;
-                $details['plan'] =config('chargebee.BASE_PLAN');
+                $details['plan'] =config('chargebee.base_plan');
                 dispatch(new subscribePlanJob($details));
                 return $this->sendResponse($organization, __('responses.create_organization'));
             }else {
@@ -461,20 +461,20 @@ class OrganizationController extends AppBaseController
             $exists_slug=$organizationService->existsSlug($slug);
             if(!$exists_slug){
                 $response = ['success' => false, 'message' => __('responses.organization_slug_not_exists')];
-                   return $response;
+                 return $response;
             }
+           
             if ($request->profile_image !== null) {
-                $profile_images_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
-                if ($profile_images_path == false) {
-                    $response = ['success' => false, 'message' => __('responses.fail_organization_image_upload')];
-
-                    return $response;
+                $profile_image_path = $organizationService->updateOrganizationProfileImage($request);
+                if ($profile_image_path == false) {
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
                 }
+                $profile_images_path = $profile_image_path;
             }
         
         $cover_images_path=null;
         if($request->cover_image!==null){
-            $cover_images_path=FileUploadHelper::uploadbase64ImageToS3($request->cover_image,"organization");
+            $cover_images_path=$organizationService->updateOrganizationCoverImage($request);
         }
         $organization=$organizationService->updateOrganization($request,$cover_images_path,$profile_images_path,$slug);
         if(!empty($request->organization_address)){
