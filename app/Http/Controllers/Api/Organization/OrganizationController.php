@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\organization;
 
-use App\Console\Commands\OldDataMigration\Organization;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Organization\UpdateOrganizationRequest;
@@ -11,16 +10,10 @@ use App\Repositories\Api\Organization\OrganizationRepository;
 use App\Services\OrganizationAddressService;
 use App\Services\OrganizationService;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laratrust\Models\LaratrustTeam;
-use DB;
-use App\Models\OrganizationAddress;
-use App\Models\OrganizationMember;
-use App\Helpers\UtilityHelper;
 use App\Helpers\FileUploadHelper;
 use App\Services\OrganizationMemberService;
-
+use DB;
+use App\Jobs\subscribePlanJob;
 class OrganizationController extends AppBaseController
 {
     private $organizationRepository;
@@ -261,49 +254,49 @@ class OrganizationController extends AppBaseController
      */
     public function create(CreateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember)
     {   
-        try { 
-            $rawData = $request->getContent();
-            $data = json_decode($rawData, true);
-
+        try {
             $profile_image_path = null;
             $cover_image_path = null;
-            $checkOrganization = $organizationService->checkOrganizationExist($data);
+            $checkOrganization = $organizationService->checkOrganizationExist($request);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
             }
-            $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($data);
+            $checkOrganizationInTrash = $organizationService->checkOrganizationExistInTrash($request);
             if (!$checkOrganizationInTrash) {
                 return $this->sendError(__('responses.trashed_records'), 422);
             }
-            if ($data['profile_image'] !== null) {
-                $upload_profile_image = $organizationService->uploadOrganizationProfileImage($data);
+            if ($request->profile_image !== null) {
+                $upload_profile_image = $organizationService->uploadOrganizationProfileImage($request);
                 if ($upload_profile_image == false) {
                     return $this->sendError(__('responses.fail_organization_image_upload'), 500);
                 }
                 $profile_image_path = $upload_profile_image;
             }
-            if ($data['cover_image'] !== null) {
-                $upload_cover_image = $organizationService->uploadOrganizationCoverImage($data);
+            if ($request->cover_image !== null) {
+                $upload_cover_image = $organizationService->uploadOrganizationCoverImage($request);
                 if ($upload_cover_image == false) {
                     return $this->sendError(__('responses.fail_organization_image_upload'), 500);
                 }
                 $cover_image_path = $upload_cover_image;
             }
-            DB::beginTransaction();
-            $organization = $organizationService->createOrganization($data, $profile_image_path, $cover_image_path);
+            $organization = $organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
             if ($organization){
-                $data["organization_id"]=$organization->id;
-                $organization_addresss=$organizationAddresss->createOrganizationAddress($data,$profile_image_path,$cover_image_path);
-                $organization_member=$organizationMember->organizationAddMemeber($data['people'],$data["organization_id"]);
-                DB::commit();
+                if(isset($request->organization_address) && !empty($request->organization_address)){
+                $organization_addresss=$organizationAddresss->createOrganizationAddress($request,$organization->id);
+                }
+                if(isset($request->organization_members) && !empty($request->organization_members)){
+                    $organization_member=$organizationMember->organizationAddMemeber($request,$organization->id);
+                }
+                $details['cust_id'] = $request->user_id;
+                $details['organization_id'] = $organization->id;
+                $details['plan'] =config('chargebee.BASE_PLAN');
+                dispatch(new subscribePlanJob($details));
                 return $this->sendResponse($organization, __('responses.create_organization'));
             }else {
-                DB::rollback();
                 return $this->sendError($organization['message'], 409);
             }
         } catch (\Exception $e) {
-            DB::rollback();
-            return $this->sendError(__('responses.send_error'), 500);
+        return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
@@ -478,9 +471,9 @@ class OrganizationController extends AppBaseController
         if($request->cover_image!==null){
             $cover_images_path=FileUploadHelper::uploadbase64ImageToS3($request->cover_image,"organization");
         }
-        $organization=$organizationService->update($request,$cover_images_path,$profile_images_path,$slug);
+        $organization=$organizationService->updateOrganization($request,$cover_images_path,$profile_images_path,$slug);
         if(!empty($request->organization_address)){
-        $organization_address=$organizationaddresss->updates($request->organization_address,$organization->id);
+        $organization_address=$organizationaddresss->updatesOrganizationAddress($request->organization_address,$organization->id);
         }
         if($organization){
             return $this->sendResponse($organization, __('responses.updated_organization'));

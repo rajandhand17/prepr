@@ -11,21 +11,29 @@ use DB;
 use App\Models\OrganizationMember;
 class OrganizationMemberService
 {
-    public function organizationAddMemeber($people,$organization_id){
+    public function organizationAddMemeber($request,$organization_id){
         try{ 
-            foreach ($people as $key => $value) {
+            if(isset($request->organization_members) && !empty($request->organization_members)){
+            DB::beginTransaction();
+            foreach ($request->organization_members as $key => $value) {
                 $people=new OrganizationMember;
                 $people->name=$value['name'];
                 $people->organization_id=$organization_id;    
                 $people->description=$value['description'];
-                $image=isset($value['image']) ? FileUploadHelper::uploadbase64ImageToS3($value['image'],"organization"):null;
+                $image=isset($value['image']) ? FileUploadHelper::uploadImageToS3($value['image'],"organization"):null;
                 $people->image=$image;
-                if($people->save()){
-                    return true;
+                if(!$people->save()){
+                    DB::rollback();
+                    return false;
                 }
-                return false;
-           }
+            }
+            DB::commit();
+            return true;
+        }else{
+            return false;
+        }
         } catch (\Exception $e) {
+            DB::rollback();
             return false;
         }
     }
