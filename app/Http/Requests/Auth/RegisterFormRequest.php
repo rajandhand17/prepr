@@ -38,7 +38,7 @@ class RegisterFormRequest extends FormRequest
             'phone_number'          => 'numeric|unique:users,phone_number',
             'country_code'          => 'numeric',
             'register_type'         => 'required',
-            'organization_name'     => 'required_if:register_type,==,organization|unique:Organizations,name',
+            'organization_name'     => 'required_if:register_type,==,organization|unique:organizations,name',
         ];
     }
 

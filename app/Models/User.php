@@ -179,8 +179,6 @@ class User extends Authenticatable
                 }
             }
 
-            // $userCreated = PlanSubscriptionHelper::createCustomer($user,$request->language);
-            // $planSubscribed  = PlanSubscriptionHelper::subscribePlan($userCreated,);
             if ($user->id) {
                 if ($request->register_type == 'organization') {
                     $organization = new Organization();
@@ -218,9 +216,6 @@ class User extends Authenticatable
             return ['success' => false, 'message' => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
-
-            return $e;
-
             return ['success' => false, 'message' => 'Something went wrong.'];
         }
     }
