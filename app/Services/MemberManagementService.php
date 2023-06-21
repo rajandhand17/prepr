@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\OrganizationAddress;
-use DB;
 class MemberManagementService
 {
     public function getRecordsFromCsv($request)

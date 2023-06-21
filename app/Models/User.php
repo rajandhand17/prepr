@@ -170,7 +170,7 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
-            $user->attachRole("user");
+            $user->attachRole('user');
             $member_manager = MemberManagement::where('email', $request->email)->get();
             if ($member_manager) {
                 foreach ($member_manager as $member) {
@@ -189,7 +189,7 @@ class User extends Authenticatable
                     $organization->name = $request->organization_name;
                     $organization->save();
                     $user = User::find($user->id);
-                    $user->attachRole('organization_owner',$organization->id);
+                    $user->attachRole('organization_owner', $organization->id);
                     $request->user_type = 'employee';
                 }
                 $userpersonal = UserPersonal::create($user, $request);
