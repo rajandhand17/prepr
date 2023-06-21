@@ -28,7 +28,7 @@ class UpdateOrganizationRequest extends FormRequest
         return [
             'name'       => 'max:255|unique:organizations,name',
             'description'=> 'string',
-            'category'=> 'exists:categories,id',
+            'category'   => 'exists:categories,id',
         ];
     }
 
