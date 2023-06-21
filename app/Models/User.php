@@ -191,6 +191,8 @@ class User extends Authenticatable
                     $organization->user_id = $user->id;
                     $organization->name = $request->organization_name;
                     $organization->save();
+                    $user = User::find($user->id);
+                    $user->attachRole('organization_owner');
                     $request->user_type = 'employee';
                 }
                 $userpersonal = UserPersonal::create($user, $request);

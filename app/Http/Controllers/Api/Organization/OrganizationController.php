@@ -25,7 +25,7 @@ class OrganizationController extends AppBaseController
 
     /**
      * @OA\Get(
-     *     path="/api/v1/organization/{language}/{slug}",
+     *     path="/api/v1/organization/",
      *     tags={"Organization API - Organization List"},
      *     summary="Finds lists of Organization List",
      *     description="Get all the Organization List",
@@ -299,7 +299,7 @@ class OrganizationController extends AppBaseController
 
     /**
      * @OA\Put(
-     *     path="/api/v1/organization/update/{language}/{slug}",
+     *     path="/api/v1/organization/{slug}/update",
      *     tags={"Organization API - Update Organization"},
      *     summary="Update Organization with different parameters",
      *     description="Update Organization with different parameters",
@@ -457,7 +457,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             $profile_images_path = null;
-            $exists_slug=$this->organizationRepository->existsSlug($slug,$request,$organizationService,$organizationaddresss);
+            $exists_slug=$this->organizationRepository->checkSlug($slug,$request,$organizationService,$organizationaddresss);
             if(!$exists_slug){
                 $response = ['success' => false, 'message' => __('responses.organization_slug_not_exists')];
                 return $response;
@@ -490,7 +490,7 @@ class OrganizationController extends AppBaseController
 
     /**
      * @OA\Delete(
-     *     path="/api/v1/organization/delete",
+     *     path="/api/v1/organization/{slug}/delete",
      *     tags={"Organization API - Delete Organization"},
      *     summary="Delete Organization with different parameters",
      *     security={ {"bearer": {} }},
@@ -551,7 +551,7 @@ class OrganizationController extends AppBaseController
 
    /**
     * @OA\Get(
-    *     path="/api/v1/organization/view",
+    *     path="/api/v1/organization/{slug}/view",
     *     tags={"Organization API - View Organization"},
     *     summary="View Organization with different parameters",
     *     description="View Organization with different parameters",

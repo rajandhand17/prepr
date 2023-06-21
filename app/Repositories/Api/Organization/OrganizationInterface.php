@@ -24,7 +24,7 @@ interface OrganizationInterface
 
     public function view($request,OrganizationService $organizationService,$slug);
 
-    public function existsSlug($slug,$request,$organizationService,$organizationaddresss);
+    public function checkSlug($slug,$request,$organizationService,$organizationaddresss);
     public function updateOrganizationProfileImage($request,$organizationService,$organizationaddresss);
     public function updateOrganizationCoverImage($request,$organizationService,$organizationaddresss);
 

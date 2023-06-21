@@ -87,7 +87,7 @@ class OrganizationService
         }
     }
     
-    public function existsSlug($slug){
+    public function checkSlug($slug){
         try {
             $slug=Organization::where("slug",$slug)->first();
             if($slug){

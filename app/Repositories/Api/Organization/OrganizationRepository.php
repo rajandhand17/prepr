@@ -87,9 +87,9 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
     
-    public function existsSlug($slug,$request,$organizationService,$organizationaddresss){
+    public function checkSlug($slug,$request,$organizationService,$organizationaddresss){
         try {
-            $organization=$organizationService->existsSlug($slug);
+            $organization=$organizationService->checkSlug($slug);
             if($organization){
              return true;
             }
