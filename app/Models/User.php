@@ -170,6 +170,7 @@ class User extends Authenticatable
             $user->verify_token = $string;
             $user->referal_code = $referencecode;
             $user->save();
+            $user->attachRole("user");
             $member_manager = MemberManagement::where('email', $request->email)->get();
             if ($member_manager) {
                 foreach ($member_manager as $member) {
@@ -182,17 +183,13 @@ class User extends Authenticatable
             // $planSubscribed  = PlanSubscriptionHelper::subscribePlan($userCreated,);
             if ($user->id) {
                 if ($request->register_type == 'organization') {
-                    // $user->syncRoles(['org_admin_manager', 'user']);
-                    // $user->admin_lab_limit = '1';
-                    // $user->admin_challenge_limit = '1';
-                    // $user->save();
                     $organization = new Organization();
                     $organization->slug = UtilityHelper::generateSlug($request->organization_name, $organization);
                     $organization->user_id = $user->id;
                     $organization->name = $request->organization_name;
                     $organization->save();
                     $user = User::find($user->id);
-                    $user->attachRole('organization_owner');
+                    $user->attachRole('organization_owner',$organization->id);
                     $request->user_type = 'employee';
                 }
                 $userpersonal = UserPersonal::create($user, $request);
