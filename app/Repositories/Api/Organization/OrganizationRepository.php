@@ -94,12 +94,13 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         }
     }
-    
-    public function checkSlug($slug,$request,$organizationService,$organizationaddresss){
+
+    public function checkSlug($slug, $request, $organizationService, $organizationaddresss)
+    {
         try {
-            $organization=$organizationService->checkSlug($slug);
-            if($organization){
-             return true;
+            $organization = $organizationService->checkSlug($slug);
+            if ($organization) {
+                return true;
             }
 
             return false;

@@ -458,8 +458,8 @@ class OrganizationController extends AppBaseController
     {
         try {
             $profile_images_path = null;
-            $exists_slug=$this->organizationRepository->checkSlug($slug,$request,$organizationService,$organizationaddresss);
-            if(!$exists_slug){
+            $exists_slug = $this->organizationRepository->checkSlug($slug, $request, $organizationService, $organizationaddresss);
+            if (!$exists_slug) {
                 $response = ['success' => false, 'message' => __('responses.organization_slug_not_exists')];
 
                 return $response;
@@ -551,50 +551,50 @@ class OrganizationController extends AppBaseController
         }
     }
 
-   /**
-    * @OA\Get(
-    *     path="/api/v1/organization/{slug}/view",
-    *     tags={"Organization API - View Organization"},
-    *     summary="View Organization with different parameters",
-    *     description="View Organization with different parameters",
-    *     operationId="list",
-    *
-    *     @OA\Parameter(
-    *         name="language",
-    *         in="query",
-    *         description="Language values that needed to be considered for choose languages",
-    *         required=true,
-    *         explode=true,
-    *      ),
-    *     @OA\Parameter(
-    *         name="slug",
-    *         in="query",
-    *         description="Slug for get the user",
-    *         required=true,
-    *         explode=true,
-    *      ),
-    *
-    *     @OA\Response(
-    *         response=200,
-    *         description="Successful operation",
-    *     ),
-    *     @OA\Response(
-    *         response=404,
-    *         description="Not found!",
-    *     ),
-    *     @OA\Response(
-    *         response=400,
-    *         description="Bad request!",
-    *
-    *     ),
-    *     @OA\Response(
-    *         response=500,
-    *         description="Internal server error!",
-    *
-    *     ),
-    * )
-    */
-    public function list(Request $request,OrganizationService $organizationService)
+    /**
+     * @OA\Get(
+     *     path="/api/v1/organization/{slug}/view",
+     *     tags={"Organization API - View Organization"},
+     *     summary="View Organization with different parameters",
+     *     description="View Organization with different parameters",
+     *     operationId="list",
+     *
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *      ),
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="query",
+     *         description="Slug for get the user",
+     *         required=true,
+     *         explode=true,
+     *      ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error!",
+     *
+     *     ),
+     * )
+     */
+    public function list(Request $request, OrganizationService $organizationService)
     {
         try {
             $organization = $this->organizationRepository->list($organizationService, $request->language);
