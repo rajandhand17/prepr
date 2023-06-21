@@ -408,9 +408,8 @@ class Lab extends Model
                 // }
 
                 DB::commit();
-                $response = ['success' => true, 'message' => __('responses.lab_stored')];
 
-                return $response;
+                return 'true';
             } else {
                 DB::rollBack();
 
@@ -649,6 +648,69 @@ class Lab extends Model
             return response()->json(['status' => 'false', 'message' =>__('responses.lab_unfollowed')], 503);
         } catch (\Exception $e) {
             return false;
+        }
+    }
+
+    public function getSkills($request)
+    {
+        $getskills = Skill::get();
+        if ($getskills) {
+            return $getskills;
+        } else {
+            return false;
+        }
+    }
+
+    public function updates($request)
+    {
+        try {
+            $lab = Lab::findOrFail($request->id);
+            if ($request->embeddedVideoUrl != '' && $request->coverFileType == 'embeddedCode') {
+                $lab->image = $request->embeddedVideoUrl;
+                $lab->mediaType = 'embeddedCode';
+            }
+
+            if ($request->challengeSwitch == '1') {
+                $challengeSequence = '1';
+            } else {
+                $challengeSequence = '0';
+            }
+
+            if ($request->resourceSwitch == '1') {
+                $resourceSequence = '1';
+            } else {
+                $resourceSequence = '0';
+            }
+
+            if ($request->achievementEnSwitch == '1') {
+                $achievementSwitch = '1';
+            } else {
+                $achievementSwitch = '0';
+            }
+            $lab->organisation = $request->organisation;
+            $lab->title = $request->title;
+            $lab->slug = Str::slug($request->slug);
+            $lab->description = $request->description;
+            $lab->category = $request->category;
+            $lab->privacy = $request->privacy;
+            $lab->member_type = $request->radioInline;
+            $lab->member = $request->member;
+            $lab->country = $request->country;
+            $lab->latitute = $request->cityLat;
+            $lab->longitude = $request->cityLng;
+            $lab->address = $request->location;
+            $lab->city = $request->city;
+            $lab->country = $request->country;
+            $lab->cha_sequence = $challengeSequence;
+            $lab->res_sequence = $resourceSequence;
+            $lab->enable_achievement = $achievementSwitch;
+            $lab->lab_skills = $request->labSkill ? $request->labSkill : null;
+            if ($lab->save()) {
+                return $lab->id;
+            }
+            dd($lab);
+        } catch (\Exception $e) {
+            return $e;
         }
     }
 }

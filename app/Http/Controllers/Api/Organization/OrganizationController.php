@@ -6,7 +6,11 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Organization\OrganizationResource;
+use App\Jobs\subscribePlanJob;
 use App\Repositories\Api\Organization\OrganizationRepository;
+use App\Services\OrganizationAddressService;
+use App\Services\OrganizationMemberService;
+use App\Services\OrganizationService;
 use Illuminate\Http\Request;
 
 class OrganizationController extends AppBaseController
@@ -20,7 +24,7 @@ class OrganizationController extends AppBaseController
 
     /**
      * @OA\Get(
-     *     path="/api/v1/organization/{language}/{slug}",
+     *     path="/api/v1/organization/",
      *     tags={"Organization API - Organization List"},
      *     summary="Finds lists of Organization List",
      *     description="Get all the Organization List",
@@ -64,13 +68,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function view($slug, Request $request)
+    public function view(Request $request, OrganizationService $organizationService, $slug)
     {
         try {
-            $organization = $this->organizationRepository->view($slug, $request->language);
-
-            return $organization;
-
+            $organization = $this->organizationRepository->view($request, $organizationService, $slug);
             if ($organization === 'not_exists') {
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
@@ -247,14 +248,50 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function create(CreateOrganizationRequest $request)
+    public function create(CreateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember)
     {
         try {
-            $organization = $this->organizationRepository->create($request);
-            if ($organization['success'] == true) {
-                return $this->sendResponse($organization['data'], $organization['message']);
+            $profile_image_path = null;
+            $cover_image_path = null;
+            $checkOrganization = $this->organizationRepository->checkOrganizationExist($request, $organizationService, $organizationAddresss, $organizationMember);
+            if (!$checkOrganization) {
+                return $this->sendError(__('responses.organization_name_unique'), 422);
+            }
+            $checkOrganizationInTrash = $this->organizationRepository->checkOrganizationExistInTrash($request, $organizationService, $organizationAddresss, $organizationMember);
+            if (!$checkOrganizationInTrash) {
+                return $this->sendError(__('responses.trashed_records'), 422);
+            }
+
+            if ($request->profile_image !== null) {
+                $upload_profile_image = $this->organizationRepository->uploadOrganizationProfileImage($request, $organizationService, $organizationAddresss, $organizationMember);
+                if ($upload_profile_image == false) {
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
+                }
+                $profile_image_path = $upload_profile_image;
+            }
+            if ($request->cover_image !== null) {
+                $upload_cover_image = $this->organizationRepository->uploadOrganizationCoverImage($request, $organizationService, $organizationAddresss, $organizationMember);
+                if ($upload_cover_image == false) {
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 500);
+                }
+                $cover_image_path = $upload_cover_image;
+            }
+            $organization = $this->organizationRepository->createOrganization($request, $organizationService, $organizationAddresss, $organizationMember, $profile_image_path, $cover_image_path);
+            if ($organization) {
+                if (isset($request->organization_address) && !empty($request->organization_address)) {
+                    $organization_addresss = $this->organizationRepository->createOrganizationAddress($request, $organizationService, $organizationAddresss, $organizationMember, $profile_image_path, $cover_image_path, $organization->id);
+                }
+                if (isset($request->organization_members) && !empty($request->organization_members)) {
+                    $organization_member = $this->organizationRepository->organizationAddMemeber($request, $organizationService, $organizationAddresss, $organizationMember, $profile_image_path, $cover_image_path, $organization->id);
+                }
+                $details['cust_id'] = auth()->user()->id;
+                $details['organization_id'] = $organization->id;
+                $details['plan'] = config('chargebee.base_plan');
+                dispatch(new subscribePlanJob($details));
+
+                return $this->sendResponse($organization, __('responses.create_organization'));
             } else {
-                return $this->sendError($organization['message'], 422);
+                return $this->sendError($organization['message'], 409);
             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -263,7 +300,7 @@ class OrganizationController extends AppBaseController
 
     /**
      * @OA\Put(
-     *     path="/api/v1/organization/update/{language}/{slug}",
+     *     path="/api/v1/organization/{slug}/update",
      *     tags={"Organization API - Update Organization"},
      *     summary="Update Organization with different parameters",
      *     description="Update Organization with different parameters",
@@ -417,25 +454,45 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function update($slug, UpdateOrganizationRequest $request)
+    public function update($slug, UpdateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organizationaddresss)
     {
         try {
-            $organization = $this->organizationRepository->update($slug, $request);
-            if ($organization['success'] == true) {
-                return $this->sendResponse(null, $organization['message']);
-            } else {
-                return $this->sendError($organization['message'], 204);
+            $profile_images_path = null;
+            $exists_slug=$this->organizationRepository->checkSlug($slug,$request,$organizationService,$organizationaddresss);
+            if(!$exists_slug){
+                $response = ['success' => false, 'message' => __('responses.organization_slug_not_exists')];
+
+                return $response;
+            }
+            if ($request->profile_image !== null) {
+                $profile_image_path = $this->organizationRepository->updateOrganizationProfileImage($request, $organizationService, $organizationaddresss);
+                if ($profile_image_path == false) {
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
+                }
+                $profile_images_path = $profile_image_path;
+            }
+            $cover_images_path = null;
+            if ($request->cover_image !== null) {
+                $cover_images_path = $this->organizationRepository->updateOrganizationCoverImage($request, $organizationService, $organizationaddresss);
+            }
+            $organization = $this->organizationRepository->updateOrganization($request, $organizationService, $cover_images_path, $profile_images_path, $slug);
+
+            if (!empty($request->organization_address)) {
+                $organization_address = $this->organizationRepository->updatesOrganizationAddress($request->organization_address, $organizationaddresss, $organization->id);
+            }
+            if ($organization) {
+                return $this->sendResponse($organization, __('responses.updated_organization'));
             }
 
-            return $this->sendError(__('responses.updated_organization_failed'));
+            return $this->sendError(__('responses.updated_organization_failed'), 409);
         } catch (\Exception $e) {
-            return false;
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
     /**
      * @OA\Delete(
-     *     path="/api/v1/organization/delete",
+     *     path="/api/v1/organization/{slug}/delete",
      *     tags={"Organization API - Delete Organization"},
      *     summary="Delete Organization with different parameters",
      *     security={ {"bearer": {} }},
@@ -477,10 +534,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function delete($slug, Request $request)
+    public function delete($slug, Request $request, OrganizationService $organizationService)
     {
         try {
-            $organization = $this->organizationRepository->delete($slug, $request->language);
+            $organization = $this->organizationRepository->delete($slug, $organizationService, $request->language);
             if ($organization === 'not_exists') {
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
@@ -496,7 +553,7 @@ class OrganizationController extends AppBaseController
 
    /**
     * @OA\Get(
-    *     path="/api/v1/organization/view",
+    *     path="/api/v1/organization/{slug}/view",
     *     tags={"Organization API - View Organization"},
     *     summary="View Organization with different parameters",
     *     description="View Organization with different parameters",
@@ -537,31 +594,17 @@ class OrganizationController extends AppBaseController
     *     ),
     * )
     */
-   public function list(Request $request)
-   {
-       try {
-           $organization = $this->organizationRepository->list($request->language);
-           if ($organization !== false) {
-               return $this->sendResponse($organization, __('responses.organization_view_get'));
-           }
+    public function list(Request $request,OrganizationService $organizationService)
+    {
+        try {
+            $organization = $this->organizationRepository->list($organizationService, $request->language);
+            if ($organization !== false) {
+                return $this->sendResponse($organization, __('responses.organization_view_get'));
+            }
 
-           return $this->sendError(__('responses.organization_view_get_failed'), 400);
-       } catch (\Exception $e) {
-           return $this->sendError(__('responses.send_error'), 500);
-       }
-   }
-
-   public function organizationMemberView(Request $request)
-   {
-       try {
-           $organization = $this->organizationRepository->organizationMemberView($request->id, $request->language);
-           if ($organization !== false) {
-               return $this->sendResponse($organization, __('responses.organization_view_get'));
-           }
-
-           return $this->sendError(__('responses.organization_view_get_failed'), 400);
-       } catch (\Exception $e) {
-           return $this->sendError(__('responses.send_error'), 500);
-       }
-   }
+            return $this->sendError(__('responses.organization_view_get_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

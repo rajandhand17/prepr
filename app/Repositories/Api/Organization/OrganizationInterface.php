@@ -2,17 +2,37 @@
 
 namespace App\Repositories\Api\Organization;
 
+use App\Services\OrganizationAddressService;
+use App\Services\OrganizationMemberService;
+use App\Services\OrganizationService;
+
 interface OrganizationInterface
 {
-    public function view($slug, $language);
+    public function checkOrganizationExist($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember);
 
-    public function create($request);
+    public function checkOrganizationExistInTrash($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember);
 
-    public function update($slug, $language);
+    public function uploadOrganizationProfileImage($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember);
 
-    public function delete($language, $slug);
+    public function uploadOrganizationCoverImage($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember);
 
-    public function list($language);
+    public function createOrganization($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember, $profile_image_path, $cover_image_path);
 
-    public function organizationMemberView($id, $language);
+    public function createOrganizationAddress($request, $organizationService, $organizationAddresss, $organizationMember, $profile_image_path, $cover_image_path, $organization_id);
+
+    public function organizationAddMemeber($request, $organizationService, $organizationAddresss, $organizationMember, $profile_image_path, $cover_image_path, $organization_id);
+
+    public function view($request, OrganizationService $organizationService, $slug);
+
+    public function checkSlug($slug,$request,$organizationService,$organizationaddresss);
+    public function updateOrganizationProfileImage($request,$organizationService,$organizationaddresss);
+    public function updateOrganizationCoverImage($request,$organizationService,$organizationaddresss);
+
+    public function updateOrganization($request, $organizationService, $cover_images_path, $profile_images_path, $slug);
+
+    public function updatesOrganizationAddress($organization_address, $organizationaddresss, $organization_id);
+
+    public function delete($slug, $organizationService, $language);
+
+    public function list($organizationService, $language);
 }
