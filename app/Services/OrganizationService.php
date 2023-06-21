@@ -160,7 +160,7 @@ class OrganizationService
         }
     }
 
-    public function list($language = 'en'){
+    public function list($language){
         try {
             $organization_list = Organization::select('id', 'language', 'name', 'slug', 'description', 'cover_image', 'profile_image', 'website', 'about', 'category', 'status', 'is_verified', 'total_employees');
             $organization_list = $organization_list->get();

@@ -10,15 +10,30 @@ interface OrganizationInterface
 {
     public function checkOrganizationExist($request,OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember);
 
-    public function view($slug, $language);
+    public function checkOrganizationExistInTrash($request,OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember);
 
-    public function create($request);
+    public function uploadOrganizationProfileImage($request,OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember);
 
-    public function update($slug, $language);
+    public function uploadOrganizationCoverImage($request,OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember);
 
-    public function delete($language, $slug);
+    public function createOrganization($request,OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember,$profile_image_path, $cover_image_path);
 
-    public function list($language);
+    public function createOrganizationAddress($request,$organizationService,$organizationAddresss,$organizationMember, $profile_image_path, $cover_image_path,$organization_id);
 
-    public function organizationMemberView($id, $language);
+    public function organizationAddMemeber($request,$organizationService,$organizationAddresss,$organizationMember, $profile_image_path, $cover_image_path,$organization_id);
+
+    public function view($request,OrganizationService $organizationService,$slug);
+
+    public function existsSlug($slug,$request,$organizationService,$organizationaddresss);
+    public function updateOrganizationProfileImage($request,$organizationService,$organizationaddresss);
+    public function updateOrganizationCoverImage($request,$organizationService,$organizationaddresss);
+
+    public function updateOrganization($request,$organizationService,$cover_images_path,$profile_images_path,$slug);
+       
+    public function updatesOrganizationAddress($organization_address,$organizationaddresss,$organization_id);
+
+    public function delete($slug,$organizationService, $language);
+
+    public function list($organizationService,$language);
+
 }
