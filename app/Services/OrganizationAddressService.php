@@ -4,12 +4,13 @@ namespace App\Services;
 
 use App\Models\OrganizationAddress;
 use DB;
+
 class OrganizationAddressService
 {
-    public function createOrganizationAddress($request,$organization_id)
+    public function createOrganizationAddress($request, $organization_id)
     {
         try {
-            if(isset($request->organization_address) && !empty($request->organization_address)){
+            if (isset($request->organization_address) && !empty($request->organization_address)) {
                 DB::beginTransaction();
                 foreach ($request->organization_address as $data) {
                     $organization_address = new OrganizationAddress();
@@ -23,20 +24,25 @@ class OrganizationAddressService
                     $organization_address->zip_code = $data['zip_code'];
                     if (!$organization_address->save()) {
                         DB::rollback();
+
                         return false;
                     }
                 }
                 DB::commit();
+
                 return true;
             }
-        } catch (\Exception $e) { 
+        } catch (\Exception $e) {
             DB::rollback();
+
             return $e;
-           return false;
+
+            return false;
         }
     }
 
-    public function updatesOrganizationAddress($request,$organization_id){
+    public function updatesOrganizationAddress($request, $organization_id)
+    {
         try {
             $organization_address_records = OrganizationAddress::where('organization_id', $organization_id)->first();
             foreach ($request as $request) {
@@ -56,6 +62,7 @@ class OrganizationAddressService
             return false;
         } catch (\Exception $e) {
             return $e;
+
             return false;
         }
     }
