@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\OrganizationAddress;
 use DB;
+use App\Models\MemberManagement;
+use App\Models\User;
 class MemberManagementService
 {
     public function getRecordsFromCsv($request)
@@ -24,7 +26,7 @@ class MemberManagementService
                         } else {
                             $email_column = 1;
                         }
-                    } else {
+                    }else{
                         return false;
                     }
                     /**getting data from csv and convert in array */
@@ -32,7 +34,6 @@ class MemberManagementService
                         $invitee[] = $csv_get_data[$email_column];
                     }
                     fclose($handle);
-
                     return $invitee;
                 }
 
@@ -40,6 +41,44 @@ class MemberManagementService
             }
         } catch (\Exception $e) {
             return false;
+        }
+    }
+
+    public function insert($invitee, $request)
+    {
+        try {
+            if (!MemberManagement::where(['module_id' => (int) $request->module_id, 'role' => $request->role, 'email' => trim($invitee)])->exists()) {
+                $member_management_data = new MemberManagement();
+                $member_management_data->type = $request->type;
+                $member_management_data->invite_type = $request->invite_type;
+                $member_management_data->role = $request->role;
+                $member_management_data->email = trim($invitee);
+                $member_management_data->module_id = (int) $request->module_id;
+                $member_management_data->inviter_id = (int) $request->inviter_id;
+                $member_management_data->subject_line = $request->subject_line;
+                $member_management_data->email_body = $request->email_body;
+                $member_management_data->invite_status = $request->invite_status;
+                $member_management_data->email_status = '0';
+                $member_management_data->email_resend_count = '0';
+                if ($member_management_data->save()) {
+                    return true;
+                }
+
+                return false;
+            } else {
+                return 'already_exists';
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkEmail($invite_member){
+        $user=User::select('email')->where(['id' => (int) $invite_member])->first();
+        if($user){
+        
+        }else{
+        return null;
         }
     }
 }

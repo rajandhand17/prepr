@@ -14,7 +14,7 @@ use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use Illuminate\Http\Request;
-
+use App\Services\MemberManagementService;
 class MemberManagementController extends AppBaseController
 {
     private $memberManagementRepository;
@@ -197,14 +197,11 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */
-    public function creates($component, $slug, CreateMemberManagementRequest $request)
+    public function creates($component, $slug, CreateMemberManagementRequest $request,MemberManagementService $memberManagementService)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->create($component, $slug, $request);
-            if ($member_mangement) {
-                return $member_mangement;
-            }
-            $member_mangement = $this->memberManagementRepository->create($component, $slug, $request);
+            $member_mangement = $this->memberManagementRepository->create($component, $slug, $request,$memberManagementService);
+           dd($member_mangement);
             if ($member_mangement['status'] === true) {
                 return $this->sendResponse($member_mangement, __('responses.create_member_manger_success'));
             }

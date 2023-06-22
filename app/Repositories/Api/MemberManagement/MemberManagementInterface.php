@@ -8,5 +8,5 @@ interface MemberManagementInterface
 
     public function delete($component, $slug, $request);
 
-    public function create($component, $slug, $request);
+    public function create($component, $slug, $request,$memberManagementService);
 }
