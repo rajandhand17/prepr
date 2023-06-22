@@ -100,7 +100,7 @@ class MemberManagementService
                 $response = ['success' => false, 'message' => __('labels.labels_org_noof'), 'code'=>404];
                 return $response;
             }
-            $listing = MemberManagement::with(['user'])->where(['module_id'=>$module_id, 'module_type'=>$module_type]);
+            $listing = MemberManagement::with(['user'])->with(['organization'])->where(['module_id'=>$module_id, 'module_type'=>$module_type]);
             
             if (!empty($request->org_id)) {
                 $listing->where('id', $request->org_id);

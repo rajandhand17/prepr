@@ -39,6 +39,11 @@ class MemberManagement extends Model
         return $this->hasOne(User::class, 'id', 'inviter_id');
     }
 
+    public function organization()
+    {
+        return $this->hasOne(Organization::class, 'id', 'module_id');
+    }
+
     public function list($component, $slug, $request,$memberManagementService)
     {
         try {
@@ -89,7 +94,7 @@ class MemberManagement extends Model
                 $response = ['success' => true, 'data'=>$listing, 'message' => __('labels.labels_org_noof'), 'code'=>200];
                 return $response;
             } else {
-                $response = ['success' => true, 'message' => __('responses.no_member_organization'), 'code'=>200];
+                $response = ['success' => true,'data'=>[], 'message' => __('responses.no_member_organization'), 'code'=>200];
 
                 return $response;
             }
