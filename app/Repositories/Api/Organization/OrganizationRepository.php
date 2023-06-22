@@ -14,7 +14,7 @@ class OrganizationRepository implements OrganizationInterface
     private $organizationMemberService;
     private $organizationService;
 
-    public function __construct(Organization $organization,OrganizationService $organizationService, OrganizationAddressService $organizationAddressService, OrganizationMemberService $organizationMemberService, OrganizationAddressService $organizationAddressService2)
+    public function __construct(Organization $organization, OrganizationService $organizationService, OrganizationAddressService $organizationAddressService, OrganizationMemberService $organizationMemberService, OrganizationAddressService $organizationAddressService2)
     {
         $this->organization = $organization;
         $this->organizationAddressService = $organizationAddressService;
@@ -28,6 +28,7 @@ class OrganizationRepository implements OrganizationInterface
         if ($checkOrganization) {
             return true;
         }
+
         return false;
     }
 
@@ -71,7 +72,7 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function organizationAddAddress($request,$organization_id)
+    public function organizationAddAddress($request, $organization_id)
     {
         $organization = $this->organizationAddressService->createOrganizationAddress($request, $organization_id);
         if ($organization) {
@@ -195,6 +196,7 @@ class OrganizationRepository implements OrganizationInterface
             if ($organization) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

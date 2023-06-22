@@ -16,6 +16,11 @@ class PermissionSeeder extends Seeder
     {
         $permission = [
             [
+                'name'         => 'change_organization_ownership',
+                'display_name' => 'Change Organization Ownership',
+                'description'  => 'Organization Owner can assign their ownership to another user with in the organization',
+            ],
+            [
                 'name'         => 'view_organization',
                 'display_name' => 'Organization View',
                 'description'  => 'Organization view permission to who can view organization',
@@ -288,9 +293,13 @@ class PermissionSeeder extends Seeder
 
         foreach ($permission as $key => $permission_array) {
             Permission::updateOrCreate(
-                ['name' =>  $permission_array['name']],
-                ['display_name' => $permission_array['display_name']],
-                ['description'  => $permission_array['description']],
+                [
+                    'name' => $permission_array['name'],
+                ],
+                [
+                    'display_name' => $permission_array['display_name'],
+                    'description'  => $permission_array['description'],
+                ],
             );
         }
     }

@@ -2,10 +2,6 @@
 
 namespace App\Repositories\Api\Organization;
 
-use App\Services\OrganizationAddressService;
-use App\Services\OrganizationMemberService;
-use App\Services\OrganizationService;
-
 interface OrganizationInterface
 {
     public function checkOrganizationExist($request);

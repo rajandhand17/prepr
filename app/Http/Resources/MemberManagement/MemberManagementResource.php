@@ -18,7 +18,6 @@ class MemberManagementResource extends JsonResource
     public function toArray($request)
     {
         $member_management = [
-            'id'                  => $this->id,
             'module_id'           => $this->module_id,
             'invite_status'       => $this->invite_status,
             'email'               => $this->email,

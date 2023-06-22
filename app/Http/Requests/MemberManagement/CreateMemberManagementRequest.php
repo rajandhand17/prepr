@@ -31,7 +31,7 @@ class CreateMemberManagementRequest extends FormRequest
             'invite_type'  => 'required',
             'module_id'    => 'required|exists:organizations,id',
             'invite_email' => 'required',
-            'role'         => 'required|exists:member_management,role',
+            'role'         => 'required|exists:roles,name',
             'inviter_id'   => 'required|exists:users,id',
             'subject_line' => 'required',
             'email_body'   => 'required',

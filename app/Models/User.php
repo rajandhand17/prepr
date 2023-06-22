@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\PlanSubscriptionHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use Carbon\Carbon;
@@ -216,6 +215,7 @@ class User extends Authenticatable
             return ['success' => false, 'message' => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
+
             return ['success' => false, 'message' => 'Something went wrong.'];
         }
     }

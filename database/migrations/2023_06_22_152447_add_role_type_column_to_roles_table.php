@@ -12,10 +12,8 @@ return new class() extends Migration {
      */
     public function up()
     {
-        Schema::table('organization_addresses', function (Blueprint $table) {
-            $table->renameColumn('address', 'full_address');
-            $table->text('address_1')->nullable();
-            $table->text('address_2')->nullable();
+        Schema::table('roles', function (Blueprint $table) {
+            $table->enum('role_type', ['0', '1'])->comment('0 -> Internal (Belongs to Prepr), 1 -> External (Belongs to External Organizations)')->default('0')->after('description');
         });
     }
 
@@ -26,7 +24,7 @@ return new class() extends Migration {
      */
     public function down()
     {
-        Schema::table('organization_addresses', function (Blueprint $table) {
+        Schema::table('roles', function (Blueprint $table) {
             //
         });
     }

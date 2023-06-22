@@ -23,12 +23,15 @@ class OrganizationMemberService
                     $organization_member->save();
                 }
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
@@ -49,12 +52,15 @@ class OrganizationMemberService
                     $organization_member->save();
                 }
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }

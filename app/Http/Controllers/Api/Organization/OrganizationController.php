@@ -19,7 +19,6 @@ class OrganizationController extends AppBaseController
         $this->organizationRepository = $organizationRepository;
     }
 
-
     /**
      * @OA\Get(
      *     path="/api/v1/organization/{slug}/view",
@@ -515,7 +514,6 @@ class OrganizationController extends AppBaseController
         try {
             $profile_images_path = null;
             $cover_images_path = null;
-
             if ($request->profile_image !== null) {
                 $profile_image_path = $this->organizationRepository->updateOrganizationProfileImage($request);
                 if ($profile_image_path == false) {
@@ -537,8 +535,10 @@ class OrganizationController extends AppBaseController
                 if (isset($request->organization_members) && !empty($request->organization_members)) {
                     $this->organizationRepository->updatesOrganizationMembers($request, $organization->id);
                 }
+
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.updated_organization'));
             }
+
             return $this->sendError(__('responses.updated_organization_failed'), 409);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -606,13 +606,14 @@ class OrganizationController extends AppBaseController
         }
     }
 
-    public function checkSlug($slug,Request $request)
+    public function checkSlug($slug, Request $request)
     {
         try {
             $organization = $this->organizationRepository->checkSlug($request->slug);
             if ($organization == false) {
                 return $this->sendResponse([], __('Vanity slug available!'));
             }
+
             return $this->sendError('Vanity slug already exists!', 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
