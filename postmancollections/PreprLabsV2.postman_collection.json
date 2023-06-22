@@ -1,13 +1,14 @@
 {
 	"info": {
-		"_postman_id": "e020c49b-f59f-40bb-9a4f-dfe93812f91f",
+		"_postman_id": "9b46ac9f-9360-4c56-be48-2da1d5813225",
 		"name": "PreprLabsV2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "7824085"
+		"_exporter_id": "7824085",
+		"_collection_link": "https://winter-resonance-809817.postman.co/workspace/New-Team-Workspace~43a6f93a-fbb0-4673-a3ab-cc8c2f2d7796/collection/7824085-9b46ac9f-9360-4c56-be48-2da1d5813225?action=share&creator=7824085&source=collection_link"
 	},
 	"item": [
 		{
-			"name": "Master API",
+			"name": "Master APIs",
 			"item": [
 				{
 					"name": "Social Links",
@@ -15,9 +16,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/api/v1/master/links?search=facebook&language=en",
+							"raw": "{{url}}/api/v1/master/links?search=facebook&language=en",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -454,9 +455,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/api/v1/master/lab-conditions?language=en&search=titleds",
+							"raw": "{{url}}/api/v1/master/lab-conditions?language=en&search=titleds",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -878,15 +879,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/pitch-templates?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/pitch-templates?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -1323,15 +1319,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/flexible-date-duration?language=en&search=Titled",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/flexible-date-duration?language=en&search=Titled",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -1767,15 +1758,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/host?language=en&search=Google",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/host?language=en&search=Google",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -2211,15 +2197,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/achievement-condition-list?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/achievement-condition-list?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -2646,15 +2627,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/project-submission-requirement?language=en&search=Complete project pitch",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/project-submission-requirement?language=en&search=Complete project pitch",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -3075,15 +3051,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/skill-groups?language=en&search=Titles",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/skill-groups?language=en&search=Titles",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -3519,15 +3490,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/ranks?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/ranks?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -3954,15 +3920,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/skill-sets?language=en&search=Strategy",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/skill-sets?language=en&search=Strategy",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -4433,15 +4394,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/categories?language=en&search=Incubatorsd",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/categories?language=en&search=Incubatorsd",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -4897,15 +4853,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/skills?language=en&search=Avaya Communication Manager",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/skills?language=en&search=Avaya Communication Manager",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -5359,15 +5310,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/tags?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/tags?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -5804,15 +5750,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/industries?language=en&search=Finance",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/industries?language=en&search=Finance",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -6248,15 +6189,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/types?language=en&search=Hackathonsd",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/types?language=en&search=Hackathonsd",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -6692,15 +6628,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/stages?language=en&search=Prototype",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/stages?language=en&search=Prototype",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -7136,15 +7067,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/verticals?language=en&search=MarTech",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/verticals?language=en&search=MarTech",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -7580,15 +7506,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/status?language=en&search=Active",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/status?language=en&search=Active",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -8024,15 +7945,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/master/social-connect?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/master/social-connect?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -8284,10 +8200,10 @@
 			]
 		},
 		{
-			"name": "Auths API",
+			"name": "Auth APIs",
 			"item": [
 				{
-					"name": "login",
+					"name": "Login",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -8315,9 +8231,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/login",
+							"raw": "{{url}}/api/v1/auth/login",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -8675,7 +8591,7 @@
 					]
 				},
 				{
-					"name": "register",
+					"name": "Register",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -8758,9 +8674,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{beta}}/api/v1/auth/register",
+							"raw": "{{url}}/api/v1/auth/register",
 							"host": [
-								"{{beta}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -9625,7 +9541,7 @@
 					]
 				},
 				{
-					"name": "checkusername",
+					"name": "Check Username",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -9645,9 +9561,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/checkusername",
+							"raw": "{{url}}/api/v1/auth/checkusername",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -9895,7 +9811,7 @@
 					]
 				},
 				{
-					"name": "checkemail",
+					"name": "Check Email",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -9915,9 +9831,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/checkemail",
+							"raw": "{{url}}/api/v1/auth/checkemail",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -10160,7 +10076,7 @@
 					]
 				},
 				{
-					"name": "checkphone",
+					"name": "Check Phone",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -10180,9 +10096,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/checkphone",
+							"raw": "{{url}}/api/v1/auth/checkphone",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -10430,7 +10346,7 @@
 					]
 				},
 				{
-					"name": "send-otp",
+					"name": "Send OTP",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -10456,9 +10372,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/send-otp",
+							"raw": "{{url}}/api/v1/auth/send-otp",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -10919,7 +10835,7 @@
 					]
 				},
 				{
-					"name": "verify-otp",
+					"name": "Verify OTP",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -10944,9 +10860,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/verify-otp",
+							"raw": "{{url}}/api/v1/auth/verify-otp",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -11313,7 +11229,7 @@
 					]
 				},
 				{
-					"name": "forget-password",
+					"name": "Forgot Password",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -11333,9 +11249,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/forget-password",
+							"raw": "{{url}}/api/v1/auth/forget-password",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -11593,7 +11509,7 @@
 					]
 				},
 				{
-					"name": "reset-password",
+					"name": "Reset Password",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -11628,9 +11544,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/reset-password",
+							"raw": "{{url}}/api/v1/auth/reset-password",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -11816,7 +11732,7 @@
 					]
 				},
 				{
-					"name": "verify-invite-code",
+					"name": "Verify Invite Code",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -11836,9 +11752,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/verify-invite-code",
+							"raw": "{{url}}/api/v1/auth/verify-invite-code",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -12096,7 +12012,7 @@
 					]
 				},
 				{
-					"name": "verify-two-factor",
+					"name": "Verify Two Factor",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -12121,9 +12037,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/verify-two-factor",
+							"raw": "{{url}}/api/v1/auth/verify-two-factor",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -12399,10 +12315,10 @@
 			]
 		},
 		{
-			"name": "Organization Api",
+			"name": "Organization APIs",
 			"item": [
 				{
-					"name": "Organization List",
+					"name": "List Organizations",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -12424,9 +12340,9 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/organization/?language=en",
+							"raw": "{{url}}/api/v1/organization/?language=en",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -12565,9 +12481,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/organization/prepr-org/update",
+							"raw": "{{url}}/api/v1/organization/prepr-org/update",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -12778,9 +12694,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/organization/create",
+							"raw": "{{url}}/api/v1/organization/create",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -12793,7 +12709,7 @@
 					"response": []
 				},
 				{
-					"name": "Organization Delete",
+					"name": "Delete Organization",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -12808,9 +12724,9 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/api/v1/organization/prepr-foundation/delete?language=en",
+							"raw": "{{url}}/api/v1/organization/prepr-foundation/delete?language=en",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -12830,7 +12746,7 @@
 					"response": []
 				},
 				{
-					"name": "Organization View",
+					"name": "View Organization",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -12845,9 +12761,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/api/v1/organization/prepr-foundation?language=en",
+							"raw": "{{url}}/api/v1/organization/prepr-foundation?language=en",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -12881,9 +12797,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/api/v1/organization/check-slug/prepr-org?language=en",
+							"raw": "{{url}}/api/v1/organization/check-slug/prepr-org?language=en",
 							"host": [
-								"{{localhost}}"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -12905,10 +12821,10 @@
 			]
 		},
 		{
-			"name": "MemberManaagement",
+			"name": "Member Management APIs",
 			"item": [
 				{
-					"name": "MemberMangement- View",
+					"name": "List Members",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -12920,15 +12836,10 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/member-management/organisation/prepr?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/member-management/organisation/prepr?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -12972,7 +12883,7 @@
 					"response": []
 				},
 				{
-					"name": "Member Management - Create",
+					"name": "Add Memebers",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -13032,15 +12943,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/member-management/organization/prepr/create?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/member-management/organization/prepr/create?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -13060,7 +12966,7 @@
 					"response": []
 				},
 				{
-					"name": "Member  Management- Delete Multiple",
+					"name": "Delete Members",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -13074,15 +12980,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/member-management/organization/prepr/delete?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/member-management/organization/prepr/delete?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -13104,7 +13005,7 @@
 			]
 		},
 		{
-			"name": "Labs",
+			"name": "Lab APIs",
 			"item": [
 				{
 					"name": "Delete",
@@ -13112,15 +13013,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/lab/1440-lab/delete?language=en",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/lab/1440-lab/delete?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -13192,15 +13088,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/lab/checklabslug",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/lab/checklabslug",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -13232,15 +13123,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/lab/checklabslug",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/lab/checklabslug",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -13357,15 +13243,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/lab/store",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/lab/store",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -13482,15 +13363,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/lab/store",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/lab/store",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -13518,15 +13394,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/lab/get-tags",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/lab/get-tags",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -13600,7 +13471,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3IiwianRpIjoiNjkzMmI5NzI4ZWYwYjJkYzdlNzU1ZThiODU4MDU5ZmY0OGM1MTE5ZjAyYzJmMDRiYjUzYmFiYTBmZjY2M2YzOWYzNWMxNTcyZWE0ZTQyOWMiLCJpYXQiOjE2ODc0MjA0NDEuOTk1NTgsIm5iZiI6MTY4NzQyMDQ0MS45OTU1ODQsImV4cCI6MTcxOTA0Mjg0MS45ODc4NTQsInN1YiI6IjMiLCJzY29wZXMiOltdfQ.prBR2bQag9Sz0scG4pNM5BLGOrOy3eMpLOpru5CdDfOF9q-fs0Tvt_XYTBQwbuXVOzmHYYB6xDXp4rwny2-vxpbAtFROzJucl8UUBSiEsOz6MoJcaoVLT2imIGPuRVrDuYHmgFyBad1X5mJbfNvjpII0cgTbkYPo7o8ivuO8Y9r--OItpWs9GvTq8yT1nE85-IWjMXNhgceWIGjbj0qJHrc4_UwMW3URb1ELJIyStT4pKeeQYfq4WHG55n9VLLMDfff-hjAG64yX24pKNIWwo-NXKKc1pZgP4qBpfgtVV1rIdE5nfJ2unSYHgJ_d4_0AtoevMYBue_RPl20DRArFStuAtRhW595tzoFYHTVFJaVlzaNwnnOcwKdtY95Qg-MLNMJVECyuG0UlWgkMIvv573OWdudnW88aZszjXA-opaJzlRskWYqwvPSRsf51rnb3WDZVdBsA3Od3AUFTRYnoK3qbkxHfgal3xVNQ3WcU49lFZ9K-wYXZVny2KIGmwJpbN9UoeD0S5BxZfuYKb1PJUKyGrH0cD2fglyWiDfYaqv-25XeNV57OPltY3Y-a6tXRnJydN29PQB3rHwFzwczF8g989hO3VZ_w4PSGyZC5AOKRiGCbGgVrEzbr7lzQ49sIdRZHkMvP0Q6GtbtoYt8e-KMwdXQrFFGmNn2Fw5L6fuM",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3IiwianRpIjoiMTgxY2E3NmYzYWExODM3YTFkMjEzZGQxOGQzYmNjMDI3NmY4OTBkNzFjNGViNjg0MTM4Y2FiYmI3NTIxZTM2NjU1YmJhZGExNmZjMjNjNTQiLCJpYXQiOjE2ODc0NDA3MDQuMzA5NjgyLCJuYmYiOjE2ODc0NDA3MDQuMzA5Njg2LCJleHAiOjE3MTkwNjMxMDQuMzAyODc4LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.e7mVq3VmoezaYs_I53fVXhCei10gVcB6deSQkKn7sZq1rWfpEe_vEzUu6gpzhrmna_kTYLDFoYXFXMhumlnRRHvES0x6y2aGZ2aTfT8Yn0YKuxz-Ykp8t0dVlGf10ghF4mp7bk73N9VCLd3mHW8NvjfFigKxCcqGISp8aTfjXcs_pKi59ixo5Xfo1LIIJOxfBqEIoGTt7yAE72YyTza2tfd28kI6y1-OWgnFT_uRyeVXr0aIQ3n-_WvThaSAvqV_w47v60QFB1Nmlrzeq4-BhxDan1L1qNYZkMkfWJstpn2Ozum_pAvo_9KdTJQ8MA9Tkoj5KjxKUFNsJpjeOqBT6zyGgobG8Rb-Z_4Iv-wzkaMcyjv6pi45EqnTWk-e5gqZYVZmKhPuZZNoCGLHLy3iUcbEGGdp6AxqeMNTbzhh-1HPcXCNxbOMEsYJCTGgiETTfeHwXSdQ1BZZkJyrnxREwWk02AgcsBcIlKLSAC6Y7T8-RDmqnzaz2SgVmLnZGTB8vbkMgVTr6coqtzTdRTAeOUHx4oArXK2JPdTS-v5Kmz9XgZVR0DCLszWh3LhqmN2uAC5Bha8XuZyjMxdbtGFBKceULhpzskLweUzIqiZimVy_Mx9HuGPuU7n1ovwUutO-kqhOR7DwNoaaOOVf68C-nkbysPU6sOqX-jSyRYEE3XI",
 				"type": "string"
 			}
 		]
@@ -13627,7 +13498,7 @@
 	],
 	"variable": [
 		{
-			"key": "localhost",
+			"key": "url",
 			"value": "http://localhost:8000"
 		},
 		{
