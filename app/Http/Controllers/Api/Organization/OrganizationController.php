@@ -8,9 +8,6 @@ use App\Http\Requests\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Organization\OrganizationResource;
 use App\Jobs\subscribePlanJob;
 use App\Repositories\Api\Organization\OrganizationRepository;
-use App\Services\OrganizationAddressService;
-use App\Services\OrganizationMemberService;
-use App\Services\OrganizationService;
 use Illuminate\Http\Request;
 
 class OrganizationController extends AppBaseController
@@ -20,6 +17,64 @@ class OrganizationController extends AppBaseController
     public function __construct(OrganizationRepository $organizationRepository)
     {
         $this->organizationRepository = $organizationRepository;
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/organization/{slug}/view",
+     *     tags={"Organization API - View Organization"},
+     *     summary="View Organization with different parameters",
+     *     description="View Organization with different parameters",
+     *     operationId="list",
+     *
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *      ),
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="query",
+     *         description="Slug for get the user",
+     *         required=true,
+     *         explode=true,
+     *      ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error!",
+     *
+     *     ),
+     * )
+     */
+    public function index(Request $request)
+    {
+        try {
+            $organization = $this->organizationRepository->getOrganizationList($request->language);
+            if ($organization !== false) {
+                return $this->sendResponse(OrganizationResource::collection($organization), __('responses.organization_view_get'));
+            }
+
+            return $this->sendError(__('responses.organization_view_get_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
 
     /**
@@ -68,10 +123,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function view(Request $request, $slug)
+    public function show(Request $request, $slug)
     {
         try {
-            $organization = $this->organizationRepository->view($request, $slug);
+            $organization = $this->organizationRepository->viewOrganization($request, $slug);
             if ($organization === 'not_exists') {
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
@@ -279,10 +334,10 @@ class OrganizationController extends AppBaseController
 
             if ($organization) {
                 if (isset($request->organization_address) && !empty($request->organization_address)) {
-                    $this->organizationRepository->createOrganizationAddress($request, $organization->id);
+                    $this->organizationRepository->organizationAddAddress($request, $organization->id);
                 }
                 if (isset($request->organization_members) && !empty($request->organization_members)) {
-                    $this->organizationRepository->organizationAddMemeber($request, $organization->id);
+                    $this->organizationRepository->organizationAddMembers($request, $organization->id);
                 }
                 $details['cust_id'] = auth()->user()->id;
                 $details['organization_id'] = $organization->id;
@@ -454,15 +509,11 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function update($slug, UpdateOrganizationRequest $request, OrganizationService $organizationService, OrganizationAddressService $organizationaddresss)
+    public function update($slug, UpdateOrganizationRequest $request)
     {
         try {
             $profile_images_path = null;
-            $exists_slug = $this->organizationRepository->checkSlug($slug, $request);
-            if (!$exists_slug) {
-                $response = ['success' => false, 'message' => __('responses.organization_slug_not_exists')];
-                return $response;
-            }
+            $cover_images_path = null;
             if ($request->profile_image !== null) {
                 $profile_image_path = $this->organizationRepository->updateOrganizationProfileImage($request);
                 if ($profile_image_path == false) {
@@ -470,19 +521,22 @@ class OrganizationController extends AppBaseController
                 }
                 $profile_images_path = $profile_image_path;
             }
-            $cover_images_path = null;
+
             if ($request->cover_image !== null) {
                 $cover_images_path = $this->organizationRepository->updateOrganizationCoverImage($request);
             }
-            $organization = $this->organizationRepository->updateOrganization($request, $organizationService, $cover_images_path, $profile_images_path, $slug);
 
-            if (!empty($request->organization_address)) {
-                $organization_address = $this->organizationRepository->updatesOrganizationAddress($request->organization_address, $organizationaddresss, $organization->id);
-            }
+            $organization = $this->organizationRepository->updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
+
             if ($organization) {
-                return $this->sendResponse($organization, __('responses.updated_organization'));
+                if (!empty($request->organization_address)) {
+                    $this->organizationRepository->updatesOrganizationAddress($request, $organization->id);
+                }
+                if (isset($request->organization_members) && !empty($request->organization_members)) {
+                    $this->organizationRepository->updatesOrganizationMembers($request, $organization->id);
+                }
+                return $this->sendResponse(OrganizationResource::make($organization), __('responses.updated_organization'));
             }
-
             return $this->sendError(__('responses.updated_organization_failed'), 409);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -533,10 +587,10 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function delete($slug, Request $request, OrganizationService $organizationService)
+    public function delete($slug, Request $request)
     {
         try {
-            $organization = $this->organizationRepository->delete($slug, $organizationService, $request->language);
+            $organization = $this->organizationRepository->deleteOrganization($slug, $request->language);
             if ($organization === 'not_exists') {
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
@@ -546,62 +600,6 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.delete_organizations_failed'), 400);
         } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/organization/{slug}/view",
-     *     tags={"Organization API - View Organization"},
-     *     summary="View Organization with different parameters",
-     *     description="View Organization with different parameters",
-     *     operationId="list",
-     *
-     *     @OA\Parameter(
-     *         name="language",
-     *         in="query",
-     *         description="Language values that needed to be considered for choose languages",
-     *         required=true,
-     *         explode=true,
-     *      ),
-     *     @OA\Parameter(
-     *         name="slug",
-     *         in="query",
-     *         description="Slug for get the user",
-     *         required=true,
-     *         explode=true,
-     *      ),
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Not found!",
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Bad request!",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error!",
-     *
-     *     ),
-     * )
-     */
-    public function list(Request $request)
-    {
-        try {
-            $organization = $this->organizationRepository->list($request->language);
-            if ($organization !== false) {
-                return $this->sendResponse(OrganizationResource::collection($organization), __('responses.organization_view_get'));
-            }
-            return $this->sendError(__('responses.organization_view_get_failed'), 400);
-        }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

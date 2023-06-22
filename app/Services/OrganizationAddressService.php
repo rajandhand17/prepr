@@ -29,6 +29,7 @@ class OrganizationAddressService
                 DB::commit();
                 return true;
             }
+            DB::rollback();
             return false;
         } catch (\Exception $e) {
             DB::rollback();
@@ -39,24 +40,30 @@ class OrganizationAddressService
     public static function updatesOrganizationAddress($request, $organization_id)
     {
         try {
-            $organization_id = 1;
-            $organization_address_records = OrganizationAddress::where('organization_id', $organization_id)->first();
-            foreach ($request as $request) {
-                $organization_address = OrganizationAddress::find($organization_address_records->id);
-                $organization_address->latitude = isset($request['latitude']) ? $request['latitude'] : $organization_address_records->latitude;
-                $organization_address->longitude = isset($request['longitude']) ? $request['longitude'] : $organization_address_records->longitude;
-                $organization_address->address = isset($request['address']) ? $request['address'] : $organization_address_records->address;
-                $organization_address->city = isset($request['city']) ? $request['city'] : $organization_address_records->city;
-                $organization_address->state = isset($request['state']) ? $request['state'] : $organization_address_records->state;
-                $organization_address->country = isset($request['country']) ? $request['country'] : $organization_address_records->country;
-                $organization_address->zip_code = isset($request['zip_code']) ? $request['zip_code'] : $organization_address_records->zip_code;
-                if ($organization_address->save()) {
-                    return true;
+            DB::beginTransaction();
+            if (isset($request->organization_address) && !empty($request->organization_address)) {
+                OrganizationAddress::where('organization_id', $organization_id)->delete();
+                foreach ($request->organization_address as $data) {
+                    $organization_address = new OrganizationAddress();
+                    $organization_address->organization_id = $organization_id;
+                    $organization_address->latitude = isset($data['latitude']) ? $data['latitude'] : null;
+                    $organization_address->longitude = isset($data['longitude']) ? $data['longitude'] : null;
+                    $organization_address->full_address = $data['address_1']. ', '. $data['address_2'];
+                    $organization_address->address_1 = $data['address_1'];
+                    $organization_address->address_2 = $data['address_2'];
+                    $organization_address->city = $data['city'];
+                    $organization_address->state = $data['state'];
+                    $organization_address->country = $data['country'];
+                    $organization_address->zip_code = $data['zip_code'];
+                    $organization_address->save();
                 }
+                DB::commit();
+                return true;
             }
+            DB::rollBack();
             return false;
         } catch (\Exception $e) {
-            return $e;
+            DB::rollBack();
             return false;
         }
     }

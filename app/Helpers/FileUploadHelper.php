@@ -20,8 +20,6 @@ class FileUploadHelper
 
             return $path_cover;
         } catch(\Exception $e) {
-            return $e;
-
             return false;
         }
     }
@@ -41,16 +39,7 @@ class FileUploadHelper
             $path_cover = Storage::disk('s3')->url($webp_path_cover);
 
             return $path_cover;
-            // // Generate a unique file name
-            // $fileName = uniqid() . '.png';
-            // // Define the file path
-            // $filePath = public_path() . $fileName;
-            // // Save the image to the local system
-            // $storedimage= file_put_contents($filePath, $imageData);
-            // return $filePath;
         } catch (\Exception $e) {
-            return $e;
-
             return false;
         }
     }

@@ -71,7 +71,7 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function createOrganizationAddress($request,$organization_id)
+    public function organizationAddAddress($request,$organization_id)
     {
         $organization = $this->organizationAddressService->createOrganizationAddress($request, $organization_id);
         if ($organization) {
@@ -81,9 +81,9 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function organizationAddMemeber($request, $organization_id)
+    public function organizationAddMembers($request, $organization_id)
     {
-        $organization_member = $this->organizationMemberService->organizationAddMemeber($request, $organization_id);
+        $organization_member = $this->organizationMemberService->organizationAddMembers($request, $organization_id);
         if ($organization_member) {
             return $organization_member;
         } else {
@@ -91,7 +91,7 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function view($request, $slug)
+    public function viewOrganization($request, $slug)
     {
         try {
             return $this->organizationService->view($slug, $request->language);
@@ -156,18 +156,25 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function updatesOrganizationAddress($organization_address, $organization_id)
+    public function updatesOrganizationAddress($request, $organization_id)
     {
         try {
-            return $organization_address = $this->organizationAddressService->updatesOrganizationAddress($organization_address, $organization_id);
+            return $this->organizationAddressService->updatesOrganizationAddress($request, $organization_id);
         } catch (\Exception $e) {
-            return $e;
-
             return false;
         }
     }
 
-    public function list($language)
+    public function updatesOrganizationMembers($request, $organization_id)
+    {
+        try {
+            return $this->organizationMemberService->updatesOrganizationMembers($request, $organization_id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getOrganizationList($language)
     {
         try {
             $organization = $this->organizationService->list($language);
@@ -181,14 +188,13 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function delete($slug, $language)
+    public function deleteOrganization($slug, $language)
     {
         try {
             $organization = $this->organizationService->delete($slug, $language);
             if ($organization) {
                 return true;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;

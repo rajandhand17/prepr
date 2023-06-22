@@ -36,6 +36,19 @@ class OrganizationService
         }
     }
 
+    public static function getOrganizationExistBasedOnSlug($slug)
+    {
+        try {
+            $organization = Organization::select('id')->where('slug', $slug)->withTrashed()->first();
+            if ($organization != null) {
+                return $organization;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function uploadOrganizationProfileImage($request)
     {
         try {
@@ -110,10 +123,12 @@ class OrganizationService
         try {
             DB::beginTransaction();
             $model = new Organization();
+
             $organization = new Organization();
             $organization->language = isset($request->language) ? $request->language : 'en';
             $organization->user_id = auth()->user()->id;
             $organization->name = $request->name;
+            $organization->display_name = $request->name;
             $organization->description = isset($request->description) ? $request->description : null;
             $organization->slug = UtilityHelper::generateSlug($request->slug, $model);
             $organization->cover_image = $cover_image_path;
@@ -127,12 +142,10 @@ class OrganizationService
             $organization->total_employees = $request->total_employees;
             if ($organization->save()) {
                 DB::commit();
-                $response = $organization;
-                return $response;
-            }else{
-                DB::rollback();
-                return false;
+                return $organization;
             }
+            DB::rollback();
+            return false;
         } catch (\Exception $e) {
             DB::rollback();
             return false;
@@ -206,31 +219,34 @@ class OrganizationService
     public static function updateOrganization($request, $cover_images_path, $profile_images_path, $slug)
     {
         try {
-            $organization = Organization::select('id', 'language', 'name', 'slug', 'description', 'cover_image', 'profile_image', 'website', 'about', 'category', 'status', 'is_verified', 'total_employees')->where('slug', $slug)->first();
+            DB::beginTransaction();
+            $organization = Organization::where('slug', $slug)->first();
             if ($organization !== null) {
+
                 $organization->language = ($request->has('language')) ? $request->language : $organization->language;
                 $organization->name = ($request->has('name')) ? $request->name : $organization->name;
                 $organization->display_name = ($request->has('display_name')) ? $request->display_name : $organization->display_name;
                 $organization->description = ($request->has('description')) ? $request->description : $organization->description;
-                $organization->cover_image = $cover_images_path ? $cover_images_path : $organization->cover_image;
-                $organization->profile_image = $profile_images_path ? $profile_images_path : $organization->profile_image;
+                $organization->cover_image = ($cover_images_path != null) ? $cover_images_path : $organization->cover_image;
+                $organization->profile_image = ($profile_images_path != null) ? $profile_images_path : $organization->profile_image;
                 $organization->website = ($request->has('website')) ? $request->website : $organization->website;
                 $organization->about = ($request->has('about')) ? $request->about : $organization->about;
                 $organization->category = ($request->has('category')) ? $request->category : $organization->category;
                 $organization->status = ($request->has('status')) ? $request->status : $organization->status;
                 $organization->total_employees = ($request->has('total_employees')) ? $request->total_employees : $organization->total_employees;
                 $organization->save();
+
                 if ($organization) {
-                    $request->organization_id = $organization->id;
-
+                    DB::commit();
                     return $organization;
-                } else {
-                    return false;
                 }
+                DB::rollBack();
+                return false;
             }
-
+            DB::rollBack();
             return false;
         } catch (\Exception $e) {
+            DB::rollBack();
             return false;
         }
     }

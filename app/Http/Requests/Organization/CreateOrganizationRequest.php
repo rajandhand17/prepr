@@ -28,13 +28,13 @@ class CreateOrganizationRequest extends FormRequest
     {
 
         $base_rules = [
-            'name'         => 'required|max:255',
+            'name'         => 'required|max:255|unique:organizations,name',
             'description'  => 'required',
             'profile_image'=> 'image|mimes:jpeg,jpg,png,webp|max:1024|dimensions:width=500,height=500',
             'cover_image'  => 'image|mimes:jpeg,jpg,png,webp|max:1024',
             'category'     => 'required|exists:categories,id',
             'website' => 'required|url',
-            'slug' => 'required',
+            'slug' => 'required|max:255|unique:organizations,slug',
         ];
 
         if($this->request->has('organization_address')){

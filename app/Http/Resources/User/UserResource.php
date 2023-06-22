@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User;
 
+use App\Helpers\UtilityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -30,6 +31,7 @@ class UserResource extends JsonResource
             'verified_user'             => $this->verified_user,
             'referal_code'              => $this->referal_code,
             'is_profile_completed'      => $this->is_profile_completed,
+            'member_since'              => UtilityHelper::formatDateTime($this->created_at),
             'roles'                     => $this->roles->pluck('name'),
         ];
     }
