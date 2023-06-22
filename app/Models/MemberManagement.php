@@ -43,5 +43,4 @@ class MemberManagement extends Model
     {
         return $this->hasOne(Organization::class, 'id', 'module_id');
     }
-
 }

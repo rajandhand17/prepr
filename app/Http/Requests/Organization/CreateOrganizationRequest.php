@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Organization;
 
-use http\Env\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,18 +25,17 @@ class CreateOrganizationRequest extends FormRequest
      */
     public function rules()
     {
-
         $base_rules = [
             'name'         => 'required|max:255|unique:organizations,name',
             'description'  => 'required',
             'profile_image'=> 'image|mimes:jpeg,jpg,png,webp|max:1024|dimensions:width=500,height=500',
             'cover_image'  => 'image|mimes:jpeg,jpg,png,webp|max:1024',
             'category'     => 'required|exists:categories,id',
-            'website' => 'required|url',
-            'slug' => 'required|max:255|unique:organizations,slug',
+            'website'      => 'required|url',
+            'slug'         => 'required|max:255|unique:organizations,slug',
         ];
 
-        if($this->request->has('organization_address')){
+        if ($this->request->has('organization_address')) {
             $base_rules['organization_address'] = 'array';
             $base_rules['organization_address.*.address_1'] = 'required|string';
             $base_rules['organization_address.*.address_2'] = 'required|string';
@@ -49,7 +47,7 @@ class CreateOrganizationRequest extends FormRequest
             $base_rules['organization_address.*.longitude'] = 'required|string';
         }
 
-        if($this->request->has('organization_members')){
+        if ($this->request->has('organization_members')) {
             $base_rules['organization_members'] = 'array';
             $base_rules['organization_members.*.name'] = 'required|string';
             $base_rules['organization_members.*.position'] = 'required|string';

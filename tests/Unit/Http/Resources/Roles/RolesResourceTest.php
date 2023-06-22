@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Roles;
 
-use App\Http\Resources\Roles\RolesResource;
 use Tests\TestCase;
 
 /**
