@@ -17,7 +17,7 @@ class OrganizationAddressService
                     $organization_address->organization_id = $organization_id;
                     $organization_address->latitude = isset($data['latitude']) ? $data['latitude'] : null;
                     $organization_address->longitude = isset($data['longitude']) ? $data['longitude'] : null;
-                    $organization_address->full_address = $data['address_1']. ', '. $data['address_2'];
+                    $organization_address->full_address = $data['address_1'].', '.$data['address_2'];
                     $organization_address->address_1 = $data['address_1'];
                     $organization_address->address_2 = $data['address_2'];
                     $organization_address->city = $data['city'];
@@ -27,12 +27,15 @@ class OrganizationAddressService
                     $organization_address->save();
                 }
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
@@ -48,7 +51,7 @@ class OrganizationAddressService
                     $organization_address->organization_id = $organization_id;
                     $organization_address->latitude = isset($data['latitude']) ? $data['latitude'] : null;
                     $organization_address->longitude = isset($data['longitude']) ? $data['longitude'] : null;
-                    $organization_address->full_address = $data['address_1']. ', '. $data['address_2'];
+                    $organization_address->full_address = $data['address_1'].', '.$data['address_2'];
                     $organization_address->address_1 = $data['address_1'];
                     $organization_address->address_2 = $data['address_2'];
                     $organization_address->city = $data['city'];
@@ -58,12 +61,15 @@ class OrganizationAddressService
                     $organization_address->save();
                 }
                 DB::commit();
+
                 return true;
             }
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }

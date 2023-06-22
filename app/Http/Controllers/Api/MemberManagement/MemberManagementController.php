@@ -15,7 +15,7 @@ use App\Http\Resources\MemberManagement\MemberManagementResource;
 use App\Http\Resources\Roles\RolesResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use Illuminate\Http\Request;
-use App\Services\MemberManagementService;
+
 class MemberManagementController extends AppBaseController
 {
     private $memberManagementRepository;
@@ -85,8 +85,9 @@ class MemberManagementController extends AppBaseController
             if ($member_mangement['success'] == true && isset($member_mangement['data'])) {
                 return $this->sendResponse(MemberManagementResource::collection($member_mangement['data']), __('responses.member_manager_found'));
             }
+
             return $this->sendError($member_mangement['message'], $member_mangement['code']);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -202,9 +203,10 @@ class MemberManagementController extends AppBaseController
         try {
             $member_mangement = $this->memberManagementRepository->addMembers($component, $slug, $request);
 
-            if ($member_mangement->status === true){
+            if ($member_mangement->status === true) {
                 return $this->sendResponse($member_mangement, __('responses.create_member_manger_success'));
             }
+
             return $this->sendError(__('responses.create_member_manger_failed'), 403);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -257,6 +259,7 @@ class MemberManagementController extends AppBaseController
             if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
             }
+
             return $this->sendError(__('responses.member_manager_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -276,14 +279,16 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $getRoles = $this->memberManagementRepository->getRoles(config('constants.role_type.external'));
-            if($getRoles){
-                if(!auth()->user()->isAbleTo('change_organization_ownership')){
-                    $getRoles = $getRoles->reject(function($role) {
+            if ($getRoles) {
+                if (!auth()->user()->isAbleTo('change_organization_ownership')) {
+                    $getRoles = $getRoles->reject(function ($role) {
                         return $role->display_name == config('constants.role_name.organization_owner');
                     });
                 }
+
                 return $this->sendResponse(RolesResource::collection($getRoles), 'Roles fetched successfully');
             }
+
             return $this->sendError('Roles not found', 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

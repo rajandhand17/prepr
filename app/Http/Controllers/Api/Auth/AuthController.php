@@ -91,7 +91,6 @@ class AuthController extends AppBaseController
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if ($login['code'] === 3) {
-
                     $response = ['token'=> LoginResource::make(json_decode(json_encode($login), false)), 'user'=> UserResource::make($login['user']), 'code'=>$login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
@@ -100,9 +99,11 @@ class AuthController extends AppBaseController
             if ($login['success'] == false) {
                 return $this->sendError($login['message'], 401);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch(\Exception $e) {
             dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

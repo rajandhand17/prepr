@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use DB;
+
 use function auth;
 
 class OrganizationService
@@ -43,6 +44,7 @@ class OrganizationService
             if ($organization != null) {
                 return $organization;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -112,6 +114,7 @@ class OrganizationService
             if ($slug) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -136,18 +139,21 @@ class OrganizationService
             $organization->website = isset($request->website) ? $request->website : null;
             $organization->about = isset($request->about) ? $request->about : null;
             $organization->category = $request->category;
-            if($request->status !== null) {
+            if ($request->status !== null) {
                 $organization->status = $request->status;
             }
             $organization->total_employees = $request->total_employees;
             if ($organization->save()) {
                 DB::commit();
+
                 return $organization;
             }
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
@@ -177,6 +183,7 @@ class OrganizationService
 
                 return $organization_list;
             }
+
             return 'not_exists';
         } catch (\Exception $e) {
             return false;
@@ -191,6 +198,7 @@ class OrganizationService
             if (!$organization_list->isEmpty()) {
                 return $organization_list;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -222,7 +230,6 @@ class OrganizationService
             DB::beginTransaction();
             $organization = Organization::where('slug', $slug)->first();
             if ($organization !== null) {
-
                 $organization->language = ($request->has('language')) ? $request->language : $organization->language;
                 $organization->name = ($request->has('name')) ? $request->name : $organization->name;
                 $organization->display_name = ($request->has('display_name')) ? $request->display_name : $organization->display_name;
@@ -238,15 +245,19 @@ class OrganizationService
 
                 if ($organization) {
                     DB::commit();
+
                     return $organization;
                 }
                 DB::rollBack();
+
                 return false;
             }
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }

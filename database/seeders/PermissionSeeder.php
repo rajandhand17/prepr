@@ -294,11 +294,11 @@ class PermissionSeeder extends Seeder
         foreach ($permission as $key => $permission_array) {
             Permission::updateOrCreate(
                 [
-                    'name' =>  $permission_array['name']
+                    'name' => $permission_array['name'],
                 ],
                 [
                     'display_name' => $permission_array['display_name'],
-                    'description'  => $permission_array['description']
+                    'description'  => $permission_array['description'],
                 ],
             );
         }

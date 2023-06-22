@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
-use App\Models\MemberManagement;
 use App\Models\OrganizationMember;
 use DB;
-use App\Models\Organization;
+
 class OrganizationMemberService
 {
     public static function organizationAddMembers($request, $organization_id)
@@ -24,12 +23,15 @@ class OrganizationMemberService
                     $organization_member->save();
                 }
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
@@ -50,12 +52,15 @@ class OrganizationMemberService
                     $organization_member->save();
                 }
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
