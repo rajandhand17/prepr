@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\OrganizationAddress;
-use DB;
 use App\Models\MemberManagement;
 use App\Models\User;
 class MemberManagementService
@@ -76,7 +74,7 @@ class MemberManagementService
     public function checkEmail($invite_member){
         $user=User::select('email')->where(['id' => (int) $invite_member])->first();
         if($user){
-        
+        return $user;
         }else{
         return null;
         }

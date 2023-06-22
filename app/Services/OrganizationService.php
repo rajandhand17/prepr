@@ -90,8 +90,9 @@ class OrganizationService
             return false;
         }
     }
-    
-    public function checkSlug($slug){
+
+    public function checkSlug($slug)
+    {
         try {
             $slug = Organization::where('slug', $slug)->first();
             if ($slug) {
