@@ -64,12 +64,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function UserPersonal()
+    public function userPersonal()
     {
         return $this->hasOne(UserPersonal::class);
     }
 
-    public function UserSetting()
+    public function userSetting()
     {
         return $this->hasOne(UserSetting::class);
     }

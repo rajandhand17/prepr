@@ -14,6 +14,7 @@ use App\Http\Requests\Auth\SendOtpRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
+use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
 
 class AuthController extends AppBaseController
@@ -89,7 +90,8 @@ class AuthController extends AppBaseController
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if ($login['code'] === 3) {
-                    $response = ['token'=>$login['token'], 'data'=>$login['user'], 'code'=>$login['code']];
+
+                    $response = ['token'=>$login['token'], 'user'=> UserResource::make($login['user']), 'code'=>$login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
                 }
