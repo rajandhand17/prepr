@@ -77,10 +77,10 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */
-    public function index($component, $slug, Request $request,MemberManagementService $memberManagementService)
+    public function index($component, $slug, Request $request)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->index($component, $slug, $request,$memberManagementService);
+            $member_mangement = $this->memberManagementRepository->index($component, $slug, $request);
             if ($member_mangement['success'] == true && isset($member_mangement['data'])) {
                 return $this->sendResponse(MemberManagementResource::collection($member_mangement['data']), __('responses.member_manager_found'));
             }
@@ -196,10 +196,11 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */
-    public function creates($component, $slug, CreateMemberManagementRequest $request,MemberManagementService $memberManagementService)
+    public function creates($component, $slug, CreateMemberManagementRequest $request)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->create($component, $slug, $request,$memberManagementService);
+            $member_mangement = $this->memberManagementRepository->create($component, $slug, $request);
+            dd($member_mangement);
             if ($member_mangement->status === true){
                 return $this->sendResponse($member_mangement, __('responses.create_member_manger_success'));
             }
@@ -248,10 +249,10 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */
-    public function deletes($component, $slug, DeleteMemberManagementRequest $request,MemberManagementService $memberManagementService)
+    public function deletes($component, $slug, DeleteMemberManagementRequest $request)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->delete($component, $slug, $request,$memberManagementService);
+            $member_mangement = $this->memberManagementRepository->delete($component, $slug, $request);
             if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
             }

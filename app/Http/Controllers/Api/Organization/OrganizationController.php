@@ -461,7 +461,6 @@ class OrganizationController extends AppBaseController
             $exists_slug = $this->organizationRepository->checkSlug($slug, $request);
             if (!$exists_slug) {
                 $response = ['success' => false, 'message' => __('responses.organization_slug_not_exists')];
-
                 return $response;
             }
             if ($request->profile_image !== null) {
