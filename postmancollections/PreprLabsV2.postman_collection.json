@@ -12565,15 +12565,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/organization/prepr-org/update",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/organization/prepr-org/update",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -12813,15 +12808,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/organization/prepr-foundation/delete?language=en",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/organization/prepr-foundation/delete?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
