@@ -78,7 +78,6 @@ class OrganizationController extends AppBaseController
             if ($organization) {
                 return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
             }
-
             return $this->sendError(__('responses.found_not_organizations_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -601,9 +600,8 @@ class OrganizationController extends AppBaseController
             if ($organization !== false) {
                 return $this->sendResponse($organization, __('responses.organization_view_get'));
             }
-
             return $this->sendError(__('responses.organization_view_get_failed'), 400);
-        } catch(\Exception $e) {
+        }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

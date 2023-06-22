@@ -14,23 +14,23 @@ class MemberManagementRepository implements MemberManagementInterface
         $this->member_mangement = $member_mangement;
     }
 
-     public function index($component, $slug, $request)
-     {
-         try {
-             return $this->member_mangement->list($component, $slug, $request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+    public function index($component, $slug, $request,$memberManagementService)
+    {
+        try {
+            return $memberManagementService->index($component, $slug, $request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
-     public function delete($component, $slug, $request)
-     {
-         try {
-             return $this->member_mangement->deletes($component, $slug, $request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+    public function delete($component, $slug, $request,$memberManagementService)
+    {
+        try {
+            return $memberManagementService->delete($request);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 
      public function create($component, $slug, $request,$memberManagementService)
     {
@@ -58,11 +58,9 @@ class MemberManagementRepository implements MemberManagementInterface
                     $request->invite_type = '1';
                 }
             }
-
             if ($request->invite_type == 'csv') {
                 $request['invite_type'] = '3';
                  /**get records from csv */
-                 //$invitee = $this->member_mangement->getRecordsFromCsv($request);
                 $invitee = $memberManagementService->getRecordsFromCsv($request);
                 if (!$invitee) {
                     return false;
@@ -72,7 +70,7 @@ class MemberManagementRepository implements MemberManagementInterface
             foreach ($invitee as $invite_member) {
                  /**in case invite type email */
                 if ($request->invite_type == '1'){
-                    $user_data = User::select('email')->where(['id' => (int) $invite_member])->first();
+                    $user_data =$memberManagementService->checkEmail($invite_member);
                     if ($user_data == null){
                         $invalid_users[] = $invite_member;
                         continue;
@@ -104,7 +102,6 @@ class MemberManagementRepository implements MemberManagementInterface
                 if ($request->invite_type == '1') {
                     $response->invalid_users = $invalid_users;
                 }
-
                 return $response;
             }
             $response->status = false;

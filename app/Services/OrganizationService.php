@@ -121,23 +121,20 @@ class OrganizationService
             $organization->website = isset($request->website) ? $request->website : null;
             $organization->about = isset($request->about) ? $request->about : null;
             $organization->category = $request->category;
-            if ($request->status !== null) {
+            if($request->status !== null) {
                 $organization->status = $request->status;
             }
             $organization->total_employees = $request->total_employees;
             if ($organization->save()) {
                 DB::commit();
                 $response = $organization;
-
                 return $response;
-            } else {
+            }else{
                 DB::rollback();
-
                 return false;
             }
         } catch (\Exception $e) {
             DB::rollback();
-
             return false;
         }
     }
@@ -182,7 +179,6 @@ class OrganizationService
             if (!$organization_list->isEmpty()) {
                 return $organization_list;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;

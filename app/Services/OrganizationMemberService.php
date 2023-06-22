@@ -3,9 +3,10 @@
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
+use App\Models\MemberManagement;
 use App\Models\OrganizationMember;
 use DB;
-
+use App\Models\Organization;
 class OrganizationMemberService
 {
     public function organizationAddMemeber($request, $organization_id)

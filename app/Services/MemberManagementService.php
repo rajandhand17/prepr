@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\MemberManagement;
 use App\Models\User;
+use App\Models\Organization;
 class MemberManagementService
 {
     public function getRecordsFromCsv($request)
@@ -77,6 +78,78 @@ class MemberManagementService
         return $user;
         }else{
         return null;
+        }
+    }
+
+    public function index($component, $slug, $request)
+    {
+        try {
+            $module_type = '0';
+            $module_id = '';
+            if ($component == 'organization'){
+                $module_type = '0';
+                $module_id = Organization::select('id')->where('slug', $slug)->first();
+                if ($module_id) {
+                    $module_id = $module_id->id;
+                }
+            } else {
+                $response = ['success' => false, 'message' => __('responses.wrong_component'), 'code'=>404];
+                return $response;
+            }
+            if ($module_id === null && $module_id == '') {
+                $response = ['success' => false, 'message' => __('labels.labels_org_noof'), 'code'=>404];
+                return $response;
+            }
+            $listing = MemberManagement::with(['user'])->where(['module_id'=>$module_id, 'module_type'=>$module_type]);
+            
+            if (!empty($request->org_id)) {
+                $listing->where('id', $request->org_id);
+            }
+            if (!empty($request->role)) {
+                $listing->where('role', $request->role);
+            }
+            if (!empty($request->email_status)) {
+                if ($request->email_status == 'scheduled') {
+                    $email_status = '0';
+                } elseif ($request->email_status == 'sent') {
+                    $email_status = '1';
+                } elseif ($request->email_status == 'fail') {
+                    $email_status = '2';
+                }
+                $listing->where('email_status', $email_status);
+            }
+
+            if (!empty($request->searchname)) {
+                $listing->where(function ($q) use ($request) {
+                    $q->whereHas('user', function ($q) use ($request) {
+                        $q->where('username', 'like', '%'.$request->searchname.'%')->orWhere('first_name', 'like', '%'.$request->searchname.'%');
+                    })->orWhere('email', 'like', '%'.$request->searchname.'%');
+                });
+            }
+            $listing = $listing->get();
+            if (!$listing->isEmpty()){
+                $response = ['success' => true, 'data'=>$listing, 'message' => __('labels.labels_org_noof'), 'code'=>200];
+                return $response;
+            } else {
+                $response = ['success' => true, 'message' => __('responses.no_member_organization'), 'code'=>200];
+
+                return $response;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    
+    public function delete($request){
+        try {
+            $member_manger = MemberManagement::whereIn('id', $request->id)->delete();
+            if ($member_manger) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch(\Exception $e) {
+            return false;
         }
     }
 }

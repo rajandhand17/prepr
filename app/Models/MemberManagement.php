@@ -39,13 +39,12 @@ class MemberManagement extends Model
         return $this->hasOne(User::class, 'id', 'inviter_id');
     }
 
-    public function list($component, $slug, $request)
+    public function list($component, $slug, $request,$memberManagementService)
     {
         try {
             $module_type = '0';
             $module_id = '';
-
-            if ($component == 'organization') {
+            if ($component == 'organization'){
                 $module_type = '0';
                 $module_id = Organization::select('id')->where('slug', $slug)->first();
                 if ($module_id) {
@@ -53,16 +52,14 @@ class MemberManagement extends Model
                 }
             } else {
                 $response = ['success' => false, 'message' => __('responses.wrong_component'), 'code'=>404];
-
                 return $response;
             }
             if ($module_id === null && $module_id == '') {
                 $response = ['success' => false, 'message' => __('labels.labels_org_noof'), 'code'=>404];
-
                 return $response;
             }
-
-            $listing = static::with(['user'])->where(['module_id'=>$module_id, 'module_type'=>$module_type]);
+            $listing = MemberManagement::with(['user'])->where(['module_id'=>$module_id, 'module_type'=>$module_type]);
+            
             if (!empty($request->org_id)) {
                 $listing->where('id', $request->org_id);
             }
@@ -88,13 +85,11 @@ class MemberManagement extends Model
                 });
             }
             $listing = $listing->get();
-
-            if (!$listing->isEmpty()) {
+            if (!$listing->isEmpty()){
                 $response = ['success' => true, 'data'=>$listing, 'message' => __('labels.labels_org_noof'), 'code'=>200];
-
                 return $response;
             } else {
-                $response = ['success' => true, 'message' => __('notification.notification_mnf'), 'code'=>200];
+                $response = ['success' => true, 'message' => __('responses.no_member_organization'), 'code'=>200];
 
                 return $response;
             }
@@ -105,7 +100,7 @@ class MemberManagement extends Model
         }
     }
 
-    public function deletes($component, $slug, $request)
+    public function deletes($component, $slug, $request,$memberManagementService)
     {
         try {
             $member_manger = static::whereIn('id', $request->id)->delete();

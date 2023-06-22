@@ -77,16 +77,15 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */
-    public function index($component, $slug, Request $request)
+    public function index($component, $slug, Request $request,MemberManagementService $memberManagementService)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->index($component, $slug, $request);
+            $member_mangement = $this->memberManagementRepository->index($component, $slug, $request,$memberManagementService);
             if ($member_mangement['success'] == true && isset($member_mangement['data'])) {
-                return $this->sendResponse(MemberManagementResource::collection($member_mangement), __('responses.member_manager_found'));
+                return $this->sendResponse(MemberManagementResource::collection($member_mangement['data']), __('responses.member_manager_found'));
             }
-
             return $this->sendError($member_mangement['message'], $member_mangement['code']);
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -201,11 +200,9 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $member_mangement = $this->memberManagementRepository->create($component, $slug, $request,$memberManagementService);
-           dd($member_mangement);
-            if ($member_mangement['status'] === true) {
+            if ($member_mangement->status === true){
                 return $this->sendResponse($member_mangement, __('responses.create_member_manger_success'));
             }
-
             return $this->sendError(__('responses.create_member_manger_failed'), 403);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -251,14 +248,13 @@ class MemberManagementController extends AppBaseController
      *     ),
      * )
      */
-    public function deletes($component, $slug, DeleteMemberManagementRequest $request)
+    public function deletes($component, $slug, DeleteMemberManagementRequest $request,MemberManagementService $memberManagementService)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->delete($component, $slug, $request);
+            $member_mangement = $this->memberManagementRepository->delete($component, $slug, $request,$memberManagementService);
             if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
             }
-
             return $this->sendError(__('responses.member_manager_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
