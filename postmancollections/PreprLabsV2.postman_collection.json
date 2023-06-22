@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d3682caf-691d-4444-a3e4-b6afd70b6136",
+		"_postman_id": "ebc9c5ae-dbe3-4484-ab1b-f3a9dd5535e4",
 		"name": "PreprLabsV2",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7824085"
 	},
 	"item": [
 		{
@@ -8298,12 +8299,12 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "rajan@prepr.orgs",
+									"value": "shagun@prepr.org",
 									"type": "default"
 								},
 								{
 									"key": "password",
-									"value": "Prepr@123",
+									"value": "Sh@gun1099",
 									"type": "default"
 								},
 								{
@@ -8757,9 +8758,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{localhost}}/api/v1/auth/register",
+							"raw": "{{beta}}/api/v1/auth/register",
 							"host": [
-								"{{localhost}}"
+								"{{beta}}"
 							],
 							"path": [
 								"api",
@@ -12411,7 +12412,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYWIwYWEyMjI5OWYzYmNlMGFjYzBkM2VkYmZlMzM3YzYwZjVlNTU4M2MwZWExZDAyODJjNjFlNDE3YzkzZjdiOGI1NGE0Yjk3MzhhZDljMjIiLCJpYXQiOjE2ODE4OTc3MDAuMTEzODgyLCJuYmYiOjE2ODE4OTc3MDAuMTEzODg0LCJleHAiOjE3MTM1MjAxMDAuMTA0NDcxLCJzdWIiOiIyOSIsInNjb3BlcyI6W119.PHyxqeS0bXLri-eak2f0xwpRAhzRV7UrZG6-Fm-kGgWHxAB34fwCOBwkxcc4TgFQl23MMDt5Aei7n5L0ajG6F20UsOvRi9csiy4P3HtFJ-CPuZ70kuwgNlNLevP_YW39l-ZFL6kgLjocArfko_iewO56QH9I5ICITpUrjg-oE1VIi_1gpx5u7uFgdQfocoXwwgpWm1Q1gawJ7-6vcIIlWFkWVVnUOkjuw6EZtNKDZ8feDAOH3TJqIV4PvsQvJK_qElpkP42Qgfvcj1nohEPg9w_3bxuuIvi2St2tG_Gcv6C63HRBYcRrpUadAGj3EuVBQBUHPjal0toUD70LzkZuMzufv_tcogaAr_ffqIkmmzt0Zr7hqCtYEqn0gZOgucyNp6w1aGDDO2UDwT8V_-EqRGzlxdGTkcLh_Qqdgr0RJbNqkRrzBQ2XPktTjmemUk7fQ-IICirRjpv7pTB00Tgjp9_-i9MqhsrfyykixKBvZGnDb0mfoYj3yD2NhNqmvc33MeXSdbfbtBCGvSD4G2HrPqCTsK4pYAxg-3-QA5i6eACUecxJ14tIPyAFkfnXMUgfUVMsAE6xCs2-vi533u-rweRaOCcEYzC8sH9Ffpds3zyOLQtOOo5EhndAwEL8lyr13nGEii3-b1C3jgh-wg2b8NooUooc6DRwFYugVUZG5os",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3IiwianRpIjoiNjkzMmI5NzI4ZWYwYjJkYzdlNzU1ZThiODU4MDU5ZmY0OGM1MTE5ZjAyYzJmMDRiYjUzYmFiYTBmZjY2M2YzOWYzNWMxNTcyZWE0ZTQyOWMiLCJpYXQiOjE2ODc0MjA0NDEuOTk1NTgsIm5iZiI6MTY4NzQyMDQ0MS45OTU1ODQsImV4cCI6MTcxOTA0Mjg0MS45ODc4NTQsInN1YiI6IjMiLCJzY29wZXMiOltdfQ.prBR2bQag9Sz0scG4pNM5BLGOrOy3eMpLOpru5CdDfOF9q-fs0Tvt_XYTBQwbuXVOzmHYYB6xDXp4rwny2-vxpbAtFROzJucl8UUBSiEsOz6MoJcaoVLT2imIGPuRVrDuYHmgFyBad1X5mJbfNvjpII0cgTbkYPo7o8ivuO8Y9r--OItpWs9GvTq8yT1nE85-IWjMXNhgceWIGjbj0qJHrc4_UwMW3URb1ELJIyStT4pKeeQYfq4WHG55n9VLLMDfff-hjAG64yX24pKNIWwo-NXKKc1pZgP4qBpfgtVV1rIdE5nfJ2unSYHgJ_d4_0AtoevMYBue_RPl20DRArFStuAtRhW595tzoFYHTVFJaVlzaNwnnOcwKdtY95Qg-MLNMJVECyuG0UlWgkMIvv573OWdudnW88aZszjXA-opaJzlRskWYqwvPSRsf51rnb3WDZVdBsA3Od3AUFTRYnoK3qbkxHfgal3xVNQ3WcU49lFZ9K-wYXZVny2KIGmwJpbN9UoeD0S5BxZfuYKb1PJUKyGrH0cD2fglyWiDfYaqv-25XeNV57OPltY3Y-a6tXRnJydN29PQB3rHwFzwczF8g989hO3VZ_w4PSGyZC5AOKRiGCbGgVrEzbr7lzQ49sIdRZHkMvP0Q6GtbtoYt8e-KMwdXQrFFGmNn2Fw5L6fuM",
 									"type": "string"
 								}
 							]
@@ -12423,15 +12424,10 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/organization/?language=en",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/organization/?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -12568,7 +12564,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYTk4N2NjMTIwYWI2ZmE4MzEyNmUwNWNlMjE1MDYzZDZlMjI3YTAyZTk5MGEwNGY2MWY5YmI5NTQ0YjdhNGZkNjgyMWUwNGIxMTcxZTAyODUiLCJpYXQiOjE2Nzk0OTcyODQuNTA5OTY0LCJuYmYiOjE2Nzk0OTcyODQuNTA5OTY4LCJleHAiOjE3MTExMTk2ODQuNDkxMzg4LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.VQE_dpHzVAoh35APdU2Cfb3aSAEJmxPHmzyRDSMqqve_iNpPJpNf2SQ1eslKBm797aT-O5iq99fFxRKI36iYen1bYt1bWrVqdY3aMIjR1He3-jJXc3OFtta7tNx6ht5lwjx1iZqMH4PUu1Mn0bAZOx1lNUfwJVX1AjldHj76trMpGTFrr2y3od7DNLEsSM8s9ZTkpxTW5hiCww6wFO0scZwDP6GAjV3MP6uK_vkkQIJUANTYacQxMMLWRJMMJmE1Vlf-DrM_waN6PTCptPLgOt2dzHV_KftmecbAecdthpfw8DbqQlJAbHkf9dU9WcNiKF_3J5FXVtOjs17rkuhDPvbjpHPNwOszZMse37iMCsSMhuzNWTXcrrGHtlPECxevuKl9_U95TWJIqDI3ELFoJq5x61CEUOxOH177uSZa6UgoLtM7Y5QztzCprh5j83KUoQBArPUnXWLF6sS0YB_0i3pRUpZkfpfK3t-PL-xR1iCwuTkaqNISs6IkQLq9pLqCjWxSqyucz7LGa551mE03K-aRdJtfJAYo7SHwf-_-5GtRdWeac2IGNtlEbMq09gEG91afqwOkJkcB7xPD39N2b2XTOx5SFJQIfCQLXd2zz4z61z1FvSkofcL15w2dCEcmspJjm1riyeZ_xZzXtmZ5Z6vJf6vr8Nline3bPxOCdo8",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3IiwianRpIjoiOWY2YzE3OTdlY2NjZDc5NDQ1MGMwNWYyYjY0MWYyZWJlMTRjZWQzNTA5MmQ0MzczNzI1N2VkMjMwM2I3ODdiNjEwNDgxNmUzYTEwMGViOTUiLCJpYXQiOjE2ODc0MjAxMjMuODA0MDI0LCJuYmYiOjE2ODc0MjAxMjMuODA0MDI3LCJleHAiOjE3MTkwNDI1MjMuNzk2OTY1LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.nM7PYGTfTfhhFS4oXA2upinfimtLT0Mw6ikSTu24fyzQxBUN4UDW9BYVFKylnB5drqtK14mYRzPB1em2DLfd4iAsTZGb-8hElUWj5Z5NKiqoBiWaUX2Xiv9qdbuNwA3oumXp8euYyg-nXee3YlbZuciePPSkobv0uFE4zUo2HeyNyn-kLgQuwwEiUGjZzeM7RjM2-QDSuEFT7r5kB-coL6UoyPF-F3LFiNo9IZ5IS1sVp_Ccm2tJGOgMO0E5hFvpAJc3MVvTF_fcX0Suj5pdDxjtkRR8j7EyF83kwkLad_dHyFVEW5VAiaF2rjk9K3Gafjd-VKzMnzgR51nihZLKkAk92werbDvhcCFxavAdyW3rVJNDEuVZWakeXi7ZMlZ_jeA87vXesrmprLqxTQ488Ht7s3I5kCjPlAIJiyaXau891hnr1OXTs_yyK8PHsY0aCKQ7JZONDunL2_7cRUz_IWk_1xVvqMSH4Dcpsdg8EKOA1EOYMBMdV716rxMMxyBpA3INS4HIk0ITO4v-e4vlsllWH35iMrGvyZr8G0_8yCN0_pbW1HPuHB3Te3G2VGrD--1nQoRjyzFzJP9y1f7OO0P3Zw_R3D16Hd7Kncwd3fhWF2WIE9FZe12kctA0RC6HeJXaPPI5wjo3B9jdxssRJuD1n9DafVs7-tia7fQ0LWw",
 									"type": "string"
 								}
 							]
@@ -12584,9 +12580,9 @@
 									"type": "text"
 								},
 								{
-									"key": "user_id",
-									"value": "7",
-									"type": "text"
+									"key": "name",
+									"value": "Prepr Org",
+									"type": "default"
 								},
 								{
 									"key": "description",
@@ -12595,12 +12591,12 @@
 								},
 								{
 									"key": "website",
-									"value": "prepr.org",
+									"value": "https://prepr.org",
 									"type": "text"
 								},
 								{
-									"key": "about",
-									"value": "testing",
+									"key": "slug",
+									"value": "prepr-org",
 									"type": "text"
 								},
 								{
@@ -12629,8 +12625,13 @@
 									"type": "text"
 								},
 								{
-									"key": "organization_address[0][address]",
-									"value": "Oakville, ON, Canada",
+									"key": "organization_address[0][address_1]",
+									"value": "Oakville",
+									"type": "text"
+								},
+								{
+									"key": "organization_address[0][address_2]",
+									"value": "ON, Canada",
 									"type": "text"
 								},
 								{
@@ -12654,16 +12655,6 @@
 									"type": "text"
 								},
 								{
-									"key": "user_type",
-									"value": "organization",
-									"type": "text"
-								},
-								{
-									"key": "organization_name",
-									"value": "Preps178sa",
-									"type": "text"
-								},
-								{
 									"key": "cover_image",
 									"type": "file",
 									"src": "/C:/Users/Rajan/OneDrive/Pictures/Screenshots/2018-06-23.png"
@@ -12674,24 +12665,13 @@
 									"src": "/C:/Users/Rajan/OneDrive/Pictures/Screenshots/2018-07-11.png"
 								},
 								{
-									"key": "people",
-									"value": "[ {\"name\": \"John\", \"description\": \"desciption\"}]",
-									"type": "default",
-									"disabled": true
-								},
-								{
-									"key": "name",
-									"value": "testsd",
-									"type": "default"
-								},
-								{
 									"key": "organization_members[0][name]",
 									"value": "John",
 									"type": "default"
 								},
 								{
-									"key": "organization_members[0][description]",
-									"value": "Describe the informations",
+									"key": "organization_members[0][position]",
+									"value": "CEO",
 									"type": "default"
 								},
 								{
@@ -12705,8 +12685,8 @@
 									"type": "default"
 								},
 								{
-									"key": "organization_members[1][description]",
-									"value": "Another description",
+									"key": "organization_members[1][position]",
+									"value": "CTO",
 									"type": "default"
 								},
 								{
@@ -12714,23 +12694,13 @@
 									"type": "file",
 									"src": "/C:/Users/Rajan/OneDrive/Pictures/Screenshots/2018-07-11.png"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/organization/create",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/organization/create",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -12786,24 +12756,66 @@
 				{
 					"name": "Organization View",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3IiwianRpIjoiOWY2YzE3OTdlY2NjZDc5NDQ1MGMwNWYyYjY0MWYyZWJlMTRjZWQzNTA5MmQ0MzczNzI1N2VkMjMwM2I3ODdiNjEwNDgxNmUzYTEwMGViOTUiLCJpYXQiOjE2ODc0MjAxMjMuODA0MDI0LCJuYmYiOjE2ODc0MjAxMjMuODA0MDI3LCJleHAiOjE3MTkwNDI1MjMuNzk2OTY1LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.nM7PYGTfTfhhFS4oXA2upinfimtLT0Mw6ikSTu24fyzQxBUN4UDW9BYVFKylnB5drqtK14mYRzPB1em2DLfd4iAsTZGb-8hElUWj5Z5NKiqoBiWaUX2Xiv9qdbuNwA3oumXp8euYyg-nXee3YlbZuciePPSkobv0uFE4zUo2HeyNyn-kLgQuwwEiUGjZzeM7RjM2-QDSuEFT7r5kB-coL6UoyPF-F3LFiNo9IZ5IS1sVp_Ccm2tJGOgMO0E5hFvpAJc3MVvTF_fcX0Suj5pdDxjtkRR8j7EyF83kwkLad_dHyFVEW5VAiaF2rjk9K3Gafjd-VKzMnzgR51nihZLKkAk92werbDvhcCFxavAdyW3rVJNDEuVZWakeXi7ZMlZ_jeA87vXesrmprLqxTQ488Ht7s3I5kCjPlAIJiyaXau891hnr1OXTs_yyK8PHsY0aCKQ7JZONDunL2_7cRUz_IWk_1xVvqMSH4Dcpsdg8EKOA1EOYMBMdV716rxMMxyBpA3INS4HIk0ITO4v-e4vlsllWH35iMrGvyZr8G0_8yCN0_pbW1HPuHB3Te3G2VGrD--1nQoRjyzFzJP9y1f7OO0P3Zw_R3D16Hd7Kncwd3fhWF2WIE9FZe12kctA0RC6HeJXaPPI5wjo3B9jdxssRJuD1n9DafVs7-tia7fQ0LWw",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/organization/prep/view?language=en",
-							"protocol": "http",
+							"raw": "{{localhost}}/api/v1/organization/preprlabs-org/view?language=en",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{localhost}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
 								"organization",
-								"prep",
+								"preprlabs-org",
 								"view"
+							],
+							"query": [
+								{
+									"key": "language",
+									"value": "en"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Organization Slug",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3IiwianRpIjoiOWY2YzE3OTdlY2NjZDc5NDQ1MGMwNWYyYjY0MWYyZWJlMTRjZWQzNTA5MmQ0MzczNzI1N2VkMjMwM2I3ODdiNjEwNDgxNmUzYTEwMGViOTUiLCJpYXQiOjE2ODc0MjAxMjMuODA0MDI0LCJuYmYiOjE2ODc0MjAxMjMuODA0MDI3LCJleHAiOjE3MTkwNDI1MjMuNzk2OTY1LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.nM7PYGTfTfhhFS4oXA2upinfimtLT0Mw6ikSTu24fyzQxBUN4UDW9BYVFKylnB5drqtK14mYRzPB1em2DLfd4iAsTZGb-8hElUWj5Z5NKiqoBiWaUX2Xiv9qdbuNwA3oumXp8euYyg-nXee3YlbZuciePPSkobv0uFE4zUo2HeyNyn-kLgQuwwEiUGjZzeM7RjM2-QDSuEFT7r5kB-coL6UoyPF-F3LFiNo9IZ5IS1sVp_Ccm2tJGOgMO0E5hFvpAJc3MVvTF_fcX0Suj5pdDxjtkRR8j7EyF83kwkLad_dHyFVEW5VAiaF2rjk9K3Gafjd-VKzMnzgR51nihZLKkAk92werbDvhcCFxavAdyW3rVJNDEuVZWakeXi7ZMlZ_jeA87vXesrmprLqxTQ488Ht7s3I5kCjPlAIJiyaXau891hnr1OXTs_yyK8PHsY0aCKQ7JZONDunL2_7cRUz_IWk_1xVvqMSH4Dcpsdg8EKOA1EOYMBMdV716rxMMxyBpA3INS4HIk0ITO4v-e4vlsllWH35iMrGvyZr8G0_8yCN0_pbW1HPuHB3Te3G2VGrD--1nQoRjyzFzJP9y1f7OO0P3Zw_R3D16Hd7Kncwd3fhWF2WIE9FZe12kctA0RC6HeJXaPPI5wjo3B9jdxssRJuD1n9DafVs7-tia7fQ0LWw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/api/v1/organization/check-slug/prepr-org?language=en",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"organization",
+								"check-slug",
+								"prepr-org"
 							],
 							"query": [
 								{
@@ -12942,12 +12954,7 @@
 									"value": "15",
 									"type": "default"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/v1/member-management/organization/prepr/create?language=en",
@@ -13060,7 +13067,10 @@
 					"name": "List",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -13068,7 +13078,10 @@
 					"name": "view lab",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -13076,7 +13089,10 @@
 					"name": "create lab",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -13414,7 +13430,10 @@
 					"name": "Share",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -13447,7 +13466,10 @@
 					"name": "Lab detailed",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -13455,7 +13477,10 @@
 					"name": "Join Lab",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -13463,7 +13488,10 @@
 					"name": "Like lab",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -13471,7 +13499,10 @@
 					"name": "Follow Lab",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -13479,11 +13510,55 @@
 					"name": "Get Skills",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3IiwianRpIjoiNjkzMmI5NzI4ZWYwYjJkYzdlNzU1ZThiODU4MDU5ZmY0OGM1MTE5ZjAyYzJmMDRiYjUzYmFiYTBmZjY2M2YzOWYzNWMxNTcyZWE0ZTQyOWMiLCJpYXQiOjE2ODc0MjA0NDEuOTk1NTgsIm5iZiI6MTY4NzQyMDQ0MS45OTU1ODQsImV4cCI6MTcxOTA0Mjg0MS45ODc4NTQsInN1YiI6IjMiLCJzY29wZXMiOltdfQ.prBR2bQag9Sz0scG4pNM5BLGOrOy3eMpLOpru5CdDfOF9q-fs0Tvt_XYTBQwbuXVOzmHYYB6xDXp4rwny2-vxpbAtFROzJucl8UUBSiEsOz6MoJcaoVLT2imIGPuRVrDuYHmgFyBad1X5mJbfNvjpII0cgTbkYPo7o8ivuO8Y9r--OItpWs9GvTq8yT1nE85-IWjMXNhgceWIGjbj0qJHrc4_UwMW3URb1ELJIyStT4pKeeQYfq4WHG55n9VLLMDfff-hjAG64yX24pKNIWwo-NXKKc1pZgP4qBpfgtVV1rIdE5nfJ2unSYHgJ_d4_0AtoevMYBue_RPl20DRArFStuAtRhW595tzoFYHTVFJaVlzaNwnnOcwKdtY95Qg-MLNMJVECyuG0UlWgkMIvv573OWdudnW88aZszjXA-opaJzlRskWYqwvPSRsf51rnb3WDZVdBsA3Od3AUFTRYnoK3qbkxHfgal3xVNQ3WcU49lFZ9K-wYXZVny2KIGmwJpbN9UoeD0S5BxZfuYKb1PJUKyGrH0cD2fglyWiDfYaqv-25XeNV57OPltY3Y-a6tXRnJydN29PQB3rHwFzwczF8g989hO3VZ_w4PSGyZC5AOKRiGCbGgVrEzbr7lzQ49sIdRZHkMvP0Q6GtbtoYt8e-KMwdXQrFFGmNn2Fw5L6fuM",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "beta",
+			"value": "https://betaapis.learnlab.ai",
+			"type": "string"
 		}
 	]
 }
