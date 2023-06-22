@@ -42,6 +42,7 @@ class AssignPermissionToRolesSeeder extends Seeder
             if ($organization_manager) {
                 $remove_permissions = [
                     'impersonate_user',
+                    'change_organization_ownership',
                     'view_organization',
                     'create_organization',
                     'edit_organization',
@@ -61,6 +62,7 @@ class AssignPermissionToRolesSeeder extends Seeder
             if ($lab_manager) {
                 $remove_permissions = [
                     'impersonate_user',
+                    'change_organization_ownership',
                     'view_organization',
                     'create_organization',
                     'edit_organization',
@@ -84,6 +86,7 @@ class AssignPermissionToRolesSeeder extends Seeder
             if ($lab_manager) {
                 $remove_permissions = [
                     'impersonate_user',
+                    'change_organization_ownership',
                     'view_organization',
                     'create_organization',
                     'edit_organization',
@@ -120,6 +123,7 @@ class AssignPermissionToRolesSeeder extends Seeder
             if ($lab_manager) {
                 $remove_permissions = [
                     'impersonate_user',
+                    'change_organization_ownership',
                     'view_organization',
                     'create_organization',
                     'edit_organization',
@@ -177,6 +181,7 @@ class AssignPermissionToRolesSeeder extends Seeder
             if ($lab_manager) {
                 $remove_permissions = [
                     'delete_organization',
+                    'change_organization_ownership',
                     'delete_organization_members',
                     'delete_lab',
                     'delete_lab_member',

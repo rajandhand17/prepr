@@ -2,23 +2,25 @@
 
 namespace App\Repositories\Api\MemberManagement;
 
-use App\Models\MemberManagement;
 use App\Services\MemberManagementService;
+use App\Services\RolesService;
 use Response;
 
 class MemberManagementRepository implements MemberManagementInterface
 {
-    private $member_mangement;
+    private $memberManagementService;
+    private $roleService;
 
-    public function __construct(MemberManagementService $memberManagementService)
+    public function __construct(MemberManagementService $memberManagementService, RolesService $roleService)
     {
-        $this->member_mangement = $memberManagementService;
+        $this->memberManagementService = $memberManagementService;
+        $this->roleService = $roleService;
     }
 
     public function getMembers($component, $slug, $request)
     {
         try {
-            return $this->member_mangement->index($component, $slug, $request);
+            return $this->memberManagementService->index($component, $slug, $request);
         } catch (\Exception $e) {
             return false;
         }
@@ -27,7 +29,7 @@ class MemberManagementRepository implements MemberManagementInterface
     public function deleteMembers($component, $slug, $request)
     {
         try {
-            return $this->member_mangement->delete($request);
+            return $this->memberManagementService->delete($request);
         }catch (\Exception $e) {
             return false;
         }
@@ -63,7 +65,7 @@ class MemberManagementRepository implements MemberManagementInterface
             if ($request->invite_type == 'csv') {
                 $request['invite_type'] = '3';
                  /**get records from csv */
-                $invitee = $this->member_mangement->getRecordsFromCsv($request);
+                $invitee = $this->memberManagementService->getRecordsFromCsv($request);
                 if (!$invitee) {
                     return false;
                 }
@@ -72,7 +74,7 @@ class MemberManagementRepository implements MemberManagementInterface
             foreach ($invitee as $invite_member) {
                  /**in case invite type email */
                 if ($request->invite_type == '1'){
-                    $user_data =$this->member_mangement->checkEmail($invite_member);
+                    $user_data =$this->memberManagementService->checkEmail($invite_member);
                     if ($user_data == null){
                         $invalid_users[] = $invite_member;
                         continue;
@@ -80,7 +82,7 @@ class MemberManagementRepository implements MemberManagementInterface
                     $invite_member = $user_data->email;
                 }
                 if (filter_var(trim($invite_member), FILTER_VALIDATE_EMAIL)) {
-                    $result =  $this->member_mangement->insert($invite_member, $request);
+                    $result =  $this->memberManagementService->insert($invite_member, $request);
                     if ($result === true) {
                     $inserted_emails[] = $invite_member;
                     }
@@ -134,6 +136,15 @@ class MemberManagementRepository implements MemberManagementInterface
                 fclose($file);
             };
             return Response::stream($callback, 200, $headers);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getRoles($role_type)
+    {
+        try{
+            return $this->roleService->getRoles($role_type);
         } catch (\Exception $e) {
             return false;
         }

@@ -8,4 +8,5 @@ interface MemberManagementInterface
     public function addMembers($component, $slug, $request);
     public function deleteMembers($component, $slug, $request);
     public function downloadSample();
+    public function getRoles($role_type);
 }
