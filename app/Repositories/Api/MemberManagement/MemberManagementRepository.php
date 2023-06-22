@@ -3,19 +3,19 @@
 namespace App\Repositories\Api\MemberManagement;
 
 use App\Models\MemberManagement;
-use App\Models\User;
 use App\Services\MemberManagementService;
+use Response;
+
 class MemberManagementRepository implements MemberManagementInterface
 {
     private $member_mangement;
 
-    public function __construct(MemberManagement $member_mangement,MemberManagementService $memberManagementService)
+    public function __construct(MemberManagementService $memberManagementService)
     {
-       // $this->member_mangement = $member_mangement;
         $this->member_mangement = $memberManagementService;
     }
 
-    public function index($component, $slug, $request)
+    public function getMembers($component, $slug, $request)
     {
         try {
             return $this->member_mangement->index($component, $slug, $request);
@@ -24,7 +24,7 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-    public function delete($component, $slug, $request)
+    public function deleteMembers($component, $slug, $request)
     {
         try {
             return $this->member_mangement->delete($request);
@@ -33,7 +33,7 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-     public function create($component, $slug, $request)
+     public function addMembers($component, $slug, $request)
     {
         try {
             $invalid_email_data = [];
@@ -49,7 +49,7 @@ class MemberManagementRepository implements MemberManagementInterface
                     return false;
                 }
                 $invitee = explode(',', $request->invite_email);
-                
+
                 if (!is_array($invitee)) {
                     return false;
                 }
@@ -108,6 +108,32 @@ class MemberManagementRepository implements MemberManagementInterface
             }
             $response->status = false;
             return $response;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return MemberManagementService
+     */
+    public function downloadSample()
+    {
+        try{
+            $headers = array(
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=member-management-sample.csv",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            );
+            $columns  = ['Name', 'Email'];
+            $callback = function() use ($columns)
+            {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+                fclose($file);
+            };
+            return Response::stream($callback, 200, $headers);
         } catch (\Exception $e) {
             return false;
         }
