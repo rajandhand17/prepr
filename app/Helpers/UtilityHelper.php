@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class UtilityHelper
@@ -16,5 +17,14 @@ class UtilityHelper
             $next++;
         }
         return $slug;
+    }
+
+    public static function formatDateTime($date,$time = 0)
+    {
+        $formatedDate = Carbon::parse($date);
+        if($time == 0){
+            return $formatedDate->format('M d, Y');
+        }
+        return $formatedDate->format('M d, Y H:i:s');
     }
 }

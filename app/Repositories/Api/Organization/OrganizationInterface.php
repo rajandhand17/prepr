@@ -18,11 +18,11 @@ interface OrganizationInterface
 
     public function createOrganization($request, $profile_image_path, $cover_image_path);
 
-    public function createOrganizationAddress($request, $organization_id);
+    public function organizationAddAddress($request, $organization_id);
 
-    public function organizationAddMemeber($request, $organization_id);
+    public function organizationAddMembers($request, $organization_id);
 
-    public function view($request, $slug);
+    public function viewOrganization($request, $slug);
 
     public function checkSlug($slug);
 
@@ -32,9 +32,11 @@ interface OrganizationInterface
 
     public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
 
-    public function updatesOrganizationAddress($organization_address, $organization_id);
+    public function updatesOrganizationAddress($request, $organization_id);
 
-    public function delete($slug, $language);
+    public function updatesOrganizationMembers($organization_address, $organization_id);
 
-    public function list($language);
+    public function deleteOrganization($slug, $language);
+
+    public function getOrganizationList($language);
 }

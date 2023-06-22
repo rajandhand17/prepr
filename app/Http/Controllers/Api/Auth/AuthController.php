@@ -14,6 +14,7 @@ use App\Http\Requests\Auth\SendOtpRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
+use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
 
@@ -91,7 +92,7 @@ class AuthController extends AppBaseController
                 }
                 if ($login['code'] === 3) {
 
-                    $response = ['token'=>$login['token'], 'user'=> UserResource::make($login['user']), 'code'=>$login['code']];
+                    $response = ['token'=> LoginResource::make(json_decode(json_encode($login), false)), 'user'=> UserResource::make($login['user']), 'code'=>$login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
                 }
@@ -99,9 +100,9 @@ class AuthController extends AppBaseController
             if ($login['success'] == false) {
                 return $this->sendError($login['message'], 401);
             }
-
             return $this->sendError(__('responses.send_error'), 500);
         } catch(\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

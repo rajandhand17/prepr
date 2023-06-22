@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Organization;
 
+use App\Helpers\UtilityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -16,22 +17,23 @@ class OrganizationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'              => $this->id,
-            'language'        => $this->language,
-            'name'            => $this->name,
-            'slug'            => $this->slug,
-            'description'     => $this->description,
-            'cover_image'     => $this->cover_image,
-            'profile_image'   => $this->profile_image,
-            'website'         => $this->website,
-            'about'           => $this->about,
-            'status'          => $this->status,
-            'total_employees' => $this->total_employees,
-            'lab_count'       => 0,
-            'challange_count'      => 0,
-            'resource_count'       => 0,
-            'organization_address' => OrganizationAddressResource::collection($this->organizationAddress),
-            'organization_members' => OrganizationMemberResource::collection($this->organizationMembers),
+            'id'                    => $this->id,
+            'language'              => $this->language,
+            'name'                  => $this->name,
+            'slug'                  => $this->slug,
+            'description'           => $this->description,
+            'cover_image'           => $this->cover_image,
+            'profile_image'         => $this->profile_image,
+            'website'               => $this->website,
+            'about'                 => $this->about,
+            'status'                => $this->status,
+            'total_employees'       => $this->total_employees,
+            'lab_count'             => 0,
+            'challange_count'       => 0,
+            'resource_count'        => 0,
+            'member_since'          => UtilityHelper::formatDateTime($this->created_at),
+            'organization_address'  => OrganizationAddressResource::collection($this->organizationAddress),
+            'organization_members'  => OrganizationMemberResource::collection($this->organizationMembers),
         ];
     }
 }

@@ -8,11 +8,11 @@ use DB;
 
 class OrganizationMemberService
 {
-    public static function organizationAddMemeber($request, $organization_id)
+    public static function organizationAddMembers($request, $organization_id)
     {
         try {
+            DB::beginTransaction();
             if (isset($request->organization_members) && !empty($request->organization_members)) {
-                DB::beginTransaction();
                 foreach ($request->organization_members as $value) {
                     $organization_member = new OrganizationMember();
                     $organization_member->organization_id = $organization_id;
@@ -25,6 +25,33 @@ class OrganizationMemberService
                 DB::commit();
                 return true;
             }
+            DB::rollback();
+            return false;
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
+    }
+
+    public static function updatesOrganizationMembers($request, $organization_id)
+    {
+        try {
+            DB::beginTransaction();
+            if (isset($request->organization_members) && !empty($request->organization_members)) {
+                OrganizationMember::where('organization_id', $organization_id)->delete();
+                foreach ($request->organization_members as $value) {
+                    $organization_member = new OrganizationMember();
+                    $organization_member->organization_id = $organization_id;
+                    $organization_member->name = $value['name'];
+                    $organization_member->position = $value['position'];
+                    $image = isset($value['image']) ? FileUploadHelper::uploadImageToS3($value['image'], 'organization') : null;
+                    $organization_member->image = $image;
+                    $organization_member->save();
+                }
+                DB::commit();
+                return true;
+            }
+            DB::rollback();
             return false;
         } catch (\Exception $e) {
             DB::rollback();
