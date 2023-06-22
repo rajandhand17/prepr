@@ -10,15 +10,30 @@ use App\Services\OrganizationService;
 class OrganizationRepository implements OrganizationInterface
 {
     private $organization;
+    private $organizationAddressService;
+    private $organizationMemberService;
+    private $organizationService;
 
-    public function __construct(Organization $organization)
+    public function __construct(Organization $organization,OrganizationService $organizationService, OrganizationAddressService $organizationAddressService, OrganizationMemberService $organizationMemberService, OrganizationAddressService $organizationAddressService2)
     {
         $this->organization = $organization;
+        $this->organizationAddressService = $organizationAddressService;
+        $this->organizationMemberService = $organizationMemberService;
+        $this->organizationService = $organizationService;
     }
 
-    public function checkOrganizationExist($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember)
+    public function checkOrganizationExist($request)
     {
-        $checkOrganization = $organizationService->checkOrganizationExist($request);
+        $checkOrganization = $this->organizationService->checkOrganizationExist($request);
+        if ($checkOrganization) {
+            return true;
+        }
+        return false;
+    }
+
+    public function checkOrganizationExistInTrash($request)
+    {
+        $checkOrganization = $this->organizationService->checkOrganizationExistInTrash($request);
         if ($checkOrganization) {
             return true;
         }
@@ -26,19 +41,9 @@ class OrganizationRepository implements OrganizationInterface
         return false;
     }
 
-    public function checkOrganizationExistInTrash($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember)
+    public function uploadOrganizationProfileImage($request)
     {
-        $checkOrganization = $organizationService->checkOrganizationExistInTrash($request);
-        if ($checkOrganization) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function uploadOrganizationProfileImage($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember)
-    {
-        $upload_profile_image = $organizationService->uploadOrganizationProfileImage($request);
+        $upload_profile_image = $this->organizationService->uploadOrganizationProfileImage($request);
         if ($upload_profile_image) {
             return $upload_profile_image;
         } else {
@@ -46,9 +51,9 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function uploadOrganizationCoverImage($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember)
+    public function uploadOrganizationCoverImage($request)
     {
-        $upload_profile_image = $organizationService->uploadOrganizationCoverImage($request);
+        $upload_profile_image = $this->organizationService->uploadOrganizationCoverImage($request);
         if ($upload_profile_image) {
             return $upload_profile_image;
         } else {
@@ -56,9 +61,9 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function createOrganization($request, OrganizationService $organizationService, OrganizationAddressService $organizationAddresss, OrganizationMemberService $organizationMember, $profile_image_path, $cover_image_path)
+    public function createOrganization($request, $profile_image_path, $cover_image_path)
     {
-        $organization = $organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
+        $organization = $this->organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
         if ($organization) {
             return $organization;
         } else {
@@ -66,9 +71,9 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function createOrganizationAddress($request, $organizationService, $organizationAddresss, $organizationMember, $profile_image_path, $cover_image_path, $organization_id)
+    public function createOrganizationAddress($request,$organization_id)
     {
-        $organization = $organizationAddresss->createOrganizationAddress($request, $organization_id);
+        $organization = $this->organizationAddressService->createOrganizationAddress($request, $organization_id);
         if ($organization) {
             return $organization;
         } else {
@@ -76,9 +81,9 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function organizationAddMemeber($request, $organizationService, $organizationAddresss, $organizationMember, $profile_image_path, $cover_image_path, $organization_id)
+    public function organizationAddMemeber($request, $organization_id)
     {
-        $organization_member = $organizationMember->organizationAddMemeber($request, $organization_id);
+        $organization_member = $this->organizationMemberService->organizationAddMemeber($request, $organization_id);
         if ($organization_member) {
             return $organization_member;
         } else {
@@ -86,19 +91,19 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function view($request, OrganizationService $organizationService, $slug)
+    public function view($request, $slug)
     {
         try {
-            return $organizationService->view($slug, $request->language);
+            return $this->organizationService->view($slug, $request->language);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkSlug($slug, $request, $organizationService, $organizationaddresss)
+    public function checkSlug($slug)
     {
         try {
-            $organization = $organizationService->checkSlug($slug);
+            $organization = $this->organizationService->checkSlug($slug);
             if ($organization) {
                 return true;
             }
@@ -109,10 +114,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function updateOrganizationProfileImage($request, $organizationService, $organizationaddresss)
+    public function updateOrganizationProfileImage($request)
     {
         try {
-            $profile_image_path = $organizationService->updateOrganizationProfileImage($request);
+            $profile_image_path = $this->organizationService->updateOrganizationProfileImage($request);
             if ($profile_image_path) {
                 return $profile_image_path;
             }
@@ -123,10 +128,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function updateOrganizationCoverImage($request, $organizationService, $organizationaddresss)
+    public function updateOrganizationCoverImage($request)
     {
         try {
-            $cover_images_path = $organizationService->updateOrganizationCoverImage($request);
+            $cover_images_path = $this->organizationService->updateOrganizationCoverImage($request);
             if ($cover_images_path) {
                 return $cover_images_path;
             }
@@ -137,10 +142,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function updateOrganization($request, $organizationService, $cover_images_path, $profile_images_path, $slug)
+    public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug)
     {
         try {
-            $organization = $organizationService->updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
+            $organization = $this->organizationService->updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
             if ($organization) {
                 return $organization;
             } else {
@@ -151,10 +156,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function updatesOrganizationAddress($organization_address, $organizationaddresss, $organization_id)
+    public function updatesOrganizationAddress($organization_address, $organization_id)
     {
         try {
-            return $organization_address = $organizationaddresss->updatesOrganizationAddress($organization_address, $organization_id);
+            return $organization_address = $this->organizationAddressService->updatesOrganizationAddress($organization_address, $organization_id);
         } catch (\Exception $e) {
             return $e;
 
@@ -162,10 +167,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function list($organizationService, $language)
+    public function list($language)
     {
         try {
-            $organization = $organizationService->list($language);
+            $organization = $this->organizationService->list($language);
             if ($organization) {
                 return $organization;
             }
@@ -176,10 +181,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function delete($slug, $organizationService, $language)
+    public function delete($slug, $language)
     {
         try {
-            $organization = $organizationService->delete($slug, $language);
+            $organization = $this->organizationService->delete($slug, $language);
             if ($organization) {
                 return true;
             }

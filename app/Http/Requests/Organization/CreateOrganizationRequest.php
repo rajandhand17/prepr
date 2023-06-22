@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Organization;
 
+use http\Env\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -25,19 +26,37 @@ class CreateOrganizationRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'user_id'      => 'required',
+
+        $base_rules = [
             'name'         => 'required|max:255',
             'description'  => 'required',
-            'profile_image'=> 'image',
-            'cover_image'  => 'image',
+            'profile_image'=> 'image|mimes:jpeg,jpg,png,webp|max:1024|dimensions:width=500,height=500',
+            'cover_image'  => 'image|mimes:jpeg,jpg,png,webp|max:1024',
             'category'     => 'required|exists:categories,id',
-            //    'address'      => 'required',
-            //    'city'         => 'required',
-            //    'state'        => 'required',
-            //    'country'      => 'required',
-            //    'zip_code'     => 'required',
+            'website' => 'required|url',
+            'slug' => 'required',
         ];
+
+        if($this->request->has('organization_address')){
+            $base_rules['organization_address'] = 'array';
+            $base_rules['organization_address.*.address_1'] = 'required|string';
+            $base_rules['organization_address.*.address_2'] = 'required|string';
+            $base_rules['organization_address.*.city'] = 'required|string';
+            $base_rules['organization_address.*.state'] = 'required|string';
+            $base_rules['organization_address.*.country'] = 'required|string';
+            $base_rules['organization_address.*.zip_code'] = 'required|string';
+            $base_rules['organization_address.*.latitude'] = 'required|string';
+            $base_rules['organization_address.*.longitude'] = 'required|string';
+        }
+
+        if($this->request->has('organization_members')){
+            $base_rules['organization_members'] = 'array';
+            $base_rules['organization_members.*.name'] = 'required|string';
+            $base_rules['organization_members.*.position'] = 'required|string';
+            $base_rules['organization_members.*.image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024|dimensions:width=500,height=500';
+        }
+
+        return $base_rules;
     }
 
     public function failedValidation(Validator $validator)
@@ -52,7 +71,6 @@ class CreateOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'user_id.required'    => __('responses.user_id_required'),
             'name.required'       => __('responses.organization_name_required'),
             'name.max'            => __('responses.organization_name_max'),
             'description.required'=> __('notification.notification_tdfdfir'),
@@ -60,11 +78,6 @@ class CreateOrganizationRequest extends FormRequest
             'cover_image.image'   => __('responses.cover_image'),
             'category.required'   => __('responses.organization_category_required'),
             'category.exists'     => __('responses.organization_category_exists'),
-            'address.required'    => __('responses.organization_address_required'),
-            'city.required'       => __('responses.organization_city_required'),
-            'state.required'      => __('responses.organization_state_required'),
-            'country.required'    => __('responses.organization_zip_code_required'),
-            'zip_code.required'   => __('responses.zip_code_required'),
         ];
     }
 }

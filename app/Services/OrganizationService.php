@@ -6,10 +6,11 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use DB;
+use function auth;
 
 class OrganizationService
 {
-    public function checkOrganizationExist($request)
+    public static function checkOrganizationExist($request)
     {
         try {
             $organization_exists = Organization::select('id')->where('name', $request->name)->withTrashed()->first();
@@ -21,7 +22,7 @@ class OrganizationService
         }
     }
 
-    public function checkOrganizationExistInTrash($request)
+    public static function checkOrganizationExistInTrash($request)
     {
         try {
             $organization_trashed_exists = Organization::select('id')->where('name', $request->name)->onlyTrashed()->first();
@@ -35,7 +36,7 @@ class OrganizationService
         }
     }
 
-    public function uploadOrganizationProfileImage($request)
+    public static function uploadOrganizationProfileImage($request)
     {
         try {
             $profile_image_path = FileUploadHelper::uploadImageToS3($request->profile_image, 'organization');
@@ -49,7 +50,7 @@ class OrganizationService
         }
     }
 
-    public function uploadOrganizationCoverImage($request)
+    public static function uploadOrganizationCoverImage($request)
     {
         try {
             $cover_image_path = FileUploadHelper::uploadImageToS3($request->cover_image, 'organization');
@@ -63,7 +64,7 @@ class OrganizationService
         }
     }
 
-    public function updateOrganizationProfileImage($request)
+    public static function updateOrganizationProfileImage($request)
     {
         try {
             $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
@@ -77,7 +78,7 @@ class OrganizationService
         }
     }
 
-    public function updateOrganizationCoverImage($request)
+    public static function updateOrganizationCoverImage($request)
     {
         try {
             $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->cover_image, 'organization');
@@ -91,31 +92,30 @@ class OrganizationService
         }
     }
 
-    public function checkSlug($slug)
+    public static function checkSlug($slug)
     {
         try {
             $slug = Organization::where('slug', $slug)->first();
             if ($slug) {
                 return true;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function createOrganization($request, $profile_image_path, $cover_image_path)
+    public static function createOrganization($request, $profile_image_path, $cover_image_path)
     {
         try {
             DB::beginTransaction();
             $model = new Organization();
             $organization = new Organization();
             $organization->language = isset($request->language) ? $request->language : 'en';
-            $organization->user_id = $request->user_id;
+            $organization->user_id = auth()->user()->id;
             $organization->name = $request->name;
             $organization->description = isset($request->description) ? $request->description : null;
-            $organization->slug = UtilityHelper::generateSlug($request->name, $model);
+            $organization->slug = UtilityHelper::generateSlug($request->slug, $model);
             $organization->cover_image = $cover_image_path;
             $organization->profile_image = $profile_image_path;
             $organization->website = isset($request->website) ? $request->website : null;
@@ -139,7 +139,7 @@ class OrganizationService
         }
     }
 
-    public function view($search = null, $language = 'en')
+    public static function view($search = null, $language = 'en')
     {
         try {
             $organization_list = Organization::with('categoryDetail')->with('organizationAddress')->with('organizationMembers');
@@ -164,14 +164,13 @@ class OrganizationService
 
                 return $organization_list;
             }
-
             return 'not_exists';
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function list($language)
+    public static function list($language)
     {
         try {
             $organization_list = Organization::select('id', 'language', 'name', 'slug', 'description', 'cover_image', 'profile_image', 'website', 'about', 'category', 'status', 'is_verified', 'total_employees');
@@ -185,7 +184,7 @@ class OrganizationService
         }
     }
 
-    public function delete($slug = null, $language = 'en')
+    public static function delete($slug = null, $language = 'en')
     {
         try {
             $exists = Organization::select('id')->where('slug', $slug)->first();
@@ -204,7 +203,7 @@ class OrganizationService
         }
     }
 
-    public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug)
+    public static function updateOrganization($request, $cover_images_path, $profile_images_path, $slug)
     {
         try {
             $organization = Organization::select('id', 'language', 'name', 'slug', 'description', 'cover_image', 'profile_image', 'website', 'about', 'category', 'status', 'is_verified', 'total_employees')->where('slug', $slug)->first();

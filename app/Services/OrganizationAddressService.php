@@ -7,7 +7,7 @@ use DB;
 
 class OrganizationAddressService
 {
-    public function createOrganizationAddress($request, $organization_id)
+    public static function createOrganizationAddress($request, $organization_id)
     {
         try {
             if (isset($request->organization_address) && !empty($request->organization_address)) {
@@ -17,33 +17,29 @@ class OrganizationAddressService
                     $organization_address->organization_id = $organization_id;
                     $organization_address->latitude = isset($data['latitude']) ? $data['latitude'] : null;
                     $organization_address->longitude = isset($data['longitude']) ? $data['longitude'] : null;
-                    $organization_address->address = $data['address'];
+                    $organization_address->full_address = $data['address_1']. ', '. $data['address_2'];
+                    $organization_address->address_1 = $data['address_1'];
+                    $organization_address->address_2 = $data['address_2'];
                     $organization_address->city = $data['city'];
                     $organization_address->state = $data['state'];
                     $organization_address->country = $data['country'];
                     $organization_address->zip_code = $data['zip_code'];
-                    if (!$organization_address->save()) {
-                        DB::rollback();
-
-                        return false;
-                    }
+                    $organization_address->save();
                 }
                 DB::commit();
-
                 return true;
             }
+            return false;
         } catch (\Exception $e) {
             DB::rollback();
-
-            return $e;
-
             return false;
         }
     }
 
-    public function updatesOrganizationAddress($request, $organization_id)
+    public static function updatesOrganizationAddress($request, $organization_id)
     {
         try {
+            $organization_id = 1;
             $organization_address_records = OrganizationAddress::where('organization_id', $organization_id)->first();
             foreach ($request as $request) {
                 $organization_address = OrganizationAddress::find($organization_address_records->id);
@@ -58,11 +54,9 @@ class OrganizationAddressService
                     return true;
                 }
             }
-
             return false;
         } catch (\Exception $e) {
             return $e;
-
             return false;
         }
     }

@@ -27,11 +27,11 @@ class OrganizationResource extends JsonResource
             'about'           => $this->about,
             'status'          => $this->status,
             'total_employees' => $this->total_employees,
-            'organization_address'=>$this->organizationAddress,
-            'members'         => $this->organizationMembers,
-            'lab'             => 0,
-            'challanges'      => 0,
-            'resources'       => 0,
+            'lab_count'       => 0,
+            'challange_count'      => 0,
+            'resource_count'       => 0,
+            'organization_address' => OrganizationAddressResource::collection($this->organizationAddress),
+            'organization_members' => OrganizationMemberResource::collection($this->organizationMembers),
         ];
     }
 }
