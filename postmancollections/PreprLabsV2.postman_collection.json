@@ -12836,7 +12836,7 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/member-management/organisation/prepr?language=en",
+							"raw": "{{url}}/api/v1/member-management/organization/preprlabs-org?language=en",
 							"host": [
 								"{{url}}"
 							],
@@ -12844,35 +12844,86 @@
 								"api",
 								"v1",
 								"member-management",
-								"organisation",
-								"prepr"
+								"organization",
+								"preprlabs-org"
 							],
 							"query": [
 								{
-									"key": "searchname",
-									"value": "rajan",
-									"disabled": true
-								},
+									"key": "language",
+									"value": "en"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download Sample CSV",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/member-management/download-sample?language=en",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"member-management",
+								"download-sample"
+							],
+							"query": [
 								{
-									"key": "email_status",
-									"value": "scheduled",
-									"disabled": true
-								},
+									"key": "language",
+									"value": "en"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get External Roles",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "role",
-									"value": "orgnization_manager",
-									"disabled": true
-								},
-								{
-									"key": "module_type",
-									"value": "organization",
-									"disabled": true
-								},
-								{
-									"key": "org_id",
-									"value": "26",
-									"disabled": true
-								},
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/member-management/get-roles?language=en",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"member-management",
+								"get-roles"
+							],
+							"query": [
 								{
 									"key": "language",
 									"value": "en"
@@ -12897,17 +12948,17 @@
 								},
 								{
 									"key": "invite_type",
-									"value": "csv",
+									"value": "email",
 									"type": "default"
 								},
 								{
 									"key": "role",
-									"value": "orgnization_manager",
+									"value": "Organization Owner",
 									"type": "default"
 								},
 								{
 									"key": "module_id",
-									"value": "26",
+									"value": "1",
 									"type": "default"
 								},
 								{
@@ -12932,8 +12983,8 @@
 								},
 								{
 									"key": "invite_email",
-									"type": "file",
-									"src": "/C:/Users/Rajan/Downloads/CSV_Data_2023_4_17 17_41.csv"
+									"value": "",
+									"type": "text"
 								},
 								{
 									"key": "inviter_id",
@@ -12943,7 +12994,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/member-management/organization/prepr/create?language=en",
+							"raw": "{{url}}/api/v1/member-management/organization/preprlabs-org/create?language=en",
 							"host": [
 								"{{url}}"
 							],
@@ -12952,7 +13003,7 @@
 								"v1",
 								"member-management",
 								"organization",
-								"prepr",
+								"preprlabs-org",
 								"create"
 							],
 							"query": [
@@ -13500,11 +13551,6 @@
 		{
 			"key": "url",
 			"value": "http://localhost:8000"
-		},
-		{
-			"key": "beta",
-			"value": "https://betaapis.learnlab.ai",
-			"type": "string"
 		},
 		{
 			"key": "bearer_token",
