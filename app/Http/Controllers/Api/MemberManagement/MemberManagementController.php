@@ -202,19 +202,20 @@ class MemberManagementController extends AppBaseController
     public function create($component, $slug, CreateMemberManagementRequest $request)
     {
         try {
-
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfrist($component)." Not Found" , 403);
+                return $this->sendError(ucfrist($component).' Not Found', 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
 
             if ($memberLists != false) {
                 return $this->sendResponse($memberLists, __('responses.create_member_manger_success'));
             }
+
             return $this->sendError(__('responses.create_member_manger_failed'), 403);
         } catch (\Exception $e) {
             dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

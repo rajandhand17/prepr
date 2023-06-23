@@ -39,6 +39,7 @@ class CreateMemberManagementRequest extends FormRequest
         if ($check_csv_request == 'csv') {
             $rules['invite_email'] = 'required|mimes:csv,txt';
         }
+
         return $rules;
     }
 
