@@ -29,17 +29,15 @@ class CreateMemberManagementRequest extends FormRequest
         $rules = [
             'type'         => 'required',
             'invite_type'  => 'required',
-            'module_id'    => 'required|exists:organizations,id',
             'invite_email' => 'required',
-            'role'         => 'required|exists:roles,name',
-            'inviter_id'   => 'required|exists:users,id',
+            'role'         => 'required|exists:roles,display_name',
             'subject_line' => 'required',
             'email_body'   => 'required',
             'invite_status'=> 'required',
 
         ];
         if ($check_csv_request == 'csv') {
-            $rules['invite_email'] = 'required|mimes:csv';
+            $rules['invite_email'] = 'required|mimes:csv,txt';
         }
 
         return $rules;

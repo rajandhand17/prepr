@@ -35,83 +35,28 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-     public function addMembers($component, $slug, $request)
+     public function addMembers($componentCollectionObject, $component, $request)
      {
          try {
-             $invalid_email_data = [];
-             $invalid_users = [];
-             $inserted_emails = [];
-             $not_inserted_emails = [];
-             $already_exists_emails = [];
-             $request->type = '0';
-             $request->invite_status = '0';
-             $invitee = [];
-             if ($request->invite_type != 'csv') {
-                 if (gettype($request->invite_email) != 'string') {
-                     return false;
-                 }
-                 $invitee = explode(',', $request->invite_email);
-
-                 if (!is_array($invitee)) {
-                     return false;
-                 }
-                 if ($request->invite_type == 'email') {
-                     $request->invite_type = '0';
-                 }
-                 if ($request->invite_type == 'network') {
-                     $request->invite_type = '1';
-                 }
-             }
+             $memberList = [];
              if ($request->invite_type == 'csv') {
-                 $request['invite_type'] = '3';
-                 /**get records from csv */
-                 $invitee = $this->memberManagementService->getRecordsFromCsv($request);
-                 if (!$invitee) {
+                 $memberList = $this->memberManagementService->getRecordsFromCsv($request);
+                 if (!$memberList && !count($memberList) > 0) {
                      return false;
                  }
              }
-             /**convert string to array */
-             foreach ($invitee as $invite_member) {
-                 /**in case invite type email */
-                 if ($request->invite_type == '1') {
-                     $user_data = $this->memberManagementService->checkEmail($invite_member);
-                     if ($user_data == null) {
-                         $invalid_users[] = $invite_member;
-                         continue;
-                     }
-                     $invite_member = $user_data->email;
-                 }
-                 if (filter_var(trim($invite_member), FILTER_VALIDATE_EMAIL)) {
-                     $result = $this->memberManagementService->insert($invite_member, $request);
-                     if ($result === true) {
-                         $inserted_emails[] = $invite_member;
-                     }
-                     if ($result === false) {
-                         $not_inserted_emails[] = $invite_member;
-                     }
-                     if ($result === 'already_exists') {
-                         $already_exists_emails[] = $invite_member;
-                     }
-                 } else {
-                     $invalid_email_data[] = $invite_member;
-                 }
-             }
-             $invalid_users = implode(',', $invalid_users);
-             $response = new \stdClass();
-             if (!empty($inserted_emails) || !empty($already_exists_emails)) {
-                 $response->status = true;
-                 $response->already_exists_emails = $already_exists_emails;
-                 $response->inserted_emails = $inserted_emails;
-                 $response->invalid_email_data = $invalid_email_data;
-                 if ($request->invite_type == '1') {
-                     $response->invalid_users = $invalid_users;
+
+             if (is_array($memberList) && count($memberList) > 0) {
+                 $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject, $component, $request, $memberList);
+
+                 if ($checkStatus != false) {
+                     return $checkStatus;
                  }
 
-                 return $response;
+                 return false;
              }
-             $response->status = false;
 
-             return $response;
+             return false;
          } catch (\Exception $e) {
              return false;
          }

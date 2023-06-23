@@ -6,7 +6,7 @@ interface MemberManagementInterface
 {
     public function getMembers($component, $slug, $request);
 
-    public function addMembers($component, $slug, $request);
+    public function addMembers($componentCollectionObject, $component, $request);
 
     public function deleteMembers($component, $slug, $request);
 
