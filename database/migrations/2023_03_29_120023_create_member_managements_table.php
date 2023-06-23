@@ -22,10 +22,10 @@ return new class() extends Migration {
             $table->string('role')->nullable();
             $table->enum('invite_status', ['0', '1', '2', '3', '4'])->default('2')->comment('0=>invited,1=>accepted,2=>pending,3=>declined 4 auto_created');
             $table->string('email')->nullable();
-            $table->enum('email_status', ['0', '1', '2', '3'])->default('2')->comment('0=>scheduled 1 => sent, 2=>fail');
+            $table->enum('email_status', ['0', '1', '2', '3'])->default('0')->comment('0=>scheduled 1 => sent, 2=>fail');
             $table->string('email_response')->nullable();
             $table->enum('email_resend_status', ['0', '1'])->default('1')->comment('0=>yes,1=>no');
-            $table->integer('email_resend_count');
+            $table->integer('email_resend_count')->default(0);
             $table->string('subject_line')->nullable();
             $table->text('email_body')->nullable();
             $table->index(['inviter_id']);

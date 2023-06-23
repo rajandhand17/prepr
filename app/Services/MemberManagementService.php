@@ -2,19 +2,17 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
-use App\Models\Organization;
-use App\Models\User;
+use DB;
 
 class MemberManagementService
 {
     public function getRecordsFromCsv($request)
     {
         try {
-            $invite_type = '3';
-            $csv_email_data = [];
-            /** checking extension of file  */
-            if (in_array($request->file('invite_email')->getClientMimeType(), ['application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv'])) {
+            $memberList = [];
+            if($request->hasFile('invite_email')){;
                 if (($handle = fopen($request->invite_email, 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
                     $count_header = count($header);
@@ -23,139 +21,133 @@ class MemberManagementService
                         /**checking place of email column one or two */
                         if ($header[0] == 'Email') {
                             $email_column = 0;
+                            $name_column = 1;
                         } else {
                             $email_column = 1;
+                            $name_column = 0;
                         }
                     } else {
                         return false;
                     }
                     /**getting data from csv and convert in array */
                     while (($csv_get_data = fgetcsv($handle, 1000, ',')) !== false) {
-                        $invitee[] = $csv_get_data[$email_column];
+                        $memberList[] = [
+                            "type" => config('constants.member_management_type.invite'),
+                            "invite_type" => config('constants.member_management_invite_type.csv'),
+                            "invitee_name" => $csv_get_data[$name_column],
+                            "invitee_email" => $csv_get_data[$email_column]
+                        ];
                     }
                     fclose($handle);
-
-                    return $invitee;
+                    if(!empty($memberList)){
+                        return $memberList;
+                    }
+                    return false;
                 }
-
                 return false;
             }
+            return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function insert($invitee, $request)
-    {
-        try {
-            if (!MemberManagement::where(['module_id' => (int) $request->module_id, 'role' => $request->role, 'email' => trim($invitee)])->exists()) {
-                $member_management_data = new MemberManagement();
-                $member_management_data->type = $request->type;
-                $member_management_data->invite_type = $request->invite_type;
-                $member_management_data->role = $request->role;
-                $member_management_data->email = trim($invitee);
-                $member_management_data->module_id = (int) $request->module_id;
-                $member_management_data->inviter_id = (int) $request->inviter_id;
-                $member_management_data->subject_line = $request->subject_line;
-                $member_management_data->email_body = $request->email_body;
-                $member_management_data->invite_status = $request->invite_status;
-                $member_management_data->email_status = '0';
-                $member_management_data->email_resend_count = '0';
-                if ($member_management_data->save()) {
-                    return true;
-                }
-
-                return false;
-            } else {
-                return 'already_exists';
+    public function addMembers($componentCollectionObject,$component, $request, $memberList){
+        try{
+            $already_members = [];
+            $invalid_emails = [];
+            $invited_emails = [];
+//            $module_type = null;
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.member_management_component_type.organization');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
             }
-        } catch (\Exception $e) {
+            $auto_invite = config('constants.member_management_auto_invite.no');
+
+            switch ($request->auto_invite) {
+                case 'Yes':
+                    $auto_invite = config('constants.member_management_auto_invite.yes');
+                    break;
+                case 'No':
+                    $auto_invite = config('constants.member_management_auto_invite.no');
+                    break;
+                case 'NA':
+                    $auto_invite = config('constants.member_management_auto_invite.na');
+                    break;
+                default:
+                    $auto_invite = config('constants.member_management_auto_invite.no');
+            }
+            if($module_type!==null){
+                DB::beginTransaction();
+                foreach($memberList as $member){
+                    if(UtilityHelper::validEmail($member['invitee_email'])){
+                        $checkMemberExists = MemberManagement::where([
+                            'module_id' => $componentCollectionObject->id,
+                            'module_type' => $module_type,
+                            'email' => $member['invitee_email']
+                        ])->first();
+                        if($checkMemberExists==null){
+
+                            $invite_status = config('constants.member_management_invite_status.invited');
+                            if($auto_invite == 0){
+                                $invite_status = config('constants.member_management_invite_status.invited');
+                            }
+
+                            if($auto_invite == 1){
+                                $invite_status = config('constants.member_management_invite_status.accepted');
+                            }
+
+                            if($auto_invite == 2){
+                                if($member['type'] == '1'){
+                                    $invite_status = config('constants.member_management_invite_status.pending');
+                                }elseif($member['type'] == '2'){
+                                    $invite_status = config('constants.member_management_invite_status.auto_created');
+                                }
+                            }
+
+                            MemberManagement::create([
+                                'type' => $member['type'],
+                                'invite_type' => $member['invite_type'],
+                                'module_id' => $componentCollectionObject->id,
+                                'module_type' => $module_type,
+                                'inviter_id' => ($member['type'] == 0) ? auth()->user()->id : $componentCollectionObject->user_id,
+                                'role' => $request->role,
+                                'email' => $member['invitee_email'],
+                                'auto_invite' => $auto_invite,
+                                'invite_status' => $member['type'],
+                                'invitee_name' => $member['invitee_name'],
+                                'email_status' => config('constants.member_management_email_status.scheduled'),
+                                'subject_line' => $request->subject_line,
+                                'email_body' => $request->email_body
+                            ]);
+
+                            $invited_emails[] = $member['invitee_email'];
+                        }
+                        else{
+                            $already_members[] = $member['invitee_email'];
+                        }
+                    }
+                    else{
+                        $invalid_emails[] = $member['invitee_email'];
+                    }
+                }
+                DB::commit();
+                $data = [
+                    'invalid_emails' => $invalid_emails,
+                    'invited_emails' => $invited_emails,
+                    'already_members' => $already_members,
+                ];
+                return $data;
+            }
+            DB::rollBack();
             return false;
-        }
-    }
 
-    public function checkEmail($invite_member)
-    {
-        $user = User::select('email')->where(['id' => (int) $invite_member])->first();
-        if ($user) {
-            return $user;
-        } else {
-            return null;
-        }
-    }
-
-    public function index($component, $slug, $request)
-    {
-        try {
-            $module_type = '0';
-            $module_id = '';
-            if ($component == 'organization') {
-                $module_type = '0';
-                $module_id = Organization::select('id')->where('slug', $slug)->first();
-                if ($module_id) {
-                    $module_id = $module_id->id;
-                }
-            } else {
-                $response = ['success' => false, 'message' => __('responses.wrong_component'), 'code'=>404];
-
-                return $response;
-            }
-            if ($module_id === null && $module_id == '') {
-                $response = ['success' => false, 'message' => __('labels.labels_org_noof'), 'code'=>404];
-
-                return $response;
-            }
-            $listing = MemberManagement::with(['user'])->with(['organization'])->where(['module_id'=>$module_id, 'module_type'=>$module_type]);
-
-            if (!empty($request->org_id)) {
-                $listing->where('id', $request->org_id);
-            }
-            if (!empty($request->role)) {
-                $listing->where('role', $request->role);
-            }
-            if (!empty($request->email_status)) {
-                if ($request->email_status == 'scheduled') {
-                    $email_status = '0';
-                } elseif ($request->email_status == 'sent') {
-                    $email_status = '1';
-                } elseif ($request->email_status == 'fail') {
-                    $email_status = '2';
-                }
-                $listing->where('email_status', $email_status);
-            }
-
-            if (!empty($request->searchname)) {
-                $listing->where(function ($q) use ($request) {
-                    $q->whereHas('user', function ($q) use ($request) {
-                        $q->where('username', 'like', '%'.$request->searchname.'%')->orWhere('first_name', 'like', '%'.$request->searchname.'%');
-                    })->orWhere('email', 'like', '%'.$request->searchname.'%');
-                });
-            }
-            $listing = $listing->get();
-            if (!$listing->isEmpty()) {
-                $response = ['success' => true, 'data'=>$listing, 'message' => __('labels.labels_org_noof'), 'code'=>200];
-
-                return $response;
-            } else {
-                $response = ['success' => true, 'message' => __('responses.no_member_organization'), 'code'=>200];
-
-                return $response;
-            }
         } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function delete($request)
-    {
-        try {
-            $member_manger = MemberManagement::whereIn('id', $request->id)->delete();
-            if ($member_manger) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch(\Exception $e) {
+            DB::rollBack();
             return false;
         }
     }
