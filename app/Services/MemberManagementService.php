@@ -12,7 +12,7 @@ class MemberManagementService
     {
         try {
             $memberList = [];
-            if($request->hasFile('invite_email')){;
+            if ($request->hasFile('invite_email')) {
                 if (($handle = fopen($request->invite_email, 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
                     $count_header = count($header);
@@ -32,28 +32,32 @@ class MemberManagementService
                     /**getting data from csv and convert in array */
                     while (($csv_get_data = fgetcsv($handle, 1000, ',')) !== false) {
                         $memberList[] = [
-                            "type" => config('constants.member_management_type.invite'),
-                            "invite_type" => config('constants.member_management_invite_type.csv'),
-                            "invitee_name" => $csv_get_data[$name_column],
-                            "invitee_email" => $csv_get_data[$email_column]
+                            'type'          => config('constants.member_management_type.invite'),
+                            'invite_type'   => config('constants.member_management_invite_type.csv'),
+                            'invitee_name'  => $csv_get_data[$name_column],
+                            'invitee_email' => $csv_get_data[$email_column],
                         ];
                     }
                     fclose($handle);
-                    if(!empty($memberList)){
+                    if (!empty($memberList)) {
                         return $memberList;
                     }
+
                     return false;
                 }
+
                 return false;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function addMembers($componentCollectionObject,$component, $request, $memberList){
-        try{
+    public function addMembers($componentCollectionObject, $component, $request, $memberList)
+    {
+        try {
             $already_members = [];
             $invalid_emails = [];
             $invited_emails = [];
@@ -81,73 +85,72 @@ class MemberManagementService
                 default:
                     $auto_invite = config('constants.member_management_auto_invite.no');
             }
-            if($module_type!==null){
+            if ($module_type !== null) {
                 DB::beginTransaction();
-                foreach($memberList as $member){
-                    if(UtilityHelper::validEmail($member['invitee_email'])){
+                foreach ($memberList as $member) {
+                    if (UtilityHelper::validEmail($member['invitee_email'])) {
                         $checkMemberExists = MemberManagement::where([
-                            'module_id' => $componentCollectionObject->id,
+                            'module_id'   => $componentCollectionObject->id,
                             'module_type' => $module_type,
-                            'email' => $member['invitee_email']
+                            'email'       => $member['invitee_email'],
                         ])->first();
-                        if($checkMemberExists==null){
-
+                        if ($checkMemberExists == null) {
                             $invite_status = config('constants.member_management_invite_status.invited');
-                            if($auto_invite == 0){
+                            if ($auto_invite == 0) {
                                 $invite_status = config('constants.member_management_invite_status.invited');
                             }
 
-                            if($auto_invite == 1){
+                            if ($auto_invite == 1) {
                                 $invite_status = config('constants.member_management_invite_status.accepted');
                             }
 
-                            if($auto_invite == 2){
-                                if($member['type'] == '1'){
+                            if ($auto_invite == 2) {
+                                if ($member['type'] == '1') {
                                     $invite_status = config('constants.member_management_invite_status.pending');
-                                }elseif($member['type'] == '2'){
+                                } elseif ($member['type'] == '2') {
                                     $invite_status = config('constants.member_management_invite_status.auto_created');
                                 }
                             }
 
                             MemberManagement::create([
-                                'type' => $member['type'],
-                                'invite_type' => $member['invite_type'],
-                                'module_id' => $componentCollectionObject->id,
-                                'module_type' => $module_type,
-                                'inviter_id' => ($member['type'] == 0) ? auth()->user()->id : $componentCollectionObject->user_id,
-                                'role' => $request->role,
-                                'email' => $member['invitee_email'],
-                                'auto_invite' => $auto_invite,
+                                'type'          => $member['type'],
+                                'invite_type'   => $member['invite_type'],
+                                'module_id'     => $componentCollectionObject->id,
+                                'module_type'   => $module_type,
+                                'inviter_id'    => ($member['type'] == 0) ? auth()->user()->id : $componentCollectionObject->user_id,
+                                'role'          => $request->role,
+                                'email'         => $member['invitee_email'],
+                                'auto_invite'   => $auto_invite,
                                 'invite_status' => $member['type'],
-                                'invitee_name' => $member['invitee_name'],
-                                'email_status' => config('constants.member_management_email_status.scheduled'),
-                                'subject_line' => $request->subject_line,
-                                'email_body' => $request->email_body
+                                'invitee_name'  => $member['invitee_name'],
+                                'email_status'  => config('constants.member_management_email_status.scheduled'),
+                                'subject_line'  => $request->subject_line,
+                                'email_body'    => $request->email_body,
                             ]);
 
                             $invited_emails[] = $member['invitee_email'];
-                        }
-                        else{
+                        } else {
                             $already_members[] = $member['invitee_email'];
                         }
-                    }
-                    else{
+                    } else {
                         $invalid_emails[] = $member['invitee_email'];
                     }
                 }
                 DB::commit();
                 $data = [
-                    'invalid_emails' => $invalid_emails,
-                    'invited_emails' => $invited_emails,
+                    'invalid_emails'  => $invalid_emails,
+                    'invited_emails'  => $invited_emails,
                     'already_members' => $already_members,
                 ];
+
                 return $data;
             }
             DB::rollBack();
-            return false;
 
+            return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
