@@ -13,7 +13,6 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
-use App\Http\Resources\Roles\RolesResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use Illuminate\Http\Request;
 
@@ -289,6 +288,7 @@ class MemberManagementController extends AppBaseController
                     return $role->display_name == config('constants.role_name.organization_owner');
                 });
             }
+
             return $this->sendError('Roles not found', 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

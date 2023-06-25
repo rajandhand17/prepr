@@ -185,8 +185,9 @@ class MemberManagementService
         }
     }
 
-    public function getComponentBasedUser($componentCollectionObject,$component,$slug,$request){
-        try{
+    public function getComponentBasedUser($componentCollectionObject, $component, $slug, $request)
+    {
+        try {
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
@@ -195,9 +196,7 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-        }
-        catch (\Exception $e){
-
+        } catch (\Exception $e) {
         }
     }
 }
