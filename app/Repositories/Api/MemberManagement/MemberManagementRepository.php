@@ -35,7 +35,7 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-     public function addMembers($componentCollectionObject,$component, $request)
+     public function addMembers($componentCollectionObject, $component, $request)
      {
          try {
              $memberList = [];
@@ -52,14 +52,16 @@ class MemberManagementRepository implements MemberManagementInterface
                  }
              }
 
-             if(is_array($memberList) && count($memberList)>0){
-                 $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject,$component, $request, $memberList);
+             if (is_array($memberList) && count($memberList) > 0) {
+                 $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject, $component, $request, $memberList);
 
-                 if($checkStatus != false){
+                 if ($checkStatus != false) {
                      return $checkStatus;
                  }
+
                  return false;
              }
+
              return false;
          } catch (\Exception $e) {
              return false;
