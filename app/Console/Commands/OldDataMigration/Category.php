@@ -43,7 +43,7 @@ class Category extends Command
             $this->info('Migrating old data for categories table.');
             DB::beginTransaction();
 
-            $categories = DB::connection('mysql2')->table('categories')->where('id',35)->get();
+            $categories = DB::connection('mysql2')->table('categories')->get();
 
             if ($categories->count() > 0) {
                 foreach ($categories as $key => $single_category) {
