@@ -45,6 +45,12 @@ class MemberManagementRepository implements MemberManagementInterface
                      return false;
                  }
              }
+             if ($request->invite_type == 'email') {
+                 $memberList = $this->memberManagementService->getRecordsFromEmailArray($request);
+                 if (!$memberList && !count($memberList) > 0) {
+                     return false;
+                 }
+             }
 
              if(is_array($memberList) && count($memberList)>0){
                  $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject,$component, $request, $memberList);

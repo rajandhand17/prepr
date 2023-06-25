@@ -214,7 +214,6 @@ class MemberManagementController extends AppBaseController
             }
             return $this->sendError(__('responses.create_member_manger_failed'), 403);
         } catch (\Exception $e) {
-            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

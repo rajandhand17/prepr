@@ -34,9 +34,7 @@ class Language
 
             return Response::json(ResponseUtil::makeError('Please provide the language.'), 400);
         } catch (\Exception $e) {
-            dd($e);
-
-            return Response::json(ResponseUtil::makeError('Something went wrong during setting up the application language.'), 400);
+            return Response::json(ResponseUtil::makeError('Something went wrong during setting up the application language.'), 500);
         }
     }
 }

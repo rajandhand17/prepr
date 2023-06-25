@@ -12,7 +12,7 @@ class MemberManagementService
     {
         try {
             $memberList = [];
-            if($request->hasFile('invite_email')){;
+            if($request->hasFile('invite_email')){
                 if (($handle = fopen($request->invite_email, 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
                     $count_header = count($header);
@@ -52,12 +52,40 @@ class MemberManagementService
         }
     }
 
+    public function getRecordsFromEmailArray($request)
+    {
+        try {
+            $memberList = [];
+            if(is_array($request->invite_email)){
+                foreach ($request->invite_email as $email) {
+                    $user = UserService::getUserByEmail($email);
+                    $name=null;
+                    if($user){
+                        $name = $user->first_name.' '.$user->last_name;
+                    }
+                    $memberList[] = [
+                        "type" => config('constants.member_management_type.invite'),
+                        "invite_type" => config('constants.member_management_invite_type.email'),
+                        "invitee_name" => $name,
+                        "invitee_email" => $email,
+                    ];
+                }
+                if(!empty($memberList)){
+                    return $memberList;
+                }
+                return false;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function addMembers($componentCollectionObject,$component, $request, $memberList){
         try{
             $already_members = [];
             $invalid_emails = [];
             $invited_emails = [];
-//            $module_type = null;
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
@@ -69,13 +97,13 @@ class MemberManagementService
             $auto_invite = config('constants.member_management_auto_invite.no');
 
             switch ($request->auto_invite) {
-                case 'Yes':
+                case ('Yes' || 'YES' || 'yes'):
                     $auto_invite = config('constants.member_management_auto_invite.yes');
                     break;
-                case 'No':
+                case ('No' || 'NO' || 'no'):
                     $auto_invite = config('constants.member_management_auto_invite.no');
                     break;
-                case 'NA':
+                case ('Na' || 'NA' || 'na') :
                     $auto_invite = config('constants.member_management_auto_invite.na');
                     break;
                 default:
