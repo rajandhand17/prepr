@@ -33,7 +33,7 @@ class CreateMemberManagementRequest extends FormRequest
             'role'         => 'required|exists:roles,display_name',
             'subject_line' => 'required',
             'email_body'   => 'required',
-            'auto_invite'  => 'required|in:yes,no,na'
+            'auto_invite'  => 'required|in:yes,no,na',
         ];
         if ($check_invite_type == 'csv') {
             $rules['invite_email'] = 'required|mimes:csv,txt';
@@ -42,6 +42,7 @@ class CreateMemberManagementRequest extends FormRequest
             $rules['invite_email'] = 'required|array';
             $rules['invite_email.*'] = 'required|email';
         }
+
         return $rules;
     }
 
