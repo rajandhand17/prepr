@@ -31,6 +31,7 @@ class OrganizationResource extends JsonResource
             'lab_count'             => 0,
             'challange_count'       => 0,
             'resource_count'        => 0,
+            'organization_users_count'    => 0,
             'member_since'          => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'  => OrganizationAddressResource::collection($this->organizationAddress),
             'organization_members'  => OrganizationMemberResource::collection($this->organizationMembers),
