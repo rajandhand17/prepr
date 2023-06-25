@@ -13,7 +13,6 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
-use App\Http\Resources\Roles\RolesResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use Illuminate\Http\Request;
 
@@ -214,8 +213,6 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendError(__('responses.create_member_manger_failed'), 403);
         } catch (\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -287,13 +284,9 @@ class MemberManagementController extends AppBaseController
         try {
             $getRoles = $this->memberManagementRepository->getRoles(config('constants.role_type.external'));
             if ($getRoles) {
-                if (!auth()->user()->isAbleTo('change_organization_ownership')) {
-                    $getRoles = $getRoles->reject(function ($role) {
-                        return $role->display_name == config('constants.role_name.organization_owner');
-                    });
-                }
-
-                return $this->sendResponse(RolesResource::collection($getRoles), 'Roles fetched successfully');
+                $getRoles = $getRoles->reject(function ($role) {
+                    return $role->display_name == config('constants.role_name.organization_owner');
+                });
             }
 
             return $this->sendError('Roles not found', 400);

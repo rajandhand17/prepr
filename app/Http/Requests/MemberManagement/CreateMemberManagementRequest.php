@@ -25,19 +25,22 @@ class CreateMemberManagementRequest extends FormRequest
      */
     public function rules()
     {
-        $check_csv_request = $this->request->get('invite_type');
+        $check_invite_type = $this->request->get('invite_type');
+
         $rules = [
-            'type'         => 'required',
-            'invite_type'  => 'required',
-            'invite_email' => 'required',
+            'type'         => 'required|in:invite,join_request,auto_created',
+            'invite_type'  => 'required|in:email,csv',
             'role'         => 'required|exists:roles,display_name',
             'subject_line' => 'required',
             'email_body'   => 'required',
-            'invite_status'=> 'required',
-
+            'auto_invite'  => 'required|in:yes,no,na',
         ];
-        if ($check_csv_request == 'csv') {
+        if ($check_invite_type == 'csv') {
             $rules['invite_email'] = 'required|mimes:csv,txt';
+        }
+        if ($check_invite_type == 'email') {
+            $rules['invite_email'] = 'required|array';
+            $rules['invite_email.*'] = 'required|email';
         }
 
         return $rules;

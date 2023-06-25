@@ -47,16 +47,13 @@ class Category extends Command
 
             if ($categories->count() > 0) {
                 foreach ($categories as $key => $single_category) {
-                    $category_details = [
+                    $created = Categories::updateOrCreate([
                         'name'       => $single_category->name,
+                    ], [
                         'fr_CA_name' => $single_category->fr_CA_name,
-                        'components' => $single_category->components,
+                        'components' => (string) $single_category->components,
                         'parent_id'  => $single_category->parent_id,
-                    ];
-                    $check_category = Categories::where($category_details)->first();
-                    if (!$check_category) {
-                        Categories::create($category_details);
-                    }
+                    ]);
                 }
                 DB::commit();
                 $this->info('Migrating of old data for categories table completed.');
