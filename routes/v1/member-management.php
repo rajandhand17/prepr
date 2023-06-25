@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\MemberManagement\MemberManagementController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language', 'auth:api','check.component'])->group(function () {
+Route::middleware(['language', 'auth:api', 'check.component'])->group(function () {
     Route::get('/get-roles ', [MemberManagementController::class, 'getRoles']);
     Route::get('/download-sample ', [MemberManagementController::class, 'downloadSample']);
     Route::get('/{component}/{slug}', [MemberManagementController::class, 'index']);

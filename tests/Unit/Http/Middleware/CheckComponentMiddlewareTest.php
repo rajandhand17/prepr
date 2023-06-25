@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Middleware;
 
-use App\Http\Middleware\CheckComponentMiddleware;
 use Tests\TestCase;
 
 /**
