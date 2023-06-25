@@ -181,4 +181,20 @@ class MemberManagementService
             return false;
         }
     }
+
+    public function getComponentBasedUser($componentCollectionObject,$component,$slug,$request){
+        try{
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.member_management_component_type.organization');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
+            }
+        }
+        catch (\Exception $e){
+
+        }
+    }
 }

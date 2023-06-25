@@ -285,15 +285,10 @@ class MemberManagementController extends AppBaseController
         try {
             $getRoles = $this->memberManagementRepository->getRoles(config('constants.role_type.external'));
             if ($getRoles) {
-                if (!auth()->user()->isAbleTo('change_organization_ownership')) {
-                    $getRoles = $getRoles->reject(function ($role) {
-                        return $role->display_name == config('constants.role_name.organization_owner');
-                    });
-                }
-
-                return $this->sendResponse(RolesResource::collection($getRoles), 'Roles fetched successfully');
+                $getRoles = $getRoles->reject(function ($role) {
+                    return $role->display_name == config('constants.role_name.organization_owner');
+                });
             }
-
             return $this->sendError('Roles not found', 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
