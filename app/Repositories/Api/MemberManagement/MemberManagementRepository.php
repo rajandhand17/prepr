@@ -21,7 +21,7 @@ class MemberManagementRepository implements MemberManagementInterface
     {
         try {
             return $this->memberManagementService->getMembers($componentCollectionObject, $component);
-            
+
         } catch (\Exception $e) {
             return false;
         }
@@ -30,7 +30,7 @@ class MemberManagementRepository implements MemberManagementInterface
     public function deleteMembers($checkComponentBasedOnSlug,$request)
     {
         try {
-            return $this->memberManagementService->delete($checkComponentBasedOnSlug,$request);
+            return $this->memberManagementService->deleteMembers($checkComponentBasedOnSlug,$request);
         } catch (\Exception $e) {
             return false;
         }

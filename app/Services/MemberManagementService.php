@@ -186,25 +186,32 @@ class MemberManagementService
         }
     }
 
-    public function getComponentBasedUser($componentCollectionObject, $component, $slug, $request)
+    public function getComponentBasedUsers($componentCollectionObject, $component, $slug, $request)
     {
         try {
+            $memberList = [];
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
+                    $memberListCollection = MemberManagement::with(['user'])->with(['organizations']);
                     break;
                 default:
                     $module_type = null;
                     break;
             }
+            if(!empty($memberList)){
+
+                $memberList = $this->filterUserList($memberListCollection,$request);
+
+            }
         } catch (\Exception $e) {
         }
     }
 
-    public function delete($checkComponentBasedOnSlug,$request)
+    public function deleteMembers($checkComponentBasedOnSlug,$request)
     {
         try {
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where("module_id",$checkComponentBasedOnSlug->id)->delete();    
+            $member_manger = MemberManagement::whereIn('email', $request->email)->where("module_id",$checkComponentBasedOnSlug->id)->delete();
                 if ($member_manger) {
                     return true;
                 } else {
@@ -215,28 +222,8 @@ class MemberManagementService
         }
     }
 
-    
-    public function getMembers($componentCollectionObject, $component)
-    {
-        try {
-            switch ($component) {
-                case 'organization':
-                    $module_type = config('constants.member_management_component_type.organization');
-                    break;
-                default:
-                    $module_type = null;
-                    break;
-            }
-            $listing = MemberManagement::with(['user'])->with(['organizations'])->with('organizationAddress')->where(['module_id'=>$componentCollectionObject->id, 'module_type'=>$module_type]);
-            $listing = $listing->get();
-            if(count($listing) > 0) {
-                return $listing;
-            }else{
-                return false;
-            }
-        } catch (\Exception $e) {
-            return false;
-        }
+    function filterUserList($componentCollectionObject,$request){
+
     }
 
 }
