@@ -10476,5 +10476,14 @@
       }
     }
   },
-  "servers": []
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "PreprlabsV2 Localhost"
+    },
+    {
+      "url": "https://betaapis.learnlab.ai",
+      "description": "PreprlabsV2 Beta"
+    }
+  ]
 }
