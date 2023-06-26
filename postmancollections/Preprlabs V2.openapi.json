@@ -9699,7 +9699,7 @@
         "x-run-in-apidog": "https://apidog.com/web/project/369794/apis/api-3830599-run"
       }
     },
-    "/api/v1/organization/prepr-foundation": {
+    "/api/v1/organization/prepr-org": {
       "get": {
         "summary": "View Organization",
         "x-apidog-folder": "Organization APIs",
@@ -9837,106 +9837,6 @@
           }
         },
         "x-run-in-apidog": "https://apidog.com/web/project/369794/apis/api-3830602-run"
-      }
-    },
-    "/api/v1/member-management/organization/preprlabs-org/create": {
-      "post": {
-        "summary": "Add Memebers - Username",
-        "x-apidog-folder": "Member Management APIs",
-        "x-apidog-status": "released",
-        "deprecated": false,
-        "description": "",
-        "tags": [
-          "Member Management APIs"
-        ],
-        "parameters": [
-          {
-            "name": "language",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "en",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "invite"
-                  },
-                  "invite_type": {
-                    "type": "string",
-                    "example": "email"
-                  },
-                  "role": {
-                    "type": "string",
-                    "example": "Organization Owner"
-                  },
-                  "module_id": {
-                    "type": "string",
-                    "example": "1"
-                  },
-                  "inviter_id": {
-                    "type": "array",
-                    "example": [
-                      "2",
-                      "15"
-                    ]
-                  },
-                  "subject_line": {
-                    "type": "string",
-                    "example": "testing"
-                  },
-                  "email_body": {
-                    "type": "string",
-                    "example": "email messages"
-                  },
-                  "invite_status": {
-                    "type": "string",
-                    "example": "pending"
-                  },
-                  "invite_email": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "invite_type",
-                  "role",
-                  "module_id",
-                  "inviter_id",
-                  "subject_line",
-                  "email_body",
-                  "invite_status",
-                  "invite_email"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apidog-orders": [],
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            }
-          }
-        },
-        "x-run-in-apidog": "https://apidog.com/web/project/369794/apis/api-3831011-run"
       }
     },
     "/api/v1/organization/check-slug/prepr-org": {
@@ -10376,7 +10276,7 @@
     },
     "/api/v1/member-management/organization/prepr-org/create": {
       "post": {
-        "summary": "Add Memebers - CSV",
+        "summary": "Add Memebers - Email",
         "x-apidog-folder": "Member Management APIs",
         "x-apidog-status": "released",
         "deprecated": false,
@@ -10408,7 +10308,7 @@
                   },
                   "invite_type": {
                     "type": "string",
-                    "example": "csv"
+                    "example": "email"
                   },
                   "role": {
                     "type": "string",
@@ -10416,16 +10316,19 @@
                   },
                   "subject_line": {
                     "type": "string",
-                    "example": "testing"
+                    "example": "Invitation to join an organization"
                   },
                   "email_body": {
                     "type": "string",
-                    "example": "email messages"
+                    "example": "You have been invited to join an organzarion"
                   },
-                  "invite_email": {
-                    "type": "string",
-                    "example": "file://C:\\Users\\vk671\\Downloads\\member-management-sample.csv",
-                    "format": "binary"
+                  "invite_email[]": {
+                    "type": "array",
+                    "example": [
+                      "vk671991@gmail.com",
+                      "rajan@prepr.org",
+                      "shagun@prepr.org"
+                    ]
                   },
                   "auto_invite": {
                     "type": "string",
@@ -10438,7 +10341,7 @@
                   "role",
                   "subject_line",
                   "email_body",
-                  "invite_email"
+                  "invite_email[]"
                 ]
               }
             }
@@ -10459,7 +10362,7 @@
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/369794/apis/api-3831010-run"
+        "x-run-in-apidog": "https://apidog.com/web/project/369794/apis/api-3834709-run"
       }
     }
   },
@@ -10573,10 +10476,5 @@
       }
     }
   },
-  "servers": [
-    {
-      "url": "http://localhost:8000",
-      "description": "PreprlabsV2 Localhost"
-    }
-  ]
+  "servers": []
 }
