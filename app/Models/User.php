@@ -339,7 +339,7 @@ class User extends Authenticatable
             }
             /**Matching otp is same or not */
             if ($user->otp == $request->otp) {
-                $user = User::find($user->id);
+                $user->email_verified_at = Carbon::now();
                 $user->verified_user = '1';
                 if ($user->save()) {
                     $data = ['subject' => 'Verified Successfully!', 'first_name' => $user->first_name, 'last_name' => $user->last_name];

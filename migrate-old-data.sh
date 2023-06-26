@@ -9,7 +9,7 @@ php artisan migrate-old-data:project-status
 php artisan migrate-old-data:project-type
 php artisan migrate-old-data:project-verticals
 php artisan migrate-old-data:ranks
-php artisan migrate-old-data:skills
-php artisan migrate-old-data:skill-stacks
 php artisan migrate-old-data:social-link
 php artisan migrate-old-data:tags
+php artisan migrate-old-data:skills
+php artisan migrate-old-data:skill-stacks
