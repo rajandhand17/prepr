@@ -16,6 +16,7 @@ use App\Http\Resources\MemberManagement\MemberManagementResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use Illuminate\Http\Request;
 
+
 class MemberManagementController extends AppBaseController
 {
     private $memberManagementRepository;
@@ -82,12 +83,12 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $member_mangement = $this->memberManagementRepository->getMembers($component, $slug, $request);
-            if ($member_mangement['success'] == true && isset($member_mangement['data'])) {
+           if ($member_mangement['success'] == true && isset($member_mangement['data'])) {
                 return $this->sendResponse(MemberManagementResource::collection($member_mangement['data']), __('responses.member_manager_found'));
             }
-
             return $this->sendError($member_mangement['message'], $member_mangement['code']);
         } catch (\Exception $e) {
+            return $e;
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -203,7 +204,7 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfrist($component).' Not Found', 403);
+                return $this->sendError(ucfirst($component).' Not Found', 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
 
@@ -263,7 +264,6 @@ class MemberManagementController extends AppBaseController
             if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
             }
-
             return $this->sendError(__('responses.member_manager_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

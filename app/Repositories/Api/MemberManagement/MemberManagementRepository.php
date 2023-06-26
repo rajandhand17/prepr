@@ -29,7 +29,7 @@ class MemberManagementRepository implements MemberManagementInterface
     public function deleteMembers($component, $slug, $request)
     {
         try {
-            return $this->memberManagementService->delete($request);
+            return $this->memberManagementService->delete($component, $slug, $request);
         } catch (\Exception $e) {
             return false;
         }

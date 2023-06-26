@@ -40,8 +40,13 @@ class MemberManagement extends Model
         return $this->hasOne(User::class, 'id', 'inviter_id');
     }
 
-    public function organization()
+    public function organizations()
     {
-        return $this->hasOne(Organization::class, 'id', 'module_id');
+        return $this->hasMany(Organization::class, 'id', 'module_id');
+    }
+
+    public function organizationAddress()
+    {
+        return $this->hasMany(OrganizationAddress::class, 'organization_id', 'module_id');
     }
 }

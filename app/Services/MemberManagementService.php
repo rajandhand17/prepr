@@ -4,8 +4,9 @@ namespace App\Services;
 
 use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
+use App\Models\Organization;
+use App\Models\User;
 use DB;
-
 class MemberManagementService
 {
     public function getRecordsFromCsv($request)
@@ -199,4 +200,60 @@ class MemberManagementService
         } catch (\Exception $e) {
         }
     }
+
+    public function delete($component, $slug, $request)
+    {
+        try {
+            if($component=="organization"){
+            $organization=Organization::select('id')->where("slug",$slug)->first();
+            if($organization->id){
+                $member_manger = MemberManagement::whereIn('email', $request->email)->where("module_id",$organization->id)->delete();    
+                if ($member_manger) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            }
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    
+    public function index($component, $slug, $request)
+    {
+        try {
+            $module_type = '0';
+            $module_id = '';
+            if ($component == 'organization') {
+                $module_type = '0';
+                $module_id = Organization::select('id')->where('slug', $slug)->first();
+                if ($module_id) {
+                    $module_id = $module_id->id;
+                }
+            } else {
+                $response = ['success' => false, 'message' => __('responses.wrong_component'), 'code'=>404];
+                return $response;
+            }
+            if ($module_id === null && $module_id == '') {
+                $response = ['success' => false, 'message' => __('labels.labels_org_noof'), 'code'=>404];
+                return $response;
+            }
+            $listing = MemberManagement::with(['user'])->with(['organizations'])->with('organizationAddress')->where(['module_id'=>$module_id, 'module_type'=>$module_type]);
+            $listing = $listing->get();
+            $total_members= $listing->count();
+            $listing['count']=$total_members;
+            if (!$listing->isEmpty()) {
+                $response = ['success' => true, 'data'=>$listing,'message' => __('labels.labels_org_noof'), 'code'=>200];
+                return $response;
+            } else {
+                $response = ['success' => true, 'message' => __('responses.no_member_organization'), 'code'=>200];
+                return $response;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 }

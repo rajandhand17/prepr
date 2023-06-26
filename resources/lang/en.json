@@ -3037,5 +3037,6 @@
     "responses.lab_unfollowed":"Lab is followed!",
     "responses.lab_followed_already":"Lab is already followed!",
     "responses.lab_unfollowed_already":"Lab is already unfollowed!",
-    "responses.no_member_organization":"No members associated with this organization!"
+    "responses.no_member_organization":"No members associated with this organization!",
+    "responses.member_manager_email_array":"Member manager email data should in array!"
 }
