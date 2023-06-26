@@ -86,7 +86,7 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component); 
+            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug,$component,$request); 
             if($memberMangementListing!=false && $memberMangementListing!=""){
             return $this->sendResponse(MemberManagementResource::collection($memberMangementListing), __('responses.member_manager_found'));
             }
@@ -267,7 +267,7 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            $member_mangement = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug,$request);
+            $member_mangement = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug,$component,$request);
             if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
             }
