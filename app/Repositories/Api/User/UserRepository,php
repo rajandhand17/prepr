@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Repositories\Api\Auth;
+
+use App\Models\Organization;
+use App\Models\User;
+use App\Services\OrganizationAddressService;
+use App\Services\OrganizationMemberService;
+use App\Services\OrganizationService;
+use App\Repositories\Api\User\UserInterface;
+
+class UserRepository implements UserInterface
+{
+    public function getUsers($request){
+    
+    }
+}

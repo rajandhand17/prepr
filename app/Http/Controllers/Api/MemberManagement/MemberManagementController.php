@@ -82,13 +82,16 @@ class MemberManagementController extends AppBaseController
     public function index($component, $slug, Request $request)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->getMembers($component, $slug, $request);
-           if ($member_mangement['success'] == true && isset($member_mangement['data'])) {
-                return $this->sendResponse(MemberManagementResource::collection($member_mangement['data']), __('responses.member_manager_found'));
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            return $this->sendError($member_mangement['message'], $member_mangement['code']);
+            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component); 
+            if($memberMangementListing!=false && $memberMangementListing!=""){
+            return $this->sendResponse(MemberManagementResource::collection($memberMangementListing), __('responses.member_manager_found'));
+            }
+            return $this->sendError(__('responses.no_member_organization'), 500);
         } catch (\Exception $e) {
-            return $e;
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -260,7 +263,11 @@ class MemberManagementController extends AppBaseController
     public function delete($component, $slug, DeleteMemberManagementRequest $request)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->deleteMembers($component, $slug, $request);
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' Not Found', 403);
+            }
+            $member_mangement = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug,$request);
             if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
             }
@@ -283,15 +290,17 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $getRoles = $this->memberManagementRepository->getRoles(config('constants.role_type.external'));
-            if ($getRoles) {
+            if($getRoles){
                 $getRoles = $getRoles->reject(function ($role) {
                     return $role->display_name == config('constants.role_name.organization_owner');
                 });
+                return $getRoles;
             }
-
             return $this->sendError('Roles not found', 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    
 }

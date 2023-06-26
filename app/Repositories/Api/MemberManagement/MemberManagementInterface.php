@@ -4,11 +4,11 @@ namespace App\Repositories\Api\MemberManagement;
 
 interface MemberManagementInterface
 {
-    public function getMembers($component, $slug, $request);
+    public function getMembers($componentCollectionObject, $component);
 
     public function addMembers($componentCollectionObject, $component, $request);
 
-    public function deleteMembers($component, $slug, $request);
+    public function deleteMembers($checkComponentBasedOnSlug,$request);
 
     public function downloadSample();
 
