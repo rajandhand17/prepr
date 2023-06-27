@@ -14,6 +14,7 @@ use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Resources\MemberManagement\ComponentMemberMangementResource;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
+use App\Http\Resources\Roles\RolesResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use Illuminate\Http\Request;
 
@@ -300,11 +301,12 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $getRoles = $this->memberManagementRepository->getRoles(config('constants.role_type.external'));
-            if($getRoles){
+
+            if ($getRoles) {
                 $getRoles = $getRoles->reject(function ($role) {
                     return $role->display_name == config('constants.role_name.organization_owner');
                 });
-                return $getRoles;
+                return $this->sendResponse(RolesResource::collection($getRoles), 'Roles fetched successfully');
             }
             return $this->sendError('Roles not found', 400);
         } catch(\Exception $e) {
