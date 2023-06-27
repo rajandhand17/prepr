@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\User;
 
-use App\Helpers\UtilityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserSearchResource extends JsonResource
@@ -17,7 +16,7 @@ class UserSearchResource extends JsonResource
     public function toArray($request)
     {
         return [
-//            'id'                        => $this->id,
+            //            'id'                        => $this->id,
             'first_name'                => $this->first_name,
             'last_name'                 => $this->last_name,
             'full_name'                 => $this->full_name,

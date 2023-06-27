@@ -31,11 +31,11 @@ class RolesService
     {
         try {
             $getRoles = Role::where('display_name', $role_name)->first();
-            if($getRoles){
+            if ($getRoles) {
                 return $getRoles;
             }
-            return false;
 
+            return false;
         } catch (\Exception $e) {
             return false;
         }
