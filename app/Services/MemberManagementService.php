@@ -213,7 +213,6 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-
             $memberList = $this->filterUserList($memberListCollection, $request);
 
             return $memberList;
@@ -301,6 +300,40 @@ class MemberManagementService
 
             return $componentCollectionObject->get();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function changeRoleById($request, $component)
+    {
+        try {
+            DB::beginTransaction();
+            $checkMember = MemberManagement::find($request->id);
+            if ($checkMember != null) {
+                if ($component == 'organization') {
+                    $getOrganization = OrganizationService::getOrganizationExistBasedOnId($checkMember->module_id);
+                    if ($checkMember->invite_status == config('constants.member_management_invite_status.accepted')) {
+                        $getUser = UserService::getUserByEmail($checkMember->email);
+                        $getOldRole = RolesService::getRoleBasedOnDisplayName($checkMember->role);
+                        $getNewRole = RolesService::getRoleBasedOnDisplayName($request->role);
+                        if ($getUser && $getOldRole && $getNewRole) {
+                            $getUser->detachRole($getOldRole, $getOrganization);
+                            $getUser->attachRoles($getNewRole, $getOrganization);
+                        }
+                    }
+                }
+                $checkMember->role = $request->role;
+                $checkMember->save();
+                DB::commit();
+
+                return true;
+            }
+            DB::rollBack();
+
+            return false;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }

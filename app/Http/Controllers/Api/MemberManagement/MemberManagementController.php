@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\MemberManagement;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\MemberManagement\ChangeRoleRequest;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
@@ -302,7 +303,6 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $getRoles = $this->memberManagementRepository->getRoles(config('constants.role_type.external'));
-
             if ($getRoles) {
                 $getRoles = $getRoles->reject(function ($role) {
                     return $role->display_name == config('constants.role_name.organization_owner');
@@ -313,6 +313,20 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendError('Roles not found', 400);
         } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function changeRole($component, ChangeRoleRequest $request)
+    {
+        try {
+            $changeRoleResponse = $this->memberManagementRepository->changeRole($request, $component);
+            if ($changeRoleResponse) {
+                return $this->sendResponse([], __('responses.role_removed_sucessfully'));
+            }
+
+            return $this->sendError(__('responses.role_removed_failed'), 400);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

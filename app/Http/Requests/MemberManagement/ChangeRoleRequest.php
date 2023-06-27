@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Lab;
+namespace App\Http\Requests\MemberManagement;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CheckLabNameRequest extends FormRequest
+class ChangeRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,8 @@ class CheckLabNameRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:labs,title',
+            'id'  => 'required|Exists:member_management,id',
+            'role'=> 'required|Exists:roles,display_name',
         ];
     }
 
@@ -41,9 +42,12 @@ class CheckLabNameRequest extends FormRequest
 
     public function messages()
     {
-        return [
-            'name.required'=> __('responses.lab_name_required'),
-            'name.unique'  => __('responses.lab_name_exists'),
+        return[
+            'id.required'       => __('responses.member_manager_id_required'),
+            'id.exists'         => __('responses.member_manager_not_exists'),
+            'role.required'     => __('responses.role_required'),
+            'role.exists'       => __('responses.roles_exists'),
+
         ];
     }
 }

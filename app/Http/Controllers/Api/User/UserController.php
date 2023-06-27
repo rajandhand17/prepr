@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\User\UserSearchResource;
 use App\Repositories\Api\User\UserRepository;
 use Illuminate\Http\Request;
 
@@ -15,12 +16,12 @@ class UserController extends AppBaseController
         $this->userRepository = $userRepository;
     }
 
-    public function userList(Request $request)
+    public function index(Request $request)
     {
         try {
             $userListing = $this->userRepository->getUsers($request);
-            if ($userListing->count() > 0) {
-                return $this->sendResponse($userListing, __('responses.user_list_found_success'));
+            if ($userListing != false) {
+                return $this->sendResponse(UserSearchResource::collection($userListing), __('responses.user_list_found_success'));
             }
 
             return $this->sendError(__('labels.labels_mm_nuf'), 404);

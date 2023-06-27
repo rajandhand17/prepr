@@ -102,4 +102,13 @@ class MemberManagementRepository implements MemberManagementInterface
             return false;
         }
     }
+
+    public function changeRole($request, $component)
+    {
+        try {
+            return $this->memberManagementService->changeRoleById($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

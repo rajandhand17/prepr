@@ -26,4 +26,18 @@ class RolesService
             return false;
         }
     }
+
+    public function getRoleBasedOnDisplayName($role_name)
+    {
+        try {
+            $getRoles = Role::where('display_name', $role_name)->first();
+            if ($getRoles) {
+                return $getRoles;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

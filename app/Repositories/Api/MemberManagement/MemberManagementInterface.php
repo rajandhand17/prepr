@@ -13,4 +13,6 @@ interface MemberManagementInterface
     public function downloadSample();
 
     public function getRoles($role_type);
+
+    public function changeRole($request, $component);
 }
