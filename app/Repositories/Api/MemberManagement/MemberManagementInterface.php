@@ -14,5 +14,5 @@ interface MemberManagementInterface
 
     public function getRoles($role_type);
 
-    public function changeRole($request,$component);
+    public function changeRole($request, $component);
 }

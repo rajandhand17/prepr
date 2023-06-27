@@ -61,13 +61,14 @@ class UserService
     {
         try {
             $user = User::select();
-            if($request->search){
+            if ($request->search) {
                 $user = $user->orWhere('full_name', 'like', '%'.$request->search.'%')->orWhere('username', 'like', '%'.$request->search.'%')->orWhere('email', 'like', '%'.$request->search.'%');
             }
             $user = $user->get();
-            if($user->count() > 0 ){
+            if ($user->count() > 0) {
                 return $user;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

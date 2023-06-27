@@ -304,18 +304,19 @@ class MemberManagementService
         }
     }
 
-    public function changeRoleById($request,$component){
+    public function changeRoleById($request, $component)
+    {
         try {
             DB::beginTransaction();
             $checkMember = MemberManagement::find($request->id);
-            if($checkMember != null){
-                if($component == 'organization'){
+            if ($checkMember != null) {
+                if ($component == 'organization') {
                     $getOrganization = OrganizationService::getOrganizationExistBasedOnId($checkMember->module_id);
-                    if($checkMember->invite_status == config('constants.member_management_invite_status.accepted')){
+                    if ($checkMember->invite_status == config('constants.member_management_invite_status.accepted')) {
                         $getUser = UserService::getUserByEmail($checkMember->email);
                         $getOldRole = RolesService::getRoleBasedOnDisplayName($checkMember->role);
                         $getNewRole = RolesService::getRoleBasedOnDisplayName($request->role);
-                        if($getUser && $getOldRole && $getNewRole){
+                        if ($getUser && $getOldRole && $getNewRole) {
                             $getUser->detachRole($getOldRole, $getOrganization);
                             $getUser->attachRoles($getNewRole, $getOrganization);
                         }
@@ -324,15 +325,16 @@ class MemberManagementService
                 $checkMember->role = $request->role;
                 $checkMember->save();
                 DB::commit();
+
                 return true;
             }
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
-
-
 }
