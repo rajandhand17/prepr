@@ -181,9 +181,9 @@ class User extends Authenticatable
             if ($user->id) {
                 if ($request->register_type == 'organization') {
                     $organization = new Organization();
-                    $organization->slug = UtilityHelper::generateSlug($request->organization_name, $organization);
+                    $organization->slug = UtilityHelper::generateSlug($request->organization_title, $organization);
                     $organization->user_id = $user->id;
-                    $organization->title = $request->organization_name;
+                    $organization->title = $request->organization_title;
                     $organization->save();
                     $user = User::find($user->id);
                     $user->attachRole('organization_owner', $organization->id);

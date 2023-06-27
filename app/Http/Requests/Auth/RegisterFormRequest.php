@@ -38,7 +38,7 @@ class RegisterFormRequest extends FormRequest
             'phone_number'          => 'numeric|unique:users,phone_number',
             'country_code'          => 'numeric',
             'register_type'         => 'required',
-            'organization_name'     => 'required_if:register_type,==,organization|unique:organizations,title',
+            'organization_title'     => 'required_if:register_type,==,organization|unique:organizations,title',
         ];
     }
 
@@ -79,7 +79,7 @@ class RegisterFormRequest extends FormRequest
             'phone_number.unique'           => __('responses.already_number'),
             'country_code.numeric'          => __('responses.country_code_numeric'),
             'register_type.required'        => __('responses.register_type_required'),
-            'organization_name.unique'      => __('responses.organization_name_unique'),
+            'organization_title.unique'      => __('responses.organization_name_unique'),
         ];
     }
 }
