@@ -58,18 +58,19 @@ class UserService
     }
 
     public static function getUsers($request)
-    {   try {
-        $user = User::select(['first_name', 'last_name', 'full_name', 'email','username']);
-        if($request->name){
-            $user=$user->orWhere('full_name', 'like', '%'.$request->name.'%')->orWhere('username', 'like', '%'.$request->name.'%')->orWhere('email', 'like', '%'.$request->name.'%');
+    {
+        try {
+            $user = User::select();
+            if($request->search){
+                $user = $user->orWhere('full_name', 'like', '%'.$request->search.'%')->orWhere('username', 'like', '%'.$request->search.'%')->orWhere('email', 'like', '%'.$request->search.'%');
+            }
+            $user = $user->get();
+            if($user->count() > 0 ){
+                return $user;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
         }
-        $user=$user->get();
-        if ($user != null) {
-            return $user;
-        }
-        return false;
-    } catch (\Exception $e) {
-        return false;
-    }   
     }
 }

@@ -95,7 +95,7 @@ class OrganizationRepository implements OrganizationInterface
     public function viewOrganization($request, $slug)
     {
         try {
-            return $this->organizationService->view($slug, $request->language);
+            return $this->organizationService->viewOrganization($slug, $request->language);
         } catch (\Exception $e) {
             return false;
         }
@@ -178,7 +178,7 @@ class OrganizationRepository implements OrganizationInterface
     public function getOrganizationList($language)
     {
         try {
-            $organization = $this->organizationService->list($language);
+            $organization = $this->organizationService->getOrganizationList($language);
             if ($organization) {
                 return $organization;
             }
@@ -192,7 +192,7 @@ class OrganizationRepository implements OrganizationInterface
     public function deleteOrganization($slug, $language)
     {
         try {
-            $organization = $this->organizationService->delete($slug, $language);
+            $organization = $this->organizationService->deleteOrganization($slug, $language);
             if ($organization) {
                 return true;
             }
