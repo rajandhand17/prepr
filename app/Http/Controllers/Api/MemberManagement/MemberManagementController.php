@@ -87,7 +87,8 @@ class MemberManagementController extends AppBaseController
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
             $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug,$component,$request); 
-            if($memberMangementListing!=false && $memberMangementListing!=""){
+          
+            if($memberMangementListing->count()!="0" && $memberMangementListing!==false && $memberMangementListing!==""){
             return $this->sendResponse(MemberManagementResource::collection($memberMangementListing), __('responses.member_manager_found'));
             }
             return $this->sendError(__('responses.no_member_organization'), 500);

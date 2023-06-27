@@ -232,7 +232,9 @@ class MemberManagementService
 
     function filterUserList($componentCollectionObject,$request){
         try {
+            
             if(isset($request->role) && !empty($request->role)) {
+                
                 $componentCollectionObject=$componentCollectionObject->where("role",$request->role);
             }
             if(isset($request->invite_status) && !empty($request->invite_status)){
