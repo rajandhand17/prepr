@@ -6,7 +6,6 @@ use App\Models\User;
 
 class UserService
 {
-
     public static function getUserByEmail($email)
     {
         try {
@@ -58,7 +57,8 @@ class UserService
         }
     }
 
-    public static function getUsers($request){
+    public static function getUsers($request)
+    {
         $user = User::select([
             'id', 'preferred_language', 'first_name', 'last_name', 'full_name', 'username', 'email', 'country_code', 'phone_number',
             'profile_image', 'user_points', 'user_rank', 'verified_user', 'referal_code', 'is_profile_completed', 'created_at',
@@ -66,6 +66,7 @@ class UserService
         if ($user != null) {
             return $user;
         }
+
         return false;
     }
 }
