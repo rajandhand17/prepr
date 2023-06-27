@@ -14,7 +14,7 @@ class UtilityHelper
         $name = preg_replace('/[^A-Za-z0-9\-]/', '-', $name);
         $slug = $slug_format = Str::slug($name);
         $next = 1;
-        while ($model::where('slug', '=', $slug)->pluck('name')->first()) {
+        while ($model::where('slug', '=', $slug)->pluck('title')->first()) {
             $slug = "{$slug_format}-{$next}";
             $next++;
         }
@@ -83,27 +83,4 @@ class UtilityHelper
 
         return true;
     }
-
-    public static function checkComponentIdExistsOrNot($component, $id){
-        try {
-            $checkComponentIdExistsOrNot = false;
-            switch ($component) {
-                case 'organization':
-                    $checkComponentIdExistsOrNot = MemberManagementService::getMemberExistBasedOnId($id);
-                    break;
-
-                default:
-                    $checkComponentIdExistsOrNot = false;
-            }
-            if ($checkComponentIdExistsOrNot != false) {
-                return $checkComponentIdExistsOrNot;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return $e;
-            return false;
-        }
-    }
-
 }

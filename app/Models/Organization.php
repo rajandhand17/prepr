@@ -14,7 +14,7 @@ class Organization extends LaratrustTeam
     protected $table = 'organizations';
 
     protected $fillable = [
-        'name',
+        'title',
         'display_name',
         'description',
         'language',

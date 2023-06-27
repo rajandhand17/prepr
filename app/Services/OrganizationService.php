@@ -14,7 +14,7 @@ class OrganizationService
     public static function checkOrganizationExist($request)
     {
         try {
-            $organization_exists = Organization::select('id')->where('name', $request->name)->withTrashed()->first();
+            $organization_exists = Organization::select('id')->where('title', $request->title)->withTrashed()->first();
             if ($organization_exists == null) {
                 return true;
             }
@@ -26,7 +26,7 @@ class OrganizationService
     public static function checkOrganizationExistInTrash($request)
     {
         try {
-            $organization_trashed_exists = Organization::select('id')->where('name', $request->name)->onlyTrashed()->first();
+            $organization_trashed_exists = Organization::select('id')->where('title', $request->title)->onlyTrashed()->first();
             if ($organization_trashed_exists == null) {
                 return true;
             }
@@ -40,7 +40,7 @@ class OrganizationService
     public static function getOrganizationExistBasedOnSlug($slug)
     {
         try {
-            $organization = Organization::select('id')->where('slug', $slug)->withTrashed()->first();
+            $organization = Organization::where('slug', $slug)->first();
             if ($organization != null) {
                 return $organization;
             }
@@ -130,8 +130,8 @@ class OrganizationService
             $organization = new Organization();
             $organization->language = isset($request->language) ? $request->language : 'en';
             $organization->user_id = auth()->user()->id;
-            $organization->name = $request->name;
-            $organization->display_name = $request->name;
+            $organization->title = $request->title;
+            $organization->display_name = $request->title;
             $organization->description = isset($request->description) ? $request->description : null;
             $organization->slug = UtilityHelper::generateSlug($request->slug, $model);
             $organization->cover_image = $cover_image_path;
@@ -193,7 +193,7 @@ class OrganizationService
     public static function list($language)
     {
         try {
-            $organization_list = Organization::select('id', 'language', 'name', 'slug', 'description', 'cover_image', 'profile_image', 'website', 'about', 'category', 'status', 'is_verified', 'total_employees');
+            $organization_list = Organization::select('id', 'language', 'title', 'slug', 'description', 'cover_image', 'profile_image', 'website', 'about', 'category', 'status', 'is_verified', 'total_employees');
             $organization_list = $organization_list->get();
             if (!$organization_list->isEmpty()) {
                 return $organization_list;
@@ -231,8 +231,8 @@ class OrganizationService
             $organization = Organization::where('slug', $slug)->first();
             if ($organization !== null) {
                 $organization->language = ($request->has('language')) ? $request->language : $organization->language;
-                $organization->name = ($request->has('name')) ? $request->name : $organization->name;
-                $organization->display_name = ($request->has('display_name')) ? $request->display_name : $organization->display_name;
+                $organization->title = ($request->has('title')) ? $request->title : $organization->title;
+                $organization->display_name = ($request->has('display_name')) ? $request->title : $organization->display_name;
                 $organization->description = ($request->has('description')) ? $request->description : $organization->description;
                 $organization->cover_image = ($cover_images_path != null) ? $cover_images_path : $organization->cover_image;
                 $organization->profile_image = ($profile_images_path != null) ? $profile_images_path : $organization->profile_image;

@@ -14,9 +14,9 @@ use App\Http\Requests\MemberManagement\ChangeRoleRequest;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
+use App\Http\Resources\Roles\RolesResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use Illuminate\Http\Request;
-
 
 class MemberManagementController extends AppBaseController
 {
@@ -84,15 +84,25 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug,$component,$request); 
-          
-            if($memberMangementListing->count()!="0" && $memberMangementListing!==false && $memberMangementListing!==""){
-            return $this->sendResponse(MemberManagementResource::collection($memberMangementListing), __('responses.member_manager_found'));
+            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
+
+            if ($memberMangementListing != false) {
+                $response = [
+                    'id'                          => $checkComponentBasedOnSlug->id,
+                    'title'                       => $checkComponentBasedOnSlug->title,
+                    'slug'                        => $checkComponentBasedOnSlug->slug,
+                    'user_count'                  => $memberMangementListing->count(),
+                    'users'                       => MemberManagementResource::collection($memberMangementListing),
+                ];
+
+                return $this->sendResponse($response, __('responses.member_manager_found'));
             }
-            return $this->sendError(__('responses.no_member_organization'), 500);
+
+            return $this->sendError('Error Occured in getting members', 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -269,10 +279,11 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            $member_mangement = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug,$component,$request);
+            $member_mangement = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug, $component, $request);
             if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
             }
+
             return $this->sendError(__('responses.member_manager_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -292,12 +303,14 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $getRoles = $this->memberManagementRepository->getRoles(config('constants.role_type.external'));
-            if($getRoles){
+            if ($getRoles) {
                 $getRoles = $getRoles->reject(function ($role) {
                     return $role->display_name == config('constants.role_name.organization_owner');
                 });
-                return $getRoles;
+
+                return $this->sendResponse(RolesResource::collection($getRoles), 'Roles fetched successfully');
             }
+
             return $this->sendError('Roles not found', 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -306,10 +319,6 @@ class MemberManagementController extends AppBaseController
 
     public function changeRole($component,ChangeRoleRequest $request){
         try {
-            $checkComponentBasedOnId = UtilityHelper::checkComponentIdExistsOrNot($component, $request->id);
-            if (!$checkComponentBasedOnId) {
-                return $this->sendError('Id:-'.ucfirst($request->id).'is Not Found', 403);
-            }
            $changeRoleResponse=$this->memberManagementRepository->changeRole($request);
            if($changeRoleResponse){
             return $this->sendResponse([],__("responses.role_removed_sucessfully"));

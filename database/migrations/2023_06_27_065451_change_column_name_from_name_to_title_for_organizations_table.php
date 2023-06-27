@@ -12,15 +12,8 @@ return new class() extends Migration {
      */
     public function up()
     {
-        Schema::create('lab_tag', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id');
-            $table->integer('lab_id');
-            $table->integer('tag');
-            $table->index(['user_id']);
-            $table->index(['lab_id']);
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('organizations', function (Blueprint $table) {
+            $table->renameColumn('name', 'title');
         });
     }
 
@@ -31,6 +24,8 @@ return new class() extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('lab_tag');
+        Schema::table('name_to_title_for_organizations', function (Blueprint $table) {
+            //
+        });
     }
 };
