@@ -239,24 +239,29 @@ class MemberManagementService
             }
             if(isset($request->invite_status) && !empty($request->invite_status)){
                 switch ($request->invite_status) {
-                    case 'Accepted' || 'ACCEPTED' || 'accepted':
+                    case "accepted":
                         $invite_status = config('constants.member_management_invite_status.accepted');
                         break;
-                    case 'Pending' || 'PENDING' || 'pending':
+                    case "pending":
                         $invite_status = config('constants.member_management_invite_status.pending');
                         break;
                     default:
                     $invite_status = config('constants.member_management_invite_status.invited');
-                }
+                  }
+                
                 $componentCollectionObject=$componentCollectionObject->where("invite_status",$invite_status);
             }
             if(isset($request->invite_type) && !empty($request->invite_type)){
+                
                 switch ($request->invite_type) {
-                    case 'email' || 'EMAIL' || 'Email':
+                    case 'email':
                         $invite_type = config('constants.member_management_invite_type.email');
                         break;
-                    case 'Network' || 'NETWORK' || 'network':
+                    case 'network':
                         $invite_type = config('constants.member_management_invite_type.network');
+                        break;
+                    case 'csv':
+                        $invite_type = config('constants.member_management_invite_type.csv');
                         break;
                     default:
                     $invite_type = config('constants.member_management_invite_type.email');
@@ -265,13 +270,13 @@ class MemberManagementService
             }
             if(isset($request->email_status) && !empty($request->email_status)){
                 switch ($request->email_status) {
-                    case 'scheduled' || 'Scheduled' || 'SCHEDULED':
+                    case 'scheduled':
                         $email_status = config('constants.member_management_email_status.scheduled');
                         break;
-                    case 'SENT' || 'Sent' || 'sent':
+                    case 'sent':
                         $email_status = config('constants.member_management_email_status.sent');
                         break;
-                    case 'Fail' || 'Fail' || 'fail':
+                    case 'fail':
                         $email_status = config('constants.member_management_email_status.fail');
                         break;
                     default:
