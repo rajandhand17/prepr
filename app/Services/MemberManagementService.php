@@ -290,4 +290,31 @@ class MemberManagementService
         }
     }
 
+    public static function getMemberExistBasedOnId($id){
+        try {
+            $checkMemberExists=MemberManagement::select("id")->where("id",$id)->first();
+            
+            if($checkMemberExists!=null){
+                return $checkMemberExists;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function changeRoleByUsingId($request){
+        try {
+            $updateRole=MemberManagement::find($request->id);
+            $updateRole->role=$request->role;
+            if($updateRole->save()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+
 }

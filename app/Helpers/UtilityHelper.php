@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Services\MemberManagementService;
 use App\Services\OrganizationService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -82,4 +83,27 @@ class UtilityHelper
 
         return true;
     }
+
+    public static function checkComponentIdExistsOrNot($component, $id){
+        try {
+            $checkComponentIdExistsOrNot = false;
+            switch ($component) {
+                case 'organization':
+                    $checkComponentIdExistsOrNot = MemberManagementService::getMemberExistBasedOnId($id);
+                    break;
+
+                default:
+                    $checkComponentIdExistsOrNot = false;
+            }
+            if ($checkComponentIdExistsOrNot != false) {
+                return $checkComponentIdExistsOrNot;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return $e;
+            return false;
+        }
+    }
+
 }

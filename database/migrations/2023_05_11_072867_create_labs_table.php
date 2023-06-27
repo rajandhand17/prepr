@@ -20,13 +20,10 @@ return new class() extends Migration {
             $table->integer('category_id');
             $table->string('slug');
             $table->varchar('title');
-            $table->enum('verification', ['0', '1'])->comment("0 for not verified and 1 for verified");
             $table->longText('description');
             $table->enum('privacy', ['yes', 'no']);
             $table->string('mediaType')->default('image');
             $table->text('media')->nullable();
-            $table->text('member')->nullable();
-            $table->enum('member_type', ['member', 'moderator'])->nullable();
             $table->double('longitude')->nullable();
             $table->double('latitute')->nullable();
             $table->text('address')->nullable();

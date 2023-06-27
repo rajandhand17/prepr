@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\MemberManagement;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\MemberManagement\ChangeRoleRequest;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
@@ -303,5 +304,20 @@ class MemberManagementController extends AppBaseController
         }
     }
 
+    public function changeRole($component,ChangeRoleRequest $request){
+        try {
+            $checkComponentBasedOnId = UtilityHelper::checkComponentIdExistsOrNot($component, $request->id);
+            if (!$checkComponentBasedOnId) {
+                return $this->sendError('Id:-'.ucfirst($request->id).'is Not Found', 403);
+            }
+           $changeRoleResponse=$this->memberManagementRepository->changeRole($request);
+           if($changeRoleResponse){
+            return $this->sendResponse([],__("responses.role_removed_sucessfully"));
+           }
+           return $this->sendError(__('responses.role_removed_failed'), 400);
+        } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
     
 }
