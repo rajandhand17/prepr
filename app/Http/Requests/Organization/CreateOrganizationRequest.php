@@ -26,9 +26,9 @@ class CreateOrganizationRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'name'         => 'required|max:255|unique:organizations,name',
+            'title'         => 'required|max:255|unique:organizations,title',
             'description'  => 'required',
-            'profile_image'=> 'image|mimes:jpeg,jpg,png,webp|max:1024|dimensions:width=500,height=500',
+            'profile_image'=> 'image|mimes:jpeg,jpg,png,webp|max:1024', //|dimensions:width=500,height=500
             'cover_image'  => 'image|mimes:jpeg,jpg,png,webp|max:1024',
             'category'     => 'required|exists:categories,id',
             'website'      => 'required|url',
@@ -69,8 +69,8 @@ class CreateOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'name.required'       => __('responses.organization_name_required'),
-            'name.max'            => __('responses.organization_name_max'),
+            'title.required'       => __('responses.organization_name_required'),
+            'title.max'            => __('responses.organization_name_max'),
             'description.required'=> __('notification.notification_tdfdfir'),
             'profile_image.image' => __('responses.profile_image'),
             'cover_image.image'   => __('responses.cover_image'),

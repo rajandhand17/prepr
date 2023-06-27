@@ -12,6 +12,7 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
+use App\Http\Resources\MemberManagement\ComponentMemberMangementResource;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
 use Illuminate\Http\Request;
@@ -83,16 +84,25 @@ class MemberManagementController extends AppBaseController
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug,$component,$request); 
-          
-            if($memberMangementListing->count()!="0" && $memberMangementListing!==false && $memberMangementListing!==""){
-            return $this->sendResponse(MemberManagementResource::collection($memberMangementListing), __('responses.member_manager_found'));
+            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug,$component,$request);
+
+            if($memberMangementListing != false ){
+                $response = [
+                    'id'                          => $checkComponentBasedOnSlug->id,
+                    'title'                       => $checkComponentBasedOnSlug->title,
+                    'slug'                        => $checkComponentBasedOnSlug->slug,
+                    'user_count'                  => $memberMangementListing->count(),
+                    'users' => MemberManagementResource::collection($memberMangementListing)
+                ];
+                return $this->sendResponse($response, __('responses.member_manager_found'));
             }
-            return $this->sendError(__('responses.no_member_organization'), 500);
+            return $this->sendError('Error Occured in getting members', 500);
         } catch (\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -303,5 +313,5 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    
+
 }

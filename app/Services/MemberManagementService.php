@@ -193,14 +193,19 @@ class MemberManagementService
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
-                    $memberListCollection = MemberManagement::with(['user'])->with(['organizations']);
+                    $memberListCollection = MemberManagement::select('type','invite_type','module_id','module_type','inviter_id',
+                        'role','invite_status','email','auto_invite','invitee_name','email_status')->where([
+                        'module_id' => $componentCollectionObject->id,
+                        'module_type' => $module_type
+                    ]);
                     break;
                 default:
                     $module_type = null;
                     break;
             }
+
             $memberList = $this->filterUserList($memberListCollection,$request);
-            
+
             return $memberList;
         } catch (\Exception $e) {
             return $e;
@@ -220,11 +225,10 @@ class MemberManagementService
                     break;
             }
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(["module_id"=>$checkComponentBasedOnSlug->id,"module_type"=>$module_type])->delete();
-                if ($member_manger) {
-                    return true;
-                } else {
-                    return false;
-                }
+            if ($member_manger) {
+                return true;
+            }
+            return false;
         } catch(\Exception $e) {
             return false;
         }
@@ -232,9 +236,9 @@ class MemberManagementService
 
     function filterUserList($componentCollectionObject,$request){
         try {
-            
+
             if(isset($request->role) && !empty($request->role)) {
-                
+
                 $componentCollectionObject=$componentCollectionObject->where("role",$request->role);
             }
             if(isset($request->invite_status) && !empty($request->invite_status)){
@@ -248,11 +252,11 @@ class MemberManagementService
                     default:
                     $invite_status = config('constants.member_management_invite_status.invited');
                   }
-                
+
                 $componentCollectionObject=$componentCollectionObject->where("invite_status",$invite_status);
             }
             if(isset($request->invite_type) && !empty($request->invite_type)){
-                
+
                 switch ($request->invite_type) {
                     case 'email':
                         $invite_type = config('constants.member_management_invite_type.email');
