@@ -20,7 +20,7 @@ return new class() extends Migration {
             $table->integer('category_id');
             $table->string('slug');
             $table->varchar('title');
-            $table->enum('verification', ['0', '1'])->comment("0 for not verified and 1 for verified");
+            $table->enum('verification', ['0', '1'])->comment('0 for not verified and 1 for verified');
             $table->longText('description');
             $table->enum('privacy', ['yes', 'no']);
             $table->string('mediaType')->default('image');
@@ -39,7 +39,7 @@ return new class() extends Migration {
             $table->enum('is_challenge_sequential', ['yes', 'no'])->default('no')->comment('1 if lab challenges is set to sequential by user');
             $table->enum('is_achievement_enabled', ['yes', 'no'])->default('no')->comment('1 if lab achievements is enabled or not by user');
             $table->enum('is_notification_enabled', ['yes', 'no'])->default('no');
-           $table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
         });
     }

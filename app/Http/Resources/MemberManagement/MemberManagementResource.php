@@ -4,20 +4,21 @@ namespace App\Http\Resources\MemberManagement;
 
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Organization\OrganizationAddressResource;
+
 class MemberManagementResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         $user = UserService::getUserByEmail($this->email);
         $username = null;
-        if($user){
+        if ($user) {
             $this->invitee_name = $user->first_name.' '.$user->last_name;
             $username = $user->username;
         }
@@ -35,17 +36,17 @@ class MemberManagementResource extends JsonResource
         $email_status = ($this->email_status == '0') ? 'Scheduled' : (($this->email_status == '1') ? 'Sent' : (($this->email_status == '2') ? 'Failed' : 'NA'));
 
         return [
-            'id' => $this->id,
-            'type' => $type,
-            'invite_type' => $invite_type,
-            'name' => $this->invitee_name,
-            'email' => $this->email,
-            'username' => $username,
-            'invited_by' => $invtee_user->first_name.' '.$invtee_user->last_name,
-            'role' => $this->role,
+            'id'            => $this->id,
+            'type'          => $type,
+            'invite_type'   => $invite_type,
+            'name'          => $this->invitee_name,
+            'email'         => $this->email,
+            'username'      => $username,
+            'invited_by'    => $invtee_user->first_name.' '.$invtee_user->last_name,
+            'role'          => $this->role,
             'invite_status' => $invite_status,
-            'auto_invite' => $auto_invite,
-            'email_status' => $email_status,
+            'auto_invite'   => $auto_invite,
+            'email_status'  => $email_status,
         ];
     }
 }

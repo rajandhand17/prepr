@@ -4,9 +4,8 @@ namespace App\Services;
 
 use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
-use App\Models\Organization;
-use App\Models\User;
 use DB;
+
 class MemberManagementService
 {
     public function getRecordsFromCsv($request)
@@ -186,17 +185,28 @@ class MemberManagementService
         }
     }
 
-    public function getComponentBasedUsers($componentCollectionObject, $component,$request)
+    public function getComponentBasedUsers($componentCollectionObject, $component, $request)
     {
         try {
             $memberList = [];
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
-                    $memberListCollection = MemberManagement::select('type','invite_type','module_id','module_type','inviter_id',
-                        'role','invite_status','email','auto_invite','invitee_name','email_status')->where([
-                        'module_id' => $componentCollectionObject->id,
-                        'module_type' => $module_type
+                    $memberListCollection = MemberManagement::select(
+                        'type',
+                        'invite_type',
+                        'module_id',
+                        'module_type',
+                        'inviter_id',
+                        'role',
+                        'invite_status',
+                        'email',
+                        'auto_invite',
+                        'invitee_name',
+                        'email_status'
+                    )->where([
+                        'module_id'   => $componentCollectionObject->id,
+                        'module_type' => $module_type,
                     ]);
                     break;
                 default:
@@ -204,16 +214,17 @@ class MemberManagementService
                     break;
             }
 
-            $memberList = $this->filterUserList($memberListCollection,$request);
+            $memberList = $this->filterUserList($memberListCollection, $request);
 
             return $memberList;
         } catch (\Exception $e) {
             return $e;
+
             return false;
         }
     }
 
-    public function deleteMembers($checkComponentBasedOnSlug,$component,$request)
+    public function deleteMembers($checkComponentBasedOnSlug, $component, $request)
     {
         try {
             switch ($component) {
@@ -224,39 +235,38 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where(["module_id"=>$checkComponentBasedOnSlug->id,"module_type"=>$module_type])->delete();
+            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
             if ($member_manger) {
                 return true;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    function filterUserList($componentCollectionObject,$request){
+    public function filterUserList($componentCollectionObject, $request)
+    {
         try {
-
-            if(isset($request->role) && !empty($request->role)) {
-
-                $componentCollectionObject=$componentCollectionObject->where("role",$request->role);
+            if (isset($request->role) && !empty($request->role)) {
+                $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
             }
-            if(isset($request->invite_status) && !empty($request->invite_status)){
+            if (isset($request->invite_status) && !empty($request->invite_status)) {
                 switch ($request->invite_status) {
-                    case "accepted":
+                    case 'accepted':
                         $invite_status = config('constants.member_management_invite_status.accepted');
                         break;
-                    case "pending":
+                    case 'pending':
                         $invite_status = config('constants.member_management_invite_status.pending');
                         break;
                     default:
-                    $invite_status = config('constants.member_management_invite_status.invited');
-                  }
+                        $invite_status = config('constants.member_management_invite_status.invited');
+                }
 
-                $componentCollectionObject=$componentCollectionObject->where("invite_status",$invite_status);
+                $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
             }
-            if(isset($request->invite_type) && !empty($request->invite_type)){
-
+            if (isset($request->invite_type) && !empty($request->invite_type)) {
                 switch ($request->invite_type) {
                     case 'email':
                         $invite_type = config('constants.member_management_invite_type.email');
@@ -268,11 +278,11 @@ class MemberManagementService
                         $invite_type = config('constants.member_management_invite_type.csv');
                         break;
                     default:
-                    $invite_type = config('constants.member_management_invite_type.email');
+                        $invite_type = config('constants.member_management_invite_type.email');
                 }
-                $componentCollectionObject=$componentCollectionObject->where("invite_type",$invite_type);
+                $componentCollectionObject = $componentCollectionObject->where('invite_type', $invite_type);
             }
-            if(isset($request->email_status) && !empty($request->email_status)){
+            if (isset($request->email_status) && !empty($request->email_status)) {
                 switch ($request->email_status) {
                     case 'scheduled':
                         $email_status = config('constants.member_management_email_status.scheduled');
@@ -284,14 +294,14 @@ class MemberManagementService
                         $email_status = config('constants.member_management_email_status.fail');
                         break;
                     default:
-                    $email_status = config('constants.member_management_email_status.scheduled');
+                        $email_status = config('constants.member_management_email_status.scheduled');
                 }
-                $componentCollectionObject=$componentCollectionObject->where("email_status",$email_status);
+                $componentCollectionObject = $componentCollectionObject->where('email_status', $email_status);
             }
+
             return $componentCollectionObject->get();
         } catch (\Exception $e) {
             return false;
         }
     }
-
 }
