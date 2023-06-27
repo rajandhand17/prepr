@@ -20,6 +20,7 @@ class RolesService
                 default:
                     $getRoles = $getRoles->where('role_type', config('constants.role_type.external'));
             }
+
             return $getRoles->get();
         } catch (\Exception $e) {
             return false;

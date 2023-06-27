@@ -2,9 +2,8 @@
 
 namespace App\Http\Resources\MemberManagement;
 
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
-
-use function PHPSTORM_META\type;
 
 class MemberManagementResource extends JsonResource
 {
@@ -17,36 +16,37 @@ class MemberManagementResource extends JsonResource
      */
     public function toArray($request)
     {
-        $member_management = [
-            'module_id'           => $this->module_id,
-            'invite_status'       => $this->invite_status,
-            'email'               => $this->email,
-            'email_status'        => $this->email_status,
-            'email_resend_status' => $this->email_resend_status,
-            'invite_status'       => $this->invite_status,
-            'user_status'         => $this->user_status,
-            'user_name'           => $this->user->username,
-            'user_profile_image'  => $this->user->profile_image,
+        $user = UserService::getUserByEmail($this->email);
+        $username = null;
+        if ($user) {
+            $this->invitee_name = $user->first_name.' '.$user->last_name;
+            $username = $user->username;
+        }
+
+        $type = ($this->type == '0') ? 'Invitation' : (($this->type == '1') ? 'Join Request' : 'Auto Created');
+
+        $invite_type = ($this->invite_type == '0') ? 'Email' : (($this->invite_type == '1') ? 'Network' : (($this->invite_type == '2') ? 'Join Request' : 'CSV Upload'));
+
+        $invtee_user = UserService::getUserById($this->inviter_id);
+
+        $invite_status = ($this->invite_status == '0') ? 'Invited' : (($this->invite_status == '1') ? 'Accepted' : (($this->invite_status == '2') ? 'Pending' : (($this->invite_status == '3') ? 'Declined' : 'Auto Created')));
+
+        $auto_invite = ($this->auto_invite == '0') ? 'No' : 'Yes';
+
+        $email_status = ($this->email_status == '0') ? 'Scheduled' : (($this->email_status == '1') ? 'Sent' : (($this->email_status == '2') ? 'Failed' : 'NA'));
+
+        return [
+            'id'            => $this->id,
+            'type'          => $type,
+            'invite_type'   => $invite_type,
+            'name'          => $this->invitee_name,
+            'email'         => $this->email,
+            'username'      => $username,
+            'invited_by'    => $invtee_user->first_name.' '.$invtee_user->last_name,
+            'role'          => $this->role,
+            'invite_status' => $invite_status,
+            'auto_invite'   => $auto_invite,
+            'email_status'  => $email_status,
         ];
-
-        if ($this->type == 0) {
-            $member_management['type'] = 'invite';
-        }
-        if ($this->type == 1) {
-            $member_management['type'] = 'join-request';
-        }
-        if ($this->type == 2) {
-            $member_management['type'] = 'auto-created';
-        }
-        //Invite type changing
-        $inviteType = config('member-manager-invite-type');
-        $member_management['invite_type'] = $inviteType[$this->invite_type];
-        //organisation, lab, challenge, project
-        $moduleType = config('member-management-module-type');
-        $member_management['module_type'] = $moduleType[$this->module_type];
-        $inviteStatus = config('member-management-invite-status');
-        $member_management['invite_status'] = $inviteStatus[$this->invite_status];
-
-        return $member_management;
     }
 }

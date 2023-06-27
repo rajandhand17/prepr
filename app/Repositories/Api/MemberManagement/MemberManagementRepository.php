@@ -17,19 +17,19 @@ class MemberManagementRepository implements MemberManagementInterface
         $this->roleService = $roleService;
     }
 
-    public function getMembers($component, $slug, $request)
+    public function getMembers($componentCollectionObject, $component, $request)
     {
         try {
-            return $this->memberManagementService->index($component, $slug, $request);
+            return $this->memberManagementService->getComponentBasedUsers($componentCollectionObject, $component, $request);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteMembers($component, $slug, $request)
+    public function deleteMembers($checkComponentBasedOnSlug, $component, $request)
     {
         try {
-            return $this->memberManagementService->delete($request);
+            return $this->memberManagementService->deleteMembers($checkComponentBasedOnSlug, $component, $request);
         } catch (\Exception $e) {
             return false;
         }

@@ -82,12 +82,26 @@ class MemberManagementController extends AppBaseController
     public function index($component, $slug, Request $request)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->getMembers($component, $slug, $request);
-            if ($member_mangement['success'] == true && isset($member_mangement['data'])) {
-                return $this->sendResponse(MemberManagementResource::collection($member_mangement['data']), __('responses.member_manager_found'));
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' Not Found', 403);
+            }
+            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
+
+            if ($memberMangementListing != false) {
+                $response = [
+                    'id'                          => $checkComponentBasedOnSlug->id,
+                    'title'                       => $checkComponentBasedOnSlug->title,
+                    'slug'                        => $checkComponentBasedOnSlug->slug,
+                    'user_count'                  => $memberMangementListing->count(),
+                    'users'                       => MemberManagementResource::collection($memberMangementListing),
+                ];
+
+                return $this->sendResponse($response, __('responses.member_manager_found'));
             }
 
-            return $this->sendError($member_mangement['message'], $member_mangement['code']);
+            return $this->sendError('Error Occured in getting members', 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -204,7 +218,7 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfrist($component).' Not Found', 403);
+                return $this->sendError(ucfirst($component).' Not Found', 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
 
@@ -260,7 +274,11 @@ class MemberManagementController extends AppBaseController
     public function delete($component, $slug, DeleteMemberManagementRequest $request)
     {
         try {
-            $member_mangement = $this->memberManagementRepository->deleteMembers($component, $slug, $request);
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' Not Found', 403);
+            }
+            $member_mangement = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug, $component, $request);
             if ($member_mangement) {
                 return $this->sendResponse(null, __('responses.member_manager_delete'));
             }
@@ -289,8 +307,10 @@ class MemberManagementController extends AppBaseController
                 $getRoles = $getRoles->reject(function ($role) {
                     return $role->display_name == config('constants.role_name.organization_owner');
                 });
+
                 return $this->sendResponse(RolesResource::collection($getRoles), 'Roles fetched successfully');
             }
+
             return $this->sendError('Roles not found', 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
