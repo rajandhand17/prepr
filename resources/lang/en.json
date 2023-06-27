@@ -3038,5 +3038,6 @@
     "responses.lab_followed_already":"Lab is already followed!",
     "responses.lab_unfollowed_already":"Lab is already unfollowed!",
     "responses.no_member_organization":"No members associated with this organization!",
-    "responses.member_manager_email_array":"Member manager email data should in array!"
+    "responses.member_manager_email_array":"Member manager email data should in array!",
+    "responses.user_list_found_success":"Success! You have successfully retrieved the listing of users!"
 }
