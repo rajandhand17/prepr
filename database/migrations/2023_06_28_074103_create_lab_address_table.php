@@ -13,15 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('lab_external_links', function (Blueprint $table) {
+        Schema::create('lab_address', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("lab_id");
-            $table->string("social_media_link");
-            $table->unsignedBigInteger("social_link_id");
+            $table->double('latitute')->nullable();
+            $table->double('longitude')->nullable();
+            $table->text('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
-            $table->foreign('social_link_id')->references('id')->on('social_links')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
+            
         });
     }
 
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lab_external_links');
+        Schema::dropIfExists('lab_address');
     }
 };

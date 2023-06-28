@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('lab_acheivements', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger("lab_id");
+            $table->unsignedBigInteger("lab_id");
             $table->string("achievement_name");
             $table->integer("achievement_points");
             $table->text("achievement_condition");
