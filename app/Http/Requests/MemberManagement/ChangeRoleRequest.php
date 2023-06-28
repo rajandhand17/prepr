@@ -26,10 +26,11 @@ class ChangeRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            "id" =>"required|Exists:member_management,id",
-            "role"=>"required|Exists:roles,display_name"
+            'id'  => 'required|Exists:member_management,id',
+            'role'=> 'required|Exists:roles,display_name',
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
@@ -38,14 +39,15 @@ class ChangeRoleRequest extends FormRequest
             'data'      => $validator->errors(),
         ], 422));
     }
+
     public function messages()
     {
         return[
-            'id.required'     => __('responses.member_manager_id_required'),
-            'id.exists'     => __('responses.member_manager_not_exists'),
+            'id.required'       => __('responses.member_manager_id_required'),
+            'id.exists'         => __('responses.member_manager_not_exists'),
             'role.required'     => __('responses.role_required'),
-            'role.exists'     => __('responses.roles_exists'),
-            
+            'role.exists'       => __('responses.roles_exists'),
+
         ];
     }
 }

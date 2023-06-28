@@ -302,32 +302,36 @@ class MemberManagementService
         }
     }
 
-    public static function getMemberExistBasedOnId($id){
+    public function changeRoleById($request, $component)
+    {
         try {
-            $checkMemberExists=MemberManagement::select("id")->where("id",$id)->first();
-            
-            if($checkMemberExists!=null){
-                return $checkMemberExists;
-            }
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-    public function changeRoleById($request){
-        try {
-            $checkMemberExists=MemberManagement::select("id")->where("id",$request->id)->first();
-            if($checkMemberExists==null){
-                return false;
-            }
-            $updateRole=MemberManagement::find($request->id);
-            $updateRole->role=$request->role;
-            if($updateRole->save()){
+            DB::beginTransaction();
+            $checkMember = MemberManagement::find($request->id);
+            if ($checkMember != null) {
+                if ($component == 'organization') {
+                    $getOrganization = OrganizationService::getOrganizationExistBasedOnId($checkMember->module_id);
+                    if ($checkMember->invite_status == config('constants.member_management_invite_status.accepted')) {
+                        $getUser = UserService::getUserByEmail($checkMember->email);
+                        $getOldRole = RolesService::getRoleBasedOnDisplayName($checkMember->role);
+                        $getNewRole = RolesService::getRoleBasedOnDisplayName($request->role);
+                        if ($getUser && $getOldRole && $getNewRole) {
+                            $getUser->detachRole($getOldRole, $getOrganization);
+                            $getUser->attachRoles($getNewRole, $getOrganization);
+                        }
+                    }
+                }
+                $checkMember->role = $request->role;
+                $checkMember->save();
+                DB::commit();
+
                 return true;
-            }else{
-                return false;
             }
+            DB::rollBack();
+
+            return false;
         } catch (\Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }

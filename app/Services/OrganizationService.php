@@ -14,7 +14,7 @@ class OrganizationService
     public static function checkOrganizationExist($request)
     {
         try {
-            $organization_exists = Organization::select('id')->where('title', $request->title)->withTrashed()->first();
+            $organization_exists = Organization::select('id')->where('title', $request->title)->first();
             if ($organization_exists == null) {
                 return true;
             }
@@ -41,6 +41,20 @@ class OrganizationService
     {
         try {
             $organization = Organization::where('slug', $slug)->first();
+            if ($organization != null) {
+                return $organization;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationExistBasedOnId($id)
+    {
+        try {
+            $organization = Organization::find($id);
             if ($organization != null) {
                 return $organization;
             }
@@ -158,7 +172,7 @@ class OrganizationService
         }
     }
 
-    public static function view($search = null, $language = 'en')
+    public static function viewOrganization($search = null, $language = 'en')
     {
         try {
             $organization_list = Organization::with('categoryDetail')->with('organizationAddress')->with('organizationMembers');
@@ -190,7 +204,7 @@ class OrganizationService
         }
     }
 
-    public static function list($language)
+    public static function getOrganizationList($language)
     {
         try {
             $organization_list = Organization::select('id', 'language', 'title', 'slug', 'description', 'cover_image', 'profile_image', 'website', 'about', 'category', 'status', 'is_verified', 'total_employees');
@@ -205,7 +219,7 @@ class OrganizationService
         }
     }
 
-    public static function delete($slug = null, $language = 'en')
+    public static function deleteOrganization($slug = null, $language = 'en')
     {
         try {
             $exists = Organization::select('id')->where('slug', $slug)->first();
