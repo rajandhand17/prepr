@@ -35,38 +35,38 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-     public function addMembers($componentCollectionObject, $component, $request)
-     {
-         try {
-             $memberList = [];
-             if ($request->invite_type == 'csv') {
-                 $memberList = $this->memberManagementService->getRecordsFromCsv($request);
-                 if (!$memberList && !count($memberList) > 0) {
-                     return false;
-                 }
-             }
-             if ($request->invite_type == 'email') {
-                 $memberList = $this->memberManagementService->getRecordsFromEmailArray($request);
-                 if (!$memberList && !count($memberList) > 0) {
-                     return false;
-                 }
-             }
+    public function addMembers($componentCollectionObject, $component, $request)
+    {
+        try {
+            $memberList = [];
+            if ($request->invite_type == 'csv') {
+                $memberList = $this->memberManagementService->getRecordsFromCsv($request);
+                if (!$memberList && !count($memberList) > 0) {
+                    return false;
+                }
+            }
+            if ($request->invite_type == 'email') {
+                $memberList = $this->memberManagementService->getRecordsFromEmailArray($request);
+                if (!$memberList && !count($memberList) > 0) {
+                    return false;
+                }
+            }
 
-             if (is_array($memberList) && count($memberList) > 0) {
-                 $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject, $component, $request, $memberList);
+            if (is_array($memberList) && count($memberList) > 0) {
+                $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject, $component, $request, $memberList);
 
-                 if ($checkStatus != false) {
-                     return $checkStatus;
-                 }
+                if ($checkStatus != false) {
+                    return $checkStatus;
+                }
 
-                 return false;
-             }
+                return false;
+            }
 
-             return false;
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
     /**
      * @return MemberManagementService

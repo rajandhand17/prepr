@@ -180,7 +180,6 @@ class MemberManagementService
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
-
             return false;
         }
     }
@@ -262,7 +261,6 @@ class MemberManagementService
                     default:
                         $invite_status = config('constants.member_management_invite_status.invited');
                 }
-
                 $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
             }
             if (isset($request->invite_type) && !empty($request->invite_type)) {
@@ -333,6 +331,4 @@ class MemberManagementService
             return false;
         }
     }
-
-
 }
