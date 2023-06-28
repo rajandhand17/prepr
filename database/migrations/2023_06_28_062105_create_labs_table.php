@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('uuid');
             $table->string('language')->default('en');
             $table->integer('user_id');
-            $table->integer('organizartion_id');
+            $table->integer('organization_id');
             $table->integer('category_id');
             $table->string('slug');
             $table->string('title');
@@ -34,7 +34,6 @@ return new class extends Migration
             $table->enum('is_achievement_enabled', ['0', '1'])->default('1')->comment('0=>yes,1=>no');
             $table->enum('is_notification_enabled', ['0', '1'])->default('1')->comment('0=>yes,1=>no');
             $table->enum("is_verified",['0','1'])->default('1')->comment("0->verified and 1 for not-verify");
-            $table->string("uuid");
             $table->timestamps();
             $table->softDeletes();
         });

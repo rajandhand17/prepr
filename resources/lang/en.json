@@ -3022,7 +3022,8 @@
     "responses.lab_id_required":"Lab id is required!",
     "responses.lab_id_not_exists":"This lab id is not exists!",
     "responses.lab_joined":"Congratulations you have joined  lab successfully.",
-    "responses.lab_stored":"Congratulations you have created  lab successfully.",
+    "responses.lab_stored_success":"Congratulations you have created  lab successfully.",
+    "responses.lab_stored_failed":"Sorry! Lab has not created.",
     "responses.lab_already_joined":"You have already sent request to join it.",
     "responses.wrong_component":"You have entered wrong component",
     "responses.lab_liked":"The Lab is liked successfully!",
@@ -3039,5 +3040,7 @@
     "responses.lab_unfollowed_already":"Lab is already unfollowed!",
     "responses.no_member_organization":"No members associated with this organization!",
     "responses.member_manager_email_array":"Member manager email data should in array!",
-    "responses.user_list_found_success":"Success! You have successfully retrieved the listing of users!"
+    "responses.user_list_found_success":"Success! You have successfully retrieved the listing of users!",
+    "responses.success_organization_image_upload":"Lab cover image upload successfully!",
+    "responses.fail_lab_image_upload":"Lab cover image upload failed!"
 }

@@ -1,186 +1,59 @@
 <?php
 
 namespace App\Repositories\Api\Lab;
-
+use App\Services\LabService;
 use App\Models\Lab;
+use App\Services\MemberManagementService;
 
 class LabRepository implements LabInterface
 {
-    private $lab;
+    private $LabService;
+    private $memberManagementService;
 
-    public function __construct(Lab $lab)
+    public function __construct(LabService $LabService, MemberManagementService $memberManagementService)
     {
-        $this->lab = $lab;
+        $this->LabService = $LabService;
+        $this->memberManagementService=$memberManagementService;
     }
 
-     public function list($request)
-     {
-         try {
-             return $this->lab->list($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+    public function uploadImage($image,$type){
+        try {
+            return $this->LabService->uploadImage($image,$type);
+        } catch (\Exception $e){
+            return false;
+        }
+    }
+    public function store($component,$request,$upload_profile_image,$upload_acheivements_image)
+    {
+        try {
+            $addLab=$this->LabService->store($request,$upload_profile_image,$upload_acheivements_image);
+            if($addLab!==false){
+                $memberList = [];
+            if ($request->invite_type == 'csv') {
+                $memberList = $this->memberManagementService->getRecordsFromCsv($request);
+                if (!$memberList && !count($memberList) > 0) {
+                    return false;
+                }
+            }
+            if ($request->invite_type == 'email') {
+                $memberList = $this->memberManagementService->getRecordsFromEmailArray($request);
+                if (!$memberList && !count($memberList) > 0) {
+                    return false;
+                }
+            }
+            if (is_array($memberList) && count($memberList) > 0) {
+                $checkStatus = $this->memberManagementService->addMembers($addLab, $component, $request, $memberList);
+                if ($checkStatus != false) {
+                    return true;
+                }
 
-     public function create($request)
-     {
-         try {
-             return $this->lab->createform($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+                return false;
+            }
+            }
+        
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
-     public function store($request)
-     {
-         try {
-             return $this->lab->store($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
-
-     public function draft($request)
-     {
-         try {
-             return $this->lab->draft($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
-
-     public function edit($request)
-     {
-         try {
-             return $this->lab->edit($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
-
-     public function delete($request)
-     {
-         try {
-             return $this->lab->deletes($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
-
-     public function labDetail($request)
-     {
-         try {
-             return $this->lab->labDetail($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
-
-     public function checkLabSlug($request)
-     {
-         try {
-             return $this->lab->checkLabSlug($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
-
-     public function checkLabName($request)
-     {
-         try {
-             return $this->lab->checkLabName($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
-
-      public function getSkills($request)
-      {
-          try {
-              return $this->lab->getSkills($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function getTags($request)
-      {
-          try {
-              return $this->lab->getTags($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function getLabPrograms($request)
-      {
-          try {
-              return $this->lab->getLabPrograms($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function genrateReportExcel($request)
-      {
-          try {
-              return $this->lab->genrateReportExcel($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function genrateReportPdf($request)
-      {
-          try {
-              return $this->lab->genrateReportPdf($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function likeUnlike($request)
-      {
-          try {
-              return $this->lab->likeUnlike($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function followUnfollow($request)
-      {
-          try {
-              return $this->lab->followUnfollow($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function joinLab($request)
-      {
-          try {
-              return $this->lab->joinLab($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function share($id)
-      {
-          try {
-              return $this->lab->share($id);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
-
-      public function view($request)
-      {
-          try {
-              return $this->lab->view($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
 }

@@ -2,5 +2,6 @@
 
 return [
     'organization' => 'organizations/upload/',
-    'lab'          => 'uploads/labs/',
+    'lab'          => 'lab/upload/',
+    'achievement'  => 'achievement/upload/',
 ];
