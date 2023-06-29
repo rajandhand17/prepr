@@ -54,4 +54,26 @@ return [
         'sent'      => '1',
         'fail'      => '2',
     ],
+
+    'member_management_invite_type' => [
+        'email'        => '0',
+        'network'      => '1',
+        'join_request' => '2',
+        'csv'          => '3',
+    ],
+
+    'email_template_type' => [
+        'invitation' => '0',
+    ],
+
+
+    'email_template_module_type' => [
+        'organization'      => '0',
+        'lab'               => '1',
+        'lab_program'       => '2',
+        'challenge'         => '3',
+        'challenge_path'    => '4',
+        'project'           => '5',
+    ],
+
 ];

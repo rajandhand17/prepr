@@ -15,7 +15,9 @@ use App\Http\Requests\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\MemberManagement\DeleteMemberManagementRequest;
 use App\Http\Resources\MemberManagement\MemberManagementResource;
 use App\Http\Resources\Roles\RolesResource;
+use App\Http\Resources\EmailTemplate\EmailTemplateResource;
 use App\Repositories\Api\MemberManagement\MemberManagementRepository;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class MemberManagementController extends AppBaseController
@@ -91,11 +93,19 @@ class MemberManagementController extends AppBaseController
             $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
 
             if ($memberMangementListing != false) {
+                $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
+
+                if($getTemplate){
+                    //replace component title and user name with actual data
+                    $user_name = UserService::joinName(auth()->user()->first_name,auth()->user()->last_name);
+                    $getTemplate->body_content = str_replace('user_name',$user_name,str_replace('component_title',$checkComponentBasedOnSlug->title,$getTemplate->body_content));
+                }
                 $response = [
                     'id'                          => $checkComponentBasedOnSlug->id,
                     'title'                       => $checkComponentBasedOnSlug->title,
                     'slug'                        => $checkComponentBasedOnSlug->slug,
                     'user_count'                  => $memberMangementListing->count(),
+                    'invitation_email'            => EmailTemplateResource::make($getTemplate),
                     'users'                       => MemberManagementResource::collection($memberMangementListing),
                 ];
 
