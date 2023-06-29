@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('lab_challenges', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('lab_id');
-            $table->unsignedBigInteger('challenge_id');
+            $table->unsignedBigInteger('challenge_id')->nullable();
             $table->unsignedBigInteger('challenge_path_id')->nullable();
-            $table->enum('status',['0','1'])->comment("0 for active,1 for deactive");
+            $table->enum('status',['0','1'])->default('0')->comment("0 for active,1 for deactive");
             $table->string('sequence_no')->nullable();
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
             $table->timestamps();

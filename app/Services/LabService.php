@@ -9,6 +9,7 @@ use HiFolks\RandoPhp\Randomize;
 use App\Helpers\UtilityHelper;
 use App\Models\LabAcheivement;
 use App\Models\LabAddress;
+use App\Models\labChallenges;
 use DB;
 class LabService
 {
@@ -25,7 +26,21 @@ class LabService
         $lab->description=$request->description;
         $lab->category_id=$request->category_id;
         $lab->slug=UtilityHelper::generateSlug($request->title, $model);
-        $lab->status=$request->status;
+        switch($request->status){
+            case "draft":
+                $status=0;
+            break;
+            case "publish":
+                $status=1;
+            break;
+            case "archive":
+                $status=2;
+            break;
+            default:
+            $status = 0;
+            break;
+        }
+        $lab->status=$status;
         $lab->privacy=$request->privacy;
         $lab->total_share=0;
         $lab->uuid=Randomize::chars(10)->alphanumeric()->unique()->generate();        ;
@@ -47,9 +62,40 @@ class LabService
                         $labAchievement->achievement_points=$request->achievement_points;
                         $labAchievement->achievement_condition=$request->achievement_condition;
                         $labAchievement->achievement_image=$upload_acheivements_image;
-                        if($labAchievement->save()){
-                            DB::commit();
+                        if(!$labAchievement->save()){
+                            DB::rollback();
                         }
+                        break;
+                    default:
+                        $module_type = null;
+                        break;
+                }
+                switch ($request->associated_challenge_switch){
+                    case 'yes':
+                        $selectedChallenge=$request->challenge_id;
+                        foreach ($selectedChallenge as $key => $challenge_id) {
+                        $labchllebges= LabChallenges::create([
+                                'lab_id' =>  $lab->id,
+                                'challenge_id' => $challenge_id,
+                                'sequence_no' => $key+1,
+                            ]);
+                        }
+                    break;
+                    default:
+                        $module_type = null;
+                        break;
+                }
+                switch ($request->associated_resource_switch){
+                    case 'yes':
+                        $SelectedPaths=$request->challenge_path_id;
+                        foreach ($SelectedPaths as $key => $path_id) {
+                            LabChallenges::create([
+                                'lab_id' =>  $lab->id,
+                                'challenge_path_id' => $path_id,
+                                'sequence_no' => $key+1,
+                            ]);
+                        }
+                    break;
                     default:
                         $module_type = null;
                         break;
@@ -62,6 +108,7 @@ class LabService
         return false;
         } catch (\Exception $e) {
             DB::rollback();
+            dd($e);
             return false;
         }
     }

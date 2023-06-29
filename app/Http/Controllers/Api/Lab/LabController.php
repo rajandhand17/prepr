@@ -63,10 +63,9 @@ class LabController extends AppBaseController
         }
     }
 
-    public function store(Request $request)//LabStoreRequest
+    public function store(LabStoreRequest $request)
     {
     try {
-        //uploadLabCoverImage
         if ($request->cover_image !== null) {
             $upload_cover_image = $this->labRepository->uploadImage($request->cover_image,"lab");
             if ($upload_cover_image == false) {
