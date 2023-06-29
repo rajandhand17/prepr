@@ -3042,5 +3042,12 @@
     "responses.member_manager_email_array":"Member manager email data should in array!",
     "responses.user_list_found_success":"Success! You have successfully retrieved the listing of users!",
     "responses.success_organization_image_upload":"Lab cover image upload successfully!",
-    "responses.fail_lab_image_upload":"Lab cover image upload failed!"
+    "responses.fail_lab_image_upload":"Lab cover image upload failed!",
+    "responses.acheivement_name":"The achievement name is required!",
+    "responses.acheivement_point":"The achievement point is required!",
+    "responses.achievement_condition":"The achievement condition is required!",
+    "responses.achievement_image":"The achievement image is required!",
+    "responses.challenge_id":"The challenge is required!",
+    "responses.challenge_path":"The challenge path is required!"
+    
 }

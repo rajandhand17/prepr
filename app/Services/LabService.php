@@ -63,7 +63,6 @@ class LabService
                         if (!empty($request->link_url[$key]) && !empty($request->social_name[$key])) {
                             $social_links=SocialLink::select('id')->where("name",$request->social_name[$key])->first();
                             $social_link_id=$social_links->id;
-                           
                             $ExternalLinkUrl=LabExternalLinks::create([
                                 'user_id' => auth()->user()->id,
                                 'lab_id' => $lab->id,
@@ -150,7 +149,6 @@ class LabService
         return false;
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
             return false;
         }
     }

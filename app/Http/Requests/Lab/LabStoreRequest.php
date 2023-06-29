@@ -66,15 +66,17 @@ class LabStoreRequest extends FormRequest
         return [
             'title.required' => __('notification.notification_title_req'),
             'description.required' => __('notification.notification_tdfdfir'),
-            'organizartion_id.required' => __('notification.notification_peeief'),
-            'location.required' => __('notification.notification_peeief'),
-            'category_id.required' => __('notification.notification_peeief'),
-            'skills.required' => __('notification.notification_peeief'),
-            'tag.required' => __('notification.notification_peeief'),
-            'achievement_name.required' => __('notification.notification_peeief'),
-            'achievement_points.required' => __('notification.notification_peeief'),
-            'achievement_condition.required' => __('notification.notification_peeief'),
-            'achievement_image.required' => __('notification.notification_peeief'),
+            'organizartion_id.required' => __('notification.notification_toir'),
+            'location.required' => __('notification.notification_lirr'),
+            'category_id.required' => __('notification.notification_cat'),
+            'skills.required' => __('notification.notification_skillmbs'),
+            'tag.required' => __('labels.labels_lab_tmbs'),
+            'achievement_name.required' => __('responses.acheivement_name'),
+            'achievement_points.required' => __('responses.acheivement_point'),
+            'achievement_condition.required' => __('responses.achievement_condition'),
+            'achievement_image.required' => __('responses.achievement_image'),
+            'challenge_id.required' => __('responses.challenge_id'),
+            'challenge_path_id.required' => __('responses.challenge_path'),
 
         ];
     }
