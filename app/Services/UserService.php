@@ -6,6 +6,11 @@ use App\Models\User;
 
 class UserService
 {
+    public static function joinName($firstName, $lastName)
+    {
+        return $firstName.' '.$lastName;
+    }
+
     public static function getUserByEmail($email)
     {
         try {

@@ -145,6 +145,25 @@ class MemberManagementService
                                 }
                             }
 
+                            $subject = $request->subject_line;
+                            $emailBody = $request->email_body;
+                            if (empty($request->subject_line) || empty($request->email_body)) {
+                                $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
+
+                                if ($getTemplate) {
+                                    //replace component title and user name with actual data
+                                    $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
+                                    $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $componentCollectionObject->title, $getTemplate->body_content));
+
+                                    if (empty($request->subject_line)) {
+                                        $subject = $getTemplate->subject;
+                                    }
+                                    if (empty($request->email_body)) {
+                                        $emailBody = $getTemplate->body_content;
+                                    }
+                                }
+                            }
+
                             MemberManagement::create([
                                 'type'          => $member['type'],
                                 'invite_type'   => $member['invite_type'],
@@ -157,8 +176,8 @@ class MemberManagementService
                                 'invite_status' => $member['type'],
                                 'invitee_name'  => $member['invitee_name'],
                                 'email_status'  => config('constants.member_management_email_status.scheduled'),
-                                'subject_line'  => $request->subject_line,
-                                'email_body'    => $request->email_body,
+                                'subject_line'  => $subject,
+                                'email_body'    => $emailBody,
                             ]);
 
                             $invited_emails[] = $member['invitee_email'];
@@ -182,6 +201,7 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
             return $e;
 
@@ -197,6 +217,7 @@ class MemberManagementService
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
                     $memberListCollection = MemberManagement::select(
+                        'id',
                         'type',
                         'invite_type',
                         'module_id',
@@ -266,7 +287,6 @@ class MemberManagementService
                     default:
                         $invite_status = config('constants.member_management_invite_status.invited');
                 }
-
                 $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
             }
             if (isset($request->invite_type) && !empty($request->invite_type)) {
@@ -338,6 +358,25 @@ class MemberManagementService
         } catch (\Exception $e) {
             DB::rollBack();
 
+            return false;
+        }
+    }
+
+    public function getTemplate($request, $component)
+    {
+        try {
+            $module_type = null;
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.email_template_module_type.organization');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
+            }
+
+            return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
+        } catch (\Exception $e) {
             return false;
         }
     }

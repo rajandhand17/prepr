@@ -31,8 +31,8 @@ class CreateMemberManagementRequest extends FormRequest
             'type'         => 'required|in:invite,join_request,auto_created',
             'invite_type'  => 'required|in:email,csv',
             'role'         => 'required|exists:roles,display_name',
-            'subject_line' => 'required',
-            'email_body'   => 'required',
+            'subject_line' => 'max:250',
+            'email_body'   => 'max:2000',
             'auto_invite'  => 'required|in:yes,no,na',
         ];
         if ($check_invite_type == 'csv') {
@@ -69,8 +69,6 @@ class CreateMemberManagementRequest extends FormRequest
             'role.required'             => __('responses.role_required'),
             'role.exists'               => __('responses.roles_exists'),
             'user_invite_email.required'=> __('responses.email_required'),
-            'subject_line.required'     => __('responses.subject_line'),
-            'email_body.required'       => __('responses.email_body'),
             'invite_status'             => __('responses.auto_invite_status'),
         ];
     }
