@@ -329,8 +329,7 @@ class User extends Authenticatable
     {
         try {
             /**get records of particular user by using email */
-            $user = User::select('id', 'otp', 'verified_user', 'country_code', 'phone_number', 'updated_at')->where(['email' => $request->email])->first();
-            $updated_user = $user->updated_at;
+            $user = User::where(['email' => $request->email])->first();
             /**check user account verified or not */
             if ($user->verified_user === '1') {
                 $response = ['success' => false, 'message' => __('responses.verify_success_already'), 'code' => 1];
