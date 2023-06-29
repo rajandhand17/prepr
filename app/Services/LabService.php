@@ -10,6 +10,10 @@ use App\Helpers\UtilityHelper;
 use App\Models\LabAcheivement;
 use App\Models\LabAddress;
 use App\Models\labChallenges;
+use App\Models\LabExternalLinks;
+use App\Models\LabSkillsGroupsStack;
+use App\Models\LabTagsGroups;
+use App\Models\SocialLink;
 use DB;
 class LabService
 {
@@ -54,6 +58,43 @@ class LabService
             $labaddress->city=$request->city;
             $labaddress->country=$request->country;
             if($labaddress->save()){
+                if (!empty($request->link_url) && !empty($request->social_name)) {
+                    foreach ($request->link_url as $key => $value) {
+                        if (!empty($request->link_url[$key]) && !empty($request->social_name[$key])) {
+                            $social_links=SocialLink::select('id')->where("name",$request->social_name[$key])->first();
+                            $social_link_id=$social_links->id;
+                           
+                            $ExternalLinkUrl=LabExternalLinks::create([
+                                'user_id' => auth()->user()->id,
+                                'lab_id' => $lab->id,
+                                'social_media_link' =>$value,
+                                'social_link_id' =>  $social_link_id,
+                            ]);
+                        }
+                    }
+                }
+                $labskills=$request->skills;
+                foreach($labskills as $key=>$skills){
+                    $LabSkillsGroupsStack=new LabSkillsGroupsStack;
+                    $LabSkillsGroupsStack->lab_id =  $lab->id;
+                    $LabSkillsGroupsStack->foreign_id= $skills;
+                    $LabSkillsGroupsStack->type= '0';
+                    if(!$LabSkillsGroupsStack->save()){
+                        DB::rollback();
+                        return false;
+                    }
+                }
+                $labtag=$request->tag;
+                foreach($labtag as $key=>$tag){
+                    $LabTagsGroups=new LabTagsGroups();
+                    $LabTagsGroups->lab_id =  $lab->id;
+                    $LabTagsGroups->foreign_id= $tag;
+                    $LabTagsGroups->type= '0';
+                    if(!$LabTagsGroups->save()){
+                        DB::rollback();
+                        return false;
+                    }
+                }
                 switch ($request->achievement_en_switch) {
                     case 'yes':
                         $labAchievement=new LabAcheivement();
@@ -64,6 +105,7 @@ class LabService
                         $labAchievement->achievement_image=$upload_acheivements_image;
                         if(!$labAchievement->save()){
                             DB::rollback();
+                            return false;
                         }
                         break;
                     default:

@@ -64,8 +64,8 @@ class LabStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => __('notification.notification_peeief'),
-            'description.required' => __('notification.notification_peeief'),
+            'title.required' => __('notification.notification_title_req'),
+            'description.required' => __('notification.notification_tdfdfir'),
             'organizartion_id.required' => __('notification.notification_peeief'),
             'location.required' => __('notification.notification_peeief'),
             'category_id.required' => __('notification.notification_peeief'),
