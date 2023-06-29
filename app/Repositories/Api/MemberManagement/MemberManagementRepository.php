@@ -111,4 +111,13 @@ class MemberManagementRepository implements MemberManagementInterface
             return false;
         }
     }
+
+    public function getTemplate($request,$component)
+    {
+        try {
+            return $this->memberManagementService->getTemplate($request, $component);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
