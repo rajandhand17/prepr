@@ -17,6 +17,7 @@ class LanguageColumnHelper
                 }
                 $final_column_name = $language.'_'.$column_name;
             }
+
             return $final_column_name;
         } catch (\Exception $e) {
             return false;

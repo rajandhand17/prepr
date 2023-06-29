@@ -112,7 +112,7 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-    public function getTemplate($request,$component)
+    public function getTemplate($request, $component)
     {
         try {
             return $this->memberManagementService->getTemplate($request, $component);

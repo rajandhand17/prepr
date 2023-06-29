@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\EmailTemplate;
 
-use App\Helpers\UtilityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EmailTemplateResource extends JsonResource
