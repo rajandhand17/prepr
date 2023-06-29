@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Helpers\LanguageColumnHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
 use DB;
@@ -145,21 +144,20 @@ class MemberManagementService
 
                             $subject = $request->subject_line;
                             $emailBody = $request->email_body;
-                            if(empty($request->subject_line) || empty($request->email_body)){
-                                $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'),$module_type,$request->language);
+                            if (empty($request->subject_line) || empty($request->email_body)) {
+                                $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
 
-                                if($getTemplate){
+                                if ($getTemplate) {
                                     //replace component title and user name with actual data
-                                    $user_name = UserService::joinName(auth()->user()->first_name,auth()->user()->last_name);
-                                    $getTemplate->body_content = str_replace('user_name',$user_name,str_replace('component_title',$componentCollectionObject->title,$getTemplate->body_content));
+                                    $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
+                                    $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $componentCollectionObject->title, $getTemplate->body_content));
 
-                                    if(empty($request->subject_line)){
+                                    if (empty($request->subject_line)) {
                                         $subject = $getTemplate->subject;
                                     }
-                                    if(empty($request->email_body)) {
+                                    if (empty($request->email_body)) {
                                         $emailBody = $getTemplate->body_content;
                                     }
-
                                 }
                             }
 
@@ -202,6 +200,7 @@ class MemberManagementService
         } catch (\Exception $e) {
             dd($e);
             DB::rollBack();
+
             return false;
         }
     }
@@ -359,8 +358,9 @@ class MemberManagementService
         }
     }
 
-    public function getTemplate($request, $component){
-        try{
+    public function getTemplate($request, $component)
+    {
+        try {
             $module_type = null;
             switch ($component) {
                 case 'organization':
@@ -370,8 +370,9 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-            return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'),$module_type,$request->language);
-        }catch (\Exception $e) {
+
+            return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
+        } catch (\Exception $e) {
             return false;
         }
     }

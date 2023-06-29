@@ -66,7 +66,6 @@ return [
         'invitation' => '0',
     ],
 
-
     'email_template_module_type' => [
         'organization'      => '0',
         'lab'               => '1',

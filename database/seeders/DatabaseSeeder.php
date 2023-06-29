@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RolesSeeder::class,
             AssignPermissionToRolesSeeder::class,
-            EmailTemplateSeeder::class
+            EmailTemplateSeeder::class,
         ]);
     }
 }
