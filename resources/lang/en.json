@@ -3048,5 +3048,6 @@
     "responses.achievement_condition":"The achievement condition is required!",
     "responses.achievement_image":"The achievement image is required!",
     "responses.challenge_id":"The challenge is required!",
-    "responses.challenge_path":"The challenge path is required!"
+    "responses.challenge_path":"The challenge path is required!",
+    "responses.lab_title_unique":"Lab title should be unique!"
 }

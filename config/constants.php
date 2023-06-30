@@ -75,4 +75,15 @@ return [
         'project'           => '5',
     ],
 
+    'lab_status'=>[
+        'draft' => '0',
+        'publish' =>'1',
+        'archive'=> '2',
+    ],
+
+    'lab_privacy'=>[
+        'yes' => '0',
+        'no' =>'1',
+    ]
+
 ];

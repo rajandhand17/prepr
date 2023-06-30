@@ -4,5 +4,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/store', [LabController::class, 'store']);
-    Route::post('/list', [LabController::class,'list']);
+    Route::get('/', [LabController::class,'index']);
 });

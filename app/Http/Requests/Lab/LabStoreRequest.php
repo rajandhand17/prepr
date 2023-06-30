@@ -28,9 +28,9 @@ class LabStoreRequest extends FormRequest
         $associated_challenge_switch = $this->request->get('associated_challenge_switch');
         $associated_resource_switch = $this->request->get('associated_resource_switch');
         $data= [
-            "title"=>"required",
+            "title"=>"required|unique:labs,title",
             "description"=>"required",
-            "organizartion_id"=>"required",
+            "organization_id"=>"required",
             "location"=>"required",
             "category_id"=>"required",
             "skills"=>"required",   
@@ -65,6 +65,7 @@ class LabStoreRequest extends FormRequest
     {
         return [
             'title.required' => __('notification.notification_title_req'),
+            'title.unique' => __('responses.lab_title_unique'),
             'description.required' => __('notification.notification_tdfdfir'),
             'organizartion_id.required' => __('notification.notification_toir'),
             'location.required' => __('notification.notification_lirr'),
