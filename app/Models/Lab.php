@@ -34,7 +34,10 @@ class Lab extends Model
             "is_verified",
             "uuid"
     ];
-
+    public function labAddress()
+    {
+        return $this->hasMany(LabAddress::class,'lab_id','id');
+    }
     public function organization()
     {
         return $this->belongsTo(Organization::class,'organization_id','id');

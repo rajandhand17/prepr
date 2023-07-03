@@ -28,7 +28,7 @@ class CreateOrganizationRequest extends FormRequest
         $base_rules = [
             'title'         => 'required|max:255|unique:organizations,title',
             'description'   => 'required',
-            'profile_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024', //|dimensions:width=500,height=500
+            'profile_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024', 
             'cover_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024',
             'category'      => 'required|exists:categories,id',
             'website'       => 'required|url',

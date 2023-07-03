@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Lab;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Lab\CheckLabSlug;
 use App\Http\Requests\Lab\LabStoreRequest;
 use App\Repositories\Api\Lab\LabRepository;
 use App\Repositories\Api\LabAcheivement\LabAcheivementRepository;
@@ -51,6 +52,7 @@ class LabController extends AppBaseController
 
     public function index(Request $request){
         try {
+            
             $lab = $this->labRepository->getLabList($request);
             if ($lab !== false) {
                 return $lab;
@@ -58,7 +60,60 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.organization_view_get_failed'), 400);
         } catch(\Exception $e) {
-             return $this->sendError(__('responses.send_error'), 500);
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function labDetails($slug){
+        try {
+            $lab = $this->labRepository->checkLabSlug($slug);
+            if ($lab == false) {
+                return $this->sendError(__('responses.lab_slug_not_exists'),400);
+            }
+            $labDetailed=$this->labRepository->getLabDetailed($slug);
+            if($labDetailed){
+                return $this->sendResponse($labDetailed,__('responses.lab_found'),200);
+            }
+            return $this->sendError(__('responses.lab_slug_not_found'),404);
+        } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkLabSlug($slug){
+        try {
+            $checkLabSlugExistsOrNot = $this->labRepository->checkLabSlug($slug);
+            if($checkLabSlugExistsOrNot==false){
+                
+                return $this->sendResponse([],__('responses.lab_slug_not_exists'),200);
+            }
+            return $this->sendError(__('responses.lab_slug_exists'),400);
+        } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkLabName($name){
+        try {
+            $checkLabNameExistsOrNot=$this->labRepository->checkLabNameExistsOrNot($name);
+            if($checkLabNameExistsOrNot){
+                return $this->sendError(__('responses.lab_name_not_exists'));
+            }
+            return $this->sendResponse([],__('responses.lab_name_exists'),400);
+        } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getSkills(Request $request){
+        try {
+            $getSkills=$this->labRepository->getSkills($request);
+            if($getSkills){
+                return $this->sendResponse($getSkills,__('responses.found_skill_list'));
+            }
+            return $this->sendError('responses.not_found_skill_list');
+        } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

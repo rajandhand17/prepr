@@ -24,9 +24,9 @@ class LabStoreRequest extends FormRequest
      */
     public function rules()
     {   
-        $achievement_en_switch = $this->request->get('achievement_en_switch');
-        $associated_challenge_switch = $this->request->get('associated_challenge_switch');
-        $associated_resource_switch = $this->request->get('associated_resource_switch');
+        $achievement_en_switch = $this->request->get('is_achievement_enabled');
+        $associated_challenge_switch = $this->request->get('is_associated_challenge');
+        $associated_resource_switch = $this->request->get('is_associated_resource');
         $data= [
             "title"=>"required|unique:labs,title",
             "description"=>"required",

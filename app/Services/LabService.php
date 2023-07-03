@@ -4,16 +4,8 @@ namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\Lab;
-use Predis\Command\Redis\AUTH;
 use HiFolks\RandoPhp\Randomize;
 use App\Helpers\UtilityHelper;
-use App\Models\LabAcheivement;
-use App\Models\LabAddress;
-use App\Models\labChallenges;
-use App\Models\LabExternalLinks;
-use App\Models\LabSkillsGroupsStack;
-use App\Models\LabTagsGroups;
-use App\Models\SocialLink;
 use DB;
 class LabService
 {
@@ -112,7 +104,7 @@ class LabService
 
     public function getLabList($request){
         try {
-            $labList=Lab::with('organization')->with('user')->with('category');
+            $labList=Lab::with('labAddress')->with('organization')->with('user')->with('category');
             $labList = $this->filterLabList($labList,$request);
             if (!$labList->isEmpty()) {
                 $labList->transform(function ($item) {
@@ -163,4 +155,40 @@ class LabService
             return false;
         }
     }
+
+    public function getLabDetailed($slug){
+        try {
+            $labDetailed=Lab::with('labAddress')->with('user')->with('category')->where("slug",$slug)->first();
+            if($labDetailed){
+                return $labDetailed;
+            }
+            return false;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function checkLabSlug($slug){
+        try {
+            $checklabSlug=Lab::where("slug",$slug)->first();
+            if($checklabSlug){
+                return true;
+            }
+            return false;
+        } catch (\Exception $e){
+        return false;
+        }
+    }
+
+public function checkLabNameExistsOrNot($name){
+    try{
+        $checklabName=Lab::where("title",$name)->first();
+        if($checklabName){
+            return true;
+        }
+        return false;
+    } catch (\Exception $e){
+    return false;
+    }
+}
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Lab;
 
+use App\Http\Requests\Lab\CheckLabSlug;
 use App\Services\LabExternalLinksService;
 use App\Services\LabService;
 use App\Services\MemberManagementService;
@@ -10,6 +11,7 @@ use App\Services\LabSkillsGroupsStackService;
 use App\Services\LabTagsGroupsService;
 use App\Services\LabAcheivementService;
 use App\Services\LabChallengesService;
+use App\Services\SkillService;
 class LabRepository implements LabInterface
 {
     private $LabService;
@@ -20,8 +22,9 @@ class LabRepository implements LabInterface
     private $labTagsGroupsService;
     private $labAcheivementService;
     private $labChallengesService;
+    private $skillService;
 
-    public function __construct(LabService $LabService, MemberManagementService $memberManagementService,LabAddressService $labAddressService,LabExternalLinksService $labExternalLinksService,LabSkillsGroupsStackService $labSkillsGroupsStackService,LabTagsGroupsService $labTagsGroupsService,LabAcheivementService $labAcheivementService,LabChallengesService $labChallengesService)
+    public function __construct(LabService $LabService, MemberManagementService $memberManagementService,LabAddressService $labAddressService,LabExternalLinksService $labExternalLinksService,LabSkillsGroupsStackService $labSkillsGroupsStackService,LabTagsGroupsService $labTagsGroupsService,LabAcheivementService $labAcheivementService,LabChallengesService $labChallengesService,SkillService $skillService)
     {   
         $this->LabService = $LabService;
         $this->memberManagementService=$memberManagementService;
@@ -31,6 +34,7 @@ class LabRepository implements LabInterface
         $this->labTagsGroupsService=$labTagsGroupsService;
         $this->labAcheivementService=$labAcheivementService;
         $this->labChallengesService=$labChallengesService;
+        $this->skillService=$skillService;
     }
 
     public function uploadCoverImage($image){
@@ -92,6 +96,45 @@ class LabRepository implements LabInterface
             $lab = $this->LabService->getLabList($request);
             if ($lab) {
                 return $lab;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getLabDetailed($slug){
+        try {
+            $labDetailed=$this->LabService->getLabDetailed($slug);
+            return $labDetailed;
+        } catch (\Exception $e){
+        return false;
+        }
+    }
+    
+    public function checkLabSlug($slug){
+        try {
+            $labSlug=$this->LabService->checkLabSlug($slug);
+            return $labSlug;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function checkLabNameExistsOrNot($name){
+        try {
+            $labSlug=$this->LabService->checkLabNameExistsOrNot($name);
+            return $labSlug;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function getSkills($request){
+        try {
+            $getSkills=$this->skillService->getSkillLists($request);
+            if($getSkills){
+                return $getSkills;
             }
             return false;
         } catch (\Exception $e) {
