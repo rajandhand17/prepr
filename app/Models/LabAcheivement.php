@@ -11,14 +11,14 @@ class LabAcheivement extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="lab_acheivements";
+    protected $table = 'lab_acheivements';
 
-    protected $fillable=[
-        "lab_id",
-        "achievement_name",
-        "achievement_points",
-        "achievement_condition",
-        "achievement_image",
+    protected $fillable = [
+        'lab_id',
+        'achievement_name',
+        'achievement_points',
+        'achievement_condition',
+        'achievement_image',
     ];
     /**
      * The attributes that should be cast.

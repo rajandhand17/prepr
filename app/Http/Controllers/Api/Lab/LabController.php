@@ -14,30 +14,33 @@ class LabController extends AppBaseController
     private $labRepository;
     private $labAcheivementRepository;
 
-    public function __construct(LabRepository $labRepository,LabAcheivementRepository $labAcheivementRepository)
+    public function __construct(LabRepository $labRepository, LabAcheivementRepository $labAcheivementRepository)
     {
         $this->labRepository = $labRepository;
         $this->labAcheivementRepository = $labAcheivementRepository;
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         try {
-
             $lab = $this->labRepository->getLabList($request);
             if ($lab !== false) {
                 return $this->sendResponse(LabResource::collection($lab), 'Labs fetched successfully');
             }
+
             return $this->sendError('Labs not found', 400);
         } catch(\Exception $e) {
             dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function store(LabStoreRequest $request)
     {
         try {
             $upload_cover_image = null;
-            $upload_acheivements_image=null;
+            $upload_acheivements_image = null;
 
             if ($request->cover_image !== null) {
                 $upload_cover_image = $this->labRepository->uploadCoverImage($request->cover_image);
@@ -46,74 +49,77 @@ class LabController extends AppBaseController
                 }
                 $upload_cover_image = $upload_cover_image;
             }
-            if($request->is_achievement_enabled=="yes"){
-                $upload_acheivements_image=$this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+            if ($request->is_achievement_enabled == 'yes') {
+                $upload_acheivements_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
                 if ($upload_acheivements_image == false) {
                     return $this->sendError(__('responses.fail_organization_image_upload'), 400);
                 }
                 $upload_acheivements_image = $upload_acheivements_image;
             }
 
-            $createdLab = $this->labRepository->createLab($request,$upload_cover_image,$upload_acheivements_image);
+            $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_acheivements_image);
 
             if ($createdLab != false) {
-                return $this->sendResponse(LabResource::make($createdLab),__('responses.lab_stored_success'),200);
+                return $this->sendResponse(LabResource::make($createdLab), __('responses.lab_stored_success'), 200);
             }
+
             return $this->sendError(__('responses.lab_stored_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-
-    public function show($slug){
+    public function show($slug)
+    {
         try {
             $lab = $this->labRepository->checkSlug($slug);
             if ($lab == false) {
-                return $this->sendError(__('responses.lab_slug_not_exists'),400);
+                return $this->sendError(__('responses.lab_slug_not_exists'), 400);
             }
-            $labDetails=$this->labRepository->getLabDetails($slug);
-            if($labDetails){
-                return $this->sendResponse(LabResource::make($labDetails),__('responses.lab_found'),200);
+            $labDetails = $this->labRepository->getLabDetails($slug);
+            if ($labDetails) {
+                return $this->sendResponse(LabResource::make($labDetails), __('responses.lab_found'), 200);
             }
-            return $this->sendError(__('responses.lab_slug_not_found'),404);
-        } catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
 
-    public function checkSlug($slug){
-        try {
-            $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
-            if($checkLabSlugExistsOrNot==false){
-
-                return $this->sendResponse([],__('responses.lab_slug_not_exists'),200);
-            }
-            return $this->sendError(__('responses.lab_slug_exists'),400);
-        } catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function checkName($title){
-        try {
-            $checkLabNameExistsOrNot=$this->labRepository->checkNameExistsOrNot($title);
-            if($checkLabNameExistsOrNot){
-                return $this->sendError(__('responses.lab_name_not_exists'));
-            }
-            return $this->sendResponse([],__('responses.lab_name_exists'),400);
-        } catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-
-    public function labActivity(Request $request){
-        try {
-
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
+    public function checkSlug($slug)
+    {
+        try {
+            $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
+            if ($checkLabSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.lab_slug_not_exists'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_slug_exists'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkName($title)
+    {
+        try {
+            $checkLabNameExistsOrNot = $this->labRepository->checkNameExistsOrNot($title);
+            if ($checkLabNameExistsOrNot) {
+                return $this->sendError(__('responses.lab_name_not_exists'));
+            }
+
+            return $this->sendResponse([], __('responses.lab_name_exists'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function labActivity(Request $request)
+    {
+        try {
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

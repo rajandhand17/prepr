@@ -10,12 +10,12 @@ class LabExternalLinks extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
-    protected $table="lab_external_links";
 
-    protected $fillable=[
-        "lab_id",
-        "social_media_link",
-        "social_link_id",
+    protected $table = 'lab_external_links';
+
+    protected $fillable = [
+        'lab_id',
+        'social_media_link',
+        'social_link_id',
     ];
 }

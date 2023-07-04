@@ -11,14 +11,14 @@ class LabAddress extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="lab_address";
+    protected $table = 'lab_address';
 
-    protected $fillable=[
-        "lab_id",
-        "latitute",
-        "longitude",
-        "address",
-        "city",
-        "country",
+    protected $fillable = [
+        'lab_id',
+        'latitute',
+        'longitude',
+        'address',
+        'city',
+        'country',
     ];
 }
