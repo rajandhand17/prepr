@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('lab_id');
             $table->integer("foreign_id");
-            $table->enum("type",["0","1","2"])->comment("0=>skills","1=>group","2=>stack");
+            $table->enum("type",["0","1","2"])->comment("0=>skills, 1=>group,2=>stack");
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

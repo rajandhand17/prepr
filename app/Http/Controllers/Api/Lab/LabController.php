@@ -19,6 +19,20 @@ class LabController extends AppBaseController
         $this->labRepository = $labRepository;
         $this->labAcheivementRepository = $labAcheivementRepository;
     }
+
+    public function index(Request $request){
+        try {
+
+            $lab = $this->labRepository->getLabList($request);
+            if ($lab !== false) {
+                return $lab;
+            }
+
+            return $this->sendError(__('responses.organization_view_get_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
     public function store(LabStoreRequest $request)
     {
     try {
@@ -50,21 +64,8 @@ class LabController extends AppBaseController
     }
     }
 
-    public function index(Request $request){
-        try {
-            
-            $lab = $this->labRepository->getLabList($request);
-            if ($lab !== false) {
-                return $lab;
-            }
 
-            return $this->sendError(__('responses.organization_view_get_failed'), 400);
-        } catch(\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function labDetails($slug){
+    public function show($slug){
         try {
             $lab = $this->labRepository->checkLabSlug($slug);
             if ($lab == false) {
@@ -84,7 +85,7 @@ class LabController extends AppBaseController
         try {
             $checkLabSlugExistsOrNot = $this->labRepository->checkLabSlug($slug);
             if($checkLabSlugExistsOrNot==false){
-                
+
                 return $this->sendResponse([],__('responses.lab_slug_not_exists'),200);
             }
             return $this->sendError(__('responses.lab_slug_exists'),400);

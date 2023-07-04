@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('lab_address', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("lab_id");
-            $table->double('latitute')->nullable();
+            $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->text('address')->nullable();
             $table->string('city')->nullable();
@@ -24,7 +24,6 @@ return new class extends Migration
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
-            
         });
     }
 

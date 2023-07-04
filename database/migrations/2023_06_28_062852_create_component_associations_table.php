@@ -16,14 +16,13 @@ return new class extends Migration
         Schema::create('component_associations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("lab_id");
-            $table->integer("lab_program_id");
-            $table->integer("challenge_id");
-            $table->integer("challenge_path_id");
-            $table->integer("resource_module_id");
-            $table->integer("resource_collection_id");
-            $table->integer("resource_group_id");
-            $table->integer("sequence");
-            $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
+            $table->bigInteger("lab_program_id")->nullable();
+            $table->bigInteger("challenge_id")->nullable();
+            $table->bigInteger("challenge_path_id")->nullable();
+            $table->bigInteger("resource_module_id")->nullable();
+            $table->bigInteger("resource_collection_id")->nullable();
+            $table->bigInteger("resource_group_id")->nullable();
+            $table->integer("sequence")->nullable();
             $table->timestamps();
         });
     }

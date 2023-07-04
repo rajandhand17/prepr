@@ -21,11 +21,11 @@ class LabAcheivement extends Model
         "achievement_image",
     ];
     /**
- * The attributes that should be cast.
- *
- * @var array
- */
-protected $casts = [
-    'achievement_condition' => 'array',
-];
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'achievement_condition' => 'json',
+    ];
 }
