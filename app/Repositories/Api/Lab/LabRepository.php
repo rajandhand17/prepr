@@ -12,9 +12,10 @@ use App\Services\LabTagsGroupsService;
 use App\Services\LabAcheivementService;
 use App\Services\LabChallengesService;
 use App\Services\SkillService;
+use App\Services\FavoriteService;
 class LabRepository implements LabInterface
 {
-    private $LabService;
+    private $labService;
     private $memberManagementService;
     private $labAddressService;
     private $labExternalLinksService;
@@ -23,10 +24,11 @@ class LabRepository implements LabInterface
     private $labAcheivementService;
     private $labChallengesService;
     private $skillService;
+    private $favoriteService;
 
-    public function __construct(LabService $LabService, MemberManagementService $memberManagementService,LabAddressService $labAddressService,LabExternalLinksService $labExternalLinksService,LabSkillsGroupsStackService $labSkillsGroupsStackService,LabTagsGroupsService $labTagsGroupsService,LabAcheivementService $labAcheivementService,LabChallengesService $labChallengesService,SkillService $skillService)
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService,LabAddressService $labAddressService,LabExternalLinksService $labExternalLinksService,LabSkillsGroupsStackService $labSkillsGroupsStackService,LabTagsGroupsService $labTagsGroupsService,LabAcheivementService $labAcheivementService,LabChallengesService $labChallengesService,SkillService $skillService,FavoriteService $favoriteService)
     {   
-        $this->LabService = $LabService;
+        $this->labService = $labService;
         $this->memberManagementService=$memberManagementService;
         $this->labAddressService=$labAddressService;
         $this->labExternalLinksService=$labExternalLinksService;
@@ -35,11 +37,12 @@ class LabRepository implements LabInterface
         $this->labAcheivementService=$labAcheivementService;
         $this->labChallengesService=$labChallengesService;
         $this->skillService=$skillService;
+        $this->favoriteService=$favoriteService;
     }
 
     public function uploadCoverImage($image){
         try {
-            return $this->LabService->uploadCoverImage($image);
+            return $this->labService->uploadCoverImage($image);
         } catch (\Exception $e){
             return false;
         }
@@ -47,7 +50,7 @@ class LabRepository implements LabInterface
     public function store($component,$request,$upload_profile_image,$upload_acheivements_image)
     {
         try {
-            $addLab=$this->LabService->store($request,$upload_profile_image);
+            $addLab=$this->labService->store($request,$upload_profile_image);
             if($addLab!==false){
                 $labAddress=$this->labAddressService->store($request,$addLab);
                 $labSkillsGroupsStack=$this->labSkillsGroupsStackService->store($request,$addLab);
@@ -93,7 +96,7 @@ class LabRepository implements LabInterface
 
     public function getLabList($request){
         try {
-            $lab = $this->LabService->getLabList($request);
+            $lab = $this->labService->getLabList($request);
             if ($lab) {
                 return $lab;
             }
@@ -105,7 +108,7 @@ class LabRepository implements LabInterface
 
     public function getLabDetailed($slug){
         try {
-            $labDetailed=$this->LabService->getLabDetailed($slug);
+            $labDetailed=$this->labService->getLabDetailed($slug);
             return $labDetailed;
         } catch (\Exception $e){
         return false;
@@ -114,7 +117,7 @@ class LabRepository implements LabInterface
     
     public function checkLabSlug($slug){
         try {
-            $labSlug=$this->LabService->checkLabSlug($slug);
+            $labSlug=$this->labService->checkLabSlug($slug);
             return $labSlug;
         } catch (\Exception $e){
             return false;
@@ -123,7 +126,7 @@ class LabRepository implements LabInterface
 
     public function checkLabNameExistsOrNot($name){
         try {
-            $labSlug=$this->LabService->checkLabNameExistsOrNot($name);
+            $labSlug=$this->labService->checkLabNameExistsOrNot($name);
             return $labSlug;
         } catch (\Exception $e){
             return false;
@@ -141,5 +144,18 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
+    public function likeUnlike($request){
+        try {
+            $likeUnlikeLab=$this->favoriteService->likeUnlikeLab($request);
+            if($likeUnlikeLab){
+                return true;
+            }
+            return false;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
+    
 
 }

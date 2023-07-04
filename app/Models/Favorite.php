@@ -11,7 +11,7 @@ class Favorite extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'favorite';
+    protected $table = 'favorites';
 
     protected $fillable = [
         'user_id',
