@@ -75,31 +75,29 @@ return [
         'project'           => '5',
     ],
 
-    'lab_status'=>[
-        'draft' => '0',
-        'publish' =>'1',
-        'archive'=> '2',
+    'lab_status'=> [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
     ],
 
-    'lab_privacy'=>[
-        'yes' => '0',
-        'no' =>'1',
+    'lab_privacy'=> [
+        'no'  => '0',
+        'yes' => '1',
     ],
 
-    'favorites_is_like'=>[
-        'no' => '0',
-        'yes' =>'1',
-    ],
-    
-    'favorites_refence_type'=>[
-        "lab"=>"0",
-        "project"=> "1",
-        "user"=>"2",
-        "challange"=>"3",
-        "challenge-group"=> "4",
-        "lab-group"=>"5",	
+    'favorites_is_like'=> [
+        'unlike' => '0',
+        'like'   => '1',
     ],
 
-    
+    'favorites_refence_type'=> [
+        'lab'            => '0',
+        'project'        => '1',
+        'user'           => '2',
+        'challenge'      => '3',
+        'challenge-group'=> '4',
+        'lab-group'      => '5',
+    ],
 
 ];

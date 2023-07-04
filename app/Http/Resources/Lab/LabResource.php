@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Http\Resources\Lab;
+
+use App\Services\UserService;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class LabResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
+    public function toArray($request)
+    {
+        return [
+            'id'                            => $this->uuid,
+            'language'                      => $this->language,
+            'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
+            'organization'                  => $this->organization->title,
+            'category'                      => $this->category->name,
+            'slug'                          => $this->slug,
+            'title'                         => $this->title,
+            'description'                   => $this->description,
+            'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
+            'media_type'                    => $this->media_type,
+            'media'                         => $this->media,
+            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
+            'total_share'                   => $this->total_share,
+            'is_auto_created'               => ($this->is_auto_created == '1') ? 'yes' : 'no',
+            'is_resource_sequential'        => ($this->is_resource_sequential == '1') ? 'yes' : 'no',
+            'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
+            'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
+            'is_notification_enabled'       => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
+            'is_verified'                   => ($this->is_verified == '1') ? 'yes' : 'no',
+            'address'                       => [
+                'latitude'  => $this->address->latitude,
+                'longitude' => $this->address->longitude,
+                'address'   => $this->address->address,
+                'city'      => $this->address->city,
+                'country'   => $this->address->country,
+            ],
+            'achievement'                   => [
+                'achievement_name'      => $this->achievement->achievement_name,
+                'achievement_points'    => $this->achievement->achievement_points,
+                'achievement_condition' => $this->achievement->achievement_condition,
+                'achievement_image'     => $this->achievement->achievement_image,
+            ],
+            'external_links'                => LabExternalLinkResource::collection($this->external_links),
+            'skills'                        => $this->skills->pluck('foreign_id'),
+            'skill_groups'                  => $this->skill_groups->pluck('foreign_id'),
+            'skill_stacks'                  => $this->skill_stacks->pluck('foreign_id'),
+            'tags'                          => $this->tags->pluck('foreign_id'),
+            'tag_groups'                    => $this->tag_groups->pluck('foreign_id'),
+            'lab_program_count'             => 0,
+            'challenge_count'               => 0,
+            'challenge_path_count'          => 0,
+            'resource_module_count'         => 0,
+            'resource_collection_count'     => 0,
+            'resource_group_count'          => 0,
+        ];
+    }
+}

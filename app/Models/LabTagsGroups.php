@@ -11,10 +11,10 @@ class LabTagsGroups extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="lab_tags_groups";
-    protected $fillable=[
-        "lab_id",
-        "foreign_id",
-        "type",
+    protected $table = 'lab_tags_groups';
+    protected $fillable = [
+        'lab_id',
+        'foreign_id',
+        'type',
     ];
 }

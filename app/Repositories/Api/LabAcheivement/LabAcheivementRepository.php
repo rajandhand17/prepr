@@ -5,7 +5,7 @@ namespace App\Repositories\Api\LabAcheivement;
 use App\Services\LabAcheivementService;
 
 class LabAcheivementRepository implements LabAcheivementInterface
-{   
+{
     private $LabAcheivementService;
     private $memberManagementService;
 
@@ -13,10 +13,12 @@ class LabAcheivementRepository implements LabAcheivementInterface
     {
         $this->LabAcheivementService = $LabAcheivementService;
     }
-    public function uploadAcheivementImage($image){
+
+    public function uploadAcheivementImage($image)
+    {
         try {
             return $this->LabAcheivementService->uploadAcheivementImage($image);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

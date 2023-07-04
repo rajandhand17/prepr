@@ -4,13 +4,13 @@ namespace App\Repositories\Api\Lab;
 
 interface LabInterface
 {
-  public function store($component,$request,$upload_profile_image,$upload_acheivements_image);
-  public function uploadCoverImage($image);
-  public function getLabDetailed($slug);
-  public function checkLabSlug($slug);
+    public function createLab($request, $upload_profile_image, $upload_acheivements_image);
 
-  public function checkLabNameExistsOrNot($slug);
+    public function uploadCoverImage($image);
 
-  public function getSkills($request);
+    public function getLabDetails($slug);
 
+    public function checkSlug($slug);
+
+    public function checkNameExistsOrNot($slug);
 }

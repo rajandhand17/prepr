@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 namespace App\Repositories\Api\LabAcheivement;
 
-interface LabAcheivementInterface{
-
+interface LabAcheivementInterface
+{
     public function uploadAcheivementImage($image);
 }

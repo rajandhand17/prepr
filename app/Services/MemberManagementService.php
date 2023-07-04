@@ -97,8 +97,8 @@ class MemberManagementService
                     $module_type = config('constants.member_management_component_type.organization');
                     break;
                 case 'lab':
-                    $module_type=config('constants.member_management_component_type.lab');
-                   break;
+                    $module_type = config('constants.member_management_component_type.lab');
+                    break;
                 default:
                     $module_type = null;
                     break;
@@ -203,6 +203,7 @@ class MemberManagementService
         } catch (\Exception $e) {
             dd($e);
             DB::rollBack();
+
             return $e;
 
             return false;

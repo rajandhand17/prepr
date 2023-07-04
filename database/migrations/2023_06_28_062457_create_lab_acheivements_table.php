@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -15,11 +14,11 @@ return new class extends Migration
     {
         Schema::create('lab_acheivements', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("lab_id");
-            $table->string("achievement_name");
-            $table->integer("achievement_points");
-            $table->text("achievement_condition");
-            $table->string("achievement_image");
+            $table->unsignedBigInteger('lab_id');
+            $table->string('achievement_name');
+            $table->integer('achievement_points');
+            $table->json('achievement_condition');
+            $table->string('achievement_image');
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
