@@ -212,6 +212,7 @@ class OrganizationService
             if (!$organization_list->isEmpty()) {
                 return $organization_list;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

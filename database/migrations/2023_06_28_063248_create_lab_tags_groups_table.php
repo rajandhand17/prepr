@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -15,9 +14,9 @@ return new class extends Migration
     {
         Schema::create('lab_tags_groups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("lab_id");
-            $table->integer("foreign_id");
-            $table->enum("type",["0","1"])->comment("0=>tag, 1=>groups");
+            $table->unsignedBigInteger('lab_id');
+            $table->integer('foreign_id');
+            $table->enum('type', ['0', '1'])->comment('0=>tag, 1=>groups');
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

@@ -17,7 +17,7 @@ class LabExternalLinkResource extends JsonResource
     {
         return [
             'social_media_link' => $this->social_media_link,
-            'social_link_id' => $this->social_link_id,
+            'social_link_id'    => $this->social_link_id,
         ];
     }
 }

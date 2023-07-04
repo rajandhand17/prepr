@@ -5,6 +5,7 @@ namespace App\Http\Requests\Lab;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+
 class LabStoreRequest extends FormRequest
 {
     /**
@@ -26,42 +27,42 @@ class LabStoreRequest extends FormRequest
     {
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
 
-        $base_rules= [
-            "request_type"=>"required|in:draft,publish,archive",
-            'cover_image' => "nullable|mimes:jpeg,jpg,png,webp|max:1024",
-            "title"=>"required_if:request_type,publish|unique:labs,title|nullable",
-            "description"=>"required_if:request_type,publish|nullable",
+        $base_rules = [
+            'request_type'=> 'required|in:draft,publish,archive',
+            'cover_image' => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
+            'title'       => 'required_if:request_type,publish|unique:labs,title|nullable',
+            'description' => 'required_if:request_type,publish|nullable',
 
-            "organization_id"=>"required|exists:organizations,id",
-            "category_id"=>"required|exists:categories,id",
+            'organization_id'=> 'required|exists:organizations,id',
+            'category_id'    => 'required|exists:categories,id',
 
-            "privacy"=>"required_if:request_type,publish|in:yes,no",
+            'privacy'=> 'required_if:request_type,publish|in:yes,no',
 
-            "location"=>"required_if:request_type,publish|nullable",
-            "latitude"=>"required_if:request_type,publish|nullable",
-            "longitude"=>"required_if:request_type,publish|nullable",
-            "country"=>"required_if:request_type,publish|nullable",
-            "city"=>"required_if:request_type,publish|nullable",
+            'location' => 'required_if:request_type,publish|nullable',
+            'latitude' => 'required_if:request_type,publish|nullable',
+            'longitude'=> 'required_if:request_type,publish|nullable',
+            'country'  => 'required_if:request_type,publish|nullable',
+            'city'     => 'required_if:request_type,publish|nullable',
 
-            "skills"=>"required_if:request_type,publish|nullable|array",
-            "skills.*"=>"numeric",
-            "skill_groups"=>"nullable|array",
-            "skill_groups.*"=>"numeric",
-            "skill_stacks"=>"nullable|array",
-            "skill_stacks.*"=>"numeric",
+            'skills'        => 'required_if:request_type,publish|nullable|array',
+            'skills.*'      => 'numeric',
+            'skill_groups'  => 'nullable|array',
+            'skill_groups.*'=> 'numeric',
+            'skill_stacks'  => 'nullable|array',
+            'skill_stacks.*'=> 'numeric',
 
-            "tags"=>"required_if:request_type,publish|nullable|array",
-            "tags.*"=>"numeric",
-            "tag_groups"=>"nullable|array",
-            "tag_groups.*"=>"numeric",
+            'tags'        => 'required_if:request_type,publish|nullable|array',
+            'tags.*'      => 'numeric',
+            'tag_groups'  => 'nullable|array',
+            'tag_groups.*'=> 'numeric',
 
-            "is_notification_enabled"=>"in:yes,no",
+            'is_notification_enabled'=> 'in:yes,no',
 
-            "is_achievement_enabled"=>"in:yes,no",
+            'is_achievement_enabled'=> 'in:yes,no',
 
-            "is_sequential"=>"in:yes,no",
+            'is_sequential'=> 'in:yes,no',
 
-            "is_resource_sequential"=>"in:yes,no",
+            'is_resource_sequential'=> 'in:yes,no',
         ];
 
         if ($this->request->has('external_links')) {
@@ -71,13 +72,12 @@ class LabStoreRequest extends FormRequest
             $base_rules['external_link_ids.*'] = 'numeric';
         }
 
-        if($achievement_en_switch=="yes"){
-            $base_rules['achievement_name']="required";
-            $base_rules['achievement_points']="required";
-            $base_rules['achievement_conditions']="required|array";
-            $base_rules['achievement_image']="required|mimes:jpeg,jpg,png,webp|max:1024";
+        if ($achievement_en_switch == 'yes') {
+            $base_rules['achievement_name'] = 'required';
+            $base_rules['achievement_points'] = 'required';
+            $base_rules['achievement_conditions'] = 'required|array';
+            $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
         }
-
 
         if ($this->request->has('lab_programs')) {
             $base_rules['lab_programs'] = 'array';
@@ -109,7 +109,7 @@ class LabStoreRequest extends FormRequest
             $base_rules['resource_collections.*'] = 'numeric';
         }
 
-        if($this->request->has('invite_type')){
+        if ($this->request->has('invite_type')) {
             $check_invite_type = $this->request->get('invite_type');
             $base_rules['subject_line'] = 'max:250';
             $base_rules['email_body'] = 'max:2000';
@@ -139,20 +139,20 @@ class LabStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => __('notification.notification_title_req'),
-            'title.unique' => __('responses.lab_title_unique'),
-            'description.required' => __('notification.notification_tdfdfir'),
-            'organizartion_id.required' => __('notification.notification_toir'),
-            'location.required' => __('notification.notification_lirr'),
-            'category_id.required' => __('notification.notification_cat'),
-            'skills.required' => __('notification.notification_skillmbs'),
-            'tag.required' => __('labels.labels_lab_tmbs'),
-            'achievement_name.required' => __('responses.acheivement_name'),
-            'achievement_points.required' => __('responses.acheivement_point'),
+            'title.required'                 => __('notification.notification_title_req'),
+            'title.unique'                   => __('responses.lab_title_unique'),
+            'description.required'           => __('notification.notification_tdfdfir'),
+            'organizartion_id.required'      => __('notification.notification_toir'),
+            'location.required'              => __('notification.notification_lirr'),
+            'category_id.required'           => __('notification.notification_cat'),
+            'skills.required'                => __('notification.notification_skillmbs'),
+            'tag.required'                   => __('labels.labels_lab_tmbs'),
+            'achievement_name.required'      => __('responses.acheivement_name'),
+            'achievement_points.required'    => __('responses.acheivement_point'),
             'achievement_condition.required' => __('responses.achievement_condition'),
-            'achievement_image.required' => __('responses.achievement_image'),
-            'challenge_id.required' => __('responses.challenge_id'),
-            'challenge_path_id.required' => __('responses.challenge_path'),
+            'achievement_image.required'     => __('responses.achievement_image'),
+            'challenge_id.required'          => __('responses.challenge_id'),
+            'challenge_path_id.required'     => __('responses.challenge_path'),
 
         ];
     }

@@ -13,15 +13,14 @@ class ComponentAssociation extends Model
 
     protected $table = 'component_associations';
 
-    protected $fillable=[
-            "lab_id",
-            "lab_program_id",
-            "challenge_id",
-            "challenge_path_id",
-            "resource_module_id",
-            "resource_collection_id",
-            "resource_group_id",
-            "sequence",
+    protected $fillable = [
+        'lab_id',
+        'lab_program_id',
+        'challenge_id',
+        'challenge_path_id',
+        'resource_module_id',
+        'resource_collection_id',
+        'resource_group_id',
+        'sequence',
     ];
-
 }

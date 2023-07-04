@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources\Lab;
 
-use App\Helpers\UtilityHelper;
-use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,7 +19,7 @@ class LabResource extends JsonResource
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
-            'user'                          => UserService::joinName($this->user->first_name,$this->user->last_name),
+            'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization'                  => $this->organization->title,
             'category'                      => $this->category->name,
             'slug'                          => $this->slug,
@@ -39,18 +37,18 @@ class LabResource extends JsonResource
             'is_notification_enabled'       => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
             'is_verified'                   => ($this->is_verified == '1') ? 'yes' : 'no',
             'address'                       => [
-                                                'latitude' => $this->address->latitude,
-                                                'longitude' => $this->address->longitude,
-                                                'address' => $this->address->address,
-                                                'city' => $this->address->city,
-                                                'country' => $this->address->country,
-                                               ],
+                'latitude'  => $this->address->latitude,
+                'longitude' => $this->address->longitude,
+                'address'   => $this->address->address,
+                'city'      => $this->address->city,
+                'country'   => $this->address->country,
+            ],
             'achievement'                   => [
-                                                'achievement_name' => $this->achievement->achievement_name,
-                                                'achievement_points' => $this->achievement->achievement_points,
-                                                'achievement_condition' => $this->achievement->achievement_condition,
-                                                'achievement_image' => $this->achievement->achievement_image,
-                                              ],
+                'achievement_name'      => $this->achievement->achievement_name,
+                'achievement_points'    => $this->achievement->achievement_points,
+                'achievement_condition' => $this->achievement->achievement_condition,
+                'achievement_image'     => $this->achievement->achievement_image,
+            ],
             'external_links'                => LabExternalLinkResource::collection($this->external_links),
             'skills'                        => $this->skills->pluck('foreign_id'),
             'skill_groups'                  => $this->skill_groups->pluck('foreign_id'),
