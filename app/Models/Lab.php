@@ -14,6 +14,7 @@ class Lab extends Model
     protected $table = 'labs';
 
     protected $fillable=[
+            "uuid",
             "language",
             "user_id",
             "organization_id",
@@ -32,11 +33,10 @@ class Lab extends Model
             "is_achievement_enabled",
             "is_notification_enabled",
             "is_verified",
-            "uuid"
     ];
-    public function labAddress()
+    public function address()
     {
-        return $this->hasMany(LabAddress::class,'lab_id','id');
+        return $this->hasOne(LabAddress::class,'lab_id','id');
     }
     public function organization()
     {
@@ -49,5 +49,33 @@ class Lab extends Model
 
     public function category(){
         return $this->belongsTo(Category::class,'category_id','id');
+    }
+
+    public function achievement(){
+        return $this->hasOne(LabAcheivement::class,'lab_id','id');
+    }
+
+    public function external_links(){
+        return $this->hasMany(LabExternalLinks::class,'lab_id','id');
+    }
+
+    public function skills(){
+        return $this->hasMany(LabSkillsGroupsStack::class,'lab_id','id')->where('type','0');
+    }
+
+    public function skill_groups(){
+        return $this->hasMany(LabSkillsGroupsStack::class,'lab_id','id')->where('type','1');
+    }
+
+    public function skill_stacks(){
+        return $this->hasMany(LabSkillsGroupsStack::class,'lab_id','id')->where('type','2');
+    }
+
+    public function tags(){
+        return $this->hasMany(LabTagsGroups::class,'lab_id','id')->where('type','0');
+    }
+
+    public function tag_groups(){
+        return $this->hasMany(LabTagsGroups::class,'lab_id','id')->where('type','1');
     }
 }

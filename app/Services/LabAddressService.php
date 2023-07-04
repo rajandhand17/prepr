@@ -7,25 +7,19 @@ use App\Models\LabAddress;
 use DB;
 class LabAddressService
 {
-   public function store($request,$lab){
-          try {
-            DB::beginTransaction();
+   public function createLabAddress($request,$lab){
+       try {
             $labaddress=new LabAddress();
             $labaddress->lab_id =$lab->id;
-            $labaddress->latitute=$request->latitute;
+            $labaddress->latitude=$request->latitude;
             $labaddress->longitude=$request->longitude;
             $labaddress->address=$request->address;
             $labaddress->city=$request->city;
             $labaddress->country=$request->country;
-            if($labaddress->save()){
-                DB::commit();
-                return true;
-            }
-            DB::rollback();
+            $labaddress->save();
+            return true;
+      } catch (\Exception $e) {
             return false;
-          } catch (\Exception $e) {
-            DB::rollback();
-            return false;
-          }
+      }
    }
 }

@@ -23,33 +23,108 @@ class LabStoreRequest extends FormRequest
      * @return array<string, mixed>
      */
     public function rules()
-    {   
+    {
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
-        $associated_challenge_switch = $this->request->get('is_associated_challenge');
-        $associated_resource_switch = $this->request->get('is_associated_resource');
-        $data= [
-            "title"=>"required|unique:labs,title",
-            "description"=>"required",
-            "organization_id"=>"required",
-            "location"=>"required",
-            "category_id"=>"required",
-            "skills"=>"required",   
-            "tag"=>"required",
+
+        $base_rules= [
+            "request_type"=>"required|in:draft,publish,archive",
+            'cover_image' => "nullable|mimes:jpeg,jpg,png,webp|max:1024",
+            "title"=>"required_if:request_type,publish|unique:labs,title|nullable",
+            "description"=>"required_if:request_type,publish|nullable",
+
+            "organization_id"=>"required|exists:organizations,id",
+            "category_id"=>"required|exists:categories,id",
+
+            "privacy"=>"required_if:request_type,publish|in:yes,no",
+
+            "location"=>"required_if:request_type,publish|nullable",
+            "latitude"=>"required_if:request_type,publish|nullable",
+            "longitude"=>"required_if:request_type,publish|nullable",
+            "country"=>"required_if:request_type,publish|nullable",
+            "city"=>"required_if:request_type,publish|nullable",
+
+            "skills"=>"required_if:request_type,publish|nullable|array",
+            "skills.*"=>"numeric",
+            "skill_groups"=>"nullable|array",
+            "skill_groups.*"=>"numeric",
+            "skill_stacks"=>"nullable|array",
+            "skill_stacks.*"=>"numeric",
+
+            "tags"=>"required_if:request_type,publish|nullable|array",
+            "tags.*"=>"numeric",
+            "tag_groups"=>"nullable|array",
+            "tag_groups.*"=>"numeric",
+
+            "is_notification_enabled"=>"in:yes,no",
+
+            "is_achievement_enabled"=>"in:yes,no",
+
+            "is_sequential"=>"in:yes,no",
+
+            "is_resource_sequential"=>"in:yes,no",
         ];
-        if($achievement_en_switch=="yes"){
-            $data['achievement_name']="required";
-            $data['achievement_points']="required";
-            $data['achievement_condition']="required";
-            $data['achievement_image']="required";
+
+        if ($this->request->has('external_links')) {
+            $base_rules['external_links'] = 'array';
+            $base_rules['external_link_ids'] = 'array|exists:social_links,id';
+            $base_rules['external_links.*'] = 'url';
+            $base_rules['external_link_ids.*'] = 'numeric';
         }
 
-        if($associated_challenge_switch=="yes"){
-            $data['challenge_id']="required|array";
+        if($achievement_en_switch=="yes"){
+            $base_rules['achievement_name']="required";
+            $base_rules['achievement_points']="required";
+            $base_rules['achievement_conditions']="required|array";
+            $base_rules['achievement_image']="required|mimes:jpeg,jpg,png,webp|max:1024";
         }
-        if($associated_resource_switch=="yes"){
-            $data['challenge_path_id']="required|array";
+
+
+        if ($this->request->has('lab_programs')) {
+            $base_rules['lab_programs'] = 'array';
+            $base_rules['lab_programs.*'] = 'numeric';
         }
-        return $data;
+
+        if ($this->request->has('challenges')) {
+            $base_rules['challenges'] = 'array';
+            $base_rules['challenges.*'] = 'numeric';
+        }
+
+        if ($this->request->has('challenge_paths')) {
+            $base_rules['challenge_paths'] = 'array';
+            $base_rules['challenge_paths.*'] = 'numeric';
+        }
+
+        if ($this->request->has('resource_modules')) {
+            $base_rules['resource_modules'] = 'array';
+            $base_rules['resource_modules.*'] = 'numeric';
+        }
+
+        if ($this->request->has('resource_groups')) {
+            $base_rules['resource_groups'] = 'array';
+            $base_rules['resource_groups.*'] = 'numeric';
+        }
+
+        if ($this->request->has('resource_collections')) {
+            $base_rules['resource_collections'] = 'array';
+            $base_rules['resource_collections.*'] = 'numeric';
+        }
+
+        if($this->request->has('invite_type')){
+            $check_invite_type = $this->request->get('invite_type');
+            $base_rules['subject_line'] = 'max:250';
+            $base_rules['email_body'] = 'max:2000';
+            $base_rules['auto_invite'] = 'required|in:yes,no,na';
+
+            if ($check_invite_type == 'csv') {
+                $base_rules['invite_email'] = 'required|mimes:csv,txt';
+            }
+            if ($check_invite_type == 'email') {
+                $base_rules['invite_email'] = 'required|array';
+                $base_rules['invite_email.*'] = 'required|email';
+            }
+        }
+
+        return $base_rules;
     }
 
     public function failedValidation(Validator $validator)

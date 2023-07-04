@@ -4,25 +4,31 @@ namespace App\Services;
 use App\Models\labTagsGroups;
 use DB;
 class LabTagsGroupsService{
-    public function store($request,$lab){
+    public function createLabTagsGroups($request,$lab){
         try {
-            DB::beginTransaction();
-            if(isset($request->tag) && !empty($request->tag)){
-                $labtag=$request->tag;
-            foreach($labtag as $key=>$tag){
-                $LabTagsGroups=new LabTagsGroups();
-                $LabTagsGroups->lab_id =  $lab->id;
-                $LabTagsGroups->foreign_id= $tag;
-                $LabTagsGroups->type= '0';
-                if(!$LabTagsGroups->save()){
-                    DB::rollback();
-                    return false;
+            if($request->has('tags')){
+                if(count($request->tags) > 0 ){
+                    foreach($request->tags as $tag){
+                        $LabSkillsGroupsStack=new LabTagsGroups;
+                        $LabSkillsGroupsStack->lab_id =  $lab->id;
+                        $LabSkillsGroupsStack->foreign_id= $tag;
+                        $LabSkillsGroupsStack->type= '0';
+                        $LabSkillsGroupsStack->save();
+                    }
                 }
             }
-            DB::commit();
-            return true;
+            if($request->has('tag_groups')){
+                if(count($request->tag_groups) > 0 ){
+                    foreach($request->tag_groups as $tag_group){
+                        $LabSkillsGroupsStack=new LabTagsGroups;
+                        $LabSkillsGroupsStack->lab_id =  $lab->id;
+                        $LabSkillsGroupsStack->foreign_id= $tag_group;
+                        $LabSkillsGroupsStack->type= '1';
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
             }
-            return false;
+            return true;
         } catch (\Exception $e){
             return false;
         }

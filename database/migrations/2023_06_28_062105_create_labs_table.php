@@ -28,7 +28,7 @@ return new class extends Migration
             $table->text('media')->nullable();
             $table->enum('status', ['0', '1','2'])->default('0')->comment("0->draft,1->published,2->archive");
             $table->integer('total_share')->nullable();
-            $table->tinyInteger('is_auto_created', ['0', '1'])->comment("0->no,1->yes")->default('0');
+            $table->enum('is_auto_created', ['0', '1'])->comment("0->no, 1->yes")->default('0');
             $table->enum('is_resource_sequential', ['0', '1'])->comment("0->no,1->yes")->default('0');
             $table->enum('is_sequential', ['0', '1'])->comment("0->no,1->yes")->default('0');
             $table->enum('is_achievement_enabled', ['0', '1'])->comment("0->no,1->yes")->default('0');

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->bigInteger("resource_group_id")->nullable();
             $table->integer("sequence")->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
