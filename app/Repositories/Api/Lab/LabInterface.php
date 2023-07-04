@@ -14,5 +14,8 @@ interface LabInterface
 
     public function checkNameExistsOrNot($slug);
 
-    public function deleteLabs($lab_id);
+    public function updateLab($slug,$request, $upload_profile_image, $upload_acheivements_image);
+
+    public function deleteLab($lab_id);
+    
 }

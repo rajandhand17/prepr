@@ -141,6 +141,46 @@ class LabService
         }
     }
 
+    public function updateLab($lab_id,$request, $upload_cover_image)
+    {
+        try {
+            $lab=Lab::find($lab_id)->first();
+            $privacy = $lab->privacy;
+            if($request->has('privacy')){
+            switch($request->privacy) {
+                case 'yes':
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+                case 'no':
+                    $privacy = config('constants.lab_privacy.no');
+                    break;
+                default:
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+            }
+        }
+            $lab->language = ($request->has('language')) ? $request->language : $lab->language;
+            $lab->organization_id = ($request->has('organization_id')) ? $request->organization_id : $lab->organization_id;
+            $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
+            $lab->title = ($request->has('title')) ? $request->title : $lab->title;
+            $lab->description = ($request->has('description')) ? $request->description : $lab->description;
+            $lab->privacy = $privacy;
+            $lab->media_type = 'image';
+            $lab->media = $upload_cover_image;
+            $lab->status = ($request->request_type == 'draft') ? '0' : (($request->request_type == 'publish') ? '1' : '2');
+            $lab->is_resource_sequential = ($request->has('is_resource_sequential')) ? (($request->is_resource_sequential == 'yes') ? '1' : '0'):$lab->is_resource_sequential;
+            $lab->is_sequential = ($request->has('is_sequential')) ? (($request->is_sequential == 'yes') ? '1' : '0'): $lab->is_sequential;
+            $lab->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_achievement_enabled == 'yes') ? '1' : '0'):$lab->is_achievement_enabled;
+            $lab->is_notification_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_notification_enabled == 'yes') ? '1' : '0'):$lab->is_achievement_enabled;
+            $lab->save();
+            
+            return $lab;
+        } catch (\Exception $e) {
+            dd($e);
+            return false;
+        }
+    }
+
     public function deleteLab($lab_id){
         try {
             $lab = Lab::where('id',$lab_id)->delete();

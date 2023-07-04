@@ -59,7 +59,6 @@ class LabRepository implements LabInterface
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createdLab);
                 if ($createdLabAddress == false) {
                     DB::rollBack();
-
                     return false;
                 }
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
@@ -134,6 +133,25 @@ class LabRepository implements LabInterface
         }
     }
 
+    public function updateLab($lab_id,$request, $upload_cover_image, $upload_acheivements_image){
+        try {
+            DB::beginTransaction();
+            $updateLab = $this->labService->updateLab($lab_id,$request, $upload_cover_image);
+            if ($updateLab !== false) {
+                $updateLabAddress = $this->labAddressService->updateLabAddress($lab_id,$request);
+                if ($updateLabAddress == false) {
+                    DB::rollBack();
+                    return false;
+                }
+                
+            }
+            
+            DB::commit();
+            return $updateLab;
+        } catch (\Exception $e){
+        return false;
+        }
+    }
     public function deleteLab($lab_id){
         try {
             DB::beginTransaction();
@@ -182,7 +200,7 @@ class LabRepository implements LabInterface
     {
         try {
             $labSlug = $this->labService->checkSlug($slug);
-
+            
             return $labSlug;
         } catch (\Exception $e) {
             return false;
