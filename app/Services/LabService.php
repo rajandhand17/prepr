@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Models\Lab;
 use HiFolks\RandoPhp\Randomize;
 use App\Helpers\UtilityHelper;
+use App\Models\Favorite;
 use DB;
 class LabService
 {
@@ -191,4 +192,5 @@ public function checkLabNameExistsOrNot($name){
     return false;
     }
 }
+
 }

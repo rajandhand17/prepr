@@ -117,4 +117,25 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function likeUnlike(Request $request){
+        try {
+            $isAlreadyLikedOrNotLiked=$this->labRepository->isAlreadyLikedOrNotLiked($request);
+            if($isAlreadyLikedOrNotLiked==true){
+                if($request->is_like=="yes"){
+                    return $this->sendError(__("responses.lab_liked_already"));
+                }
+                return $this->sendError(__("responses.lab_unliked_already"));
+            }
+            $likeUnliked=$this->labRepository->likeUnlike($request);
+            dd($likeUnliked);
+            if($likeUnliked){
+                return $this->sendResponse([],__("responses.lab_liked"),200);
+            }
+            return $this->sendError(__('responses.lab_liked_already'));
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+    
 }
