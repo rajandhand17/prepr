@@ -147,13 +147,25 @@ class LabRepository implements LabInterface
 
     public function likeUnlike($request){
         try {
-            $likeUnlikeLab=$this->favoriteService->likeUnlikeLab($request);
+            $likeUnlikeLab=$this->favoriteService->create($request);
             if($likeUnlikeLab){
                 return true;
             }
             return false;
         } catch (\Exception $e){
             return false;
+        }
+    }
+
+    public function isAlreadyLikedOrNotLiked($request){
+        try {
+            $isAlreadyLikeOrNotLike=$this->favoriteService->isAlreadyLikedOrNotLiked($request);
+            if($isAlreadyLikeOrNotLike){
+                return true;
+            }
+            return false;
+        } catch (\Exception $e){
+         return false;
         }
     }
     

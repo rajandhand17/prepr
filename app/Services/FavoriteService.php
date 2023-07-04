@@ -4,10 +4,58 @@ namespace App\Services;
 use App\Models\Favorite;
 class FavoriteService
 {
-    public function likeUnlikeLab($request){
+    public function create($request){
         try {
+            switch($request->reference_type){
+                case "lab":
+                $reference_type=config('constants.favorites_refence_type.lab');
+                break;
+                case "project":
+                $reference_type=config('constants.favorites_refence_type.project');
+                break;
+                case "user":
+                $reference_type=config('constants.favorites_refence_type.user');
+                break;
+                case "challange":
+                $reference_type=config('constants.favorites_refence_type.challange');
+                break;
+                case "challenge-group":
+                $reference_type=config('constants.favorites_refence_type.challenge-group');
+                break;
+                case "lab-group":
+                $reference_type=config('constants.favorites_refence_type.lab-group');
+                break;
+                default:
+                $reference_type=config('constants.favorites_refence_type.lab');
+                break;
+            }
+            switch($request->is_like){
+                case "yes":
+                    $is_like=config('constants.favorites_is_like.yes');
+                break;
+                case "no":
+                $is_like=config('constants.favorites_is_like.no');
+                break;
+                default:
+                $is_like=config('constants.favorites_is_like.no');
+                break;
+            }
             $favourite=new Favorite;
-            $favourite->refence_id=$request->refence_id;
+            $favourite->reference_id=$request->reference_id;
+            $favourite->reference_type=$reference_type;
+            $favourite->is_like=$is_like;
+            $favourite->user_id=auth()->user()->id;
+            if($favourite->save()){
+                return $favourite;
+            }
+            return false;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function isAlreadyLikedOrNotLiked($request){
+        try {
             switch($request->refence_type){
                 case "lab":
                 $refence_type=config('constants.favorites_refence_type.lab');
@@ -31,34 +79,27 @@ class FavoriteService
                 $refence_type=config('constants.favorites_refence_type.lab');
                 break;
             }
-            $favourite->refence_type=$refence_type;
-
             switch($request->is_like){
-                case "like":
-                    $is_like=config('constants.favorites_is_like.like');
+                case "yes":
+                    $is_like=config('constants.favorites_is_like.yes');
                 break;
-                case "unlike":
-                $is_like=config('constants.favorites_is_like.unlike');
+                case "no":
+                $is_like=config('constants.favorites_is_like.no');
                 break;
                 default:
-                $is_like=config('constants.favorites_is_like.unlike');
+                $is_like=config('constants.favorites_is_like.no');
                 break;
             }
-            $favourite->is_like=$is_like;
-            $favourite->user_id=auth()->user()->id;
-            if($favourite->save()){
-                return $favourite;
-            }
-            return false;
-        } catch (\Exception $e){
-            return false;
-        }
-    }
+        
+            $isAlreadyLikedOrNotLiked=Favorite::Select('id')->where(
+                [
+                ["reference_id","=",$request->reference_id],
+                ["reference_type","=",$refence_type],
+                ["is_like","=",$is_like],
+                ["user_id","=",auth()->user()->id],
+                ])->first();
 
-    public function isAlreadyLikedOrNotLiked($request){
-        try {
-            $isAlreadyLikedOrNotLiked=Favorite::Select('id')->where(["refence_id"=>$request->reference_id,"refence_type"=>$request->refence_type,"is_like"=>$request->is_like,"user_id"=>auth()->user()->id])->first();
-            if($isAlreadyLikedOrNotLiked){
+                if($isAlreadyLikedOrNotLiked){
                 return true;
             }else{
                 return false;
