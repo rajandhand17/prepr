@@ -28,8 +28,8 @@ class CreateOrganizationRequest extends FormRequest
         $base_rules = [
             'title'         => 'required|max:255|unique:organizations,title',
             'description'   => 'required',
-            'profile_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024', //|dimensions:width=500,height=500
-            'cover_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024',
+            'profile_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'cover_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
             'category'      => 'required|exists:categories,id',
             'website'       => 'required|url',
             'slug'          => 'required|max:255|unique:organizations,slug',

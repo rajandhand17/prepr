@@ -2,185 +2,181 @@
 
 namespace App\Repositories\Api\Lab;
 
-use App\Models\Lab;
+use App\Services\ComponentAssociationService;
+use App\Services\FavoriteService;
+use App\Services\LabAcheivementService;
+use App\Services\LabAddressService;
+use App\Services\LabExternalLinksService;
+use App\Services\LabService;
+use App\Services\LabSkillsGroupsStackService;
+use App\Services\LabTagsGroupsService;
+use App\Services\MemberManagementService;
+use App\Services\SkillService;
+use DB;
 
 class LabRepository implements LabInterface
 {
-    private $lab;
+    private $labService;
+    private $memberManagementService;
+    private $labAddressService;
+    private $labExternalLinksService;
+    private $labSkillsGroupsStackService;
+    private $labTagsGroupsService;
+    private $labAcheivementService;
+    private $skillService;
+    private $favoriteService;
+    private $componentAssociationService;
 
-    public function __construct(Lab $lab)
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, FavoriteService $favoriteService, ComponentAssociationService $componentAssociationService)
     {
-        $this->lab = $lab;
+        $this->labService = $labService;
+        $this->memberManagementService = $memberManagementService;
+        $this->labAddressService = $labAddressService;
+        $this->labExternalLinksService = $labExternalLinksService;
+        $this->labSkillsGroupsStackService = $labSkillsGroupsStackService;
+        $this->labTagsGroupsService = $labTagsGroupsService;
+        $this->labAcheivementService = $labAcheivementService;
+        $this->skillService = $skillService;
+        $this->favoriteService = $favoriteService;
+        $this->componentAssociationService = $componentAssociationService;
     }
 
-     public function list($request)
-     {
-         try {
-             return $this->lab->list($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+    public function uploadCoverImage($image)
+    {
+        try {
+            return $this->labService->uploadCoverImage($image);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
-     public function create($request)
-     {
-         try {
-             return $this->lab->createform($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+    public function createLab($request, $upload_profile_image, $upload_acheivements_image)
+    {
+        try {
+            DB::beginTransaction();
+            $createdLab = $this->labService->createLab($request, $upload_profile_image);
+            if ($createdLab !== false) {
+                $createdLabAddress = $this->labAddressService->createLabAddress($request, $createdLab);
+                if ($createdLabAddress == false) {
+                    DB::rollBack();
 
-     public function store($request)
-     {
-         try {
-             return $this->lab->store($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+                    return false;
+                }
+                $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
 
-     public function draft($request)
-     {
-         try {
-             return $this->lab->draft($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+                if ($createdLabSkillAssociations == false) {
+                    DB::rollBack();
 
-     public function edit($request)
-     {
-         try {
-             return $this->lab->edit($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+                    return false;
+                }
 
-     public function delete($request)
-     {
-         try {
-             return $this->lab->deletes($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+                $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createdLab);
+                if ($createdLabTagAssociations == false) {
+                    DB::rollBack();
 
-     public function labDetail($request)
-     {
-         try {
-             return $this->lab->labDetail($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+                    return false;
+                }
 
-     public function checkLabSlug($request)
-     {
-         try {
-             return $this->lab->checkLabSlug($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+                $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createdLab);
+                if ($createdLabExternalLinks == false) {
+                    DB::rollBack();
 
-     public function checkLabName($request)
-     {
-         try {
-             return $this->lab->checkLabName($request);
-         } catch (\Exception $e) {
-             return false;
-         }
-     }
+                    return false;
+                }
 
-      public function getSkills($request)
-      {
-          try {
-              return $this->lab->getSkills($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+                if ($request->is_achievement_enabled == 'yes') {
+                    $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_acheivements_image);
+                    if ($createdLabAcheivement == false) {
+                        DB::rollBack();
 
-      public function getTags($request)
-      {
-          try {
-              return $this->lab->getTags($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+                        return false;
+                    }
+                }
 
-      public function getLabPrograms($request)
-      {
-          try {
-              return $this->lab->getLabPrograms($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+                $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
+                if ($createdLabAssociations == false) {
+                    DB::rollBack();
 
-      public function genrateReportExcel($request)
-      {
-          try {
-              return $this->lab->genrateReportExcel($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+                    return false;
+                }
+//                $memberList = [];
+//                if ($request->invite_type == 'csv') {
+//                    $memberList = $this->memberManagementService->getRecordsFromCsv($request);
+//                    if (!$memberList && !count($memberList) > 0) {
+//                        return false;
+//                    }
+//                }
+//                if ($request->invite_type == 'email') {
+//                    $memberList = $this->memberManagementService->getRecordsFromEmailArray($request);
+//                    if (!$memberList && !count($memberList) > 0) {
+//                        return false;
+//                    }
+//                }
+//                if (is_array($memberList) && count($memberList) > 0) {
+//                    $checkStatus = $this->memberManagementService->addMembers($createdLab, "lab", $request, $memberList);
+//                    if ($checkStatus != false) {
+//                        return true;
+//                    }
+//                    return false;
+//                }
+                DB::commit();
 
-      public function genrateReportPdf($request)
-      {
-          try {
-              return $this->lab->genrateReportPdf($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+                return $createdLab;
+            }
+            DB::rollBack();
 
-      public function likeUnlike($request)
-      {
-          try {
-              return $this->lab->likeUnlike($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+            return false;
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-      public function followUnfollow($request)
-      {
-          try {
-              return $this->lab->followUnfollow($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+            return false;
+        }
+    }
 
-      public function joinLab($request)
-      {
-          try {
-              return $this->lab->joinLab($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+    public function getLabList($request)
+    {
+        try {
+            $lab = $this->labService->getLabList($request);
+            if ($lab) {
+                return $lab;
+            }
 
-      public function share($id)
-      {
-          try {
-              return $this->lab->share($id);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
-      public function view($request)
-      {
-          try {
-              return $this->lab->view($request);
-          } catch (\Exception $e) {
-              return false;
-          }
-      }
+    public function getLabDetails($slug)
+    {
+        try {
+            $labDetails = $this->labService->getLabDetails($slug);
+
+            return $labDetails;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkSlug($slug)
+    {
+        try {
+            $labSlug = $this->labService->checkSlug($slug);
+
+            return $labSlug;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $labSlug = $this->labService->checkNameExistsOrNot($title);
+
+            return $labSlug;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

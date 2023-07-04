@@ -4,39 +4,13 @@ namespace App\Repositories\Api\Lab;
 
 interface LabInterface
 {
-    public function list($request);
+    public function createLab($request, $upload_profile_image, $upload_acheivements_image);
 
-    public function create($request);
+    public function uploadCoverImage($image);
 
-    public function draft($request);
+    public function getLabDetails($slug);
 
-    public function edit($request);
+    public function checkSlug($slug);
 
-    public function delete($request);
-
-    public function labDetail($request);
-
-    public function checkLabSlug($request);
-
-    public function checkLabName($request);
-
-    public function getSkills($request);
-
-    public function getTags($request);
-
-    public function getLabPrograms($request);
-
-    public function genrateReportExcel($request);
-
-    public function genrateReportPdf($request);
-
-    public function likeUnlike($request);
-
-    public function followUnfollow($request);
-
-    public function joinLab($request);
-
-    public function share($request);
-
-    public function view($request);
+    public function checkNameExistsOrNot($slug);
 }

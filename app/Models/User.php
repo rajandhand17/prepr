@@ -88,7 +88,6 @@ class User extends Authenticatable
                 /**check password same or not */
                 if (Hash::check($request->password, $user->password)) {
                     $token = $user->createToken(env('APP_NAME'))->accessToken;
-
                     if ($user->two_factor_verification == 1) {
                         $otp = random_int(1000, 9999);
                         DB::beginTransaction();
@@ -215,6 +214,8 @@ class User extends Authenticatable
             return ['success' => false, 'message' => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
+
+            return $e;
 
             return ['success' => false, 'message' => 'Something went wrong.'];
         }

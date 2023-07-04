@@ -3,259 +3,123 @@
 namespace App\Http\Controllers\Api\Lab;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Lab\CheckLabNameRequest;
-use App\Http\Requests\Lab\CheckLabSlugRequest;
-use App\Http\Requests\Lab\LabJoinRequest;
 use App\Http\Requests\Lab\LabStoreRequest;
-use App\Http\Requests\LabfollowRequest;
 use App\Http\Resources\Lab\LabResource;
 use App\Repositories\Api\Lab\LabRepository;
+use App\Repositories\Api\LabAcheivement\LabAcheivementRepository;
 use Illuminate\Http\Request;
 
 class LabController extends AppBaseController
 {
     private $labRepository;
+    private $labAcheivementRepository;
 
-    public function __construct(LabRepository $labRepository)
+    public function __construct(LabRepository $labRepository, LabAcheivementRepository $labAcheivementRepository)
     {
         $this->labRepository = $labRepository;
+        $this->labAcheivementRepository = $labAcheivementRepository;
     }
 
     public function index(Request $request)
     {
         try {
-            $list = $this->labRepository->list($request);
-            if ($list) {
-                return $this->sendResponse(LabResource::collection($list), __('responses.lab'));
+            $lab = $this->labRepository->getLabList($request);
+            if ($lab !== false) {
+                return $this->sendResponse(LabResource::collection($lab), 'Labs fetched successfully');
             }
 
-            return false;
-        } catch (\Exception $e) {
-            return false;
+            return $this->sendError('Labs not found', 400);
+        } catch(\Exception $e) {
+            dd($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function view(Request $request)
+    public function store(LabStoreRequest $request)
     {
         try {
-            $view = $this->labRepository->view($request);
-            if ($view) {
-                return $this->sendResponse($view, __('responses.lab'));
+            $upload_cover_image = null;
+            $upload_acheivements_image = null;
+
+            if ($request->cover_image !== null) {
+                $upload_cover_image = $this->labRepository->uploadCoverImage($request->cover_image);
+                if ($upload_cover_image == false) {
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
+                }
+                $upload_cover_image = $upload_cover_image;
+            }
+            if ($request->is_achievement_enabled == 'yes') {
+                $upload_acheivements_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                if ($upload_acheivements_image == false) {
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
+                }
+                $upload_acheivements_image = $upload_acheivements_image;
             }
 
-            return false;
+            $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_acheivements_image);
+
+            if ($createdLab != false) {
+                return $this->sendResponse(LabResource::make($createdLab), __('responses.lab_stored_success'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_stored_failed'), 400);
         } catch (\Exception $e) {
-            return false;
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function create(Request $request)
+    public function show($slug)
     {
         try {
-            $create = $this->labRepository->create($request);
-            if ($create) {
-                return $create;
+            $lab = $this->labRepository->checkSlug($slug);
+            if ($lab == false) {
+                return $this->sendError(__('responses.lab_slug_not_exists'), 400);
+            }
+            $labDetails = $this->labRepository->getLabDetails($slug);
+            if ($labDetails) {
+                return $this->sendResponse(LabResource::make($labDetails), __('responses.lab_found'), 200);
             }
 
-            return false;
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
-            return false;
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-  public function store(LabStoreRequest $request)
-  {
-      try {
-          $store = $this->labRepository->store($request);
-          if ($store) {
-              return $store;
-          }
-
-          return false;
-      } catch (\Exception $e) {
-          return false;
-      }
-  }
-
-    public function delete(Request $request)
+    public function checkSlug($slug)
     {
         try {
-            $delete = $this->labRepository->delete($request);
-            if ($delete) {
-                return $delete;
+            $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
+            if ($checkLabSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.lab_slug_not_exists'), 200);
             }
 
-            return false;
+            return $this->sendError(__('responses.lab_slug_exists'), 400);
         } catch (\Exception $e) {
-            return false;
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function labDetail(Request $request)
+    public function checkName($title)
     {
         try {
-            $lab_detail = $this->labRepository->labDetail($request->id);
-            if ($lab_detail) {
-                return $lab_detail;
+            $checkLabNameExistsOrNot = $this->labRepository->checkNameExistsOrNot($title);
+            if ($checkLabNameExistsOrNot) {
+                return $this->sendError(__('responses.lab_name_not_exists'));
             }
 
-            return false;
+            return $this->sendResponse([], __('responses.lab_name_exists'), 400);
         } catch (\Exception $e) {
-            return false;
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function checkLabSlug(CheckLabSlugRequest $request)
+    public function labActivity(Request $request)
     {
         try {
-            $check_lab_slug = $this->labRepository->checkLabSlug($request);
-            if ($check_lab_slug) {
-                return $check_lab_slug;
-            }
-
-            return false;
         } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function checkLabName(CheckLabNameRequest $request)
-    {
-        try {
-            $check_lab_name = $this->labRepository->checkLabName($request);
-            if ($check_lab_name) {
-                return $check_lab_name;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function getSkills($request)
-    {
-        try {
-            $skills = $this->labRepository->getSkills($request);
-            if ($skills) {
-                return true;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function getTags(Request $request)
-    {
-        try {
-            $tags = $this->labRepository->getTags($request->lab_id);
-            if ($tags) {
-                return $tags;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function getLabPrograms($request)
-    {
-        try {
-            $get_lab_programs = $this->labRepository->getLabPrograms($request);
-            if ($get_lab_programs) {
-                return true;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function genrateReportExcel($request)
-    {
-        try {
-            $genrate_report_excel = $this->labRepository->genrateReportExcel($request);
-            if ($genrate_report_excel) {
-                return true;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function genrateReportPdf($request)
-    {
-        try {
-            $genrate_report_pdf = $this->labRepository->genrateReportPdf($request);
-            if ($genrate_report_pdf) {
-                return true;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function likeUnlike($request)
-    {
-        try {
-            $like_unlike = $this->labRepository->likeUnlike($request);
-            if ($like_unlike) {
-                return $like_unlike;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function followUnfollow(LabfollowRequest $request)
-    {
-        try {
-            $follow_unfollow = $this->labRepository->followUnfollow($request);
-            if ($follow_unfollow) {
-                return $follow_unfollow;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function joinLab(LabJoinRequest $request)
-    {
-        try {
-            $join_unjoin = $this->labRepository->joinLab($request);
-            if ($join_unjoin) {
-                return $join_unjoin;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function share(Request $request)
-    {
-        try {
-            $share = $this->labRepository->share($request->id);
-            if ($share) {
-                return $share;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

@@ -6,19 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Favorite extends Model
+class LabSkillsGroupsStack extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'favorites';
+    protected $table = 'lab_skills_groups_stack';
 
     protected $fillable = [
-        'user_id',
-        'ref_id',
-        'ref_type',
-        'favorite',
-        'like_it',
-        'is_follow',
+        'lab_id',
+        'foreign_id',
+        'type',
     ];
 }

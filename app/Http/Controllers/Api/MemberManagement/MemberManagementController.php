@@ -232,7 +232,6 @@ class MemberManagementController extends AppBaseController
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
-
             if ($memberLists != false) {
                 return $this->sendResponse($memberLists, __('responses.create_member_manger_success'));
             }
