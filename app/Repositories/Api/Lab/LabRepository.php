@@ -63,17 +63,14 @@ class LabRepository implements LabInterface
                     return false;
                 }
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
-
                 if ($createdLabSkillAssociations == false) {
                     DB::rollBack();
-
                     return false;
                 }
 
                 $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createdLab);
                 if ($createdLabTagAssociations == false) {
                     DB::rollBack();
-
                     return false;
                 }
 
@@ -92,7 +89,6 @@ class LabRepository implements LabInterface
                         return false;
                     }
                 }
-
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
                 if ($createdLabAssociations == false) {
                     DB::rollBack();
@@ -138,6 +134,50 @@ class LabRepository implements LabInterface
         }
     }
 
+    public function deleteLab($lab_id){
+        try {
+            DB::beginTransaction();
+            $deleteLabAssociations = $this->componentAssociationService->deletelabAssociation($lab_id);
+            if ($deleteLabAssociations == false) {
+                DB::rollBack();
+                return false;
+            }
+            $deleteLabAcheivement = $this->labAcheivementService->deleteLabAchievement($lab_id);
+            if ($deleteLabAcheivement == false) {
+                DB::rollBack();
+                return false;
+            }
+            $deleteLabExternalLinks = $this->labExternalLinksService->deleteLabExternalLinks($lab_id);
+            if ($deleteLabExternalLinks == false) {
+                DB::rollBack();
+                return false;
+            }
+            $deleteLabTagAssociations = $this->labTagsGroupsService->deleteLabTagsGroups($lab_id);
+            if ($deleteLabTagAssociations == false) {
+                DB::rollBack();
+                return false;
+            }
+            $deleteLabSkillAssociations = $this->labSkillsGroupsStackService->deleteLabSkillsGroupsStack($lab_id);
+            if ($deleteLabSkillAssociations == false) {
+                DB::rollBack();
+                return false;
+            }
+            $deleteLabAddress = $this->labAddressService->deleteLabAddress($lab_id);
+            if($deleteLabAddress == false) {
+                DB::rollBack();
+                return false;
+            }
+            $deleteLab=$this->labService->deleteLab($lab_id);
+            if($deleteLab == false) {
+                DB::rollBack();
+                return false;
+            }  
+            DB::commit();
+            return true;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
     public function checkSlug($slug)
     {
         try {

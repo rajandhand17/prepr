@@ -3013,6 +3013,7 @@
     "responses.send_otp_success":"Please check your email for the one-time password.",
     "responses.lab":"Lab list found successfully!",
     "responses.lab_delete":"Lab deleted successfully!",
+    "responses.lab_not_delete":"Lab is not deleted!",
     "responses.lab_name_required":"The Lab name is required!",
     "responses.lab_name_exists":"This Lab name is available!",
     "responses.lab_name_not_exists":"This Lab name is not available!",
@@ -3051,6 +3052,7 @@
     "responses.challenge_path":"The challenge path is required!",
     "responses.lab_title_unique":"Lab title should be unique!",
     "responses.lab_slug_not_found":"No labs are associated with this slug!",
+    "responses.lab_slug_required":"Please enter slug!",
     "responses.lab_found":"Lab detail found successfully!",
     "responses.lab_slug_exists":"Oops! This slug is not available!",
     "responses.lab_slug_not_exists":"Success is yours! This slug is available!"

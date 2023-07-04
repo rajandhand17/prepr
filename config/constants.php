@@ -87,8 +87,8 @@ return [
     ],
 
     'favorites_is_like'=> [
-        'unlike' => '0',
-        'like'   => '1',
+        'no' => '0',
+        'yes'   => '1',
     ],
 
     'favorites_refence_type'=> [

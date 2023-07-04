@@ -28,4 +28,15 @@ class LabExternalLinksService
             return false;
         }
     }
+
+    public function deleteLabExternalLinks($lab_id){
+        $checkExists=LabExternalLinks::select('id')->where('lab_id',$lab_id)->get()->toArray();
+        if($checkExists){
+            $deleteLabExternalLinks=LabExternalLinks::whereIn('id', $checkExists)->delete();
+            if(!$deleteLabExternalLinks){
+                return false;
+            }
+        }
+        return true;
+    }
 }

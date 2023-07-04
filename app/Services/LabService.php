@@ -141,6 +141,17 @@ class LabService
         }
     }
 
+    public function deleteLab($lab_id){
+        try {
+            $lab = Lab::where('id',$lab_id)->delete();
+            if (!$lab){
+                return false;
+            }
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
     public function checkSlug($slug)
     {
         try {
@@ -163,6 +174,19 @@ public function checkNameExistsOrNot($title)
             return true;
         }
 
+        return false;
+    } catch (\Exception $e) {
+        return false;
+    }
+}
+
+public static function getLabExistBasedOnSlug($slug)
+{
+    try {
+        $lab = Lab::where('slug',$slug)->first();
+        if ($lab != null) {
+            return $lab;
+        } 
         return false;
     } catch (\Exception $e) {
         return false;

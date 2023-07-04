@@ -37,4 +37,19 @@ class LabTagsGroupsService
             return false;
         }
     }
+
+    public function deleteLabTagsGroups($lab_id){
+       try {
+        $labTagsGroups=LabTagsGroups::select('id')->where('lab_id',$lab_id)->get()->toArray();
+        if($labTagsGroups){
+            $deleteLabTagsGroups=labTagsGroups::whereIn('id',$labTagsGroups)->delete();
+            if(!$deleteLabTagsGroups){
+                return false;
+            }
+        }
+        return true;
+       }catch (\Exception $e) {
+        return false;
+       }
+    }
 }

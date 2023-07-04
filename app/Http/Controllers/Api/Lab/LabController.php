@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\Lab;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Lab\DeleteLabRequest;
 use App\Http\Requests\Lab\LabStoreRequest;
 use App\Http\Resources\Lab\LabResource;
 use App\Repositories\Api\Lab\LabRepository;
 use App\Repositories\Api\LabAcheivement\LabAcheivementRepository;
 use Illuminate\Http\Request;
-
+use App\Helpers\UtilityHelper;
 class LabController extends AppBaseController
 {
     private $labRepository;
@@ -86,6 +87,30 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+    public function update($request){
+        try {
+
+        } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function delete($slug){
+        try { 
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot("lab", $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst("lab").' Not Found', 403);
+            }
+            $lab=$this->labRepository->deleteLab($checkComponentBasedOnSlug->id);
+            if ($lab) {
+                return $this->sendResponse(null, __('responses.lab_delete'));
+            }
+
+            return $this->sendError(__('responses.lab_not_delete'), 400);
+        } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 
     public function checkSlug($slug)
     {
@@ -115,6 +140,8 @@ class LabController extends AppBaseController
         }
     }
 
+
+
     public function labActivity(Request $request)
     {
         try {
@@ -122,4 +149,5 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
 }

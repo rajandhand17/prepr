@@ -48,4 +48,20 @@ class LabSkillsGroupsStackService
             return false;
         }
     }
+
+
+    public function deleteLabSkillsGroupsStack($lab_id){
+        try {
+            $checkExistsLabSkillsGroupsStack=LabSkillsGroupsStack::select('id')->where("lab_id",$lab_id)->get()->toArray();
+            if($checkExistsLabSkillsGroupsStack){
+                $deleteLabSkillsGroupsStack=LabSkillsGroupsStack::whereIn('id',$checkExistsLabSkillsGroupsStack)->delete();
+                if(!$deleteLabSkillsGroupsStack){
+                    return false;
+                }
+            }
+            return true;
+        } catch (\Exception $e) {
+        return false;
+        }
+    }
 }

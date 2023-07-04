@@ -119,7 +119,6 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             $response = ['success' => false, 'message'=>__('responses.send_error'), 'code' => 6];
-
             return $response;
         }
     }
@@ -214,8 +213,7 @@ class User extends Authenticatable
             return ['success' => false, 'message' => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
-
-            return $e;
+            dd($e);
 
             return ['success' => false, 'message' => 'Something went wrong.'];
         }

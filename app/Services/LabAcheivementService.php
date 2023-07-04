@@ -31,10 +31,25 @@ class LabAcheivementService
             $labAchievement->achievement_condition = $request->achievement_conditions;
             $labAchievement->achievement_image = $upload_acheivements_image;
             $labAchievement->save();
-
             return true;
         } catch (\Exception $e) {
             return false;
+        }
+    }
+
+    public function deleteLabAchievement($lab_id){
+        try {
+        $checkLabAchievementExists=LabAcheivement::where("lab_id",$lab_id)->first();
+        if($checkLabAchievementExists){
+            $deleteLabAchievement=LabAcheivement::where("lab_id",$lab_id)->delete();
+            if(!$deleteLabAchievement){
+                return false;
+            }
+            return true;
+        }
+        return true;
+        } catch (\Exception $e){
+        return false;
         }
     }
 }
