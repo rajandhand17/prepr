@@ -50,6 +50,15 @@ class LabRepository implements LabInterface
         }
     }
 
+    public function updateCoverImage($image){
+        try {
+            return $this->labService->updateLabCoverImage($image);
+
+        } catch (\Exception $e){
+            return false;
+        }
+    }
+
     public function createLab($request, $upload_profile_image, $upload_acheivements_image)
     {
         try {
@@ -143,9 +152,36 @@ class LabRepository implements LabInterface
                     DB::rollBack();
                     return false;
                 }
-                
+                $updateLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($lab_id,$request);
+                if ($updateLabSkillAssociations == false) {
+                    DB::rollBack();
+                    return false;
+                }
+
+                $updateLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($lab_id,$request);
+                if ($updateLabTagAssociations == false) {
+                    DB::rollBack();
+                    return false;
+                }
+                $updateLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($lab_id,$request);
+                if ($updateLabExternalLinks == false) {
+                    DB::rollBack();
+                    return false;
+                }
+                if ($request->is_achievement_enabled == 'yes') {
+                    $updateLabAcheivement = $this->labAcheivementService->updateLabAchievement($lab_id,$request, $upload_acheivements_image);
+                    if ($updateLabAcheivement == false) {
+                        DB::rollBack();
+                        return false;
+                    }
+                }
+                $updateLabAssociations = $this->componentAssociationService->updatelabAssociation($lab_id,$request);
+                if ($updateLabAssociations == false) {
+                    DB::rollBack();
+                    return false;
+                }
             }
-            
+
             DB::commit();
             return $updateLab;
         } catch (\Exception $e){

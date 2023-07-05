@@ -10,6 +10,8 @@ use App\Repositories\Api\Lab\LabRepository;
 use App\Repositories\Api\LabAcheivement\LabAcheivementRepository;
 use Illuminate\Http\Request;
 use App\Helpers\UtilityHelper;
+use App\Http\Requests\Lab\LabUpdateRequest;
+
 class LabController extends AppBaseController
 {
     private $labRepository;
@@ -87,7 +89,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function update($slug,Request $request){
+    public function update($slug,LabUpdateRequest $request){
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot("lab", $slug);
             if (!$checkComponentBasedOnSlug) {
@@ -95,20 +97,20 @@ class LabController extends AppBaseController
             }
             $upload_cover_image = null;
             $upload_acheivements_image = null;
-            // if ($request->cover_image !== null) {
-            //     $upload_cover_image = $this->labRepository->uploadCoverImage($request->cover_image);
-            //     if ($upload_cover_image == false) {
-            //         return $this->sendError(__('responses.fail_organization_image_upload'), 400);
-            //     }
-            //     $upload_cover_image = $upload_cover_image;
-            // }
-            // if ($request->is_achievement_enabled == 'yes') {
-            //     $upload_acheivements_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
-            //     if ($upload_acheivements_image == false) {
-            //         return $this->sendError(__('responses.fail_organization_image_upload'), 400);
-            //     }
-            //     $upload_acheivements_image = $upload_acheivements_image;
-            // }
+            if ($request->cover_image !== null) {
+                $upload_cover_image = $this->labRepository->updateCoverImage($request->cover_image);
+                if ($upload_cover_image == false) {
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
+                }
+                $upload_cover_image = $upload_cover_image;
+            }
+            if ($request->is_achievement_enabled == 'yes') {
+                $upload_acheivements_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                if ($upload_acheivements_image == false) {
+                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
+                }
+                $upload_acheivements_image = $upload_acheivements_image;
+            }
             $updateLab=$this->labRepository->updateLab($checkComponentBasedOnSlug->id,$request, $upload_cover_image, $upload_acheivements_image);
             if ($updateLab != false) {
                 return $this->sendResponse(LabResource::make($updateLab), __('responses.lab_update'), 200);

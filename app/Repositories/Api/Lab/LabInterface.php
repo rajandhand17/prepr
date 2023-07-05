@@ -17,5 +17,7 @@ interface LabInterface
     public function updateLab($slug,$request, $upload_profile_image, $upload_acheivements_image);
 
     public function deleteLab($lab_id);
+
+    public function updateCoverImage($image);
     
 }

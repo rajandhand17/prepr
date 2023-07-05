@@ -22,4 +22,13 @@ class LabAcheivementRepository implements LabAcheivementInterface
             return false;
         }
     }
+
+    public function updateAcheivementImage($image)
+    {
+        try {
+            return $this->LabAcheivementService->updateAcheivementImage($image);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

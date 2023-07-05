@@ -176,7 +176,6 @@ class LabService
             
             return $lab;
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
@@ -188,6 +187,19 @@ class LabService
                 return false;
             }
             return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updateLabCoverImage($request)
+    {
+        try {
+            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->cover_image, 'organization');
+            if ($profile_image_path == false) {
+                return false;
+            }
+            return $profile_image_path;
         } catch (\Exception $e) {
             return false;
         }
