@@ -141,24 +141,24 @@ class LabService
         }
     }
 
-    public function updateLab($lab_id,$request, $upload_cover_image)
+    public function updateLab($lab_id, $request, $upload_cover_image)
     {
         try {
-            $lab=Lab::find($lab_id)->first();
+            $lab = Lab::find($lab_id)->first();
             $privacy = $lab->privacy;
-            if($request->has('privacy')){
-            switch($request->privacy) {
-                case 'yes':
-                    $privacy = config('constants.lab_privacy.yes');
-                    break;
-                case 'no':
-                    $privacy = config('constants.lab_privacy.no');
-                    break;
-                default:
-                    $privacy = config('constants.lab_privacy.yes');
-                    break;
+            if ($request->has('privacy')) {
+                switch($request->privacy) {
+                    case 'yes':
+                        $privacy = config('constants.lab_privacy.yes');
+                        break;
+                    case 'no':
+                        $privacy = config('constants.lab_privacy.no');
+                        break;
+                    default:
+                        $privacy = config('constants.lab_privacy.yes');
+                        break;
+                }
             }
-        }
             $lab->language = ($request->has('language')) ? $request->language : $lab->language;
             $lab->organization_id = ($request->has('organization_id')) ? $request->organization_id : $lab->organization_id;
             $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
@@ -168,24 +168,26 @@ class LabService
             $lab->media_type = 'image';
             $lab->media = $upload_cover_image;
             $lab->status = ($request->request_type == 'draft') ? '0' : (($request->request_type == 'publish') ? '1' : '2');
-            $lab->is_resource_sequential = ($request->has('is_resource_sequential')) ? (($request->is_resource_sequential == 'yes') ? '1' : '0'):$lab->is_resource_sequential;
-            $lab->is_sequential = ($request->has('is_sequential')) ? (($request->is_sequential == 'yes') ? '1' : '0'): $lab->is_sequential;
-            $lab->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_achievement_enabled == 'yes') ? '1' : '0'):$lab->is_achievement_enabled;
-            $lab->is_notification_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_notification_enabled == 'yes') ? '1' : '0'):$lab->is_achievement_enabled;
+            $lab->is_resource_sequential = ($request->has('is_resource_sequential')) ? (($request->is_resource_sequential == 'yes') ? '1' : '0') : $lab->is_resource_sequential;
+            $lab->is_sequential = ($request->has('is_sequential')) ? (($request->is_sequential == 'yes') ? '1' : '0') : $lab->is_sequential;
+            $lab->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_achievement_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
+            $lab->is_notification_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_notification_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
             $lab->save();
-            
+
             return $lab;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteLab($lab_id){
+    public function deleteLab($lab_id)
+    {
         try {
-            $lab = Lab::where('id',$lab_id)->delete();
-            if (!$lab){
+            $lab = Lab::where('id', $lab_id)->delete();
+            if (!$lab) {
                 return false;
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
@@ -199,11 +201,13 @@ class LabService
             if ($profile_image_path == false) {
                 return false;
             }
+
             return $profile_image_path;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public function checkSlug($slug)
     {
         try {
@@ -235,10 +239,11 @@ public function checkNameExistsOrNot($title)
 public static function getLabExistBasedOnSlug($slug)
 {
     try {
-        $lab = Lab::where('slug',$slug)->first();
+        $lab = Lab::where('slug', $slug)->first();
         if ($lab != null) {
             return $lab;
-        } 
+        }
+
         return false;
     } catch (\Exception $e) {
         return false;

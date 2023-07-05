@@ -87,7 +87,7 @@ return [
     ],
 
     'favorites_is_like'=> [
-        'no' => '0',
+        'no'    => '0',
         'yes'   => '1',
     ],
 
