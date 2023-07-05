@@ -43,7 +43,7 @@ class OrganizationService
             $organization = Organization::where('slug', $slug)->first();
             if ($organization != null) {
                 return $organization;
-            } 
+            }
 
             return false;
         } catch (\Exception $e) {

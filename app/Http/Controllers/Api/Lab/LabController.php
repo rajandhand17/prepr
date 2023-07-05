@@ -33,8 +33,6 @@ class LabController extends AppBaseController
 
             return $this->sendError('Labs not found', 400);
         } catch(\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -170,11 +168,10 @@ class LabController extends AppBaseController
     public function labActivity($activity,$slug)
     {
         try {
-            $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
-            if ($checkLabSlugExistsOrNot == false) {
-                return $this->sendError(ucfirst($slug).' slug Not Found', 403);
-            }
-            
+            // $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
+            // if ($checkLabSlugExistsOrNot == false) {
+            //     return $this->sendError(ucfirst($slug).' slug Not Found', 403);
+            // }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

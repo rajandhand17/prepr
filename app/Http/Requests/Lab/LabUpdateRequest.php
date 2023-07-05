@@ -29,8 +29,8 @@ class LabUpdateRequest extends FormRequest
 
         $base_rules = [
             'request_type'=> 'required|in:draft,publish,archive',
-           // 'cover_image' => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
-           // 'title'       => 'required_if:request_type,publish|unique:labs,title|nullable',
+            // 'cover_image' => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
+            // 'title'       => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description' => 'required_if:request_type,publish|nullable',
 
             'organization_id'=> 'required|exists:organizations,id',

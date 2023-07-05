@@ -50,11 +50,11 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function updateCoverImage($image){
+    public function updateCoverImage($image)
+    {
         try {
             return $this->labService->updateLabCoverImage($image);
-
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -68,17 +68,20 @@ class LabRepository implements LabInterface
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createdLab);
                 if ($createdLabAddress == false) {
                     DB::rollBack();
+
                     return false;
                 }
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
                 if ($createdLabSkillAssociations == false) {
                     DB::rollBack();
+
                     return false;
                 }
 
                 $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createdLab);
                 if ($createdLabTagAssociations == false) {
                     DB::rollBack();
+
                     return false;
                 }
 
@@ -142,101 +145,120 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function updateLab($lab_id,$request, $upload_cover_image, $upload_acheivements_image){
+    public function updateLab($lab_id, $request, $upload_cover_image, $upload_acheivements_image)
+    {
         try {
             DB::beginTransaction();
-            $updateLab = $this->labService->updateLab($lab_id,$request, $upload_cover_image);
+            $updateLab = $this->labService->updateLab($lab_id, $request, $upload_cover_image);
             if ($updateLab !== false) {
-                $updateLabAddress = $this->labAddressService->updateLabAddress($lab_id,$request);
+                $updateLabAddress = $this->labAddressService->updateLabAddress($lab_id, $request);
                 if ($updateLabAddress == false) {
                     DB::rollBack();
+
                     return false;
                 }
-                $updateLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($lab_id,$request);
+                $updateLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($lab_id, $request);
                 if ($updateLabSkillAssociations == false) {
                     DB::rollBack();
+
                     return false;
                 }
 
-                $updateLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($lab_id,$request);
+                $updateLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($lab_id, $request);
                 if ($updateLabTagAssociations == false) {
                     DB::rollBack();
+
                     return false;
                 }
-                $updateLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($lab_id,$request);
+                $updateLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($lab_id, $request);
                 if ($updateLabExternalLinks == false) {
                     DB::rollBack();
+
                     return false;
                 }
                 if ($request->is_achievement_enabled == 'yes') {
-                    $updateLabAcheivement = $this->labAcheivementService->updateLabAchievement($lab_id,$request, $upload_acheivements_image);
+                    $updateLabAcheivement = $this->labAcheivementService->updateLabAchievement($lab_id, $request, $upload_acheivements_image);
                     if ($updateLabAcheivement == false) {
                         DB::rollBack();
+
                         return false;
                     }
                 }
-                $updateLabAssociations = $this->componentAssociationService->updatelabAssociation($lab_id,$request);
+                $updateLabAssociations = $this->componentAssociationService->updatelabAssociation($lab_id, $request);
                 if ($updateLabAssociations == false) {
                     DB::rollBack();
+
                     return false;
                 }
             }
 
             DB::commit();
+
             return $updateLab;
-        } catch (\Exception $e){
-        return false;
+        } catch (\Exception $e) {
+            return false;
         }
     }
-    public function deleteLab($lab_id){
+
+    public function deleteLab($lab_id)
+    {
         try {
             DB::beginTransaction();
             $deleteLabAssociations = $this->componentAssociationService->deletelabAssociation($lab_id);
             if ($deleteLabAssociations == false) {
                 DB::rollBack();
+
                 return false;
             }
             $deleteLabAcheivement = $this->labAcheivementService->deleteLabAchievement($lab_id);
             if ($deleteLabAcheivement == false) {
                 DB::rollBack();
+
                 return false;
             }
             $deleteLabExternalLinks = $this->labExternalLinksService->deleteLabExternalLinks($lab_id);
             if ($deleteLabExternalLinks == false) {
                 DB::rollBack();
+
                 return false;
             }
             $deleteLabTagAssociations = $this->labTagsGroupsService->deleteLabTagsGroups($lab_id);
             if ($deleteLabTagAssociations == false) {
                 DB::rollBack();
+
                 return false;
             }
             $deleteLabSkillAssociations = $this->labSkillsGroupsStackService->deleteLabSkillsGroupsStack($lab_id);
             if ($deleteLabSkillAssociations == false) {
                 DB::rollBack();
+
                 return false;
             }
             $deleteLabAddress = $this->labAddressService->deleteLabAddress($lab_id);
-            if($deleteLabAddress == false) {
+            if ($deleteLabAddress == false) {
                 DB::rollBack();
+
                 return false;
             }
-            $deleteLab=$this->labService->deleteLab($lab_id);
-            if($deleteLab == false) {
+            $deleteLab = $this->labService->deleteLab($lab_id);
+            if ($deleteLab == false) {
                 DB::rollBack();
+
                 return false;
-            }  
+            }
             DB::commit();
+
             return true;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function checkSlug($slug)
     {
         try {
             $labSlug = $this->labService->checkSlug($slug);
-            
+
             return $labSlug;
         } catch (\Exception $e) {
             return false;
