@@ -159,7 +159,6 @@ class LabController extends AppBaseController
             if ($checkLabNameExistsOrNot) {
                 return $this->sendError(__('responses.lab_name_not_exists'));
             }
-
             return $this->sendResponse([], __('responses.lab_name_exists'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -168,9 +167,14 @@ class LabController extends AppBaseController
 
 
 
-    public function labActivity(Request $request)
+    public function labActivity($activity,$slug)
     {
         try {
+            $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
+            if ($checkLabSlugExistsOrNot == false) {
+                return $this->sendError(ucfirst($slug).' slug Not Found', 403);
+            }
+            
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

@@ -244,4 +244,34 @@ public static function getLabExistBasedOnSlug($slug)
         return false;
     }
 }
+
+public function labActivity($activity,$slug)
+{
+    try {
+        switch ($activity){
+            case 'like':
+                $privacy = config('constants.lab_privacy.yes');
+                break;
+            case 'dislike':
+                $privacy = config('constants.lab_privacy.no');
+                break;
+            case 'follow':
+                $privacy = config('constants.lab_privacy.no');
+                break;
+            case 'un-follow':
+                $privacy = config('constants.lab_privacy.no');
+                break;
+            case 'favorite':
+                $privacy = config('constants.lab_privacy.no');
+                break;
+            case 'unfavorite':
+                $privacy = config('constants.lab_privacy.no');
+                break;
+            default:
+                $privacy = config('constants.lab_privacy.no');
+        }
+    } catch (\Exception $e){
+        return false;
+    }   
+}
 }

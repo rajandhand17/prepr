@@ -253,4 +253,13 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
+    public function labActivity($activity, $slug)
+    {
+        try {
+            return $this->labService->labActivity($activity,$slug);
+        } catch (\Exception $e){
+            return false;
+        }
+    }
 }

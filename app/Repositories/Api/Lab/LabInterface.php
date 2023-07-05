@@ -19,5 +19,6 @@ interface LabInterface
     public function deleteLab($lab_id);
 
     public function updateCoverImage($image);
+    public function labActivity($activity,$slug);
     
 }

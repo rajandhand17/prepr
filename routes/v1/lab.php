@@ -11,5 +11,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/check-title/{title}', [LabController::class, 'checkName']);
     Route::put('/{slug}/update', [LabController::class, 'update']);
     Route::delete('/{slug}/delete', [LabController::class, 'delete']);
-    Route::post('/{activity}/{slug}', [LabController::class, 'labActivity']); //like, dislike, follow, un follow, favorite
+    Route::post('/{activity}/{slug}', [LabController::class, 'labActivity']); 
 });
