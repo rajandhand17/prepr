@@ -49,44 +49,42 @@ class LabSkillsGroupsStackService
         }
     }
 
-    public function updateLabSkillsGroupsStack($lab_id,$request)
+    public function updateLabSkillsGroupsStack($lab_id, $request)
     {
         try {
             if ($request->has('skills')) {
                 if (count($request->skills) > 0) {
-                    $getExistsSkills=LabSkillsGroupsStack::where([
+                    $getExistsSkills = LabSkillsGroupsStack::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '0'],
-                        ])->pluck('foreign_id')->toArray();
-                    $nonExistingIds = array_diff($getExistsSkills,$request->skills);
-                    $deleteNonExistingSkills=LabSkillsGroupsStack::where([
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsSkills, $request->skills);
+                    $deleteNonExistingSkills = LabSkillsGroupsStack::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '0'],
-                    ])->whereIn("foreign_id",$nonExistingIds)->delete();
-                    $newSkills = array_diff($request->skills,$getExistsSkills);
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newSkills = array_diff($request->skills, $getExistsSkills);
                     foreach ($newSkills as $skill) {
-                            $LabSkillsGroupsStack = new LabSkillsGroupsStack();
-                            $LabSkillsGroupsStack->lab_id = $lab_id;
-                            $LabSkillsGroupsStack->foreign_id = $skill;
-                            $LabSkillsGroupsStack->type = '0';
-                            $LabSkillsGroupsStack->save();
-                        
+                        $LabSkillsGroupsStack = new LabSkillsGroupsStack();
+                        $LabSkillsGroupsStack->lab_id = $lab_id;
+                        $LabSkillsGroupsStack->foreign_id = $skill;
+                        $LabSkillsGroupsStack->type = '0';
+                        $LabSkillsGroupsStack->save();
                     }
-                    
                 }
             }
             if ($request->has('skill_groups')) {
                 if (count($request->skill_groups) > 0) {
-                    $getExistsSkillsGroup=LabSkillsGroupsStack::where([
+                    $getExistsSkillsGroup = LabSkillsGroupsStack::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '1'],
-                        ])->pluck('foreign_id')->toArray();
-                    $nonExistingIds = array_diff($getExistsSkillsGroup,$request->skill_groups);
-                    $deleteNonExistingSkillsGroup=LabSkillsGroupsStack::where([
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsSkillsGroup, $request->skill_groups);
+                    $deleteNonExistingSkillsGroup = LabSkillsGroupsStack::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '1'],
-                    ])->whereIn("foreign_id",$nonExistingIds)->delete();
-                    $newSkillGroup = array_diff($request->skill_groups,$getExistsSkillsGroup);
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newSkillGroup = array_diff($request->skill_groups, $getExistsSkillsGroup);
                     foreach ($newSkillGroup as $skill_group) {
                         $LabSkillsGroupsStack = new LabSkillsGroupsStack();
                         $LabSkillsGroupsStack->lab_id = $lab_id;
@@ -98,16 +96,16 @@ class LabSkillsGroupsStackService
             }
             if ($request->has('skill_stacks')) {
                 if (count($request->skill_stacks) > 0) {
-                    $getExistsSkillStack=LabSkillsGroupsStack::where([
+                    $getExistsSkillStack = LabSkillsGroupsStack::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '2'],
-                        ])->pluck('foreign_id')->toArray();
-                    $nonExistingIds = array_diff($getExistsSkillStack,$request->skill_stacks);
-                    $deleteNonExistingSkillStack=LabSkillsGroupsStack::where([
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsSkillStack, $request->skill_stacks);
+                    $deleteNonExistingSkillStack = LabSkillsGroupsStack::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '2'],
-                    ])->whereIn("foreign_id",$nonExistingIds)->delete();
-                    $newSkillStack = array_diff($request->skill_stacks,$getExistsSkillStack);
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newSkillStack = array_diff($request->skill_stacks, $getExistsSkillStack);
                     foreach ($newSkillStack as $skill_stack) {
                         $LabSkillsGroupsStack = new LabSkillsGroupsStack();
                         $LabSkillsGroupsStack->lab_id = $lab_id;
@@ -117,26 +115,29 @@ class LabSkillsGroupsStackService
                     }
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-
-    public function deleteLabSkillsGroupsStack($lab_id){
+    public function deleteLabSkillsGroupsStack($lab_id)
+    {
         try {
-            $checkExistsLabSkillsGroupsStack=LabSkillsGroupsStack::select('id')->where("lab_id",$lab_id)->get()->toArray();
-            if($checkExistsLabSkillsGroupsStack){
-                $deleteLabSkillsGroupsStack=LabSkillsGroupsStack::whereIn('id',$checkExistsLabSkillsGroupsStack)->delete();
-                if(!$deleteLabSkillsGroupsStack){
+            $checkExistsLabSkillsGroupsStack = LabSkillsGroupsStack::select('id')->where('lab_id', $lab_id)->get()->toArray();
+            if ($checkExistsLabSkillsGroupsStack) {
+                $deleteLabSkillsGroupsStack = LabSkillsGroupsStack::whereIn('id', $checkExistsLabSkillsGroupsStack)->delete();
+                if (!$deleteLabSkillsGroupsStack) {
                     return false;
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             dd($e);
-        return false;
+
+            return false;
         }
     }
 }

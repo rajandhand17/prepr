@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Api\Lab;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Lab\DeleteLabRequest;
 use App\Http\Requests\Lab\LabStoreRequest;
+use App\Http\Requests\Lab\LabUpdateRequest;
 use App\Http\Resources\Lab\LabResource;
 use App\Repositories\Api\Lab\LabRepository;
 use App\Repositories\Api\LabAcheivement\LabAcheivementRepository;
 use Illuminate\Http\Request;
-use App\Helpers\UtilityHelper;
-use App\Http\Requests\Lab\LabUpdateRequest;
 
 class LabController extends AppBaseController
 {
@@ -89,11 +88,13 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function update($slug,LabUpdateRequest $request){
+
+    public function update($slug, LabUpdateRequest $request)
+    {
         try {
-            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot("lab", $slug);
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot('lab', $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst("lab").' Not Found', 403);
+                return $this->sendError(ucfirst('lab').' Not Found', 403);
             }
             $upload_cover_image = null;
             $upload_acheivements_image = null;
@@ -111,29 +112,31 @@ class LabController extends AppBaseController
                 }
                 $upload_acheivements_image = $upload_acheivements_image;
             }
-            $updateLab=$this->labRepository->updateLab($checkComponentBasedOnSlug->id,$request, $upload_cover_image, $upload_acheivements_image);
+            $updateLab = $this->labRepository->updateLab($checkComponentBasedOnSlug->id, $request, $upload_cover_image, $upload_acheivements_image);
             if ($updateLab != false) {
                 return $this->sendResponse(LabResource::make($updateLab), __('responses.lab_update'), 200);
             }
+
             return $this->sendError(__('responses.lab_not_update'));
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function delete($slug){
-        try { 
-            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot("lab", $slug);
+    public function delete($slug)
+    {
+        try {
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot('lab', $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst("lab").' Not Found', 403);
+                return $this->sendError(ucfirst('lab').' Not Found', 403);
             }
-            $lab=$this->labRepository->deleteLab($checkComponentBasedOnSlug->id);
+            $lab = $this->labRepository->deleteLab($checkComponentBasedOnSlug->id);
             if ($lab) {
                 return $this->sendResponse(null, __('responses.lab_delete'));
             }
 
             return $this->sendError(__('responses.lab_not_delete'), 400);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -166,8 +169,6 @@ class LabController extends AppBaseController
         }
     }
 
-
-
     public function labActivity(Request $request)
     {
         try {
@@ -175,5 +176,4 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
 }

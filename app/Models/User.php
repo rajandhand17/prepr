@@ -119,6 +119,7 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             $response = ['success' => false, 'message'=>__('responses.send_error'), 'code' => 6];
+
             return $response;
         }
     }

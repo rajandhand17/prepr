@@ -37,21 +37,22 @@ class LabTagsGroupsService
             return false;
         }
     }
-    public function updateLabTagsGroups($lab_id,$request)
+
+    public function updateLabTagsGroups($lab_id, $request)
     {
         try {
             if ($request->has('tags')) {
                 if (count($request->tags) > 0) {
-                    $getExistsLabTags=LabTagsGroups::where([
+                    $getExistsLabTags = LabTagsGroups::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '0'],
-                        ])->pluck('foreign_id')->toArray();
-                    $nonExistingIds = array_diff($getExistsLabTags,$request->tags);
-                    $deleteNonExisting=LabTagsGroups::where([
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsLabTags, $request->tags);
+                    $deleteNonExisting = LabTagsGroups::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '0'],
-                    ])->whereIn("foreign_id",$nonExistingIds)->delete();
-                    $newTags = array_diff($request->tags,$getExistsLabTags);
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newTags = array_diff($request->tags, $getExistsLabTags);
                     foreach ($newTags as $tag) {
                         $LabSkillsGroupsStack = new LabTagsGroups();
                         $LabSkillsGroupsStack->lab_id = $lab_id;
@@ -62,19 +63,17 @@ class LabTagsGroupsService
                 }
             }
             if ($request->has('tag_groups')) {
-                
                 if (count($request->tag_groups) > 0) {
-                
-                    $getExistsLabTagsGroups=LabTagsGroups::where([
+                    $getExistsLabTagsGroups = LabTagsGroups::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '1'],
-                        ])->pluck('foreign_id')->toArray();
-                    $nonExistingIds = array_diff($getExistsLabTagsGroups,$request->tag_groups);
-                    $deleteNonExisting=LabTagsGroups::where([
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsLabTagsGroups, $request->tag_groups);
+                    $deleteNonExisting = LabTagsGroups::where([
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '1'],
-                    ])->whereIn("foreign_id",$nonExistingIds)->delete();
-                    $newTagsGroups = array_diff($request->tag_groups,$getExistsLabTagsGroups);
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newTagsGroups = array_diff($request->tag_groups, $getExistsLabTagsGroups);
                     foreach ($newTagsGroups as $tag_group) {
                         $LabSkillsGroupsStack = new LabTagsGroups();
                         $LabSkillsGroupsStack->lab_id = $lab_id;
@@ -90,18 +89,21 @@ class LabTagsGroupsService
             return false;
         }
     }
-    public function deleteLabTagsGroups($lab_id){
-       try {
-        $labTagsGroups=LabTagsGroups::select('id')->where('lab_id',$lab_id)->get()->toArray();
-        if($labTagsGroups){
-            $deleteLabTagsGroups=labTagsGroups::whereIn('id',$labTagsGroups)->delete();
-            if(!$deleteLabTagsGroups){
-                return false;
+
+    public function deleteLabTagsGroups($lab_id)
+    {
+        try {
+            $labTagsGroups = LabTagsGroups::select('id')->where('lab_id', $lab_id)->get()->toArray();
+            if ($labTagsGroups) {
+                $deleteLabTagsGroups = labTagsGroups::whereIn('id', $labTagsGroups)->delete();
+                if (!$deleteLabTagsGroups) {
+                    return false;
+                }
             }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
         }
-        return true;
-       }catch (\Exception $e) {
-        return false;
-       }
     }
 }

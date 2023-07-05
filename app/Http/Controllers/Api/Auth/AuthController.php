@@ -102,7 +102,6 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch(\Exception $e) {
-            
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
