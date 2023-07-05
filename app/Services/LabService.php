@@ -187,7 +187,6 @@ class LabService
             if (!$lab) {
                 return false;
             }
-
             return true;
         } catch (\Exception $e) {
             return false;
@@ -241,6 +240,7 @@ public static function getLabExistBasedOnSlug($slug)
     try {
         $lab = Lab::where('slug', $slug)->first();
         if ($lab != null) {
+           
             return $lab;
         }
 

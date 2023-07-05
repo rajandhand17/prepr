@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api\Lab;
 
+use App\Console\Commands\OldDataMigration\Lab;
+use App\Models\Lab as ModelsLab;
 use App\Services\ComponentAssociationService;
 use App\Services\FavoriteService;
 use App\Services\LabAcheivementService;
@@ -64,8 +66,10 @@ class LabRepository implements LabInterface
         try {
             DB::beginTransaction();
             $createdLab = $this->labService->createLab($request, $upload_profile_image);
+           
             if ($createdLab !== false) {
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createdLab);
+                
                 if ($createdLabAddress == false) {
                     DB::rollBack();
 
@@ -79,13 +83,14 @@ class LabRepository implements LabInterface
                 }
 
                 $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createdLab);
+               
                 if ($createdLabTagAssociations == false) {
                     DB::rollBack();
 
                     return false;
                 }
 
-                $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createdLab);
+                $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createdLab);   
                 if ($createdLabExternalLinks == false) {
                     DB::rollBack();
 
@@ -94,6 +99,7 @@ class LabRepository implements LabInterface
 
                 if ($request->is_achievement_enabled == 'yes') {
                     $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_acheivements_image);
+                    
                     if ($createdLabAcheivement == false) {
                         DB::rollBack();
 
@@ -101,9 +107,9 @@ class LabRepository implements LabInterface
                     }
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
+              
                 if ($createdLabAssociations == false) {
                     DB::rollBack();
-
                     return false;
                 }
                 DB::commit();
@@ -115,7 +121,7 @@ class LabRepository implements LabInterface
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
-
+            
             return false;
         }
     }
@@ -203,17 +209,22 @@ class LabRepository implements LabInterface
     public function deleteLab($lab_id)
     {
         try {
+            // $lab = ModelsLab::find($lab_id);
+            // if($lab->delete()){
+            //     return true;
+            // }else{
+            //     return false;
+            // }
+            // dd($lab);
             DB::beginTransaction();
             $deleteLabAssociations = $this->componentAssociationService->deletelabAssociation($lab_id);
             if ($deleteLabAssociations == false) {
                 DB::rollBack();
-
                 return false;
             }
             $deleteLabAcheivement = $this->labAcheivementService->deleteLabAchievement($lab_id);
             if ($deleteLabAcheivement == false) {
                 DB::rollBack();
-
                 return false;
             }
             $deleteLabExternalLinks = $this->labExternalLinksService->deleteLabExternalLinks($lab_id);
@@ -237,17 +248,14 @@ class LabRepository implements LabInterface
             $deleteLabAddress = $this->labAddressService->deleteLabAddress($lab_id);
             if ($deleteLabAddress == false) {
                 DB::rollBack();
-
                 return false;
             }
             $deleteLab = $this->labService->deleteLab($lab_id);
             if ($deleteLab == false) {
                 DB::rollBack();
-
                 return false;
             }
             DB::commit();
-
             return true;
         } catch (\Exception $e) {
             return false;

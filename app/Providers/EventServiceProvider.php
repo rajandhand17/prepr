@@ -19,6 +19,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        'eloquent.deleted: App\Models\Lab' => [
+            'App\Observers\Lab\LabObserver',
+            'App\Observers\Lab\LabAcheivementObserver@deleted',
+            'App\Observers\Lab\LabAddressObserver@deleted',
+            'App\Observers\Lab\LabExternalLinksObserver@deleted',
+            'App\Observers\Lab\LabObserver@deleted',
+            'App\Observers\Lab\LabSkillsGroupsStackObserver@deleted',
+            'App\Observers\Lab\LabTagsGroupsObserver@deleted',
+        ],
 
     ];
 

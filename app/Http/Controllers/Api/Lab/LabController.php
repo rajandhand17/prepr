@@ -42,7 +42,7 @@ class LabController extends AppBaseController
         try {
             $upload_cover_image = null;
             $upload_acheivements_image = null;
-
+            
             if ($request->cover_image !== null) {
                 $upload_cover_image = $this->labRepository->uploadCoverImage($request->cover_image);
                 if ($upload_cover_image == false) {
@@ -57,7 +57,6 @@ class LabController extends AppBaseController
                 }
                 $upload_acheivements_image = $upload_acheivements_image;
             }
-
             $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_acheivements_image);
 
             if ($createdLab != false) {

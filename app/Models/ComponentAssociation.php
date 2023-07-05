@@ -23,4 +23,5 @@ class ComponentAssociation extends Model
         'resource_group_id',
         'sequence',
     ];
+
 }
