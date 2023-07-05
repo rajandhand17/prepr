@@ -37,14 +37,7 @@ class ComponentAssociationObserver
     public function deleted(ComponentAssociation $componentAssociation)
     {
         $getComponentAssociation = ComponentAssociation::select('id')->where('lab_id', $componentAssociation)->get()->toArray();
-        if ($getComponentAssociation) {
-            $deleteComponentAssociation = ComponentAssociation::whereIn('id', $getComponentAssociation)->delete();
-            if (!$deleteComponentAssociation) {
-                return false;
-            }
-            return true;
-        }
-
+        $deleteComponentAssociation = ComponentAssociation::whereIn('id', $getComponentAssociation)->delete();
     }
 
     /**

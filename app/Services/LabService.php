@@ -184,6 +184,7 @@ class LabService
     {
         try {
             $lab = Lab::where('id', $lab_id)->delete();
+            
             if (!$lab) {
                 return false;
             }

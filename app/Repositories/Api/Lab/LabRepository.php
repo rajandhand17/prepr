@@ -209,13 +209,7 @@ class LabRepository implements LabInterface
     public function deleteLab($lab_id)
     {
         try {
-            // $lab = ModelsLab::find($lab_id);
-            // if($lab->delete()){
-            //     return true;
-            // }else{
-            //     return false;
-            // }
-            // dd($lab);
+            
             DB::beginTransaction();
             $deleteLabAssociations = $this->componentAssociationService->deletelabAssociation($lab_id);
             if ($deleteLabAssociations == false) {
@@ -230,19 +224,16 @@ class LabRepository implements LabInterface
             $deleteLabExternalLinks = $this->labExternalLinksService->deleteLabExternalLinks($lab_id);
             if ($deleteLabExternalLinks == false) {
                 DB::rollBack();
-
                 return false;
             }
             $deleteLabTagAssociations = $this->labTagsGroupsService->deleteLabTagsGroups($lab_id);
             if ($deleteLabTagAssociations == false) {
                 DB::rollBack();
-
                 return false;
             }
             $deleteLabSkillAssociations = $this->labSkillsGroupsStackService->deleteLabSkillsGroupsStack($lab_id);
             if ($deleteLabSkillAssociations == false) {
                 DB::rollBack();
-
                 return false;
             }
             $deleteLabAddress = $this->labAddressService->deleteLabAddress($lab_id);
