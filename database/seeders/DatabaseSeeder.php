@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\FlexibleExpireDateDuration;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             RolesSeeder::class,
             AssignPermissionToRolesSeeder::class,
             EmailTemplateSeeder::class,
+            FlexibleDateDurationSeeder::class,
         ]);
     }
 }
