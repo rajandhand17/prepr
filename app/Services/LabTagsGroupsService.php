@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\labTagsGroups;
+use App\Models\LabTagsGroups;
 
 class LabTagsGroupsService
 {
