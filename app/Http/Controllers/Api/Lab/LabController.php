@@ -164,14 +164,24 @@ class LabController extends AppBaseController
 
 
 
-    public function labActivity($activity,$slug)
+    public function labActivity($activity,$slug,Request $request)
     {
         try {
-            // $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
-            // if ($checkLabSlugExistsOrNot == false) {
-            //     return $this->sendError(ucfirst($slug).' slug Not Found', 403);
-            // }
-        } catch (\Exception $e) {
+            /**checking slug that is exists or not */
+            $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
+            if ($checkLabSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.lab_slug_exists'), 403);
+            }
+            $checkActivityAlreadyExistOrNot = $this->labRepository->checkActivity($activity,$slug,$request);
+           if ($checkActivityAlreadyExistOrNot == false) {
+                return $this->sendError(__('responses.lab_already_done_activity').$activity, 400);
+            } 
+            $checkLabActivity = $this->labRepository->labActivity($activity,$request);
+            if ($checkLabActivity){
+                return $this->sendResponse([],__('responses.lab_activity_successfully'), 200);
+            }
+            return $this->sendError(__('responses.send_error'),500);
+        } catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

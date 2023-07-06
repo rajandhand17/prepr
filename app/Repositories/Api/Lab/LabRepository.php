@@ -205,11 +205,10 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-
+    
     public function deleteLab($lab_id)
     {
         try {
-            
             DB::beginTransaction();
             $deleteLabAssociations = $this->componentAssociationService->deletelabAssociation($lab_id);
             if ($deleteLabAssociations == false) {
@@ -257,7 +256,6 @@ class LabRepository implements LabInterface
     {
         try {
             $labSlug = $this->labService->checkSlug($slug);
-
             return $labSlug;
         } catch (\Exception $e) {
             return false;
@@ -275,10 +273,25 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function labActivity($activity, $slug)
+    public function labActivity($activity, $request)
     {
         try {
-            return $this->labService->labActivity($activity,$slug);
+            $labCheckExistsOrNot = $this->labService->checkExistsOrNot($activity,$request);
+            if($labCheckExistsOrNot==false){
+                $storeLabActivity = $this->labService->storeLabActivity($activity,$request);
+                return $storeLabActivity;
+            }
+            $updateLabActivity = $this->labService->updateLabActivity($activity,$labCheckExistsOrNot->id);
+            return $updateLabActivity;
+        } catch (\Exception $e){
+            
+            return false;
+        }
+    }
+
+    public function checkActivity($activity,$slug,$request){
+        try {
+            return $this->labService->checkActivity($activity,$slug,$request);
         } catch (\Exception $e){
             return false;
         }

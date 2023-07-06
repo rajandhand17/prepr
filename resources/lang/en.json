@@ -3057,5 +3057,8 @@
     "responses.lab_slug_exists":"Oops! This slug is not available!",
     "responses.lab_slug_not_exists":"Success is yours! This slug is available!",
     "responses.lab_update":"Lab updated successfully",
-    "responses.lab_not_update":"There are some issues being encountered while updating the lab!"
+    "responses.lab_not_update":"There are some issues being encountered while updating the lab!",
+    "responses.lab_slug_not_found_with_name":" slug not found!",
+    "responses.lab_already_done_activity":"This action is already performed!",
+    "responses.lab_activity_successfully":"The action is performed successfully!"   
 }
