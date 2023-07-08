@@ -38,9 +38,7 @@ class LabAcheivementObserver
     {
         
         $deleteLabAchievement = LabAcheivement::where('lab_id', $labAcheivement)->delete();
-        if (!$deleteLabAchievement) {
-            return false;
-        }
+        
     }
 
     /**

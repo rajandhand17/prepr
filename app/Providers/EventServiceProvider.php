@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Lab;
+use App\Models\LabAddress;
 use App\Models\User;
+use App\Observers\Lab\LabAddressObserver;
+use App\Observers\Lab\LabObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -19,18 +23,19 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        'eloquent.deleted: App\Models\Lab' => [
-            'App\Observers\Lab\LabObserver',
-            'App\Observers\Lab\LabAcheivementObserver@deleted',
-            'App\Observers\Lab\LabAddressObserver@deleted',
-            'App\Observers\Lab\LabExternalLinksObserver@deleted',
-            'App\Observers\Lab\LabObserver@deleted',
-            'App\Observers\Lab\LabSkillsGroupsStackObserver@deleted',
-            'App\Observers\Lab\LabTagsGroupsObserver@deleted',
-        ],
+       
+        // 'eloquent.deleted: App\Models\Lab' => [
+        //     'App\Observers\Lab\LabObserver',
+        //     'App\Observers\Lab\LabAddressObserver@deleted',
+        //     'App\Observers\Lab\LabAcheivementObserver@deleted',
+        //     'App\Observers\Lab\LabExternalLinksObserver@deleted',
+        //     'App\Observers\Lab\LabObserver@deleted',
+        //     'App\Observers\Lab\LabSkillsGroupsStackObserver@deleted',
+        //     'App\Observers\Lab\LabTagsGroupsObserver@deleted',
+        // ],
 
     ];
-
+    
     /**
      * Register any events for your application.
      *
@@ -38,7 +43,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        User::observe(UserObserver::class);
+        LabAddress::observe(LabAddressObserver::class);
     }
 
     /**

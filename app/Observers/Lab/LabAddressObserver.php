@@ -37,11 +37,7 @@ class LabAddressObserver
     public function deleted(LabAddress $labAddress)
     {
         $deleteLabaddress = LabAddress::where('lab_id', $labAddress)->delete();
-        if (!$deleteLabaddress) {
-            return false;
-        }
-
-        return true;
+        
     }
 
     /**

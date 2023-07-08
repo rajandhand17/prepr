@@ -36,7 +36,7 @@ class LabSkillsGroupsStackObserver
      */
     public function deleted(LabSkillsGroupsStack $labSkillsGroupsStack)
     {
-        $checkExistsLabSkillsGroupsStack = LabSkillsGroupsStack::select('id')->where('lab_id', $lab_id)->get()->toArray();
+        $checkExistsLabSkillsGroupsStack = LabSkillsGroupsStack::select('id')->where('lab_id', $labSkillsGroupsStack)->get()->toArray();
         if ($checkExistsLabSkillsGroupsStack) {
             $deleteLabSkillsGroupsStack = LabSkillsGroupsStack::whereIn('id', $checkExistsLabSkillsGroupsStack)->delete();
             if (!$deleteLabSkillsGroupsStack) {

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Favorite;
+use App\Models\Group;
 use App\Models\Lab;
 use HiFolks\RandoPhp\Randomize;
 
@@ -128,6 +129,38 @@ class LabService
         }
     }
 
+    public function getlabProgramList($request){
+        try {
+            $labProgram= Lab::where('type','0');
+            $labProgram = $this->filterLabList($labProgram, $request);
+            return $labProgram;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function filterLabProgramList($labListProgram, $request)
+    {
+        try {
+            if (isset($request->privacy) && !empty($request->privacy)) {
+                switch ($request->privacy) {
+                    case 'yes':
+                        $privacy = config('constants.lab_privacy.yes');
+                        break;
+                    case 'no':
+                        $privacy = config('constants.lab_privacy.no');
+                        break;
+                    default:
+                        $privacy = config('constants.lab_privacy.no');
+                }
+                $labListProgram = $labListProgram->where('privacy', $privacy);
+            }
+            $labListProgram = $labListProgram->get();
+            return $labListProgram;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
     public function getLabDetails($slug)
     {
         try {
@@ -184,8 +217,8 @@ class LabService
     public function deleteLab($lab_id)
     {
         try {
-            $lab = Lab::where('id', $lab_id)->delete();
             
+            $lab = Lab::find($lab_id)->delete();
             if (!$lab) {
                 return false;
             }
@@ -300,7 +333,6 @@ class LabService
                     return false;
                     break;
                 default:
-                dd("default");
                     return false;
             }
         } catch (\Exception $e) {
@@ -352,7 +384,6 @@ public function checkExistsOrNot($activity,$request){
         return false;
     }
 }
-
 public function storeLabActivity($activity,$request)
 {
     try {

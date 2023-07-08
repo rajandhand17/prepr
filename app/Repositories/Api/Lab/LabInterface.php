@@ -9,17 +9,13 @@ interface LabInterface
     public function uploadCoverImage($image);
 
     public function getLabDetails($slug);
-
     public function checkSlug($slug);
-
     public function checkNameExistsOrNot($slug);
-
     public function updateLab($slug, $request, $upload_profile_image, $upload_acheivements_image);
-
     public function deleteLab($lab_id);
-
     public function updateCoverImage($image);
-
     public function checkActivity($activity,$slug,$request);
     public function labActivity($activity,$request);
+    public function getLabProgramList($request);
+  
 }

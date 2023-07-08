@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Api\Lab;
 
-use App\Console\Commands\OldDataMigration\Lab;
-use App\Models\Lab as ModelsLab;
+//use App\Console\Commands\OldDataMigration\Lab;
+use App\Models\Lab;
 use App\Services\ComponentAssociationService;
 use App\Services\FavoriteService;
 use App\Services\LabAcheivementService;
@@ -15,7 +15,6 @@ use App\Services\LabTagsGroupsService;
 use App\Services\MemberManagementService;
 use App\Services\SkillService;
 use DB;
-
 class LabRepository implements LabInterface
 {
     private $labService;
@@ -140,6 +139,18 @@ class LabRepository implements LabInterface
         }
     }
 
+    public function getLabProgramList($request){
+        try {
+            $labProgram = $this->labService->getlabProgramList($request);
+            if ($labProgram) {
+                return $labProgram;
+            }
+            return false;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
+
     public function getLabDetails($slug)
     {
         try {
@@ -160,20 +171,17 @@ class LabRepository implements LabInterface
                 $updateLabAddress = $this->labAddressService->updateLabAddress($lab_id, $request);
                 if ($updateLabAddress == false) {
                     DB::rollBack();
-
                     return false;
                 }
                 $updateLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($lab_id, $request);
                 if ($updateLabSkillAssociations == false) {
                     DB::rollBack();
-
                     return false;
                 }
 
                 $updateLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($lab_id, $request);
                 if ($updateLabTagAssociations == false) {
                     DB::rollBack();
-
                     return false;
                 }
                 $updateLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($lab_id, $request);
@@ -210,36 +218,6 @@ class LabRepository implements LabInterface
     {
         try {
             DB::beginTransaction();
-            $deleteLabAssociations = $this->componentAssociationService->deletelabAssociation($lab_id);
-            if ($deleteLabAssociations == false) {
-                DB::rollBack();
-                return false;
-            }
-            $deleteLabAcheivement = $this->labAcheivementService->deleteLabAchievement($lab_id);
-            if ($deleteLabAcheivement == false) {
-                DB::rollBack();
-                return false;
-            }
-            $deleteLabExternalLinks = $this->labExternalLinksService->deleteLabExternalLinks($lab_id);
-            if ($deleteLabExternalLinks == false) {
-                DB::rollBack();
-                return false;
-            }
-            $deleteLabTagAssociations = $this->labTagsGroupsService->deleteLabTagsGroups($lab_id);
-            if ($deleteLabTagAssociations == false) {
-                DB::rollBack();
-                return false;
-            }
-            $deleteLabSkillAssociations = $this->labSkillsGroupsStackService->deleteLabSkillsGroupsStack($lab_id);
-            if ($deleteLabSkillAssociations == false) {
-                DB::rollBack();
-                return false;
-            }
-            $deleteLabAddress = $this->labAddressService->deleteLabAddress($lab_id);
-            if ($deleteLabAddress == false) {
-                DB::rollBack();
-                return false;
-            }
             $deleteLab = $this->labService->deleteLab($lab_id);
             if ($deleteLab == false) {
                 DB::rollBack();
@@ -247,6 +225,45 @@ class LabRepository implements LabInterface
             }
             DB::commit();
             return true;
+            // DB::beginTransaction();
+            // $deleteLabAssociations = $this->componentAssociationService->deletelabAssociation($lab_id);
+            // if ($deleteLabAssociations == false) {
+            //     DB::rollBack();
+            //     return false;
+            // }
+            // $deleteLabAcheivement = $this->labAcheivementService->deleteLabAchievement($lab_id);
+            // if ($deleteLabAcheivement == false) {
+            //     DB::rollBack();
+            //     return false;
+            // }
+            // $deleteLabExternalLinks = $this->labExternalLinksService->deleteLabExternalLinks($lab_id);
+            // if ($deleteLabExternalLinks == false) {
+            //     DB::rollBack();
+            //     return false;
+            // }
+            // $deleteLabTagAssociations = $this->labTagsGroupsService->deleteLabTagsGroups($lab_id);
+            // if ($deleteLabTagAssociations == false) {
+            //     DB::rollBack();
+
+            //     return false;
+            // }
+            // $deleteLabSkillAssociations = $this->labSkillsGroupsStackService->deleteLabSkillsGroupsStack($lab_id);
+            // if ($deleteLabSkillAssociations == false) {
+            //     DB::rollBack();
+            //     return false;
+            // }
+            // $deleteLabAddress = $this->labAddressService->deleteLabAddress($lab_id);
+            // if ($deleteLabAddress == false) {
+            //     DB::rollBack();
+            //     return false;
+            // }
+            // $deleteLab = $this->labService->deleteLab($lab_id);
+            // if ($deleteLab == false) {
+            //     DB::rollBack();
+            //     return false;
+            // }
+            // DB::commit();
+            // return true;
         } catch (\Exception $e) {
             return false;
         }

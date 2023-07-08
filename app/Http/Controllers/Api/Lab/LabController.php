@@ -37,6 +37,18 @@ class LabController extends AppBaseController
         }
     }
 
+    public function labProgram(Request $request){
+        try {
+            $labProgram = $this->labRepository->getLabProgramList($request);
+            if ($labProgram !== false) {
+                return $this->sendResponse(LabResource::collection($labProgram), 'Labs fetched successfully');
+            }
+            return $this->sendError('Labs not found', 400);
+        } catch (\Exception $e) {
+        return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
     public function store(LabStoreRequest $request)
     {
         try {
@@ -173,7 +185,7 @@ class LabController extends AppBaseController
                 return $this->sendError(__('responses.lab_slug_exists'), 403);
             }
             $checkActivityAlreadyExistOrNot = $this->labRepository->checkActivity($activity,$slug,$request);
-           if ($checkActivityAlreadyExistOrNot == false) {
+            if ($checkActivityAlreadyExistOrNot == false) {
                 return $this->sendError(__('responses.lab_already_done_activity').$activity, 400);
             } 
             $checkLabActivity = $this->labRepository->labActivity($activity,$request);

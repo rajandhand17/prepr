@@ -2,7 +2,13 @@
 
 namespace App\Observers\Lab;
 
+use App\Models\ComponentAssociation;
 use App\Models\Lab;
+use App\Models\LabAcheivement;
+use App\Models\LabAddress;
+use App\Models\LabExternalLinks;
+use App\Models\LabSkillsGroupsStack;
+use App\Models\LabTagsGroups;
 
 class LabObserver
 {
@@ -35,8 +41,13 @@ class LabObserver
      * @return void
      */
     public function deleted(Lab $lab)
-    {
-        $lab=Lab::where('id', $lab)->delete();
+    {   
+        LabAddress::where('lab_id',$lab->id)->delete();
+        ComponentAssociation::where('lab_id', $lab->id)->delete();
+        LabAcheivement::where('lab_id', $lab->id)->delete();
+        LabExternalLinks::where('lab_id', $lab->id)->delete();
+        LabTagsGroups::select('id')->where('lab_id',$lab->id)->delete();
+        LabSkillsGroupsStack::select('id')->where('lab_id', $lab->id)->delete();
     }
 
     /**
