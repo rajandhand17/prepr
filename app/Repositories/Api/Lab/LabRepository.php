@@ -201,10 +201,20 @@ class LabRepository implements LabInterface
         }
     }
     
-    public function deleteLab($lab_id)
+    public function deleteLab($lab_id,$request)
     {
         try {
             DB::beginTransaction();
+            
+            if(isset($request->status) && !empty($request->status) && $request->status=="archived"){
+                $archived=$this->labService->archieveLab($lab_id);
+                if($archived==false){
+                    DB::rollBack();
+                    return false;
+                }
+                DB::commit();
+                return true;
+            }
             $deleteLab = $this->labService->deleteLab($lab_id);
             if ($deleteLab == false) {
                 DB::rollBack();
@@ -212,9 +222,8 @@ class LabRepository implements LabInterface
             }
             DB::commit();
             return true;
-        
         } catch (\Exception $e) {
-            return false;
+        return false;
         }
     }
 

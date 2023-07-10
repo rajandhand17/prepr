@@ -211,6 +211,18 @@ class LabService
         }
     }
 
+    public function archieveLab($lab_id){
+        try {
+            $lab=Lab::find($lab_id);
+            $lab->status=config('constants.lab_status.archive');
+            if($lab->save()){
+                return true;
+            }
+            return false;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
     public static function updateLabCoverImage($request)
     {
         try {
@@ -296,8 +308,7 @@ public static function getLabExistBasedOnSlug($slug)
     try {
         $lab = Lab::where('slug', $slug)->first();
         if ($lab != null) {
-           
-            return $lab;
+        return $lab;
         }
 
         return false;

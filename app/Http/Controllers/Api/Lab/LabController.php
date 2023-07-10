@@ -130,13 +130,13 @@ class LabController extends AppBaseController
         }
     }
 
-    public function delete($slug){
+    public function delete($slug,Request $request){
         try { 
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot("lab", $slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst("lab").' Not Found', 403);
             }
-            $lab=$this->labRepository->deleteLab($checkComponentBasedOnSlug->id);
+            $lab=$this->labRepository->deleteLab($checkComponentBasedOnSlug->id,$request);
             if ($lab) {
                 return $this->sendResponse(null, __('responses.lab_delete'));
             }
