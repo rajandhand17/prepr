@@ -538,6 +538,7 @@ class OrganizationController extends AppBaseController
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.updated_organization'));
             }
+
             return $this->sendError(__('responses.updated_organization_failed'), 409);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

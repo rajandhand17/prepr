@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Lab;
-use App\Observers\Lab\LabObserver;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 

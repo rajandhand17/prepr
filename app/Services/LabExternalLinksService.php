@@ -76,6 +76,7 @@ class LabExternalLinksService
                 return false;
             }
         }
+
         return true;
     }
 }

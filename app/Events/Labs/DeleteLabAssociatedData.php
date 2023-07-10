@@ -2,17 +2,16 @@
 
 namespace App\Events\Labs;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class DeleteLabAssociatedData
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
     public $labId;
 
     /**
@@ -22,7 +21,7 @@ class DeleteLabAssociatedData
      */
     public function __construct($labId)
     {
-        $this->labId=$labId;
+        $this->labId = $labId;
     }
 
     /**
