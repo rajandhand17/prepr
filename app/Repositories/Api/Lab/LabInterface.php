@@ -14,8 +14,6 @@ interface LabInterface
     public function updateLab($slug, $request, $upload_profile_image, $upload_acheivements_image);
     public function deleteLab($lab_id);
     public function updateCoverImage($image);
-    public function checkActivity($activity,$slug,$request);
-    public function labActivity($activity,$request);
-    public function getLabProgramList($request);
-  
+    public function checkActivity($activity,$lab_id);
+    public function storeLabActivity($activity,$lab_id,$request);
 }

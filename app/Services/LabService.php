@@ -2,12 +2,16 @@
 
 namespace App\Services;
 
+use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Favorite;
 use App\Models\Group;
 use App\Models\Lab;
+use App\Models\LabAddress;
+use App\Models\LabSocialActivity;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Facades\Auth;
 
 class LabService
 {
@@ -128,17 +132,6 @@ class LabService
             return false;
         }
     }
-
-    public function getlabProgramList($request){
-        try {
-            $labProgram= Lab::where('type','0');
-            $labProgram = $this->filterLabList($labProgram, $request);
-            return $labProgram;
-        } catch (\Exception $e){
-            return false;
-        }
-    }
-
     public function filterLabProgramList($labListProgram, $request)
     {
         try {
@@ -217,13 +210,13 @@ class LabService
     public function deleteLab($lab_id)
     {
         try {
-            
             $lab = Lab::find($lab_id)->delete();
-            if (!$lab) {
-                return false;
+            $associatedLabs=event(new DeleteLabAssociatedData($lab_id));
+            if (!$associatedLabs) {
+            return false;
             }
             return true;
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             return false;
         }
     }
@@ -247,94 +240,48 @@ class LabService
         try {
             $checklabSlug = Lab::where('slug', $slug)->first();
             if ($checklabSlug) {
-                return true;
+                return $checklabSlug;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
-    public function checkActivity($activity,$slug,$request)
+    public function checkActivity($activity,$lab_id)
     {
         try {
+            $checkActivity=LabSocialActivity::where([
+                ['user_id','=', auth()->user()->id],
+                ['lab_id','=', $lab_id],
+            ]);
             switch ($activity){
                 case 'like':
-                $checklabLike = Favorite::where([
-                    ['refence_id','=', $request['refence_id']],
-                    ['refence_type','=', $request['refence_type']],
-                    ['user_id','=', auth()->user()->id],
-                    ['is_like','=', '1'],
-                ])->first();
-                if (!$checklabLike) {
-                    return true;
-                }
-                return false;    
+                $checkActivity=$checkActivity->where('like_dislike','1');
                 break;
                 case 'dislike':
-                    $checklabUnlike = Favorite::where([
-                        ['refence_id','=', $request['refence_id']],
-                        ['refence_type','=', $request['refence_type']],
-                        ['user_id','=', auth()->user()->id],
-                        ['is_like','=', '0'],
-                    ])->first();
-                    if (!$checklabUnlike) {
-                        return true;
-                    }
-                    return false;
+                $checkActivity=$checkActivity->where('like_dislike','2');
                     break;
                 case 'follow':
-                    $checklabFollow = Favorite::where([
-                        ['refence_id','=', $request['refence_id']],
-                        ['refence_type','=', $request['refence_type']],
-                        ['user_id','=', auth()->user()->id],
-                        ['is_follow','=', '1'],
-                    ])->first();
-                    if (!$checklabFollow){
-                        return true;
-                    }
-                    return false;
-                    break;
-                case 'un-follow':
-                    
-                    $checklabUnFollow = Favorite::where([
-                        ['refence_id','=', $request['refence_id']],
-                        ['refence_type','=', $request['refence_type']],
-                        ['user_id','=', auth()->user()->id],
-                        ['is_follow','=', '0'],
-                    ])->first();
-                    if (!$checklabUnFollow){
-                        return true;
-                    }
-                    return false;
-                    break;
-                case 'favorite':
-                    $checklabFavorite = Favorite::where([
-                        ['refence_id','=', $request['refence_id']],
-                        ['refence_type','=', $request['refence_type']],
-                        ['user_id','=', auth()->user()->id],
-                        ['is_favorite','=', '1'],
-                    ])->first();
-                    if (!$checklabFavorite){
-                        return true;
-                    }
-                    return false;
-                    break;
-                case 'un-favorite':
-                    $checklabUnFavorite = Favorite::where([
-                        ['refence_id','=', $request['refence_id']],
-                        ['refence_type','=', $request['refence_type']],
-                        ['user_id','=', auth()->user()->id],
-                        ['is_favorite','=', '0'],
-                    ])->first();
-                    if (!$checklabUnFavorite){
-                        return true;
-                    }
-                    return false;
-                    break;
+                $checkActivity=$checkActivity->where('follow_unfollow','1');
+                break;
+                case 'unfollow':
+                $checkActivity=$checkActivity->where('follow_unfollow','2');
+                break;
+                case 'favourite':
+                $checkActivity=$checkActivity->where('favourite','1');
+                break;
+                case 'unfavored':
+                $checkActivity=$checkActivity->where('favourite','2');
+                break;
                 default:
-                    return false;
+                return false;
             }
+            
+            $checkActivity=$checkActivity->first();
+            if(!$checkActivity){
+                return true;
+            }
+            return false;
         } catch (\Exception $e) {
             return false;
         }
@@ -369,146 +316,94 @@ public static function getLabExistBasedOnSlug($slug)
     }
 }
 
-public function checkExistsOrNot($activity,$request){
+public function checkExistsOrNot($activity,$lab_id){
     try {
-        $checkFavouriteExistsOrNot = Favorite::where([
-            ['refence_id','=', $request['refence_id']],
-            ['refence_type','=', $request['refence_type']],
+        $checkLabActivity=LabSocialActivity::where([
             ['user_id','=', auth()->user()->id],
+            ['lab_id','=', $lab_id],
         ])->first();
-        if($checkFavouriteExistsOrNot){
-            return $checkFavouriteExistsOrNot;
+        if($checkLabActivity){
+            return $checkLabActivity;
         }
         return false;
     } catch (\Exception $e){
         return false;
     }
 }
-public function storeLabActivity($activity,$request)
+public function storeLabActivity($activity,$lab_id,$request)
 {
     try {
+        $storeLabActivity=new LabSocialActivity();
+        $storeLabActivity->user_id=auth()->user()->id;
+        $storeLabActivity->lab_id=$lab_id;
         switch ($activity){
             case 'like':
-                    $likeLab=new Favorite();
-                    $likeLab->refence_id=$request['refence_id'];
-                    $likeLab->refence_type=$request['refence_type'];
-                    $likeLab->user_id=auth()->user()->id;
-                    $likeLab->is_like='1';
-                    if($likeLab->save()){
-                        return true;
-                    }
-                        return false;
-                break;
+            $storeLabActivity->like_dislike="1";
+            break;
             case 'dislike':
-                    $likeLab=new Favorite();
-                    $likeLab->refence_id=$request['refence_id'];
-                    $likeLab->refence_type=$request['refence_type'];
-                    $likeLab->user_id=auth()->user()->id;
-                    $likeLab->is_like='0';
-                    if($likeLab->save()){
-                        return true;
-                    }
-                        return false;
-                break;
+            $storeLabActivity->like_dislike="2";
+            break;
             case 'follow':
-                    $likeLab=new Favorite();
-                    $likeLab->refence_id=$request['refence_id'];
-                    $likeLab->refence_type=$request['refence_type'];
-                    $likeLab->user_id=auth()->user()->id;
-                    $likeLab->is_follow='1';
-                    if($likeLab->save()){
-                        return true;
-                    }
-                    return false;
-                break;
-            case 'un-follow':
-                $likeLab=new Favorite();
-                $likeLab->refence_id=$request['refence_id'];
-                $likeLab->refence_type=$request['refence_type'];
-                $likeLab->user_id=auth()->user()->id;
-                $likeLab->is_follow='0';
-                if($likeLab->save()){
-                    return true;
-                }
-                return false;
-                break;
-            case 'favorite':
-                $likeLab=new Favorite();
-                $likeLab->refence_id=$request['refence_id'];
-                $likeLab->refence_type=$request['refence_type'];
-                $likeLab->user_id=auth()->user()->id;
-                $likeLab->is_favorite='0';
-                if($likeLab->save()){
-                    return true;
-                }
-                return false;
-                break;
-            case 'un-favorite':
-                $likeLab=new Favorite();
-                $likeLab->refence_id=$request['refence_id'];
-                $likeLab->refence_type=$request['refence_type'];
-                $likeLab->user_id=auth()->user()->id;
-                $likeLab->is_favorite='1';
-                if($likeLab->save()){
-                    return true;
-                }
-                return false;
-                break;
+            $storeLabActivity->follow_unfollow="1";
+            break;
+            case 'unfollow':
+            $storeLabActivity->follow_unfollow="2";
+            break;
+            case 'favourite':
+            $storeLabActivity->favourite="1";
+            break;
+            case 'unfavored':
+            $storeLabActivity->favourite="2";
+            break;
             default:
                 return false;
         }
+        if(isset($request->share) && !empty($request->share)){
+            $storeLabActivity->share=$request->share;
+        }
+        if($storeLabActivity->save()){
+            return true;
+        }
+        return false;
     } catch (\Exception $e){
         dd($e);
         return false;
     }   
 }
 
-public function updateLabActivity($activity,$id){
+public function updateLabActivity($activity,$id,$request){
     try {
+        $updateLabActivity=LabSocialActivity::find($id);
         switch ($activity){
             case 'like':
-                $updateLab=Favorite::find($id);
-                $updateLab->is_like="0";
-                $updateLab->save();
-                return true;
-                break;
+            $updateLabActivity->like_dislike="1";
+            break;
             case 'dislike':
-                $updateLab=Favorite::find($id);
-                $updateLab->is_like="0";
-                $updateLab->save();
-                return true;
-                break;
+            $updateLabActivity->like_dislike="2";
+            break;
             case 'follow':
-                $updateLab=Favorite::find($id);
-                $updateLab->is_follow="1";
-                $updateLab->save();
-                return true;
-                break;
-            case 'un-follow':
-                $updateLab=Favorite::find($id);
-                $updateLab->is_follow="0";
-                $updateLab->save();
-                return true;
-                break;
-            case 'favorite':
-                
-                $updateLab=Favorite::find($id);
-                $updateLab->is_favorite="1";
-                if($updateLab->save()){
-                    return true;
-                }
-                return false;
-                break;
-            case 'un-favorite':
-                $updateLab=Favorite::find($id);
-                $updateLab->is_favorite="0";
-                if($updateLab->save()){
-                    return true;
-                }
-                break;
+            $updateLabActivity->follow_unfollow="1";
+            break;
+            case 'unfollow':
+            $updateLabActivity->follow_unfollow="2";
+            break;
+            case 'favourite':
+            $updateLabActivity->favourite="1";
+            break;
+            case 'unfavored':
+            $updateLabActivity->favourite="2";
+            break;
             default:
-                return false;
+            return false;
+            break;
         }
+        if(isset($request->share) && !empty($request->share)){
+            $updateLabActivity->share=(int)$request->share;
+        }
+        if($updateLabActivity->save()){
+            return true;
+        }
+        return false;
     } catch (\Exception $e){
         return false;
     }

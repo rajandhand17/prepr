@@ -184,16 +184,17 @@ class LabController extends AppBaseController
             if ($checkLabSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.lab_slug_exists'), 403);
             }
-            $checkActivityAlreadyExistOrNot = $this->labRepository->checkActivity($activity,$slug,$request);
+            $checkActivityAlreadyExistOrNot = $this->labRepository->checkActivity($activity,$checkLabSlugExistsOrNot->id);
             if ($checkActivityAlreadyExistOrNot == false) {
                 return $this->sendError(__('responses.lab_already_done_activity').$activity, 400);
             } 
-            $checkLabActivity = $this->labRepository->labActivity($activity,$request);
+            $checkLabActivity = $this->labRepository->storeLabActivity($activity,$checkLabSlugExistsOrNot->id,$request);
             if ($checkLabActivity){
                 return $this->sendResponse([],__('responses.lab_activity_successfully'), 200);
             }
             return $this->sendError(__('responses.send_error'),500);
         } catch (\Exception $e){
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

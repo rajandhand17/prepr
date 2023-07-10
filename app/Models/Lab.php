@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 class Lab extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $table = 'labs';
-
+    //protected $softCascade  =['component_associations','lab_acheivements','lab_address','lab_challenges','lab_external_links','lab_skills_groups_stack','lab_tags_groups'];
     protected $fillable = [
         'uuid',
         'language',
@@ -87,6 +86,10 @@ class Lab extends Model
 
     public function tag_groups()
     {
-        return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id')->where('type', '1');
+        return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id');
+    }
+
+    public function component_association(){
+        return $this->hasMany(ComponentAssociation::class,'lab_id','id');
     }
 }

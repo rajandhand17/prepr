@@ -138,19 +138,6 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-
-    public function getLabProgramList($request){
-        try {
-            $labProgram = $this->labService->getlabProgramList($request);
-            if ($labProgram) {
-                return $labProgram;
-            }
-            return false;
-        } catch (\Exception $e){
-            return false;
-        }
-    }
-
     public function getLabDetails($slug)
     {
         try {
@@ -290,15 +277,16 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function labActivity($activity, $request)
+    public function storeLabActivity($activity, $lab_id,$request)
     {
         try {
-            $labCheckExistsOrNot = $this->labService->checkExistsOrNot($activity,$request);
+            $labCheckExistsOrNot = $this->labService->checkExistsOrNot($activity,$lab_id);
             if($labCheckExistsOrNot==false){
-                $storeLabActivity = $this->labService->storeLabActivity($activity,$request);
+                
+                $storeLabActivity = $this->labService->storeLabActivity($activity,$lab_id,$request);
                 return $storeLabActivity;
             }
-            $updateLabActivity = $this->labService->updateLabActivity($activity,$labCheckExistsOrNot->id);
+            $updateLabActivity = $this->labService->updateLabActivity($activity,$labCheckExistsOrNot->id,$request);
             return $updateLabActivity;
         } catch (\Exception $e){
             
@@ -306,9 +294,9 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function checkActivity($activity,$slug,$request){
+    public function checkActivity($activity,$lab_id){
         try {
-            return $this->labService->checkActivity($activity,$slug,$request);
+            return $this->labService->checkActivity($activity,$lab_id);
         } catch (\Exception $e){
             return false;
         }
