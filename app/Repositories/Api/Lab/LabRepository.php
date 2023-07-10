@@ -212,45 +212,7 @@ class LabRepository implements LabInterface
             }
             DB::commit();
             return true;
-            // DB::beginTransaction();
-            // $deleteLabAssociations = $this->componentAssociationService->deletelabAssociation($lab_id);
-            // if ($deleteLabAssociations == false) {
-            //     DB::rollBack();
-            //     return false;
-            // }
-            // $deleteLabAcheivement = $this->labAcheivementService->deleteLabAchievement($lab_id);
-            // if ($deleteLabAcheivement == false) {
-            //     DB::rollBack();
-            //     return false;
-            // }
-            // $deleteLabExternalLinks = $this->labExternalLinksService->deleteLabExternalLinks($lab_id);
-            // if ($deleteLabExternalLinks == false) {
-            //     DB::rollBack();
-            //     return false;
-            // }
-            // $deleteLabTagAssociations = $this->labTagsGroupsService->deleteLabTagsGroups($lab_id);
-            // if ($deleteLabTagAssociations == false) {
-            //     DB::rollBack();
-
-            //     return false;
-            // }
-            // $deleteLabSkillAssociations = $this->labSkillsGroupsStackService->deleteLabSkillsGroupsStack($lab_id);
-            // if ($deleteLabSkillAssociations == false) {
-            //     DB::rollBack();
-            //     return false;
-            // }
-            // $deleteLabAddress = $this->labAddressService->deleteLabAddress($lab_id);
-            // if ($deleteLabAddress == false) {
-            //     DB::rollBack();
-            //     return false;
-            // }
-            // $deleteLab = $this->labService->deleteLab($lab_id);
-            // if ($deleteLab == false) {
-            //     DB::rollBack();
-            //     return false;
-            // }
-            // DB::commit();
-            // return true;
+        
         } catch (\Exception $e) {
             return false;
         }

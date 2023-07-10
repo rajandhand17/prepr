@@ -5,10 +5,7 @@ namespace App\Services;
 use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Favorite;
-use App\Models\Group;
 use App\Models\Lab;
-use App\Models\LabAddress;
 use App\Models\LabSocialActivity;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Auth;
@@ -54,29 +51,22 @@ class LabService
             $lab->user_id = auth()->user()->id;
             $lab->organization_id = $request->organization_id;
             $lab->category_id = $request->category_id;
-
             $lab->slug = $slug;
             $lab->title = $request->title;
             $lab->description = $request->description;
             $lab->privacy = $privacy;
-
             $lab->media_type = 'image';
             $lab->media = $upload_cover_image;
-
             $lab->status = ($request->request_type == 'draft') ? '0' : (($request->request_type == 'publish') ? '1' : '2');
 
             $lab->total_share = 0;
-
             $lab->is_auto_created = '0';
-
             $lab->is_resource_sequential = ($request->is_resource_sequential == 'yes') ? '1' : '0';
             $lab->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
             $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
             $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
             $lab->is_verified = '0';
-
             $lab->save();
-
             return $lab;
         } catch (\Exception $e) {
             return false;
