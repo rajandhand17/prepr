@@ -16,9 +16,9 @@ return new class() extends Migration {
             $table->id();
             $table->string('title');
             $table->string('fr_CA_title')->nullable();
-            $table->string('skills');
             $table->string('description')->nullable();
             $table->string('fr_CA_description')->nullable();
+            $table->json('skills');
             $table->timestamps();
             $table->softDeletes();
         });

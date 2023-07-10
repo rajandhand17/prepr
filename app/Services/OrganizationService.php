@@ -175,7 +175,7 @@ class OrganizationService
     public static function viewOrganization($search = null, $language = 'en')
     {
         try {
-            $organization_list = Organization::with('categoryDetail')->with('organizationAddress')->with('organizationMembers');
+            $organization_list = Organization::select();
             if ($search != null) {
                 $organization_list = $organization_list->where('slug', $search);
             }

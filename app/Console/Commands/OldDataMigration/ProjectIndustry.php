@@ -47,8 +47,8 @@ class ProjectIndustry extends Command
             if ($project_industry->count() > 0) {
                 foreach ($project_industry as $key => $single_industry) {
                     $project_industry_details = [
-                        'name'       => $single_industry->name,
-                        'fr_CA_name' => $single_industry->fr_CA_name,
+                        'title'       => $single_industry->name,
+                        'fr_CA_title' => $single_industry->fr_CA_name,
                     ];
                     $check_project_industry = Industry::where($project_industry_details)->first();
                     if (!$check_project_industry) {

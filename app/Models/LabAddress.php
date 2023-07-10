@@ -15,7 +15,7 @@ class LabAddress extends Model
 
     protected $fillable = [
         'lab_id',
-        'latitute',
+        'latitude',
         'longitude',
         'address',
         'city',

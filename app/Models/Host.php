@@ -14,7 +14,7 @@ class Host extends Model
     protected $table = 'hosts';
 
     protected $fillable = [
-        'name',
+        'title',
         'link',
         'image',
         'status',
@@ -25,9 +25,9 @@ class Host extends Model
     public function getHosts($language = 'en', $search = null)
     {
         try {
-            $host = static::select('id', 'name', 'link', 'image', 'status');
+            $host = static::select('id', 'title', 'link', 'image', 'status');
             if ($search != null) {
-                $host = $host->where('name', 'like', '%'.$search.'%');
+                $host = $host->where('title', 'like', '%'.$search.'%');
             }
             $host = $host->take(20)->get();
             //  return $host;

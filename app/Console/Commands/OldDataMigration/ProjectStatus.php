@@ -47,8 +47,8 @@ class ProjectStatus extends Command
             if ($project_status->count() > 0) {
                 foreach ($project_status as $key => $single_status) {
                     $project_status_details = [
-                        'name'       => $single_status->name,
-                        'fr_CA_name' => $single_status->fr_CA_name,
+                        'title'       => $single_status->name,
+                        'fr_CA_title' => $single_status->fr_CA_name,
                     ];
                     $check_project_status = Status::where($project_status_details)->first();
                     if (!$check_project_status) {

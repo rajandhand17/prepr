@@ -166,7 +166,7 @@ class User extends Authenticatable
             $user->phone_number = ($request->has('phone_number')) ? $request->phone_number : null;
             $user->otp = $otp;
             $user->verify_token = $string;
-            $user->referal_code = $referencecode;
+            $user->referral_code = $referencecode;
             $user->save();
             $user->attachRole('user');
             $member_manager = MemberManagement::where('email', $request->email)->get();
@@ -214,8 +214,6 @@ class User extends Authenticatable
             return ['success' => false, 'message' => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
-
-            return $e;
 
             return ['success' => false, 'message' => 'Something went wrong.'];
         }

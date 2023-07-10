@@ -14,8 +14,8 @@ return new class() extends Migration {
     {
         Schema::table('organization_addresses', function (Blueprint $table) {
             $table->renameColumn('address', 'full_address');
-            $table->text('address_1')->nullable();
-            $table->text('address_2')->nullable();
+            $table->text('address_1')->nullable()->after('address');
+            $table->text('address_2')->nullable()->after('address_1');
         });
     }
 

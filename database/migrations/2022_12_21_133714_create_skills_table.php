@@ -14,8 +14,8 @@ return new class() extends Migration {
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('fr_CA_name')->nullable();
+            $table->string('title')->nullable();
+            $table->string('fr_CA_title')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

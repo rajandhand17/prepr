@@ -17,8 +17,8 @@ class Category extends Model
     protected $table = 'categories';
 
     protected $fillable = [
-        'name',
-        'fr_CA_name',
+        'title',
+        'fr_CA_title',
         'components',
         'parent_id',
     ];
@@ -34,21 +34,21 @@ class Category extends Model
     {
         try {
             if ($language == 'en') {
-                $category_list = static::select('id', 'name', 'parent_id');
+                $category_list = static::select('id', 'title', 'parent_id');
             } else {
                 //get column name based on language
-                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'name');
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
 
                 //check whether the column exist in the db or not
                 if (!$column_name || !Schema::hasColumn('categories', $column_name)) {
                     return false;
                 }
-                $category_list = static::select('id', $column_name.' as name', 'parent_id');
+                $category_list = static::select('id', $column_name.' as title', 'parent_id');
             }
 
             //Search categories based on user input
             if ($search != null) {
-                $column_name = isset($column_name) ? $column_name : 'name';
+                $column_name = isset($column_name) ? $column_name : 'title';
                 $category_list = $category_list->where($column_name, 'like', '%'.$search.'%');
             }
 

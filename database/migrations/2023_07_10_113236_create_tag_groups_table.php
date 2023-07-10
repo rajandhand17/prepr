@@ -12,11 +12,13 @@ return new class() extends Migration {
      */
     public function up()
     {
-        Schema::create('project_verticals', function (Blueprint $table) {
+        Schema::create('tag_groups', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('fr_CA_title')->nullable();
-            $table->enum('status', ['0', '1'])->default('1')->comment('0 ->in-active, 1 -> active');
+            $table->string('description')->nullable();
+            $table->string('fr_CA_description')->nullable();
+            $table->json('tags');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +31,6 @@ return new class() extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('project_verticals');
+        Schema::dropIfExists('tag_groups');
     }
 };

@@ -16,7 +16,7 @@ return new class() extends Migration {
             $table->id();
             $table->string('title');
             $table->string('fr_CA_title')->nullable();
-            $table->enum('status', ['0', '1'])->default('1')->comment('1=>active,0=>Not active');
+            $table->enum('status', ['0', '1'])->default('1')->comment('0 ->in-active, 1 -> active');
             $table->timestamps();
             $table->softDeletes();
         });

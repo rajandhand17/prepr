@@ -16,6 +16,8 @@ class OrganizationResource extends JsonResource
      */
     public function toArray($request)
     {
+        $status = ($this->status == '0') ? 'Draft' : (($this->status == '1') ? 'Published' : (($this->status == '2') ? 'Deactivated' : 'Archived'));
+
         return [
             'id'                           => $this->id,
             'language'                     => $this->language,
@@ -26,15 +28,16 @@ class OrganizationResource extends JsonResource
             'profile_image'                => $this->profile_image,
             'website'                      => $this->website,
             'about'                        => $this->about,
-            'status'                       => $this->status,
+            'status'                       => $status,
             'total_employees'              => $this->total_employees,
+            'category'                     => $this->getCategory->title,
             'lab_count'                    => 0,
             'challange_count'              => 0,
             'resource_count'               => 0,
             'organization_users_count'     => 0,
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
-            'organization_address'         => LabExternalLinkResource::collection($this->organizationAddress),
-            'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
+            'organization_address'         => OrganizationAddressResource::collection($this->address),
+            'organization_members'         => OrganizationMemberResource::collection($this->members),
         ];
     }
 }

@@ -16,14 +16,14 @@ class RankResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'          => $this->id,
-            'name'        => $this->name,
-            'description' => $this->description,
-            'image'       => $this->image,
-            'category'    => $this->category,
-            'point'       => $this->point,
-            'no_of_use'   => $this->no_of_use,
-            'status'      => $this->status,
+            'id'           => $this->id,
+            'title'        => $this->title,
+            'description'  => $this->description,
+            'image'        => $this->image,
+            'category'     => $this->category,
+            'point'        => $this->point,
+            'no_of_use'    => $this->no_of_use,
+            'status'       => $this->status,
         ];
     }
 }
