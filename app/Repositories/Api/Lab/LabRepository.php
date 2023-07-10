@@ -53,7 +53,7 @@ class LabRepository implements LabInterface
     public function createLab($request, $upload_profile_image, $upload_achievements_image)
     {
         try {
-            $createdLab = DB::transaction(function() use ($request, $upload_profile_image, $upload_achievements_image) {
+            $createdLab = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image) {
                 $createdLab = $this->labService->createLab($request, $upload_profile_image);
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createdLab);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
@@ -64,20 +64,24 @@ class LabRepository implements LabInterface
                     $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_achievements_image);
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
+
                 return $createdLab;
             });
-            if($createdLab){
+            if ($createdLab) {
                 DB::commit();
+
                 return $createdLab;
             }
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
-        }
-        catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             DB::rollback();
+
             return false;
         }
     }
@@ -89,6 +93,7 @@ class LabRepository implements LabInterface
             if ($lab) {
                 return $lab;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

@@ -48,7 +48,7 @@ class SocialLink extends Command
                 foreach ($social_link as $key => $single_social_link) {
                     $social_link_details = [
                         'title' => $single_social_link->link_name,
-                        'icon' => $single_social_link->link_icon,
+                        'icon'  => $single_social_link->link_icon,
                     ];
                     $check_skills = Link::where($social_link_details)->first();
                     if (!$check_skills) {

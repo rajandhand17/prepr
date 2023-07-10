@@ -29,7 +29,7 @@ class LabResource extends JsonResource
         $tags = [];
         $tag_groups = [];
 
-        if($this->address){
+        if ($this->address) {
             $address = [
                 'latitude'  => $this->address->latitude,
                 'longitude' => $this->address->longitude,
@@ -39,43 +39,42 @@ class LabResource extends JsonResource
             ];
         }
 
-        if($this->achievement){
-
+        if ($this->achievement) {
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
                 'achievement_points'    => $this->achievement->achievement_points,
                 'achievement_condition' => $this->achievement->achievement_condition,
-                'achievement_image'     => $this->achievement->achievement_image
+                'achievement_image'     => $this->achievement->achievement_image,
             ];
         }
 
-        if($this->skills){
+        if ($this->skills) {
             $associatedSkills = $this->skills->pluck('foreign_id');
-            $skills= SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title','id');
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         }
 
-        if($this->skill_groups){
+        if ($this->skill_groups) {
             $associatedSkillGroups = $this->skill_groups->pluck('foreign_id');
-            $skill_groups= SkillGroupService::getSkillGroupsBasedOnIds($associatedSkillGroups)->pluck('title','id');
+            $skill_groups = SkillGroupService::getSkillGroupsBasedOnIds($associatedSkillGroups)->pluck('title', 'id');
 
-            if($skill_groups->isEmpty()){
-                $skill_groups=$this->skill_groups->pluck('foreign_id');
+            if ($skill_groups->isEmpty()) {
+                $skill_groups = $this->skill_groups->pluck('foreign_id');
             }
         }
 
-        if($this->skill_stacks){
+        if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
-            $skill_stacks= SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title','id');
+            $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        if($this->tags){
+        if ($this->tags) {
             $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags= TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title','id');
+            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        if($this->tag_groups){
+        if ($this->tag_groups) {
             $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups= TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title','id');
+            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
         return [

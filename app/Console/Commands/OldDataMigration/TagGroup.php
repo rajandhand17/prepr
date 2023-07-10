@@ -46,11 +46,10 @@ class TagGroup extends Command
             if ($tag_groups->count() > 0) {
                 foreach ($tag_groups as $key => $tag_group) {
                     $tags = [];
-                    if($tag_group->tags != null){
+                    if ($tag_group->tags != null) {
                         if (str_contains($tag_group->tags, ',')) {
                             $tags = explode(',', $tag_group->tags);
-                        }
-                        else{
+                        } else {
                             $tags = [$tag_group->tags];
                         }
                     }
@@ -59,15 +58,16 @@ class TagGroup extends Command
                         'fr_CA_title'       => $tag_group->fr_CA_title,
                         'description'       => $tag_group->description,
                         'fr_CA_description' => $tag_group->fr_CA_description,
-                        'tags'            => $tags,
+                        'tags'              => $tags,
                     ];
-                    $check_tag_group = \App\Models\TagGroup::where('title',$tag_group->title)->first();
+                    $check_tag_group = \App\Models\TagGroup::where('title', $tag_group->title)->first();
                     if (!$check_tag_group) {
                         \App\Models\TagGroup::create($tag_group_details);
                     }
                 }
                 DB::commit();
                 $this->info('Migrating of old data for tag groups table completed.');
+
                 return;
             }
             DB::rollback();
@@ -76,6 +76,7 @@ class TagGroup extends Command
             dd($e);
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

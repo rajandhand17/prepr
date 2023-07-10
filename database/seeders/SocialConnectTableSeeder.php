@@ -17,32 +17,32 @@ class SocialConnectTableSeeder extends Seeder
         $social_connect_list = [
             [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ],
             [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ], [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ], [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ], [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ], [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ], [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ], [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ], [
                 'title' => 'facebook',
-                'logo' => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
+                'logo'  => 'https://cdn-icons-png.flaticon.com/512/124/124010.png',
             ],
         ];
 

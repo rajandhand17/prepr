@@ -49,13 +49,13 @@ class Rank extends Command
                     $rank_details = [
                         'title'              => $single_rank->name,
                         'fr_CA_title'        => $single_rank->fr_CA_name,
-                        'description'       => $single_rank->description,
-                        'fr_CA_description' => $single_rank->fr_CA_description,
-                        'image'             => $single_rank->image,
-                        'category'          => $single_rank->category,
-                        'point'             => $single_rank->point,
-                        'no_of_use'         => $single_rank->no_of_use,
-                        'status'            => $single_rank->status,
+                        'description'        => $single_rank->description,
+                        'fr_CA_description'  => $single_rank->fr_CA_description,
+                        'image'              => $single_rank->image,
+                        'category'           => $single_rank->category,
+                        'point'              => $single_rank->point,
+                        'no_of_use'          => $single_rank->no_of_use,
+                        'status'             => $single_rank->status,
                     ];
                     $check_ranks = Ranks::where($rank_details)->first();
                     if (!$check_ranks) {

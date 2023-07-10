@@ -49,9 +49,9 @@ class Tag extends Command
                     $tags_details = [
                         'title'           => $single_tags->tag,
                         'fr_CA_title'     => $single_tags->fr_CA_tag,
-                        'tag_image'      => $single_tags->tag_image,
-                        'fr_CA_tag_image'=> $single_tags->fr_CA_tag_image,
-                        'components'     => $single_tags->category,
+                        'tag_image'       => $single_tags->tag_image,
+                        'fr_CA_tag_image' => $single_tags->fr_CA_tag_image,
+                        'components'      => $single_tags->category,
                     ];
                     $check_tags = Tags::where($tags_details)->first();
                     if (!$check_tags) {

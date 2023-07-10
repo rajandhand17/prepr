@@ -16,6 +16,7 @@ class LabAddressService
         $labaddress->city = $request->city;
         $labaddress->country = $request->country;
         $labaddress->save();
+
         return true;
     }
 }

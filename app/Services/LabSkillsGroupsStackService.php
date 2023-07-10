@@ -41,6 +41,7 @@ class LabSkillsGroupsStackService
                 }
             }
         }
+
         return true;
     }
 }

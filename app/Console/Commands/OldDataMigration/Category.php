@@ -49,11 +49,11 @@ class Category extends Command
                 foreach ($categories as $key => $single_category) {
                     $created = Categories::updateOrCreate([
                         'title'       => $single_category->name,
-                        'id'       => $single_category->id,
+                        'id'          => $single_category->id,
                     ], [
                         'fr_CA_title' => $single_category->fr_CA_name,
-                        'components' => (string) $single_category->components,
-                        'parent_id'  => $single_category->parent_id,
+                        'components'  => (string) $single_category->components,
+                        'parent_id'   => $single_category->parent_id,
                     ]);
                 }
                 DB::commit();
@@ -66,6 +66,7 @@ class Category extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
