@@ -16,7 +16,7 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('lab_id');
             $table->integer('foreign_id');
-            $table->enum('type', ['0', '1'])->comment('0=>tag, 1=>groups');
+            $table->enum('type', ['0', '1'])->comment('0->tag, 1-> groups');
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

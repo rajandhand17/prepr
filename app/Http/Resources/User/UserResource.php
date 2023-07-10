@@ -29,7 +29,7 @@ class UserResource extends JsonResource
             'user_points'               => $this->user_points,
             'user_rank'                 => $this->verified_user,
             'verified_user'             => $this->verified_user,
-            'referal_code'              => $this->referal_code,
+            'referral_code'              => $this->referal_code,
             'is_profile_completed'      => $this->is_profile_completed,
             'member_since'              => UtilityHelper::formatDateTime($this->created_at),
             'roles'                     => $this->roles->pluck('name'),

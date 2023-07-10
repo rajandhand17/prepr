@@ -45,16 +45,16 @@ class LabStoreRequest extends FormRequest
             'city'     => 'required_if:request_type,publish|nullable',
 
             'skills'        => 'required_if:request_type,publish|nullable|array',
-            'skills.*'      => 'numeric',
+            'skills.*'      => 'numeric|exists:skills,id',
             'skill_groups'  => 'nullable|array',
-            'skill_groups.*'=> 'numeric',
+            'skill_groups.*'=> 'numeric|exists:skill_groups,id',
             'skill_stacks'  => 'nullable|array',
-            'skill_stacks.*'=> 'numeric',
+            'skill_stacks.*'=> 'numeric|exists:skill_stacks,id',
 
             'tags'        => 'required_if:request_type,publish|nullable|array',
             'tags.*'      => 'numeric',
             'tag_groups'  => 'nullable|array',
-            'tag_groups.*'=> 'numeric',
+            'tag_groups.*'=> 'numeric|exists:tag_groups,id',
 
             'is_notification_enabled'=> 'in:yes,no',
 

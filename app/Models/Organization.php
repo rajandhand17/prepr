@@ -32,22 +32,22 @@ class Organization extends LaratrustTeam
 
     ];
 
-    public function categoryDetail(): HasOne
+    public function getCategory()
     {
         return $this->hasOne(Category::class, 'id');
     }
 
-    public function organization()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function organizationAddress()
+    public function address()
     {
         return $this->hasMany(OrganizationAddress::class, 'organization_id', 'id');
     }
 
-    public function organizationMembers()
+    public function members()
     {
         return $this->hasMany(OrganizationMember::class, 'organization_id', 'id');
     }

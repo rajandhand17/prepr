@@ -17,7 +17,7 @@ class SocialConnect extends JsonResource
     {
         return [
             'id'  => $this->id,
-            'name'=> $this->name,
+            'title'=> $this->title,
             'logo'=> $this->logo,
         ];
     }

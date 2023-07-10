@@ -17,7 +17,7 @@ class Tag extends Model
     protected $table = 'tags';
 
     protected $fillable = [
-        'name', 'fr_CA_name', 'tag_image', 'fr_CA_tag_image', 'components',
+        'title', 'fr_CA_title', 'tag_image', 'fr_CA_tag_image', 'components',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -27,11 +27,11 @@ class Tag extends Model
     {
         try {
             if ($language == 'en') {
-                $tag_list = static::select('id', 'name', 'tag_image', 'components');
+                $tag_list = static::select('id', 'title', 'tag_image', 'components');
                 //Search categories based on user input
             } else {
                 //get column name based on language
-                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'name');
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
 
                 //check whether the column exist in the db or not
                 if (!$column_name || !Schema::hasColumn('tags', $column_name)) {
@@ -44,12 +44,12 @@ class Tag extends Model
                     return false;
                 }
 
-                $tag_list = static::select('id', $column_name.' as name', $image_column.' as tag_image');
+                $tag_list = static::select('id', $column_name.' as title', $image_column.' as tag_image');
             }
 
             //Search categories based on user input
             if ($search != null) {
-                $column_name = isset($column_name) ? $column_name : 'name';
+                $column_name = isset($column_name) ? $column_name : 'title';
                 $tag_list = $tag_list->where($column_name, 'like', '%'.$search.'%');
             }
 

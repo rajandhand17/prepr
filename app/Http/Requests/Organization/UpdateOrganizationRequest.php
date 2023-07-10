@@ -39,7 +39,7 @@ class UpdateOrganizationRequest extends FormRequest
             ];
         } else {
             $base_rules = [
-                'name'         => 'required|max:255|unique:organizations,name',
+                'title'         => 'required|max:255|unique:organizations,title',
                 'description'  => 'required',
                 'profile_image'=> 'image|mimes:jpeg,jpg,png,webp|max:1024|dimensions:width=500,height=500',
                 'cover_image'  => 'image|mimes:jpeg,jpg,png,webp|max:1024',

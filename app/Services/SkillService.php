@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Skill;
 
 class SkillService
@@ -32,6 +34,21 @@ class SkillService
                 return $getSkillsList;
             }
 
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getSkillBasedOnIds($skill_ids)
+    {
+        try {
+
+            $getSkillsList = Skill::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(),'title').' as title')
+                ->whereIn('id', $skill_ids)->get();
+            if ($getSkillsList) {
+                return $getSkillsList;
+            }
             return false;
         } catch (\Exception $e) {
             return false;

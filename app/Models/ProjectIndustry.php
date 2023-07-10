@@ -17,8 +17,8 @@ class ProjectIndustry extends Model
     protected $table = 'project_industries';
 
     protected $fillable = [
-        'name',
-        'fr_CA_name',
+        'title',
+        'fr_CA_title',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -27,22 +27,22 @@ class ProjectIndustry extends Model
     {
         try {
             if ($language == 'en') {
-                $project_industry_list = static::select('id', 'name');
+                $project_industry_list = static::select('id', 'title');
                 //Search categories based on user input
             } else {
                 //get column name based on language
-                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'name');
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
 
                 //check whether the column exist in the db or not
                 if (!$column_name || !Schema::hasColumn('skills', $column_name)) {
                     return false;
                 }
-                $project_industry_list = static::select('id', $column_name.' as name');
+                $project_industry_list = static::select('id', $column_name.' as title');
             }
 
             //Search categories based on user input
             if ($search != null) {
-                $column_name = isset($column_name) ? $column_name : 'name';
+                $column_name = isset($column_name) ? $column_name : 'title';
                 $project_industry_list = $project_industry_list->where($column_name, 'like', '%'.$search.'%');
             }
 

@@ -18,7 +18,7 @@ return new class() extends Migration {
             $table->enum('type', ['facebook', 'google', 'linkedin', 'lab_join', 'login', 'create_thread', 'reply_thread', 'submit_project', 'submit_success', 'vote_project', 'create_project', 'referal_code', 'referal_user', 'add_member', 'voter_project', 'challengeTrophy', 'challenge_participation'])->default('login');
             $table->integer('point')->nullable();
             $table->dateTime('date')->nullable();
-            $table->enum('status', ['0', '1'])->default('1');
+            $table->enum('status', ['0', '1'])->default('1')->comment('0-> yes, 1-> no');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -17,7 +17,7 @@ class HostResource extends JsonResource
     {
         return [
             'id'    => $this->id,
-            'name'  => $this->name,
+            'title'  => $this->title,
             'link'  => $this->link,
             'image' => $this->image,
             'status'=> $this->status,

@@ -26,7 +26,8 @@ class DeleteMemberManagementRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|array|exists:member_management,email',
+            'email' => 'required|array',
+            'email.*' => 'email|exists:member_management,email',
         ];
     }
 
@@ -42,9 +43,10 @@ class DeleteMemberManagementRequest extends FormRequest
     public function messages()
     {
         return[
-            'email.required'=> __('responses.email_required'),
-            'email.array'   => __('responses.member_manager_email_array'),
-            'email.exists'  => __('responses.member_manager_not_exists'),
+            'email.required'    => __('responses.email_required'),
+            'email.array'       => __('responses.member_manager_email_array'),
+            'email.*.email'     => ':input is not an valid email',
+            'email.*.exists'    => ':input is not an member',
         ];
     }
 }

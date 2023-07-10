@@ -47,8 +47,8 @@ class ProjectStages extends Command
             if ($project_stages->count() > 0) {
                 foreach ($project_stages as $key => $single_stages) {
                     $project_stages_details = [
-                        'name'       => $single_stages->name,
-                        'fr_CA_name' => $single_stages->fr_CA_name,
+                        'title'       => $single_stages->name,
+                        'fr_CA_title' => $single_stages->fr_CA_name,
                     ];
                     $check_project_stages = ProjectStage::where($project_stages_details)->first();
                     if (!$check_project_stages) {

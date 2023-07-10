@@ -11,7 +11,6 @@ class LabService
 {
     public function createLab($request, $upload_cover_image)
     {
-        try {
             $status = config('constants.lab_status.draft');
             switch($request->status) {
                 case 'draft':
@@ -57,7 +56,7 @@ class LabService
             $lab->media_type = 'image';
             $lab->media = $upload_cover_image;
 
-            $lab->status = ($request->request_type == 'draft') ? '0' : (($request->request_type == 'publish') ? '1' : '2');
+            $lab->status = $status;
 
             $lab->total_share = 0;
 
@@ -68,13 +67,8 @@ class LabService
             $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
             $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
             $lab->is_verified = '0';
-
             $lab->save();
-
             return $lab;
-        } catch (\Exception $e) {
-            return false;
-        }
     }
 
     public function uploadCoverImage($image)

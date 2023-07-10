@@ -47,8 +47,8 @@ class ProjectType extends Command
             if ($project_type->count() > 0) {
                 foreach ($project_type as $key => $single_type) {
                     $project_type_details = [
-                        'name'       => $single_type->name,
-                        'fr_CA_name' => $single_type->fr_CA_name,
+                        'title'       => $single_type->name,
+                        'fr_CA_title' => $single_type->fr_CA_name,
                     ];
                     $check_project_type = Type::where($project_type_details)->first();
                     if (!$check_project_type) {

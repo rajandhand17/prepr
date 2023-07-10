@@ -40,7 +40,7 @@ class LabController extends AppBaseController
     {
         try {
             $upload_cover_image = null;
-            $upload_acheivements_image = null;
+            $upload_achievement_image = null;
 
             if ($request->cover_image !== null) {
                 $upload_cover_image = $this->labRepository->uploadCoverImage($request->cover_image);
@@ -50,14 +50,14 @@ class LabController extends AppBaseController
                 $upload_cover_image = $upload_cover_image;
             }
             if ($request->is_achievement_enabled == 'yes') {
-                $upload_acheivements_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
-                if ($upload_acheivements_image == false) {
+                $upload_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                if ($upload_achievement_image == false) {
                     return $this->sendError(__('responses.fail_organization_image_upload'), 400);
                 }
-                $upload_acheivements_image = $upload_acheivements_image;
+                $upload_achievement_image = $upload_achievement_image;
             }
 
-            $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_acheivements_image);
+            $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_achievement_image);
 
             if ($createdLab != false) {
                 return $this->sendResponse(LabResource::make($createdLab), __('responses.lab_stored_success'), 200);

@@ -47,6 +47,7 @@ class Lab extends Command
             if ($labs->count() > 0) {
                 foreach ($labs as $key => $single_lab) {
                     $lab_details = [
+                        'id'          => $single_lab->id,
                         'language'          => $single_lab->language,
                         'slug'              => $single_lab->slug,
                         'user_id'           => $single_lab->user_id,
@@ -60,7 +61,7 @@ class Lab extends Command
                         'image'             => $single_lab->image,
                         'member'            => $single_lab->member,
                         'member_type'       => $single_lab->member_type,
-                        'latitute'          => $single_lab->latitute,
+                        'latitude'          => $single_lab->latitute,
                         'longitude'         => $single_lab->longitude,
                         'address'           => $single_lab->address,
                         'city'              => $single_lab->city,

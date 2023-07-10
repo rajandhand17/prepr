@@ -26,7 +26,7 @@ class CheckOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|regex:/^[a-zA-Z]+$/u|unique:organisations,name',
+            'title' => 'required|regex:/^[a-zA-Z]+$/u|unique:organisations,title',
         ];
     }
 

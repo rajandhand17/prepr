@@ -15,7 +15,7 @@ class SocialLink extends Model
     protected $table = 'social_links';
 
     protected $fillable = [
-        'name',
+        'title',
         'icon',
     ];
 
@@ -24,10 +24,10 @@ class SocialLink extends Model
     public function getSocialLinks($language = 'en', $search = null)
     {
         try {
-            $social_link_list = static::select('id', 'name', 'icon');
+            $social_link_list = static::select('id', 'title', 'icon');
             //Search categories based on user input
             if ($search != null) {
-                $social_link_list = $social_link_list->where('name', 'like', '%'.$search.'%');
+                $social_link_list = $social_link_list->where('title', 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table

@@ -53,7 +53,7 @@ class Organization extends Command
                     $organization_details = [
                         'language'      => $single_organization->language,
                         'user_id'       => $single_organization->user_id,
-                        'name'          => $single_organization->name,
+                        'title'          => $single_organization->name,
                         'slug'          => $single_organization->slug,
                         'vanity_slug'   => $single_organization->vanity_slug,
                         'description'   => $single_organization->description,
@@ -62,7 +62,7 @@ class Organization extends Command
                         'website'       => $single_organization->website,
                     ];
 
-                    $check_organization = Organizations::where(['name'=>$single_organization->name])->first();
+                    $check_organization = Organizations::where(['title'=>$single_organization->name])->first();
                     if (!$check_organization) {
                         $organization_create = Organizations::create($organization_details);
                         if (isset($organization_create->id)) {
@@ -81,7 +81,7 @@ class Organization extends Command
                                 $organization_address_create = OrganizationAddress::create($organization_address);
                             }
                             if ($single_organization->facebook !== null) {
-                                $getid = SocialLink::where('name', 'Facebook')->first();
+                                $getid = SocialLink::where('title', 'Facebook')->first();
 
                                 $social_data = [
                                     'organization_id'  => $organization_create->id,
@@ -91,7 +91,7 @@ class Organization extends Command
                                 $organizationSocialLink = OrganizationSocialLink::create($social_data);
                             }
                             if ($single_organization->linked !== null) {
-                                $getid = SocialLink::select('id')->where('name', 'LinkedIn')->first();
+                                $getid = SocialLink::select('id')->where('title', 'LinkedIn')->first();
                                 $social_linked_data = [
                                     'organization_id'  => $organization_create->id,
                                     'social_media_link'=> $single_organization->linked,
@@ -100,7 +100,7 @@ class Organization extends Command
                                 $organizationSocialLink = OrganizationSocialLink::create($social_linked_data);
                             }
                             if ($single_organization->twitter !== null) {
-                                $getid = SocialLink::select('id')->where('name', 'Twitter')->first();
+                                $getid = SocialLink::select('id')->where('title', 'Twitter')->first();
                                 $social_twitter_data = [
                                     'organization_id'  => $organization_create->id,
                                     'social_media_link'=> $single_organization->twitter,
