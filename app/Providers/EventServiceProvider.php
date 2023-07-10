@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Events\Labs\DeleteLabAssociatedData;
-use App\Listeners\Lab\DeletingLabAssociatedData;
 use App\Listeners\Lab\HandleDeleteLabAssociatedData;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -24,7 +23,7 @@ class EventServiceProvider extends ServiceProvider
             HandleDeleteLabAssociatedData::class,
         ],
     ];
-    
+
     /**
      * Register any events for your application.
      *

@@ -90,6 +90,7 @@ class LabAcheivementService
                 if (!$deleteLabAchievement) {
                     return false;
                 }
+
                 return true;
             }
 

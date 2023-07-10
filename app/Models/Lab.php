@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Lab extends Model
 {
     use HasFactory;
@@ -89,7 +90,8 @@ class Lab extends Model
         return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id');
     }
 
-    public function component_association(){
-        return $this->hasMany(ComponentAssociation::class,'lab_id','id');
+    public function component_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
 }

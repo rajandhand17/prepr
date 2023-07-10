@@ -333,6 +333,7 @@ class MemberManagementController extends AppBaseController
             if ($changeRoleResponse) {
                 return $this->sendResponse([], __('responses.role_removed_sucessfully'));
             }
+
             return $this->sendError(__('responses.role_removed_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

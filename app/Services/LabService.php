@@ -8,7 +8,6 @@ use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\LabSocialActivity;
 use HiFolks\RandoPhp\Randomize;
-use Illuminate\Support\Facades\Auth;
 
 class LabService
 {
@@ -67,6 +66,7 @@ class LabService
             $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
             $lab->is_verified = '0';
             $lab->save();
+
             return $lab;
         } catch (\Exception $e) {
             return false;
@@ -122,6 +122,7 @@ class LabService
             return false;
         }
     }
+
     public function filterLabProgramList($labListProgram, $request)
     {
         try {
@@ -139,11 +140,13 @@ class LabService
                 $labListProgram = $labListProgram->where('privacy', $privacy);
             }
             $labListProgram = $labListProgram->get();
+
             return $labListProgram;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public function getLabDetails($slug)
     {
         try {
@@ -201,28 +204,32 @@ class LabService
     {
         try {
             $lab = Lab::find($lab_id)->delete();
-            $associatedLabs=event(new DeleteLabAssociatedData($lab_id));
+            $associatedLabs = event(new DeleteLabAssociatedData($lab_id));
             if (!$associatedLabs) {
-            return false;
+                return false;
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function archieveLab($lab_id){
+    public function archieveLab($lab_id)
+    {
         try {
-            $lab=Lab::find($lab_id);
-            $lab->status=config('constants.lab_status.archive');
-            if($lab->save()){
+            $lab = Lab::find($lab_id);
+            $lab->status = config('constants.lab_status.archive');
+            if ($lab->save()) {
                 return true;
             }
+
             return false;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function updateLabCoverImage($request)
     {
         try {
@@ -244,45 +251,48 @@ class LabService
             if ($checklabSlug) {
                 return $checklabSlug;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
-    public function checkActivity($activity,$lab_id)
+
+    public function checkActivity($activity, $lab_id)
     {
         try {
-            $checkActivity=LabSocialActivity::where([
-                ['user_id','=', auth()->user()->id],
-                ['lab_id','=', $lab_id],
+            $checkActivity = LabSocialActivity::where([
+                ['user_id', '=', auth()->user()->id],
+                ['lab_id', '=', $lab_id],
             ]);
-            switch ($activity){
+            switch ($activity) {
                 case 'like':
-                $checkActivity=$checkActivity->where('like_dislike','1');
-                break;
+                    $checkActivity = $checkActivity->where('like_dislike', '1');
+                    break;
                 case 'dislike':
-                $checkActivity=$checkActivity->where('like_dislike','2');
+                    $checkActivity = $checkActivity->where('like_dislike', '2');
                     break;
                 case 'follow':
-                $checkActivity=$checkActivity->where('follow_unfollow','1');
-                break;
+                    $checkActivity = $checkActivity->where('follow_unfollow', '1');
+                    break;
                 case 'unfollow':
-                $checkActivity=$checkActivity->where('follow_unfollow','2');
-                break;
+                    $checkActivity = $checkActivity->where('follow_unfollow', '2');
+                    break;
                 case 'favourite':
-                $checkActivity=$checkActivity->where('favourite','1');
-                break;
+                    $checkActivity = $checkActivity->where('favourite', '1');
+                    break;
                 case 'unfavored':
-                $checkActivity=$checkActivity->where('favourite','2');
-                break;
+                    $checkActivity = $checkActivity->where('favourite', '2');
+                    break;
                 default:
-                return false;
+                    return false;
             }
-            
-            $checkActivity=$checkActivity->first();
-            if(!$checkActivity){
+
+            $checkActivity = $checkActivity->first();
+            if (!$checkActivity) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -308,7 +318,7 @@ public static function getLabExistBasedOnSlug($slug)
     try {
         $lab = Lab::where('slug', $slug)->first();
         if ($lab != null) {
-        return $lab;
+            return $lab;
         }
 
         return false;
@@ -317,95 +327,102 @@ public static function getLabExistBasedOnSlug($slug)
     }
 }
 
-public function checkExistsOrNot($activity,$lab_id){
+public function checkExistsOrNot($activity, $lab_id)
+{
     try {
-        $checkLabActivity=LabSocialActivity::where([
-            ['user_id','=', auth()->user()->id],
-            ['lab_id','=', $lab_id],
+        $checkLabActivity = LabSocialActivity::where([
+            ['user_id', '=', auth()->user()->id],
+            ['lab_id', '=', $lab_id],
         ])->first();
-        if($checkLabActivity){
+        if ($checkLabActivity) {
             return $checkLabActivity;
         }
+
         return false;
-    } catch (\Exception $e){
+    } catch (\Exception $e) {
         return false;
     }
 }
-public function storeLabActivity($activity,$lab_id,$request)
+
+public function storeLabActivity($activity, $lab_id, $request)
 {
     try {
-        $storeLabActivity=new LabSocialActivity();
-        $storeLabActivity->user_id=auth()->user()->id;
-        $storeLabActivity->lab_id=$lab_id;
-        switch ($activity){
+        $storeLabActivity = new LabSocialActivity();
+        $storeLabActivity->user_id = auth()->user()->id;
+        $storeLabActivity->lab_id = $lab_id;
+        switch ($activity) {
             case 'like':
-            $storeLabActivity->like_dislike="1";
-            break;
+                $storeLabActivity->like_dislike = '1';
+                break;
             case 'dislike':
-            $storeLabActivity->like_dislike="2";
-            break;
+                $storeLabActivity->like_dislike = '2';
+                break;
             case 'follow':
-            $storeLabActivity->follow_unfollow="1";
-            break;
+                $storeLabActivity->follow_unfollow = '1';
+                break;
             case 'unfollow':
-            $storeLabActivity->follow_unfollow="2";
-            break;
+                $storeLabActivity->follow_unfollow = '2';
+                break;
             case 'favourite':
-            $storeLabActivity->favourite="1";
-            break;
+                $storeLabActivity->favourite = '1';
+                break;
             case 'unfavored':
-            $storeLabActivity->favourite="2";
-            break;
+                $storeLabActivity->favourite = '2';
+                break;
             default:
                 return false;
         }
-        if(isset($request->share) && !empty($request->share)){
-            $storeLabActivity->share=$request->share;
+        if (isset($request->share) && !empty($request->share)) {
+            $storeLabActivity->share = $request->share;
         }
-        if($storeLabActivity->save()){
+        if ($storeLabActivity->save()) {
             return true;
         }
+
         return false;
-    } catch (\Exception $e){
+    } catch (\Exception $e) {
         dd($e);
+
         return false;
-    }   
+    }
 }
 
-public function updateLabActivity($activity,$id,$request){
+public function updateLabActivity($activity, $id, $request)
+{
     try {
-        $updateLabActivity=LabSocialActivity::find($id);
-        switch ($activity){
+        $updateLabActivity = LabSocialActivity::find($id);
+        switch ($activity) {
             case 'like':
-            $updateLabActivity->like_dislike="1";
-            break;
+                $updateLabActivity->like_dislike = '1';
+                break;
             case 'dislike':
-            $updateLabActivity->like_dislike="2";
-            break;
+                $updateLabActivity->like_dislike = '2';
+                break;
             case 'follow':
-            $updateLabActivity->follow_unfollow="1";
-            break;
+                $updateLabActivity->follow_unfollow = '1';
+                break;
             case 'unfollow':
-            $updateLabActivity->follow_unfollow="2";
-            break;
+                $updateLabActivity->follow_unfollow = '2';
+                break;
             case 'favourite':
-            $updateLabActivity->favourite="1";
-            break;
+                $updateLabActivity->favourite = '1';
+                break;
             case 'unfavored':
-            $updateLabActivity->favourite="2";
-            break;
+                $updateLabActivity->favourite = '2';
+                break;
             default:
-            return false;
-            break;
+                return false;
+                break;
         }
-        if(isset($request->share) && !empty($request->share)){
-            $updateLabActivity->share=(int)$request->share;
+        if (isset($request->share) && !empty($request->share)) {
+            $updateLabActivity->share = (int) $request->share;
         }
-        if($updateLabActivity->save()){
+        if ($updateLabActivity->save()) {
             return true;
         }
+
         return false;
-    } catch (\Exception $e){
+    } catch (\Exception $e) {
         return false;
     }
 }

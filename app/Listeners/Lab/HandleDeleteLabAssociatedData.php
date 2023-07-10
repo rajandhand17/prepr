@@ -9,8 +9,6 @@ use App\Models\LabAddress;
 use App\Models\LabExternalLinks;
 use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTagsGroups;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class HandleDeleteLabAssociatedData
 {
@@ -27,23 +25,25 @@ class HandleDeleteLabAssociatedData
     /**
      * Handle the event.
      *
-     * @param  \App\Events\Labs\DeleteLabAssociatedData  $event
+     * @param \App\Events\Labs\DeleteLabAssociatedData $event
+     *
      * @return void
      */
     public function handle(DeleteLabAssociatedData $event)
-    {   
+    {
         try {
-            $lab_id=$event->labId;
+            $lab_id = $event->labId;
             ComponentAssociation::where('lab_id', $lab_id)->delete();
             LabAcheivement::where('lab_id', $lab_id)->delete();
             LabExternalLinks::where('lab_id', $lab_id)->delete();
             LabExternalLinks::where('lab_id', $lab_id)->delete();
-            LabTagsGroups::where('lab_id',$lab_id)->delete();
+            LabTagsGroups::where('lab_id', $lab_id)->delete();
             LabSkillsGroupsStack::where('lab_id', $lab_id)->delete();
             LabAddress::where('lab_id', $lab_id)->delete();
+
             return true;
         } catch (\Throwable $th) {
-          return false;
+            return false;
         }
     }
 }
