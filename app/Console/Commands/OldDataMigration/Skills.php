@@ -48,11 +48,11 @@ class Skills extends Command
             DB::connection('mysql2')->table('skills')->chunkById(1000, function ($skills) use ($insertArr) {
                 foreach ($skills as $skill) {
                     $skills_details = [
-                        'id'       => $skill->id,
+                        'id'          => $skill->id,
                         'title'       => $skill->skill,
                         'fr_CA_title' => $skill->fr_CA_skill,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now(),
+                        'created_at'  => Carbon::now(),
+                        'updated_at'  => Carbon::now(),
                     ];
                     $check_skills = Skill::find($skill->id);
                     if (!$check_skills) {

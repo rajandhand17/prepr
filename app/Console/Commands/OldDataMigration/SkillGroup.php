@@ -46,20 +46,18 @@ class SkillGroup extends Command
             if ($skill_groups->count() > 0) {
                 foreach ($skill_groups as $key => $skill_group) {
                     $skills = [];
-                    if($skill_group->skills != null){
+                    if ($skill_group->skills != null) {
                         if (str_contains($skill_group->skills, ',')) {
                             $skills = explode(',', $skill_group->skills);
-                        }
-                        else{
+                        } else {
                             $skills = [$skill_group->skills];
                         }
                     }
                     $skill_stacks = [];
-                    if($skill_group->skills != null){
+                    if ($skill_group->skills != null) {
                         if (str_contains($skill_group->skill_stacks, ',')) {
                             $skill_stacks = explode(',', $skill_group->skills);
-                        }
-                        else{
+                        } else {
                             $skill_stacks = [$skill_group->skill_stacks];
                         }
                     }
@@ -72,7 +70,7 @@ class SkillGroup extends Command
                         'skills'            => $skills,
                         'skill_stacks'      => $skill_stacks,
                     ];
-                    $check_skill_group = \App\Models\SkillGroup::where('title',$skill_group->title)->first();
+                    $check_skill_group = \App\Models\SkillGroup::where('title', $skill_group->title)->first();
                     if (!$check_skill_group) {
                         \App\Models\SkillGroup::create($skill_group_details);
                     }

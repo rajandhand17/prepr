@@ -24,7 +24,7 @@ class SkillGroup extends Model
         'fr_CA_description',
     ];
     protected $casts = [
-        'skills' => 'json',
+        'skills'       => 'json',
         'skill_stacks' => 'json',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

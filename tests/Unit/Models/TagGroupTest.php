@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\TagGroup;
 use Tests\TestCase;
 
 /**

@@ -93,6 +93,5 @@ class ComponentAssociationService
         }
 
         return true;
-
     }
 }

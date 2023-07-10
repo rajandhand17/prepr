@@ -21,6 +21,7 @@ class LabExternalLinksService
                 }
             }
         }
+
         return true;
     }
 }

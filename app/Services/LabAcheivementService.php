@@ -32,6 +32,5 @@ class LabAcheivementService
         $labAchievement->save();
 
         return true;
-
     }
 }

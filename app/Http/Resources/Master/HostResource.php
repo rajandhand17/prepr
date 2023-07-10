@@ -16,11 +16,11 @@ class HostResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'    => $this->id,
+            'id'     => $this->id,
             'title'  => $this->title,
-            'link'  => $this->link,
-            'image' => $this->image,
-            'status'=> $this->status,
+            'link'   => $this->link,
+            'image'  => $this->image,
+            'status' => $this->status,
         ];
     }
 }

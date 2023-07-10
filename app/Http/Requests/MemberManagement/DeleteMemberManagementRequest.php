@@ -26,7 +26,7 @@ class DeleteMemberManagementRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|array',
+            'email'   => 'required|array',
             'email.*' => 'email|exists:member_management,email',
         ];
     }

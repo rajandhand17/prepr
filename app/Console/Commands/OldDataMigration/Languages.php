@@ -48,7 +48,7 @@ class Languages extends Command
             if ($languages->count() > 0) {
                 foreach ($languages as $key => $single_language) {
                     $language_details = [
-                        'id'        => $single_language->id,
+                        'id'          => $single_language->id,
                         'name'        => $single_language->lang_name,
                         'iso'         => $single_language->lang_iso,
                         'status'      => $single_language->status,

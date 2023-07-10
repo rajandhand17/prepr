@@ -47,11 +47,10 @@ class SkillStack extends Command
             if ($skill_stack->count() > 0) {
                 foreach ($skill_stack as $key => $single_skill_stack) {
                     $skills = [];
-                    if($single_skill_stack->skills != null){
+                    if ($single_skill_stack->skills != null) {
                         if (str_contains($single_skill_stack->skills, ',')) {
                             $skills = explode(',', $single_skill_stack->skills);
-                        }
-                        else{
+                        } else {
                             $skills = [$single_skill_stack->skills];
                         }
                     }
@@ -62,13 +61,14 @@ class SkillStack extends Command
                         'fr_CA_description' => $single_skill_stack->fr_CA_description,
                         'skills'            => $skills,
                     ];
-                    $check_skills = SkillStacks::where('title',$single_skill_stack->title)->first();
+                    $check_skills = SkillStacks::where('title', $single_skill_stack->title)->first();
                     if (!$check_skills) {
                         SkillStacks::create($skill_stack_details);
                     }
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skill stack table completed.');
+
                 return;
             }
             DB::rollback();
@@ -76,6 +76,7 @@ class SkillStack extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

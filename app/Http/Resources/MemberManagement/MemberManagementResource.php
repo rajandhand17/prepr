@@ -29,7 +29,6 @@ class MemberManagementResource extends JsonResource
 
         $invtee_user = UserService::getUserById($this->inviter_id);
 
-
         $invite_status = ($this->invite_status == '0') ? 'Invited' : (($this->invite_status == '1') ? 'Accepted' : (($this->invite_status == '2') ? 'Pending' : (($this->invite_status == '3') ? 'Declined' : 'Auto Created')));
 
         $auto_invite = ($this->auto_invite == '0') ? 'No' : 'Yes';

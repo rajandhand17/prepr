@@ -30,6 +30,7 @@ class LabTagsGroupsService
                 }
             }
         }
+
         return true;
     }
 }

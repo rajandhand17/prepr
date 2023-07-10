@@ -51,15 +51,15 @@ class Organization extends Command
             if ($organizations->count() > 0) {
                 foreach ($organizations as $key => $single_organization) {
                     $organization_details = [
-                        'language'      => $single_organization->language,
-                        'user_id'       => $single_organization->user_id,
+                        'language'       => $single_organization->language,
+                        'user_id'        => $single_organization->user_id,
                         'title'          => $single_organization->name,
-                        'slug'          => $single_organization->slug,
-                        'vanity_slug'   => $single_organization->vanity_slug,
-                        'description'   => $single_organization->description,
-                        'cover_image'   => $single_organization->cover_image,
-                        'profile_image' => $single_organization->profile_image,
-                        'website'       => $single_organization->website,
+                        'slug'           => $single_organization->slug,
+                        'vanity_slug'    => $single_organization->vanity_slug,
+                        'description'    => $single_organization->description,
+                        'cover_image'    => $single_organization->cover_image,
+                        'profile_image'  => $single_organization->profile_image,
+                        'website'        => $single_organization->website,
                     ];
 
                     $check_organization = Organizations::where(['title'=>$single_organization->name])->first();
