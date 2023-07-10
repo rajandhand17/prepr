@@ -214,11 +214,6 @@ class User extends Authenticatable
             return ['success' => false, 'message' => __('responses.failed_registeration')];
         } catch (\Exception $e) {
             DB::rollback();
-<<<<<<< HEAD
-            dd($e);
-=======
->>>>>>> BetaDevelopment
-
             return ['success' => false, 'message' => 'Something went wrong.'];
         }
     }
