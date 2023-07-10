@@ -94,6 +94,7 @@ class ComponentAssociationService
 
         return true;
     }
+
     public function updatelabAssociation($lab_id, $request)
     {
         try {
