@@ -14,7 +14,7 @@ return new class() extends Migration {
     {
         Schema::create('social_connect', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->string('logo');
             $table->enum('integration_status', ['0', '1'])->comment('0 -> disabled, 1 -> enabled')->default('1');
             $table->timestamps();

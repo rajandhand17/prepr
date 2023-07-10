@@ -114,6 +114,8 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendError('Error Occured in getting members', 500);
         } catch (\Exception $e) {
+            dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

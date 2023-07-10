@@ -13,64 +13,65 @@ class LabService
 {
     public function createLab($request, $upload_cover_image)
     {
-        try {
-            $status = config('constants.lab_status.draft');
-            switch($request->status) {
-                case 'draft':
-                    $status = config('constants.lab_status.draft');
-                    break;
-                case 'publish':
-                    $status = config('constants.lab_status.publish');
-                    break;
-                case 'archive':
-                    $status = config('constants.lab_status.archive');
-                    break;
-                default:
-                    $status = config('constants.lab_status.draft');
-                    break;
-            }
-            $privacy = config('constants.lab_privacy.no');
-            switch($request->privacy) {
-                case 'yes':
-                    $privacy = config('constants.lab_privacy.yes');
-                    break;
-                case 'no':
-                    $privacy = config('constants.lab_privacy.no');
-                    break;
-                default:
-                    $privacy = config('constants.lab_privacy.yes');
-                    break;
-            }
-            $model = new Lab();
-            $slug = UtilityHelper::generateSlug($request->title, $model);
-
-            $lab = new Lab();
-            $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $lab->language = $request->language;
-            $lab->user_id = auth()->user()->id;
-            $lab->organization_id = $request->organization_id;
-            $lab->category_id = $request->category_id;
-            $lab->slug = $slug;
-            $lab->title = $request->title;
-            $lab->description = $request->description;
-            $lab->privacy = $privacy;
-            $lab->media_type = 'image';
-            $lab->media = $upload_cover_image;
-            $lab->status = ($request->request_type == 'draft') ? '0' : (($request->request_type == 'publish') ? '1' : '2');
-
-            $lab->total_share = 0;
-            $lab->is_auto_created = '0';
-            $lab->is_resource_sequential = ($request->is_resource_sequential == 'yes') ? '1' : '0';
-            $lab->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
-            $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
-            $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
-            $lab->is_verified = '0';
-            $lab->save();
-
-            return $lab;
-        } catch (\Exception $e) {
-            return false;
+        $status = config('constants.lab_status.draft');
+        switch($request->status) {
+            case 'draft':
+                $status = config('constants.lab_status.draft');
+                break;
+            case 'publish':
+                $status = config('constants.lab_status.publish');
+                break;
+            case 'archive':
+                $status = config('constants.lab_status.archive');
+                break;
+            default:
+                $status = config('constants.lab_status.draft');
+                break;
         }
+        $privacy = config('constants.lab_privacy.no');
+        switch($request->privacy) {
+            case 'yes':
+                $privacy = config('constants.lab_privacy.yes');
+                break;
+            case 'no':
+                $privacy = config('constants.lab_privacy.no');
+                break;
+            default:
+                $privacy = config('constants.lab_privacy.yes');
+                break;
+        }
+        $model = new Lab();
+        $slug = UtilityHelper::generateSlug($request->title, $model);
+
+        $lab = new Lab();
+        $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+        $lab->language = $request->language;
+        $lab->user_id = auth()->user()->id;
+        $lab->organization_id = $request->organization_id;
+        $lab->category_id = $request->category_id;
+
+        $lab->slug = $slug;
+        $lab->title = $request->title;
+        $lab->description = $request->description;
+        $lab->privacy = $privacy;
+
+        $lab->media_type = 'image';
+        $lab->media = $upload_cover_image;
+
+        $lab->status = $status;
+
+        $lab->total_share = 0;
+
+        $lab->is_auto_created = '0';
+
+        $lab->is_resource_sequential = ($request->is_resource_sequential == 'yes') ? '1' : '0';
+        $lab->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
+        $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
+        $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
+        $lab->is_verified = '0';
+        $lab->save();
+
+        return $lab;
     }
 
     public function uploadCoverImage($image)

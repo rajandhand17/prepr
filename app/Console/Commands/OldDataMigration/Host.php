@@ -47,9 +47,10 @@ class Host extends Command
             if ($hosts->count() > 0) {
                 foreach ($hosts as $key => $single_host) {
                     $hosts_details = [
-                        'name'  => $single_host->name,
-                        'link'  => $single_host->link,
-                        'image' => $single_host->image,
+                        'id'     => $single_host->id,
+                        'title'  => $single_host->name,
+                        'link'   => $single_host->link,
+                        'image'  => $single_host->image,
                     ];
                     $check_hosts = Hosts::where($hosts_details)->first();
                     if (!$check_hosts) {

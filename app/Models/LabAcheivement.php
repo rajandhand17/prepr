@@ -15,7 +15,7 @@ class LabAcheivement extends Model
 
     protected $fillable = [
         'lab_id',
-        'achievement_name',
+        'achievement_title',
         'achievement_points',
         'achievement_condition',
         'achievement_image',

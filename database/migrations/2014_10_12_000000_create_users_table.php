@@ -31,8 +31,8 @@ return new class() extends Migration {
             $table->integer('user_rank')->nullable();
             $table->enum('verified_user', ['0', '1'])->comment('0 -> no, 1 -> yes')->default('0');
             $table->string('verify_token')->nullable();
-            $table->string('referal_code')->nullable();
-            $table->enum('is_profile_completed', ['0', '1'])->comment('0 -> incomplete, 1 for complete')->default('0');
+            $table->string('referral_code')->nullable();
+            $table->enum('is_profile_completed', ['0', '1'])->comment('0 -> incomplete, 1 -> complete')->default('0');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

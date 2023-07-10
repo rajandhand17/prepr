@@ -46,14 +46,22 @@ class SkillStack extends Command
             $skill_stack = DB::connection('mysql2')->table('skill_stacks')->get();
             if ($skill_stack->count() > 0) {
                 foreach ($skill_stack as $key => $single_skill_stack) {
+                    $skills = [];
+                    if ($single_skill_stack->skills != null) {
+                        if (str_contains($single_skill_stack->skills, ',')) {
+                            $skills = explode(',', $single_skill_stack->skills);
+                        } else {
+                            $skills = [$single_skill_stack->skills];
+                        }
+                    }
                     $skill_stack_details = [
                         'title'             => $single_skill_stack->title,
                         'fr_CA_title'       => $single_skill_stack->fr_CA_title,
-                        'skills'            => $single_skill_stack->skills,
                         'description'       => $single_skill_stack->description,
                         'fr_CA_description' => $single_skill_stack->fr_CA_description,
+                        'skills'            => $skills,
                     ];
-                    $check_skills = SkillStacks::where($skill_stack_details)->first();
+                    $check_skills = SkillStacks::where('title', $single_skill_stack->title)->first();
                     if (!$check_skills) {
                         SkillStacks::create($skill_stack_details);
                     }

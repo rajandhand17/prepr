@@ -48,11 +48,12 @@ class Category extends Command
             if ($categories->count() > 0) {
                 foreach ($categories as $key => $single_category) {
                     $created = Categories::updateOrCreate([
-                        'name'       => $single_category->name,
+                        'title'       => $single_category->name,
+                        'id'          => $single_category->id,
                     ], [
-                        'fr_CA_name' => $single_category->fr_CA_name,
-                        'components' => (string) $single_category->components,
-                        'parent_id'  => $single_category->parent_id,
+                        'fr_CA_title' => $single_category->fr_CA_name,
+                        'components'  => (string) $single_category->components,
+                        'parent_id'   => $single_category->parent_id,
                     ]);
                 }
                 DB::commit();

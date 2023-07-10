@@ -47,11 +47,11 @@ class Tag extends Command
             if ($tags->count() > 0) {
                 foreach ($tags as $key => $single_tags) {
                     $tags_details = [
-                        'name'           => $single_tags->tag,
-                        'fr_CA_name'     => $single_tags->fr_CA_tag,
-                        'tag_image'      => $single_tags->tag_image,
-                        'fr_CA_tag_image'=> $single_tags->fr_CA_tag_image,
-                        'components'     => $single_tags->category,
+                        'title'           => $single_tags->tag,
+                        'fr_CA_title'     => $single_tags->fr_CA_tag,
+                        'tag_image'       => $single_tags->tag_image,
+                        'fr_CA_tag_image' => $single_tags->fr_CA_tag_image,
+                        'components'      => $single_tags->category,
                     ];
                     $check_tags = Tags::where($tags_details)->first();
                     if (!$check_tags) {

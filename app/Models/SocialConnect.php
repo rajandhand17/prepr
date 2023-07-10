@@ -13,7 +13,7 @@ class SocialConnect extends Model
     protected $table = 'social_connect';
 
     protected $fillable = [
-        'name',
+        'title',
         'logo',
         'integration_status',
     ];
@@ -23,7 +23,7 @@ class SocialConnect extends Model
     public function getSocialConnect($search = null)
     {
         try {
-            $social_connect_list = static::select('id', 'name', 'logo');
+            $social_connect_list = static::select('id', 'title', 'logo');
 
             //take 20 results based from the table
             $social_connect_list = $social_connect_list->where('integration_status', '1')->get();

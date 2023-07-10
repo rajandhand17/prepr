@@ -51,67 +51,24 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function updateCoverImage($image)
+    public function createLab($request, $upload_profile_image, $upload_achievements_image)
     {
         try {
-            return $this->labService->updateLabCoverImage($image);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function createLab($request, $upload_profile_image, $upload_acheivements_image)
-    {
-        try {
-            DB::beginTransaction();
-            $createdLab = $this->labService->createLab($request, $upload_profile_image);
-
-            if ($createdLab !== false) {
+            $createdLab = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image) {
+                $createdLab = $this->labService->createLab($request, $upload_profile_image);
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createdLab);
-
-                if ($createdLabAddress == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
-                if ($createdLabSkillAssociations == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
-
                 $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createdLab);
-
-                if ($createdLabTagAssociations == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
-
                 $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createdLab);
-                if ($createdLabExternalLinks == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
 
                 if ($request->is_achievement_enabled == 'yes') {
-                    $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_acheivements_image);
-
-                    if ($createdLabAcheivement == false) {
-                        DB::rollBack();
-
-                        return false;
-                    }
+                    $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_achievements_image);
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
 
-                if ($createdLabAssociations == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
+                return $createdLab;
+            });
+            if ($createdLab) {
                 DB::commit();
 
                 return $createdLab;
@@ -121,6 +78,10 @@ class LabRepository implements LabInterface
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
+            return false;
+        } catch (\Throwable $e) {
+            DB::rollback();
 
             return false;
         }

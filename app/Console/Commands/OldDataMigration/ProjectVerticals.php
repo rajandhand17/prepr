@@ -47,8 +47,8 @@ class ProjectVerticals extends Command
             if ($project_verticals->count() > 0) {
                 foreach ($project_verticals as $key => $single_verticals) {
                     $project_verticals_details = [
-                        'name'       => $single_verticals->name,
-                        'fr_CA_name' => $single_verticals->fr_CA_name,
+                        'title'       => $single_verticals->name,
+                        'fr_CA_title' => $single_verticals->fr_CA_name,
                     ];
                     $check_project_verticals = ProjectVertical::where($project_verticals_details)->first();
                     if (!$check_project_verticals) {

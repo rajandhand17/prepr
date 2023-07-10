@@ -17,22 +17,22 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'                        => $this->id,
-            'preferred_language'        => $this->preferred_language,
-            'first_name'                => $this->first_name,
-            'last_name'                 => $this->last_name,
-            'full_name'                 => $this->full_name,
-            'username'                  => $this->username,
-            'email'                     => $this->email,
-            'profile_image'             => $this->profile_image,
-            'two_factor_verification'   => $this->two_factor_verification,
-            'user_points'               => $this->user_points,
-            'user_rank'                 => $this->verified_user,
-            'verified_user'             => $this->verified_user,
-            'referal_code'              => $this->referal_code,
-            'is_profile_completed'      => $this->is_profile_completed,
-            'member_since'              => UtilityHelper::formatDateTime($this->created_at),
-            'roles'                     => $this->roles->pluck('name'),
+            'id'                         => $this->id,
+            'preferred_language'         => $this->preferred_language,
+            'first_name'                 => $this->first_name,
+            'last_name'                  => $this->last_name,
+            'full_name'                  => $this->full_name,
+            'username'                   => $this->username,
+            'email'                      => $this->email,
+            'profile_image'              => $this->profile_image,
+            'two_factor_verification'    => $this->two_factor_verification,
+            'user_points'                => $this->user_points,
+            'user_rank'                  => $this->verified_user,
+            'verified_user'              => $this->verified_user,
+            'referral_code'              => $this->referal_code,
+            'is_profile_completed'       => $this->is_profile_completed,
+            'member_since'               => UtilityHelper::formatDateTime($this->created_at),
+            'roles'                      => $this->roles->pluck('name'),
         ];
     }
 }
