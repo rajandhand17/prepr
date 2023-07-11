@@ -30,22 +30,24 @@ class UpdateOrganizationRequest extends FormRequest
 
         if ($organization) {
             $base_rules = [
-                'title'         => 'required|max:255|unique:organizations,title,'.$organization->id,
-                'description'   => 'required',
-                'profile_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024', //|dimensions:width=500,height=500
-                'cover_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024',
-                'category'      => 'required|exists:categories,id',
-                'website'       => 'required|url',
+                'title'           => 'required|max:255|unique:organizations,title,'.$organization->id,
+                'description'     => 'required',
+                'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+                'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+                'category'        => 'required|numeric|exists:categories,id',
+                'website'         => 'required|url',
+                'status'          => 'required|numeric|in:draft,publish,archive',
             ];
         } else {
             $base_rules = [
-                'title'         => 'required|max:255|unique:organizations,title',
-                'description'   => 'required',
-                'profile_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024|dimensions:width=500,height=500',
-                'cover_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024',
-                'category'      => 'required|exists:categories,id',
-                'website'       => 'required|url',
-                'slug'          => 'required|max:255|unique:organizations,slug',
+                'title'           => 'required|max:255|unique:organizations,title',
+                'description'     => 'required',
+                'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+                'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+                'category'        => 'required|numeric|exists:categories,id',
+                'website'         => 'required|url',
+                'slug'            => 'required|max:255|unique:organizations,slug',
+                'status'          => 'required|numeric|in:draft,publish,archive',
             ];
         }
         if ($this->request->has('organization_address')) {
