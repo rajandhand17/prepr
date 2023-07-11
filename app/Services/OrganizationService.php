@@ -157,6 +157,7 @@ class OrganizationService
             $organization->total_employees = $request->total_employees;
             if ($organization->save()) {
                 DB::commit();
+
                 return $organization;
             }
             DB::rollback();
