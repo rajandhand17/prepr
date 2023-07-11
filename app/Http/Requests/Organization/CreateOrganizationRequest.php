@@ -33,7 +33,7 @@ class CreateOrganizationRequest extends FormRequest
             'category'        => 'required|numeric|exists:categories,id',
             'website'         => 'required|url',
             'slug'            => 'required|max:255|unique:organizations,slug',
-            'status'          => 'required|numeric|in:draft,publish,archive',
+            'status'          => 'required|in:draft,publish,archive',
         ];
 
         if ($this->request->has('organization_address')) {
