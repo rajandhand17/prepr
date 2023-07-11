@@ -36,7 +36,6 @@ class UpdateOrganizationRequest extends FormRequest
                 'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
                 'category'        => 'required|numeric|exists:categories,id',
                 'website'         => 'required|url',
-                'slug'            => 'required|max:255|unique:organizations,slug',
                 'status'          => 'required|numeric|in:draft,publish,archive',
             ];
         } else {
