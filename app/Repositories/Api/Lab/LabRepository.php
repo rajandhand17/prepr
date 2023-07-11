@@ -244,4 +244,12 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
+    public function updateCoverImage($image){
+        try {
+            return $this->labService->updateCoverImage($image);
+        } catch (\Exception $e){
+            return false;
+        }
+    }
 }

@@ -76,7 +76,7 @@ class LabUpdateRequest extends FormRequest
             $base_rules['achievement_name'] = 'required';
             $base_rules['achievement_points'] = 'required';
             $base_rules['achievement_conditions'] = 'required|array';
-            $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['achievement_image'] = 'required';
         }
 
         if ($this->request->has('lab_programs')) {

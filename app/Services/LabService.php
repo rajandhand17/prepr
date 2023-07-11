@@ -88,6 +88,17 @@ class LabService
         }
     }
 
+    public function updateCoverImage($image){
+        try {
+            $updateCoverImage=FileUploadHelper::uploadbase64ImageToS3($image,'lab');
+            if($updateCoverImage==false){
+                return false;
+            }
+            return $updateCoverImage;
+        } catch (\Exception $e){
+            return false;
+        }
+    }
     public function getLabList($request)
     {
         try {

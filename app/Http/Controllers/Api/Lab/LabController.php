@@ -35,21 +35,6 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
-    public function labProgram(Request $request)
-    {
-        try {
-            $labProgram = $this->labRepository->getLabProgramList($request);
-            if ($labProgram !== false) {
-                return $this->sendResponse(LabResource::collection($labProgram), 'Labs fetched successfully');
-            }
-
-            return $this->sendError('Labs not found', 400);
-        } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
     public function store(LabStoreRequest $request)
     {
         try {
@@ -118,7 +103,7 @@ class LabController extends AppBaseController
                 $upload_cover_image = $upload_cover_image;
             }
             if ($request->is_achievement_enabled == 'yes') {
-                $upload_acheivements_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                $upload_acheivements_image = $this->labAcheivementRepository->updateAcheivementImage($request->achievement_image);
                 if ($upload_acheivements_image == false) {
                     return $this->sendError(__('responses.fail_organization_image_upload'), 400);
                 }
