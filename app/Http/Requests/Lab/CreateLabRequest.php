@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class LabUpdateRequest extends FormRequest
+class CreateLabRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,15 +29,12 @@ class LabUpdateRequest extends FormRequest
 
         $base_rules = [
             'request_type'=> 'required|in:draft,publish,archive',
-            // 'cover_image' => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
-            // 'title'       => 'required_if:request_type,publish|unique:labs,title|nullable',
+            'cover_image' => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
+            'title'       => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description' => 'required_if:request_type,publish|nullable',
-
             'organization_id'=> 'required|exists:organizations,id',
             'category_id'    => 'required|exists:categories,id',
-
             'privacy'=> 'required_if:request_type,publish|in:yes,no',
-
             'location' => 'required_if:request_type,publish|nullable',
             'latitude' => 'required_if:request_type,publish|nullable',
             'longitude'=> 'required_if:request_type,publish|nullable',
@@ -45,16 +42,16 @@ class LabUpdateRequest extends FormRequest
             'city'     => 'required_if:request_type,publish|nullable',
 
             'skills'        => 'required_if:request_type,publish|nullable|array',
-            'skills.*'      => 'numeric',
+            'skills.*'      => 'numeric|exists:skills,id',
             'skill_groups'  => 'nullable|array',
-            'skill_groups.*'=> 'numeric',
+            'skill_groups.*'=> 'numeric|exists:skill_groups,id',
             'skill_stacks'  => 'nullable|array',
-            'skill_stacks.*'=> 'numeric',
+            'skill_stacks.*'=> 'numeric|exists:skill_stacks,id',
 
             'tags'        => 'required_if:request_type,publish|nullable|array',
             'tags.*'      => 'numeric',
             'tag_groups'  => 'nullable|array',
-            'tag_groups.*'=> 'numeric',
+            'tag_groups.*'=> 'numeric|exists:tag_groups,id',
 
             'is_notification_enabled'=> 'in:yes,no',
 
@@ -76,7 +73,7 @@ class LabUpdateRequest extends FormRequest
             $base_rules['achievement_name'] = 'required';
             $base_rules['achievement_points'] = 'required';
             $base_rules['achievement_conditions'] = 'required|array';
-            $base_rules['achievement_image'] = 'required';
+            $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
         }
 
         if ($this->request->has('lab_programs')) {

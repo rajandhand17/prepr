@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\Lab;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Lab\LabStoreRequest;
-use App\Http\Requests\Lab\LabUpdateRequest;
+use App\Http\Requests\Lab\CreateLabRequest;
+use App\Http\Requests\Lab\UpdateLabRequest;
 use App\Http\Resources\Lab\LabResource;
 use App\Repositories\Api\Lab\LabRepository;
 use App\Repositories\Api\LabAcheivement\LabAcheivementRepository;
@@ -35,7 +35,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function store(LabStoreRequest $request)
+    public function store(CreateLabRequest $request)
     {
         try {
             $upload_cover_image = null;
@@ -86,7 +86,7 @@ class LabController extends AppBaseController
         }
     }
 
-    public function update($slug, LabUpdateRequest $request)
+    public function update($slug, UpdateLabRequest $request)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot('lab', $slug);

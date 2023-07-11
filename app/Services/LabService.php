@@ -159,7 +159,7 @@ class LabService
         }
     }
 
-    public function getLabDetails($slug)
+    public static function getLabDetails($slug)
     {
         try {
             $labDetails = Lab::where('slug', $slug)->first();
@@ -296,6 +296,9 @@ class LabService
                 case 'unfavored':
                     $checkActivity = $checkActivity->where('favourite', '2');
                     break;
+                case 'share':
+                    $checkActivity = $checkActivity->where('share', '1');
+                    break;
                 default:
                     return false;
             }
@@ -405,23 +408,26 @@ public function updateLabActivity($activity, $id, $request)
         $updateLabActivity = LabSocialActivity::find($id);
         switch ($activity) {
             case 'like':
-                $updateLabActivity->like_dislike = '1';
+                $updateLabActivity->like_dislike = config('constants.lab_social_activity_is_like.yes');
                 break;
             case 'dislike':
-                $updateLabActivity->like_dislike = '2';
+                $updateLabActivity->like_dislike = config('constants.lab_social_activity_is_like.no');
                 break;
             case 'follow':
-                $updateLabActivity->follow_unfollow = '1';
+                $updateLabActivity->follow_unfollow = config('constants.lab_social_activity_is_follow.yes');
                 break;
             case 'unfollow':
-                $updateLabActivity->follow_unfollow = '2';
+                $updateLabActivity->follow_unfollow = config('constants.lab_social_activity_is_follow.no');
                 break;
             case 'favourite':
-                $updateLabActivity->favourite = '1';
+                $updateLabActivity->favourite = config('constants.lab_social_activity_favourite.yes');
                 break;
             case 'unfavored':
-                $updateLabActivity->favourite = '2';
+                $updateLabActivity->favourite = config('constants.lab_social_activity_favourite.no');
                 break;
+            case 'share':
+                $updateLabActivity->share=config('constants.lab_social_activity_share.yes');
+            break;
             default:
                 return false;
                 break;

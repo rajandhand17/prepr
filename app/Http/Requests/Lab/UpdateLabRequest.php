@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\Lab;
 
+use App\Models\Lab;
+use App\Services\LabService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class LabStoreRequest extends FormRequest
+class UpdateLabRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,37 +26,42 @@ class LabStoreRequest extends FormRequest
      * @return array<string, mixed>
      */
     public function rules()
-    {
+    {   
+        $lab=LabService::getLabDetails(request()->route('slug'));
+     
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
-
+        if($lab){
+            $base_rules=[
+            'cover_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024',
+            'title'       => 'required|max:255|unique:labs,title,'.$lab->id,
+            ];
+        }else{
+            $base_rules=[
+                'cover_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024',
+                'title'       => 'required|max:255|unique:labs,title,',
+            ];
+        }
         $base_rules = [
             'request_type'=> 'required|in:draft,publish,archive',
-            'cover_image' => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
-            'title'       => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description' => 'required_if:request_type,publish|nullable',
-
             'organization_id'=> 'required|exists:organizations,id',
             'category_id'    => 'required|exists:categories,id',
-
             'privacy'=> 'required_if:request_type,publish|in:yes,no',
-
             'location' => 'required_if:request_type,publish|nullable',
             'latitude' => 'required_if:request_type,publish|nullable',
             'longitude'=> 'required_if:request_type,publish|nullable',
             'country'  => 'required_if:request_type,publish|nullable',
             'city'     => 'required_if:request_type,publish|nullable',
-
             'skills'        => 'required_if:request_type,publish|nullable|array',
-            'skills.*'      => 'numeric|exists:skills,id',
+            'skills.*'      => 'numeric',
             'skill_groups'  => 'nullable|array',
-            'skill_groups.*'=> 'numeric|exists:skill_groups,id',
+            'skill_groups.*'=> 'numeric',
             'skill_stacks'  => 'nullable|array',
-            'skill_stacks.*'=> 'numeric|exists:skill_stacks,id',
-
+            'skill_stacks.*'=> 'numeric',
             'tags'        => 'required_if:request_type,publish|nullable|array',
             'tags.*'      => 'numeric',
             'tag_groups'  => 'nullable|array',
-            'tag_groups.*'=> 'numeric|exists:tag_groups,id',
+            'tag_groups.*'=> 'numeric',
 
             'is_notification_enabled'=> 'in:yes,no',
 
@@ -76,7 +83,7 @@ class LabStoreRequest extends FormRequest
             $base_rules['achievement_name'] = 'required';
             $base_rules['achievement_points'] = 'required';
             $base_rules['achievement_conditions'] = 'required|array';
-            $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['achievement_image'] = 'required';
         }
 
         if ($this->request->has('lab_programs')) {

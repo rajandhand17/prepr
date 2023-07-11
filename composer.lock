@@ -4,65 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5231164b82162c17cf2181c889c0964d",
+    "content-hash": "ad3d4ce70377ff5c40464ea3ab3391f3",
     "packages": [
-        {
-            "name": "askedio/laravel-soft-cascade",
-            "version": "10.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Askedio/laravel-soft-cascade.git",
-                "reference": "d740ce3054a207c68df5b94894634460aff33456"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Askedio/laravel-soft-cascade/zipball/d740ce3054a207c68df5b94894634460aff33456",
-                "reference": "d740ce3054a207c68df5b94894634460aff33456",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/container": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/database": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/events": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/support": "^7.0|^8.0|^9.0|^10.0",
-                "php": "^7.2.5|^8.0"
-            },
-            "require-dev": {
-                "codacy/coverage": "dev-master",
-                "orchestra/testbench": "^5.0|^6.0|^7.0",
-                "phpunit/phpunit": "^8.4|^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Askedio\\SoftCascade\\Providers\\GenericServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Askedio\\SoftCascade\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Will Bowman",
-                    "homepage": "https://medium.com/@asked_io",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Laravel Cascade Soft Delete & Restore",
-            "support": {
-                "issues": "https://github.com/Askedio/laravel-soft-cascade/issues",
-                "source": "https://github.com/Askedio/laravel-soft-cascade/tree/10.0.0"
-            },
-            "time": "2023-02-17T12:29:44+00:00"
-        },
         {
             "name": "aws/aws-crt-php",
             "version": "v1.2.1",
@@ -119,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.275.5",
+            "version": "3.275.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "d46961b82e857f77059c0c78160719ecb26f6cc6"
+                "reference": "a048b1d7110f62fb67cc69b93efc24e62ea8b64b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d46961b82e857f77059c0c78160719ecb26f6cc6",
-                "reference": "d46961b82e857f77059c0c78160719ecb26f6cc6",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a048b1d7110f62fb67cc69b93efc24e62ea8b64b",
+                "reference": "a048b1d7110f62fb67cc69b93efc24e62ea8b64b",
                 "shasum": ""
             },
             "require": {
@@ -208,9 +151,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.275.5"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.275.6"
             },
-            "time": "2023-07-07T18:20:11+00:00"
+            "time": "2023-07-11T04:45:11+00:00"
         },
         {
             "name": "brick/math",

@@ -25,10 +25,9 @@ class LabRepository implements LabInterface
     private $labTagsGroupsService;
     private $labAcheivementService;
     private $skillService;
-    private $favoriteService;
     private $componentAssociationService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, FavoriteService $favoriteService, ComponentAssociationService $componentAssociationService)
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -38,7 +37,6 @@ class LabRepository implements LabInterface
         $this->labTagsGroupsService = $labTagsGroupsService;
         $this->labAcheivementService = $labAcheivementService;
         $this->skillService = $skillService;
-        $this->favoriteService = $favoriteService;
         $this->componentAssociationService = $componentAssociationService;
     }
 
@@ -201,7 +199,6 @@ class LabRepository implements LabInterface
     {
         try {
             $labSlug = $this->labService->checkSlug($slug);
-
             return $labSlug;
         } catch (\Exception $e) {
             return false;

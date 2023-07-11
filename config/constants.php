@@ -86,12 +86,26 @@ return [
         'yes' => '1',
     ],
 
-    'favorites_is_like'=> [
-        'no'    => '0',
-        'yes'   => '1',
+    'lab_social_activity_is_like'=> [
+        'yes'    => '1',
+        'no'   => '2',
     ],
 
-    'favorites_refence_type'=> [
+    'lab_social_activity_is_follow'=> [
+        'yes'    => '1',
+        'no'   => '2',
+    ],
+
+    'lab_social_activity_favourite'=> [
+        'yes'    => '1',
+        'no'   => '2',
+    ],
+
+    'lab_social_activity_share'=> [
+        'yes'    => '1',
+        'no'   => '0',
+    ],
+    'lab_social_activity_refence_type'=> [
         'lab'            => '0',
         'project'        => '1',
         'user'           => '2',

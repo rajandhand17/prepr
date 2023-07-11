@@ -17,7 +17,6 @@ class FileUploadHelper
             $webp_path_cover = $pathsarray[$type].time().'.webp';
             $path_cover = Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
             $path_cover = Storage::disk('s3')->url($webp_path_cover);
-
             return $path_cover;
         } catch(\Exception $e) {
             return false;
@@ -37,7 +36,6 @@ class FileUploadHelper
             $webp_path_cover = $pathsarray[$type].time().'.webp';
             $path_cover = Storage::disk('s3')->put($webp_path_cover, $imageData);
             $path_cover = Storage::disk('s3')->url($webp_path_cover);
-
             return $path_cover;
         } catch (\Exception $e) {
             return false;
