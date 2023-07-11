@@ -153,13 +153,10 @@ class OrganizationService
             $organization->website = isset($request->website) ? $request->website : null;
             $organization->about = isset($request->about) ? $request->about : null;
             $organization->category = $request->category;
-            if ($request->status !== null) {
-                $organization->status = $request->status;
-            }
+            $organization->status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : '3');
             $organization->total_employees = $request->total_employees;
             if ($organization->save()) {
                 DB::commit();
-
                 return $organization;
             }
             DB::rollback();

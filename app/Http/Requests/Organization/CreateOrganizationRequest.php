@@ -30,9 +30,10 @@ class CreateOrganizationRequest extends FormRequest
             'description'   => 'required',
             'profile_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
             'cover_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'category'      => 'required|exists:categories,id',
+            'category'      => 'required|numeric|exists:categories,id',
             'website'       => 'required|url',
             'slug'          => 'required|max:255|unique:organizations,slug',
+            'status'          => 'required|numeric|in:draft,publish,archive',
         ];
 
         if ($this->request->has('organization_address')) {
