@@ -71,7 +71,7 @@ class LabAcheivementService
         }
     }
 
-    public function deleteLabAchievement($lab_id)
+    public static function deleteLabAchievement($lab_id)
     {
         try {
             $checkLabAchievementExists = LabAcheivement::where('lab_id', $lab_id)->first();

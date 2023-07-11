@@ -86,7 +86,7 @@ class LabTagsGroupsService
         }
     }
 
-    public function deleteLabTagsGroups($lab_id)
+    public static function deleteLabTagsGroups($lab_id)
     {
         try {
             $labTagsGroups = LabTagsGroups::select('id')->where('lab_id', $lab_id)->get()->toArray();

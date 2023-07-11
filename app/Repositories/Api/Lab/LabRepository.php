@@ -102,7 +102,7 @@ class LabRepository implements LabInterface
     public function getLabDetails($slug)
     {
         try {
-            $labDetails = $this->labService->getLabDetails($slug);
+            $labDetails = $this->labService->checkSlug($slug);
 
             return $labDetails;
         } catch (\Exception $e) {
@@ -169,28 +169,24 @@ class LabRepository implements LabInterface
     {
         try {
             DB::beginTransaction();
-
             if (isset($request->status) && !empty($request->status) && $request->status == 'archived') {
                 $archived = $this->labService->archieveLab($lab_id);
                 if ($archived == false) {
                     DB::rollBack();
-
                     return false;
                 }
                 DB::commit();
-
                 return true;
             }
             $deleteLab = $this->labService->deleteLab($lab_id);
             if ($deleteLab == false) {
                 DB::rollBack();
-
                 return false;
             }
             DB::commit();
-
             return true;
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }

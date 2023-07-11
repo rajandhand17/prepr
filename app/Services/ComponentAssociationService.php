@@ -254,7 +254,7 @@ class ComponentAssociationService
         }
     }
 
-    public function deletelabAssociation($lab_id)
+    public static function deletelabAssociation($lab_id)
     {
         try {
             $getComponentAssociation = ComponentAssociation::select('id')->where('lab_id', $lab_id)->get()->toArray();

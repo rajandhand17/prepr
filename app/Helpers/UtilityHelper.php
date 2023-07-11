@@ -30,9 +30,6 @@ class UtilityHelper
                 case 'organization':
                     $checkComponentSlugExistOrNot = OrganizationService::getOrganizationExistBasedOnSlug($slug);
                     break;
-                case 'lab':
-                    $checkComponentSlugExistOrNot = LabService::getLabExistBasedOnSlug($slug);
-                    break;
                 default:
                     $checkComponentSlugExistOrNot = false;
             }

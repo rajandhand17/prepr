@@ -12,7 +12,6 @@ class Lab extends Model
     use SoftDeletes;
 
     protected $table = 'labs';
-    //protected $softCascade  =['component_associations','lab_acheivements','lab_address','lab_challenges','lab_external_links','lab_skills_groups_stack','lab_tags_groups'];
     protected $fillable = [
         'uuid',
         'language',

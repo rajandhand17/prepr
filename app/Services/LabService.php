@@ -159,20 +159,6 @@ class LabService
         }
     }
 
-    public static function getLabDetails($slug)
-    {
-        try {
-            $labDetails = Lab::where('slug', $slug)->first();
-            if ($labDetails) {
-                return $labDetails;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function updateLab($lab_id, $request, $upload_cover_image)
     {
         try {
@@ -215,9 +201,9 @@ class LabService
     public function deleteLab($lab_id)
     {
         try {
-            $lab = Lab::find($lab_id)->delete();
             $associatedLabs = event(new DeleteLabAssociatedData($lab_id));
-            if (!$associatedLabs) {
+            $lab = Lab::find($lab_id)->delete();
+            if (!$lab) {
                 return false;
             }
 
@@ -256,14 +242,13 @@ class LabService
         }
     }
 
-    public function checkSlug($slug)
+    public static function checkSlug($slug)
     {
         try {
-            $checklabSlug = Lab::where('slug', $slug)->first();
-            if ($checklabSlug) {
-                return $checklabSlug;
+            $checklab= Lab::where('slug', $slug)->first();
+            if ($checklab) {
+                return $checklab;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
@@ -328,20 +313,6 @@ public function checkNameExistsOrNot($title)
     }
 }
 
-public static function getLabExistBasedOnSlug($slug)
-{
-    try {
-        $lab = Lab::where('slug', $slug)->first();
-        if ($lab != null) {
-            return $lab;
-        }
-
-        return false;
-    } catch (\Exception $e) {
-        return false;
-    }
-}
-
 public function checkExistsOrNot($activity, $lab_id)
 {
     try {
@@ -352,7 +323,6 @@ public function checkExistsOrNot($activity, $lab_id)
         if ($checkLabActivity) {
             return $checkLabActivity;
         }
-
         return false;
     } catch (\Exception $e) {
         return false;
@@ -393,11 +363,8 @@ public function storeLabActivity($activity, $lab_id, $request)
         if ($storeLabActivity->save()) {
             return true;
         }
-
         return false;
     } catch (\Exception $e) {
-        dd($e);
-
         return false;
     }
 }

@@ -63,8 +63,8 @@ class LabExternalLinksService
         }
     }
 
-    public function deleteLabExternalLinks($lab_id)
-    {
+    public static function deleteLabExternalLinks($lab_id)
+    {   
         $checkExists = LabExternalLinks::select('id')->where('lab_id', $lab_id)->get()->toArray();
         if ($checkExists) {
             $deleteLabExternalLinks = LabExternalLinks::whereIn('id', $checkExists)->delete();
@@ -72,7 +72,6 @@ class LabExternalLinksService
                 return false;
             }
         }
-
         return true;
     }
 }

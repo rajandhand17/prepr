@@ -37,14 +37,14 @@ class LabAddressService
         }
     }
 
-    public function deleteLabAddress($lab_id)
+    public static function deleteLabAddress($lab_id)
     {
         try {
             $deleteLabaddress = LabAddress::where('lab_id', $lab_id)->delete();
+            
             if (!$deleteLabaddress) {
                 return false;
             }
-
             return true;
         } catch (\Exception $e) {
             return false;

@@ -9,6 +9,12 @@ use App\Models\LabAddress;
 use App\Models\LabExternalLinks;
 use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTagsGroups;
+use App\Services\ComponentAssociationService;
+use App\Services\LabAcheivementService;
+use App\Services\LabAddressService;
+use App\Services\LabExternalLinksService;
+use App\Services\LabSkillsGroupsStackService;
+use App\Services\LabTagsGroupsService;
 
 class HandleDeleteLabAssociatedData
 {
@@ -33,16 +39,34 @@ class HandleDeleteLabAssociatedData
     {
         try {
             $lab_id = $event->labId;
-            ComponentAssociation::where('lab_id', $lab_id)->delete();
-            LabAcheivement::where('lab_id', $lab_id)->delete();
-            LabExternalLinks::where('lab_id', $lab_id)->delete();
-            LabExternalLinks::where('lab_id', $lab_id)->delete();
-            LabTagsGroups::where('lab_id', $lab_id)->delete();
-            LabSkillsGroupsStack::where('lab_id', $lab_id)->delete();
-            LabAddress::where('lab_id', $lab_id)->delete();
-
+            $componentAssociation =ComponentAssociationService::deletelabAssociation($lab_id);
+            if(!$componentAssociation){
+                return false;
+            }
+            $deleteLabAchievement=LabAcheivementService::deleteLabAchievement($lab_id);
+            if(!$deleteLabAchievement){
+                return false;
+            }
+            $labExternalLinks=LabExternalLinksService::deleteLabExternalLinks($lab_id);
+            if(!$labExternalLinks){
+                return false;
+            }
+            $labTagGroups=LabTagsGroupsService::deleteLabTagsGroups($lab_id);
+            
+            if(!$labTagGroups){
+                return false;
+            }
+            $labSkillsGroupsService=LabSkillsGroupsStackService::deleteLabSkillsGroupsStack($lab_id);
+            if(!$labSkillsGroupsService){
+                return false;
+            }
+            $labAddress=LabAddressService::deleteLabAddress($lab_id);
+           
+            if(!$labAddress){
+                return false;
+            }
             return true;
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return false;
         }
     }

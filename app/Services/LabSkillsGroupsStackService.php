@@ -118,7 +118,7 @@ class LabSkillsGroupsStackService
         }
     }
 
-    public function deleteLabSkillsGroupsStack($lab_id)
+    public static function deleteLabSkillsGroupsStack($lab_id)
     {
         try {
             $checkExistsLabSkillsGroupsStack = LabSkillsGroupsStack::select('id')->where('lab_id', $lab_id)->get()->toArray();

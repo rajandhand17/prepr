@@ -27,8 +27,7 @@ class UpdateLabRequest extends FormRequest
      */
     public function rules()
     {   
-        $lab=LabService::getLabDetails(request()->route('slug'));
-     
+        $lab=LabService::checkSlug(request()->route('slug'));
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
         if($lab){
             $base_rules=[
