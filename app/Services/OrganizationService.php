@@ -251,7 +251,7 @@ class OrganizationService
                 $organization->website = ($request->has('website')) ? $request->website : $organization->website;
                 $organization->about = ($request->has('about')) ? $request->about : $organization->about;
                 $organization->category = ($request->has('category')) ? $request->category : $organization->category;
-                $organization->status = ($request->has('status')) ? $request->status : $organization->status;
+                $organization->status = ($request->has('status')) ? (($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : '3')) : $organization->status;
                 $organization->total_employees = ($request->has('total_employees')) ? $request->total_employees : $organization->total_employees;
                 $organization->save();
 
