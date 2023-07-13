@@ -106,13 +106,13 @@ class MemberManagementController extends AppBaseController
                 'invitation_email'            => EmailTemplateResource::make($getTemplate),
             ];
             if ($memberMangementListing != false) {
-                $response ['user_count'] = $memberMangementListing->count();
-                $response ['users'] = MemberManagementResource::collection($memberMangementListing);
+                $response['user_count'] = $memberMangementListing->count();
+                $response['users'] = MemberManagementResource::collection($memberMangementListing);
+            } else {
+                $response['user_count'] = 0;
+                $response['users'] = [];
             }
-            else{
-                $response ['user_count'] = 0;
-                $response ['users'] = [];
-            }
+
             return $this->sendResponse($response, __('responses.member_manager_found'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -232,7 +232,7 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            if($component != 'organization' && $request->role != 'User') {
+            if ($component != 'organization' && $request->role != 'User') {
                 return $this->sendError('Please select valid role for the invitees.', 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);

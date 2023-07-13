@@ -39,6 +39,7 @@ class UtilityHelper
             if ($checkComponentSlugExistOrNot != false) {
                 return $checkComponentSlugExistOrNot;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
