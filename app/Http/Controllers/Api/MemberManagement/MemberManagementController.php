@@ -90,32 +90,31 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
+
             $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
 
+            $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
+
+            if ($getTemplate) {
+                $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
+                $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $checkComponentBasedOnSlug->title, $getTemplate->body_content));
+            }
+            $response = [
+                'id'                          => $checkComponentBasedOnSlug->id,
+                'title'                       => $checkComponentBasedOnSlug->title,
+                'slug'                        => $checkComponentBasedOnSlug->slug,
+                'invitation_email'            => EmailTemplateResource::make($getTemplate),
+            ];
             if ($memberMangementListing != false) {
-                $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
-
-                if ($getTemplate) {
-                    //replace component title and user name with actual data
-                    $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
-                    $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $checkComponentBasedOnSlug->title, $getTemplate->body_content));
-                }
-                $response = [
-                    'id'                          => $checkComponentBasedOnSlug->id,
-                    'title'                       => $checkComponentBasedOnSlug->title,
-                    'slug'                        => $checkComponentBasedOnSlug->slug,
-                    'user_count'                  => $memberMangementListing->count(),
-                    'invitation_email'            => EmailTemplateResource::make($getTemplate),
-                    'users'                       => MemberManagementResource::collection($memberMangementListing),
-                ];
-
-                return $this->sendResponse($response, __('responses.member_manager_found'));
+                $response['user_count'] = $memberMangementListing->count();
+                $response['users'] = MemberManagementResource::collection($memberMangementListing);
+            } else {
+                $response['user_count'] = 0;
+                $response['users'] = [];
             }
 
-            return $this->sendError('Error Occured in getting members', 500);
+            return $this->sendResponse($response, __('responses.member_manager_found'));
         } catch (\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -232,6 +231,9 @@ class MemberManagementController extends AppBaseController
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
+            }
+            if ($component != 'organization' && $request->role != 'User') {
+                return $this->sendError('Please select valid role for the invitees.', 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
             if ($memberLists != false) {

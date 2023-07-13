@@ -20,20 +20,28 @@ class EmailTemplateSeeder extends Seeder
                 'module_type'        => '0',
                 'subject'            => 'Invitation to join Organization',
                 'fr_CA_subject'      => "Invitation à rejoindre l'organisation",
-                'body_content'       => 'You have been invited to the organization $organization_name by $user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the organization once you log in.',
-                'fr_CA_body_content' => 'Vous avez été invité à l\'organisation $organization_name par $user_name. Utilisez le lien ci-dessous pour vous inscrire et vous connecter à PreprLabs avec cette adresse e-mail. Vous serez ajouté à l\'organisation une fois connecté.',
+                'body_content'       => 'You have been invited to the organization component_title by user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the organization once you log in.',
+                'fr_CA_body_content' => 'Vous avez été invité à l\'organisation component_title par user_name. Utilisez le lien ci-dessous pour vous inscrire et vous connecter à PreprLabs avec cette adresse e-mail. Vous serez ajouté à l\'organisation une fois connecté.',
+            ],
+            [
+                'template_type'      => '0',
+                'module_type'        => '1',
+                'subject'            => 'Invitation to join Lab',
+                'fr_CA_subject'      => 'Invitation à rejoindre le laboratoire',
+                'body_content'       => 'You have been invited to the lab component_title by user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the organization once you log in.',
+                'fr_CA_body_content' => 'Vous avez été invité au laboratoire component_title par user_name. Utilisez le lien ci-dessous pour vous inscrire et vous connecter à PreprLabs avec cette adresse e-mail. Vous serez ajouté à l\'organisation une fois connecté.',
             ],
         ];
 
         foreach ($emailTemplates as $emailTemplate) {
             EmailTemplate::updateOrCreate([
-                'template_type' => '0',
-                'module_type'   => '0',
+                'template_type' => $emailTemplate['template_type'],
+                'module_type'   => $emailTemplate['module_type'],
             ], [
-                'subject'            => 'Invitation to join Organization',
-                'fr_CA_subject'      => "Invitation à rejoindre l'organisation",
-                'body_content'       => 'You have been invited to the organization $organization_name by $user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the organization once you log in.',
-                'fr_CA_body_content' => 'Vous avez été invité à l\'organisation $organization_name par $user_name. Utilisez le lien ci-dessous pour vous inscrire et vous connecter à PreprLabs avec cette adresse e-mail. Vous serez ajouté à l\'organisation une fois connecté.',
+                'subject'            => $emailTemplate['subject'],
+                'fr_CA_subject'      => $emailTemplate['fr_CA_subject'],
+                'body_content'       => $emailTemplate['body_content'],
+                'fr_CA_body_content' => $emailTemplate['fr_CA_body_content'],
             ]);
         }
     }

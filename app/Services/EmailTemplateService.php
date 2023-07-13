@@ -19,13 +19,8 @@ class EmailTemplateService
                     $getTemplate = $getTemplate->where('template_type', config('constants.email_template_type.invitation'));
                     break;
             }
-            switch ($module_type) {
-                case 0:
-                    $getTemplate = $getTemplate->where('module_type', config('constants.email_template_module_type.organization'));
-                    break;
-            }
 
-            return $getTemplate->first();
+            return $getTemplate->where('module_type', $module_type)->first();
         } catch (\Exception $e) {
             return false;
         }
