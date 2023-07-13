@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\EmailTemplate;
-use DB;
 
 class EmailTemplateService
 {
@@ -20,7 +19,8 @@ class EmailTemplateService
                     $getTemplate = $getTemplate->where('template_type', config('constants.email_template_type.invitation'));
                     break;
             }
-            return $getTemplate->where('module_type',$module_type)->first();
+
+            return $getTemplate->where('module_type', $module_type)->first();
         } catch (\Exception $e) {
             return false;
         }

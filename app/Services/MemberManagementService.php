@@ -249,10 +249,12 @@ class MemberManagementService
                     $memberListCollection = null;
                     break;
             }
-            if($module_type != null) {
+            if ($module_type != null) {
                 $memberList = $this->filterUserList($memberListCollection, $request);
+
                 return $memberList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -391,6 +393,7 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
+
             return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
         } catch (\Exception $e) {
             return false;
