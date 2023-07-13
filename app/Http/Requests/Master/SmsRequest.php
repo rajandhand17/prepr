@@ -42,9 +42,9 @@ class SmsRequest extends FormRequest
     public function messages()
     {
         return[
-            'receiver.required' => __('responses.receiver_unique'),
-            'receiver.numeric'  => __('responses.numeric'),
-            'receiver.unique'   => __('responses.receiver_unique'),
+            'receiver.required' => __('responses.required_field'),
+            'receiver.numeric'  => __('responses.numeric_data_allowed'),
+            'receiver.unique'   => __('responses.already_registered'),
         ];
     }
 }

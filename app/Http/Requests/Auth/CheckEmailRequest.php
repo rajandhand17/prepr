@@ -42,10 +42,10 @@ class CheckEmailRequest extends FormRequest
     public function messages()
     {
         return[
-            'email.required' => __('notification.notification_peeief'),
+            'email.required' => __('responses.required_field'),
             'email.unique'   => __('responses.unique_email'),
-            'email.email'    => __('notification.notification_iea'),
-            'email.max'      => __('responses.max_email'),
+            'email.email'    => __('responses.valid_email_pattern'),
+            'email.max'      => __('responses.max_content_50'),
         ];
     }
 }

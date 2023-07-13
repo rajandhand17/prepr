@@ -58,18 +58,22 @@ class CreateMemberManagementRequest extends FormRequest
     public function messages()
     {
         return[
-            'invite_email.required'     => __('responses.invite_email_required'),
-            'invite_email.mimes'        => __('responses.invitee_email_csv'),
-            'type.required'             => __('responses.type_required'),
-            'invite_type.required'      => __('responses.invite_type_required'),
-            'module_id.required'        => __('responses.module_id_required'),
-            'module_id.exists'          => __('notification.notification_onf'),
-            'inviter_id.exists'         => __('responses.user_id_not_exists'),
-            'inviter_id.required'       => __('responses.inviter_id_required'),
-            'role.required'             => __('responses.role_required'),
-            'role.exists'               => __('responses.roles_exists'),
-            'user_invite_email.required'=> __('responses.email_required'),
-            'invite_status'             => __('responses.auto_invite_status'),
+            'invite_email.required'     => __('responses.required_field'),
+            'invite_email.mimes'        => __('responses.choose_csv_file'),
+            'invite_email.array'        => __('responses.array'),
+            'invite_email.*.required'   => __('responses.required_field'),
+            'invite_email.*.email'      => __('responses.valid_email_pattern'),
+            'type.required'             => __('responses.required_field'),
+            'invite_type.required'      => __('responses.required_field'),
+            'module_id.required'        => __('responses.required_field'),
+            'module_id.exists'          => __('responses.organization_not_found'),
+            'inviter_id.exists'         => __('responses.not_exists'),
+            'inviter_id.required'       => __('responses.required_field'),
+            'role.required'             => __('responses.required_field'),
+            'role.exists'               => __('responses.not_exists'),
+            'user_invite_email.required'=> __('responses.required_field'),
+            'auto_invite.required'      => __('responses.required_field'),
+            'auto_invite.in'            => __('responses.choose_yes_no'),
         ];
     }
 }

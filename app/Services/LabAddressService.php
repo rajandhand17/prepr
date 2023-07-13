@@ -24,7 +24,7 @@ class LabAddressService
     {
         try {
             $labaddress = LabAddress::where('lab_id', $lab_id)->first();
-            $labaddress->latitude = ($request->has('latitude')) ? $request->latitude : $labaddress->latitude;
+            $labaddress->latitude =($request->has('latitude')) ? $request->latitude : $labaddress->latitude;
             $labaddress->longitude = ($request->has('longitude')) ? $request->longitude : $labaddress->longitude;
             $labaddress->address = ($request->has('address')) ? $request->address : $labaddress->address;
             $labaddress->city = ($request->has('city')) ? $request->city : $labaddress->city;
