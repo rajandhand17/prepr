@@ -213,38 +213,48 @@ class MemberManagementService
     public function getComponentBasedUsers($componentCollectionObject, $component, $request)
     {
         try {
-            $memberList = [];
+            $module_type = null;
+            $memberListCollection = MemberManagement::select(
+                'id',
+                'type',
+                'invite_type',
+                'module_id',
+                'module_type',
+                'inviter_id',
+                'role',
+                'invite_status',
+                'email',
+                'auto_invite',
+                'invitee_name',
+                'email_status'
+            );
+
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
-                    $memberListCollection = MemberManagement::select(
-                        'id',
-                        'type',
-                        'invite_type',
-                        'module_id',
-                        'module_type',
-                        'inviter_id',
-                        'role',
-                        'invite_status',
-                        'email',
-                        'auto_invite',
-                        'invitee_name',
-                        'email_status'
-                    )->where([
+                    $memberListCollection = $memberListCollection->where([
+                        'module_id'   => $componentCollectionObject->id,
+                        'module_type' => $module_type,
+                    ]);
+                    break;
+                case 'lab':
+                    $module_type = config('constants.member_management_component_type.lab');
+                    $memberListCollection = $memberListCollection->where([
                         'module_id'   => $componentCollectionObject->id,
                         'module_type' => $module_type,
                     ]);
                     break;
                 default:
                     $module_type = null;
+                    $memberListCollection = null;
                     break;
             }
-            $memberList = $this->filterUserList($memberListCollection, $request);
-
-            return $memberList;
+            if($module_type != null) {
+                $memberList = $this->filterUserList($memberListCollection, $request);
+                return $memberList;
+            }
+            return false;
         } catch (\Exception $e) {
-            return $e;
-
             return false;
         }
     }
@@ -255,6 +265,9 @@ class MemberManagementService
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
+                    break;
+                case 'lab':
+                    $module_type = config('constants.member_management_component_type.lab');
                     break;
                 default:
                     $module_type = null;
@@ -371,11 +384,13 @@ class MemberManagementService
                 case 'organization':
                     $module_type = config('constants.email_template_module_type.organization');
                     break;
+                case 'lab':
+                    $module_type = config('constants.email_template_module_type.lab');
+                    break;
                 default:
                     $module_type = null;
                     break;
             }
-
             return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
         } catch (\Exception $e) {
             return false;

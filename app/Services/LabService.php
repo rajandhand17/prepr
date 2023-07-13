@@ -122,7 +122,7 @@ class LabService
         }
     }
 
-    public function getLabDetails($slug)
+    public static function getLabDetails($slug)
     {
         try {
             $labDetails = Lab::where('slug', $slug)->first();
