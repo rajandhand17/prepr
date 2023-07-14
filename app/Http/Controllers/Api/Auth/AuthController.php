@@ -726,7 +726,7 @@ class AuthController extends AppBaseController
      *     operationId="referalCode",
      *
      *     @OA\Parameter(
-     *         name="referal_code",
+     *         name="referral_code",
      *         in="query",
      *         description="check the referal code value that exists or not!",
      *         required=true,

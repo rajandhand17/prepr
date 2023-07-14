@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Controllers\Api\MemberManagement;
 
 use Tests\TestCase;
+use Illuminate\Support\Facades\Auth;
 
 class MemberManagementControllerTest extends TestCase
 {
@@ -14,7 +15,7 @@ class MemberManagementControllerTest extends TestCase
     protected $parameters;
 
     public function setUp(): void
-    {
+    {   
         parent::setUp();
         $this->parameters = [
             'language'      => 'en',
@@ -39,7 +40,7 @@ class MemberManagementControllerTest extends TestCase
 
    /**create member management positive */
    public function test_create_positive()
-   {
+   {    
        $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters);
        $this->assertEquals(200, $response->getStatusCode());
    }
@@ -120,7 +121,7 @@ class MemberManagementControllerTest extends TestCase
         $response = $this->post(
             '/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
             [
-                'id'=> $this->parameters['id'],
+            'id'=> $this->parameters['id'],
             ]
         );
         $this->assertEquals(400, $response->getStatusCode());

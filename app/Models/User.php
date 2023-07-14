@@ -48,7 +48,7 @@ class User extends Authenticatable
         'is_verify',
         'is_email_sent',
         'verify_token',
-        'referal_code',
+        'referral_code',
         'isReferralOpen',
         'manage_alerts',
         'is_subscribe',
@@ -364,7 +364,7 @@ class User extends Authenticatable
     public function referalCode($request)
     {
         try {
-            $userrecords = User::select('id', 'email', 'first_name', 'last_name')->where(['referal_code' => $request->referal_code])->first();
+            $userrecords = User::select('id', 'email', 'first_name', 'last_name')->where(['referral_code' => $request->referral_code])->first();
             if ($userrecords) {
                 return true;
             }
