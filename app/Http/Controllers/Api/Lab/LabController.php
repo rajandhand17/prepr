@@ -27,11 +27,8 @@ class LabController extends AppBaseController
             if ($lab !== false) {
                 return $this->sendResponse(LabResource::collection($lab), 'Labs fetched successfully');
             }
-
             return $this->sendError('Labs not found', 400);
         } catch(\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

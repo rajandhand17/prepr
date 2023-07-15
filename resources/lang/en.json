@@ -3053,5 +3053,6 @@
     "responses.lab_slug_not_found":"No labs are associated with this slug!",
     "responses.lab_found":"Lab detail found successfully!",
     "responses.lab_slug_exists":"Oops! This slug is not available!",
-    "responses.lab_slug_not_exists":"Success is yours! This slug is available!"
+    "responses.lab_slug_not_exists":"Success is yours! This slug is available!",
+    "responses.social_connect_list":"Social connect list fetched"
 }

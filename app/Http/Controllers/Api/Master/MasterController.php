@@ -1140,7 +1140,6 @@ class MasterController extends AppBaseController
             if ($lab_condition) {
                 return $this->sendResponse(LabConditionResource::collection($lab_condition), __('responses.found_lab_condition_list'));
             }
-
             return $this->sendResponse(null, __('responses.not_found_lab_condition_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -1193,7 +1192,6 @@ class MasterController extends AppBaseController
             if ($socialconnect) {
                 return $this->sendResponse(SocialConnect::collection($socialconnect), __('responses.social_connect_list'));
             }
-
             return $this->sendResponse(null, __('responses.not_found_social_connect_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);

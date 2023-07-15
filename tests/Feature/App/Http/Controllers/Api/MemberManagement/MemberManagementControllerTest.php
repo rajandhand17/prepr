@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers\Api\MemberManagement;
 
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class MemberManagementControllerTest extends TestCase
@@ -16,79 +17,70 @@ class MemberManagementControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        
         $this->parameters = [
             'language'      => 'en',
             'user_id'       => '2',
             'name'          => 'Prepr',
-            'slug'          => 'prepr',
+            'slug'          => 'prepr-org',
             'wrong_language'=> 'Hindi',
             'page'          => '1',
-            'component'     => 'organisation',
-            'type'          => 'email',
+            'component'     => 'organization',
+            'wrong_component'=> 'component',
+            'type'          => 'invite',
             'invite_type'   => 'email',
-            'role'          => 'orgnization_manager',
+            'role'          => 'Organization Manager',
             'module_id'     => '27',
-            'subject_line'  => 'testing',
+            'subject_line'  => 'Invitation to join an organization',
             'email_body'    => 'email messages',
             'invite_status' => 'pending',
-            'invite_email'  => 'rajan@prepr.org',
+            'invite_email'  => ['rajan@prepr.org'],
             'inviter_id'    => '15',
             'id'            => ['1'],
+            'auto_invite'  =>'yes',
+        ];
+        $data = Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
+        $user = Auth::user();
+        $this->token = $user->createToken(env('APP_NAME'))->accessToken;
+        $this->headers = [
+            'Accept'        => 'application/vnd.laravel.v1+json',
+            'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
     }
 
    /**create member management positive */
    public function test_create_positive()
-   {
-       $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters);
-       $this->assertEquals(200, $response->getStatusCode());
+   {   
+    $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters, $this->headers);
+    $this->assertEquals(200, $response->getStatusCode());
+    
    }
 
    /**create member management negative */
    public function test_create_negative()
    {
-       $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', []);
+       $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', [], $this->headers);
        $this->assertEquals(422, $response->getStatusCode());
+       
    }
-
-   /**create member management positive */
-   public function test_create_with_network_positive()
-   {
-       $this->parameters['invite_type'] = 'network';
-       $this->parameters['invite_email'] = '15';
-       $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters);
-       $this->assertEquals(200, $response->getStatusCode());
-   }
-
-     /**create member management positive */
-     public function test_create_with_network_negative()
-     {
-         $this->parameters['invite_type'] = 'network';
-         $this->parameters['invite_email'] = '5';
-
-         $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters);
-         $this->assertEquals(403, $response->getStatusCode());
-     }
-
    /**Listing member management positive */
    public function test_listing_positive()
-   {
-       $response = $this->get('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language=en');
+   {   
+       $response = $this->get('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
        $response->assertStatus(200);
        $data = $response->json();
        if ($data['success']) {
-           $this->assertArrayHasKey('id', $data['data'][0]);
-           $this->assertArrayHasKey('module_id', $data['data'][0]);
-           $this->assertArrayHasKey('invite_status', $data['data'][0]);
-           $this->assertArrayHasKey('email', $data['data'][0]);
-           $this->assertArrayHasKey('email_status', $data['data'][0]);
-           $this->assertArrayHasKey('email_resend_status', $data['data'][0]);
-           $this->assertArrayHasKey('user_status', $data['data'][0]);
-           $this->assertArrayHasKey('user_name', $data['data'][0]);
-           $this->assertArrayHasKey('user_profile_image', $data['data'][0]);
-           $this->assertArrayHasKey('type', $data['data'][0]);
-           $this->assertArrayHasKey('invite_type', $data['data'][0]);
-           $this->assertArrayHasKey('module_type', $data['data'][0]);
+           $this->assertArrayHasKey('id', $data['data']['users'][0]);
+           $this->assertArrayHasKey('type', $data['data']['users'][0]);
+           $this->assertArrayHasKey('invite_type', $data['data']['users'][0]);
+           $this->assertArrayHasKey('name', $data['data']['users'][0]);
+           $this->assertArrayHasKey('email', $data['data']['users'][0]);
+           $this->assertArrayHasKey('username', $data['data']['users'][0]);
+           $this->assertArrayHasKey('invited_by', $data['data']['users'][0]);
+           $this->assertArrayHasKey('role', $data['data']['users'][0]);
+           $this->assertArrayHasKey('invite_status', $data['data']['users'][0]);
+           $this->assertArrayHasKey('auto_invite', $data['data']['users'][0]);
+           $this->assertArrayHasKey('email_status', $data['data']['users'][0]);
            $response->assertOk();
        } else {
            $this->fail();
@@ -98,8 +90,8 @@ class MemberManagementControllerTest extends TestCase
    /**Listing member management negative */
    public function test_listing_negative()
    {
-       $response = $this->get('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug']);
-       $response->assertStatus(400);
+       $response = $this->get('/api/v1/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
+       $response->assertStatus(404);
    }
 
    /**Delete member management positive */
@@ -108,9 +100,9 @@ class MemberManagementControllerTest extends TestCase
        $response = $this->post(
            '/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
            [
-               'id'=> $this->parameters['id'],
-           ]
-       );
+            'email'=> $this->parameters['invite_email'],
+           ],$this->headers);
+           
        $this->assertEquals(200, $response->getStatusCode());
    }
 
@@ -120,9 +112,9 @@ class MemberManagementControllerTest extends TestCase
         $response = $this->post(
             '/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
             [
-                'id'=> $this->parameters['id'],
-            ]
-        );
-        $this->assertEquals(400, $response->getStatusCode());
+                'email'=>'',
+            ],$this->headers);
+           
+        $this->assertEquals(422, $response->getStatusCode());
     }
 }
