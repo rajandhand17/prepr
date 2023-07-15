@@ -43,11 +43,11 @@ class VerifyTwoFactorRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => __('notification.notification_peeief'),
+            'email.required' => __('responses.required_field'),
+            'email.email'    => __('responses.valid_email_pattern'),
+            'email.max'      => __('responses.max_content_50'),
             'email.exists'   => __('responses.not_exists_email'),
-            'email.email'    => __('notification.notification_iea'),
-            'email.max'      => __('responses.max_email'),
-            'otp.required'   => __('responses.otp_required'),
+            'otp.required'   =>  __('responses.required_field'),
         ];
     }
 }

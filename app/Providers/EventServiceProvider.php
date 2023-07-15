@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use App\Observers\UserObserver;
+use App\Events\Labs\DeleteLabAssociatedData;
+use App\Listeners\Lab\HandleDeleteLabAssociatedData;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -19,7 +19,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-
+        DeleteLabAssociatedData::class => [
+            HandleDeleteLabAssociatedData::class,
+        ],
     ];
 
     /**
@@ -27,10 +29,6 @@ class EventServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-        User::observe(UserObserver::class);
-    }
 
     /**
      * Determine if events and listeners should be automatically discovered.

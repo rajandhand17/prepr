@@ -43,11 +43,11 @@ class SendOtpRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => __('notification.notification_peeief'),
-            'email.exists'   => __('responses.not_exists_email'),
-            'email.email'    => __('notification.notification_iea'),
-            'email.max'      => __('responses.max_email'),
-            'purpose'        => __('responses.purpose'),
+            'email.required'          => __('responses.required_field'),
+            'email.email'             => __('responses.valid_email_pattern'),
+            'email.max'               => __('responses.max_content_50'),
+            'email.exists'            => __('responses.not_exists_email'),
+            'purpose.required'        => __('responses.required_field'),
 
         ];
     }

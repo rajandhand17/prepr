@@ -73,7 +73,7 @@ class User extends Command
                         'two_factor_verification'=> $twofactor,
                         'otp'                    => $single_user->two_factor_otp,
                         'profile_image'          => $single_user->profile_image,
-                        'referal_code'           => $single_user->referal_code,
+                        'referral_code'           => $single_user->referal_code,
                         'remember_token'         => $single_user->remember_token,
                     ];
                     $check_users = User::where('email', $single_user->email)->first();

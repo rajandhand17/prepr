@@ -67,10 +67,9 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->getOrganizationList($request->language);
             if ($organization !== false) {
-                return $this->sendResponse(OrganizationResource::collection($organization), __('responses.organization_view_get'));
+                return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organization_list'));
             }
-
-            return $this->sendError(__('responses.organization_view_get_failed'), 400);
+            return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -130,10 +129,10 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
             if ($organization) {
-                return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organizations_list'));
+                return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organization_list'));
             }
 
-            return $this->sendError(__('responses.found_not_organizations_list'), 404);
+            return $this->sendError(__('responses.not_found_organization_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -315,18 +314,17 @@ class OrganizationController extends AppBaseController
             if (!$checkOrganizationInTrash) {
                 return $this->sendError(__('responses.trashed_records'), 422);
             }
-
             if ($request->profile_image !== null) {
                 $upload_profile_image = $this->organizationRepository->uploadOrganizationProfileImage($request);
                 if ($upload_profile_image == false) {
-                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
                 $profile_image_path = $upload_profile_image;
             }
             if ($request->cover_image !== null) {
                 $upload_cover_image = $this->organizationRepository->uploadOrganizationCoverImage($request);
                 if ($upload_cover_image == false) {
-                    return $this->sendError(__('responses.fail_organization_image_upload'), 500);
+                    return $this->sendError(__('responses.image_upload_failed'), 500);
                 }
                 $cover_image_path = $upload_cover_image;
             }
@@ -344,9 +342,9 @@ class OrganizationController extends AppBaseController
                 $details['plan'] = config('chargebee.base_plan');
                 dispatch(new subscribePlanJob($details));
 
-                return $this->sendResponse(OrganizationResource::make($organization), __('responses.create_organization'));
+                return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_stored_success'));
             } else {
-                return $this->sendError('Unable to create organization.', 409);
+                return $this->sendError(__('responses.organization_stored_failed'), 409);
             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -517,7 +515,7 @@ class OrganizationController extends AppBaseController
             if ($request->profile_image !== null) {
                 $profile_image_path = $this->organizationRepository->updateOrganizationProfileImage($request);
                 if ($profile_image_path == false) {
-                    return $this->sendError(__('responses.fail_organization_image_upload'), 400);
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
                 $profile_images_path = $profile_image_path;
             }
@@ -536,13 +534,11 @@ class OrganizationController extends AppBaseController
                     $this->organizationRepository->updatesOrganizationMembers($request, $organization->id);
                 }
 
-                return $this->sendResponse(OrganizationResource::make($organization), __('responses.updated_organization'));
+                return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfull'),200);
             }
 
-            return $this->sendError(__('responses.updated_organization_failed'), 409);
+            return $this->sendError(__('responses.organization_not_update'), 409);
         } catch (\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -599,10 +595,9 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
             if ($organization === true) {
-                return $this->sendResponse(null, __('responses.delete_organizations_success'));
+                return $this->sendResponse(null, __('responses.organization_delete'),200);
             }
-
-            return $this->sendError(__('responses.delete_organizations_failed'), 400);
+            return $this->sendError(__('responses.organization_not_delete'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -613,10 +608,9 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->checkSlug($request->slug);
             if ($organization == false) {
-                return $this->sendResponse([], __('Vanity slug available!'));
+                return $this->sendResponse([], __('responses.lab_slug_availble'),200);
             }
-
-            return $this->sendError('Vanity slug already exists!', 400);
+            return $this->sendError(__('responses.already_exists'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

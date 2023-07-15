@@ -42,8 +42,8 @@ class UploadCsvFileMemberManagementRequest extends FormRequest
     public function messages()
     {
         return[
-            'csv.required' => __('responses.csv_upload'),
-            'csv.mimes'    => __('responses.csv_required'),
+            'csv.required' => __('responses.required_field'),
+            'csv.mimes'    => __('responses.choose_csv_file'),
         ];
     }
 }

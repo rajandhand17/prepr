@@ -232,6 +232,7 @@ class MemberManagementService
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
+                    
                     $memberListCollection = $memberListCollection->where([
                         'module_id'   => $componentCollectionObject->id,
                         'module_type' => $module_type,
@@ -251,7 +252,6 @@ class MemberManagementService
             }
             if ($module_type != null) {
                 $memberList = $this->filterUserList($memberListCollection, $request);
-
                 return $memberList;
             }
 
@@ -337,7 +337,6 @@ class MemberManagementService
                 }
                 $componentCollectionObject = $componentCollectionObject->where('email_status', $email_status);
             }
-
             return $componentCollectionObject->get();
         } catch (\Exception $e) {
             return false;

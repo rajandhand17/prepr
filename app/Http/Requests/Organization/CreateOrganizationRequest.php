@@ -35,8 +35,7 @@ class CreateOrganizationRequest extends FormRequest
             'slug'            => 'required|max:255|unique:organizations,slug',
             'status'          => 'required|in:draft,publish,archive',
         ];
-
-        if ($this->request->has('organization_address')) {
+        if($this->request->has('organization_address')) {
             $base_rules['organization_address'] = 'array';
             $base_rules['organization_address.*.address_1'] = 'required|string';
             $base_rules['organization_address.*.address_2'] = 'required|string';
@@ -47,8 +46,7 @@ class CreateOrganizationRequest extends FormRequest
             $base_rules['organization_address.*.latitude'] = 'required|string';
             $base_rules['organization_address.*.longitude'] = 'required|string';
         }
-
-        if ($this->request->has('organization_members')) {
+        if($this->request->has('organization_members')) {
             $base_rules['organization_members'] = 'array';
             $base_rules['organization_members.*.name'] = 'required|string';
             $base_rules['organization_members.*.position'] = 'required|string';
@@ -70,13 +68,56 @@ class CreateOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'title.required'       => __('responses.organization_name_required'),
-            'title.max'            => __('responses.organization_name_max'),
-            'description.required' => __('notification.notification_tdfdfir'),
-            'profile_image.image'  => __('responses.profile_image'),
-            'cover_image.image'    => __('responses.cover_image'),
-            'category.required'    => __('responses.organization_category_required'),
-            'category.exists'      => __('responses.organization_category_exists'),
+            'title.required'       => __('responses.required_field'),
+            'title.max'            => __('responses.max_content_255'),
+            'title.unique'         => __('responses.already_exists'),
+            'description.required' => __('responses.required_field'),
+            'profile_image.image'  => __('response.type_image'),
+            'profile_image.mimes'  => __('responses.mimes_image'),
+            'profile_image.max'  => __('responses.mimes_image_max'),
+            'profile_image.nullable'  => __('responses.mimes_image_max'),
+            'cover_image.image'  => __('response.type_image'),
+            'cover_image.mimes'  => __('responses.mimes_image'),
+            'cover_image.max'  => __('responses.mimes_image_max'),
+            'cover_image.nullable'  => __('responses.mimes_image_max'),
+            'category.required'    => __('responses.required_field'),
+            'category.numeric'    => __('responses.numeric_data_allowed'),
+            'category.exists'      => __('responses.not_exists'),
+            'website.required'      => __('responses.required_field'),
+            'website.url'      => __('responses.valid_url_pattern'),
+            'slug.required'      => __('responses.required_field'),
+            'slug.max'      => __('responses.required_field'),
+            'slug.unique'      => __('responses.required_field'),
+            'status.required'      => __('responses.required_field'),
+            'status.numeric'      => __('responses.numeric_data_allowed'),
+            'status.in'      => __('responses.choose_draft_publish_archive'),
+            'organization_address.array'      => __('responses.array'),
+            'organization_address.*.address_1.required'      => __('responses.array'),
+            'organization_address.*.address_1.string'      => __('responses.string_data_allowed'),
+            'organization_address.*.address_2.required'      => __('responses.required_field'),
+            'organization_address.*.address_2.string'      => __('responses.string_data_allowed'),
+            'organization_address.*.city.required'      => __('responses.required_field'),
+            'organization_address.*.city.string'      => __('responses.string_data_allowed'),
+            'organization_address.*.state.required'      => __('responses.required_field'),
+            'organization_address.*.state.string'      => __('responses.string_data_allowed'),
+            'organization_address.*.country.required'      => __('responses.required_field'),
+            'organization_address.*.country.string'      => __('responses.string_data_allowed'),
+            'organization_address.*.zip_code.required'      => __('responses.required_field'),
+            'organization_address.*.zip_code.string'      => __('responses.string_data_allowed'),
+            'organization_address.*.latitude.required'      => __('responses.required_field'),
+            'organization_address.*.latitude.string'      => __('responses.string_data_allowed'),
+            'organization_address.*.longitude.required'      => __('responses.required_field'),
+            'organization_address.*.longitude.string'      => __('responses.string_data_allowed'),
+            'organization_members.array'=>__('responses.array'),
+            'organization_members.*.name.required'=>__('responses.required_field'),
+            'organization_members.*.name.string'=>__('responses.string_data_allowed'),
+            'organization_members.*.position.required'=>__('responses.required_field'),
+            'organization_members.*.position.string'=>__('responses.string_data_allowed'),
+            'organization_members.*.image.mimes'  => __('responses.mimes_image'),
+            'organization_members.*.image.image'  => __('response.type_image'),
+            'organization_members.*.image.max'  => __('responses.mimes_image_max'),
+            'organization_members.*.image.dimensions'  => __('responses.mimes_image_max'),
+            
         ];
     }
 }

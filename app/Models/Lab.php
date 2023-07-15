@@ -12,7 +12,6 @@ class Lab extends Model
     use SoftDeletes;
 
     protected $table = 'labs';
-
     protected $fillable = [
         'uuid',
         'language',
@@ -87,6 +86,11 @@ class Lab extends Model
 
     public function tag_groups()
     {
-        return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id')->where('type', '1');
+        return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id');
+    }
+
+    public function component_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
 }

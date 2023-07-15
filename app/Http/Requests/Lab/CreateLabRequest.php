@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class LabStoreRequest extends FormRequest
+class CreateLabRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,36 +32,27 @@ class LabStoreRequest extends FormRequest
             'cover_image' => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'title'       => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description' => 'required_if:request_type,publish|nullable',
-
             'organization_id'=> 'required|exists:organizations,id',
             'category_id'    => 'required|exists:categories,id',
-
             'privacy'=> 'required_if:request_type,publish|in:yes,no',
-
             'location' => 'required_if:request_type,publish|nullable',
             'latitude' => 'required_if:request_type,publish|nullable',
             'longitude'=> 'required_if:request_type,publish|nullable',
             'country'  => 'required_if:request_type,publish|nullable',
             'city'     => 'required_if:request_type,publish|nullable',
-
             'skills'        => 'required_if:request_type,publish|nullable|array',
             'skills.*'      => 'numeric|exists:skills,id',
             'skill_groups'  => 'nullable|array',
             'skill_groups.*'=> 'numeric|exists:skill_groups,id',
             'skill_stacks'  => 'nullable|array',
             'skill_stacks.*'=> 'numeric|exists:skill_stacks,id',
-
             'tags'        => 'required_if:request_type,publish|nullable|array',
             'tags.*'      => 'numeric',
             'tag_groups'  => 'nullable|array',
             'tag_groups.*'=> 'numeric|exists:tag_groups,id',
-
             'is_notification_enabled'=> 'in:yes,no',
-
             'is_achievement_enabled'=> 'in:yes,no',
-
             'is_sequential'=> 'in:yes,no',
-
             'is_resource_sequential'=> 'in:yes,no',
         ];
 
@@ -139,21 +130,69 @@ class LabStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required'                 => __('notification.notification_title_req'),
-            'title.unique'                   => __('responses.lab_title_unique'),
-            'description.required'           => __('notification.notification_tdfdfir'),
-            'organizartion_id.required'      => __('notification.notification_toir'),
-            'location.required'              => __('notification.notification_lirr'),
-            'category_id.required'           => __('notification.notification_cat'),
-            'skills.required'                => __('notification.notification_skillmbs'),
-            'tag.required'                   => __('labels.labels_lab_tmbs'),
-            'achievement_name.required'      => __('responses.acheivement_name'),
-            'achievement_points.required'    => __('responses.acheivement_point'),
-            'achievement_condition.required' => __('responses.achievement_condition'),
-            'achievement_image.required'     => __('responses.achievement_image'),
-            'challenge_id.required'          => __('responses.challenge_id'),
-            'challenge_path_id.required'     => __('responses.challenge_path'),
-
+            'request_type.required'     =>__('responses.required_field'),
+            'request_type.in'           =>__('responses.choose_draft_publish_archive'),
+            'privacy.in'                =>__('responses.choose_yes_no'),
+            'privacy.required_if'          =>__('responses.required_field'),
+            'latitude.required_if'          =>__('responses.required_field'),
+            'longitude.required_if'          =>__('responses.required_field'),
+            'organization_id.required'  =>__('responses.required_field'),
+            'organization_id.exists'    =>__('responses.organization_not_found'),
+            'title.required_if'            => __('responses.required_field'),
+            'title.unique'              => __('responses.lab_title_unique'),
+            'description.required_if'      => __('responses.required_field'),
+            'country.required_if'          => __('responses.required_field'),
+            'city.required_if'             => __('responses.required_field'),
+            'organizartion_id.required' => __('responses.required_field'),
+            'location.required_if'         => __('responses.required_field'),
+            'category_id.required'      => __('responses.required_field'),
+            'category_id.exists'        => __('responses.category_not_found'),
+            'skills.required'           => __('responses.required_field'),
+            'skills.required_if'             => __('responses.skill_not_found'),
+            'tags.required'              => __('responses.required_field'),
+            'tags.numeric'              => __('responses.numeric_data_allowed'),
+            'achievement_name.required' => __('responses.required_field'),
+            'achievement_points.required'=> __('responses.required_field'),
+            'achievement_image.required' => __('responses.required_field'),
+            'achievement_conditions.required'=> __('responses.required_field'),
+            'achievement_conditions.array' => __('responses.array'),
+            'challenge_id.required'      => __('responses.required_field'),
+            'challenge_path_id.required' => __('responses.required_field'),
+            'skill_groups.*.exists' => __('responses.not_exists'),
+            'skill_groups.*.array' => __('responses.array'),
+            'skill_stacks.*.array' => __('responses.array'),
+            'skill_stacks.*.exists' => __('responses.skill_stack_not_found'),
+            'tag_groups.*.exists' => __('responses.tag_groups_not_found'),
+            'tag_groups.*.array' => __('responses.array'),
+            'tag_groups.*.numeric' => __('responses.numeric_data_allowed'),
+            'is_notification_enabled.in' => __('responses.choose_yes_no'),
+            'is_achievement_enabled.in' => __('responses.choose_yes_no'),
+            'is_sequential.in' => __('responses.choose_yes_no'),
+            'is_resource_sequential.in' => __('responses.choose_yes_no'),
+            'external_links.array' => __('responses.array'),
+            'external_links.url' => __('responses.valid_url_pattern'),
+            'external_link_ids.exists' => __('responses.not_exists'),
+            'external_link_ids.array' => __('responses.array'),
+            'external_link_ids.numeric' => __('responses.numeric_data_allowed'),
+            'lab_programs.*.numeric'=>__('responses.numeric_data_allowed'),
+            'lab_programs.*.array'=>__('responses.array'),
+            'challenges.*.numeric'=>__('responses.numeric_data_allowed'),
+            'challenges.*.array'=>__('responses.array'),
+            'challenge_paths.*.numeric'=>__('responses.numeric_data_allowed'),
+            'challenge_paths.*.array'=>__('responses.array'),
+            'resource_modules.*.numeric'=>__('responses.numeric_data_allowed'),
+            'resource_modules.*.array'=>__('responses.array'),
+            'resource_groups.*.numeric'=>__('responses.numeric_data_allowed'),
+            'resource_groups.*.array'=>__('responses.array'),
+            'resource_collections.*.numeric'=>__('responses.numeric_data_allowed'),
+            'resource_collections.*.array'=>__('responses.array'),
+            'subject_line.max'=>__('responses.max_content_250'),
+            'email_body.max'=>__('responses.max_content_2000'),
+            'auto_invite.in'=>__('responses.choose_yes_no'),
+            'invite_email.required'=>__('responses.required_field'),
+            'invite_email.csv'=>__('responses.choose_csv_file'),
+            'invite_email.*.required'=>__('responses.required_field'),
+            
         ];
     }
 }

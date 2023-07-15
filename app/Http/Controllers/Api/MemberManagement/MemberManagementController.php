@@ -90,11 +90,9 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-
-            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
-
+            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);  
             $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
-
+            
             if ($getTemplate) {
                 $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
                 $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $checkComponentBasedOnSlug->title, $getTemplate->body_content));
@@ -105,15 +103,15 @@ class MemberManagementController extends AppBaseController
                 'slug'                        => $checkComponentBasedOnSlug->slug,
                 'invitation_email'            => EmailTemplateResource::make($getTemplate),
             ];
-            if ($memberMangementListing != false) {
+            if ($memberMangementListing !== false) {
                 $response['user_count'] = $memberMangementListing->count();
                 $response['users'] = MemberManagementResource::collection($memberMangementListing);
+                return $this->sendResponse($response,__('responses.create_member_manger_success'));
             } else {
                 $response['user_count'] = 0;
                 $response['users'] = [];
+                return $this->sendResponse($response,__('responses.create_member_manger_failed')); 
             }
-
-            return $this->sendResponse($response, __('responses.member_manager_found'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -294,10 +292,10 @@ class MemberManagementController extends AppBaseController
             }
             $member_mangement = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug, $component, $request);
             if ($member_mangement) {
-                return $this->sendResponse(null, __('responses.member_manager_delete'));
+                return $this->sendResponse(null, __('responses.member_manger_delete'));
             }
 
-            return $this->sendError(__('responses.member_manager_not_delete'), 400);
+            return $this->sendError(__('responses.member_manger_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -321,10 +319,9 @@ class MemberManagementController extends AppBaseController
                     return $role->display_name == config('constants.role_name.organization_owner');
                 });
 
-                return $this->sendResponse(RolesResource::collection($getRoles), 'Roles fetched successfully');
+                return $this->sendResponse(RolesResource::collection($getRoles), __('responses.found_role_list'));
             }
-
-            return $this->sendError('Roles not found', 400);
+            return $this->sendError( __('responses.not_found_role_list'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -335,10 +332,9 @@ class MemberManagementController extends AppBaseController
         try {
             $changeRoleResponse = $this->memberManagementRepository->changeRole($request, $component);
             if ($changeRoleResponse) {
-                return $this->sendResponse([], __('responses.role_removed_sucessfully'));
+                return $this->sendResponse([], __('responses.role_assigned_sucessfully'));
             }
-
-            return $this->sendError(__('responses.role_removed_failed'), 400);
+            return $this->sendError(__('responses.role_assigned_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

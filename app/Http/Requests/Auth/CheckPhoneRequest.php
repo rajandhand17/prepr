@@ -42,9 +42,9 @@ class CheckPhoneRequest extends FormRequest
     public function messages()
     {
         return[
-            'phone_number.required' => __('notification.notification_ypnie'),
-            'phone_number.numeric'  => __('responses.numeric'),
-            'phone_number.unique'   => __('responses.already_number'),
+            'phone_number.required' => __('responses.required_field'),
+            'phone_number.numeric'  => __('responses.numeric_data_allowed'),
+            'phone_number.unique'   => __('responses.unique_phone_number'),
         ];
     }
 }

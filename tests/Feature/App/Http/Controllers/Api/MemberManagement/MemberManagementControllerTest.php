@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\App\Http\Controllers\Api\MemberManagement;
 
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Auth;
 
 class MemberManagementControllerTest extends TestCase
 {
@@ -15,7 +15,7 @@ class MemberManagementControllerTest extends TestCase
     protected $parameters;
 
     public function setUp(): void
-    {
+    {   
         parent::setUp();
         
         $this->parameters = [
@@ -53,46 +53,43 @@ class MemberManagementControllerTest extends TestCase
    {   
     $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters, $this->headers);
     $this->assertEquals(200, $response->getStatusCode());
-    
    }
 
    /**create member management negative */
-   public function test_create_negative()
-   {
-       $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', [], $this->headers);
-       $this->assertEquals(422, $response->getStatusCode());
-       
-   }
+    public function test_create_negative()
+    {
+        $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', [], $this->headers);
+        $this->assertEquals(422, $response->getStatusCode());
+    }
    /**Listing member management positive */
-   public function test_listing_positive()
-   {   
-       $response = $this->get('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
-       $response->assertStatus(200);
-       $data = $response->json();
-       if ($data['success']) {
-           $this->assertArrayHasKey('id', $data['data']['users'][0]);
-           $this->assertArrayHasKey('type', $data['data']['users'][0]);
-           $this->assertArrayHasKey('invite_type', $data['data']['users'][0]);
-           $this->assertArrayHasKey('name', $data['data']['users'][0]);
-           $this->assertArrayHasKey('email', $data['data']['users'][0]);
-           $this->assertArrayHasKey('username', $data['data']['users'][0]);
-           $this->assertArrayHasKey('invited_by', $data['data']['users'][0]);
-           $this->assertArrayHasKey('role', $data['data']['users'][0]);
-           $this->assertArrayHasKey('invite_status', $data['data']['users'][0]);
-           $this->assertArrayHasKey('auto_invite', $data['data']['users'][0]);
-           $this->assertArrayHasKey('email_status', $data['data']['users'][0]);
-           $response->assertOk();
-       } else {
-           $this->fail();
-       }
-   }
+    public function test_listing_positive()
+    {   
+        $response = $this->get('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
+        $response->assertStatus(200);
+        $data = $response->json();
+        if ($data['success']){
+            $this->assertArrayHasKey('id', $data['data']['users'][0]);
+            $this->assertArrayHasKey('type', $data['data']['users'][0]);
+            $this->assertArrayHasKey('invite_type', $data['data']['users'][0]);
+            $this->assertArrayHasKey('name', $data['data']['users'][0]);
+            $this->assertArrayHasKey('email', $data['data']['users'][0]);
+            $this->assertArrayHasKey('username', $data['data']['users'][0]);
+            $this->assertArrayHasKey('role', $data['data']['users'][0]);
+            $this->assertArrayHasKey('invite_status', $data['data']['users'][0]);
+            $this->assertArrayHasKey('auto_invite', $data['data']['users'][0]);
+            $this->assertArrayHasKey('email_status', $data['data']['users'][0]);
+            $response->assertOk();
+        }else{
+            $this->fail();
+        }
+    }
 
    /**Listing member management negative */
-   public function test_listing_negative()
-   {
-       $response = $this->get('/api/v1/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
-       $response->assertStatus(404);
-   }
+    public function test_listing_negative()
+    {
+        $response = $this->get('/api/v1/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
+        $response->assertStatus(404);
+    }
 
    /**Delete member management positive */
    public function test_delete_positive()
@@ -102,7 +99,6 @@ class MemberManagementControllerTest extends TestCase
            [
             'email'=> $this->parameters['invite_email'],
            ],$this->headers);
-           
        $this->assertEquals(200, $response->getStatusCode());
    }
 

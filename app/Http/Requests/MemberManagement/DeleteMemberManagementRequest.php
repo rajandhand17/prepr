@@ -44,9 +44,9 @@ class DeleteMemberManagementRequest extends FormRequest
     {
         return[
             'email.required'    => __('responses.email_required'),
-            'email.array'       => __('responses.member_manager_email_array'),
-            'email.*.email'     => ':input is not an valid email',
-            'email.*.exists'    => ':input is not an member',
+            'email.array'       => __('responses.array'),
+            'email.*.email'     => __('responses.valid_email_pattern'),
+            'email.*.exists'    => __('responses.not_exists_email'),
         ];
     }
 }
