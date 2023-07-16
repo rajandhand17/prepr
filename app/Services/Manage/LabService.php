@@ -88,17 +88,20 @@ class LabService
         }
     }
 
-    public function updateCoverImage($image){
+    public function updateCoverImage($image)
+    {
         try {
-            $updateCoverImage=FileUploadHelper::uploadbase64ImageToS3($image,'lab');
-            if($updateCoverImage==false){
+            $updateCoverImage = FileUploadHelper::uploadbase64ImageToS3($image, 'lab');
+            if ($updateCoverImage == false) {
                 return false;
             }
+
             return $updateCoverImage;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function getLabList($request)
     {
         try {
@@ -134,7 +137,6 @@ class LabService
             return false;
         }
     }
-
 
     public function updateLab($lab_id, $request, $upload_cover_image)
     {
@@ -222,10 +224,11 @@ class LabService
     public static function checkSlug($slug)
     {
         try {
-            $checklab= Lab::where('slug', $slug)->first();
+            $checklab = Lab::where('slug', $slug)->first();
             if ($checklab) {
                 return $checklab;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -300,6 +303,7 @@ public function checkExistsOrNot($activity, $lab_id)
         if ($checkLabActivity) {
             return $checkLabActivity;
         }
+
         return false;
     } catch (\Exception $e) {
         return false;
@@ -340,6 +344,7 @@ public function storeLabActivity($activity, $lab_id, $request)
         if ($storeLabActivity->save()) {
             return true;
         }
+
         return false;
     } catch (\Exception $e) {
         return false;
@@ -370,8 +375,8 @@ public function updateLabActivity($activity, $id, $request)
                 $updateLabActivity->favourite = config('constants.lab_social_activity_favourite.no');
                 break;
             case 'share':
-                $updateLabActivity->share=config('constants.lab_social_activity_share.yes');
-            break;
+                $updateLabActivity->share = config('constants.lab_social_activity_share.yes');
+                break;
             default:
                 return false;
                 break;

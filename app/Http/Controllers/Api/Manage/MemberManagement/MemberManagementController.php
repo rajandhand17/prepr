@@ -323,7 +323,8 @@ class MemberManagementController extends AppBaseController
 
                 return $this->sendResponse(RolesResource::collection($getRoles), __('responses.found_role_list'));
             }
-            return $this->sendError( __('responses.not_found_role_list'), 400);
+
+            return $this->sendError(__('responses.not_found_role_list'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -336,6 +337,7 @@ class MemberManagementController extends AppBaseController
             if ($changeRoleResponse) {
                 return $this->sendResponse([], __('responses.role_assigned_sucessfully'));
             }
+
             return $this->sendError(__('responses.role_assigned_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

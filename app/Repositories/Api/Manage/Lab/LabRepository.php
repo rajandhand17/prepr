@@ -171,20 +171,25 @@ class LabRepository implements LabInterface
                 $archived = $this->labService->archieveLab($lab_id);
                 if ($archived == false) {
                     DB::rollBack();
+
                     return false;
                 }
                 DB::commit();
+
                 return true;
             }
             $deleteLab = $this->labService->deleteLab($lab_id);
             if ($deleteLab == false) {
                 DB::rollBack();
+
                 return false;
             }
             DB::commit();
+
             return true;
         } catch (\Exception $e) {
             dd($e);
+
             return false;
         }
     }
@@ -193,6 +198,7 @@ class LabRepository implements LabInterface
     {
         try {
             $labSlug = $this->labService->checkSlug($slug);
+
             return $labSlug;
         } catch (\Exception $e) {
             return false;
@@ -236,10 +242,11 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function updateCoverImage($image){
+    public function updateCoverImage($image)
+    {
         try {
             return $this->labService->updateCoverImage($image);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

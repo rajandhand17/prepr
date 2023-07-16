@@ -28,6 +28,7 @@ class LabAcheivementService
             if ($uploadLabCoverImage == false) {
                 return false;
             }
+
             return $uploadLabCoverImage;
         } catch (\Exception $e) {
             return false;
@@ -43,6 +44,7 @@ class LabAcheivementService
         $labAchievement->achievement_condition = $request->achievement_conditions;
         $labAchievement->achievement_image = $upload_achievements_image;
         $labAchievement->save();
+
         return true;
     }
 
@@ -58,6 +60,7 @@ class LabAcheivementService
                 $labAchievement->achievement_condition = $request->achievement_conditions;
                 $labAchievement->achievement_image = $upload_acheivements_image;
                 $labAchievement->save();
+
                 return true;
             }
             $checkExistsLabAcheivement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsLabAcheivement->achievement_name;
@@ -65,9 +68,10 @@ class LabAcheivementService
             $checkExistsLabAcheivement->achievement_condition = ($request->has('achievement_conditions')) ? $request->achievement_conditions : $checkExistsLabAcheivement->achievement_conditions;
             $checkExistsLabAcheivement->achievement_image = ($upload_acheivements_image) ? $upload_acheivements_image : $checkExistsLabAcheivement->achievement_image;
             $checkExistsLabAcheivement->save();
+
             return true;
         } catch (\Exception $e) {
-        return false;
+            return false;
         }
     }
 
@@ -75,13 +79,15 @@ class LabAcheivementService
     {
         try {
             $checkLabAchievementExists = LabAcheivement::where('lab_id', $lab_id)->first();
-            if ($checkLabAchievementExists){
+            if ($checkLabAchievementExists) {
                 $deleteLabAchievement = LabAcheivement::where('lab_id', $lab_id)->delete();
                 if (!$deleteLabAchievement) {
                     return false;
                 }
+
                 return true;
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

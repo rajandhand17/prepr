@@ -50,7 +50,7 @@ class OrganizationControllerTest extends TestCase
 
     /**Organization create */
     public function test_create_organization_positive()
-    {   
+    {
         $response = $this->post('/api/v1/organization/create', $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();

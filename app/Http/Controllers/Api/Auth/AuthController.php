@@ -327,6 +327,7 @@ class AuthController extends AppBaseController
             if ($register['success'] == true) {
                 return $this->sendResponse(null, __('responses.registration_success'), 200);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -636,6 +637,7 @@ class AuthController extends AppBaseController
             if ($send_otp['success'] === false) {
                 return $this->sendError($send_otp['message'], 401);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

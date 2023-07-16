@@ -33,32 +33,33 @@ class HandleDeleteLabAssociatedData
     {
         try {
             $lab_id = $event->labId;
-            $componentAssociation =ComponentAssociationService::deletelabAssociation($lab_id);
-            if(!$componentAssociation){
+            $componentAssociation = ComponentAssociationService::deletelabAssociation($lab_id);
+            if (!$componentAssociation) {
                 return false;
             }
-            $deleteLabAchievement=LabAcheivementService::deleteLabAchievement($lab_id);
-            if(!$deleteLabAchievement){
+            $deleteLabAchievement = LabAcheivementService::deleteLabAchievement($lab_id);
+            if (!$deleteLabAchievement) {
                 return false;
             }
-            $labExternalLinks=LabExternalLinksService::deleteLabExternalLinks($lab_id);
-            if(!$labExternalLinks){
+            $labExternalLinks = LabExternalLinksService::deleteLabExternalLinks($lab_id);
+            if (!$labExternalLinks) {
                 return false;
             }
-            $labTagGroups=LabTagsGroupsService::deleteLabTagsGroups($lab_id);
+            $labTagGroups = LabTagsGroupsService::deleteLabTagsGroups($lab_id);
 
-            if(!$labTagGroups){
+            if (!$labTagGroups) {
                 return false;
             }
-            $labSkillsGroupsService=LabSkillsGroupsStackService::deleteLabSkillsGroupsStack($lab_id);
-            if(!$labSkillsGroupsService){
+            $labSkillsGroupsService = LabSkillsGroupsStackService::deleteLabSkillsGroupsStack($lab_id);
+            if (!$labSkillsGroupsService) {
                 return false;
             }
-            $labAddress=LabAddressService::deleteLabAddress($lab_id);
+            $labAddress = LabAddressService::deleteLabAddress($lab_id);
 
-            if(!$labAddress){
+            if (!$labAddress) {
                 return false;
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

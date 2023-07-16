@@ -109,6 +109,7 @@ class User extends Authenticatable
                     return $response;
                 } else {
                     $response = ['success' => false, 'message'=>__('responses.invalid_credentials'), 'code' => 4];
+
                     return $response;
                 }
             } else {
@@ -256,6 +257,7 @@ class User extends Authenticatable
             if ($checkphone) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -368,6 +370,7 @@ class User extends Authenticatable
             if ($userrecords) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -391,8 +394,10 @@ class User extends Authenticatable
                 $mail = SendMailHelper::sendMail($user, 'email.forget_password_otp', $data);
                 if ($mail) {
                     $success = ['success' => true, 'user' => $user, 'code' => 1];
+
                     return $success;
                 }
+
                 return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
             }
         } catch (\Exception $e) {
@@ -428,8 +433,10 @@ class User extends Authenticatable
                 }
             } else {
                 $response = ['success' => false, 'message' =>__('responses.otp_correct_required'), 'code' => 3];
+
                 return $response;
             }
+
             return false;
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

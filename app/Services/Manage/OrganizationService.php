@@ -205,8 +205,9 @@ class OrganizationService
         try {
             $organization_list = Organization::select();
 
-            $organization_list = self::filterOrganizationList($request,$organization_list);
+            $organization_list = self::filterOrganizationList($request, $organization_list);
             $organization_list = $organization_list->paginate(config('site_settings.pagination_per_page'));
+
             return $organization_list;
         } catch (\Exception $e) {
             return false;
@@ -273,79 +274,75 @@ class OrganizationService
     public static function filterOrganizationList($request, $organization_list)
     {
         try {
-            if($request->has('search') && !empty($request->search)){
-                $organization_list = $organization_list->where('organizations.title','like', '%' . $request->search . '%');
+            if ($request->has('search') && !empty($request->search)) {
+                $organization_list = $organization_list->where('organizations.title', 'like', '%'.$request->search.'%');
             }
 
-            if($request->has('status') && !empty($request->status)){
+            if ($request->has('status') && !empty($request->status)) {
                 $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
-                $organization_list = $organization_list->where('organizations.status',$status);
-            }
-            else{
-                $organization_list = $organization_list->where('organizations.status',"1");
-            }
-
-            if($request->has('category') && !empty($request->category) && is_array($request->category)){
-                $organization_list = $organization_list->whereIn('organizations.category',$request->category);
+                $organization_list = $organization_list->where('organizations.status', $status);
+            } else {
+                $organization_list = $organization_list->where('organizations.status', '1');
             }
 
-            if($request->has('owner') && !empty($request->owner)){
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $organization_list = $organization_list->whereIn('organizations.category', $request->category);
+            }
 
-                switch ($request->owner){
+            if ($request->has('owner') && !empty($request->owner)) {
+                switch ($request->owner) {
                     case 'invited':
 
                         $invited_organization_ids = MemberManagementService::getFilteredMemberManagementList(
                             [
-                                'module_type'   =>  '0',
-                                'email'         =>  auth()->user()->email,
-                                'role'          =>  'Organization Manager',
-                                'invite_status' =>  '1',
+                                'module_type'   => '0',
+                                'email'         => auth()->user()->email,
+                                'role'          => 'Organization Manager',
+                                'invite_status' => '1',
                             ]
                         )->pluck('module_id');
-                        $organization_list = $organization_list->whereIn('organizations.id',$invited_organization_ids);
+                        $organization_list = $organization_list->whereIn('organizations.id', $invited_organization_ids);
                         break;
                     case 'my':
-                        $organization_list = $organization_list->where('organizations.user_id',auth()->user()->id);
+                        $organization_list = $organization_list->where('organizations.user_id', auth()->user()->id);
                         break;
                     default:
                         $invited_organization_ids = MemberManagementService::getFilteredMemberManagementList(
                             [
-                                'module_type'   =>  '0',
-                                'email'         =>  auth()->user()->email,
-                                'role'          =>  'Organization Manager',
-                                'invite_status' =>  '1',
+                                'module_type'   => '0',
+                                'email'         => auth()->user()->email,
+                                'role'          => 'Organization Manager',
+                                'invite_status' => '1',
                             ]
                         )->pluck('module_id');
 
-                        $owner_organization_ids = Organization::where('organizations.user_id',auth()->user()->id)->pluck('id');
+                        $owner_organization_ids = Organization::where('organizations.user_id', auth()->user()->id)->pluck('id');
 
                         $final_organization_ids = $owner_organization_ids->merge($invited_organization_ids)->unique();
 
-                        $organization_list = $organization_list->whereIn('organizations.id',$final_organization_ids);
+                        $organization_list = $organization_list->whereIn('organizations.id', $final_organization_ids);
                 }
             }
 
-            if($request->has('sort_by') && !empty($request->sort_by)){
-
-                switch ($request->sort_by){
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
                     case 'name-a-to-z':
-                        $organization_list = $organization_list->orderBy('organizations.title','ASC');
+                        $organization_list = $organization_list->orderBy('organizations.title', 'ASC');
                         break;
                     case 'name-z-to-a':
-                        $organization_list = $organization_list->orderBy('organizations.title','DESC');
+                        $organization_list = $organization_list->orderBy('organizations.title', 'DESC');
                         break;
                     case 'creation_date':
-                        $organization_list = $organization_list->orderBy('organizations.created_at','ASC');
+                        $organization_list = $organization_list->orderBy('organizations.created_at', 'ASC');
                         break;
                     default:
-                        $organization_list = $organization_list->orderBy('organizations.id','ASC');
+                        $organization_list = $organization_list->orderBy('organizations.id', 'ASC');
                 }
             }
-            return $organization_list;
-        }
-        catch (\Exception $e) {
-            return $organization_list;
-        }
 
+            return $organization_list;
+        } catch (\Exception $e) {
+            return $organization_list;
+        }
     }
 }

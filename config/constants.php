@@ -88,22 +88,22 @@ return [
 
     'lab_social_activity_is_like'=> [
         'yes'    => '1',
-        'no'   => '2',
+        'no'     => '2',
     ],
 
     'lab_social_activity_is_follow'=> [
         'yes'    => '1',
-        'no'   => '2',
+        'no'     => '2',
     ],
 
     'lab_social_activity_favourite'=> [
         'yes'    => '1',
-        'no'   => '2',
+        'no'     => '2',
     ],
 
     'lab_social_activity_share'=> [
         'yes'    => '1',
-        'no'   => '0',
+        'no'     => '0',
     ],
     'lab_social_activity_refence_type'=> [
         'lab'            => '0',

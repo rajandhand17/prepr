@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'pagination_per_page' => '15'
+    'pagination_per_page' => '15',
 ];

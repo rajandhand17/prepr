@@ -69,11 +69,13 @@ class OrganizationController extends AppBaseController
             if ($organization !== false) {
                 $response = [
                     'count' => $organization->count(),
-                    'list' => OrganizationResource::collection($organization),
+                    'list'  => OrganizationResource::collection($organization),
                     'links' => $organization->links(),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_organization_list'));
             }
+
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -539,7 +541,7 @@ class OrganizationController extends AppBaseController
                     $this->organizationRepository->updatesOrganizationMembers($request, $organization->id);
                 }
 
-                return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfull'),200);
+                return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfull'), 200);
             }
 
             return $this->sendError(__('responses.organization_not_update'), 409);
@@ -600,8 +602,9 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.organization_not_exists'), 404);
             }
             if ($organization === true) {
-                return $this->sendResponse(null, __('responses.organization_delete'),200);
+                return $this->sendResponse(null, __('responses.organization_delete'), 200);
             }
+
             return $this->sendError(__('responses.organization_not_delete'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -613,8 +616,9 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->checkSlug($request->slug);
             if ($organization == false) {
-                return $this->sendResponse([], __('responses.lab_slug_available'),200);
+                return $this->sendResponse([], __('responses.lab_slug_available'), 200);
             }
+
             return $this->sendError(__('responses.already_exists'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

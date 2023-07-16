@@ -2,11 +2,9 @@
 
 namespace Tests\Feature\App\Http\Controllers\Api\Lab;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
-use Illuminate\Support\Facades\Auth;
 class LabControllerTest extends TestCase
 {
     /**
@@ -21,7 +19,7 @@ class LabControllerTest extends TestCase
         parent::setUp();
         $data = Auth::attempt(['email' =>'vinod@prepr.org', 'password' =>'Test@1234']);
         $user = Auth::user();
-        
+
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
         $this->headers = [
             'Accept'        => 'application/vnd.laravel.v1+json',
@@ -30,7 +28,7 @@ class LabControllerTest extends TestCase
     }
 
     public function test_lab_list_positive()
-    {   
+    {
         $response = $this->get('/');
         $response->assertStatus(200);
     }

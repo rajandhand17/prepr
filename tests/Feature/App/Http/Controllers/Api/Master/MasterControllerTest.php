@@ -13,7 +13,7 @@ final class MasterControllerTest extends TestCase
 {
     /**Categories positive test */
     public function test_get_categories_positive(): void
-    {   
+    {
         $response = $this->get('/api/v1/master/categories?language=en');
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
