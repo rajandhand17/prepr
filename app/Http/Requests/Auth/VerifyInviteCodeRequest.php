@@ -26,7 +26,7 @@ class VerifyInviteCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'referal_code'=> 'required|exists:users,referal_code',
+            'referral_code'=> 'required|exists:users,referral_code',
         ];
     }
 
@@ -42,9 +42,8 @@ class VerifyInviteCodeRequest extends FormRequest
     public function messages()
     {
         return [
-            'referal_code.required'=> __('responses.mycode'),
-            'referal_code.exists'  => __('responses.not_mycode'),
-
+            'referral_code.required'=> __('responses.required_field'),
+            'referral_code.exists'  => __('responses.not_exists'),
         ];
     }
 }

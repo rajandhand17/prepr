@@ -48,7 +48,7 @@ class User extends Authenticatable
         'is_verify',
         'is_email_sent',
         'verify_token',
-        'referal_code',
+        'referral_code',
         'isReferralOpen',
         'manage_alerts',
         'is_subscribe',
@@ -80,7 +80,7 @@ class User extends Authenticatable
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
-                $response = ['success' => false, 'message' => __('notification.notification_pvyeatpl')];
+                $response = ['success' => false, 'message' => __('responses.verify_email')];
 
                 return $response;
             }
@@ -104,16 +104,16 @@ class User extends Authenticatable
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code'=>null];
                     }
                     $data = User::where('email', $request->email)->first();
-                    $response = ['success' => true,  'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_sucess')];
+                    $response = ['success' => true,  'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                     return $response;
                 } else {
-                    $response = ['success' => false, 'message'=>__('notification.notification_icpta'), 'code' => 4];
+                    $response = ['success' => false, 'message'=>__('responses.invalid_credentials'), 'code' => 4];
 
                     return $response;
                 }
             } else {
-                $response = ['success' => false, 'message'=>__('responses.notification_usernot_found'), 'code' => 5];
+                $response = ['success' => false, 'message'=>__('responses.user_not_found'), 'code' => 5];
 
                 return $response;
             }
@@ -125,7 +125,7 @@ class User extends Authenticatable
     }
 
     /**Verify two factor */
-    public function verifyTwoFactor($request)
+    public function twoFactorVerification($request)
     {
         try {
             /**checking user exists or not */
@@ -207,15 +207,15 @@ class User extends Authenticatable
                 }
                 DB::rollback();
 
-                return ['success' => false, 'message' => __('responses.failed_registeration')];
+                return ['success' => false, 'message' => __('responses.failed_registration')];
             }
             DB::rollback();
 
-            return ['success' => false, 'message' => __('responses.failed_registeration')];
+            return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
             DB::rollback();
 
-            return ['success' => false, 'message' => 'Something went wrong.'];
+            return ['success' => false, 'message' => __('responses.send_error')];
         }
     }
 
@@ -324,7 +324,7 @@ class User extends Authenticatable
     }
 
     /**Verify otp */
-    public function verifyOtp($request)
+    public function verifyAccount($request)
     {
         try {
             /**get records of particular user by using email */
@@ -363,10 +363,10 @@ class User extends Authenticatable
     }
 
     /**check referal code exists or not */
-    public function referalCode($request)
+    public function referralCode($request)
     {
         try {
-            $userrecords = User::select('id', 'email', 'first_name', 'last_name')->where(['referal_code' => $request->referal_code])->first();
+            $userrecords = User::select('id', 'email', 'first_name', 'last_name')->where(['referral_code' => $request->referral_code])->first();
             if ($userrecords) {
                 return true;
             }

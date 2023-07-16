@@ -43,12 +43,12 @@ class LoginFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'   => __('notification.notification_peeief'),
-            'email.email'      => __('notification.notification_iea'),
-            'email.max'        => __('responses.max_email'),
-            'email.exists'     => __('notification.notification_usernot_found'),
-            'password.required'=> __('notification.notification_reg_pass'),
-            'password.min'     => __('notification.min_password'),
+            'email.required'   => __('responses.required_field'),
+            'email.email'      => __('responses.valid_email_pattern'),
+            'email.max'        => __('responses.max_content_50'),
+            'email.exists'     => __('responses.not_exists_email'),
+            'password.required'=> __('responses.required_field'),
+            'password.min'     => __('responses.min_content_6'),
         ];
     }
 }

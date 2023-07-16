@@ -18,11 +18,11 @@ interface AuthInterface
 
     public function sendOtp($request);
 
-    public function verifyOtp($request);
+    public function verifyAccount($request);
 
-    public function referalCode($request);
+    public function referralCode($request);
 
     public function resetPassword($request);
 
-    public function verifyTwoFactor($request);
+    public function twoFactorVerification($request);
 }

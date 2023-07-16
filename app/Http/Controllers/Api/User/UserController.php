@@ -21,10 +21,10 @@ class UserController extends AppBaseController
         try {
             $userListing = $this->userRepository->getUsers($request);
             if ($userListing != false) {
-                return $this->sendResponse(UserSearchResource::collection($userListing), __('responses.user_list_found_success'));
+                return $this->sendResponse(UserSearchResource::collection($userListing), __('responses.found_user_list'));
             }
 
-            return $this->sendError(__('labels.labels_mm_nuf'), 404);
+            return $this->sendError(__('responses.found_user_list'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

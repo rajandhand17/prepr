@@ -2,8 +2,8 @@
 
 namespace App\Helpers;
 
-use App\Services\LabService;
-use App\Services\OrganizationService;
+use App\Services\Manage\LabService;
+use App\Services\Manage\OrganizationService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 

@@ -32,8 +32,8 @@ class AuthControllerTest extends TestCase
         $this->phone_number = '9646080802';
         $this->wrong_phone_number = '9646080805';
         $this->purpose_send_otp = 'two_factor_verification';
-        $this->referal_code = 'Rajandhands2023';
-        $this->wrong_referal_code = 'rajandhandd';
+        $this->referral_code = 'Rajandhands2023';
+        $this->wrong_referral_code = 'rajandhandd';
         $this->register_type = 'organization';
         $this->organization_name = 'prepr sds';
     }
@@ -41,7 +41,22 @@ class AuthControllerTest extends TestCase
     /**Successfull Positive */
     public function test_register_positive()
     {
-        $response = $this->post('/api/v1/auth/register', ['language' => $this->language, 'username' => $this->username, 'email' => $this->email, 'first_name' => $this->first_name, 'last_name' => $this->last_name, 'password' => $this->password, 'password_confirmation' => $this->password_confirmation, 'device_platform' => $this->device_platform, 'user_type' => $this->user_type, 'purpose' => $this->purpose, 'country_code' => $this->country_code, 'phone_number' => $this->phone_number, 'register_type'=>$this->register_type, 'organization_name'=>$this->organization_name]);
+        $response = $this->post('/api/v1/auth/register', [
+            'language'              => $this->language,
+            'username'              => $this->username,
+            'email'                 => $this->email,
+            'first_name'            => $this->first_name,
+            'last_name'             => $this->last_name,
+            'password'              => $this->password,
+            'password_confirmation' => $this->password_confirmation,
+            'device_platform'       => $this->device_platform,
+            'user_type'             => $this->user_type,
+            'purpose'               => $this->purpose,
+            'country_code'          => $this->country_code,
+            'phone_number'          => $this->phone_number,
+            'register_type'         => $this->register_type,
+            'organization_name'     => $this->organization_name,
+        ]);
         $response->assertStatus(200);
         $data = $response->json();
 
@@ -55,7 +70,7 @@ class AuthControllerTest extends TestCase
             $this->assertArrayHasKey('email', $data['user'][0]);
             $this->assertArrayHasKey('country_code', $data['user'][0]);
             $this->assertArrayHasKey('phone_number', $data['user'][0]);
-            $this->assertArrayHasKey('referal_code', $data['user'][0]);
+            $this->assertArrayHasKey('referral_code', $data['user'][0]);
             if ($response->assertOk()) {
                 $records = User::select('otp')->where('email', $this->email)->first();
                 $verifyuser = $this->post('/api/v1/auth/verify-otp', ['language' => $this->language, 'email' => $this->email, 'otp'=>$records->otp]);
@@ -263,7 +278,7 @@ class AuthControllerTest extends TestCase
     /** invit code */
     public function test_post_verify_invite_code_positive()
     {
-        $response = $this->post('/api/v1/auth/verify-invite-code', ['referal_code' =>$this->referal_code, 'language' =>$this->language]);
+        $response = $this->post('/api/v1/auth/verify-invite-code', ['referral_code' =>$this->referral_code, 'language' =>$this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -276,7 +291,7 @@ class AuthControllerTest extends TestCase
     /** Reset Password negative*/
     public function test_post_verify_invite_code_negative()
     {
-        $response = $this->post('/api/v1/auth/verify-invite-code', ['referal_code' =>$this->wrong_referal_code, 'language' =>$this->language]);
+        $response = $this->post('/api/v1/auth/verify-invite-code', ['referral_code' =>$this->wrong_referral_code, 'language' =>$this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 

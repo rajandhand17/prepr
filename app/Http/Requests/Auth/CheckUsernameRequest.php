@@ -42,10 +42,10 @@ class CheckUsernameRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.max'     => __('responses.username_max'),
-            'username.required'=> __('responses.username_required'),
-            'username.unique'  => __('responses.username_unique'),
-            'username.regex'   => __('notification.notification_reg_unc'),
+            'username.max'     => __('responses.max_content_20'),
+            'username.required'=> __('responses.required_field'),
+            'username.unique'  => __('responses.unique_username'),
+            'username.regex'   => __('responses.regex_pattern'),
         ];
     }
 }
