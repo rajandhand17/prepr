@@ -28,11 +28,13 @@ class LabController extends AppBaseController
             if ($lab !== false) {
                 return $this->sendResponse(LabResource::collection($lab), __('responses.labs_fetched_successfully'));
             }
+
             return $this->sendError(__('responses.labs_fetched_error'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function create(CreateLabRequest $request)
     {
         try {
@@ -86,7 +88,7 @@ class LabController extends AppBaseController
     public function update($slug, UpdateLabRequest $request)
     {
         try {
-            $checkComponentBasedOnSlug =  $this->labRepository->checkSlug($slug);
+            $checkComponentBasedOnSlug = $this->labRepository->checkSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 403);
             }
@@ -120,7 +122,7 @@ class LabController extends AppBaseController
     public function delete($slug, Request $request)
     {
         try {
-            $checkComponentBasedOnSlug =  $this->labRepository->checkSlug($slug);
+            $checkComponentBasedOnSlug = $this->labRepository->checkSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.lab_not_found'), 403);
             }
@@ -156,6 +158,7 @@ class LabController extends AppBaseController
             if ($checkLabNameExistsOrNot) {
                 return $this->sendError(__('responses.lab_name_not_availble'));
             }
+
             return $this->sendResponse([], __('responses.lab_name_availble'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

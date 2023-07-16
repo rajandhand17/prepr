@@ -43,10 +43,10 @@ class LoginFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => __('responses.required_field'),
-            'email.email'    => __('responses.valid_email_pattern'),
-            'email.max'      => __('responses.max_content_50'),
-            'email.exists'   => __('responses.not_exists_email'),
+            'email.required'   => __('responses.required_field'),
+            'email.email'      => __('responses.valid_email_pattern'),
+            'email.max'        => __('responses.max_content_50'),
+            'email.exists'     => __('responses.not_exists_email'),
             'password.required'=> __('responses.required_field'),
             'password.min'     => __('responses.min_content_6'),
         ];

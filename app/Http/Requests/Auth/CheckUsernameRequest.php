@@ -40,7 +40,7 @@ class CheckUsernameRequest extends FormRequest
     }
 
     public function messages()
-    { 
+    {
         return [
             'username.max'     => __('responses.max_content_20'),
             'username.required'=> __('responses.required_field'),

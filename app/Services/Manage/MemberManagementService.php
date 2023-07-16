@@ -401,7 +401,8 @@ class MemberManagementService
         }
     }
 
-    public static function getFilteredMemberManagementList($filterData){
+    public static function getFilteredMemberManagementList($filterData)
+    {
         try {
             return MemberManagement::select(
                 'id',
@@ -417,11 +418,8 @@ class MemberManagementService
                 'invitee_name',
                 'email_status'
             )->where($filterData)->get();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
-
     }
-
 }

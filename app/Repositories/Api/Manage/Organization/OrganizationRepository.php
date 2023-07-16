@@ -3,8 +3,6 @@
 namespace App\Repositories\Api\Manage\Organization;
 
 use App\Models\Organization;
-use App\Models\OrganizationAddress;
-use App\Models\OrganizationMember;
 use App\Services\Manage\OrganizationAddressService;
 use App\Services\Manage\OrganizationMemberService;
 use App\Services\Manage\OrganizationService;
@@ -80,6 +78,7 @@ class OrganizationRepository implements OrganizationInterface
         if ($organization) {
             return $organization;
         }
+
         return false;
     }
 
@@ -89,17 +88,18 @@ class OrganizationRepository implements OrganizationInterface
         if ($organization_member) {
             return $organization_member;
         }
-        return false;
 
+        return false;
     }
 
     public function viewOrganization($request, $slug)
     {
         try {
             $organization = $this->organizationService->viewOrganization($slug, $request->language);
-            if($organization){
+            if ($organization) {
                 return $organization;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -113,6 +113,7 @@ class OrganizationRepository implements OrganizationInterface
             if ($organization) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -126,6 +127,7 @@ class OrganizationRepository implements OrganizationInterface
             if ($profile_image_path) {
                 return $profile_image_path;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -153,6 +155,7 @@ class OrganizationRepository implements OrganizationInterface
             if ($organization) {
                 return $organization;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
