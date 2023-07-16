@@ -22,10 +22,10 @@ class AuthRepository implements AuthInterface
         }
     }
 
-    public function verifyTwoFactor($request)
+    public function twoFactorVerification($request)
     {
         try {
-            return $this->user->verifyTwoFactor($request);
+            return $this->user->twoFactorVerification($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -76,19 +76,19 @@ class AuthRepository implements AuthInterface
         }
     }
 
-    public function verifyOtp($request)
+    public function verifyAccount($request)
     {
         try {
-            return $this->user->verifyOtp($request);
+            return $this->user->verifyAccount($request);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function referalCode($request)
+    public function referralCode($request): bool
     {
         try {
-            return $this->user->referalCode($request);
+            return $this->user->referralCode($request);
         } catch (\Exception $e) {
             return false;
         }

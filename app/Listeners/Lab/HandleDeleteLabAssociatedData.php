@@ -3,18 +3,12 @@
 namespace App\Listeners\Lab;
 
 use App\Events\Labs\DeleteLabAssociatedData;
-use App\Models\ComponentAssociation;
-use App\Models\LabAcheivement;
-use App\Models\LabAddress;
-use App\Models\LabExternalLinks;
-use App\Models\LabSkillsGroupsStack;
-use App\Models\LabTagsGroups;
-use App\Services\ComponentAssociationService;
-use App\Services\LabAcheivementService;
-use App\Services\LabAddressService;
-use App\Services\LabExternalLinksService;
-use App\Services\LabSkillsGroupsStackService;
-use App\Services\LabTagsGroupsService;
+use App\Services\Manage\ComponentAssociationService;
+use App\Services\Manage\LabAcheivementService;
+use App\Services\Manage\LabAddressService;
+use App\Services\Manage\LabExternalLinksService;
+use App\Services\Manage\LabSkillsGroupsStackService;
+use App\Services\Manage\LabTagsGroupsService;
 
 class HandleDeleteLabAssociatedData
 {
@@ -52,7 +46,7 @@ class HandleDeleteLabAssociatedData
                 return false;
             }
             $labTagGroups=LabTagsGroupsService::deleteLabTagsGroups($lab_id);
-            
+
             if(!$labTagGroups){
                 return false;
             }
@@ -61,7 +55,7 @@ class HandleDeleteLabAssociatedData
                 return false;
             }
             $labAddress=LabAddressService::deleteLabAddress($lab_id);
-           
+
             if(!$labAddress){
                 return false;
             }

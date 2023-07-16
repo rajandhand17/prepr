@@ -196,10 +196,17 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Repositories\Api\Organization\OrganizationServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+
+
+        /*
+         * API Service Providers
+         */
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
+        App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
+        App\Repositories\Api\Manage\MemberManagement\MemberManagementServiceProvider::class,
+        App\Repositories\Api\Manage\Lab\LabServiceProvider::class,
     ],
 
     /*

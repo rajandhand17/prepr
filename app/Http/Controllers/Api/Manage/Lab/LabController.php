@@ -1,0 +1,187 @@
+<?php
+
+namespace App\Http\Controllers\Api\Manage\Lab;
+
+use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Lab\CreateLabRequest;
+use App\Http\Requests\Manage\Lab\UpdateLabRequest;
+use App\Http\Resources\Manage\Lab\LabResource;
+use App\Repositories\Api\Manage\Lab\LabRepository;
+use App\Repositories\Api\Manage\LabAchievement\LabAcheivementRepository;
+use Illuminate\Http\Request;
+
+class LabController extends AppBaseController
+{
+    private $labRepository;
+    private $labAcheivementRepository;
+
+    public function __construct(LabRepository $labRepository, LabAcheivementRepository $labAcheivementRepository)
+    {
+        $this->labRepository = $labRepository;
+        $this->labAcheivementRepository = $labAcheivementRepository;
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            $lab = $this->labRepository->getLabList($request);
+            if ($lab !== false) {
+                return $this->sendResponse(LabResource::collection($lab), __('responses.labs_fetched_successfully'));
+            }
+            return $this->sendError(__('responses.labs_fetched_error'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+    public function create(CreateLabRequest $request)
+    {
+        try {
+            $upload_cover_image = null;
+            $upload_achievement_image = null;
+            if ($request->cover_image !== null) {
+                $upload_cover_image = $this->labRepository->uploadCoverImage($request->cover_image);
+                if ($upload_cover_image == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_cover_image = $upload_cover_image;
+            }
+            if ($request->is_achievement_enabled == 'yes') {
+                $upload_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                if ($upload_achievement_image == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_achievement_image = $upload_achievement_image;
+            }
+
+            $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_achievement_image);
+
+            if ($createdLab != false) {
+                return $this->sendResponse(LabResource::make($createdLab), __('responses.lab_stored_success'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_stored_failed'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function show($slug)
+    {
+        try {
+            $lab = $this->labRepository->checkSlug($slug);
+            if ($lab == false) {
+                return $this->sendError(__('responses.slug_not_exists'), 400);
+            }
+            $labDetails = $this->labRepository->getLabDetails($slug);
+            if ($labDetails) {
+                return $this->sendResponse(LabResource::make($labDetails), __('responses.lab_found'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function update($slug, UpdateLabRequest $request)
+    {
+        try {
+            $checkComponentBasedOnSlug =  $this->labRepository->checkSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.slug_not_exists'), 403);
+            }
+            $upload_cover_image = null;
+            $upload_acheivements_image = null;
+            if ($request->cover_image !== null) {
+                $upload_cover_image = $this->labRepository->uploadCoverImage($request->cover_image);
+                if ($upload_cover_image == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_cover_image = $upload_cover_image;
+            }
+            if ($request->is_achievement_enabled == 'yes') {
+                $upload_acheivements_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                if ($upload_acheivements_image == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_acheivements_image = $upload_acheivements_image;
+            }
+            $updateLab = $this->labRepository->updateLab($checkComponentBasedOnSlug->id, $request, $upload_cover_image, $upload_acheivements_image);
+            if ($updateLab != false) {
+                return $this->sendResponse(LabResource::make($updateLab), __('responses.lab_update_successfull'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_not_update'));
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function delete($slug, Request $request)
+    {
+        try {
+            $checkComponentBasedOnSlug =  $this->labRepository->checkSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.lab_not_found'), 403);
+            }
+            $lab = $this->labRepository->deleteLab($checkComponentBasedOnSlug->id, $request);
+            if ($lab) {
+                return $this->sendResponse(null, __('responses.lab_delete'));
+            }
+
+            return $this->sendError(__('responses.lab_not_delete'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkSlug($slug)
+    {
+        try {
+            $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
+            if ($checkLabSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.lab_slug_available'), 200);
+            }
+
+            return $this->sendError(__('responses.slug_not_exists'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkName($title)
+    {
+        try {
+            $checkLabNameExistsOrNot = $this->labRepository->checkNameExistsOrNot($title);
+            if ($checkLabNameExistsOrNot) {
+                return $this->sendError(__('responses.lab_name_not_availble'));
+            }
+            return $this->sendResponse([], __('responses.lab_name_availble'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function labActivity($activity, $slug, Request $request)
+    {
+        try {
+            /**checking slug that is exists or not */
+            $checkLabSlugExistsOrNot = $this->labRepository->checkSlug($slug);
+            if ($checkLabSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.slug_not_exists'), 403);
+            }
+            $checkActivityAlreadyExistOrNot = $this->labRepository->checkActivity($activity, $checkLabSlugExistsOrNot->id);
+            if ($checkActivityAlreadyExistOrNot == false) {
+                return $this->sendError(__('responses.lab_already_done_activity').$activity, 400);
+            }
+            $checkLabActivity = $this->labRepository->storeLabActivity($activity, $checkLabSlugExistsOrNot->id, $request);
+            if ($checkLabActivity) {
+                return $this->sendResponse([], __('responses.lab_activity_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.send_error'), 500);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+}
