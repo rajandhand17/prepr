@@ -9,27 +9,15 @@ use DB;
 
 class OrganizationService
 {
-    public static function checkOrganizationExist($request)
+
+    public static function getOrganizationList($request)
     {
         try {
-            $organization_exists = Organization::select('id')->where('title', $request->title)->first();
-            if ($organization_exists == null) {
-                return true;
-            }
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
+            $organization_list = Organization::select();
 
-    public static function checkOrganizationExistInTrash($request)
-    {
-        try {
-            $organization_trashed_exists = Organization::select('id')->where('title', $request->title)->onlyTrashed()->first();
-            if ($organization_trashed_exists == null) {
-                return true;
-            }
+            $organization_list = self::filterOrganizationList($request, $organization_list);
 
-            return false;
+            return $organization_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;
         }
@@ -39,15 +27,39 @@ class OrganizationService
     {
         try {
             $organization = Organization::where('slug', $slug)->first();
-            if ($organization != null) {
-                return $organization;
-            }
+            return $organization;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
+    public static function checkOrganizationExistBasedOnTitle($request)
+    {
+        try {
+            $organization_exists = Organization::select('id')->where('title', $request->title)->first();
+            if ($organization_exists == null) {
+                return true;
+            }
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
+
+    public static function checkOrganizationExistInTrashBasedOnTitle($request)
+    {
+        try {
+            $organization_trashed_exists = Organization::select('id')->where('title', $request->title)->onlyTrashed()->first();
+            if ($organization_trashed_exists == null) {
+                return true;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+
 
     public static function getOrganizationExistBasedOnId($id)
     {
@@ -70,7 +82,6 @@ class OrganizationService
             if ($profile_image_path == false) {
                 return false;
             }
-
             return $profile_image_path;
         } catch (\Exception $e) {
             return false;
@@ -155,7 +166,7 @@ class OrganizationService
             $organization->total_employees = $request->total_employees;
             if ($organization->save()) {
                 DB::commit();
-
+                auth()->user()->attachRole('organization_owner',$organization);
                 return $organization;
             }
             DB::rollback();
@@ -200,33 +211,13 @@ class OrganizationService
         }
     }
 
-    public static function getOrganizationList($request)
-    {
-        try {
-            $organization_list = Organization::select();
 
-            $organization_list = self::filterOrganizationList($request, $organization_list);
-
-            return $organization_list->paginate(config('site-settings.pagination_per_page'));
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 
     public static function deleteOrganization($slug = null, $language = 'en')
     {
         try {
-            $exists = Organization::select('id')->where('slug', $slug)->first();
-            if ($exists !== null) {
-                $organization = Organization::where('slug', $slug)->delete();
-                if ($organization) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return 'not_exists';
-            }
+            Organization::where('slug', $slug)->delete();
+            return true;
         } catch (\Exception $e) {
             return false;
         }

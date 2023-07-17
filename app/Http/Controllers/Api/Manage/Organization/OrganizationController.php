@@ -81,8 +81,6 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -133,18 +131,14 @@ class OrganizationController extends AppBaseController
      *     ),
      * )
      */
-    public function show(Request $request, $slug)
+    public function show($slug)
     {
         try {
-            $organization = $this->organizationRepository->viewOrganization($request, $slug);
-            if ($organization === 'not_exists') {
-                return $this->sendError(__('responses.organization_not_exists'), 404);
-            }
-            if ($organization) {
+            $organization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
+            if($organization){
                 return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organization_list'));
             }
-
-            return $this->sendError(__('responses.not_found_organization_list'), 404);
+            return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -318,11 +312,11 @@ class OrganizationController extends AppBaseController
         try {
             $profile_image_path = null;
             $cover_image_path = null;
-            $checkOrganization = $this->organizationRepository->checkOrganizationExist($request);
+            $checkOrganization = $this->organizationRepository->checkOrganizationExistBasedOnTitle($request);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
             }
-            $checkOrganizationInTrash = $this->organizationRepository->checkOrganizationExistInTrash($request);
+            $checkOrganizationInTrash = $this->organizationRepository->checkOrganizationExistInTrashBasedOnTitle($request);
             if (!$checkOrganizationInTrash) {
                 return $this->sendError(__('responses.trashed_records'), 422);
             }
@@ -522,6 +516,13 @@ class OrganizationController extends AppBaseController
     public function update($slug, UpdateOrganizationRequest $request)
     {
         try {
+            $checkOrganization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
+            if (!$checkOrganization) {
+                return $this->sendError(__('responses.organization_name_unique'), 422);
+            }
+            if(auth()->user()->isAbleTo('edit_organization', $checkOrganization) == false) {
+                return $this->sendError(__('responses.organization_update_access_denied'), 403);
+            }
             $profile_images_path = null;
             $cover_images_path = null;
             if ($request->profile_image !== null) {
@@ -602,14 +603,19 @@ class OrganizationController extends AppBaseController
     public function delete($slug, Request $request)
     {
         try {
-            $organization = $this->organizationRepository->deleteOrganization($slug, $request->language);
-            if ($organization === 'not_exists') {
-                return $this->sendError(__('responses.organization_not_exists'), 404);
+
+            $checkOrganization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
+            if (!$checkOrganization) {
+                return $this->sendError(__('responses.organization_name_unique'), 422);
             }
-            if ($organization === true) {
-                return $this->sendResponse(null, __('responses.organization_delete'), 200);
+            if(auth()->user()->isAbleTo('delete_organization', $checkOrganization) == false) {
+                return $this->sendError(__('responses.organization_delete_access_denied'), 403);
             }
 
+            $deleteOrganization = $this->organizationRepository->deleteOrganization($slug, $request->language);
+            if ($deleteOrganization) {
+                return $this->sendResponse(null, __('responses.organization_delete'), 200);
+            }
             return $this->sendError(__('responses.organization_not_delete'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

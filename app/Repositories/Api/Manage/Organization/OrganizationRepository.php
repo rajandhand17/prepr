@@ -22,24 +22,44 @@ class OrganizationRepository implements OrganizationInterface
         $this->organizationService = $organizationService;
     }
 
-    public function checkOrganizationExist($request)
+    public function getOrganizationList($request)
     {
-        $checkOrganization = $this->organizationService->checkOrganizationExist($request);
-        if ($checkOrganization) {
-            return true;
-        }
+        try {
+            $organization = $this->organizationService->getOrganizationList($request);
+            if ($organization) {
+                return $organization;
+            }
 
-        return false;
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function getOrganizationExistBasedOnSlug($slug)
+    {
+        try{
+            return $this->organizationService->getOrganizationExistBasedOnSlug($slug);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
-    public function checkOrganizationExistInTrash($request)
+    public function checkOrganizationExistBasedOnTitle($request)
     {
-        $checkOrganization = $this->organizationService->checkOrganizationExistInTrash($request);
-        if ($checkOrganization) {
-            return true;
+        try{
+            return $this->organizationService->checkOrganizationExistBasedOnTitle($request);
+        } catch (\Exception $e) {
+            return false;
         }
+    }
 
-        return false;
+    public function checkOrganizationExistInTrashBasedOnTitle($request)
+    {
+        try{
+            return $this->organizationService->checkOrganizationExistInTrashBasedOnTitle($request);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public function uploadOrganizationProfileImage($request)
@@ -92,10 +112,10 @@ class OrganizationRepository implements OrganizationInterface
         return false;
     }
 
-    public function viewOrganization($request, $slug)
+    public function getOrganization($request, $slug)
     {
         try {
-            $organization = $this->organizationService->viewOrganization($slug, $request->language);
+            $organization = $this->organizationService->getOrganization($slug, $request->language);
             if ($organization) {
                 return $organization;
             }
@@ -180,31 +200,15 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function getOrganizationList($request)
-    {
-        try {
-            $organization = $this->organizationService->getOrganizationList($request);
-            if ($organization) {
-                return $organization;
-            }
 
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 
     public function deleteOrganization($slug, $language)
     {
         try {
-            $organization = $this->organizationService->deleteOrganization($slug, $language);
-            if ($organization) {
-                return true;
-            }
-
-            return false;
+            return  $this->organizationService->deleteOrganization($slug, $language);
         } catch (\Exception $e) {
             return false;
         }
     }
+
 }

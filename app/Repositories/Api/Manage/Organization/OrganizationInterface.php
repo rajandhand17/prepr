@@ -4,9 +4,13 @@ namespace App\Repositories\Api\Manage\Organization;
 
 interface OrganizationInterface
 {
-    public function checkOrganizationExist($request);
+    public function getOrganizationList($request);
 
-    public function checkOrganizationExistInTrash($request);
+    public function getOrganizationExistBasedOnSlug($slug);
+
+    public function checkOrganizationExistBasedOnTitle($request);
+
+    public function checkOrganizationExistInTrashBasedOnTitle($request);
 
     public function uploadOrganizationProfileImage($request);
 
@@ -18,7 +22,7 @@ interface OrganizationInterface
 
     public function organizationAddMembers($request, $organization_id);
 
-    public function viewOrganization($request, $slug);
+    public function getOrganization($request, $slug);
 
     public function checkSlug($slug);
 
@@ -34,5 +38,4 @@ interface OrganizationInterface
 
     public function deleteOrganization($slug, $language);
 
-    public function getOrganizationList($request);
 }

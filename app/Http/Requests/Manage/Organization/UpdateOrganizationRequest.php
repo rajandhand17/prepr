@@ -28,28 +28,16 @@ class UpdateOrganizationRequest extends FormRequest
     {
         $organization = OrganizationService::getOrganizationExistBasedOnSlug(request()->route('slug'));
 
-        if ($organization) {
-            $base_rules = [
-                'title'           => 'required|max:255|unique:organizations,title,'.$organization->id,
-                'description'     => 'required',
-                'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-                'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-                'category'        => 'required|numeric|exists:categories,id',
-                'website'         => 'required|url',
-                'status'          => 'required|in:draft,publish,archive',
-            ];
-        } else {
-            $base_rules = [
-                'title'           => 'required|max:255|unique:organizations,title',
-                'description'     => 'required',
-                'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-                'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-                'category'        => 'required|numeric|exists:categories,id',
-                'website'         => 'required|url',
-                'slug'            => 'required|max:255|unique:organizations,slug',
-                'status'          => 'required|in:draft,publish,archive',
-            ];
-        }
+        $base_rules = [
+            'title'           => 'required|max:255|unique:organizations,title,'.$organization->id,
+            'description'     => 'required',
+            'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'category'        => 'required|numeric|exists:categories,id',
+            'website'         => 'required|url',
+            'status'          => 'required|in:draft,publish,archive',
+        ];
+
         if ($this->request->has('organization_address')) {
             $base_rules['organization_address'] = 'array';
             $base_rules['organization_address.*.address_1'] = 'required|string';
