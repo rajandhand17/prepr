@@ -77,37 +77,37 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(500, $response->getStatusCode());
     }
 
-      /** Organization view */
-      public function test_organization_view_positive()
-      {
-          $response = $this->get('/api/v1/organization/?language='.$this->parameters['language'], $this->headers);
-          $this->assertEquals(200, $response->getStatusCode());
-          $data = $response->json();
-          if ($data['success']) {
-              $this->assertArrayHasKey('id', $data['data'][0]);
-              $this->assertArrayHasKey('language', $data['data'][0]);
-              $this->assertArrayHasKey('name', $data['data'][0]);
-              $this->assertArrayHasKey('slug', $data['data'][0]);
-              $this->assertArrayHasKey('description', $data['data'][0]);
-              $this->assertArrayHasKey('cover_image', $data['data'][0]);
-              $this->assertArrayHasKey('profile_image', $data['data'][0]);
-              $this->assertArrayHasKey('website', $data['data'][0]);
-              $this->assertArrayHasKey('about', $data['data'][0]);
-              $this->assertArrayHasKey('category', $data['data'][0]);
-              $this->assertArrayHasKey('status', $data['data'][0]);
-              $this->assertArrayHasKey('total_employees', $data['data'][0]);
-              $response->assertOk();
-          } else {
-              $this->fail();
-          }
-      }
+    /** Organization view */
+    public function test_organization_view_positive()
+    {
+        $response = $this->get('/api/v1/organization/?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['success']) {
+            $this->assertArrayHasKey('id', $data['data'][0]);
+            $this->assertArrayHasKey('language', $data['data'][0]);
+            $this->assertArrayHasKey('name', $data['data'][0]);
+            $this->assertArrayHasKey('slug', $data['data'][0]);
+            $this->assertArrayHasKey('description', $data['data'][0]);
+            $this->assertArrayHasKey('cover_image', $data['data'][0]);
+            $this->assertArrayHasKey('profile_image', $data['data'][0]);
+            $this->assertArrayHasKey('website', $data['data'][0]);
+            $this->assertArrayHasKey('about', $data['data'][0]);
+            $this->assertArrayHasKey('category', $data['data'][0]);
+            $this->assertArrayHasKey('status', $data['data'][0]);
+            $this->assertArrayHasKey('total_employees', $data['data'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
+    }
 
-      /** Organization view */
-      public function test_organization_view_negative()
-      {
-          $response = $this->get('/api/v1/organization/', $this->headers);
-          $this->assertEquals(400, $response->getStatusCode());
-      }
+    /** Organization view */
+    public function test_organization_view_negative()
+    {
+        $response = $this->get('/api/v1/organization/', $this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 
     /**Organization Listing */
     public function test_organization_list()

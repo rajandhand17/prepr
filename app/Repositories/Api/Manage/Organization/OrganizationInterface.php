@@ -37,5 +37,4 @@ interface OrganizationInterface
     public function updatesOrganizationMembers($organization_address, $organization_id);
 
     public function deleteOrganization($slug, $language);
-
 }

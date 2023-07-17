@@ -83,117 +83,117 @@ class PlanSubscriptionHelper
     }
 
     //fetch subscription and their features limit based on org id
-  public static function getSubscribedPlanDetailForOrg($org_id)
-  {
-      try {
-          Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
-          $all_Subscription = Subscription::all([
-              'cf_org_id[is]' => $org_id,
-          ]);
-          if ($all_Subscription->count() > 0) {
-              $subscription = $all_Subscription[0]->subscription();
-              $subscriptionFeature = SubscriptionEntitlement::subscriptionEntitlementsForSubscription($subscription->id);
-              $data = ['featureList' => $subscriptionFeature, 'subscriptionDetail' => $subscription];
+    public static function getSubscribedPlanDetailForOrg($org_id)
+    {
+        try {
+            Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            $all_Subscription = Subscription::all([
+                'cf_org_id[is]' => $org_id,
+            ]);
+            if ($all_Subscription->count() > 0) {
+                $subscription = $all_Subscription[0]->subscription();
+                $subscriptionFeature = SubscriptionEntitlement::subscriptionEntitlementsForSubscription($subscription->id);
+                $data = ['featureList' => $subscriptionFeature, 'subscriptionDetail' => $subscription];
 
-              return $data;
-          } else {
-              return $data = [];
-          }
-      } catch (Exception $e) {
-          return false;
-      }
-  }
+                return $data;
+            } else {
+                return $data = [];
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 
-  // get feature limits (created lab, challenge, group count)
-  public static function getFeatureLimits($org_id)
-  {
-      try {
-          $data = self::getSubscribedPlanDetailForOrg($org_id);
-          $Limits = [];
-          if ($data != []) {
-              foreach ($data['featureList'] as $feature) {
-                  $subscriptionEntitlement = $feature->subscriptionEntitlement();
-                  if ($subscriptionEntitlement->featureId == 'resource-creation') {
-                      $Limits['resourceModule'] = $subscriptionEntitlement->value;
-                  }
-                  if ($subscriptionEntitlement->featureId == 'challenge-creation') {
-                      $Limits['challenge'] = $subscriptionEntitlement->value;
-                  }
-                  if ($subscriptionEntitlement->featureId == 'lab-creation') {
-                      $Limits['lab'] = $subscriptionEntitlement->value;
-                  }
-                  if ($subscriptionEntitlement->featureId == 'resource-collection-creation') {
-                      $Limits['resourceCollection'] = $subscriptionEntitlement->value;
-                  }
-                  if ($subscriptionEntitlement->featureId == 'resource-group-creation') {
-                      $Limits['resourceGroup'] = $subscriptionEntitlement->value;
-                  }
-                  if ($subscriptionEntitlement->featureId == 'challenge-path-creation') {
-                      $Limits['challengePath'] = $subscriptionEntitlement->value;
-                  }
-                  if ($subscriptionEntitlement->featureId == 'lab-program-creation') {
-                      $Limits['labProgram'] = $subscriptionEntitlement->value;
-                  }
-                  if ($subscriptionEntitlement->featureId == 'organisation-manager-invite') {
-                      $Limits['managerInvite'] = $subscriptionEntitlement->value;
-                  }
-                  if ($subscriptionEntitlement->featureId == 'user-invite') {
-                      $Limits['userInvite'] = $subscriptionEntitlement->value;
-                  }
-              }
-          }
+    // get feature limits (created lab, challenge, group count)
+    public static function getFeatureLimits($org_id)
+    {
+        try {
+            $data = self::getSubscribedPlanDetailForOrg($org_id);
+            $Limits = [];
+            if ($data != []) {
+                foreach ($data['featureList'] as $feature) {
+                    $subscriptionEntitlement = $feature->subscriptionEntitlement();
+                    if ($subscriptionEntitlement->featureId == 'resource-creation') {
+                        $Limits['resourceModule'] = $subscriptionEntitlement->value;
+                    }
+                    if ($subscriptionEntitlement->featureId == 'challenge-creation') {
+                        $Limits['challenge'] = $subscriptionEntitlement->value;
+                    }
+                    if ($subscriptionEntitlement->featureId == 'lab-creation') {
+                        $Limits['lab'] = $subscriptionEntitlement->value;
+                    }
+                    if ($subscriptionEntitlement->featureId == 'resource-collection-creation') {
+                        $Limits['resourceCollection'] = $subscriptionEntitlement->value;
+                    }
+                    if ($subscriptionEntitlement->featureId == 'resource-group-creation') {
+                        $Limits['resourceGroup'] = $subscriptionEntitlement->value;
+                    }
+                    if ($subscriptionEntitlement->featureId == 'challenge-path-creation') {
+                        $Limits['challengePath'] = $subscriptionEntitlement->value;
+                    }
+                    if ($subscriptionEntitlement->featureId == 'lab-program-creation') {
+                        $Limits['labProgram'] = $subscriptionEntitlement->value;
+                    }
+                    if ($subscriptionEntitlement->featureId == 'organisation-manager-invite') {
+                        $Limits['managerInvite'] = $subscriptionEntitlement->value;
+                    }
+                    if ($subscriptionEntitlement->featureId == 'user-invite') {
+                        $Limits['userInvite'] = $subscriptionEntitlement->value;
+                    }
+                }
+            }
 
-          return $Limits;
-      } catch (Exception $e) {
-          return false;
-      }
-  }
+            return $Limits;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 
- // get Addons limits (created lab, challenge, group count)
-  public static function getAddonsLimits($org_id)
-  {
-      try {
-          Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
-          $all_Subscription = Subscription::all([
-              'cf_org_id[is]' => $org_id,
-          ]);
-          $addon = [];
-          if ($all_Subscription->count() > 0) {
-              $subscription = $all_Subscription[0]->subscription();
-              foreach ($subscription->subscriptionItems as $item) {
-                  if ($item->itemType === 'addon') {
-                      if ($item->itemPriceId == 'challenge-creation-CAD-Monthly') {
-                          $addon['challenge'] = $item->quantity;
-                      } elseif ($item->itemPriceId == 'Resource-Creation-CAD-Monthly') {
-                          $addon['resourceModule'] = $item->quantity;
-                      } elseif ($item->itemPriceId == 'lab-creation-CAD-Monthly') {
-                          $addon['lab'] = $item->quantity;
-                      }
-                  }
-              }
-          }
+    // get Addons limits (created lab, challenge, group count)
+    public static function getAddonsLimits($org_id)
+    {
+        try {
+            Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            $all_Subscription = Subscription::all([
+                'cf_org_id[is]' => $org_id,
+            ]);
+            $addon = [];
+            if ($all_Subscription->count() > 0) {
+                $subscription = $all_Subscription[0]->subscription();
+                foreach ($subscription->subscriptionItems as $item) {
+                    if ($item->itemType === 'addon') {
+                        if ($item->itemPriceId == 'challenge-creation-CAD-Monthly') {
+                            $addon['challenge'] = $item->quantity;
+                        } elseif ($item->itemPriceId == 'Resource-Creation-CAD-Monthly') {
+                            $addon['resourceModule'] = $item->quantity;
+                        } elseif ($item->itemPriceId == 'lab-creation-CAD-Monthly') {
+                            $addon['lab'] = $item->quantity;
+                        }
+                    }
+                }
+            }
 
-          return $addon;
-      } catch (Exception $e) {
-          return false;
-      }
-  }
+            return $addon;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 
-  public static function getTotalLimits($org_id, $component)
-  {
-      try {
-          $featureLimit = self::getFeatureLimits($org_id);
-          $addonLimit = self::getAddonsLimits($org_id);
-          $totalLimit = [];
-          if ($featureLimit || $addonLimit != []) {
-              $totalLimit = (array_key_exists($component, $featureLimit) ? $featureLimit[$component] : 0) + (array_key_exists($component, $addonLimit) ? $addonLimit[$component] : 0);
-          }
+    public static function getTotalLimits($org_id, $component)
+    {
+        try {
+            $featureLimit = self::getFeatureLimits($org_id);
+            $addonLimit = self::getAddonsLimits($org_id);
+            $totalLimit = [];
+            if ($featureLimit || $addonLimit != []) {
+                $totalLimit = (array_key_exists($component, $featureLimit) ? $featureLimit[$component] : 0) + (array_key_exists($component, $addonLimit) ? $addonLimit[$component] : 0);
+            }
 
-          return $totalLimit;
-      } catch (Exception $e) {
-          return false;
-      }
-  }
+            return $totalLimit;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 
     // get created component ids (created lab, challenge, group count)
     public static function getComponentUsage($id, $component)
@@ -243,32 +243,32 @@ class PlanSubscriptionHelper
         }
     }
 
-  public static function getAccessedNonAccessedComponentIds($orgIds, $component)
-  {
-      try {
-          if (is_array($orgIds) == false) {
-              $orgIds = [$orgIds];
-          }
-          $componentIds = [];
-          if (!empty($orgIds)) {
-              foreach ($orgIds as $orgId) {
-                  $totalLimit = self::getTotalLimits($orgId, $component);
-                  $createdComponentIds = self::getComponentUsage($orgId, $component);
-                  if ($createdComponentIds->count() != 0 && $totalLimit != []) {
-                      foreach ($createdComponentIds as $key => $createdComponentId) {
-                          if ($key < $totalLimit) {
-                              $componentIds['accessed'][] = $createdComponentId;
-                          } else {
-                              $componentIds['nonAccessed'][] = $createdComponentId;
-                          }
-                      }
-                  }
-              }
-          }
+    public static function getAccessedNonAccessedComponentIds($orgIds, $component)
+    {
+        try {
+            if (is_array($orgIds) == false) {
+                $orgIds = [$orgIds];
+            }
+            $componentIds = [];
+            if (!empty($orgIds)) {
+                foreach ($orgIds as $orgId) {
+                    $totalLimit = self::getTotalLimits($orgId, $component);
+                    $createdComponentIds = self::getComponentUsage($orgId, $component);
+                    if ($createdComponentIds->count() != 0 && $totalLimit != []) {
+                        foreach ($createdComponentIds as $key => $createdComponentId) {
+                            if ($key < $totalLimit) {
+                                $componentIds['accessed'][] = $createdComponentId;
+                            } else {
+                                $componentIds['nonAccessed'][] = $createdComponentId;
+                            }
+                        }
+                    }
+                }
+            }
 
-          return $componentIds;
-      } catch(Exception $e) {
-          return false;
-      }
-  }
+            return $componentIds;
+        } catch(Exception $e) {
+            return false;
+        }
+    }
 }
