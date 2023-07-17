@@ -47,14 +47,19 @@ class AcheivementConditionList extends Command
 
             if ($achievement_condition_list->count() > 0) {
                 foreach ($achievement_condition_list as $key => $single_acheivement_condition_list) {
-                    $achievement_condition_list_details = [
-                        'id'    => $single_acheivement_condition_list->id,
-                        'title' => $single_acheivement_condition_list->condition_title,
-                    ];
-                    $check_achievement_condition_list = AchievementConditionLists::where($achievement_condition_list_details)->first();
-                    if (!$check_achievement_condition_list) {
-                        AchievementConditionLists::create($achievement_condition_list_details);
+
+                    $check_achievement_condition_list = AchievementConditionLists::where('title',$single_acheivement_condition_list->condition_title)->first();
+
+                    if($check_achievement_condition_list){
+                        $newCreated = $check_achievement_condition_list;
                     }
+                    else{
+                        $newCreated = new AchievementConditionLists();
+                    }
+                    $newCreated->id = $single_acheivement_condition_list->id;
+                    $newCreated->title = $single_acheivement_condition_list->condition_title;
+                    $newCreated->save();
+
                 }
                 DB::commit();
                 $this->info('Migrating of old data for achievement condition list table completed.');

@@ -47,6 +47,7 @@ class ProjectType extends Command
             if ($project_type->count() > 0) {
                 foreach ($project_type as $key => $single_type) {
                     $project_type_details = [
+                        'id'       => $single_type->id,
                         'title'       => $single_type->name,
                         'fr_CA_title' => $single_type->fr_CA_name,
                     ];

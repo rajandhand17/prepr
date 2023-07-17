@@ -47,6 +47,7 @@ class Tag extends Command
             if ($tags->count() > 0) {
                 foreach ($tags as $key => $single_tags) {
                     $tags_details = [
+                        'id'           => $single_tags->id,
                         'title'           => $single_tags->tag,
                         'fr_CA_title'     => $single_tags->fr_CA_tag,
                         'tag_image'       => $single_tags->tag_image,

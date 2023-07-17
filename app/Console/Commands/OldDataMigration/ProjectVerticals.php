@@ -47,6 +47,7 @@ class ProjectVerticals extends Command
             if ($project_verticals->count() > 0) {
                 foreach ($project_verticals as $key => $single_verticals) {
                     $project_verticals_details = [
+                        'id'       => $single_verticals->id,
                         'title'       => $single_verticals->name,
                         'fr_CA_title' => $single_verticals->fr_CA_name,
                     ];

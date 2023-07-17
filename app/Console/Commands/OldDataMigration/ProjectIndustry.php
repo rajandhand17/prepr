@@ -47,6 +47,7 @@ class ProjectIndustry extends Command
             if ($project_industry->count() > 0) {
                 foreach ($project_industry as $key => $single_industry) {
                     $project_industry_details = [
+                        'id'       => $single_industry->id,
                         'title'       => $single_industry->name,
                         'fr_CA_title' => $single_industry->fr_CA_name,
                     ];

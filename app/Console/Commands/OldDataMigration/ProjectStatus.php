@@ -47,6 +47,7 @@ class ProjectStatus extends Command
             if ($project_status->count() > 0) {
                 foreach ($project_status as $key => $single_status) {
                     $project_status_details = [
+                        'id'       => $single_status->id,
                         'title'       => $single_status->name,
                         'fr_CA_title' => $single_status->fr_CA_name,
                     ];

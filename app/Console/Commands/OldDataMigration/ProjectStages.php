@@ -47,6 +47,7 @@ class ProjectStages extends Command
             if ($project_stages->count() > 0) {
                 foreach ($project_stages as $key => $single_stages) {
                     $project_stages_details = [
+                        'id'       => $single_stages->id,
                         'title'       => $single_stages->name,
                         'fr_CA_title' => $single_stages->fr_CA_name,
                     ];

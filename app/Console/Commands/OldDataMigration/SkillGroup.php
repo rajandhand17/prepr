@@ -63,6 +63,7 @@ class SkillGroup extends Command
                     }
 
                     $skill_group_details = [
+                        'id'             => $skill_group->id,
                         'title'             => $skill_group->title,
                         'fr_CA_title'       => $skill_group->fr_CA_title,
                         'description'       => $skill_group->description,

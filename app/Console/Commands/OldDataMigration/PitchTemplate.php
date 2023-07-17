@@ -47,6 +47,7 @@ class PitchTemplate extends Command
             if ($pitch_templates->count() > 0) {
                 foreach ($pitch_templates as $key => $single_pitch_templates) {
                     $pitch_templates_details = [
+                        'id'        => $single_pitch_templates->id,
                         'title'        => $single_pitch_templates->title,
                         'challenge_id' => $single_pitch_templates->challenge_id,
                     ];

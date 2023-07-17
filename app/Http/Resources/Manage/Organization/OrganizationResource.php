@@ -17,7 +17,13 @@ class OrganizationResource extends JsonResource
     public function toArray($request)
     {
         $status = ($this->status == '0') ? 'Draft' : (($this->status == '1') ? 'Published' : (($this->status == '2') ? 'Deactivated' : 'Archived'));
-
+        $category = $this->getCategory;
+        if($category){
+            $category = $this->getCategory->title;
+        }
+        else{
+            $category = null;
+        }
         return [
             'id'                           => $this->id,
             'language'                     => $this->language,
@@ -30,7 +36,7 @@ class OrganizationResource extends JsonResource
             'about'                        => $this->about,
             'status'                       => $status,
             'total_employees'              => $this->total_employees,
-            'category'                     => $this->getCategory->title,
+            'category'                     => $category,
             'lab_count'                    => $this->members->count(),
             'challange_count'              => 0,
             'resource_count'               => 0,
