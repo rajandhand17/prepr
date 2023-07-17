@@ -68,9 +68,12 @@ class OrganizationController extends AppBaseController
             $organization = $this->organizationRepository->getOrganizationList($request);
             if ($organization !== false) {
                 $response = [
-                    'count' => $organization->count(),
-                    'list'  => OrganizationResource::collection($organization),
-                    'links' => $organization->links(),
+                    'total_count'  => $organization->total(),
+                    'per_page'     => $organization->perPage(),
+                    'count'        => $organization->count(),
+                    'current_page' => $organization->currentPage(),
+                    'total_pages'  => $organization->lastPage(),
+                    'list'         => OrganizationResource::collection($organization),
                 ];
 
                 return $this->sendResponse($response, __('responses.found_organization_list'));
@@ -78,6 +81,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
+            dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

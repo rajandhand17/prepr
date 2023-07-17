@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use App\Models\Organization as Organizations;
 use App\Models\OrganizationAddress;
-use App\Models\OrganizationSocialLink;
-use App\Models\SocialLink;
+use App\Models\OrganizationMember;
 use DB;
 use Illuminate\Console\Command;
 
@@ -16,7 +14,7 @@ class Organization extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:organization';
+    protected $signature = 'migrate-old-data:organizations';
 
     /**
      * The console command description.
@@ -49,65 +47,79 @@ class Organization extends Command
             $organizations = DB::connection('mysql2')->table('organisations')->get();
 
             if ($organizations->count() > 0) {
-                foreach ($organizations as $key => $single_organization) {
-                    $organization_details = [
-                        'language'       => $single_organization->language,
-                        'user_id'        => $single_organization->user_id,
-                        'title'          => $single_organization->name,
-                        'slug'           => $single_organization->slug,
-                        'vanity_slug'    => $single_organization->vanity_slug,
-                        'description'    => $single_organization->description,
-                        'cover_image'    => $single_organization->cover_image,
-                        'profile_image'  => $single_organization->profile_image,
-                        'website'        => $single_organization->website,
-                    ];
+                foreach ($organizations as $key => $organization) {
+                    $checkUser = \App\Models\User::find($organization->user_id);
+                    if (!$checkUser) {
+                        continue;
+                    }
+                    $organizationDetails = DB::connection('mysql2')->table('organisations_details')->where('organisations_id', $organization->id)->first();
+                    $organizationPeoples = DB::connection('mysql2')->table('peoples')->where('organisation', $organization->id)->get();
 
-                    $check_organization = Organizations::where(['title'=>$single_organization->name])->first();
-                    if (!$check_organization) {
-                        $organization_create = Organizations::create($organization_details);
-                        if (isset($organization_create->id)) {
-                            $organisations_details = DB::connection('mysql2')->table('organisations_details')->get();
-                            foreach ($organisations_details as $key => $detailed) {
-                                $organization_address = [
-                                    'organization_id'=> $organization_create->id,
-                                    'latitude'       => $single_organization->latitude,
-                                    'longitude'      => $single_organization->longitude,
-                                    'address'        => $single_organization->address,
-                                    'city'           => $detailed->city,
-                                    'state'          => $detailed->province,
-                                    'country'        => $detailed->country,
-                                    'zip_code'       => $detailed->postal_code,
-                                ];
-                                $organization_address_create = OrganizationAddress::create($organization_address);
-                            }
-                            if ($single_organization->facebook !== null) {
-                                $getid = SocialLink::where('title', 'Facebook')->first();
+                    $checkOrganization = \App\Models\Organization::find($organization->id);
+                    if ($checkOrganization) {
+                        $newOrganization = $checkOrganization;
+                    } else {
+                        $newOrganization = new \App\Models\Organization();
+                    }
+                    $category = null;
+                    if ($organization->category != '0' && $organization->category != null) {
+                        $checkOldCategory = DB::connection('mysql2')->table('categories')->find($organization->category);
+                        $checkCategory = \App\Models\Category::where('title', $checkOldCategory->name)->first();
+                        if ($checkCategory) {
+                            $category = $checkCategory->id;
+                        } else {
+                            $category = null;
+                        }
+                    }
 
-                                $social_data = [
-                                    'organization_id'  => $organization_create->id,
-                                    'social_media_link'=> $single_organization->facebook,
-                                    'social_link_id'   => $getid->id,
-                                ];
-                                $organizationSocialLink = OrganizationSocialLink::create($social_data);
-                            }
-                            if ($single_organization->linked !== null) {
-                                $getid = SocialLink::select('id')->where('title', 'LinkedIn')->first();
-                                $social_linked_data = [
-                                    'organization_id'  => $organization_create->id,
-                                    'social_media_link'=> $single_organization->linked,
-                                    'social_link_id'   => $getid->id,
-                                ];
-                                $organizationSocialLink = OrganizationSocialLink::create($social_linked_data);
-                            }
-                            if ($single_organization->twitter !== null) {
-                                $getid = SocialLink::select('id')->where('title', 'Twitter')->first();
-                                $social_twitter_data = [
-                                    'organization_id'  => $organization_create->id,
-                                    'social_media_link'=> $single_organization->twitter,
-                                    'social_link_id'   => $getid->id,
-                                ];
-                                $organizationSocialLink = OrganizationSocialLink::create($social_twitter_data);
-                            }
+                    $newOrganization->id = $organization->id;
+                    $newOrganization->language = $organization->language;
+                    $newOrganization->user_id = $organization->user_id;
+                    $newOrganization->title = $organization->name;
+                    $newOrganization->display_name = $organization->name;
+                    $newOrganization->description = isset($organization->description) ? $organization->description : null;
+                    $newOrganization->slug = $organization->slug;
+                    $newOrganization->cover_image = $organization->cover_image;
+                    $newOrganization->profile_image = $organization->profile_image;
+                    $newOrganization->website = isset($organization->website) ? $organization->website : null;
+                    $newOrganization->about = isset($organization->about) ? $organization->about : null;
+                    $newOrganization->category = $category;
+                    $newOrganization->status = ($organization->status == '0') ? '0' : (($organization->status == '1') ? '1' : '3');
+                    $newOrganization->total_employees = isset($organizationDetails->number_employees) ? $organizationDetails->number_employees : 0;
+                    $newOrganization->is_verified = ($organization->is_verified == '0') ? '0' : '1';
+
+                    $newOrganization->save();
+
+                    $checkUser->attachRole('organization_owner', $newOrganization->id);
+
+                    $checkOrganizationAddress = OrganizationAddress::where('organization_id', $organization->id)->first();
+                    if ($checkOrganization) {
+                        $organization_address = $checkOrganizationAddress;
+                    } else {
+                        $organization_address = new OrganizationAddress();
+                    }
+
+                    $organization_address->organization_id = $newOrganization->id;
+                    $organization_address->latitude = isset($organization->latitude) ? $organization->latitude : null;
+                    $organization_address->longitude = isset($organization->longitude) ? $organization->longitude : null;
+                    $organization_address->full_address = (isset($organizationDetails->address_one) && isset($organizationDetails->address_one)) ? $organizationDetails->address_one.', '.$organizationDetails->address_two : null;
+                    $organization_address->address_1 = isset($organizationDetails->address_one) ? $organizationDetails->address_one : null;
+                    $organization_address->address_2 = isset($organizationDetails->city) ? $organizationDetails->city : null;
+                    $organization_address->city = isset($organizationDetails->city) ? $organizationDetails->city : null;
+                    $organization_address->state = isset($organizationDetails->province) ? $organizationDetails->province : null;
+                    $organization_address->country = isset($organizationDetails->country) ? $organizationDetails->country : null;
+                    $organization_address->zip_code = isset($organizationDetails->postal_code) ? $organizationDetails->postal_code : null;
+                    $organization_address->save();
+
+                    if ($organizationPeoples) {
+                        OrganizationMember::where('organization_id', $organization->id)->delete();
+                        foreach ($organizationPeoples as $organizationPeople) {
+                            $organization_member = new OrganizationMember();
+                            $organization_member->organization_id = $newOrganization->id;
+                            $organization_member->name = $organizationPeople->name;
+                            $organization_member->position = $organizationPeople->description;
+                            $organization_member->image = $organizationPeople->image;
+                            $organization_member->save();
                         }
                     }
                 }
@@ -120,6 +132,7 @@ class Organization extends Command
             $this->error('No organizations found.');
         } catch (\Exception $e) {
             DB::rollback();
+            dd($e);
             $this->error($e->getMessage());
 
             return;
