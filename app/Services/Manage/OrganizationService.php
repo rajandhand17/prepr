@@ -9,7 +9,6 @@ use DB;
 
 class OrganizationService
 {
-
     public static function getOrganizationList($request)
     {
         try {
@@ -27,6 +26,7 @@ class OrganizationService
     {
         try {
             $organization = Organization::where('slug', $slug)->first();
+
             return $organization;
         } catch (\Exception $e) {
             return false;
@@ -40,6 +40,7 @@ class OrganizationService
             if ($organization_exists == null) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -53,13 +54,12 @@ class OrganizationService
             if ($organization_trashed_exists == null) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
-
-
 
     public static function getOrganizationExistBasedOnId($id)
     {
@@ -82,6 +82,7 @@ class OrganizationService
             if ($profile_image_path == false) {
                 return false;
             }
+
             return $profile_image_path;
         } catch (\Exception $e) {
             return false;
@@ -166,7 +167,8 @@ class OrganizationService
             $organization->total_employees = $request->total_employees;
             if ($organization->save()) {
                 DB::commit();
-                auth()->user()->attachRole('organization_owner',$organization);
+                auth()->user()->attachRole('organization_owner', $organization);
+
                 return $organization;
             }
             DB::rollback();
@@ -211,12 +213,11 @@ class OrganizationService
         }
     }
 
-
-
     public static function deleteOrganization($slug = null, $language = 'en')
     {
         try {
             Organization::where('slug', $slug)->delete();
+
             return true;
         } catch (\Exception $e) {
             return false;

@@ -135,9 +135,10 @@ class OrganizationController extends AppBaseController
     {
         try {
             $organization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
-            if($organization){
+            if ($organization) {
                 return $this->sendResponse(OrganizationResource::collection($organization), __('responses.found_organization_list'));
             }
+
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -520,7 +521,7 @@ class OrganizationController extends AppBaseController
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
             }
-            if(auth()->user()->isAbleTo('edit_organization', $checkOrganization) == false) {
+            if (auth()->user()->isAbleTo('edit_organization', $checkOrganization) == false) {
                 return $this->sendError(__('responses.organization_update_access_denied'), 403);
             }
             $profile_images_path = null;
@@ -603,12 +604,11 @@ class OrganizationController extends AppBaseController
     public function delete($slug, Request $request)
     {
         try {
-
             $checkOrganization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
             }
-            if(auth()->user()->isAbleTo('delete_organization', $checkOrganization) == false) {
+            if (auth()->user()->isAbleTo('delete_organization', $checkOrganization) == false) {
                 return $this->sendError(__('responses.organization_delete_access_denied'), 403);
             }
 
@@ -616,6 +616,7 @@ class OrganizationController extends AppBaseController
             if ($deleteOrganization) {
                 return $this->sendResponse(null, __('responses.organization_delete'), 200);
             }
+
             return $this->sendError(__('responses.organization_not_delete'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

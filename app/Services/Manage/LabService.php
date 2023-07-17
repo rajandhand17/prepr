@@ -279,118 +279,118 @@ class LabService
         }
     }
 
-public function checkNameExistsOrNot($title)
-{
-    try {
-        $checklabName = Lab::where('title', $title)->first();
-        if ($checklabName) {
-            return true;
-        }
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $checklabName = Lab::where('title', $title)->first();
+            if ($checklabName) {
+                return true;
+            }
 
-        return false;
-    } catch (\Exception $e) {
-        return false;
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
-}
 
-public function checkExistsOrNot($activity, $lab_id)
-{
-    try {
-        $checkLabActivity = LabSocialActivity::where([
-            ['user_id', '=', auth()->user()->id],
-            ['lab_id', '=', $lab_id],
-        ])->first();
-        if ($checkLabActivity) {
-            return $checkLabActivity;
+    public function checkExistsOrNot($activity, $lab_id)
+    {
+        try {
+            $checkLabActivity = LabSocialActivity::where([
+                ['user_id', '=', auth()->user()->id],
+                ['lab_id', '=', $lab_id],
+            ])->first();
+            if ($checkLabActivity) {
+                return $checkLabActivity;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
         }
-
-        return false;
-    } catch (\Exception $e) {
-        return false;
     }
-}
 
-public function storeLabActivity($activity, $lab_id, $request)
-{
-    try {
-        $storeLabActivity = new LabSocialActivity();
-        $storeLabActivity->user_id = auth()->user()->id;
-        $storeLabActivity->lab_id = $lab_id;
-        switch ($activity) {
-            case 'like':
-                $storeLabActivity->like_dislike = '1';
-                break;
-            case 'dislike':
-                $storeLabActivity->like_dislike = '2';
-                break;
-            case 'follow':
-                $storeLabActivity->follow_unfollow = '1';
-                break;
-            case 'unfollow':
-                $storeLabActivity->follow_unfollow = '2';
-                break;
-            case 'favourite':
-                $storeLabActivity->favourite = '1';
-                break;
-            case 'unfavored':
-                $storeLabActivity->favourite = '2';
-                break;
-            default:
-                return false;
-        }
-        if (isset($request->share) && !empty($request->share)) {
-            $storeLabActivity->share = $request->share;
-        }
-        if ($storeLabActivity->save()) {
-            return true;
-        }
+    public function storeLabActivity($activity, $lab_id, $request)
+    {
+        try {
+            $storeLabActivity = new LabSocialActivity();
+            $storeLabActivity->user_id = auth()->user()->id;
+            $storeLabActivity->lab_id = $lab_id;
+            switch ($activity) {
+                case 'like':
+                    $storeLabActivity->like_dislike = '1';
+                    break;
+                case 'dislike':
+                    $storeLabActivity->like_dislike = '2';
+                    break;
+                case 'follow':
+                    $storeLabActivity->follow_unfollow = '1';
+                    break;
+                case 'unfollow':
+                    $storeLabActivity->follow_unfollow = '2';
+                    break;
+                case 'favourite':
+                    $storeLabActivity->favourite = '1';
+                    break;
+                case 'unfavored':
+                    $storeLabActivity->favourite = '2';
+                    break;
+                default:
+                    return false;
+            }
+            if (isset($request->share) && !empty($request->share)) {
+                $storeLabActivity->share = $request->share;
+            }
+            if ($storeLabActivity->save()) {
+                return true;
+            }
 
-        return false;
-    } catch (\Exception $e) {
-        return false;
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
-}
 
-public function updateLabActivity($activity, $id, $request)
-{
-    try {
-        $updateLabActivity = LabSocialActivity::find($id);
-        switch ($activity) {
-            case 'like':
-                $updateLabActivity->like_dislike = config('constants.lab_social_activity_is_like.yes');
-                break;
-            case 'dislike':
-                $updateLabActivity->like_dislike = config('constants.lab_social_activity_is_like.no');
-                break;
-            case 'follow':
-                $updateLabActivity->follow_unfollow = config('constants.lab_social_activity_is_follow.yes');
-                break;
-            case 'unfollow':
-                $updateLabActivity->follow_unfollow = config('constants.lab_social_activity_is_follow.no');
-                break;
-            case 'favourite':
-                $updateLabActivity->favourite = config('constants.lab_social_activity_favourite.yes');
-                break;
-            case 'unfavored':
-                $updateLabActivity->favourite = config('constants.lab_social_activity_favourite.no');
-                break;
-            case 'share':
-                $updateLabActivity->share = config('constants.lab_social_activity_share.yes');
-                break;
-            default:
-                return false;
-                break;
-        }
-        if (isset($request->share) && !empty($request->share)) {
-            $updateLabActivity->share = (int) $request->share;
-        }
-        if ($updateLabActivity->save()) {
-            return true;
-        }
+    public function updateLabActivity($activity, $id, $request)
+    {
+        try {
+            $updateLabActivity = LabSocialActivity::find($id);
+            switch ($activity) {
+                case 'like':
+                    $updateLabActivity->like_dislike = config('constants.lab_social_activity_is_like.yes');
+                    break;
+                case 'dislike':
+                    $updateLabActivity->like_dislike = config('constants.lab_social_activity_is_like.no');
+                    break;
+                case 'follow':
+                    $updateLabActivity->follow_unfollow = config('constants.lab_social_activity_is_follow.yes');
+                    break;
+                case 'unfollow':
+                    $updateLabActivity->follow_unfollow = config('constants.lab_social_activity_is_follow.no');
+                    break;
+                case 'favourite':
+                    $updateLabActivity->favourite = config('constants.lab_social_activity_favourite.yes');
+                    break;
+                case 'unfavored':
+                    $updateLabActivity->favourite = config('constants.lab_social_activity_favourite.no');
+                    break;
+                case 'share':
+                    $updateLabActivity->share = config('constants.lab_social_activity_share.yes');
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+            if (isset($request->share) && !empty($request->share)) {
+                $updateLabActivity->share = (int) $request->share;
+            }
+            if ($updateLabActivity->save()) {
+                return true;
+            }
 
-        return false;
-    } catch (\Exception $e) {
-        return false;
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
-}
 }
