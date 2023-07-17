@@ -55,7 +55,7 @@ class SkillStack extends Command
                         }
                     }
                     $skill_stack_details = [
-                        'id'             => $single_skill_stack->id,
+                        'id'                => $single_skill_stack->id,
                         'title'             => $single_skill_stack->title,
                         'fr_CA_title'       => $single_skill_stack->fr_CA_title,
                         'description'       => $single_skill_stack->description,

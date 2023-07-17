@@ -18,12 +18,12 @@ class OrganizationResource extends JsonResource
     {
         $status = ($this->status == '0') ? 'Draft' : (($this->status == '1') ? 'Published' : (($this->status == '2') ? 'Deactivated' : 'Archived'));
         $category = $this->getCategory;
-        if($category){
+        if ($category) {
             $category = $this->getCategory->title;
-        }
-        else{
+        } else {
             $category = null;
         }
+
         return [
             'id'                           => $this->id,
             'language'                     => $this->language,

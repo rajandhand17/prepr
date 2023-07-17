@@ -17,12 +17,12 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         $roles = $this->roles->pluck('display_name');
-        if($roles){
+        if ($roles) {
             $roles = array_unique($roles->toArray());
-        }
-        else{
+        } else {
             $roles = [];
         }
+
         return [
             'id'                         => $this->id,
             'preferred_language'         => $this->preferred_language,

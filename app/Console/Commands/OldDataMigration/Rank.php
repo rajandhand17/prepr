@@ -47,7 +47,7 @@ class Rank extends Command
             if ($ranks->count() > 0) {
                 foreach ($ranks as $key => $single_rank) {
                     $rank_details = [
-                        'id'              => $single_rank->id,
+                        'id'                 => $single_rank->id,
                         'title'              => $single_rank->name,
                         'fr_CA_title'        => $single_rank->fr_CA_name,
                         'description'        => $single_rank->description,

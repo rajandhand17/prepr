@@ -206,6 +206,7 @@ class OrganizationService
             $organization_list = Organization::select();
 
             $organization_list = self::filterOrganizationList($request, $organization_list);
+
             return $organization_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;

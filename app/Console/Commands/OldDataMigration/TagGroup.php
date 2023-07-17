@@ -54,7 +54,7 @@ class TagGroup extends Command
                         }
                     }
                     $tag_group_details = [
-                        'id'             => $tag_group->id,
+                        'id'                => $tag_group->id,
                         'title'             => $tag_group->title,
                         'fr_CA_title'       => $tag_group->fr_CA_title,
                         'description'       => $tag_group->description,
