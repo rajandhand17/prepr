@@ -70,6 +70,7 @@ class UserService
                 $user = $user->orWhere('full_name', 'like', '%'.$request->search.'%')->orWhere('username', 'like', '%'.$request->search.'%')->orWhere('email', 'like', '%'.$request->search.'%');
             }
             $user = $user->take(config('site-settings.pagination_per_page'))->get();
+
             return $user;
         } catch (\Exception $e) {
             return false;

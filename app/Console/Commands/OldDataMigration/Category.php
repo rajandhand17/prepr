@@ -47,12 +47,11 @@ class Category extends Command
 
             if ($categories->count() > 0) {
                 foreach ($categories as $key => $single_category) {
-                    $checkCategory = Categories::where('title',$single_category->name)->first();
+                    $checkCategory = Categories::where('title', $single_category->name)->first();
 
-                    if($checkCategory){
+                    if ($checkCategory) {
                         $newCategory = $checkCategory;
-                    }
-                    else{
+                    } else {
                         $newCategory = new Categories();
                     }
 

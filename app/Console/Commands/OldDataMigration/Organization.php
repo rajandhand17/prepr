@@ -49,31 +49,28 @@ class Organization extends Command
             if ($organizations->count() > 0) {
                 foreach ($organizations as $key => $organization) {
                     $checkUser = \App\Models\User::find($organization->user_id);
-                    if(!$checkUser){
+                    if (!$checkUser) {
                         continue;
                     }
-                    $organizationDetails = DB::connection('mysql2')->table('organisations_details')->where('organisations_id',$organization->id)->first();
-                    $organizationPeoples = DB::connection('mysql2')->table('peoples')->where('organisation',$organization->id)->get();
+                    $organizationDetails = DB::connection('mysql2')->table('organisations_details')->where('organisations_id', $organization->id)->first();
+                    $organizationPeoples = DB::connection('mysql2')->table('peoples')->where('organisation', $organization->id)->get();
 
                     $checkOrganization = \App\Models\Organization::find($organization->id);
-                    if($checkOrganization){
+                    if ($checkOrganization) {
                         $newOrganization = $checkOrganization;
-                    }
-                    else{
+                    } else {
                         $newOrganization = new \App\Models\Organization();
                     }
                     $category = null;
-                    if($organization->category != "0" && $organization->category != null){
+                    if ($organization->category != '0' && $organization->category != null) {
                         $checkOldCategory = DB::connection('mysql2')->table('categories')->find($organization->category);
-                        $checkCategory = \App\Models\Category::where('title',$checkOldCategory->name)->first();
-                        if($checkCategory){
+                        $checkCategory = \App\Models\Category::where('title', $checkOldCategory->name)->first();
+                        if ($checkCategory) {
                             $category = $checkCategory->id;
-                        }
-                        else{
+                        } else {
                             $category = null;
                         }
                     }
-
 
                     $newOrganization->id = $organization->id;
                     $newOrganization->language = $organization->language;
@@ -95,19 +92,17 @@ class Organization extends Command
 
                     $checkUser->attachRole('organization_owner', $newOrganization->id);
 
-                    $checkOrganizationAddress = OrganizationAddress::where('organization_id',$organization->id)->first();
-                    if($checkOrganization){
+                    $checkOrganizationAddress = OrganizationAddress::where('organization_id', $organization->id)->first();
+                    if ($checkOrganization) {
                         $organization_address = $checkOrganizationAddress;
-                    }
-                    else{
+                    } else {
                         $organization_address = new OrganizationAddress();
                     }
-
 
                     $organization_address->organization_id = $newOrganization->id;
                     $organization_address->latitude = isset($organization->latitude) ? $organization->latitude : null;
                     $organization_address->longitude = isset($organization->longitude) ? $organization->longitude : null;
-                    $organization_address->full_address = (isset($organizationDetails->address_one) && isset($organizationDetails->address_one)) ? $organizationDetails->address_one.', '.$organizationDetails->address_two : null ;
+                    $organization_address->full_address = (isset($organizationDetails->address_one) && isset($organizationDetails->address_one)) ? $organizationDetails->address_one.', '.$organizationDetails->address_two : null;
                     $organization_address->address_1 = isset($organizationDetails->address_one) ? $organizationDetails->address_one : null;
                     $organization_address->address_2 = isset($organizationDetails->city) ? $organizationDetails->city : null;
                     $organization_address->city = isset($organizationDetails->city) ? $organizationDetails->city : null;
@@ -116,10 +111,8 @@ class Organization extends Command
                     $organization_address->zip_code = isset($organizationDetails->postal_code) ? $organizationDetails->postal_code : null;
                     $organization_address->save();
 
-
-
-                    if($organizationPeoples){
-                        OrganizationMember::where('organization_id',$organization->id)->delete();
+                    if ($organizationPeoples) {
+                        OrganizationMember::where('organization_id', $organization->id)->delete();
                         foreach ($organizationPeoples as $organizationPeople) {
                             $organization_member = new OrganizationMember();
                             $organization_member->organization_id = $newOrganization->id;
@@ -129,12 +122,10 @@ class Organization extends Command
                             $organization_member->save();
                         }
                     }
-
-
-
                 }
                 DB::commit();
                 $this->info('Migrating of old data for organizations table completed.');
+
                 return;
             }
             DB::rollback();
