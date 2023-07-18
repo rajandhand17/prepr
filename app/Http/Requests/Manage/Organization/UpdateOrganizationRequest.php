@@ -3,9 +3,11 @@
 namespace App\Http\Requests\Manage\Organization;
 
 use App\Services\Manage\OrganizationService;
+use ChargeBee\ChargeBee\Exceptions\InvalidRequestException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use League\Container\Exception\NotFoundException;
 
 class UpdateOrganizationRequest extends FormRequest
 {
@@ -27,7 +29,9 @@ class UpdateOrganizationRequest extends FormRequest
     public function rules()
     {
         $organization = OrganizationService::getOrganizationExistBasedOnSlug(request()->route('slug'));
-
+        if(!$organization){
+            throw new NotFoundException();
+        }
         $base_rules = [
             'title'           => 'required|max:255|unique:organizations,title,'.$organization->id,
             'description'     => 'required',

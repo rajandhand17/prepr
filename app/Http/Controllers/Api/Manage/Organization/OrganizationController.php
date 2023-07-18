@@ -519,7 +519,7 @@ class OrganizationController extends AppBaseController
         try {
             $checkOrganization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
             if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_name_unique'), 422);
+                return $this->sendError(__('responses.organization_not_found'), 404);
             }
             if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_update_access_denied'), 403);
