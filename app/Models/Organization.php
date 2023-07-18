@@ -36,10 +36,12 @@ class Organization extends LaratrustTeam
     {
         return config('site-settings.aws_url').$value;
     }
+
     public function getProfileImageAttribute($value)
     {
         return config('site-settings.aws_url').$value;
     }
+
     public function getCategory()
     {
         return $this->hasOne(Category::class, 'id');

@@ -80,7 +80,7 @@ class Organization extends Command
                     $newOrganization->description = isset($organization->description) ? $organization->description : null;
                     $newOrganization->slug = $organization->slug;
                     $newOrganization->cover_image = (!empty($organization->cover_image)) ? $organization->cover_image : config('site-settings.default_organization_cover_image');
-                    $newOrganization->profile_image = (!empty($organization->profile_image)) ? $organization->profile_image : config('site-settings.default_organization_profile_image');;
+                    $newOrganization->profile_image = (!empty($organization->profile_image)) ? $organization->profile_image : config('site-settings.default_organization_profile_image');
                     $newOrganization->website = isset($organization->website) ? $organization->website : null;
                     $newOrganization->about = isset($organization->about) ? $organization->about : null;
                     $newOrganization->category = $category;
