@@ -9,7 +9,6 @@ use DB;
 
 class MemberManagementService
 {
-
     public static function getComponentBasedUsers($componentCollectionObject, $component, $request)
     {
         try {
@@ -53,6 +52,7 @@ class MemberManagementService
             }
             if ($module_type != null) {
                 $memberList = self::filterUserList($memberListCollection, $request);
+
                 return $memberList->paginate(config('site-settings.pagination_per_page'));
             }
 
@@ -65,7 +65,6 @@ class MemberManagementService
     public static function filterUserList($componentCollectionObject, $request)
     {
         try {
-
             if ($request->has('search') && !empty($request->search)) {
                 $componentCollectionObject = $componentCollectionObject->where('invitee_name', 'like', '%'.$request->search.'%');
                 $componentCollectionObject = $componentCollectionObject->orWhere('role', 'like', '%'.$request->search.'%');
@@ -96,7 +95,7 @@ class MemberManagementService
                     default:
                         $invite_status = null;
                 }
-                if($invite_status != null) {
+                if ($invite_status != null) {
                     $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
                 }
             }
@@ -121,15 +120,13 @@ class MemberManagementService
                     default:
                         $invite_type = null;
                 }
-                if($invite_type != null ){
-                    if($invite_type == 'auto_created'){
+                if ($invite_type != null) {
+                    if ($invite_type == 'auto_created') {
                         $componentCollectionObject = $componentCollectionObject->where('type', config('constants.member_management_type.auto_created'));
-                    }
-                    else{
+                    } else {
                         $componentCollectionObject = $componentCollectionObject->where('invite_type', $invite_type);
                     }
                 }
-
             }
             if ($request->has('email_status') && !empty($request->email_status)) {
                 $email_status = null;
@@ -149,7 +146,7 @@ class MemberManagementService
                     default:
                         $email_status = null;
                 }
-                if($email_status != null){
+                if ($email_status != null) {
                     $componentCollectionObject = $componentCollectionObject->where('email_status', $email_status);
                 }
             }
