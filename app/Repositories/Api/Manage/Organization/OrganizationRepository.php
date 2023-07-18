@@ -25,16 +25,12 @@ class OrganizationRepository implements OrganizationInterface
     public function getOrganizationList($request)
     {
         try {
-            $organization = $this->organizationService->getOrganizationList($request);
-            if ($organization) {
-                return $organization;
-            }
-
-            return false;
+            return $this->organizationService->getOrganizationList($request);
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public function getOrganizationExistBasedOnSlug($slug)
     {
         try{
@@ -64,77 +60,45 @@ class OrganizationRepository implements OrganizationInterface
 
     public function uploadOrganizationProfileImage($request)
     {
-        $upload_profile_image = $this->organizationService->uploadOrganizationProfileImage($request);
-        if ($upload_profile_image) {
-            return $upload_profile_image;
-        } else {
+        try{
+            return $this->organizationService->uploadOrganizationProfileImage($request);
+        } catch (\Exception $e) {
             return false;
         }
+
     }
 
     public function uploadOrganizationCoverImage($request)
     {
-        $upload_profile_image = $this->organizationService->uploadOrganizationCoverImage($request);
-        if ($upload_profile_image) {
-            return $upload_profile_image;
-        } else {
+        try{
+            return $this->organizationService->uploadOrganizationCoverImage($request);
+        } catch (\Exception $e) {
             return false;
         }
     }
 
     public function createOrganization($request, $profile_image_path, $cover_image_path)
     {
-        $organization = $this->organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
-        if ($organization) {
-            return $organization;
-        } else {
-            return false;
-        }
-    }
-
-    public function organizationAddAddress($request, $organization_id)
-    {
-        $organization = $this->organizationAddressService->createOrganizationAddress($request, $organization_id);
-        if ($organization) {
-            return $organization;
-        }
-
-        return false;
-    }
-
-    public function organizationAddMembers($request, $organization_id)
-    {
-        $organization_member = $this->organizationMemberService->organizationAddMembers($request, $organization_id);
-        if ($organization_member) {
-            return $organization_member;
-        }
-
-        return false;
-    }
-
-    public function getOrganization($request, $slug)
-    {
-        try {
-            $organization = $this->organizationService->getOrganization($slug, $request->language);
-            if ($organization) {
-                return $organization;
-            }
-
-            return false;
+        try{
+            return $this->organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkSlug($slug): bool
+    public function createOrganizationAddress($request, $organization_id)
     {
-        try {
-            $organization = $this->organizationService->checkSlug($slug);
-            if ($organization) {
-                return true;
-            }
-
+        try{
+            return $this->organizationAddressService->createOrganizationAddress($request, $organization_id);
+        } catch (\Exception $e) {
             return false;
+        }
+    }
+
+    public function createOrganizationMembers($request, $organization_id)
+    {
+        try{
+            return $this->organizationMemberService->createOrganizationMembers($request, $organization_id);
         } catch (\Exception $e) {
             return false;
         }
@@ -143,12 +107,7 @@ class OrganizationRepository implements OrganizationInterface
     public function updateOrganizationProfileImage($request)
     {
         try {
-            $profile_image_path = $this->organizationService->updateOrganizationProfileImage($request);
-            if ($profile_image_path) {
-                return $profile_image_path;
-            }
-
-            return false;
+            return $this->organizationService->updateOrganizationProfileImage($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -157,12 +116,7 @@ class OrganizationRepository implements OrganizationInterface
     public function updateOrganizationCoverImage($request)
     {
         try {
-            $cover_images_path = $this->organizationService->updateOrganizationCoverImage($request);
-            if ($cover_images_path) {
-                return $cover_images_path;
-            }
-
-            return false;
+            return $this->organizationService->updateOrganizationCoverImage($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -171,12 +125,7 @@ class OrganizationRepository implements OrganizationInterface
     public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug)
     {
         try {
-            $organization = $this->organizationService->updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
-            if ($organization) {
-                return $organization;
-            }
-
-            return false;
+            return $this->organizationService->updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
         } catch (\Exception $e) {
             return false;
         }
@@ -200,12 +149,23 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-
-
     public function deleteOrganization($slug, $language)
     {
         try {
             return  $this->organizationService->deleteOrganization($slug, $language);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkSlug($slug)
+    {
+        try {
+            $organization = $this->organizationService->checkSlug($slug);
+            if ($organization) {
+                return true;
+            }
+            return false;
         } catch (\Exception $e) {
             return false;
         }

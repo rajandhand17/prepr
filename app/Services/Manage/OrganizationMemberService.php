@@ -8,7 +8,7 @@ use DB;
 
 class OrganizationMemberService
 {
-    public static function organizationAddMembers($request, $organization_id)
+    public static function createOrganizationMembers($request, $organization_id)
     {
         try {
             DB::beginTransaction();
