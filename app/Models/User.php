@@ -171,7 +171,6 @@ class User extends Authenticatable
                     $member_manager = MemberManagement::where('id', $member->id)->update(['invite_status'=>'1']);
                 }
             }
-
             if ($user->id) {
                 if ($request->register_type == 'organization') {
                     $organization = new Organization();

@@ -7,18 +7,18 @@ use App\Http\Requests\Manage\Lab\CreateLabRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
-use App\Repositories\Api\Manage\LabAchievement\LabAcheivementRepository;
+use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
 use Illuminate\Http\Request;
 
 class LabController extends AppBaseController
 {
     private $labRepository;
-    private $labAcheivementRepository;
+    private $labAchievementRepository;
 
-    public function __construct(LabRepository $labRepository, LabAcheivementRepository $labAcheivementRepository)
+    public function __construct(LabRepository $labRepository, LabAchievementRepository $labAcheivementRepository)
     {
         $this->labRepository = $labRepository;
-        $this->labAcheivementRepository = $labAcheivementRepository;
+        $this->labAchievementRepository = $labAcheivementRepository;
     }
 
     public function index(Request $request)
@@ -48,7 +48,7 @@ class LabController extends AppBaseController
                 $upload_cover_image = $upload_cover_image;
             }
             if ($request->is_achievement_enabled == 'yes') {
-                $upload_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                $upload_achievement_image = $this->labAchievementRepository->uploadAcheivementImage($request->achievement_image);
                 if ($upload_achievement_image == false) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
@@ -102,7 +102,7 @@ class LabController extends AppBaseController
                 $upload_cover_image = $upload_cover_image;
             }
             if ($request->is_achievement_enabled == 'yes') {
-                $upload_acheivements_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                $upload_acheivements_image = $this->labAchievementRepository->uploadAcheivementImage($request->achievement_image);
                 if ($upload_acheivements_image == false) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
