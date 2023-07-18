@@ -13,6 +13,7 @@ class Organization extends LaratrustTeam
     protected $table = 'organizations';
 
     protected $fillable = [
+        'uuid',
         'title',
         'display_name',
         'description',
@@ -31,6 +32,14 @@ class Organization extends LaratrustTeam
 
     ];
 
+    public function getCoverImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+    public function getProfileImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
     public function getCategory()
     {
         return $this->hasOne(Category::class, 'id');

@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use DB;
+use HiFolks\RandoPhp\Randomize;
 
 class OrganizationService
 {
@@ -171,6 +172,7 @@ class OrganizationService
             $organization = new Organization();
             $organization->language = isset($request->language) ? $request->language : 'en';
             $organization->user_id = auth()->user()->id;
+            $organization->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $organization->title = $request->title;
             $organization->display_name = $request->title;
             $organization->description = isset($request->description) ? $request->description : null;

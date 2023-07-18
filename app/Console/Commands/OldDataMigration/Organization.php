@@ -5,6 +5,7 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Models\OrganizationAddress;
 use App\Models\OrganizationMember;
 use DB;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 
 class Organization extends Command
@@ -67,20 +68,19 @@ class Organization extends Command
                         $checkCategory = \App\Models\Category::where('title', $checkOldCategory->name)->first();
                         if ($checkCategory) {
                             $category = $checkCategory->id;
-                        } else {
-                            $category = null;
                         }
                     }
 
                     $newOrganization->id = $organization->id;
+                    $newOrganization->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newOrganization->language = $organization->language;
                     $newOrganization->user_id = $organization->user_id;
                     $newOrganization->title = $organization->name;
                     $newOrganization->display_name = $organization->name;
                     $newOrganization->description = isset($organization->description) ? $organization->description : null;
                     $newOrganization->slug = $organization->slug;
-                    $newOrganization->cover_image = $organization->cover_image;
-                    $newOrganization->profile_image = $organization->profile_image;
+                    $newOrganization->cover_image = (!empty($organization->cover_image)) ? $organization->cover_image : config('site-settings.default_organization_cover_image');
+                    $newOrganization->profile_image = (!empty($organization->profile_image)) ? $organization->profile_image : config('site-settings.default_organization_profile_image');;
                     $newOrganization->website = isset($organization->website) ? $organization->website : null;
                     $newOrganization->about = isset($organization->about) ? $organization->about : null;
                     $newOrganization->category = $category;
