@@ -135,7 +135,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             $organization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
-            if($organization){
+            if ($organization) {
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
             }
 
@@ -521,7 +521,7 @@ class OrganizationController extends AppBaseController
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
             }
-            if(!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
+            if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_update_access_denied'), 403);
             }
             $profile_images_path = null;
@@ -608,7 +608,7 @@ class OrganizationController extends AppBaseController
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
             }
-            if(!auth()->user()->isAbleTo('delete_organization', $checkOrganization)) {
+            if (!auth()->user()->isAbleTo('delete_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_delete_access_denied'), 403);
             }
             $deleteOrganization = $this->organizationRepository->deleteOrganization($slug, $request->language);
@@ -629,6 +629,7 @@ class OrganizationController extends AppBaseController
             if (!$organization) {
                 return $this->sendResponse([], __('responses.lab_slug_available'), 200);
             }
+
             return $this->sendError(__('responses.already_exists'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

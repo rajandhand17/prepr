@@ -60,17 +60,16 @@ class OrganizationRepository implements OrganizationInterface
 
     public function uploadOrganizationProfileImage($request)
     {
-        try{
+        try {
             return $this->organizationService->uploadOrganizationProfileImage($request);
         } catch (\Exception $e) {
             return false;
         }
-
     }
 
     public function uploadOrganizationCoverImage($request)
     {
-        try{
+        try {
             return $this->organizationService->uploadOrganizationCoverImage($request);
         } catch (\Exception $e) {
             return false;
@@ -79,7 +78,7 @@ class OrganizationRepository implements OrganizationInterface
 
     public function createOrganization($request, $profile_image_path, $cover_image_path)
     {
-        try{
+        try {
             return $this->organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
         } catch (\Exception $e) {
             return false;
@@ -88,7 +87,7 @@ class OrganizationRepository implements OrganizationInterface
 
     public function createOrganizationAddress($request, $organization_id)
     {
-        try{
+        try {
             return $this->organizationAddressService->createOrganizationAddress($request, $organization_id);
         } catch (\Exception $e) {
             return false;
@@ -97,7 +96,7 @@ class OrganizationRepository implements OrganizationInterface
 
     public function createOrganizationMembers($request, $organization_id)
     {
-        try{
+        try {
             return $this->organizationMemberService->createOrganizationMembers($request, $organization_id);
         } catch (\Exception $e) {
             return false;
@@ -165,10 +164,10 @@ class OrganizationRepository implements OrganizationInterface
             if ($organization) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
-
 }
