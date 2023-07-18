@@ -42,7 +42,7 @@ class MemberManagementResource extends JsonResource
             'name'          => $this->invitee_name,
             'email'         => $this->email,
             'username'      => $username,
-            'invited_by'    => UserService::joinName($invtee_user->first_name,$invtee_user->last_name),
+            'invited_by'    => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
             'role'          => $this->role,
             'invite_status' => $invite_status,
             'auto_invite'   => $auto_invite,
