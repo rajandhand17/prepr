@@ -33,7 +33,7 @@ class OrganizationRepository implements OrganizationInterface
 
     public function getOrganizationExistBasedOnSlug($slug)
     {
-        try{
+        try {
             return $this->organizationService->getOrganizationExistBasedOnSlug($slug);
         } catch (\Exception $e) {
             return false;
@@ -42,7 +42,7 @@ class OrganizationRepository implements OrganizationInterface
 
     public function checkOrganizationExistBasedOnTitle($request)
     {
-        try{
+        try {
             return $this->organizationService->checkOrganizationExistBasedOnTitle($request);
         } catch (\Exception $e) {
             return false;
@@ -51,7 +51,7 @@ class OrganizationRepository implements OrganizationInterface
 
     public function checkOrganizationExistInTrashBasedOnTitle($request)
     {
-        try{
+        try {
             return $this->organizationService->checkOrganizationExistInTrashBasedOnTitle($request);
         } catch (\Exception $e) {
             return false;

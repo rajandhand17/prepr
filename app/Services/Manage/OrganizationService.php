@@ -9,7 +9,6 @@ use DB;
 
 class OrganizationService
 {
-
     public static function getOrganizationList($request)
     {
         try {

@@ -138,6 +138,7 @@ class OrganizationController extends AppBaseController
             if($organization){
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
             }
+
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -603,7 +604,6 @@ class OrganizationController extends AppBaseController
     public function delete($slug, Request $request)
     {
         try {
-
             $checkOrganization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
@@ -615,6 +615,7 @@ class OrganizationController extends AppBaseController
             if ($deleteOrganization) {
                 return $this->sendResponse(null, __('responses.organization_delete'), 200);
             }
+
             return $this->sendError(__('responses.organization_not_delete'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
