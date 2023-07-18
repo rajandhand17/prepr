@@ -7,20 +7,17 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use HiFolks\RandoPhp\Randomize;
-use DB;
 
 class LabService
 {
-
     public static function getLabList($request)
     {
         try {
             $lab_list = Lab::select()->where('organization_id', '=', $request->organization_id);
 
-            $lab_list = self::filterLabList($lab_list,$request);
+            $lab_list = self::filterLabList($lab_list, $request);
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
-
         } catch (\Exception $e) {
             return false;
         }
@@ -32,7 +29,6 @@ class LabService
             if ($request->has('search') && !empty($request->search)) {
                 $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
             }
-
 
             if ($request->has('status') && !empty($request->status)) {
                 $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
@@ -73,10 +69,11 @@ class LabService
                     default:
                         $privacy = null;
                 }
-                if($privacy != null) {
+                if ($privacy != null) {
                     $lab_list = $lab_list->where('privacy', $privacy);
                 }
             }
+
             return $lab_list;
         } catch (\Exception $e) {
             return false;
@@ -108,7 +105,6 @@ class LabService
 
     public function createLab($request, $upload_cover_image)
     {
-
         $status = config('constants.lab_status.draft');
         switch($request->request_type) {
             case 'draft':
@@ -170,8 +166,6 @@ class LabService
         return $lab;
     }
 
-
-
     public function updateLab($slug, $request, $upload_cover_image)
     {
         try {
@@ -208,8 +202,8 @@ class LabService
 
                 return $lab;
             }
-            return false;
 
+            return false;
         } catch (\Exception $e) {
             return false;
         }
@@ -218,10 +212,10 @@ class LabService
     public function deleteLab($lab_id)
     {
         try {
-
             $lab = Lab::find($lab_id)->delete();
             if (!$lab) {
                 $associatedLabs = event(new DeleteLabAssociatedData($lab_id));
+
                 return false;
             }
 

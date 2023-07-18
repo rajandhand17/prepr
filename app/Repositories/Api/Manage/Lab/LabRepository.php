@@ -38,7 +38,6 @@ class LabRepository implements LabInterface
         $this->componentAssociationService = $componentAssociationService;
     }
 
-
     public function getLabList($request)
     {
         try {
@@ -85,12 +84,15 @@ class LabRepository implements LabInterface
             });
             if ($createdLab) {
                 DB::commit();
+
                 return $createdLab;
             }
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
@@ -98,7 +100,6 @@ class LabRepository implements LabInterface
     public function updateLab($slug, $request, $upload_cover_image, $upload_achievement_image)
     {
         try {
-
             $updatedLab = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
                 $updatedLab = $this->labService->updateLab($slug, $request, $upload_cover_image);
                 $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updatedLab->id);
@@ -115,9 +116,11 @@ class LabRepository implements LabInterface
             });
             if ($updatedLab) {
                 DB::commit();
+
                 return $updatedLab;
             }
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -140,6 +143,7 @@ class LabRepository implements LabInterface
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
@@ -163,5 +167,4 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-
 }

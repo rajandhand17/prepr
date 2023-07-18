@@ -6,9 +6,9 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use InfyOm\Generator\Utils\ResponseUtil;
 use League\Container\Exception\NotFoundException;
+use Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
-use Response;
 
 class Handler extends ExceptionHandler
 {
@@ -49,24 +49,22 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-
         });
     }
 
     public function render($request, Throwable $e)
     {
-        if($e instanceof NotFoundException){
+        if ($e instanceof NotFoundException) {
             return Response::json(ResponseUtil::makeError('404! not found'), 404);
         }
 
-        if($e instanceof AuthenticationException){
+        if ($e instanceof AuthenticationException) {
             return Response::json(ResponseUtil::makeError('403! Access Denied. Please login.'), 403);
         }
 
-        if($e instanceof MethodNotAllowedHttpException){
+        if ($e instanceof MethodNotAllowedHttpException) {
             return Response::json(ResponseUtil::makeError('403! Illegal Request.'), 405);
         }
-
 
         return parent::render($request, $e);
     }

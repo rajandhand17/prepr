@@ -20,7 +20,7 @@ class LabAddressService
         return true;
     }
 
-    public function updateLabAddress($request,$lab_id)
+    public function updateLabAddress($request, $lab_id)
     {
         try {
             $labaddress = LabAddress::where('lab_id', $lab_id)->first();
