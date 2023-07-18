@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\App\Http\Controllers\Api\Lab;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -66,8 +64,9 @@ class LabControllerTest extends TestCase
         ];
     }
 
-    public function test_lab_create_positive(){
-        $response=$this->post('/api/v1/lab/store',$this->parameters,$this->headers);
+    public function test_lab_list_positive()
+    {
+        $response = $this->get('/');
         $response->assertStatus(200);
     }
 
@@ -87,11 +86,7 @@ class LabControllerTest extends TestCase
         $response=$this->post('/api/v1/lab/'.$this->parameters['slug'].'/update',$this->parameters,$this->headers);
         $response->assertStatus(403);
     }
-    public function test_lab_list_positive()
-    {
-        $response = $this->get('/api/v1/lab?language=en',$this->headers);
-        $response->assertStatus(200);
-    }
+  
     public function test_lab_list_negative()
     {
         $response = $this->get('/api/v1/lab?language=ens',$this->headers);

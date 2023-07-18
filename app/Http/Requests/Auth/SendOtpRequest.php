@@ -27,7 +27,7 @@ class SendOtpRequest extends FormRequest
     {
         return [
             'email'  => 'required|email|max:50|exists:users,email',
-            'purpose'=> 'required',
+            'purpose'=> 'required|in:forget_password,verify_email,two_factor_verification',
         ];
     }
 

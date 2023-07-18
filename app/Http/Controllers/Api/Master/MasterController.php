@@ -1079,6 +1079,7 @@ class MasterController extends AppBaseController
             if ($pitch_templates) {
                 return $this->sendResponse(FlexibleDateDurationResource::collection($pitch_templates), __('responses.found_pitch_templates_list'));
             }
+
             return $this->sendResponse(null, __('responses.not_found_pitch_templates_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -1191,6 +1192,7 @@ class MasterController extends AppBaseController
             if ($socialconnect) {
                 return $this->sendResponse(SocialConnect::collection($socialconnect), __('responses.social_connect_list'));
             }
+
             return $this->sendResponse(null, __('responses.not_found_social_connect_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);

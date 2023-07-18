@@ -23,6 +23,7 @@ class UserController extends AppBaseController
             if ($userListing != false) {
                 return $this->sendResponse(UserSearchResource::collection($userListing), __('responses.found_user_list'));
             }
+
             return $this->sendError(__('responses.found_user_list'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

@@ -2924,7 +2924,7 @@
     "responses.found_exists_phone_list":"Bonne nouvelle! Le numéro de téléphone que vous avez choisi est disponible.",
     "responses.user_register":"Utilisateur enregistré avec succès !",
     "responses.incorrect_password":"C'est un mauvais mot de passe !",
-    "responses.user_login_sucess":"Accueillir! Votre connexion a réussi.",
+    "responses.user_login_success":"Accueillir! Votre connexion a réussi.",
     "responses.found_reference_code":"Ce code de référence est trouvé !",
     "responses.not_found_reference_code":"Ce code de référence est introuvable !",
     "responses.change_password_success":"Votre mot de passe a changé ! Veuillez vous connecter avec un nouveau mot de passe !",
@@ -2938,7 +2938,7 @@
     "responses.not_found_social_connect_list":"Liste de connexion sociale introuvable !",
     "responses.user_verify_email_otp":"Veuillez vérifier les e-mails pour obtenir otp pour vérification !",
     "responses.failed_email":"Il y a eu un problème dans l'envoi de votre courriel.",
-    "responses.failed_registeration":"Impossible d'enregistrer l'utilisateur.",
+    "responses.failed_registration":"Impossible d'enregistrer l'utilisateur.",
     "responses.two_factor_otp":"Deux facteurs otp sont envoyés sur votre e-mail enregistré !, veuillez vérifier avec otp.",
     "responses.forget_password_email":"Nous avons reçu une demande d'oubli de mot de passe. Vous pouvez réinitialiser votre mot de passe en utilisant cet OTP :",
     "responses.reset_password_email":"Une fois le mot de passe perdu réinitialisé avec succès, veuillez vous connecter avec votre nouveau mot de passe.",
@@ -3008,6 +3008,6 @@
     "responses.csv_required":"Veuillez choisir le fichier csv, c'est obligatoire!",
     "responses.auto_invite_status":"Veuillez entrer le statut d'invitation automatique!",
     "responses.user_id_not_exists":"Cet identifiant d'utilisateur n'existe pas!",
-    "responses.member_manage_type":"Le type de gestionnaire de membre fourni n'est pas valide!" 
+    "responses.member_manage_type":"Le type de gestionnaire de membre fourni n'est pas valide!"
 
 }

@@ -3,18 +3,12 @@
 namespace App\Listeners\Lab;
 
 use App\Events\Labs\DeleteLabAssociatedData;
-use App\Models\ComponentAssociation;
-use App\Models\LabAcheivement;
-use App\Models\LabAddress;
-use App\Models\LabExternalLinks;
-use App\Models\LabSkillsGroupsStack;
-use App\Models\LabTagsGroups;
-use App\Services\ComponentAssociationService;
-use App\Services\LabAcheivementService;
-use App\Services\LabAddressService;
-use App\Services\LabExternalLinksService;
-use App\Services\LabSkillsGroupsStackService;
-use App\Services\LabTagsGroupsService;
+use App\Services\Manage\ComponentAssociationService;
+use App\Services\Manage\LabAcheivementService;
+use App\Services\Manage\LabAddressService;
+use App\Services\Manage\LabExternalLinksService;
+use App\Services\Manage\LabSkillsGroupsStackService;
+use App\Services\Manage\LabTagsGroupsService;
 
 class HandleDeleteLabAssociatedData
 {
@@ -39,32 +33,33 @@ class HandleDeleteLabAssociatedData
     {
         try {
             $lab_id = $event->labId;
-            $componentAssociation =ComponentAssociationService::deletelabAssociation($lab_id);
-            if(!$componentAssociation){
+            $componentAssociation = ComponentAssociationService::deletelabAssociation($lab_id);
+            if (!$componentAssociation) {
                 return false;
             }
-            $deleteLabAchievement=LabAcheivementService::deleteLabAchievement($lab_id);
-            if(!$deleteLabAchievement){
+            $deleteLabAchievement = LabAcheivementService::deleteLabAchievement($lab_id);
+            if (!$deleteLabAchievement) {
                 return false;
             }
-            $labExternalLinks=LabExternalLinksService::deleteLabExternalLinks($lab_id);
-            if(!$labExternalLinks){
+            $labExternalLinks = LabExternalLinksService::deleteLabExternalLinks($lab_id);
+            if (!$labExternalLinks) {
                 return false;
             }
-            $labTagGroups=LabTagsGroupsService::deleteLabTagsGroups($lab_id);
-            
-            if(!$labTagGroups){
+            $labTagGroups = LabTagsGroupsService::deleteLabTagsGroups($lab_id);
+
+            if (!$labTagGroups) {
                 return false;
             }
-            $labSkillsGroupsService=LabSkillsGroupsStackService::deleteLabSkillsGroupsStack($lab_id);
-            if(!$labSkillsGroupsService){
+            $labSkillsGroupsService = LabSkillsGroupsStackService::deleteLabSkillsGroupsStack($lab_id);
+            if (!$labSkillsGroupsService) {
                 return false;
             }
-            $labAddress=LabAddressService::deleteLabAddress($lab_id);
-           
-            if(!$labAddress){
+            $labAddress = LabAddressService::deleteLabAddress($lab_id);
+
+            if (!$labAddress) {
                 return false;
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

@@ -1,0 +1,347 @@
+<?php
+
+namespace App\Services\Manage;
+
+use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
+use App\Models\Organization;
+use DB;
+
+class OrganizationService
+{
+    public static function checkOrganizationExist($request)
+    {
+        try {
+            $organization_exists = Organization::select('id')->where('title', $request->title)->first();
+            if ($organization_exists == null) {
+                return true;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkOrganizationExistInTrash($request)
+    {
+        try {
+            $organization_trashed_exists = Organization::select('id')->where('title', $request->title)->onlyTrashed()->first();
+            if ($organization_trashed_exists == null) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationExistBasedOnSlug($slug)
+    {
+        try {
+            $organization = Organization::where('slug', $slug)->first();
+            if ($organization != null) {
+                return $organization;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationExistBasedOnId($id)
+    {
+        try {
+            $organization = Organization::find($id);
+            if ($organization != null) {
+                return $organization;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function uploadOrganizationProfileImage($request)
+    {
+        try {
+            $profile_image_path = FileUploadHelper::uploadImageToS3($request->profile_image, 'organization');
+            if ($profile_image_path == false) {
+                return false;
+            }
+
+            return $profile_image_path;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function uploadOrganizationCoverImage($request)
+    {
+        try {
+            $cover_image_path = FileUploadHelper::uploadImageToS3($request->cover_image, 'organization');
+            if ($cover_image_path == false) {
+                return false;
+            }
+
+            return $cover_image_path;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updateOrganizationProfileImage($request)
+    {
+        try {
+            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
+            if ($profile_image_path == false) {
+                return false;
+            }
+
+            return $profile_image_path;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updateOrganizationCoverImage($request)
+    {
+        try {
+            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->cover_image, 'organization');
+            if ($profile_image_path == false) {
+                return false;
+            }
+
+            return $profile_image_path;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkSlug($slug)
+    {
+        try {
+            $slug = Organization::where('slug', $slug)->first();
+            if ($slug) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createOrganization($request, $profile_image_path, $cover_image_path)
+    {
+        try {
+            DB::beginTransaction();
+            $model = new Organization();
+
+            $organization = new Organization();
+            $organization->language = isset($request->language) ? $request->language : 'en';
+            $organization->user_id = auth()->user()->id;
+            $organization->title = $request->title;
+            $organization->display_name = $request->title;
+            $organization->description = isset($request->description) ? $request->description : null;
+            $organization->slug = UtilityHelper::generateSlug($request->slug, $model);
+            $organization->cover_image = $cover_image_path;
+            $organization->profile_image = $profile_image_path;
+            $organization->website = isset($request->website) ? $request->website : null;
+            $organization->about = isset($request->about) ? $request->about : null;
+            $organization->category = $request->category;
+            $organization->status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : '3');
+            $organization->total_employees = $request->total_employees;
+            if ($organization->save()) {
+                DB::commit();
+
+                return $organization;
+            }
+            DB::rollback();
+
+            return false;
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return false;
+        }
+    }
+
+    public static function viewOrganization($search = null, $language = 'en')
+    {
+        try {
+            $organization_list = Organization::select();
+            if ($search != null) {
+                $organization_list = $organization_list->where('slug', $search);
+            }
+            $organization_list = $organization_list->get();
+            if (!$organization_list->isEmpty()) {
+                $organization_list->transform(function ($item) {
+                    if ($item['status'] == 0) {
+                        $item['status'] = 'draft';
+                    }
+                    if ($item['status'] == 1) {
+                        $item['status'] = 'published';
+                    }
+                    if ($item['status'] == 2) {
+                        $item['status'] = 'deactivated';
+                    }
+
+                    return $item;
+                });
+
+                return $organization_list;
+            }
+
+            return 'not_exists';
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationList($request)
+    {
+        try {
+            $organization_list = Organization::select();
+
+            $organization_list = self::filterOrganizationList($request, $organization_list);
+
+            return $organization_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganization($slug = null, $language = 'en')
+    {
+        try {
+            $exists = Organization::select('id')->where('slug', $slug)->first();
+            if ($exists !== null) {
+                $organization = Organization::where('slug', $slug)->delete();
+                if ($organization) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return 'not_exists';
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updateOrganization($request, $cover_images_path, $profile_images_path, $slug)
+    {
+        try {
+            DB::beginTransaction();
+            $organization = Organization::where('slug', $slug)->first();
+            if ($organization !== null) {
+                $organization->language = ($request->has('language')) ? $request->language : $organization->language;
+                $organization->title = ($request->has('title')) ? $request->title : $organization->title;
+                $organization->display_name = ($request->has('display_name')) ? $request->title : $organization->display_name;
+                $organization->description = ($request->has('description')) ? $request->description : $organization->description;
+                $organization->cover_image = ($cover_images_path != null) ? $cover_images_path : $organization->cover_image;
+                $organization->profile_image = ($profile_images_path != null) ? $profile_images_path : $organization->profile_image;
+                $organization->website = ($request->has('website')) ? $request->website : $organization->website;
+                $organization->about = ($request->has('about')) ? $request->about : $organization->about;
+                $organization->category = ($request->has('category')) ? $request->category : $organization->category;
+                $organization->status = ($request->has('status')) ? (($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : '3')) : $organization->status;
+                $organization->total_employees = ($request->has('total_employees')) ? $request->total_employees : $organization->total_employees;
+                $organization->save();
+
+                if ($organization) {
+                    DB::commit();
+
+                    return $organization;
+                }
+                DB::rollBack();
+
+                return false;
+            }
+            DB::rollBack();
+
+            return false;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    public static function filterOrganizationList($request, $organization_list)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $organization_list = $organization_list->where('organizations.title', 'like', '%'.$request->search.'%');
+            }
+
+            if ($request->has('status') && !empty($request->status)) {
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $organization_list = $organization_list->where('organizations.status', $status);
+            } else {
+                $organization_list = $organization_list->where('organizations.status', '1');
+            }
+
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $organization_list = $organization_list->whereIn('organizations.category', $request->category);
+            }
+
+            if ($request->has('owner') && !empty($request->owner)) {
+                switch ($request->owner) {
+                    case 'invited':
+
+                        $invited_organization_ids = MemberManagementService::getFilteredMemberManagementList(
+                            [
+                                'module_type'   => '0',
+                                'email'         => auth()->user()->email,
+                                'role'          => 'Organization Manager',
+                                'invite_status' => '1',
+                            ]
+                        )->pluck('module_id');
+                        $organization_list = $organization_list->whereIn('organizations.id', $invited_organization_ids);
+                        break;
+                    case 'my':
+                        $organization_list = $organization_list->where('organizations.user_id', auth()->user()->id);
+                        break;
+                    default:
+                        $invited_organization_ids = MemberManagementService::getFilteredMemberManagementList(
+                            [
+                                'module_type'   => '0',
+                                'email'         => auth()->user()->email,
+                                'role'          => 'Organization Manager',
+                                'invite_status' => '1',
+                            ]
+                        )->pluck('module_id');
+
+                        $owner_organization_ids = Organization::where('organizations.user_id', auth()->user()->id)->pluck('id');
+
+                        $final_organization_ids = $owner_organization_ids->merge($invited_organization_ids)->unique();
+
+                        $organization_list = $organization_list->whereIn('organizations.id', $final_organization_ids);
+                }
+            }
+
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $organization_list = $organization_list->orderBy('organizations.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $organization_list = $organization_list->orderBy('organizations.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $organization_list = $organization_list->orderBy('organizations.created_at', 'ASC');
+                        break;
+                    default:
+                        $organization_list = $organization_list->orderBy('organizations.id', 'ASC');
+                }
+            }
+
+            return $organization_list;
+        } catch (\Exception $e) {
+            return $organization_list;
+        }
+    }
+}

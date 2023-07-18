@@ -2,8 +2,8 @@
 
 namespace App\Helpers;
 
-use App\Services\LabService;
-use App\Services\OrganizationService;
+use App\Services\Manage\LabService;
+use App\Services\Manage\OrganizationService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -29,6 +29,9 @@ class UtilityHelper
             switch ($component) {
                 case 'organization':
                     $checkComponentSlugExistOrNot = OrganizationService::getOrganizationExistBasedOnSlug($slug);
+                    break;
+                case 'lab':
+                    $checkComponentSlugExistOrNot = LabService::getLabDetails($slug);
                     break;
                 default:
                     $checkComponentSlugExistOrNot = false;

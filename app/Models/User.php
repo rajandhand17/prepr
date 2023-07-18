@@ -27,31 +27,26 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'preferred_language',
         'first_name',
         'last_name',
+        'full_name',
         'username',
-        'country_code',
-        'verification',
-        'name',
         'email',
+        'email_verified_at',
         'password',
-        'two_factor',
-        'two_factor_otp',
-        'is_login',
-        'profile_image',
+        'country_code',
         'phone_number',
-        'fr_request',
-        'fr_accept',
-        'point',
-        'rank',
-        'remember_token',
-        'is_verify',
-        'is_email_sent',
+        'two_factor_verification',
+        'otp',
+        'profile_image',
+        'user_points',
+        'user_rank',
+        'verified_user',
         'verify_token',
         'referral_code',
-        'isReferralOpen',
-        'manage_alerts',
-        'is_subscribe',
+        'is_profile_completed',
+        'remember_token',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -104,11 +99,12 @@ class User extends Authenticatable
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code'=>null];
                     }
                     $data = User::where('email', $request->email)->first();
-                    $response = ['success' => true,  'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_sucess')];
+                    $response = ['success' => true,  'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                     return $response;
                 } else {
                     $response = ['success' => false, 'message'=>__('responses.invalid_credentials'), 'code' => 4];
+
                     return $response;
                 }
             } else {
@@ -124,7 +120,7 @@ class User extends Authenticatable
     }
 
     /**Verify two factor */
-    public function verifyTwoFactor($request)
+    public function twoFactorVerification($request)
     {
         try {
             /**checking user exists or not */
@@ -206,11 +202,11 @@ class User extends Authenticatable
                 }
                 DB::rollback();
 
-                return ['success' => false, 'message' => __('responses.failed_registeration')];
+                return ['success' => false, 'message' => __('responses.failed_registration')];
             }
             DB::rollback();
 
-            return ['success' => false, 'message' => __('responses.failed_registeration')];
+            return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
             DB::rollback();
             return ['success' => false, 'message' => __('responses.send_error')];
@@ -255,6 +251,7 @@ class User extends Authenticatable
             if ($checkphone) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -280,7 +277,6 @@ class User extends Authenticatable
 
                             return $response;
                         }
-
                         return ['success' => false, 'message' => __('responses.failed_email')];
                     }
                     /**sending otp for verify email*/
@@ -321,7 +317,7 @@ class User extends Authenticatable
     }
 
     /**Verify otp */
-    public function verifyOtp($request)
+    public function verifyAccount($request)
     {
         try {
             /**get records of particular user by using email */
@@ -360,7 +356,7 @@ class User extends Authenticatable
     }
 
     /**check referal code exists or not */
-    public function referalCode($request)
+    public function referralCode($request)
     {
         try {
             $userrecords = User::select('id', 'email', 'first_name', 'last_name')->where(['referral_code' => $request->referral_code])->first();
@@ -391,8 +387,10 @@ class User extends Authenticatable
                 $mail = SendMailHelper::sendMail($user, 'email.forget_password_otp', $data);
                 if ($mail) {
                     $success = ['success' => true, 'user' => $user, 'code' => 1];
+
                     return $success;
                 }
+
                 return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
             }
         } catch (\Exception $e) {
@@ -428,8 +426,10 @@ class User extends Authenticatable
                 }
             } else {
                 $response = ['success' => false, 'message' =>__('responses.otp_correct_required'), 'code' => 3];
+
                 return $response;
             }
+
             return false;
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

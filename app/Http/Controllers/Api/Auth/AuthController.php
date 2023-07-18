@@ -20,7 +20,7 @@ use App\Repositories\Api\Auth\AuthRepository;
 
 class AuthController extends AppBaseController
 {
-    private $authRepository;
+    private AuthRepository $authRepository;
 
     public function __construct(AuthRepository $authRepository)
     {
@@ -160,12 +160,12 @@ class AuthController extends AppBaseController
      *     ),
      * )
      */
-    public function verifyTwoFactor(VerifyTwoFactorRequest $request)
+    public function twoFactorVerification(VerifyTwoFactorRequest $request)
     {
         try {
-            $verifytwofactor = $this->authRepository->verifyTwoFactor($request);
+            $verifytwofactor = $this->authRepository->twoFactorVerification($request);
             if ($verifytwofactor['success'] == true) {
-                return $this->sendResponse($verifytwofactor, __('responses.user_login_sucess'), 200);
+                return $this->sendResponse($verifytwofactor, __('responses.user_login_success'), 200);
             }
             if ($verifytwofactor['success'] == false) {
                 if ($verifytwofactor['code'] === 1) {
@@ -325,7 +325,7 @@ class AuthController extends AppBaseController
                 return $this->sendError($register['message'], 401);
             }
             if ($register['success'] == true) {
-                return $this->sendResponse(null, __('responses.user_login_sucess'), 200);
+                return $this->sendResponse(null, __('responses.registration_success'), 200);
             }
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
@@ -387,12 +387,7 @@ class AuthController extends AppBaseController
                 return $this->sendError($forgetpassword['message'], 401);
             }
             if ($forgetpassword['success'] == true) {
-                return $this->sendResponse(null, __('responses.send_otp_success'), 200);
-                if ($forgetpassword['success'] == true) {
-                    return $this->sendResponse($forgetpassword, __('responses.send_reset_link'), 200);
-                }
-
-                return $this->sendError(__('responses.send_error'), 500);
+                return $this->sendResponse([], __('responses.send_otp_success'), 200);
             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -629,18 +624,19 @@ class AuthController extends AppBaseController
             $send_otp = $this->authRepository->sendOtp($request);
             if ($send_otp['success'] === true) {
                 if ($send_otp['purpose'] === 'forget_password') {
-                    return $this->sendResponse($send_otp, __('responses.send_otp_success'), 200);
+                    return $this->sendResponse([], __('responses.send_otp_success'), 200);
                 }
                 if ($send_otp['purpose'] === 'verify_email') {
-                    return $this->sendResponse($send_otp, __('responses.user_verify_email_otp'), 200);
+                    return $this->sendResponse([], __('responses.user_verify_email_otp'), 200);
                 }
                 if ($send_otp['purpose'] === 'two_factor_verification') {
-                    return $this->sendResponse($send_otp, __('responses.check_otp_email'), 200);
+                    return $this->sendResponse([], __('responses.check_otp_email'), 200);
                 }
             }
             if ($send_otp['success'] === false) {
                 return $this->sendError($send_otp['message'], 401);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -700,10 +696,10 @@ class AuthController extends AppBaseController
      *     ),
      * )
      */
-    public function verifyOtp(VerifyOtpRequest $request)
+    public function verifyAccount(VerifyOtpRequest $request)
     {
         try {
-            $verify = $this->authRepository->verifyOtp($request);
+            $verify = $this->authRepository->verifyAccount($request);
             if ($verify['success'] === true) {
                 return $this->sendResponse(UserResource::make($verify['user']), __('responses.verify_success'), 200);
             }
@@ -762,10 +758,10 @@ class AuthController extends AppBaseController
      *     ),
      * )
      */
-    public function referalCode(VerifyInviteCodeRequest $request)
+    public function referralCode(VerifyInviteCodeRequest $request)
     {
         try {
-            $referencecode = $this->authRepository->referalCode($request);
+            $referencecode = $this->authRepository->referralCode($request);
             if ($referencecode == true) {
                 return $this->sendResponse(null, __('responses.verify_reference_success'), 200);
             }

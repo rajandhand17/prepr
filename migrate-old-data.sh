@@ -12,6 +12,8 @@ php artisan migrate-old-data:ranks
 php artisan migrate-old-data:social-link
 php artisan migrate-old-data:tags
 php artisan migrate-old-data:tag-groups
+php artisan migrate-old-data:skills
 php artisan migrate-old-data:skill-stacks
 php artisan migrate-old-data:skill-groups
-php artisan migrate-old-data:skills
+php artisan migrate-old-data:users
+php artisan migrate-old-data:organizations

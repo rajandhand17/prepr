@@ -14,7 +14,7 @@ return new class() extends Migration {
     {
         Schema::table('organizations', function (Blueprint $table) {
             $table->string('language')->default('en')->after('id');
-            $table->integer('user_id')->after('language');
+            $table->unsignedBigInteger('user_id')->after('language');
             $table->string('slug')->after('display_name');
             $table->string('cover_image')->nullable()->after('description');
             $table->string('profile_image')->nullable()->after('cover_image');
@@ -27,6 +27,7 @@ return new class() extends Migration {
             $table->integer('total_employees')->nullable()->after('magnet_community_id');
             $table->text('description')->nullable()->change();
             $table->softDeletes();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');
         });
     }

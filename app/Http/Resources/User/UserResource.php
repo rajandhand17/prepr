@@ -16,6 +16,13 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $roles = $this->roles->pluck('display_name');
+        if ($roles) {
+            $roles = array_unique($roles->toArray());
+        } else {
+            $roles = [];
+        }
+
         return [
             'id'                         => $this->id,
             'preferred_language'         => $this->preferred_language,
@@ -32,7 +39,7 @@ class UserResource extends JsonResource
             'referral_code'              => $this->referal_code,
             'is_profile_completed'       => $this->is_profile_completed,
             'member_since'               => UtilityHelper::formatDateTime($this->created_at),
-            'roles'                      => $this->roles->pluck('name'),
+            'roles'                      => $roles,
         ];
     }
 }

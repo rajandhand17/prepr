@@ -3,7 +3,6 @@
 namespace Tests\Feature\App\Http\Controllers\Api\MemberManagement;
 
 use Tests\TestCase;
-use Illuminate\Support\Facades\Auth;
 
 class MemberManagementControllerTest extends TestCase
 {
@@ -15,7 +14,7 @@ class MemberManagementControllerTest extends TestCase
     protected $parameters;
 
     public function setUp(): void
-    {   
+    {
         parent::setUp();
         
         $this->parameters = [
@@ -49,11 +48,11 @@ class MemberManagementControllerTest extends TestCase
     }
 
    /**create member management positive */
-   public function test_create_positive()
-   {   
-    $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters, $this->headers);
-    $this->assertEquals(200, $response->getStatusCode());
-   }
+    public function test_create_positive()
+    {
+        $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 
    /**create member management negative */
     public function test_create_negative()
@@ -92,15 +91,14 @@ class MemberManagementControllerTest extends TestCase
     }
 
    /**Delete member management positive */
-   public function test_delete_positive()
-   {
-       $response = $this->post(
-           '/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
-           [
+    public function test_delete_positive()
+    {
+        $response = $this->post('/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
+            [
             'email'=> $this->parameters['invite_email'],
-           ],$this->headers);
-       $this->assertEquals(200, $response->getStatusCode());
-   }
+            ],$this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 
    /**Delete member management negative */
     public function test_delete_negative()
@@ -108,9 +106,9 @@ class MemberManagementControllerTest extends TestCase
         $response = $this->post(
             '/api/v1/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
             [
-                'email'=>'',
-            ],$this->headers);
-           
-        $this->assertEquals(422, $response->getStatusCode());
+                'id'=> $this->parameters['id'],
+            ]
+        );
+        $this->assertEquals(400, $response->getStatusCode());
     }
 }

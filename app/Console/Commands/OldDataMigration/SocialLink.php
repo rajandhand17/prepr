@@ -47,6 +47,7 @@ class SocialLink extends Command
             if ($social_link->count() > 0) {
                 foreach ($social_link as $key => $single_social_link) {
                     $social_link_details = [
+                        'id'    => $single_social_link->id,
                         'title' => $single_social_link->link_name,
                         'icon'  => $single_social_link->link_icon,
                     ];
