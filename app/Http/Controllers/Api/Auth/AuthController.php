@@ -327,7 +327,6 @@ class AuthController extends AppBaseController
             if ($register['success'] == true) {
                 return $this->sendResponse(null, __('responses.user_login_sucess'), 200);
             }
-
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
