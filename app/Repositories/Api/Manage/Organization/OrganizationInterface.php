@@ -6,7 +6,7 @@ interface OrganizationInterface
 {
     public function getOrganizationList($request);
 
-    public function getOrganizationExistBasedOnSlug($slug);
+    public function getOrganizationBasedOnSlug($slug);
 
     public function checkOrganizationExistBasedOnTitle($request);
 
@@ -22,9 +22,6 @@ interface OrganizationInterface
 
     public function createOrganizationMembers($request, $organization_id);
 
-    public function updateOrganizationProfileImage($request);
-
-    public function updateOrganizationCoverImage($request);
 
     public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
 

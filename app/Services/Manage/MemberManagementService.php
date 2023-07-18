@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
 use App\Services\UserService;
 use DB;
+use HiFolks\RandoPhp\Randomize;
 
 class MemberManagementService
 {
@@ -13,22 +14,7 @@ class MemberManagementService
     {
         try {
             $module_type = null;
-            $memberListCollection = MemberManagement::select(
-                'id',
-                'type',
-                'invite_type',
-                'module_id',
-                'module_type',
-                'inviter_id',
-                'role',
-                'invite_status',
-                'email',
-                'auto_invite',
-                'invitee_name',
-                'email_status',
-                'subject_line',
-                'email_body'
-            );
+            $memberListCollection = MemberManagement::select();
 
             switch ($component) {
                 case 'organization':
@@ -336,6 +322,7 @@ class MemberManagementService
                             }
 
                             MemberManagement::create([
+                                'uuid'          => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                                 'type'          => $member['type'],
                                 'invite_type'   => $member['invite_type'],
                                 'module_id'     => $componentCollectionObject->id,

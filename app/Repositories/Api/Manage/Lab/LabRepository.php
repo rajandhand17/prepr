@@ -38,10 +38,29 @@ class LabRepository implements LabInterface
         $this->componentAssociationService = $componentAssociationService;
     }
 
-    public function uploadCoverImage($image)
+
+    public function getLabList($request)
     {
         try {
-            return $this->labService->uploadCoverImage($image);
+            return $this->labService->getLabList($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getLabBasedOnSlug($slug)
+    {
+        try {
+            return $this->labService->getLabBasedOnSLug($slug);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function uploadLabCoverImage($image)
+    {
+        try {
+            return $this->labService->uploadLabCoverImage($image);
         } catch (\Exception $e) {
             return false;
         }
@@ -66,98 +85,40 @@ class LabRepository implements LabInterface
             });
             if ($createdLab) {
                 DB::commit();
-
                 return $createdLab;
             }
             DB::rollBack();
-
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
-
-            return false;
-        } catch (\Throwable $e) {
-            DB::rollback();
-
             return false;
         }
     }
 
-    public function getLabList($request)
+    public function updateLab($slug, $request, $upload_cover_image, $upload_achievement_image)
     {
         try {
-            $lab = $this->labService->getLabList($request);
-            if ($lab) {
-                return $lab;
-            }
 
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
+            $updatedLab = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
+                $updatedLab = $this->labService->updateLab($slug, $request, $upload_cover_image);
+                $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updatedLab->id);
+                $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updatedLab->id);
+                $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updatedLab->id);
+                $updatedLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($request, $updatedLab->id);
 
-    public function getLabDetails($slug)
-    {
-        try {
-            $labDetails = $this->labService->checkSlug($slug);
-
-            return $labDetails;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function updateLab($lab_id, $request, $upload_cover_image, $upload_acheivements_image)
-    {
-        try {
-            DB::beginTransaction();
-            $updateLab = $this->labService->updateLab($lab_id, $request, $upload_cover_image);
-            if ($updateLab !== false) {
-                $updateLabAddress = $this->labAddressService->updateLabAddress($lab_id, $request);
-                if ($updateLabAddress == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
-                $updateLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($lab_id, $request);
-                if ($updateLabSkillAssociations == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
-
-                $updateLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($lab_id, $request);
-                if ($updateLabTagAssociations == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
-                $updateLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($lab_id, $request);
-                if ($updateLabExternalLinks == false) {
-                    DB::rollBack();
-
-                    return false;
-                }
                 if ($request->is_achievement_enabled == 'yes') {
-                    $updateLabAcheivement = $this->labAcheivementService->updateLabAchievement($lab_id, $request, $upload_acheivements_image);
-                    if ($updateLabAcheivement == false) {
-                        DB::rollBack();
-
-                        return false;
-                    }
+                    $updatedLabAcheivement = $this->labAcheivementService->updateLabAchievement($request, $updatedLab->id, $upload_achievement_image);
                 }
-                $updateLabAssociations = $this->componentAssociationService->updatelabAssociation($lab_id, $request);
-                if ($updateLabAssociations == false) {
-                    DB::rollBack();
+                $updatedLabAssociations = $this->componentAssociationService->updateLabAssociation($request, $updatedLab->id);
 
-                    return false;
-                }
+                return $updatedLab;
+            });
+            if ($updatedLab) {
+                DB::commit();
+                return $updatedLab;
             }
-
-            DB::commit();
-
-            return $updateLab;
+            DB::rollBack();
+            return false;
         } catch (\Exception $e) {
             return false;
         }
@@ -167,17 +128,7 @@ class LabRepository implements LabInterface
     {
         try {
             DB::beginTransaction();
-            if (isset($request->status) && !empty($request->status) && $request->status == 'archived') {
-                $archived = $this->labService->archieveLab($lab_id);
-                if ($archived == false) {
-                    DB::rollBack();
 
-                    return false;
-                }
-                DB::commit();
-
-                return true;
-            }
             $deleteLab = $this->labService->deleteLab($lab_id);
             if ($deleteLab == false) {
                 DB::rollBack();
@@ -188,8 +139,7 @@ class LabRepository implements LabInterface
 
             return true;
         } catch (\Exception $e) {
-            dd($e);
-
+            DB::rollBack();
             return false;
         }
     }
@@ -197,9 +147,7 @@ class LabRepository implements LabInterface
     public function checkSlug($slug)
     {
         try {
-            $labSlug = $this->labService->checkSlug($slug);
-
-            return $labSlug;
+            return $this->labService->getLabBasedOnSLug($slug);
         } catch (\Exception $e) {
             return false;
         }
@@ -216,38 +164,4 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function storeLabActivity($activity, $lab_id, $request)
-    {
-        try {
-            $labCheckExistsOrNot = $this->labService->checkExistsOrNot($activity, $lab_id);
-            if ($labCheckExistsOrNot == false) {
-                $storeLabActivity = $this->labService->storeLabActivity($activity, $lab_id, $request);
-
-                return $storeLabActivity;
-            }
-            $updateLabActivity = $this->labService->updateLabActivity($activity, $labCheckExistsOrNot->id, $request);
-
-            return $updateLabActivity;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function checkActivity($activity, $lab_id)
-    {
-        try {
-            return $this->labService->checkActivity($activity, $lab_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function updateCoverImage($image)
-    {
-        try {
-            return $this->labService->updateCoverImage($image);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 }

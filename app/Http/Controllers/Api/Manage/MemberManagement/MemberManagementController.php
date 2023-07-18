@@ -100,7 +100,7 @@ class MemberManagementController extends AppBaseController
                 $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $checkComponentBasedOnSlug->title, $getTemplate->body_content));
             }
             $response = [
-                'id'                          => $checkComponentBasedOnSlug->id,
+                'id'                          => $checkComponentBasedOnSlug->uuid,
                 'title'                       => $checkComponentBasedOnSlug->title,
                 'slug'                        => $checkComponentBasedOnSlug->slug,
                 'invitation_email'            => EmailTemplateResource::make($getTemplate),

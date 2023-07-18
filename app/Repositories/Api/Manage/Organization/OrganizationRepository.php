@@ -31,10 +31,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function getOrganizationExistBasedOnSlug($slug)
+    public function getOrganizationBasedOnSlug($slug)
     {
         try {
-            return $this->organizationService->getOrganizationExistBasedOnSlug($slug);
+            return $this->organizationService->getOrganizationBasedOnSlug($slug);
         } catch (\Exception $e) {
             return false;
         }
@@ -98,24 +98,6 @@ class OrganizationRepository implements OrganizationInterface
     {
         try {
             return $this->organizationMemberService->createOrganizationMembers($request, $organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function updateOrganizationProfileImage($request)
-    {
-        try {
-            return $this->organizationService->updateOrganizationProfileImage($request);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function updateOrganizationCoverImage($request)
-    {
-        try {
-            return $this->organizationService->updateOrganizationCoverImage($request);
         } catch (\Exception $e) {
             return false;
         }

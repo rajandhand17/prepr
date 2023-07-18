@@ -10,12 +10,12 @@ class LabAcheivementService
     public function uploadAcheivementImage($image)
     {
         try {
-            $uploadLabCoverImage = FileUploadHelper::uploadImageToS3($image, 'achievement');
-            if ($uploadLabCoverImage == false) {
+            $upload_acheivement_image = FileUploadHelper::uploadImageToS3($image, 'achievement');
+            if ($upload_acheivement_image == false) {
                 return false;
             }
 
-            return $uploadLabCoverImage;
+            return $upload_acheivement_image;
         } catch (\Exception $e) {
             return false;
         }
@@ -24,12 +24,12 @@ class LabAcheivementService
     public function updateAcheivementImage($image)
     {
         try {
-            $uploadLabCoverImage = FileUploadHelper::uploadbase64ImageToS3($image, 'achievement');
-            if ($uploadLabCoverImage == false) {
+            $upload_acheivement_image = FileUploadHelper::uploadbase64ImageToS3($image, 'achievement');
+            if ($upload_acheivement_image == false) {
                 return false;
             }
 
-            return $uploadLabCoverImage;
+            return $upload_acheivement_image;
         } catch (\Exception $e) {
             return false;
         }
@@ -48,7 +48,7 @@ class LabAcheivementService
         return true;
     }
 
-    public function updateLabAchievement($lab_id, $request, $upload_acheivements_image)
+    public function updateLabAchievement($lab_id, $request, $upload_achievement_image)
     {
         try {
             $checkExistsLabAcheivement = LabAcheivement::where('lab_id', $lab_id)->first();
@@ -58,7 +58,7 @@ class LabAcheivementService
                 $labAchievement->achievement_name = $request->achievement_name;
                 $labAchievement->achievement_points = $request->achievement_points;
                 $labAchievement->achievement_condition = $request->achievement_conditions;
-                $labAchievement->achievement_image = $upload_acheivements_image;
+                $labAchievement->achievement_image = $upload_achievement_image;
                 $labAchievement->save();
 
                 return true;
@@ -66,7 +66,7 @@ class LabAcheivementService
             $checkExistsLabAcheivement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsLabAcheivement->achievement_name;
             $checkExistsLabAcheivement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : $checkExistsLabAcheivement->achievement_points;
             $checkExistsLabAcheivement->achievement_condition = ($request->has('achievement_conditions')) ? $request->achievement_conditions : $checkExistsLabAcheivement->achievement_conditions;
-            $checkExistsLabAcheivement->achievement_image = ($upload_acheivements_image) ? $upload_acheivements_image : $checkExistsLabAcheivement->achievement_image;
+            $checkExistsLabAcheivement->achievement_image = ($upload_achievement_image) ? $upload_achievement_image : $checkExistsLabAcheivement->achievement_image;
             $checkExistsLabAcheivement->save();
 
             return true;

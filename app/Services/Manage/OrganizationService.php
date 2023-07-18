@@ -98,7 +98,7 @@ class OrganizationService
         }
     }
 
-    public static function getOrganizationExistBasedOnSlug($slug)
+    public static function getOrganizationBasedOnSlug($slug)
     {
         try {
             return Organization::where('slug', $slug)->first();
@@ -194,34 +194,6 @@ class OrganizationService
         } catch (\Exception $e) {
             DB::rollback();
 
-            return false;
-        }
-    }
-
-    public static function updateOrganizationProfileImage($request)
-    {
-        try {
-            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
-            if (!$profile_image_path) {
-                return false;
-            }
-
-            return $profile_image_path;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public static function updateOrganizationCoverImage($request)
-    {
-        try {
-            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->cover_image, 'organization');
-            if (!$profile_image_path) {
-                return false;
-            }
-
-            return $profile_image_path;
-        } catch (\Exception $e) {
             return false;
         }
     }

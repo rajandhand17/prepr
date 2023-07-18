@@ -36,7 +36,7 @@ class MemberManagementResource extends JsonResource
         $email_status = ($this->email_status == '0') ? 'Scheduled' : (($this->email_status == '1') ? 'Sent' : (($this->email_status == '2') ? 'Failed' : 'NA'));
 
         return [
-            'id'            => $this->id,
+            'id'            => $this->uuid,
             'type'          => $type,
             'invite_type'   => $invite_type,
             'name'          => $this->invitee_name,
