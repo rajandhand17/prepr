@@ -18,7 +18,7 @@ class OrganizationMemberService
                     $organization_member->organization_id = $organization_id;
                     $organization_member->name = $value['name'];
                     $organization_member->position = $value['position'];
-                    $image = isset($value['image']) ? FileUploadHelper::uploadImageToS3($value['image'], 'organization') : null;
+                    $image = isset($value['image']) ? FileUploadHelper::uploadImageToS3($value['image'], 'organization') : config('site-settings.default_user_profile_image');
                     $organization_member->image = $image;
                     $organization_member->save();
                 }
@@ -47,7 +47,7 @@ class OrganizationMemberService
                     $organization_member->organization_id = $organization_id;
                     $organization_member->name = $value['name'];
                     $organization_member->position = $value['position'];
-                    $image = isset($value['image']) ? FileUploadHelper::uploadImageToS3($value['image'], 'organization') : null;
+                    $image = isset($value['image']) ? FileUploadHelper::uploadImageToS3($value['image'], 'organization') : config('site-settings.default_user_profile_image');
                     $organization_member->image = $image;
                     $organization_member->save();
                 }

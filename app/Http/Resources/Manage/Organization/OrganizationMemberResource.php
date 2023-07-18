@@ -16,10 +16,11 @@ class OrganizationMemberResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'          => $this->id,
-            'name'        => $this->name,
-            'description' => $this->description,
-            'position'    => $this->position,
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'description'   => $this->description,
+            'position'      => $this->position,
+            'image'         => $this->image,
         ];
     }
 }
