@@ -90,6 +90,7 @@ class OrganizationService
                         $organization_list = $organization_list->orderBy('organizations.id', 'ASC');
                 }
             }
+
             return $organization_list;
         } catch (\Exception $e) {
             return false;
@@ -112,6 +113,7 @@ class OrganizationService
             if ($organization_exists == null) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -125,6 +127,7 @@ class OrganizationService
             if ($organization_trashed_exists == null) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -138,6 +141,7 @@ class OrganizationService
             if (!$profile_image_path) {
                 return false;
             }
+
             return $profile_image_path;
         } catch (\Exception $e) {
             return false;
@@ -151,6 +155,7 @@ class OrganizationService
             if (!$cover_image_path) {
                 return false;
             }
+
             return $cover_image_path;
         } catch (\Exception $e) {
             return false;
@@ -179,12 +184,14 @@ class OrganizationService
             $organization->total_employees = $request->total_employees;
             $organization->save();
 
-            auth()->user()->attachRole('organization_owner',$organization);
+            auth()->user()->attachRole('organization_owner', $organization);
 
             DB::commit();
+
             return $organization;
         } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
@@ -196,6 +203,7 @@ class OrganizationService
             if (!$profile_image_path) {
                 return false;
             }
+
             return $profile_image_path;
         } catch (\Exception $e) {
             return false;
@@ -209,6 +217,7 @@ class OrganizationService
             if (!$profile_image_path) {
                 return false;
             }
+
             return $profile_image_path;
         } catch (\Exception $e) {
             return false;
@@ -234,11 +243,14 @@ class OrganizationService
                 $organization->total_employees = ($request->has('total_employees')) ? $request->total_employees : $organization->total_employees;
                 $organization->save();
                 DB::commit();
+
                 return $organization;
             }
+
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
@@ -247,6 +259,7 @@ class OrganizationService
     {
         try {
             Organization::where('slug', $slug)->delete();
+
             return true;
         } catch (\Exception $e) {
             return false;
@@ -260,6 +273,7 @@ class OrganizationService
             if ($slug) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -273,6 +287,7 @@ class OrganizationService
             if ($organization != null) {
                 return $organization;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
