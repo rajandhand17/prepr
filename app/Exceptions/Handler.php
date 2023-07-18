@@ -58,6 +58,7 @@ class Handler extends ExceptionHandler
         if($e instanceof NotFoundException){
             return Response::json(ResponseUtil::makeError('404! not found'), 404);
         }
+
         if($e instanceof AuthenticationException){
             return Response::json(ResponseUtil::makeError('403! Access Denied. Please login.'), 403);
         }
