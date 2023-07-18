@@ -22,7 +22,6 @@ interface OrganizationInterface
 
     public function createOrganizationMembers($request, $organization_id);
 
-
     public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
 
     public function updatesOrganizationAddress($request, $organization_id);

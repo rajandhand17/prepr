@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Manage\Organization;
 
 use App\Services\Manage\OrganizationService;
-use ChargeBee\ChargeBee\Exceptions\InvalidRequestException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -29,7 +28,7 @@ class UpdateOrganizationRequest extends FormRequest
     public function rules()
     {
         $organization = OrganizationService::getOrganizationExistBasedOnSlug(request()->route('slug'));
-        if(!$organization){
+        if (!$organization) {
             throw new NotFoundException();
         }
         $base_rules = [

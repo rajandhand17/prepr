@@ -65,7 +65,7 @@ class OrganizationController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if(!auth()->user()->isAbleTo('view_organization')){
+            if (!auth()->user()->isAbleTo('view_organization')) {
                 return $this->sendError('Forbidden', 403);
             }
             $organization = $this->organizationRepository->getOrganizationList($request);
@@ -138,7 +138,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            if(!auth()->user()->isAbleTo('view_organization',$organization)){
+            if (!auth()->user()->isAbleTo('view_organization', $organization)) {
                 return $this->sendError('Forbidden', 403);
             }
             if ($organization) {
@@ -317,7 +317,7 @@ class OrganizationController extends AppBaseController
     public function create(CreateOrganizationRequest $request)
     {
         try {
-            if(!auth()->user()->isAbleTo('create_organization')){
+            if (!auth()->user()->isAbleTo('create_organization')) {
                 return $this->sendError('Forbidden', 403);
             }
             $profile_image_path = config('site-settings.default_organization_profile_image');
