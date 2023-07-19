@@ -31,4 +31,6 @@ interface OrganizationInterface
     public function deleteOrganization($slug, $language);
 
     public function checkSlug($slug);
+
+    public function getOrganizationListOnlyNameAndUuid($request);
 }
