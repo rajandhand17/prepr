@@ -90,7 +90,9 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            $memberMangementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);  
+
+            $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
+
             $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
             
             if ($getTemplate) {
@@ -98,17 +100,24 @@ class MemberManagementController extends AppBaseController
                 $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $checkComponentBasedOnSlug->title, $getTemplate->body_content));
             }
             $response = [
-                'id'                          => $checkComponentBasedOnSlug->id,
+                'id'                          => $checkComponentBasedOnSlug->uuid,
                 'title'                       => $checkComponentBasedOnSlug->title,
                 'slug'                        => $checkComponentBasedOnSlug->slug,
                 'invitation_email'            => EmailTemplateResource::make($getTemplate),
             ];
-            if ($memberMangementListing !== false) {
-                $response['user_count'] = $memberMangementListing->count();
-                $response['users'] = MemberManagementResource::collection($memberMangementListing);
-                return $this->sendResponse($response,__('responses.create_member_manger_success'));
+            if ($memberManagementListing) {
+                $response['total_user_count'] = $memberManagementListing->total();
+                $response['per_page'] = $memberManagementListing->perPage();
+                $response['count'] = $memberManagementListing->count();
+                $response['current_page'] = $memberManagementListing->currentPage();
+                $response['total_pages'] = $memberManagementListing->lastPage();
+                $response['users'] = MemberManagementResource::collection($memberManagementListing);
             } else {
-                $response['user_count'] = 0;
+                $response['total_user_count'] = 0;
+                $response['per_page'] = 0;
+                $response['count'] = 0;
+                $response['current_page'] = 1;
+                $response['total_pages'] = 1;
                 $response['users'] = [];
                 return $this->sendResponse($response,__('responses.create_member_manger_failed')); 
             }
@@ -236,7 +245,7 @@ class MemberManagementController extends AppBaseController
                 return $this->sendError('Please select valid role for the invitees.', 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
-            if ($memberLists != false) {
+            if ($memberLists) {
                 return $this->sendResponse($memberLists, __('responses.create_member_manger_success'));
             }
 
@@ -292,8 +301,8 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' Not Found', 403);
             }
-            $member_mangement = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug, $component, $request);
-            if ($member_mangement) {
+            $member_management = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug, $component, $request);
+            if ($member_management) {
                 return $this->sendResponse(null, __('responses.member_manger_delete'));
             }
 

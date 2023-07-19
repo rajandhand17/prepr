@@ -20,7 +20,7 @@ class LabAddressService
         return true;
     }
 
-    public function updateLabAddress($lab_id, $request)
+    public function updateLabAddress($request, $lab_id)
     {
         try {
             $labaddress = LabAddress::where('lab_id', $lab_id)->first();
@@ -40,9 +40,9 @@ class LabAddressService
     public static function deleteLabAddress($lab_id)
     {
         try {
-            $deleteLabaddress = LabAddress::where('lab_id', $lab_id)->delete();
+            $deleteLabAddress = LabAddress::where('lab_id', $lab_id)->delete();
 
-            if (!$deleteLabaddress) {
+            if (!$deleteLabAddress) {
                 return false;
             }
 

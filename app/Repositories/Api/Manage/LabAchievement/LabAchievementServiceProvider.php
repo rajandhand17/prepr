@@ -22,6 +22,6 @@ class LabAchievementServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Manage\LabAcheivement\LabAcheivementInterface', 'App\Repositories\Api\Manage\LabAcheivement\LabAcheivementRepository');
+        $this->app->bind('App\Repositories\Api\Manage\LabAchievement\LabAchievementInterface', 'App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository');
     }
 }

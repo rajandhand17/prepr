@@ -29,17 +29,19 @@ class MemberManagementResource extends JsonResource
         $auto_invite = ($this->auto_invite == '0') ? 'No' : 'Yes';
         $email_status = ($this->email_status == '0') ? 'Scheduled' : (($this->email_status == '1') ? 'Sent' : (($this->email_status == '2') ? 'Failed' : 'NA'));
         return [
-            'id'            => $this->id,
+            'id'            => $this->uuid,
             'type'          => $type,
             'invite_type'   => $invite_type,
             'name'          => $this->invitee_name,
             'email'         => $this->email,
             'username'      => $username,
-           // 'invited_by'    => $invtee_user->first_name.' '.$invtee_user->last_name,
+            'invited_by'    => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
             'role'          => $this->role,
             'invite_status' => $invite_status,
             'auto_invite'   => $auto_invite,
             'email_status'  => $email_status,
+            'subject'       => $this->subject_line,
+            'email_content' => $this->email_body,
         ];
     }
 }

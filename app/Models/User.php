@@ -58,6 +58,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function getProfileImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
     public function userPersonal()
     {
         return $this->hasOne(UserPersonal::class);

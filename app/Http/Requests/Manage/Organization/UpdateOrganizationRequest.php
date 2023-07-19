@@ -6,6 +6,7 @@ use App\Services\Manage\OrganizationService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use League\Container\Exception\NotFoundException;
 
 class UpdateOrganizationRequest extends FormRequest
 {
@@ -27,29 +28,19 @@ class UpdateOrganizationRequest extends FormRequest
     public function rules()
     {
         $organization = OrganizationService::getOrganizationExistBasedOnSlug(request()->route('slug'));
-
-        if ($organization) {
-            $base_rules = [
-                'title'           => 'required|max:255|unique:organizations,title,'.$organization->id,
-                'description'     => 'required',
-                'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-                'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-                'category'        => 'required|numeric|exists:categories,id',
-                'website'         => 'required|url',
-                'status'          => 'required|in:draft,publish,archive',
-            ];
-        } else {
-            $base_rules = [
-                'title'           => 'required|max:255|unique:organizations,title',
-                'description'     => 'required',
-                'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-                'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-                'category'        => 'required|numeric|exists:categories,id',
-                'website'         => 'required|url',
-                'slug'            => 'required|max:255|unique:organizations,slug',
-                'status'          => 'required|in:draft,publish,archive',
-            ];
+        if (!$organization) {
+            throw new NotFoundException();
         }
+        $base_rules = [
+            'title'           => 'required|max:255|unique:organizations,title,'.$organization->id,
+            'description'     => 'required',
+            'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'category'        => 'required|numeric|exists:categories,id',
+            'website'         => 'required|url',
+            'status'          => 'required|in:draft,publish,archive',
+        ];
+
         if ($this->request->has('organization_address')) {
             $base_rules['organization_address'] = 'array';
             $base_rules['organization_address.*.address_1'] = 'required|string';

@@ -3,7 +3,7 @@ namespace App\Repositories\Api\Manage\LabAchievement;
 
 use App\Services\Manage\LabAcheivementService;
 
-class LabAchievementRepository implements LabAcheivementInterface
+class LabAchievementRepository implements LabAchievementInterface
 {
     private $LabAcheivementService;
     private $memberManagementService;
@@ -29,5 +29,10 @@ class LabAchievementRepository implements LabAcheivementInterface
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function uploadAchievementImage($image)
+    {
+        // TODO: Implement uploadAchievementImage() method.
     }
 }

@@ -106,7 +106,7 @@ class MemberManagementControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-   /**Delete member management negative */
+    /**Delete member management negative */
     public function test_delete_negative()
     {
         $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',

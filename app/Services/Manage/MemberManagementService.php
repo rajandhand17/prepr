@@ -6,10 +6,166 @@ use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
 use App\Services\UserService;
 use DB;
+use HiFolks\RandoPhp\Randomize;
 
 class MemberManagementService
 {
-    public function getRecordsFromCsv($request)
+    public static function getComponentBasedUsers($componentCollectionObject, $component, $request)
+    {
+        try {
+            $module_type = null;
+            $memberListCollection = MemberManagement::select();
+
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.member_management_component_type.organization');
+                    $memberListCollection = $memberListCollection->where([
+                        'module_id'   => $componentCollectionObject->id,
+                        'module_type' => $module_type,
+                    ]);
+                    break;
+                case 'lab':
+                    $module_type = config('constants.member_management_component_type.lab');
+                    $memberListCollection = $memberListCollection->where([
+                        'module_id'   => $componentCollectionObject->id,
+                        'module_type' => $module_type,
+                    ]);
+                    break;
+                default:
+                    $module_type = null;
+                    $memberListCollection = null;
+                    break;
+            }
+            if ($module_type != null) {
+                $memberList = self::filterUserList($memberListCollection, $request);
+
+                return $memberList->paginate(config('site-settings.pagination_per_page'));
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function filterUserList($componentCollectionObject, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $componentCollectionObject = $componentCollectionObject->where('invitee_name', 'like', '%'.$request->search.'%');
+                $componentCollectionObject = $componentCollectionObject->orWhere('role', 'like', '%'.$request->search.'%');
+                $componentCollectionObject = $componentCollectionObject->orWhere('email', 'like', '%'.$request->search.'%');
+            }
+
+            if ($request->has('roles') && is_array($request->roles) && !empty($request->roles)) {
+                $componentCollectionObject = $componentCollectionObject->whereIn('role', $request->roles);
+            }
+            if ($request->has('invite_status') && !empty($request->invite_status)) {
+                $invite_status = null;
+                switch ($request->invite_status) {
+                    case 'invited':
+                        $invite_status = config('constants.member_management_invite_status.invited');
+                        break;
+                    case 'accepted':
+                        $invite_status = config('constants.member_management_invite_status.accepted');
+                        break;
+                    case 'pending':
+                        $invite_status = config('constants.member_management_invite_status.pending');
+                        break;
+                    case 'declined':
+                        $invite_status = config('constants.member_management_invite_status.declined');
+                        break;
+                    case 'auto_created':
+                        $invite_status = config('constants.member_management_invite_status.auto_created');
+                        break;
+                    default:
+                        $invite_status = null;
+                }
+                if ($invite_status != null) {
+                    $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
+                }
+            }
+            if ($request->has('invite_type') && !empty($request->invite_type)) {
+                $invite_type = null;
+                switch ($request->invite_type) {
+                    case 'email':
+                        $invite_type = config('constants.member_management_invite_type.email');
+                        break;
+                    case 'network':
+                        $invite_type = config('constants.member_management_invite_type.network');
+                        break;
+                    case 'join_request':
+                        $invite_type = config('constants.member_management_invite_type.csv');
+                        break;
+                    case 'csv':
+                        $invite_type = config('constants.member_management_invite_type.csv');
+                        break;
+                    case 'auto_created':
+                        $invite_type = 'auto_created';
+                        break;
+                    default:
+                        $invite_type = null;
+                }
+                if ($invite_type != null) {
+                    if ($invite_type == 'auto_created') {
+                        $componentCollectionObject = $componentCollectionObject->where('type', config('constants.member_management_type.auto_created'));
+                    } else {
+                        $componentCollectionObject = $componentCollectionObject->where('invite_type', $invite_type);
+                    }
+                }
+            }
+            if ($request->has('email_status') && !empty($request->email_status)) {
+                $email_status = null;
+                switch ($request->email_status) {
+                    case 'scheduled':
+                        $email_status = config('constants.member_management_email_status.scheduled');
+                        break;
+                    case 'sent':
+                        $email_status = config('constants.member_management_email_status.sent');
+                        break;
+                    case 'fail':
+                        $email_status = config('constants.member_management_email_status.fail');
+                        break;
+                    case 'NA':
+                        $email_status = config('constants.member_management_email_status.na');
+                        break;
+                    default:
+                        $email_status = null;
+                }
+                if ($email_status != null) {
+                    $componentCollectionObject = $componentCollectionObject->where('email_status', $email_status);
+                }
+            }
+
+            return $componentCollectionObject;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTemplate($request, $component)
+    {
+        try {
+            $module_type = null;
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.email_template_module_type.organization');
+                    break;
+                case 'lab':
+                    $module_type = config('constants.email_template_module_type.lab');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
+            }
+
+            return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getRecordsFromCsv($request)
     {
         try {
             $memberList = [];
@@ -56,7 +212,7 @@ class MemberManagementService
         }
     }
 
-    public function getRecordsFromEmailArray($request)
+    public static function getRecordsFromEmailArray($request)
     {
         try {
             $memberList = [];
@@ -87,7 +243,7 @@ class MemberManagementService
         }
     }
 
-    public function addMembers($componentCollectionObject, $component, $request, $memberList)
+    public static function addMembers($componentCollectionObject, $component, $request, $memberList)
     {
         try {
             $already_members = [];
@@ -166,6 +322,7 @@ class MemberManagementService
                             }
 
                             MemberManagement::create([
+                                'uuid'          => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                                 'type'          => $member['type'],
                                 'invite_type'   => $member['invite_type'],
                                 'module_id'     => $componentCollectionObject->id,
@@ -211,58 +368,7 @@ class MemberManagementService
         }
     }
 
-    public function getComponentBasedUsers($componentCollectionObject, $component, $request)
-    {
-        try {
-            $module_type = null;
-            $memberListCollection = MemberManagement::select(
-                'id',
-                'type',
-                'invite_type',
-                'module_id',
-                'module_type',
-                'inviter_id',
-                'role',
-                'invite_status',
-                'email',
-                'auto_invite',
-                'invitee_name',
-                'email_status'
-            );
-
-            switch ($component) {
-                case 'organization':
-                    $module_type = config('constants.member_management_component_type.organization');
-                    
-                    $memberListCollection = $memberListCollection->where([
-                        'module_id'   => $componentCollectionObject->id,
-                        'module_type' => $module_type,
-                    ]);
-                    break;
-                case 'lab':
-                    $module_type = config('constants.member_management_component_type.lab');
-                    $memberListCollection = $memberListCollection->where([
-                        'module_id'   => $componentCollectionObject->id,
-                        'module_type' => $module_type,
-                    ]);
-                    break;
-                default:
-                    $module_type = null;
-                    $memberListCollection = null;
-                    break;
-            }
-            if ($module_type != null) {
-                $memberList = $this->filterUserList($memberListCollection, $request);
-                return $memberList;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function deleteMembers($checkComponentBasedOnSlug, $component, $request)
+    public static function deleteMembers($checkComponentBasedOnSlug, $component, $request)
     {
         try {
             switch ($component) {
@@ -287,64 +393,7 @@ class MemberManagementService
         }
     }
 
-    public function filterUserList($componentCollectionObject, $request)
-    {
-        try {
-            if (isset($request->role) && !empty($request->role)) {
-                $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
-            }
-            if (isset($request->invite_status) && !empty($request->invite_status)) {
-                switch ($request->invite_status) {
-                    case 'accepted':
-                        $invite_status = config('constants.member_management_invite_status.accepted');
-                        break;
-                    case 'pending':
-                        $invite_status = config('constants.member_management_invite_status.pending');
-                        break;
-                    default:
-                        $invite_status = config('constants.member_management_invite_status.invited');
-                }
-                $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
-            }
-            if (isset($request->invite_type) && !empty($request->invite_type)) {
-                switch ($request->invite_type) {
-                    case 'email':
-                        $invite_type = config('constants.member_management_invite_type.email');
-                        break;
-                    case 'network':
-                        $invite_type = config('constants.member_management_invite_type.network');
-                        break;
-                    case 'csv':
-                        $invite_type = config('constants.member_management_invite_type.csv');
-                        break;
-                    default:
-                        $invite_type = config('constants.member_management_invite_type.email');
-                }
-                $componentCollectionObject = $componentCollectionObject->where('invite_type', $invite_type);
-            }
-            if (isset($request->email_status) && !empty($request->email_status)) {
-                switch ($request->email_status) {
-                    case 'scheduled':
-                        $email_status = config('constants.member_management_email_status.scheduled');
-                        break;
-                    case 'sent':
-                        $email_status = config('constants.member_management_email_status.sent');
-                        break;
-                    case 'fail':
-                        $email_status = config('constants.member_management_email_status.fail');
-                        break;
-                    default:
-                        $email_status = config('constants.member_management_email_status.scheduled');
-                }
-                $componentCollectionObject = $componentCollectionObject->where('email_status', $email_status);
-            }
-            return $componentCollectionObject->get();
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function changeRoleById($request, $component)
+    public static function changeRoleById($request, $component)
     {
         try {
             DB::beginTransaction();
@@ -374,28 +423,6 @@ class MemberManagementService
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return false;
-        }
-    }
-
-    public function getTemplate($request, $component)
-    {
-        try {
-            $module_type = null;
-            switch ($component) {
-                case 'organization':
-                    $module_type = config('constants.email_template_module_type.organization');
-                    break;
-                case 'lab':
-                    $module_type = config('constants.email_template_module_type.lab');
-                    break;
-                default:
-                    $module_type = null;
-                    break;
-            }
-
-            return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
-        } catch (\Exception $e) {
             return false;
         }
     }
