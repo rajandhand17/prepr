@@ -62,18 +62,6 @@
         },
         {
             "name": "aws/aws-sdk-php",
-<<<<<<< HEAD
-            "version": "3.275.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "54dcef3349c81b46c0f5f6e54b5f9bfb5db19903"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/54dcef3349c81b46c0f5f6e54b5f9bfb5db19903",
-                "reference": "54dcef3349c81b46c0f5f6e54b5f9bfb5db19903",
-=======
             "version": "3.275.6",
             "source": {
                 "type": "git",
@@ -84,7 +72,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a048b1d7110f62fb67cc69b93efc24e62ea8b64b",
                 "reference": "a048b1d7110f62fb67cc69b93efc24e62ea8b64b",
->>>>>>> feature/LLAI-180-api-development
                 "shasum": ""
             },
             "require": {
@@ -164,15 +151,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-<<<<<<< HEAD
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.275.7"
-            },
-            "time": "2023-07-13T18:21:04+00:00"
-=======
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.275.6"
             },
             "time": "2023-07-11T04:45:11+00:00"
->>>>>>> feature/LLAI-180-api-development
         },
         {
             "name": "brick/math",
@@ -8885,18 +8866,6 @@
         },
         {
             "name": "laravel/pint",
-<<<<<<< HEAD
-            "version": "v1.10.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/pint.git",
-                "reference": "a458fb057bfa2f5a09888a8aa349610be807b0c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/a458fb057bfa2f5a09888a8aa349610be807b0c3",
-                "reference": "a458fb057bfa2f5a09888a8aa349610be807b0c3",
-=======
             "version": "v1.10.4",
             "source": {
                 "type": "git",
@@ -8907,7 +8876,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/pint/zipball/f56798088068af8bd75a8f2c4ecae022990fdf75",
                 "reference": "f56798088068af8bd75a8f2c4ecae022990fdf75",
->>>>>>> feature/LLAI-180-api-development
                 "shasum": ""
             },
             "require": {
@@ -8960,11 +8928,7 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-<<<<<<< HEAD
-            "time": "2023-07-14T10:26:01+00:00"
-=======
             "time": "2023-07-11T15:18:27+00:00"
->>>>>>> feature/LLAI-180-api-development
         },
         {
             "name": "laravel/sail",
