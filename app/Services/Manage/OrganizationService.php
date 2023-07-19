@@ -42,7 +42,7 @@ class OrganizationService
             }
 
             if ($request->has('owner') && !empty($request->owner)) {
-                $organization_list = self::filterOrganizationBasedOnRoles($organization_list,$request);
+                $organization_list = self::filterOrganizationBasedOnRoles($organization_list, $request);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
@@ -250,28 +250,25 @@ class OrganizationService
         }
     }
 
-    public static function filterOrganizationBasedOnRoles($organization_list,$request){
+    public static function filterOrganizationBasedOnRoles($organization_list, $request)
+    {
         $userRole = null;
         $invited_organization_ids = null;
 
-        if (auth()->user()->hasRole('organization_owner')){
+        if (auth()->user()->hasRole('organization_owner')) {
             $userRole = 'Organization Owner';
-        }
-        elseif (auth()->user()->hasRole('organization_manager')){
+        } elseif (auth()->user()->hasRole('organization_manager')) {
             $userRole = 'Organization Manager';
-        }
-        elseif (auth()->user()->hasRole('lab_manager')){
+        } elseif (auth()->user()->hasRole('lab_manager')) {
             $userRole = 'Lab Manager';
-        }
-        elseif (auth()->user()->hasRole('challenge_manager')){
+        } elseif (auth()->user()->hasRole('challenge_manager')) {
             $userRole = 'Challenge Manager';
-        }
-        elseif (auth()->user()->hasRole('resource_manager')){
+        } elseif (auth()->user()->hasRole('resource_manager')) {
             $userRole = 'Resource Manager';
         }
 
-        if($request->owner=='invited' || $request->owner=='all'){
-            if($userRole != null){
+        if ($request->owner == 'invited' || $request->owner == 'all') {
+            if ($userRole != null) {
                 $invited_organization_ids = MemberManagementService::getFilteredMemberManagementList(
                     [
                         'module_type'   => '0',
@@ -285,7 +282,7 @@ class OrganizationService
 
         switch ($request->owner) {
             case 'invited':
-                if($invited_organization_ids != null){
+                if ($invited_organization_ids != null) {
                     $organization_list = $organization_list->whereIn('organizations.id', $invited_organization_ids);
                 }
                 break;
@@ -295,15 +292,15 @@ class OrganizationService
             default:
                 $owner_organization_ids = Organization::where('organizations.user_id', auth()->user()->id)->pluck('id');
 
-                if($invited_organization_ids != null){
+                if ($invited_organization_ids != null) {
                     $final_organization_ids = $owner_organization_ids->merge($invited_organization_ids)->unique();
-                }
-                else{
+                } else {
                     $final_organization_ids = $owner_organization_ids;
                 }
 
                 $organization_list = $organization_list->whereIn('organizations.id', $final_organization_ids);
         }
+
         return $organization_list;
     }
 }
