@@ -74,17 +74,14 @@ class LabRepository implements LabInterface
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
                 $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createdLab);
                 $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createdLab);
-
                 if ($request->is_achievement_enabled == 'yes') {
                     $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_achievements_image);
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
-
                 return $createdLab;
             });
             if ($createdLab) {
                 DB::commit();
-
                 return $createdLab;
             }
             DB::rollBack();

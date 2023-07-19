@@ -527,6 +527,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -617,7 +618,7 @@ class OrganizationController extends AppBaseController
     public function delete($slug, Request $request)
     {
         try {
-            $checkOrganization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
+            $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
             }

@@ -29,8 +29,8 @@ class AuthControllerTest extends TestCase
         $this->user_type = 'student';
         $this->purpose = 'looking_team';
         $this->country_code = '+91';
-        $this->phone_number = '9646080802';
-        $this->wrong_phone_number = '9646080805';
+        $this->phone_number = '98765432101';
+        $this->wrong_phone_number = '111111111111111';
         $this->purpose_send_otp = 'two_factor_verification';
         $this->referral_code = 'Rajandhands2023';
         $this->wrong_referral_code = 'rajandhandd';
@@ -41,6 +41,7 @@ class AuthControllerTest extends TestCase
     /**Successfull Positive */
     public function test_register_positive()
     {   
+        
         $response = $this->post('/api/v1/auth/register', [
             'language'              => $this->language,
             'username'              => $this->username,
@@ -80,7 +81,7 @@ class AuthControllerTest extends TestCase
         $response = $this->post('/api/v1/auth/register');
         $this->assertEquals(400, $response->getStatusCode());
     }
-
+ 
     /**Negative Registered */
     public function test_register_negative_exists()
     {
@@ -100,7 +101,6 @@ class AuthControllerTest extends TestCase
         ]);
         $this->assertEquals(422, $response->getStatusCode());
     }
-
     /**login Positive */
     public function test_post_login_positive()
     {
@@ -120,19 +120,19 @@ class AuthControllerTest extends TestCase
         }
     }
 
-    /**Wrong email address */
-    public function test_post_login_wrong_email_negative()
-    {
-        $response = $this->post('/api/v1/auth/login', ['email' => $this->wrong_email, 'password' => $this->password, 'language' => $this->language]);
-        $this->assertEquals(422, $response->getStatusCode());
-    }
-
-    /**Wrong email address */
-    public function test_post_login_wrong_password_negative()
-    {
-        $response = $this->post('/api/v1/auth/login', ['email' => $this->email, 'password' => $this->wrong_password, 'language' => $this->language]);
-        $this->assertEquals(422, $response->getStatusCode());
-    }
+        /**Wrong email address */
+        public function test_post_login_wrong_email_negative()
+        {
+            $response = $this->post('/api/v1/auth/login', ['email' => $this->wrong_email, 'password' => $this->password, 'language' => $this->language]);
+            $this->assertEquals(422, $response->getStatusCode());
+        }
+    
+        /**Wrong email address */
+        public function test_post_login_wrong_password_negative()
+        {
+            $response = $this->post('/api/v1/auth/login', ['email' => $this->email, 'password' => $this->wrong_password, 'language' => $this->language]);
+            $this->assertEquals(422, $response->getStatusCode());
+        }
 
     /**Check user name positive */
     public function test_post_check_username_positive()
@@ -160,7 +160,6 @@ class AuthControllerTest extends TestCase
         $response = $this->post('/api/v1/auth/check-username');
         $this->assertEquals(400, $response->getStatusCode());
     }
-
     /**Check email positive */
     public function test_post_check_email_positive()
     {
@@ -201,20 +200,19 @@ class AuthControllerTest extends TestCase
         }
     }
 
-    /**Check user name negative */
-    public function test_post_check_phone_notexists_negative()
-    {
-        $response = $this->post('/api/v1/auth/check-phone', ['phone_number' => $this->phone_number, 'language' => $this->language]);
-        $this->assertEquals(422, $response->getStatusCode());
-    }
-
-    /**Check user name negative */
-    public function test_post_check_phone_negative()
-    {
-        $response = $this->post('/api/v1/auth/check-phone');
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
+        /**Check user name negative */
+        public function test_post_check_phone_not_exists_negative()
+        {
+            $response = $this->post('/api/v1/auth/check-phone', ['phone_number' => $this->phone_number, 'language' => $this->language]);
+            $this->assertEquals(422, $response->getStatusCode());
+        }
+    
+        /**Check user name negative */
+        public function test_post_check_phone_negative()
+        {
+            $response = $this->post('/api/v1/auth/check-phone');
+            $this->assertEquals(400, $response->getStatusCode());
+        }
     /**send otp */
     public function test_post_send_otp_positive()
     {
@@ -282,7 +280,7 @@ class AuthControllerTest extends TestCase
         $response = $this->post('/api/v1/auth/verify-referral-code', ['referral_code' =>$this->referral_code, 'language' =>$this->language]);
         $response->assertStatus(200);
         $data = $response->json();
-        if ($data['success'] === true) {
+        if ($data['success'] === true){
             $response->assertOk();
         } else {
             $this->fail();

@@ -168,7 +168,6 @@ class OrganizationService
         try {
             DB::beginTransaction();
             $model = new Organization();
-
             $organization = new Organization();
             $organization->language = isset($request->language) ? $request->language : 'en';
             $organization->user_id = auth()->user()->id;
@@ -185,7 +184,6 @@ class OrganizationService
             $organization->status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : '3');
             $organization->total_employees = $request->total_employees;
             $organization->save();
-
             auth()->user()->attachRole('organization_owner', $organization);
 
             DB::commit();

@@ -21,8 +21,8 @@ class OrganizationControllerTest extends TestCase
         $this->parameters = [
             'language'       => 'en',
             'user_id'        => '2',
-            'title'           => 'Prepr',
-            'slug'           => 'Prepr',
+            'title'           => 'Preprs',
+            'slug'           => 'preprs',
             'description'    => 'Describing the test cases of apis',
             'website'        => 'https://preprlabs.org',
             'about'          => 'testing',
@@ -63,14 +63,14 @@ class OrganizationControllerTest extends TestCase
         $user = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
         $this->headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
+            'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
     }
 
     /**Organization create */
     public function test_create_organization_positive()
-    {
+    {   
         $response = $this->post('/api/v1/manage/organization/create', $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
@@ -97,50 +97,49 @@ class OrganizationControllerTest extends TestCase
     }
 
       /** Organization view */
-      public function test_organization_view_positive()
-      {
-          $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'], $this->headers);
-        
-          $this->assertEquals(200, $response->getStatusCode());
-          $data = $response->json();
-          if ($data['success']) {
-              $this->assertArrayHasKey('id', $data['data']['list'][0]);
-              $this->assertArrayHasKey('language', $data['data']['list'][0]);
-              $this->assertArrayHasKey('title', $data['data']['list'][0]);
-              $this->assertArrayHasKey('slug', $data['data']['list'][0]);
-              $this->assertArrayHasKey('description', $data['data']['list'][0]);
-              $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
-              $this->assertArrayHasKey('profile_image', $data['data']['list'][0]);
-              $this->assertArrayHasKey('website', $data['data']['list'][0]);
-              $this->assertArrayHasKey('about', $data['data']['list'][0]);
-              $this->assertArrayHasKey('category', $data['data']['list'][0]);
-              $this->assertArrayHasKey('total_employees', $data['data']['list'][0]);
-              $response->assertOk();
-          } else {
-              $this->fail();
-          }
-      }
+    public function test_organization_view_positive()
+    {
+            $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'], $this->headers);
+            $this->assertEquals(200, $response->getStatusCode());
+            $data = $response->json();
+            if ($data['success']) {
+                $this->assertArrayHasKey('id', $data['data']['list'][0]);
+                $this->assertArrayHasKey('language', $data['data']['list'][0]);
+                $this->assertArrayHasKey('title', $data['data']['list'][0]);
+                $this->assertArrayHasKey('slug', $data['data']['list'][0]);
+                $this->assertArrayHasKey('description', $data['data']['list'][0]);
+                $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
+                $this->assertArrayHasKey('profile_image', $data['data']['list'][0]);
+                $this->assertArrayHasKey('website', $data['data']['list'][0]);
+                $this->assertArrayHasKey('about', $data['data']['list'][0]);
+                $this->assertArrayHasKey('category', $data['data']['list'][0]);
+                $this->assertArrayHasKey('total_employees', $data['data']['list'][0]);
+                $response->assertOk();
+            } else {
+                $this->fail();
+            }
+        }
 
       /** Organization view */
-      public function test_organization_view_negative()
-      {
-          $response = $this->get('/api/v1/manage/organization/', $this->headers);
-          $this->assertEquals(400, $response->getStatusCode());
-      }
+    public function test_organization_view_negative()
+    {
+        $response = $this->get('/api/v1/manage/organization/', $this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 
     /**Organization Listing */
-    public function test_organization_list()
+    public function test_organization_list_positive()
     {
         $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            $this->assertArrayHasKey('id', $data['data'][0]);
-            $this->assertArrayHasKey('language', $data['data'][0]);
-            $this->assertArrayHasKey('title', $data['data'][0]);
-            $this->assertArrayHasKey('slug', $data['data'][0]);
-            $this->assertArrayHasKey('description', $data['data'][0]);
-            $this->assertArrayHasKey('cover_image', $data['data'][0]);
+            $this->assertArrayHasKey('id', $data['data']);
+            $this->assertArrayHasKey('language', $data['data']);
+            $this->assertArrayHasKey('title', $data['data']);
+            $this->assertArrayHasKey('slug', $data['data']);
+            $this->assertArrayHasKey('description', $data['data']);
+            $this->assertArrayHasKey('cover_image', $data['data']);
             $response->assertOk();
         } else {
             $this->fail();

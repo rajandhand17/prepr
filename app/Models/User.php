@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laratrust\Traits\LaratrustUserTrait;
 use Laravel\Passport\HasApiTokens;
-
+use HiFolks\RandoPhp\Randomize;
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -81,7 +81,6 @@ class User extends Authenticatable
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
-
                 return $response;
             }
             if ($user) {
@@ -98,9 +97,9 @@ class User extends Authenticatable
                         $data = ['subject' => 'Two Factor Verification', 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
+                            
                             return ['success' => true, 'message'=> __('responses.two_factor_otp'), 'code' => 2];
                         }
-
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code'=>null];
                     }
                     $data = User::where('email', $request->email)->first();
@@ -180,6 +179,7 @@ class User extends Authenticatable
                 if ($request->register_type == 'organization') {
                     $organization = new Organization();
                     $organization->slug = UtilityHelper::generateSlug($request->organization_title, $organization);
+                    $organization->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $organization->user_id = $user->id;
                     $organization->title = $request->organization_title;
                     $organization->save();
@@ -251,11 +251,10 @@ class User extends Authenticatable
     public function checkPhone($request)
     {
         try {
-            $checkphone = User::select('id')->where('phone_number', $request->phone)->first();
+            $checkphone = User::select('id')->where('phone_number', $request->phone_number)->first();
             if ($checkphone) {
                 return true;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;

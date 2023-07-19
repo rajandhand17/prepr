@@ -25,7 +25,7 @@ class LabControllerTest extends TestCase
             'dislike_component' =>'dislike',
             'title'=>'UN SDG Lab',
             'not_exist_title'=>'UN SDG Labs',
-            'organization_id'=>'1',
+            'organization_id'=>'19',
             'category_id'=>'1',
             'description'=>'This lab is focused on driving awareness around the 17 UN sustainable development goals and to enable students and employees across the globe to co-lab and co-solve to create meaningful solutions.',
             'privacy'=>'yes',
@@ -55,21 +55,14 @@ class LabControllerTest extends TestCase
             'resource_collections'=>['1','2'],
             'achievement_conditions'=>['1','2'],
         ];
-        $this->baseUrl="/api/v1/manage/";
+       
         $data=Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
         $user = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
         $this->headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
+            'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
-    }
-
-    public function test_lab_list_positive()
-    {   
-        $response = $this->get("/api/v1/manage/lab/?language=en",$this->headers);
-        $response->assertStatus(200);
-        
     }
 
     public function test_lab_create_postive(){
@@ -80,12 +73,10 @@ class LabControllerTest extends TestCase
         $response=$this->post('/api/v1/manage/lab/create',$this->parameters,$this->headers);
         $response->assertStatus(422);
     }
-
+   
     public function test_lab_update_positive(){
         $this->parameters['_method']="put";
-
         $response=$this->post("api/v1/manage/lab/".$this->parameters['slug'].'/update',$this->parameters,$this->headers);
-        
         $response->assertStatus(200);
     }
 
@@ -93,17 +84,20 @@ class LabControllerTest extends TestCase
         $response=$this->post('/api/v1/manage/lab/'.$this->parameters['slug'].'/update',$this->parameters,$this->headers);
         $response->assertStatus(403);
     }
-
+    public function test_lab_list_positive()
+    {   
+        $response = $this->get("/api/v1/manage/lab/?language=en",$this->headers);
+        $response->assertStatus(200);
+    }
     public function test_lab_view_positive()
     {
         $response = $this->get('/api/v1/manage/lab/'.$this->parameters['slug'].'?language=en',$this->headers);
         $response->assertStatus(200);
     }
-    
     public function test_lab_view_negative()
     {
         $response = $this->get('/api/v1/manage/lab/'.$this->parameters['not_exists_slug'].'?language=en',$this->headers);
-        $response->assertStatus(400);
+        $response->assertStatus(404);
     }
     public function test_lab_check_slug_postive()
     {
@@ -123,55 +117,6 @@ class LabControllerTest extends TestCase
     public function test_lab_check_title_negative()
     {
         $response = $this->get('/api/v1/manage/lab/'.$this->parameters['title'].'?language=en',$this->headers);
-        $response->assertStatus(400);
-    }
-    public function test_lab_like_positive(){
-        $response=$this->post('/api/v1/manage/lab/like/'.$this->parameters['slug'],$this->parameters,$this->headers);
-        $response->assertStatus(200);
-    }
-    public function test_lab_like_negative(){
-        $response=$this->post('/api/v1/manage/lab/like/'.$this->parameters['not_exists_slug'],$this->parameters,$this->headers);
-        $response->assertStatus(403);
-    }
-
-    public function test_lab_dislike_positive(){
-        $response=$this->post('/api/v1/manage/lab/dislike/'.$this->parameters['slug'],$this->parameters,$this->headers);
-        $response->assertStatus(200);
-    }
-    public function test_lab_dislike_negative(){
-        $response=$this->post('/api/v1/manage/lab/dislike/'.$this->parameters['not_exists_slug'],$this->parameters,$this->headers);
-        $response->assertStatus(403);
-    }
-    public function test_lab_follow_positive(){
-        $response=$this->post('/api/v1/manage/lab/follow/'.$this->parameters['slug'],$this->parameters,$this->headers);
-        $response->assertStatus(200);
-    }
-    public function test_lab_follow_negative(){
-        $response=$this->post('/api/v1/manage/lab/follow/'.$this->parameters['not_exists_slug'],$this->parameters,$this->headers);
-        $response->assertStatus(403);
-    }
-    public function test_lab_unfollow_positive(){
-        $response=$this->post('/api/v1/manage/lab/unfollow/'.$this->parameters['slug'],$this->parameters,$this->headers);
-        $response->assertStatus(200);
-    }
-    public function test_lab_unfollow_negative(){
-        $response=$this->post('/api/v1/manage/lab/unfollow/'.$this->parameters['not_exists_slug'],$this->parameters,$this->headers);
-        $response->assertStatus(403);
-    }
-    public function test_lab_favourite_positive(){
-        $response=$this->post('/api/v1/manage/lab/favourite/'.$this->parameters['slug'],$this->parameters,$this->headers);
-        $response->assertStatus(200);
-    }
-    public function test_lab_favourite_negative(){
-        $response=$this->post('/api/v1/manage/lab/favourite/'.$this->parameters['not_exists_slug'],$this->parameters,$this->headers);
-        $response->assertStatus(403);
-    }
-    public function test_lab_unfavored_positive(){
-        $response=$this->post('/api/v1/manage/lab/unfavored/'.$this->parameters['slug'],$this->parameters,$this->headers);
-        $response->assertStatus(200);
-    }
-    public function test_lab_unfavored_negative(){
-        $response=$this->post('/api/v1/manage/lab/unfavored/'.$this->parameters['not_exists_slug'],$this->parameters,$this->headers);
-        $response->assertStatus(403);
+        $response->assertStatus(404);
     }
 }

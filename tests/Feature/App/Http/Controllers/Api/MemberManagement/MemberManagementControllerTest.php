@@ -44,7 +44,7 @@ class MemberManagementControllerTest extends TestCase
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
         
         $this->headers = [
-            'Accept'        => 'application/vnd.laravel.v1+json',
+            'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
     }
@@ -53,7 +53,6 @@ class MemberManagementControllerTest extends TestCase
     public function test_create_positive()
     {   
         $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters,$this->headers);
-       
         $this->assertEquals(200, $response->getStatusCode());
     }
 

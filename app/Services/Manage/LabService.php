@@ -162,7 +162,6 @@ class LabService
         $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
         $lab->is_verified = '0';
         $lab->save();
-
         return $lab;
     }
 

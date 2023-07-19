@@ -652,7 +652,6 @@ class MasterController extends AppBaseController
             if ($get_skill_groups) {
                 return $this->sendResponse(SkillGroupResource::collection($get_skill_groups), __('responses.found_skill_groups_list'));
             }
-
             return $this->sendResponse(null, __('responses.not_found_skill_groups_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
