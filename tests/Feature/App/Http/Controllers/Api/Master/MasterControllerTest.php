@@ -10,7 +10,7 @@ use Tests\TestCase;
  * @covers \App\Http\Controllers\Api\Master\MasterController
  */
 final class MasterControllerTest extends TestCase
-{   
+{
     public function test_get_categories_positive(): void
     {
         $response = $this->get('/api/v1/master/categories?language=en');

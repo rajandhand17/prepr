@@ -40,24 +40,24 @@ class AuthControllerTest extends TestCase
 
     /**Successfull Positive */
     public function test_register_positive()
-    {   
+    {
         $response = $this->post('/api/v1/auth/register', [
-            'language'              => $this->language,
-            'username'              => $this->username,
-            'email'                 => $this->email,
-            'first_name'            => $this->first_name,
-            'last_name'             => $this->last_name,
-            'password'              => $this->password,
-            'password_confirmation' => $this->password_confirmation,
-            'device_platform'       => $this->device_platform,
-            'user_type'             => $this->user_type,
-            'purpose'               => $this->purpose,
-            'country_code'          => $this->country_code,
-            'phone_number'          => $this->phone_number,
-            'register_type'         => $this->register_type,
+            'language'               => $this->language,
+            'username'               => $this->username,
+            'email'                  => $this->email,
+            'first_name'             => $this->first_name,
+            'last_name'              => $this->last_name,
+            'password'               => $this->password,
+            'password_confirmation'  => $this->password_confirmation,
+            'device_platform'        => $this->device_platform,
+            'user_type'              => $this->user_type,
+            'purpose'                => $this->purpose,
+            'country_code'           => $this->country_code,
+            'phone_number'           => $this->phone_number,
+            'register_type'          => $this->register_type,
             'organization_title'     => $this->organization_name,
         ]);
-        $response->assertStatus(200); 
+        $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
             if ($response->assertOk()) {
@@ -85,18 +85,18 @@ class AuthControllerTest extends TestCase
     public function test_register_negative_exists()
     {
         $response = $this->post('/api/v1/auth/register', [
-            'language' => $this->language, 
-            'username' => $this->username, 
-            'email' => $this->email, 
-            'first_name' => $this->first_name, 
-            'last_name' => $this->last_name, 
-            'password' => $this->password, 
-            'password_confirmation' => $this->password_confirmation, 
-            'device_platform' => $this->device_platform, 
-            'user_type' => $this->user_type, 
-            'purpose' => $this->purpose, 
-            'country_code' => $this->country_code, 
-            'phone_number' => $this->phone_number
+            'language'              => $this->language,
+            'username'              => $this->username,
+            'email'                 => $this->email,
+            'first_name'            => $this->first_name,
+            'last_name'             => $this->last_name,
+            'password'              => $this->password,
+            'password_confirmation' => $this->password_confirmation,
+            'device_platform'       => $this->device_platform,
+            'user_type'             => $this->user_type,
+            'purpose'               => $this->purpose,
+            'country_code'          => $this->country_code,
+            'phone_number'          => $this->phone_number,
         ]);
         $this->assertEquals(422, $response->getStatusCode());
     }
@@ -278,7 +278,7 @@ class AuthControllerTest extends TestCase
 
     /** invit code */
     public function test_post_verify_invite_code_positive()
-    {       
+    {
         $response = $this->post('/api/v1/auth/verify-referral-code', ['referral_code' =>$this->referral_code, 'language' =>$this->language]);
         $response->assertStatus(200);
         $data = $response->json();

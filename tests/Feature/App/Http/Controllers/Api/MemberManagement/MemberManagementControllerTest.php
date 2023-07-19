@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\App\Http\Controllers\Api\MemberManagement;
 
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
-use Illuminate\Support\Facades\Auth;
 class MemberManagementControllerTest extends TestCase
 {
     /**
@@ -17,60 +17,61 @@ class MemberManagementControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        
+
         $this->parameters = [
-            'language'      => 'en',
-            'user_id'       => '2',
-            'name'          => 'Prepr',
-            'slug'          => 'prepr-sds',
-            'wrong_language'=> 'Hindi',
-            'page'          => '1',
-            'component'     => 'organization',
+            'language'       => 'en',
+            'user_id'        => '2',
+            'name'           => 'Prepr',
+            'slug'           => 'prepr-sds',
+            'wrong_language' => 'Hindi',
+            'page'           => '1',
+            'component'      => 'organization',
             'wrong_component'=> 'component',
-            'type'          => 'invite',
-            'invite_type'   => 'email',
-            'role'          => 'Organization Manager',
-            'module_id'     => '27',
-            'subject_line'  => 'Invitation to join an organization',
-            'email_body'    => 'email messages',
-            'invite_status' => 'pending',
-            'invite_email'  => ['rajan@prepr.org'],
-            'inviter_id'    => '15',
-            'id'            => ['1'],
-            'auto_invite'  =>'yes',
+            'type'           => 'invite',
+            'invite_type'    => 'email',
+            'role'           => 'Organization Manager',
+            'module_id'      => '27',
+            'subject_line'   => 'Invitation to join an organization',
+            'email_body'     => 'email messages',
+            'invite_status'  => 'pending',
+            'invite_email'   => ['rajan@prepr.org'],
+            'inviter_id'     => '15',
+            'id'             => ['1'],
+            'auto_invite'    => 'yes',
         ];
         $data = Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
         $user = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
-        
+
         $this->headers = [
             'Accept'        => 'application/vnd.laravel.v1+json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
     }
 
-   /**create member management positive */
+    /**create member management positive */
     public function test_create_positive()
-    {   
-        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters,$this->headers);
-       
+    {
+        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters, $this->headers);
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-   /**create member management negative */
+    /**create member management negative */
     public function test_create_negative()
     {
         $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', [], $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
-   /**Listing member management positive */
+
+    /**Listing member management positive */
     public function test_listing_positive()
-    {   
-        $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
-       
+    {
+        $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language=en', $this->headers);
+
         $response->assertStatus(200);
         $data = $response->json();
-        if ($data['success']){
+        if ($data['success']) {
             $this->assertArrayHasKey('id', $data['data']['users'][0]);
             $this->assertArrayHasKey('type', $data['data']['users'][0]);
             $this->assertArrayHasKey('invite_type', $data['data']['users'][0]);
@@ -82,37 +83,43 @@ class MemberManagementControllerTest extends TestCase
             $this->assertArrayHasKey('auto_invite', $data['data']['users'][0]);
             $this->assertArrayHasKey('email_status', $data['data']['users'][0]);
             $response->assertOk();
-        }else{
+        } else {
             $this->fail();
         }
     }
 
-   /**Listing member management negative */
+    /**Listing member management negative */
     public function test_listing_negative()
     {
-        $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
-      
+        $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language=en', $this->headers);
+
         $response->assertStatus(404);
     }
 
-   /**Delete member management positive */
+    /**Delete member management positive */
     public function test_delete_positive()
     {
-        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
+        $response = $this->post(
+            '/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
             [
-            'email'=> $this->parameters['invite_email'],
-            ],$this->headers);
-      
+                'email'=> $this->parameters['invite_email'],
+            ],
+            $this->headers
+        );
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**Delete member management negative */
     public function test_delete_negative()
     {
-        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
+        $response = $this->post(
+            '/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
             [
                 'id'=> $this->parameters['id'],
-            ],$this->headers);
+            ],
+            $this->headers
+        );
         $this->assertEquals(422, $response->getStatusCode());
     }
 }

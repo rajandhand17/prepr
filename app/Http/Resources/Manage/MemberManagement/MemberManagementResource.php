@@ -15,7 +15,7 @@ class MemberManagementResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {   
+    {
         $user = UserService::getUserByEmail($this->email);
         $username = null;
         if ($user) {
@@ -28,6 +28,7 @@ class MemberManagementResource extends JsonResource
         $invite_status = ($this->invite_status == '0') ? 'Invited' : (($this->invite_status == '1') ? 'Accepted' : (($this->invite_status == '2') ? 'Pending' : (($this->invite_status == '3') ? 'Declined' : 'Auto Created')));
         $auto_invite = ($this->auto_invite == '0') ? 'No' : 'Yes';
         $email_status = ($this->email_status == '0') ? 'Scheduled' : (($this->email_status == '1') ? 'Sent' : (($this->email_status == '2') ? 'Failed' : 'NA'));
+
         return [
             'id'            => $this->uuid,
             'type'          => $type,
