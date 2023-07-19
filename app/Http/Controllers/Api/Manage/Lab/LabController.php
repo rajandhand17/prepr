@@ -12,15 +12,6 @@ use Illuminate\Http\Request;
 
 class LabController extends AppBaseController
 {
-<<<<<<< HEAD
-    private $labRepository;
-    private $labAchievementRepository;
-
-    public function __construct(LabRepository $labRepository, LabAchievementRepository $labAcheivementRepository)
-    {
-        $this->labRepository = $labRepository;
-        $this->labAchievementRepository = $labAcheivementRepository;
-=======
     private LabRepository $labRepository;
     private LabAchievementRepository $labAcheivementRepository;
 
@@ -28,7 +19,6 @@ class LabController extends AppBaseController
     {
         $this->labRepository = $labRepository;
         $this->labAcheivementRepository = $labAchievementRepository;
->>>>>>> BetaDevelopment
     }
 
     public function index(Request $request)
@@ -83,13 +73,8 @@ class LabController extends AppBaseController
             }
 
             if ($request->is_achievement_enabled == 'yes') {
-<<<<<<< HEAD
-                $upload_achievement_image = $this->labAchievementRepository->uploadAcheivementImage($request->achievement_image);
-                if ($upload_achievement_image == false) {
-=======
                 $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
                 if (!$uploaded_achievement_image) {
->>>>>>> BetaDevelopment
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
@@ -126,13 +111,8 @@ class LabController extends AppBaseController
                 $upload_cover_image = $uploaded_cover_image;
             }
             if ($request->is_achievement_enabled == 'yes') {
-<<<<<<< HEAD
-                $upload_acheivements_image = $this->labAchievementRepository->uploadAcheivementImage($request->achievement_image);
-                if ($upload_acheivements_image == false) {
-=======
                 $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
                 if ($uploaded_achievement_image == false) {
->>>>>>> BetaDevelopment
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
