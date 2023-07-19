@@ -648,4 +648,23 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getOrganizationList(Request $request)
+    {
+        try {
+            if (!auth()->user()->hasRole([
+                'organization_owner','organization_manager','lab_manager','challenge_manager','resource_manager'
+            ])) {
+                return $this->sendError(__('responses.organization_delete_access_denied'), 403);
+            }
+            $organization = $this->organizationRepository->getOrganizationListOnlyNameAndUuid($request);
+            if ($organization !== false) {
+                return $this->sendResponse($organization, __('responses.found_organization_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_organization_list'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

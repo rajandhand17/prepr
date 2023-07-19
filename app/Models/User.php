@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use Carbon\Carbon;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -180,6 +181,7 @@ class User extends Authenticatable
             if ($user->id) {
                 if ($request->register_type == 'organization') {
                     $organization = new Organization();
+                    $organization->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $organization->slug = UtilityHelper::generateSlug($request->organization_title, $organization);
                     $organization->user_id = $user->id;
                     $organization->title = $request->organization_title;
@@ -213,6 +215,7 @@ class User extends Authenticatable
 
             return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
+            dd($e);
             DB::rollback();
 
             return ['success' => false, 'message' => __('responses.send_error')];

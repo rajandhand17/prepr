@@ -10,4 +10,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::put('/{slug}/update', [OrganizationController::class, 'update'])->middleware('permission:edit_organization');
     Route::delete('/{slug}/delete', [OrganizationController::class, 'delete'])->middleware('permission:delete_organization');
     Route::get('/check-slug/{slug}', [OrganizationController::class, 'checkSlug'])->middleware('permission:create_organization');
+
+    Route::get('/get-organization-list', [OrganizationController::class, 'getOrganizationList'])->middleware('permission:view_organization');
 });

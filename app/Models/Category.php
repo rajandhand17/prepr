@@ -58,7 +58,7 @@ class Category extends Model
             }
 
             //take 20 results based from the table
-            $category_list = $category_list->take(20)->get();
+            $category_list = $category_list->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$category_list->isEmpty()) {
