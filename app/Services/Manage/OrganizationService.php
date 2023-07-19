@@ -244,7 +244,7 @@ class OrganizationService
 
             $organization_list = self::filterOrganizationList($request, $organization_list);
 
-            return $organization_list->take(config('site-settings.dropdown_listing_limit'))->get();
+            return $organization_list->take(config('site-settings.dropdown_listing_limit'))->pluck('title', 'uuid');
         } catch (\Exception $e) {
             return false;
         }
