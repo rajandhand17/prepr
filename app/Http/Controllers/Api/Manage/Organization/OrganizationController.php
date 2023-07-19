@@ -65,6 +65,9 @@ class OrganizationController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            if (!auth()->user()->isAbleTo('view_organization')) {
+                return $this->sendError('Forbidden', 403);
+            }
             $organization = $this->organizationRepository->getOrganizationList($request);
             if ($organization !== false) {
                 $response = [
@@ -134,7 +137,10 @@ class OrganizationController extends AppBaseController
     public function show($slug)
     {
         try {
-            $organization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
+            $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            if (!auth()->user()->isAbleTo('view_organization', $organization)) {
+                return $this->sendError('Forbidden', 403);
+            }
             if ($organization) {
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
             }
@@ -311,8 +317,11 @@ class OrganizationController extends AppBaseController
     public function create(CreateOrganizationRequest $request)
     {
         try {
-            $profile_image_path = null;
-            $cover_image_path = null;
+            if (!auth()->user()->isAbleTo('create_organization')) {
+                return $this->sendError('Forbidden', 403);
+            }
+            $profile_image_path = config('site-settings.default_organization_profile_image');
+            $cover_image_path = config('site-settings.default_organization_cover_image');
             $checkOrganization = $this->organizationRepository->checkOrganizationExistBasedOnTitle($request);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_name_unique'), 422);
@@ -517,9 +526,9 @@ class OrganizationController extends AppBaseController
     public function update($slug, UpdateOrganizationRequest $request)
     {
         try {
-            $checkOrganization = $this->organizationRepository->getOrganizationExistBasedOnSlug($slug);
+            $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_name_unique'), 422);
+                return $this->sendError(__('responses.organization_not_found'), 404);
             }
             if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_update_access_denied'), 403);
@@ -527,7 +536,7 @@ class OrganizationController extends AppBaseController
             $profile_images_path = null;
             $cover_images_path = null;
             if ($request->profile_image !== null) {
-                $profile_image_path = $this->organizationRepository->updateOrganizationProfileImage($request);
+                $profile_image_path = $this->organizationRepository->uploadOrganizationProfileImage($request);
                 if ($profile_image_path == false) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
@@ -535,7 +544,11 @@ class OrganizationController extends AppBaseController
             }
 
             if ($request->cover_image !== null) {
-                $cover_images_path = $this->organizationRepository->updateOrganizationCoverImage($request);
+                $cover_image_path = $this->organizationRepository->uploadOrganizationCoverImage($request);
+                if ($cover_image_path == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $cover_images_path = $cover_image_path;
             }
 
             $organization = $this->organizationRepository->updateOrganization($request, $cover_images_path, $profile_images_path, $slug);

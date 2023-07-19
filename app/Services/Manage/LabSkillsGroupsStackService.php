@@ -45,7 +45,7 @@ class LabSkillsGroupsStackService
         return true;
     }
 
-    public function updateLabSkillsGroupsStack($lab_id, $request)
+    public function updateLabSkillsGroupsStack($request, $lab_id)
     {
         try {
             if ($request->has('skills')) {

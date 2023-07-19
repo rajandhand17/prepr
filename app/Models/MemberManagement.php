@@ -14,6 +14,7 @@ class MemberManagement extends Model
     protected $table = 'member_management';
 
     protected $fillable = [
+        'uuid',
         'type',
         'invite_type',
         'module_id',

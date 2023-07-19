@@ -98,7 +98,7 @@ class User extends Command
                     $user->phone_number = $single_user->phone_number;
                     $user->two_factor_verification = $twofactor;
                     $user->otp = $single_user->two_factor_otp;
-                    $user->profile_image = $single_user->profile_image;
+                    $user->profile_image = (!empty($single_user->profile_image)) ? $single_user->profile_image : config('site-settings.default_user_profile_image');
                     $user->referral_code = $single_user->referal_code;
                     $user->remember_token = $single_user->remember_token;
                     $user->created_at = Carbon::createFromTimestamp($single_user->created_at);

@@ -53,13 +53,7 @@ return [
         'scheduled' => '0',
         'sent'      => '1',
         'fail'      => '2',
-    ],
-
-    'member_management_invite_type' => [
-        'email'        => '0',
-        'network'      => '1',
-        'join_request' => '2',
-        'csv'          => '3',
+        'na'        => '3',
     ],
 
     'email_template_type' => [

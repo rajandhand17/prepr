@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use DB;
+use HiFolks\RandoPhp\Randomize;
 
 class OrganizationService
 {
@@ -97,7 +98,7 @@ class OrganizationService
         }
     }
 
-    public static function getOrganizationExistBasedOnSlug($slug)
+    public static function getOrganizationBasedOnSlug($slug)
     {
         try {
             return Organization::where('slug', $slug)->first();
@@ -171,6 +172,7 @@ class OrganizationService
             $organization = new Organization();
             $organization->language = isset($request->language) ? $request->language : 'en';
             $organization->user_id = auth()->user()->id;
+            $organization->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $organization->title = $request->title;
             $organization->display_name = $request->title;
             $organization->description = isset($request->description) ? $request->description : null;
@@ -192,34 +194,6 @@ class OrganizationService
         } catch (\Exception $e) {
             DB::rollback();
 
-            return false;
-        }
-    }
-
-    public static function updateOrganizationProfileImage($request)
-    {
-        try {
-            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->profile_image, 'organization');
-            if (!$profile_image_path) {
-                return false;
-            }
-
-            return $profile_image_path;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public static function updateOrganizationCoverImage($request)
-    {
-        try {
-            $profile_image_path = FileUploadHelper::uploadbase64ImageToS3($request->cover_image, 'organization');
-            if (!$profile_image_path) {
-                return false;
-            }
-
-            return $profile_image_path;
-        } catch (\Exception $e) {
             return false;
         }
     }
