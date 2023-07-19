@@ -104,17 +104,17 @@ class OrganizationControllerTest extends TestCase
           $this->assertEquals(200, $response->getStatusCode());
           $data = $response->json();
           if ($data['success']) {
-              $this->assertArrayHasKey('id', $data['data'][0]);
-              $this->assertArrayHasKey('language', $data['data'][0]);
-              $this->assertArrayHasKey('title', $data['data'][0]);
-              $this->assertArrayHasKey('slug', $data['data'][0]);
-              $this->assertArrayHasKey('description', $data['data'][0]);
-              $this->assertArrayHasKey('cover_image', $data['data'][0]);
-              $this->assertArrayHasKey('profile_image', $data['data'][0]);
-              $this->assertArrayHasKey('website', $data['data'][0]);
-              $this->assertArrayHasKey('about', $data['data'][0]);
-              $this->assertArrayHasKey('category', $data['data'][0]);
-              $this->assertArrayHasKey('total_employees', $data['data'][0]);
+              $this->assertArrayHasKey('id', $data['data']['list'][0]);
+              $this->assertArrayHasKey('language', $data['data']['list'][0]);
+              $this->assertArrayHasKey('title', $data['data']['list'][0]);
+              $this->assertArrayHasKey('slug', $data['data']['list'][0]);
+              $this->assertArrayHasKey('description', $data['data']['list'][0]);
+              $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
+              $this->assertArrayHasKey('profile_image', $data['data']['list'][0]);
+              $this->assertArrayHasKey('website', $data['data']['list'][0]);
+              $this->assertArrayHasKey('about', $data['data']['list'][0]);
+              $this->assertArrayHasKey('category', $data['data']['list'][0]);
+              $this->assertArrayHasKey('total_employees', $data['data']['list'][0]);
               $response->assertOk();
           } else {
               $this->fail();

@@ -57,7 +57,7 @@ class AuthControllerTest extends TestCase
             'register_type'         => $this->register_type,
             'organization_title'     => $this->organization_name,
         ]);
-        $response->assertStatus(200);
+        $response->assertStatus(200); 
         $data = $response->json();
         if ($data['success'] === true) {
             if ($response->assertOk()) {

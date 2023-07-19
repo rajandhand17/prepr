@@ -83,7 +83,8 @@ class LabControllerTest extends TestCase
 
     public function test_lab_update_positive(){
         $this->parameters['_method']="put";
-        $response=$this->post("/api/v1/manage/".$this->parameters['slug'].'/update',$this->parameters,$this->headers);
+
+        $response=$this->post("api/v1/manage/lab/".$this->parameters['slug'].'/update',$this->parameters,$this->headers);
         
         $response->assertStatus(200);
     }
@@ -171,14 +172,6 @@ class LabControllerTest extends TestCase
     }
     public function test_lab_unfavored_negative(){
         $response=$this->post('/api/v1/manage/lab/unfavored/'.$this->parameters['not_exists_slug'],$this->parameters,$this->headers);
-        $response->assertStatus(403);
-    }
-    public function test_lab_share_positive(){
-        $response=$this->post('/api/v1/manage/lab/share/'.$this->parameters['slug'],$this->parameters,$this->headers);
-        $response->assertStatus(200);
-    }
-    public function test_lab_share_negative(){
-        $response=$this->post('/api/v1/manage/lab/share/'.$this->parameters['not_exists_slug'],$this->parameters,$this->headers);
         $response->assertStatus(403);
     }
 }

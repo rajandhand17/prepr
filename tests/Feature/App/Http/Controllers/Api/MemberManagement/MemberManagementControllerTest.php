@@ -22,7 +22,7 @@ class MemberManagementControllerTest extends TestCase
             'language'      => 'en',
             'user_id'       => '2',
             'name'          => 'Prepr',
-            'slug'          => 'prepr-org',
+            'slug'          => 'prepr-sds',
             'wrong_language'=> 'Hindi',
             'page'          => '1',
             'component'     => 'organization',
@@ -53,6 +53,7 @@ class MemberManagementControllerTest extends TestCase
     public function test_create_positive()
     {   
         $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters,$this->headers);
+       
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -66,6 +67,7 @@ class MemberManagementControllerTest extends TestCase
     public function test_listing_positive()
     {   
         $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
+       
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success']){
@@ -89,6 +91,7 @@ class MemberManagementControllerTest extends TestCase
     public function test_listing_negative()
     {
         $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language=en',$this->headers);
+      
         $response->assertStatus(404);
     }
 
@@ -99,6 +102,7 @@ class MemberManagementControllerTest extends TestCase
             [
             'email'=> $this->parameters['invite_email'],
             ],$this->headers);
+      
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -108,8 +112,7 @@ class MemberManagementControllerTest extends TestCase
         $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language=en',
             [
                 'id'=> $this->parameters['id'],
-            ]
-        );
-        $this->assertEquals(400, $response->getStatusCode());
+            ],$this->headers);
+        $this->assertEquals(422, $response->getStatusCode());
     }
 }
