@@ -321,13 +321,14 @@ class AuthController extends AppBaseController
     {
         try {
             $register = $this->authRepository->register($request);
-            
+
             if ($register['success'] == false) {
                 return $this->sendError($register['message'], 401);
             }
             if ($register['success'] == true) {
                 return $this->sendResponse(null, __('responses.registration_success'), 200);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

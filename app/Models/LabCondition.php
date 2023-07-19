@@ -21,7 +21,8 @@ class LabCondition extends Model
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-    public function getLabConditions($language = 'en', $search = null){
+    public function getLabConditions($language = 'en', $search = null)
+    {
         try {
             $labConditions = static::select('id', 'title');
             if ($search != null) {
@@ -32,6 +33,7 @@ class LabCondition extends Model
             if (!$labConditions->isEmpty()) {
                 return $labConditions;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

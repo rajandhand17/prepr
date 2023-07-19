@@ -213,6 +213,7 @@ class User extends Authenticatable
             return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
             DB::rollback();
+
             return ['success' => false, 'message' => __('responses.send_error')];
         }
     }
@@ -281,6 +282,7 @@ class User extends Authenticatable
 
                             return $response;
                         }
+
                         return ['success' => false, 'message' => __('responses.failed_email')];
                     }
                     /**sending otp for verify email*/

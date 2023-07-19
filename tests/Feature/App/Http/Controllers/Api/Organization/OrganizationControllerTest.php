@@ -19,45 +19,45 @@ class OrganizationControllerTest extends TestCase
         parent::setUp();
 
         $this->parameters = [
-            'language'       => 'en',
-            'user_id'        => '2',
-            'title'           => 'Prepr',
-            'slug'           => 'Prepr',
-            'description'    => 'Describing the test cases of apis',
-            'website'        => 'https://preprlabs.org',
-            'about'          => 'testing',
-            'category'       => '2',
-            'status'         => 'publish',
-            'total_employees'=> '12',
-            'latitude'       => '43.467517',
-            'longitude'      => '-79.6876659',
-            'address'        => 'Oakville, ON, Canada',
-            'city'           => 'Oakville',
-            'state'          => 'Ontario',
-            'country'        => 'Canada',
-            'zip_code'       => 'L6M 3N5',
-            'user_type'      => 'organization',
-            'wrong_language' => 'Hindi',
-            'organization_address'=>[
+            'language'            => 'en',
+            'user_id'             => '2',
+            'title'               => 'Prepr',
+            'slug'                => 'Prepr',
+            'description'         => 'Describing the test cases of apis',
+            'website'             => 'https://preprlabs.org',
+            'about'               => 'testing',
+            'category'            => '2',
+            'status'              => 'publish',
+            'total_employees'     => '12',
+            'latitude'            => '43.467517',
+            'longitude'           => '-79.6876659',
+            'address'             => 'Oakville, ON, Canada',
+            'city'                => 'Oakville',
+            'state'               => 'Ontario',
+            'country'             => 'Canada',
+            'zip_code'            => 'L6M 3N5',
+            'user_type'           => 'organization',
+            'wrong_language'      => 'Hindi',
+            'organization_address'=> [
                 [
-                "latitude"=>"43.467517",
-                "longitude"=>"43.467517",
-                "address_1"=>"Oakville",
-                "address_2"=>"ON, Canada",
-                "city"=>"Oakville",
-                "state"=>"Ontario",
-                "country"=>"Canada",
-                "zip_code"=>"L6M 3N6",
-                ]
+                    'latitude' => '43.467517',
+                    'longitude'=> '43.467517',
+                    'address_1'=> 'Oakville',
+                    'address_2'=> 'ON, Canada',
+                    'city'     => 'Oakville',
+                    'state'    => 'Ontario',
+                    'country'  => 'Canada',
+                    'zip_code' => 'L6M 3N6',
+                ],
             ],
-            "organization_members"=>[
+            'organization_members'=> [
                 [
-                    "name"=>"John",
-                    "position"=>"CEO",
-                   // "image"=>null,
-                ]
-                
-            ]
+                    'name'    => 'John',
+                    'position'=> 'CEO',
+                    // "image"=>null,
+                ],
+
+            ],
         ];
         $data = Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
         $user = Auth::user();
@@ -96,37 +96,37 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-      /** Organization view */
-      public function test_organization_view_positive()
-      {
-          $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'], $this->headers);
-        
-          $this->assertEquals(200, $response->getStatusCode());
-          $data = $response->json();
-          if ($data['success']) {
-              $this->assertArrayHasKey('id', $data['data']['list'][0]);
-              $this->assertArrayHasKey('language', $data['data']['list'][0]);
-              $this->assertArrayHasKey('title', $data['data']['list'][0]);
-              $this->assertArrayHasKey('slug', $data['data']['list'][0]);
-              $this->assertArrayHasKey('description', $data['data']['list'][0]);
-              $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
-              $this->assertArrayHasKey('profile_image', $data['data']['list'][0]);
-              $this->assertArrayHasKey('website', $data['data']['list'][0]);
-              $this->assertArrayHasKey('about', $data['data']['list'][0]);
-              $this->assertArrayHasKey('category', $data['data']['list'][0]);
-              $this->assertArrayHasKey('total_employees', $data['data']['list'][0]);
-              $response->assertOk();
-          } else {
-              $this->fail();
-          }
-      }
+    /** Organization view */
+    public function test_organization_view_positive()
+    {
+        $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'], $this->headers);
 
-      /** Organization view */
-      public function test_organization_view_negative()
-      {
-          $response = $this->get('/api/v1/manage/organization/', $this->headers);
-          $this->assertEquals(400, $response->getStatusCode());
-      }
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['success']) {
+            $this->assertArrayHasKey('id', $data['data']['list'][0]);
+            $this->assertArrayHasKey('language', $data['data']['list'][0]);
+            $this->assertArrayHasKey('title', $data['data']['list'][0]);
+            $this->assertArrayHasKey('slug', $data['data']['list'][0]);
+            $this->assertArrayHasKey('description', $data['data']['list'][0]);
+            $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
+            $this->assertArrayHasKey('profile_image', $data['data']['list'][0]);
+            $this->assertArrayHasKey('website', $data['data']['list'][0]);
+            $this->assertArrayHasKey('about', $data['data']['list'][0]);
+            $this->assertArrayHasKey('category', $data['data']['list'][0]);
+            $this->assertArrayHasKey('total_employees', $data['data']['list'][0]);
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
+    }
+
+    /** Organization view */
+    public function test_organization_view_negative()
+    {
+        $response = $this->get('/api/v1/manage/organization/', $this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 
     /**Organization Listing */
     public function test_organization_list()
@@ -170,7 +170,8 @@ class OrganizationControllerTest extends TestCase
 
     /**Organization Update negative*/
     public function test_update_organization_negative()
-    {    $this->parameters['title'] = '';
+    {
+        $this->parameters['title'] = '';
         $response = $this->put('/api/v1/manage/organization/'.$this->parameters['slug'].'/update', $this->parameters, $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
