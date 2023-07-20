@@ -74,7 +74,6 @@ class TagGroup extends Command
             DB::rollback();
             $this->error('No tag groups found.');
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             $this->error($e->getMessage());
 

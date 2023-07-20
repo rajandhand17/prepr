@@ -215,7 +215,6 @@ class User extends Authenticatable
 
             return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
 
             return ['success' => false, 'message' => __('responses.send_error')];

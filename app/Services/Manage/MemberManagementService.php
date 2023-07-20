@@ -359,7 +359,6 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
 
             return $e;
@@ -393,11 +392,11 @@ class MemberManagementService
         }
     }
 
-    public static function changeRoleById($request, $component)
+    public static function changeRoleByUuid($request, $component)
     {
         try {
             DB::beginTransaction();
-            $checkMember = MemberManagement::find($request->id);
+            $checkMember = MemberManagement::where('uuid',$request->id)->first();
             if ($checkMember != null) {
                 if ($component == 'organization') {
                     $getOrganization = OrganizationService::getOrganizationExistBasedOnId($checkMember->module_id);
