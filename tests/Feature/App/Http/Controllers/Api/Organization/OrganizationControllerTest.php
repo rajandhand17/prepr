@@ -22,7 +22,8 @@ class OrganizationControllerTest extends TestCase
             'language'       => 'en',
             'user_id'        => '2',
             'title'           => 'Preprs',
-            'slug'           => 'preprs',
+            'slug'           => 'prepr',
+            'wrong_slug'     => 'prepr_slug',
             'description'    => 'Describing the test cases of apis',
             'website'        => 'https://preprlabs.org',
             'about'          => 'testing',
@@ -102,7 +103,7 @@ class OrganizationControllerTest extends TestCase
             $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'], $this->headers);
             $this->assertEquals(200, $response->getStatusCode());
             $data = $response->json();
-            if ($data['success']) {
+            if ($data['success']){
                 $this->assertArrayHasKey('id', $data['data']['list'][0]);
                 $this->assertArrayHasKey('language', $data['data']['list'][0]);
                 $this->assertArrayHasKey('title', $data['data']['list'][0]);
@@ -113,13 +114,42 @@ class OrganizationControllerTest extends TestCase
                 $this->assertArrayHasKey('website', $data['data']['list'][0]);
                 $this->assertArrayHasKey('about', $data['data']['list'][0]);
                 $this->assertArrayHasKey('category', $data['data']['list'][0]);
-                $this->assertArrayHasKey('total_employees', $data['data']['list'][0]);
+                $response->assertOk();
+            } else {
+                $this->fail();
+            }
+    }
+
+        /** Organization view with search */
+        public function test_organization_view_positive_with_search_positive()
+        {
+            $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
+            $this->assertEquals(200, $response->getStatusCode());
+            $data = $response->json();
+            if ($data['success']) {
+                $this->assertArrayHasKey('id', $data['data']);
+                $this->assertArrayHasKey('language', $data['data']);
+                $this->assertArrayHasKey('title', $data['data']);
+                $this->assertArrayHasKey('slug', $data['data']);
+                $this->assertArrayHasKey('description', $data['data']);
+                $this->assertArrayHasKey('cover_image', $data['data']);
+                $this->assertArrayHasKey('profile_image', $data['data']);
+                $this->assertArrayHasKey('website', $data['data']);
+                $this->assertArrayHasKey('about', $data['data']);
+                $this->assertArrayHasKey('category', $data['data']);
+                $this->assertArrayHasKey('total_employees', $data['data']);
                 $response->assertOk();
             } else {
                 $this->fail();
             }
         }
-
+        
+        /** Organization view with search negative*/
+        public function test_organization_view_positive_with_search_negative()
+        {
+            $response = $this->get('/api/v1/manage/organization/'.$this->parameters['wrong_slug'].'?language='.$this->parameters['language'], $this->headers);
+            $this->assertEquals(404, $response->getStatusCode());
+        }
       /** Organization view */
     public function test_organization_view_negative()
     {

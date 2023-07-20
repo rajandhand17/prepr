@@ -58,21 +58,21 @@ class CreateMemberManagementRequest extends FormRequest
     public function messages()
     {
         return[
-            'invite_email.required'     => __('responses.required_field'),
+            'invite_email.required'     => __('responses.api_invite_email_required'),
             'invite_email.mimes'        => __('responses.choose_csv_file'),
             'invite_email.array'        => __('responses.array'),
-            'invite_email.*.required'   => __('responses.required_field'),
+            'invite_email.*.required'   => __('responses.api_invite_email_required'),
             'invite_email.*.email'      => __('responses.valid_email_pattern'),
-            'type.required'             => __('responses.required_field'),
-            'invite_type.required'      => __('responses.required_field'),
-            'module_id.required'        => __('responses.required_field'),
+            'type.required'             => __('responses.api_type_required'),
+            'invite_type.required'      => __('responses.api_invite_type_required'),
+            'module_id.required'        => __('responses.api_module_required'),
             'module_id.exists'          => __('responses.organization_not_found'),
             'inviter_id.exists'         => __('responses.not_exists'),
-            'inviter_id.required'       => __('responses.required_field'),
-            'role.required'             => __('responses.required_field'),
+            'inviter_id.required'       => __('responses.api_inviter_id_required'),
+            'role.required'             => __('responses.api_role_required'),
             'role.exists'               => __('responses.not_exists'),
-            'user_invite_email.required'=> __('responses.required_field'),
-            'auto_invite.required'      => __('responses.required_field'),
+            'user_invite_email.required'=> __('responses.api_user_invite_email_required'),
+            'auto_invite.required'      => __('responses.api_auto_invite_required'),
             'auto_invite.in'            => __('responses.choose_yes_no'),
         ];
     }

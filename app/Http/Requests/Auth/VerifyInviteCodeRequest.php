@@ -42,7 +42,7 @@ class VerifyInviteCodeRequest extends FormRequest
     public function messages()
     {
         return [
-            'referral_code.required'=> __('responses.required_field'),
+            'referral_code.required'=> __('responses.api_referral_code_required'),
             'referral_code.exists'  => __('responses.not_exists'),
         ];
     }
