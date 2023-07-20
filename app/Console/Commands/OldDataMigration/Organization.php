@@ -132,7 +132,6 @@ class Organization extends Command
             $this->error('No organizations found.');
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
             $this->error($e->getMessage());
 
             return;

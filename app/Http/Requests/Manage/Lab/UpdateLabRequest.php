@@ -42,7 +42,7 @@ class UpdateLabRequest extends FormRequest
         $base_rules = [
             'request_type'   => 'required|in:draft,publish,archive',
             'description'    => 'required_if:request_type,publish|nullable',
-            'organization_id'=> 'required|exists:organizations,id',
+            'organization_id'=> 'required|exists:organizations,uuid',
             'category_id'    => 'required|exists:categories,id',
             'privacy'        => 'required_if:request_type,publish|in:yes,no',
             'location'       => 'required_if:request_type,publish|nullable',
