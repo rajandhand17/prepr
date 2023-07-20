@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laratrust\Traits\LaratrustUserTrait;
 use Laravel\Passport\HasApiTokens;
-use HiFolks\RandoPhp\Randomize;
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -98,23 +97,19 @@ class User extends Authenticatable
                         $data = ['subject' => 'Two Factor Verification', 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
-                            
                             return ['success' => true, 'message'=> __('responses.two_factor_otp'), 'code' => 2];
                         }
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code'=>null];
                     }
                     $data = User::where('email', $request->email)->first();
                     $response = ['success' => true,  'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
-
                     return $response;
                 } else {
                     $response = ['success' => false, 'message'=>__('responses.invalid_credentials'), 'code' => 4];
-
                     return $response;
                 }
-            } else {
+            } else{
                 $response = ['success' => false, 'message'=>__('responses.user_not_found'), 'code' => 5];
-
                 return $response;
             }
         } catch (\Exception $e) {
@@ -199,11 +194,9 @@ class User extends Authenticatable
                         /**sending otp on registeres email */
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
-
                         return $success;
                     }
                     DB::rollback();
-
                     return ['success' => false, 'message' => __('responses.failed_email')];
                 }
                 DB::rollback();

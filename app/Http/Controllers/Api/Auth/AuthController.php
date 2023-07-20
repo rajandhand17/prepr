@@ -81,7 +81,7 @@ class AuthController extends AppBaseController
      * )
      */
     public function login(LoginFormRequest $request)
-    {
+    { 
         try {
             $login = $this->authRepository->login($request);
             if ($login['success'] == true) {

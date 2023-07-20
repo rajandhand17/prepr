@@ -12,7 +12,7 @@
     "responses.verify_success_already":"Your account has already been verified. Please continue to log in into your account!",
     "responses.user_login_success":"Welcome to your account!",
     "responses.verify_reference_success":"The referral code is available!",
-    "responses.verify_reference_error":"The referral code is not available!",
+    "responses.verify_reference_error":"The referral code is not available!", 
     "responses.account_not_verified":"Please verify your account to continue!",
     "responses.otp_correct_required":"Please enter a valid OTP!",
     "responses.invalid_credentials":"Invalid credentials! please try again.", 
@@ -196,5 +196,7 @@
     "responses.api_auto_invite_required":"This :auto invite field is required",
     "responses.api_status_required":"This :status field is required",
     "responses.api_organization_address_required":"This :organization address field is required",
-    "responses.api_receiver_required":"This :receiver field is required"
+    "responses.api_receiver_required":"This :receiver field is required",
+    "responses.api_not_found_required":"Not Found",
+    "responses.member_manager_found":"Member manager list found!"
 }

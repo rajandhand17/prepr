@@ -88,7 +88,7 @@ class MemberManagementController extends AppBaseController
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
 
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' Not Found', 403);
+                return $this->sendError(ucfirst($component)." ".__('responses.api_not_found_required'), 403);
             }
 
             $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
@@ -240,7 +240,7 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' Not Found', 403);
+                return $this->sendError(ucfirst($component)." ".__('responses.api_not_found_required'), 403);
             }
             if ($component != 'organization' && $request->role != 'User') {
                 return $this->sendError('Please select valid role for the invitees.', 403);
@@ -300,7 +300,7 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' Not Found', 403);
+                return $this->sendError(ucfirst($component)." ".__('responses.api_not_found_required'), 403);
             }
             $member_management = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug, $component, $request);
             if ($member_management) {
