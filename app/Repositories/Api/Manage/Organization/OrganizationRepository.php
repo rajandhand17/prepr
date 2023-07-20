@@ -152,4 +152,13 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         }
     }
+
+    public function getOrganizationListOnlyNameAndUuid($request)
+    {
+        try {
+            return $this->organizationService->getOrganizationListOnlyNameAndUuid($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
