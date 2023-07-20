@@ -94,7 +94,7 @@ class MemberManagementController extends AppBaseController
             $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
 
             $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
-            
+
             if ($getTemplate) {
                 $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
                 $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $checkComponentBasedOnSlug->title, $getTemplate->body_content));
@@ -119,7 +119,8 @@ class MemberManagementController extends AppBaseController
                 $response['current_page'] = 1;
                 $response['total_pages'] = 1;
                 $response['users'] = [];
-                return $this->sendResponse($response,__('responses.create_member_manger_failed')); 
+
+                return $this->sendResponse($response, __('responses.create_member_manger_failed'));
             }
 
             return $this->sendResponse($response, __('responses.member_manager_found'));

@@ -32,7 +32,7 @@ class CreateLabRequest extends FormRequest
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'title'                  => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description'            => 'required_if:request_type,publish|nullable',
-            'organization_id'        => 'required|exists:organizations,id',
+            'organization_id'        => 'required|exists:organizations,uuid',
             'category_id'            => 'required|exists:categories,id',
             'privacy'                => 'required_if:request_type,publish|in:yes,no',
             'location'               => 'required_if:request_type,publish|nullable',

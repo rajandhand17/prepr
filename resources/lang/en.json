@@ -196,5 +196,5 @@
     "responses.api_auto_invite_required":"This :auto invite field is required",
     "responses.api_status_required":"This :status field is required",
     "responses.api_organization_address_required":"This :organization address field is required",
-    "responses.api_receiver_required":"This :receiver field is required",
+    "responses.api_receiver_required":"This :receiver field is required"
 }

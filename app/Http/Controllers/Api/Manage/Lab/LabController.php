@@ -8,6 +8,7 @@ use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
+use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class LabController extends AppBaseController
@@ -24,6 +25,11 @@ class LabController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
             $lab = $this->labRepository->getLabList($request);
             if ($lab) {
                 $response = [

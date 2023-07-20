@@ -26,7 +26,7 @@ class ChangeRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'id'  => 'required|Exists:member_management,id',
+            'id'  => 'required|Exists:member_management,uuid',
             'role'=> 'required|Exists:roles,display_name',
         ];
     }

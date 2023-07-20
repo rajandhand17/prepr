@@ -41,24 +41,24 @@ class OrganizationControllerTest extends TestCase
             'wrong_language' => 'Hindi',
             'organization_address'=>[
                 [
-                "latitude"=>"43.467517",
-                "longitude"=>"43.467517",
-                "address_1"=>"Oakville",
-                "address_2"=>"ON, Canada",
-                "city"=>"Oakville",
-                "state"=>"Ontario",
-                "country"=>"Canada",
-                "zip_code"=>"L6M 3N6",
-                ]
+                    'latitude' => '43.467517',
+                    'longitude'=> '43.467517',
+                    'address_1'=> 'Oakville',
+                    'address_2'=> 'ON, Canada',
+                    'city'     => 'Oakville',
+                    'state'    => 'Ontario',
+                    'country'  => 'Canada',
+                    'zip_code' => 'L6M 3N6',
+                ],
             ],
-            "organization_members"=>[
+            'organization_members'=> [
                 [
-                    "name"=>"John",
-                    "position"=>"CEO",
-                   // "image"=>null,
-                ]
-                
-            ]
+                    'name'    => 'John',
+                    'position'=> 'CEO',
+                    // "image"=>null,
+                ],
+
+            ],
         ];
         $data = Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
         $user = Auth::user();
@@ -199,7 +199,8 @@ class OrganizationControllerTest extends TestCase
 
     /**Organization Update negative*/
     public function test_update_organization_negative()
-    {    $this->parameters['title'] = '';
+    {
+        $this->parameters['title'] = '';
         $response = $this->put('/api/v1/manage/organization/'.$this->parameters['slug'].'/update', $this->parameters, $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }

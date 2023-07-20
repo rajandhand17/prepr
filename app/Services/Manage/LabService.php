@@ -89,7 +89,7 @@ class LabService
         }
     }
 
-    public function uploadLabCoverImage($image)
+    public static function uploadLabCoverImage($image)
     {
         try {
             $upload_lab_cover_image = FileUploadHelper::uploadImageToS3($image, 'lab');
@@ -103,7 +103,7 @@ class LabService
         }
     }
 
-    public function createLab($request, $upload_cover_image)
+    public static function createLab($request, $upload_cover_image)
     {
         $status = config('constants.lab_status.draft');
         switch($request->request_type) {
@@ -165,7 +165,7 @@ class LabService
         return $lab;
     }
 
-    public function updateLab($slug, $request, $upload_cover_image)
+    public static function updateLab($slug, $request, $upload_cover_image)
     {
         try {
             $lab = Lab::where('slug', $slug)->first();
@@ -208,7 +208,7 @@ class LabService
         }
     }
 
-    public function deleteLab($lab_id)
+    public static function deleteLab($lab_id)
     {
         try {
             $lab = Lab::find($lab_id)->delete();
