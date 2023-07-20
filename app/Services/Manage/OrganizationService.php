@@ -240,7 +240,7 @@ class OrganizationService
     public static function getOrganizationExistBasedOnUuid($uuid)
     {
         try {
-            $organization = Organization::where('uuid',$uuid)->first();
+            $organization = Organization::where('uuid', $uuid)->first();
             if ($organization != null) {
                 return $organization;
             }

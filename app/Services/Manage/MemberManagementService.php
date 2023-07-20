@@ -396,7 +396,7 @@ class MemberManagementService
     {
         try {
             DB::beginTransaction();
-            $checkMember = MemberManagement::where('uuid',$request->id)->first();
+            $checkMember = MemberManagement::where('uuid', $request->id)->first();
             if ($checkMember != null) {
                 if ($component == 'organization') {
                     $getOrganization = OrganizationService::getOrganizationExistBasedOnId($checkMember->module_id);
