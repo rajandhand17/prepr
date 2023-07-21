@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\App\Http\Controllers\Api\Organization;
+namespace Tests\Feature\manage;
 
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
@@ -60,7 +60,7 @@ class OrganizationControllerTest extends TestCase
 
             ],
         ];
-        $data = Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
+        Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
         $user = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
         $this->headers = [
@@ -90,13 +90,12 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-    /**Organization create */
-    public function test_create_organization_negative_with_header()
+    /**Organization create negative*/
+    public function test_create_organization_negative()
     {
         $response = $this->post('/api/v1/manage/organization/create', $this->parameters, $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
-
       /** Organization view */
     public function test_organization_view_positive()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\App\Http\Controllers\Api\MemberManagement;
+namespace Tests\Feature\manage;
 
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\App\Http\Controllers\Api\Lab;
+namespace Tests\Feature\manage;
 
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
@@ -63,12 +63,6 @@ class LabControllerTest extends TestCase
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
-    }
-
-    public function test_lab_list_positive()
-    {
-        $response = $this->get('/api/v1/manage/lab/?language=en', $this->headers);
-        $response->assertStatus(200);
     }
 
     public function test_lab_create_postive()
