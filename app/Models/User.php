@@ -128,11 +128,9 @@ class User extends Authenticatable
             if ($user) {
                 $token = $user->createToken(env('APP_NAME'))->accessToken;
                 $response = ['success' => true, 'token' => $token];
-
                 return $response;
             } else {
                 $response = ['success' => false, 'code' => 1];
-
                 return $response;
             }
         } catch (\Exception $e) {

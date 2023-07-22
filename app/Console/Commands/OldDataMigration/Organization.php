@@ -46,7 +46,6 @@ class Organization extends Command
             DB::beginTransaction();
 
             $organizations = DB::connection('mysql2')->table('organisations')->get();
-
             if ($organizations->count() > 0) {
                 foreach ($organizations as $key => $organization) {
                     $checkUser = \App\Models\User::find($organization->user_id);
@@ -86,10 +85,7 @@ class Organization extends Command
                     $newOrganization->category = $category;
                     $newOrganization->status = ($organization->status == '0') ? '0' : (($organization->status == '1') ? '1' : '3');
                     $newOrganization->total_employees = isset($organizationDetails->number_employees) ? $organizationDetails->number_employees : 0;
-                    $newOrganization->is_verified = ($organization->is_verified == '0') ? '0' : '1';
-
                     $newOrganization->save();
-
                     $checkUser->attachRole('organization_owner', $newOrganization->id);
 
                     $checkOrganizationAddress = OrganizationAddress::where('organization_id', $organization->id)->first();

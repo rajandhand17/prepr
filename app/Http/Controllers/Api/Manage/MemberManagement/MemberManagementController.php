@@ -90,9 +90,7 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component)." ".__('responses.api_not_found_required'), 403);
             }
-
             $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
-
             $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
 
             if ($getTemplate) {
@@ -243,7 +241,7 @@ class MemberManagementController extends AppBaseController
                 return $this->sendError(ucfirst($component)." ".__('responses.api_not_found_required'), 403);
             }
             if ($component != 'organization' && $request->role != 'User') {
-                return $this->sendError('Please select valid role for the invitees.', 403);
+                return $this->sendError(__('responses.select_valid_role_error'), 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
             if ($memberLists) {

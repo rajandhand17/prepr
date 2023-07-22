@@ -21,8 +21,8 @@ class MemberManagementControllerTest extends TestCase
         $this->parameters = [
             'language'       => 'en',
             'user_id'        => '2',
-            'name'           => 'Prepr',
-            'slug'           => 'prepr-sds',
+            'name'           => 'Infosyes',
+            'slug'           => 'amazon',
             'wrong_language' => 'Hindi',
             'page'           => '1',
             'component'      => 'organization',
@@ -33,13 +33,15 @@ class MemberManagementControllerTest extends TestCase
             'module_id'      => '27',
             'subject_line'   => 'Invitation to join an organization',
             'email_body'     => 'email messages',
+            'email'          =>'rajan@amazon.com',
+            'password'       =>'Prepr@123',
             'invite_status'  => 'pending',
             'invite_email'   => ['rajan@prepr.org'],
             'inviter_id'     => '15',
             'id'             => ['1'],
             'auto_invite'    => 'yes',
         ];
-        $data = Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
+        $data = Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
         $user = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
 

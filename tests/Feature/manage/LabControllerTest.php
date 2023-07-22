@@ -100,7 +100,7 @@ class LabControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/manage/lab/'.$this->parameters['slug'].'?language=en', $this->headers);
         $response->assertStatus(200);
-    }
+    }   
 
     public function test_lab_view_negative()
     {

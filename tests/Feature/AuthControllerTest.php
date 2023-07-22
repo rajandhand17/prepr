@@ -16,30 +16,34 @@ class AuthControllerTest extends TestCase
     {
         parent::setUp();
         $this->language = 'en';
-        $this->username = 'Rajandhands';
-        $this->wrong_username = 'Rajandhandsas';
-        $this->email = 'rajan@prepr.orgs';
-        $this->wrong_email = 'rajanwrong@prepr.orgs';
+        $this->username = 'Rajan7016';
+        $this->username_with_organization = 'Dhand7016';
+        $this->wrong_username = 'rajan1994';
+        $this->email = 'rajandhand17@gmail.com';
+        $this->email_with_organization = 'rajan@amazon.com';
+        $this->wrong_email = 'rajanwrong@amazon.com';
         $this->first_name = 'rajan';
         $this->last_name = 'dhand';
         $this->password = 'Prepr@123';
         $this->password_confirmation = 'Prepr@123';
-        $this->wrong_password = 'Prepr';
+        $this->wrong_password = 'Prepr@1234';
         $this->device_platform = 'web';
         $this->user_type = 'student';
         $this->purpose = 'looking_team';
         $this->country_code = '+91';
-        $this->phone_number = '98765432101';
-        $this->wrong_phone_number = '111111111111111';
+        $this->phone_number = '9646080802';
+        $this->phone_number_with_organization = '9646080801';
+        $this->wrong_phone_number = '7589780802';
         $this->purpose_send_otp = 'two_factor_verification';
-        $this->referral_code = 'Rajandhands2023';
-        $this->wrong_referral_code = 'rajandhandd';
-        $this->register_type = 'organization';
-        $this->organization_name = 'prepr sds';
+        $this->referral_code = 'rajan7016';
+        $this->wrong_referral_code = 'rajan1994';
+        $this->register_type_organization = 'organization';
+        $this->register_type_user = 'user';
+        $this->organization_name = 'RForm';
     }
-
+    
     /**Successfull Positive */
-    public function test_register_positive()
+    public function test_register_positive_with_user()
     {
         $response = $this->post('/api/v1/auth/register', [
             'language'               => $this->language,
@@ -54,9 +58,44 @@ class AuthControllerTest extends TestCase
             'purpose'                => $this->purpose,
             'country_code'           => $this->country_code,
             'phone_number'           => $this->phone_number,
-            'register_type'          => $this->register_type,
+            'register_type'          => $this->register_type_user,
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        if ($data['success'] === true) {
+            if ($response->assertOk()) {
+                $records = User::select('otp')->where('email', $this->email)->first();
+                $verifyuser = $this->post('/api/v1/auth/verify-account', ['language' => $this->language, 'email' => $this->email, 'otp'=>$records->otp]);
+                $verifyuser->assertStatus(200);
+                $datavarify = $verifyuser->json();
+                if ($datavarify['success'] == true) {
+                    $verifyuser->assertOk();
+                }
+            }
+        } else {
+            $this->fail();
+        }
+    }
+    /**Successfull Positive with organization*/
+    public function test_register_positive_with_organization()
+    {
+        $response = $this->post('/api/v1/auth/register', [
+            'language'               => $this->language,
+            'username'               => $this->username_with_organization,
+            'email'                  => $this->email_with_organization,
+            'first_name'             => $this->first_name,
+            'last_name'              => $this->last_name,
+            'password'               => $this->password,
+            'password_confirmation'  => $this->password_confirmation,
+            'device_platform'        => $this->device_platform,
+            'user_type'              => $this->user_type,
+            'purpose'                => $this->purpose,
+            'country_code'           => $this->country_code,
+            'phone_number'           => $this->phone_number_with_organization,
+            'register_type'          => $this->register_type_organization,
             'organization_title'     => $this->organization_name,
         ]);
+        dd();
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -104,6 +143,7 @@ class AuthControllerTest extends TestCase
     public function test_post_login_positive()
     {
         $response = $this->post('/api/v1/auth/login', ['email' => $this->email, 'password' => $this->password, 'language' => $this->language]);
+        
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
