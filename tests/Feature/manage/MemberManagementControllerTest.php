@@ -21,8 +21,8 @@ class MemberManagementControllerTest extends TestCase
         $this->parameters = [
             'language'       => 'en',
             'user_id'        => '2',
-            'name'           => 'Infosyes',
-            'slug'           => 'amazon',
+            'name'           => 'RForm',
+            'slug'           => 'rform',
             'wrong_language' => 'Hindi',
             'page'           => '1',
             'component'      => 'organization',

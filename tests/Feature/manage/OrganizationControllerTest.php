@@ -20,7 +20,7 @@ class OrganizationControllerTest extends TestCase
 
         $this->parameters = [
             'language'       => 'en',
-            'user_id'        => '2',
+            'user_id'        => '10539',
             'title'          => 'Amazon',
             'wrong_title'    => 'Accenture',
             'slug'           => 'amazon',

@@ -26,7 +26,6 @@ class CreateLabRequest extends FormRequest
     public function rules()
     {
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
-
         $base_rules = [
             'request_type'           => 'required|in:draft,publish,archive',
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',

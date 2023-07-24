@@ -17,15 +17,17 @@ class LabControllerTest extends TestCase
         parent::setUp();
         $this->parameters = [
             'language'               => 'en',
-            'slug'                   => 'un-sdg-lab',
+            'email'                  =>'rajan@amazon.com',
+            'password'               =>'Prepr@123',
+            'slug'                   => 'amazon-lab',
             'not_exists_slug'        => 'un-sdg-labs',
             'reference_id'           => '2',
             'reference_type'         => 'lab',
             'like_component'         => 'like',
             'dislike_component'      => 'dislike',
-            'title'                  => 'UN SDG Lab',
+            'title'                  => 'Amazon Lab',
             'not_exist_title'        => 'UN SDG Labs',
-            'organization_id'        => '1',
+            'organization_id'        => 'l6jPagk1Sm',
             'category_id'            => '1',
             'description'            => 'This lab is focused on driving awareness around the 17 UN sustainable development goals and to enable students and employees across the globe to co-lab and co-solve to create meaningful solutions.',
             'privacy'                => 'yes',
@@ -56,7 +58,7 @@ class LabControllerTest extends TestCase
             'achievement_conditions' => ['1', '2'],
         ];
         $this->baseUrl = '/api/v1/manage/';
-        $data = Auth::attempt(['email' =>'rajan@prepr.orgs', 'password' =>'Prepr@123']);
+        Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
         $user = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
         $this->headers = [
@@ -93,7 +95,8 @@ class LabControllerTest extends TestCase
     }
     public function test_lab_list_positive()
     {   
-        $response = $this->get("/api/v1/manage/lab/?language=en",$this->headers);
+        $response = $this->get("/api/v1/manage/lab/?language=en&organization_id".$this->parameters['organization_id'],$this->headers);
+        dd($response);
         $response->assertStatus(200);
     }
     public function test_lab_view_positive()
@@ -105,7 +108,7 @@ class LabControllerTest extends TestCase
     public function test_lab_view_negative()
     {
         $response = $this->get('/api/v1/manage/lab/'.$this->parameters['not_exists_slug'].'?language=en', $this->headers);
-        $response->assertStatus(400);
+        $response->assertStatus(404);
     }
 
     public function test_lab_check_slug_postive()
