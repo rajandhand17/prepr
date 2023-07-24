@@ -33,8 +33,8 @@ class MemberManagementControllerTest extends TestCase
             'module_id'      => '27',
             'subject_line'   => 'Invitation to join an organization',
             'email_body'     => 'email messages',
-            'email'          =>'rajan@amazon.com',
-            'password'       =>'Prepr@123',
+            'email'          => 'rajan@amazon.com',
+            'password'       => 'Prepr@123',
             'invite_status'  => 'pending',
             'invite_email'   => ['rajan@prepr.org'],
             'inviter_id'     => '15',
@@ -53,8 +53,8 @@ class MemberManagementControllerTest extends TestCase
 
     /**create member management positive */
     public function test_create_positive()
-    {   
-        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters,$this->headers);
+    {
+        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language=en', $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
 

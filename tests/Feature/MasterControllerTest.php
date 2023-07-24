@@ -10,8 +10,7 @@ use Tests\TestCase;
  * @covers \App\Http\Controllers\Api\Master\MasterController
  */
 final class MasterControllerTest extends TestCase
-{   
-    
+{
     public function test_get_categories_positive(): void
     {
         $response = $this->get('/api/v1/master/categories?language=en');
@@ -100,6 +99,7 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/pitch-templates?language=en&search=null');
         $this->assertEquals(200, $response->getStatusCode());
     }
+
     /**Skills positive test cases */
     public function test_get_skills_positive(): void
     {
@@ -459,7 +459,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null){
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('skill_stacks', $data['data'][0]);
@@ -772,7 +772,7 @@ final class MasterControllerTest extends TestCase
         } else {
             $this->fail();
         }
-}
+    }
 
     /**LabConditions negative test case with search*/
     public function test_get_lab_conditions_with_search_negative(): void

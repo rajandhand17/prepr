@@ -78,10 +78,12 @@ class LabRepository implements LabInterface
                     $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_achievements_image);
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
+
                 return $createdLab;
             });
             if ($createdLab) {
                 DB::commit();
+
                 return $createdLab;
             }
             DB::rollBack();

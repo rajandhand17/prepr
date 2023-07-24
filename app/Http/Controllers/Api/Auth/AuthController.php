@@ -81,10 +81,10 @@ class AuthController extends AppBaseController
      * )
      */
     public function login(LoginFormRequest $request)
-    { 
+    {
         try {
             $login = $this->authRepository->login($request);
-            
+
             if ($login['success'] == true) {
                 if ($login['code'] === 2) {
                     $response = ['message'=>$login['message'], 'code'=>$login['code']];
@@ -100,8 +100,8 @@ class AuthController extends AppBaseController
             if ($login['success'] == false) {
                 return $this->sendError($login['message'], 401);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
-        
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
