@@ -35,9 +35,8 @@ class OrganizationService
             } else {
                 $organization_list = $organization_list->where('organizations.status', '1');
             }
-            
+
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
-               
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
             if ($request->has('owner') && !empty($request->owner)) {
