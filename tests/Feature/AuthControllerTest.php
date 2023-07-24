@@ -218,7 +218,7 @@ class AuthControllerTest extends TestCase
     }
 
     /**Check user name negative */
-    public function test_post_check_email_notexists_negative()
+    public function test_post_check_email_not_exists_negative()
     {
         $response = $this->post('/api/v1/auth/check-email', ['email' => $this->email, 'language' => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
