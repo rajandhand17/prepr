@@ -10,7 +10,7 @@ class OrganizationControllerTest extends TestCase
     /**
      * A basic feature test example.
      *
-     * @return void
+     * @return void 
      */
     protected $parameters;
 
@@ -39,8 +39,11 @@ class OrganizationControllerTest extends TestCase
             'city'                 => 'Oakville',
             'state'                => 'Ontario',
             'email'                => 'rajan@amazon.com',
+            'another_email'        => 'rajandhand17@gmail.com',
             'password'             => 'Prepr@123',
             'country'              => 'Canada',
+            'search'               =>'Rforms',
+            'wrong_search'         =>'wrong',
             'zip_code'             => 'L6M 3N5',
             'user_type'            => 'organization',
             'wrong_language'       => 'Hindi',
@@ -72,14 +75,21 @@ class OrganizationControllerTest extends TestCase
         ];
         Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
         $user = Auth::user();
+        Auth::attempt(['email' =>$this->parameters['another_email'], 'password' =>$this->parameters['password']]);
+        $userWithoutPermission = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
+        $this->tokenWithoutPermission = $userWithoutPermission->createToken(env('APP_NAME'))->accessToken;
         $this->headers = [
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
+        $this->headersWithoutPermission = [
+            'Accept'        => 'application/json',
+            'AUTHORIZATION' => 'Bearer '.$this->tokenWithoutPermission,
+        ];
     }
 
-    /**Organization create */
+    /**Create organization positive */
     public function test_create_organization_positive()
     {
         $response = $this->post('/api/v1/manage/organization/create', $this->parameters, $this->headers);
@@ -100,14 +110,60 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-    /**Organization create negative*/
+    /**Create organization negative*/
     public function test_create_organization_negative()
     {
         $response = $this->post('/api/v1/manage/organization/create', $this->parameters, $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /** Organization view */
+    /** Get List organization positive */
+    public function test_organization_view_get_list_positive()
+    {
+        $response = $this->get('/api/v1/manage/organization/get-list?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['data']!==[]) {
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
+    }
+    /** Get List organization negative */
+
+    public function test_organization_view_get_list_negative()
+    {
+        $response = $this->get('/api/v1/manage/organization/get-list?language='.$this->parameters['wrong_language'], $this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /** Get List with search positive*/
+    public function test_organization_view_get_list_with_search_positive()
+    {
+        $response = $this->get('/api/v1/manage/organization/get-list?language='.$this->parameters['language'].'&search'.$this->parameters['search'], $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['data']!==[]) {
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
+    }
+
+    /** Get List with search negative*/
+    public function test_organization_view_get_list_with_search_negative()
+    {
+        $response = $this->get('/api/v1/manage/organization/get-list?language='.$this->parameters['language'].'&search='.$this->parameters['wrong_search'], $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+    $data = $response->json();
+    if ($data['data']==[]) {
+        $response->assertOk();
+    } else {
+        $this->fail();
+    }
+    }
+
+    /** View organization positive */
     public function test_organization_view_positive()
     {
         $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'], $this->headers);
@@ -130,7 +186,14 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-    /** Organization view with search */
+    
+    /** View organization negative */
+    public function test_organization_view_negative()
+    {
+        $response = $this->get('/api/v1/manage/organization/', $this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+    /** View organization with search positive*/
     public function test_organization_view_positive_with_search_positive()
     {
         $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
@@ -154,21 +217,34 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-    /** Organization view with search negative*/
+    /** View organization with search negative*/
     public function test_organization_view_positive_with_search_negative()
     {
         $response = $this->get('/api/v1/manage/organization/'.$this->parameters['wrong_slug'].'?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    /** Organization view */
-    public function test_organization_view_negative()
+    /** fetech records without permission */
+    public function test_organization_view_get_list_without_permission()
     {
-        $response = $this->get('/api/v1/manage/organization/', $this->headers);
-        $this->assertEquals(400, $response->getStatusCode());
+        $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headersWithoutPermission);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**Organization Listing */
+    /** Organization check slug positive*/
+    public function test_organization_check_slug_positive()
+    {
+        $response = $this->get('/api/v1/manage/organization/check-slug/'.$this->parameters['wrong_slug'].'?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /** Organization check slug negative*/
+    public function test_organization_check_slug_negative()
+    {
+        $response = $this->get('/api/v1/manage/organization/check-slug/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+    /**Organization  list positive */
     public function test_organization_list_positive()
     {
         $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
@@ -187,14 +263,14 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-    /**Organization Listing negative*/
+    /**Organization  list negative */
     public function test_organization_list_negative()
     {
         $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'], $this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
-
-    public function test_organization_list_positive_with_search_positive()
+    /**Organization  list  with search*/
+    public function test_organization_list_with_search_positive()
     {
         $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'].'&search='.$this->parameters['title'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -211,8 +287,8 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-
-    public function test_organization_list_positive_with_search_negative()
+    /**Organization  list positive with search*/
+    public function test_organization_list_with_search_negative()
     {
         $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'].'&search='.$this->parameters['wrong_title'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -227,8 +303,8 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-
-    public function test_organization_list_positive_with_status_positive()
+    /**Organization get list with search status */
+    public function test_organization_list_with_status_positive()
     {
         $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'].'&status='.$this->parameters['status'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -245,8 +321,9 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-
-    public function test_organization_list_positive_with_status_negative()
+    
+    /**Organization get list with search status */
+    public function test_organization_list_with_status_negative()
     {
         $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'].'&status='.$this->parameters['status_wrong'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -261,8 +338,8 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-
-    public function test_organization_list_positive_with_category_positive()
+    /**Organization get listing based on category*/
+    public function test_organization_list_with_category_positive()
     {
         $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'].'&category[]='.$this->parameters['category'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -280,8 +357,9 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-
-    public function test_organization_list_positive_with_category_negative()
+    
+    /**Organization get listing based on category*/
+    public function test_organization_list_with_category_negative()
     {
         $response = $this->get('/api/v1/manage/organization/?language='.$this->parameters['language'].'&category[]=['.$this->parameters['wrong_category'].']', $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -296,8 +374,9 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-
-    public function test_organization_list_positive_with_sort_by_ascending_positive()
+    
+    /**Organization get listing based on sorting*/
+    public function test_organization_list_with_sort_by_ascending_positive()
     {
         $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'].'&sort_by='.$this->parameters['sort_by_ascending'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -314,8 +393,9 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-
-    public function test_organization_list_positive_with_sort_by_decending_positive()
+    
+    /**Organization get listing based on sorting*/
+    public function test_organization_list_with_sort_by_decending_positive()
     {
         $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'].'&sort_by='.$this->parameters['sort_by_decending'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -332,8 +412,9 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-
-    public function test_organization_list_positive_with_sort_by_creation_date_positive()
+    
+    /**Organization get listing based on sorting*/
+    public function test_organization_list_with_sort_by_creation_date_positive()
     {
         $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'].'&sort_by='.$this->parameters['sort_by_creation_date'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -351,7 +432,7 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-    /**Organization Update */
+    /**Update the organization*/
     public function test_update_organization_positive()
     {
         $this->parameters['title'] = 'Amazon_update';
@@ -365,11 +446,23 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-    /**Organization Update negative*/
+    /**Update the organization*/
     public function test_update_organization_negative()
     {
         $this->parameters['title'] = '';
         $response = $this->put('/api/v1/manage/organization/'.$this->parameters['slug'].'/update', $this->parameters, $this->headers);
+        $this->assertEquals(422, $response->getStatusCode());
+    }
+    /**Delete the organization*/
+    public function test_organization_delete_positive(){
+        $response=$this->delete('/api/v1/manage/organization/'.$this->parameters['slug'].'/delete',$this->parameters,$this->headers);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+    /**Delete the organization*/
+    public function test_organization_delete_negative(){
+        $response=$this->delete('/api/v1/manage/organization/'.$this->parameters['slug'].'/delete',$this->parameters,$this->headers);
+        
         $this->assertEquals(422, $response->getStatusCode());
     }
 }
