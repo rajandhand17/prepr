@@ -38,10 +38,10 @@ class LabRepository implements LabInterface
         $this->componentAssociationService = $componentAssociationService;
     }
 
-    public function getLabList($request)
+    public function getLabList($request, $organization)
     {
         try {
-            return $this->labService->getLabList($request);
+            return $this->labService->getLabList($request, $organization);
         } catch (\Exception $e) {
             return false;
         }
@@ -50,7 +50,7 @@ class LabRepository implements LabInterface
     public function getLabBasedOnSlug($slug)
     {
         try {
-            return $this->labService->getLabBasedOnSLug($slug);
+            return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
             return false;
         }
@@ -151,7 +151,7 @@ class LabRepository implements LabInterface
     public function checkSlug($slug)
     {
         try {
-            return $this->labService->getLabBasedOnSLug($slug);
+            return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
             return false;
         }

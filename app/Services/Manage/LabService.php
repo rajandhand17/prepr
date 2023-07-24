@@ -10,10 +10,10 @@ use HiFolks\RandoPhp\Randomize;
 
 class LabService
 {
-    public static function getLabList($request)
+    public static function getLabList($request, $organization)
     {
         try {
-            $lab_list = Lab::select()->where('organization_id', '=', $request->organization_id);
+            $lab_list = Lab::select()->where('organization_id', '=', $organization->id);
 
             $lab_list = self::filterLabList($lab_list, $request);
 
@@ -80,7 +80,7 @@ class LabService
         }
     }
 
-    public static function getLabBasedOnSLug($slug)
+    public static function getLabBasedOnSlug($slug)
     {
         try {
             return Lab::where('slug', $slug)->first();
