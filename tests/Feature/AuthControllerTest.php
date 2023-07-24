@@ -147,7 +147,6 @@ class AuthControllerTest extends TestCase
     public function test_post_login_positive()
     {
         $response = $this->post('/api/v1/auth/login', ['email' => $this->email, 'password' => $this->password, 'language' => $this->language]);
-        
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {

@@ -84,6 +84,7 @@ class AuthController extends AppBaseController
     { 
         try {
             $login = $this->authRepository->login($request);
+            
             if ($login['success'] == true) {
                 if ($login['code'] === 2) {
                     $response = ['message'=>$login['message'], 'code'=>$login['code']];

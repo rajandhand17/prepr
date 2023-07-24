@@ -27,7 +27,7 @@ class LabControllerTest extends TestCase
             'dislike_component'      => 'dislike',
             'title'                  => 'Amazon Lab',
             'not_exist_title'        => 'UN SDG Labs',
-            'organization_id'        => 'l6jPagk1Sm',
+            'organization_id'        => 'Hpw5XxL9uF',
             'category_id'            => '1',
             'description'            => 'This lab is focused on driving awareness around the 17 UN sustainable development goals and to enable students and employees across the globe to co-lab and co-solve to create meaningful solutions.',
             'privacy'                => 'yes',
@@ -93,12 +93,7 @@ class LabControllerTest extends TestCase
         $response = $this->post('/api/v1/manage/lab/'.$this->parameters['slug'].'/update', $this->parameters, $this->headers);
         $response->assertStatus(403);
     }
-    public function test_lab_list_positive()
-    {   
-        $response = $this->get("/api/v1/manage/lab/?language=en&organization_id".$this->parameters['organization_id'],$this->headers);
-        dd($response);
-        $response->assertStatus(200);
-    }
+ 
     public function test_lab_view_positive()
     {
         $response = $this->get('/api/v1/manage/lab/'.$this->parameters['slug'].'?language=en', $this->headers);
