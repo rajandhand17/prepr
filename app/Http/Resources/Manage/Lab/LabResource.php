@@ -82,7 +82,7 @@ class LabResource extends JsonResource
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization'                  => $this->organization->title,
-            'category'                      => $this->category->name,
+            'category'                      => $this->category->title,
             'slug'                          => $this->slug,
             'title'                         => $this->title,
             'description'                   => $this->description,
