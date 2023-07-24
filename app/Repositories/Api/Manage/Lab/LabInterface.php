@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Manage\Lab;
 
 interface LabInterface
 {
-    public function getLabList($request,$organization);
+    public function getLabList($request, $organization);
 
     public function getLabBasedOnSlug($slug);
 

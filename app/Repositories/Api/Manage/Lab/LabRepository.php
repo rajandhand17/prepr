@@ -38,10 +38,10 @@ class LabRepository implements LabInterface
         $this->componentAssociationService = $componentAssociationService;
     }
 
-    public function getLabList($request,$organization)
+    public function getLabList($request, $organization)
     {
         try {
-            return $this->labService->getLabList($request,$organization);
+            return $this->labService->getLabList($request, $organization);
         } catch (\Exception $e) {
             return false;
         }
