@@ -72,7 +72,7 @@ class LabControllerTest extends TestCase
         $response = $this->post('/api/v1/manage/lab/create', $this->parameters, $this->headers);
         $response->assertStatus(200);
     }
-
+ 
     public function test_lab_create_negative()
     {
         $response = $this->post('/api/v1/manage/lab/create', $this->parameters, $this->headers);

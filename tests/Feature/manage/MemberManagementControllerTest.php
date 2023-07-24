@@ -87,11 +87,6 @@ class MemberManagementControllerTest extends TestCase
         $this->assertEquals(405, $response->getStatusCode());
     }
 
-    // /**withour permission try to acess */
-    // public function test_without_permission_get_records(){
-    //     $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headersWithoutPermission);
-    //     $response->assertStatus(403);
-    // }
     /**Listing member management positive */
     public function test_listing_positive()
     {
