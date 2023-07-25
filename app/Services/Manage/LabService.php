@@ -121,6 +121,26 @@ class LabService
                 $status = config('constants.lab_status.draft');
                 break;
         }
+
+        $type = config('constants.lab_type.na');
+        switch($request->type) {
+            case 'assess':
+                $type = config('constants.lab_type.assess');
+                break;
+            case 'onboard':
+                $type = config('constants.lab_type.onboard');
+                break;
+            case 'engage':
+                $type = config('constants.lab_type.engage');
+                break;
+            case 'grow':
+                $type = config('constants.lab_type.grow');
+                break;
+            default:
+                $type = config('constants.lab_type.na');
+                break;
+        }
+
         $privacy = config('constants.lab_privacy.no');
         switch($request->privacy) {
             case 'yes':
@@ -142,7 +162,7 @@ class LabService
         $lab->user_id = auth()->user()->id;
         $lab->organization_id = $organization->id;
         $lab->category_id = $request->category_id;
-
+        $lab->type = $type;
         $lab->slug = $slug;
         $lab->title = $request->title;
         $lab->description = $request->description;
@@ -186,11 +206,32 @@ class LabService
                             break;
                     }
                 }
+
+                $type = config('constants.lab_type.na');
+                switch($request->type) {
+                    case 'assess':
+                        $type = config('constants.lab_type.assess');
+                        break;
+                    case 'onboard':
+                        $type = config('constants.lab_type.onboard');
+                        break;
+                    case 'engage':
+                        $type = config('constants.lab_type.engage');
+                        break;
+                    case 'grow':
+                        $type = config('constants.lab_type.grow');
+                        break;
+                    default:
+                        $type = config('constants.lab_type.na');
+                        break;
+                }
+
                 $lab->language = ($request->has('language')) ? $request->language : $lab->language;
                 $lab->organization_id = ($request->has('organization_id')) ? $request->organization_id : $lab->organization_id;
                 $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
                 $lab->title = ($request->has('title')) ? $request->title : $lab->title;
                 $lab->description = ($request->has('description')) ? $request->description : $lab->description;
+                $lab->type = $type;
                 $lab->privacy = $privacy;
                 $lab->media_type = 'image';
                 $lab->media = ($upload_cover_image != null) ? $upload_cover_image : $lab->cover_image;

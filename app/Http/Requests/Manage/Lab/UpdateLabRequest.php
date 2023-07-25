@@ -6,6 +6,7 @@ use App\Services\Manage\LabService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use League\Container\Exception\NotFoundException;
 
 class UpdateLabRequest extends FormRequest
 {
@@ -26,21 +27,17 @@ class UpdateLabRequest extends FormRequest
      */
     public function rules()
     {
-        $lab = LabService::checkSlug(request()->route('slug'));
-        $achievement_en_switch = $this->request->get('is_achievement_enabled');
-        if ($lab) {
-            $base_rules = [
-                'cover_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024',
-                'title'       => 'required|max:255|unique:labs,title,'.$lab->id,
-            ];
-        } else {
-            $base_rules = [
-                'cover_image' => 'image|mimes:jpeg,jpg,png,webp|max:1024',
-                'title'       => 'required|max:255|unique:labs,title,',
-            ];
+        $lab = LabService::getLabBasedOnSlug(request()->route('slug'));
+        if (!$lab) {
+            throw new NotFoundException();
         }
+        $achievement_en_switch = $this->request->get('is_achievement_enabled');
+
         $base_rules = [
+            'cover_image'    => 'image|mimes:jpeg,jpg,png,webp|max:1024',
+            'title'          => 'required|max:255|unique:labs,title,'.$lab->id,
             'request_type'   => 'required|in:draft,publish,archive',
+            'type'           => 'required|in:assess,onboard,engage,grow,na',
             'description'    => 'required_if:request_type,publish|nullable',
             'organization_id'=> 'required|exists:organizations,uuid',
             'category_id'    => 'required|exists:categories,id',
@@ -144,7 +141,6 @@ class UpdateLabRequest extends FormRequest
     public function messages()
     {
         return [
-
             'request_type.required'          => __('responses.required_field'),
             'request_type.in'                => __('responses.choose_draft_publish_archive'),
             'privacy.in'                     => __('responses.choose_yes_no'),

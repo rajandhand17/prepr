@@ -76,7 +76,7 @@ class OrganizationService
         }
     }
 
-    public static function checkOrganizationExistBasedOnTitle($request)
+    public static function checkOrganizationExistBasedOnTitle($request): bool
     {
         try {
             $organization_exists = Organization::select('id')->where('title', $request->title)->first();
@@ -192,6 +192,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
 
             return false;
