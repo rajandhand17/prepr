@@ -16,8 +16,8 @@ return new class() extends Migration {
             $table->id();
             $table->string('title');
             $table->string('fr_CA_title')->nullable();
-            $table->string('tag_image')->nullable();
-            $table->string('fr_CA_tag_image')->nullable();
+            $table->text('tag_image')->nullable();
+            $table->text('fr_CA_tag_image')->nullable();
             $table->string('components')->nullable();
             $table->timestamps();
             $table->softDeletes();

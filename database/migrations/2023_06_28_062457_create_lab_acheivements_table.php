@@ -18,7 +18,7 @@ return new class() extends Migration {
             $table->string('achievement_name');
             $table->integer('achievement_points');
             $table->json('achievement_condition');
-            $table->string('achievement_image');
+            $table->text('achievement_image');
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

@@ -27,7 +27,7 @@ class UpdateOrganizationRequest extends FormRequest
      */
     public function rules()
     {
-        $organization = OrganizationService::getOrganizationExistBasedOnSlug(request()->route('slug'));
+        $organization = OrganizationService::getOrganizationBasedOnSlug(request()->route('slug'));
         if (!$organization) {
             throw new NotFoundException();
         }
