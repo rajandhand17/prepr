@@ -66,7 +66,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             if (!auth()->user()->isAbleTo('view_organization')) {
-                return $this->sendError('Forbidden', 403);
+                return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             $organization = $this->organizationRepository->getOrganizationList($request);
             if ($organization !== false) {
@@ -139,7 +139,7 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!auth()->user()->isAbleTo('view_organization', $organization)) {
-                return $this->sendError('Forbidden', 403);
+                return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             if ($organization) {
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
@@ -318,7 +318,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             if (!auth()->user()->isAbleTo('create_organization')) {
-                return $this->sendError('Forbidden', 403);
+                return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             $profile_image_path = config('site-settings.default_organization_profile_image');
             $cover_image_path = config('site-settings.default_organization_cover_image');

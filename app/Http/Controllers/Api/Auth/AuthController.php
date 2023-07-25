@@ -100,7 +100,6 @@ class AuthController extends AppBaseController
             if ($login['success'] == false) {
                 return $this->sendError($login['message'], 401);
             }
-
             return $this->sendError(__('responses.send_error'), 500);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -173,7 +172,6 @@ class AuthController extends AppBaseController
                     return $this->sendError(__('responses.otp_correct_required'), 401);
                 }
             }
-
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -569,7 +567,7 @@ class AuthController extends AppBaseController
             if ($checkphone == false) {
                 return $this->sendResponse(null, __('responses.found_exists_phone_list'), 200);
             } else {
-                return $this->sendError(__('responses.already_number'), 403);
+                return $this->sendError(__('responses.already_registered_phone_number'), 403);
             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

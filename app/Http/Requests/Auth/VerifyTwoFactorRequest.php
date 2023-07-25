@@ -47,7 +47,7 @@ class VerifyTwoFactorRequest extends FormRequest
             'email.email'    => __('responses.valid_email_pattern'),
             'email.max'      => __('responses.max_content_50'),
             'email.exists'   => __('responses.not_exists_email'),
-            'otp.required'   => __('responses.api_otp_required'),
+            'otp.required'   => __('responses.otp_required'),
         ];
     }
 }
