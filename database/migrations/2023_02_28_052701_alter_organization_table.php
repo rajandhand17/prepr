@@ -16,8 +16,8 @@ return new class() extends Migration {
             $table->string('language')->default('en')->after('id');
             $table->unsignedBigInteger('user_id')->after('language');
             $table->string('slug')->after('display_name');
-            $table->string('cover_image')->nullable()->after('description');
-            $table->string('profile_image')->nullable()->after('cover_image');
+            $table->text('cover_image')->nullable()->after('description');
+            $table->text('profile_image')->nullable()->after('cover_image');
             $table->string('website')->nullable()->after('profile_image');
             $table->text('about')->nullable()->after('website');
             $table->unsignedBigInteger('category')->nullable()->after('about');

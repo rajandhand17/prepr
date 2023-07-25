@@ -29,7 +29,6 @@ class LabController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
-
             $lab = $this->labRepository->getLabList($request, $organization);
             if ($lab) {
                 $response = [

@@ -26,7 +26,7 @@ return new class() extends Migration {
             $table->string('phone_number')->nullable();
             $table->enum('two_factor_verification', ['0', '1'])->comment('0 -> disabled, 1 -> enabled')->default('0');
             $table->string('otp')->nullable();
-            $table->string('profile_image')->nullable();
+            $table->text('profile_image')->nullable();
             $table->integer('user_points')->nullable();
             $table->integer('user_rank')->nullable();
             $table->enum('verified_user', ['0', '1'])->comment('0 -> no, 1 -> yes')->default('0');

@@ -18,7 +18,7 @@ return new class() extends Migration {
             $table->string('fr_CA_title')->nullable();
             $table->string('description');
             $table->string('fr_CA_description')->nullable();
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
             $table->string('category')->nullable();
             $table->integer('point');
             $table->integer('no_of_use')->nullable();
