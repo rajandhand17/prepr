@@ -324,7 +324,7 @@ class OrganizationController extends AppBaseController
             $cover_image_path = config('site-settings.default_organization_cover_image');
             $checkOrganization = $this->organizationRepository->checkOrganizationExistBasedOnTitle($request);
             if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_name_unique'), 422);
+                return $this->sendError(__('responses.organization_title_unique'), 422);
             }
             $checkOrganizationInTrash = $this->organizationRepository->checkOrganizationExistInTrashBasedOnTitle($request);
             if (!$checkOrganizationInTrash) {
@@ -620,7 +620,7 @@ class OrganizationController extends AppBaseController
         try {
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_name_unique'), 422);
+                return $this->sendError(__('responses.organization_title_unique'), 422);
             }
             if (!auth()->user()->isAbleTo('delete_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_delete_access_denied'), 403);

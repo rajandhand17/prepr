@@ -767,7 +767,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse(null, __('responses.verify_reference_success'), 200);
             }
             if ($referencecode == false) {
-                return $this->sendError(null, __('responses.verify_reference_error'), 404);
+                return $this->sendError(null, __('responses.referral_code_not_exists'), 404);
             }
 
             return $this->sendError(__('responses.send_error'), 500);

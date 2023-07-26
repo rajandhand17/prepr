@@ -40,10 +40,10 @@ class LabController extends AppBaseController
                     'list'         => LabResource::collection($lab),
                 ];
 
-                return $this->sendResponse($response, __('responses.labs_fetched_successfully'));
+                return $this->sendResponse($response, __('responses.found_labs_list'));
             }
 
-            return $this->sendError(__('responses.labs_fetched_error'), 400);
+            return $this->sendError(__('responses.not_found_labs_list'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -54,7 +54,7 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab) {
-                return $this->sendResponse(LabResource::make($lab), __('responses.lab_found'), 200);
+                return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
