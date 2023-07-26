@@ -154,7 +154,7 @@ class UpdateLabRequest extends FormRequest
             'description.required_if'        => __('responses.description_required'),
             'country.required_if'            => __('responses.country_required'),
             'city.required_if'               => __('responses.city_required'),
-            'organizartion_id.required'      => __('responses.organizartion_id_required'),
+            'organizartion_id.required'      => __('responses.organization_id_required'),
             'location.required_if'           => __('responses.location_required'),
             'category_id.required'           => __('responses.category_id_required'),
             'category_id.exists'             => __('responses.category_not_found'),

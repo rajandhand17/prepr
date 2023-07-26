@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\manage;
 
+use App\Models\MemberManagement;
+use App\Models\Organization;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -13,34 +15,71 @@ class MemberManagementControllerTest extends TestCase
      * @return void
      */
     protected $parameters;
-
+    
     public function setUp(): void
     {
         parent::setUp();
-
         $this->parameters = [
-            'language'       => 'en',
-            'user_id'        => '2',
-            'name'           => 'Amazon_update',
-            'slug'           => 'amazon',
-            'wrong_language' => 'Hindi',
-            'page'           => '1',
+            'language'             => 'en',
+            'user_id'              => '10539',
+            'title'                => 'Accenture',
+            'type'                 => 'invite',
+            'auto_invite'          => 'yes',
+            'role'                 => 'Organization Manager',
+            'invite_type'          => 'email',
+            'wrong_title'          => 'Infosys',
+            'invite_email'         => ['rajan@prepr.org','shagun@gmail.com'],
+            'slug'                 => 'accenture',
             'component'      => 'organization',
             'wrong_component'=> 'component',
-            'type'           => 'invite',
-            'invite_type'    => 'email',
-            'role'           => 'Organization Manager',
-            'module_id'      => '27',
-            'subject_line'   => 'Invitation to join an organization',
-            'email_body'     => 'email messages',
-            'email'          => 'rajan@amazon.com',
-            'another_email'  => 'rajandhand17@gmail.com',
-            'password'       => 'Prepr@123',
-            'invite_status'  => 'pending',
-            'invite_email'   => ['rajan@prepr.org'],
-            'inviter_id'     => '15',
-            'id'             => 'a4gqUu3lr5',
-            'auto_invite'    => 'yes',
+            'wrong_slug'           => 'infosys',
+            'description'          => 'Describing the test cases of apis',
+            'website'              => 'https://infosys.com',
+            'about'                => 'testing',
+            'category'             => '2',
+            'wrong_category'       => '199999',
+            'status'               => 'publish',
+            'status_wrong'         => 'wrong_status',
+            'total_employees'      => '12',
+            'latitude'             => '43.467517',
+            'longitude'            => '-79.6876659',
+            'address'              => 'Oakville, ON, Canada',
+            'city'                 => 'Oakville',
+            'state'                => 'Ontario',
+            'email'                => 'rajan@amazon.com',
+            'another_email'        => 'rajandhand17@gmail.com',
+            'password'             => 'Prepr@123',
+            'country'              => 'Canada',
+            'search'               =>'Rforms',
+            'wrong_search'         =>'wrong',
+            'zip_code'             => 'L6M 3N5',
+            'user_type'            => 'organization',
+            'wrong_language'       => 'Hindi',
+            'sort_by_ascending'    => 'name-a-to-z',
+            'sort_by_decending'    => 'name-z-to-a',
+            'sort_by_creation_date'=> 'creation_date',
+            'sort_by_wrong_input'  => 'default',
+            'owner'                => 'organization_owner',
+            'organization_address' => [
+                [
+                    'latitude' => '43.467517',
+                    'longitude'=> '43.467517',
+                    'address_1'=> 'Oakville',
+                    'address_2'=> 'ON, Canada',
+                    'city'     => 'Oakville',
+                    'state'    => 'Ontario',
+                    'country'  => 'Canada',
+                    'zip_code' => 'L6M 3N6',
+                ],
+            ],
+            'organization_members'=> [
+                [
+                    'name'    => 'Rajan',
+                    'position'=> 'CEO',
+                ],
+
+            ],
+
         ];
         $data = Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
         $user = Auth::user();
@@ -48,7 +87,7 @@ class MemberManagementControllerTest extends TestCase
         $userWithoutPermission = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
         $this->tokenWithoutPermission = $userWithoutPermission->createToken(env('APP_NAME'))->accessToken;
-        
+
         $this->headers = [
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
@@ -57,19 +96,32 @@ class MemberManagementControllerTest extends TestCase
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->tokenWithoutPermission,
         ];
-    } 
+       global $id;
+
+    }
 
     /**create member management positive */
-    public function test_create_positive()
-    {
+  
+    public function test_add_member_to_organization_positive()
+    {  
+        $response = $this->post('/api/v1/manage/organization/create', $this->parameters, $this->headers);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        $module_id=Organization::select('id')->where("uuid",$data['data']['id'])->first();
+        $GLOBALS['id']=$module_id->id;
+        $this->parameters['id']= $data['data']['id'];
+        if ($data['success']) {
         $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
+        }
     }
 
     /**create member management negative */
-    public function test_create_negative()
-    {
-        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language='.$this->parameters['language'], [], $this->headers);
+    public function test_add_member_to_organization_negative()
+    {       
+        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['wrong_slug'].'/create?language='.$this->parameters['language'], [], $this->headers);
+       
         $this->assertEquals(422, $response->getStatusCode());
     }
 
@@ -112,7 +164,7 @@ class MemberManagementControllerTest extends TestCase
 
     /**Listing member management negative */
     public function test_listing_negative()
-    {
+    {   
         $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
         $response->assertStatus(404);
     }
@@ -120,12 +172,17 @@ class MemberManagementControllerTest extends TestCase
     /**create member management positive */
     public function test_change_role_positive()
     {   
+        $getid=MemberManagement::select('uuid')->where([
+            ["email","=",$this->parameters['invite_email'][0]],
+            ["module_id", "=", $GLOBALS['id'] ]
+            ])->first();
+        $this->parameters['id']=$getid->uuid;
         $response = $this->post('/api/v1/manage/member-management/organization/change-role', $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
     /**create member management positive */
     public function test_change_role_negative()
-    {   
+    {
         $this->parameters['id']="";
         $response = $this->post('/api/v1/manage/member-management/organization/change-role', $this->parameters, $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
@@ -133,14 +190,14 @@ class MemberManagementControllerTest extends TestCase
 
     /**download positive */
     public function test_download_sample_positive()
-    {   
+    {
         $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['language'],$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**download negative */
     public function test_download_sample_negative()
-    {   
+    {
         $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['wrong_language'],$this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -165,7 +222,7 @@ class MemberManagementControllerTest extends TestCase
         $response = $this->post(
             '/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/delete?language='.$this->parameters['language'],
             [
-                'id'=> $this->parameters['id'],
+                'id'=> $GLOBALS['id'],
             ],
             $this->headers
         );

@@ -341,9 +341,10 @@ class MemberManagementController extends AppBaseController
     public function changeRole($component, ChangeRoleRequest $request)
     {
         try {
+            
             $changeRoleResponse = $this->memberManagementRepository->changeRole($request, $component);
             if ($changeRoleResponse) {
-                return $this->sendResponse([], __('responses.role_assigned_sucessfully'));
+                return $this->sendResponse([], __('responses.role_assigned_successfully'));
             }
 
             return $this->sendError(__('responses.role_assigned_failed'), 400);

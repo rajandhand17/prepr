@@ -27,7 +27,7 @@ class RolesService
         }
     }
 
-    public function getRoleBasedOnDisplayName($role_name)
+   static public function getRoleBasedOnDisplayName($role_name)
     {
         try {
             $getRoles = Role::where('display_name', $role_name)->first();

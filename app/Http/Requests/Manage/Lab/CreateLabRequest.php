@@ -28,6 +28,7 @@ class CreateLabRequest extends FormRequest
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
         $base_rules = [
             'request_type'           => 'required|in:draft,publish,archive',
+            'type'                   => 'required|in:assess,onboard,engage,grow,na',
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'title'                  => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description'            => 'required_if:request_type,publish|nullable',
@@ -131,6 +132,8 @@ class CreateLabRequest extends FormRequest
         return [
             'request_type.required'          => __('responses.request_type_required'),
             'request_type.in'                => __('responses.request_type_status'),
+            'type.required'                  => __('responses.type_required'),
+            'type.in'                        => __('responses.type_in'),
             'privacy.in'                     => __('responses.choose_yes_no'),
             'privacy.required_if'            => __('responses.privacy_required'),
             'latitude.required_if'           => __('responses.latitude_required'),
@@ -142,7 +145,7 @@ class CreateLabRequest extends FormRequest
             'description.required_if'        => __('responses.description_required'),
             'country.required_if'            => __('responses.country_required'),
             'city.required_if'               => __('responses.city_required'),
-            'organizartion_id.required'      => __('responses.organizartion_id_required'),
+            'organizartion_id.required'      => __('responses.organization_id_required'),
             'location.required_if'           => __('responses.location_required'),
             'category_id.required'           => __('responses.category_id_required'),
             'category_id.exists'             => __('responses.category_not_found'),

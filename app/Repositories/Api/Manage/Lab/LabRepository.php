@@ -120,6 +120,7 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }

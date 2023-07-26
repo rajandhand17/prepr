@@ -43,6 +43,7 @@ class LabControllerTest extends TestCase
             'external_links'         => ['https://facebook.com', 'https://twiter.com'],
             'external_link_ids'      => ['1', '2', '3'],
             'request_type'           => 'publish',
+            'type'                   => 'onboard',
             'is_notification_enabled'=> 'yes',
             'is_sequential'          => 'yes',
             'is_resource_sequential' => 'yes',

@@ -1,4 +1,4 @@
-{   
+{
     "responses.not_supported_language":"Sorry! we are not supporting this language which you have requested for!.",
     "responses.provide_language":"Please provide the language.",
     "responses.something_wrong_setup_language":"Something went wrong during setting up the application language.",
@@ -35,8 +35,8 @@
     "responses.not_found_rank_list":"The list of rank has not been retrieved with success.",
     "responses.found_project_submission_requirements_list":"The project submission requirements list has been successfully retrieved",
     "responses.not_found_project_submission_requirements_list":"The list of project submission requirements has not been retrieved with success.",
-    "responses.found_acheivement_condition_list":"The achievement condition requirements list has been successfully retrieved",
-    "responses.not_found_acheivement_condition_list":"The list of achievement condition requirements has not been retrieved with success.",
+    "responses.found_achievement_condition_list":"The achievement condition requirements list has been successfully retrieved",
+    "responses.not_found_achievement_condition_list":"The list of achievement condition requirements has not been retrieved with success.",
     "responses.found_host_list":"The host list has been successfully retrieved",
     "responses.not_found_host_list":"The list of host has not been retrieved with success.",
     "responses.found_flexible_list":"The flexible list has been successfully retrieved",
@@ -44,13 +44,13 @@
     "responses.found_pitch_templates_list":"The pitch templates list has been successfully retrieved",
     "responses.not_found_pitch_templates_list":"The list of pitch templates has not been retrieved with success.",
     "responses.found_lab_condition_list":"The lab condition list has been successfully retrieved",
- 
+
     "responses.not_found_lab_condition_list":"The list of lab condition has not been retrieved with success.",
     "responses.found_social_connect_list":"The social connect list has been successfully retrieved",
     "responses.not_found_social_connect_list":"The list of social connect has not been retrieved with success.",
     "responses.verify_email":"Please verify your email address to proceed with the login!",
     "responses.verify_success_already":"Your account has already been verified. Please continue to log in into your account!",
-    
+
     "responses.email_subject_two_factor_verification":"Two Factor Verification",
     "responses.two_factor_otp":"We have sent OTP to your registered email, Please verify your email to continue.",
     "responses.failed_email":"Sorry! we are unable to send email, Please try again later.",
@@ -147,7 +147,7 @@
     "responses.organization_stored_failed":"Oops! The Creation organization has failed.",
     "responses.organization_not_found":"Organization not found",
     "responses.organization_update_access_denied":"Sorry! You are not allowed to update this organization.",
-    "responses.organization_update_successfull":"The organization has been updated successfully",
+    "responses.organization_update_successfully":"The organization has been updated successfully",
     "responses.organization_not_update":"There are some issues being encountered while updating the organization!",
     "responses.organization_delete_access_denied":"Sorry! You are not allowed to delete this organization.",
     "responses.organization_delete":"The organization has been deleted successfully!",
@@ -181,7 +181,7 @@
     "responses.member_manger_not_delete":"The member manager has been not deleted!",
     "responses.found_role_list":"The role list has been successfully retrieved!",
     "responses.not_found_role_list":"The list of role has not been retrieved with success.",
-    "responses.role_assigned_sucessfully":"The role allocated successfully.",
+    "responses.role_assigned_successfully":"The role allocated successfully.",
     "responses.role_assigned_failed":"The role allocation failed.",
     "responses.found_user_list":"The users list has been successfully retrieved!",
     "responses.not_found_user_list":"The list of user has not been retrieved with success.",
@@ -194,7 +194,6 @@
     "responses.privacy_required":"This privacy field is required",
     "responses.organization_id_required":"This organization id field is required",
     "responses.lab_title_unique":"Sorry,this title already registered with us, Please choose another one",
-    "responses.organizartion_id_required":"This organizartion id field is required",
     "responses.location_required":"This location field is required",
     "responses.category_id_required":"This category id field is required",
     "responses.category_not_found":"This category is not found",
@@ -236,13 +235,13 @@
     "responses.email_body_max":"The email body have Maximum character limit is 2000.",
     "responses.lab_stored_success":"Congratulations! You have successfully created a Lab.",
     "responses.lab_stored_failed":"Oops! The Creation Lab has failed.",
-    "responses.lab_update_successfull":"The Lab has been updated successfully",
+    "responses.lab_update_successfully":"The Lab has been updated successfully",
     "responses.lab_not_update":"There were some issues being encountered while updating the lab!",
     "responses.lab_not_found": "The Lab(s) which you are looking doesn't exist in our system.",
     "responses.lab_delete":"The lab has been deleted successfully!",
-    "responses.lab_not_delete":"The lab was not deleted!",  
-    "responses.lab_name_not_availble":"This lab name is not available!",
-    "responses.lab_name_availble":"This lab name is available!",
+    "responses.lab_not_delete":"The lab was not deleted!",
+    "responses.lab_name_not_available":"This lab name is not available!",
+    "responses.lab_name_available":"This lab name is available!",
     "responses.valid_component_error":"Please provide the valid component!",
     "responses.getting_component_error":"Something went wrong getting the component.",
     "responses.receiver_required":"This receiver field is required",
@@ -252,6 +251,3 @@
     "responses.handler_access_denied_403":"403! Access Denied. Please login.",
     "responses.handler_illegal_request_403":"403! Illegal Request."
 }
-
-
-

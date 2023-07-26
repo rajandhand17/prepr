@@ -562,7 +562,7 @@ class OrganizationController extends AppBaseController
                     $this->organizationRepository->updatesOrganizationMembers($request, $organization->id);
                 }
 
-                return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfull'), 200);
+                return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.organization_not_update'), 409);

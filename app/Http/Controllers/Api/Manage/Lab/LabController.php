@@ -122,8 +122,9 @@ class LabController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
             $updateLab = $this->labRepository->updateLab($slug, $request, $upload_cover_image, $upload_achievement_image);
+            dd($updateLab);
             if ($updateLab != false) {
-                return $this->sendResponse(LabResource::make($updateLab), __('responses.lab_update_successfull'), 200);
+                return $this->sendResponse(LabResource::make($updateLab), __('responses.lab_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.lab_not_update'));
@@ -169,10 +170,10 @@ class LabController extends AppBaseController
         try {
             $checkLabNameExistsOrNot = $this->labRepository->checkNameExistsOrNot($title);
             if ($checkLabNameExistsOrNot) {
-                return $this->sendError(__('responses.lab_name_not_availble'));
+                return $this->sendError(__('responses.lab_name_not_available'));
             }
 
-            return $this->sendResponse([], __('responses.lab_name_availble'), 400);
+            return $this->sendResponse([], __('responses.lab_name_available'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
