@@ -44,6 +44,7 @@
     "responses.found_pitch_templates_list":"The pitch templates list has been successfully retrieved",
     "responses.not_found_pitch_templates_list":"The list of pitch templates has not been retrieved with success.",
     "responses.found_lab_condition_list":"The lab condition list has been successfully retrieved",
+ 
     "responses.not_found_lab_condition_list":"The list of lab condition has not been retrieved with success.",
     "responses.found_social_connect_list":"The social connect list has been successfully retrieved",
     "responses.not_found_social_connect_list":"The list of social connect has not been retrieved with success.",
@@ -189,6 +190,7 @@
     "responses.not_found_labs_list":"The list of labs has not been retrieved with success.",
     "responses.lab_slug_not_found":"No labs are associated with this slug!",
     "responses.request_type_status":"Request type status can be between '<b>draft</b> ,<b>publish</b> or <b>archive</b>' only",
+    "responses.type_in":"Request type status can be between '<b>assess</b> ,<b>onboard</b>,<b>engage</b>,<b>,grow</b>, or <b>na</b>' only",
     "responses.privacy_required":"This privacy field is required",
     "responses.organization_id_required":"This organization id field is required",
     "responses.lab_title_unique":"Sorry,this title already registered with us, Please choose another one",

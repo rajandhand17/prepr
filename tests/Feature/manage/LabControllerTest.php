@@ -27,7 +27,7 @@ class LabControllerTest extends TestCase
             'dislike_component'      => 'dislike',
             'title'                  => 'Amazon Lab',
             'not_exist_title'        => 'UN SDG Labs',
-            'organization_id'        => 'Hpw5XxL9uF',
+            'organization_id'        => 'ZHgYqL8p0x',
             'category_id'            => '1',
             'description'            => 'This lab is focused on driving awareness around the 17 UN sustainable development goals and to enable students and employees across the globe to co-lab and co-solve to create meaningful solutions.',
             'privacy'                => 'yes',
