@@ -7,7 +7,7 @@ use App\Models\LabExternalLinks;
 class LabExternalLinksService
 {
     public function createLabExternalLinks($request, $lab)
-    {
+    {   
         if ($request->has('external_links') && $request->get('external_link_ids')) {
             if (count($request->external_link_ids) > 0) {
                 foreach ($request->external_link_ids as $key => $value) {
@@ -25,7 +25,7 @@ class LabExternalLinksService
         return true;
     }
 
-    public function updateLabExternalLinks($lab_id, $request)
+    public function updateLabExternalLinks($request,$lab_id)
     {
         try {
             if ($request->has('external_links') && $request->get('external_link_ids')) {

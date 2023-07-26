@@ -95,7 +95,7 @@ class ComponentAssociationService
         return true;
     }
 
-    public function updateLabAssociation($lab_id, $request)
+    public function updateLabAssociation($request,$lab_id)
     {
         try {
             if ($request->has('lab_programs')) {

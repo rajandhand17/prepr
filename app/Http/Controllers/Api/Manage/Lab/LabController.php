@@ -122,7 +122,6 @@ class LabController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
             $updateLab = $this->labRepository->updateLab($slug, $request, $upload_cover_image, $upload_achievement_image);
-            dd($updateLab);
             if ($updateLab != false) {
                 return $this->sendResponse(LabResource::make($updateLab), __('responses.lab_update_successfully'), 200);
             }

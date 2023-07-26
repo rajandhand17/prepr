@@ -34,7 +34,7 @@ class LabTagsGroupsService
         return true;
     }
 
-    public function updateLabTagsGroups($lab_id, $request)
+    public function updateLabTagsGroups($request,$lab_id)
     {
         try {
             if ($request->has('tags')) {

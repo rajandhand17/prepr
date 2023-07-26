@@ -102,6 +102,7 @@ class LabRepository implements LabInterface
                 $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updatedLab->id);
                 $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updatedLab->id);
                 $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updatedLab->id);
+              
                 $updatedLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($request, $updatedLab->id);
 
                 if ($request->is_achievement_enabled == 'yes') {
