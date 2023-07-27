@@ -51,8 +51,8 @@ class MemberManagementControllerTest extends TestCase
             'another_email'        => 'rajandhand17@gmail.com',
             'password'             => 'Prepr@123',
             'country'              => 'Canada',
-            'search'               =>'Rforms',
-            'wrong_search'         =>'wrong',
+            'search'               => 'Rforms',
+            'wrong_search'         => 'wrong',
             'zip_code'             => 'L6M 3N5',
             'user_type'            => 'organization',
             'wrong_language'       => 'Hindi',
@@ -97,8 +97,7 @@ class MemberManagementControllerTest extends TestCase
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->tokenWithoutPermission,
         ];
-       global $id;
-
+        global $id;
     }
 
     /**create member management positive */
@@ -239,10 +238,11 @@ class MemberManagementControllerTest extends TestCase
         $response = $this->post('/api/v1/manage/member-management/organization/change-role', $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
+
     /**create member management positive */
     public function test_change_role_negative()
     {
-        $this->parameters['id']="";
+        $this->parameters['id'] = '';
         $response = $this->post('/api/v1/manage/member-management/organization/change-role', $this->parameters, $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
@@ -250,14 +250,14 @@ class MemberManagementControllerTest extends TestCase
     /**download positive */
     public function test_download_sample_positive()
     {
-        $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['language'],$this->headers);
+        $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**download negative */
     public function test_download_sample_negative()
     {
-        $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['wrong_language'],$this->headers);
+        $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['wrong_language'], $this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
 

@@ -11,4 +11,3 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{component}/{slug}/create ', [MemberManagementController::class, 'create'])->middleware('check.component');
     Route::post('/{component}/{slug}/delete ', [MemberManagementController::class, 'delete'])->middleware('check.component');
 });
- 

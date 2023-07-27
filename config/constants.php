@@ -77,10 +77,10 @@ return [
 
     'lab_type'=> [
         'assess'   => '0',
-        'onboard' => '1',
-        'engage' => '2',
-        'grow' => '3',
-        'na' => '4',
+        'onboard'  => '1',
+        'engage'   => '2',
+        'grow'     => '3',
+        'na'       => '4',
     ],
 
     'lab_privacy'=> [

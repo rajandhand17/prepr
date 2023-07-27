@@ -514,6 +514,7 @@ class MasterController extends AppBaseController
             if ($project_status) {
                 return $this->sendResponse(ProjectStatusResource::collection($project_status), __('responses.found_project_status_list'));
             }
+
             return $this->sendResponse(null, __('responses.not_found_project_status_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -651,6 +652,7 @@ class MasterController extends AppBaseController
             if ($get_skill_groups) {
                 return $this->sendResponse(SkillGroupResource::collection($get_skill_groups), __('responses.found_skill_groups_list'));
             }
+
             return $this->sendResponse(null, __('responses.not_found_skill_groups_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

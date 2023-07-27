@@ -86,7 +86,7 @@ class LabController extends AppBaseController
             }
 
             $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_achievement_image);
-            
+
             if ($createdLab != false) {
                 return $this->sendResponse(LabResource::make($createdLab), __('responses.lab_stored_success'), 200);
             }

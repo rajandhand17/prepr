@@ -29,7 +29,7 @@ class CheckComponentMiddleware
             if (in_array(request()->route()->parameter('component'), $components)) {
                 return $next($request);
             }
- 
+
             return Response::json(ResponseUtil::makeError(__('responses.valid_component_error')), 404);
         } catch (\Exception $e) {
             return Response::json(ResponseUtil::makeError(__('responses.getting_component_error')), 500);
