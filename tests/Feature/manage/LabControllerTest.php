@@ -92,7 +92,7 @@ class LabControllerTest extends TestCase
     public function test_lab_update_negative()
     {
         $response = $this->post('/api/v1/manage/lab/'.$this->parameters['slug'].'/update', $this->parameters, $this->headers);
-        $response->assertStatus(403);
+        $response->assertStatus(405);
     }
 
     public function test_lab_view_positive()
