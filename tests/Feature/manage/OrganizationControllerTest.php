@@ -10,7 +10,7 @@ class OrganizationControllerTest extends TestCase
     /**
      * A basic feature test example.
      *
-     * @return void 
+     * @return void
      */
     protected $parameters;
 
@@ -48,7 +48,7 @@ class OrganizationControllerTest extends TestCase
             'user_type'            => 'organization',
             'wrong_language'       => 'Hindi',
             'sort_by_ascending'    => 'name-a-to-z',
-            'sort_by_decending'    => 'name-z-to-a',
+            'sort_by_descending'    => 'name-z-to-a',
             'sort_by_creation_date'=> 'creation_date',
             'sort_by_wrong_input'  => 'default',
             'owner'                => 'organization_owner',
@@ -186,7 +186,7 @@ class OrganizationControllerTest extends TestCase
         }
     }
 
-    
+
     /** View organization negative */
     public function test_organization_view_negative()
     {
@@ -321,7 +321,7 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-    
+
     /**Organization get list with search status */
     public function test_organization_list_with_status_negative()
     {
@@ -357,7 +357,7 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-    
+
     /**Organization get listing based on category*/
     public function test_organization_list_with_category_negative()
     {
@@ -374,7 +374,7 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-    
+
     /**Organization get listing based on sorting*/
     public function test_organization_list_with_sort_by_ascending_positive()
     {
@@ -393,11 +393,11 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-    
+
     /**Organization get listing based on sorting*/
-    public function test_organization_list_with_sort_by_decending_positive()
+    public function test_organization_list_with_sort_by_descending_positive()
     {
-        $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'].'&sort_by='.$this->parameters['sort_by_decending'], $this->headers);
+        $response = $this->get('/api/v1/manage/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'].'&sort_by='.$this->parameters['sort_by_descending'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
@@ -412,7 +412,7 @@ class OrganizationControllerTest extends TestCase
             $this->fail();
         }
     }
-    
+
     /**Organization get listing based on sorting*/
     public function test_organization_list_with_sort_by_creation_date_positive()
     {
@@ -456,13 +456,13 @@ class OrganizationControllerTest extends TestCase
     /**Delete the organization*/
     public function test_organization_delete_positive(){
         $response=$this->delete('/api/v1/manage/organization/'.$this->parameters['slug'].'/delete',$this->parameters,$this->headers);
-        
+
         $this->assertEquals(200, $response->getStatusCode());
     }
     /**Delete the organization*/
     public function test_organization_delete_negative(){
         $response=$this->delete('/api/v1/manage/organization/'.$this->parameters['slug'].'/delete',$this->parameters,$this->headers);
-        
+
         $this->assertEquals(422, $response->getStatusCode());
     }
 }

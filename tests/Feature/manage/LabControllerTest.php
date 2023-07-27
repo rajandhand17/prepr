@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\manage;
 
+use App\Helpers\UtilityHelper;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -27,7 +28,7 @@ class LabControllerTest extends TestCase
             'dislike_component'      => 'dislike',
             'title'                  => 'Amazon Lab',
             'not_exist_title'        => 'UN SDG Labs',
-            'organization_id'        => '5ArQqVNt8d',
+            'organization_id' => UtilityHelper::checkComponentSlugExistOrNot("organization","rform")->uuid,
             'category_id'            => '1',
             'description'            => 'This lab is focused on driving awareness around the 17 UN sustainable development goals and to enable students and employees across the globe to co-lab and co-solve to create meaningful solutions.',
             'privacy'                => 'yes',
@@ -70,10 +71,11 @@ class LabControllerTest extends TestCase
 
     public function test_lab_create_postive()
     {
+
         $response = $this->post('/api/v1/manage/lab/create', $this->parameters, $this->headers);
         $response->assertStatus(200);
     }
- 
+
     public function test_lab_create_negative()
     {
         $response = $this->post('/api/v1/manage/lab/create', $this->parameters, $this->headers);
