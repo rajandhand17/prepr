@@ -279,12 +279,14 @@ class User extends Authenticatable
                 if ($user->save()) {
                     /**sending otp for forget password*/
                     if ($request->purpose === 'forget_password') {
-                        $data = ['subject' =>__("responses.email_subject_forget_password"), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
+                        $data = ['subject' =>__('responses.email_subject_forget_password'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                         $mail = SendMailHelper::sendMail($user, 'email.forget_password_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'forget_password', 'code' => 1];
+
                             return $response;
                         }
+
                         return ['success' => false, 'message' => __('responses.failed_email')];
                     }
                     /**sending otp for verify email*/
@@ -293,8 +295,10 @@ class User extends Authenticatable
                         $mail = SendMailHelper::sendMail($user, 'email.verify_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'verify_email', 'code' => 2];
+
                             return $response;
                         }
+
                         return ['success' => false, 'message' => __('responses.failed_email')];
                     }
                     /**send otp for two factor verification */
@@ -331,6 +335,7 @@ class User extends Authenticatable
             /**check user account verified or not */
             if ($user->verified_user === '1') {
                 $response = ['success' => false, 'message' => __('responses.verify_success_already'), 'code' => 1];
+
                 return $response;
             }
             /**Matching otp is same or not */
@@ -418,13 +423,15 @@ class User extends Authenticatable
             /**checking otp same or not */
             if ($user->otp == $request->otp) {
                 $user->password = Hash::make($request->password);
-                if ($user->save()){
+                if ($user->save()) {
                     $data = ['subject' => __('responses.email_subject_reset_password'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name']];
                     $mail = SendMailHelper::sendMail($user, 'email.reset_password', $data);
                     if ($mail) {
                         $success = ['success' => true, 'user' => $user];
+
                         return $success;
                     }
+
                     return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
                 }
             } else {
@@ -432,6 +439,7 @@ class User extends Authenticatable
 
                 return $response;
             }
+
             return false;
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

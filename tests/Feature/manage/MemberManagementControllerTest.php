@@ -15,7 +15,7 @@ class MemberManagementControllerTest extends TestCase
      * @return void
      */
     protected $parameters;
-    
+
     public function setUp(): void
     {
         parent::setUp();
@@ -28,10 +28,10 @@ class MemberManagementControllerTest extends TestCase
             'role'                 => 'Organization Manager',
             'invite_type'          => 'email',
             'wrong_title'          => 'Infosys',
-            'invite_email'         => ['rajan@prepr.org','shagun@gmail.com'],
+            'invite_email'         => ['rajan@prepr.org', 'shagun@gmail.com'],
             'slug'                 => 'accenture',
-            'component'      => 'organization',
-            'wrong_component'=> 'component',
+            'component'            => 'organization',
+            'wrong_component'      => 'component',
             'wrong_slug'           => 'infosys',
             'description'          => 'Describing the test cases of apis',
             'website'              => 'https://infosys.com',
@@ -50,8 +50,8 @@ class MemberManagementControllerTest extends TestCase
             'another_email'        => 'rajandhand17@gmail.com',
             'password'             => 'Prepr@123',
             'country'              => 'Canada',
-            'search'               =>'Rforms',
-            'wrong_search'         =>'wrong',
+            'search'               => 'Rforms',
+            'wrong_search'         => 'wrong',
             'zip_code'             => 'L6M 3N5',
             'user_type'            => 'organization',
             'wrong_language'       => 'Hindi',
@@ -96,32 +96,31 @@ class MemberManagementControllerTest extends TestCase
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->tokenWithoutPermission,
         ];
-       global $id;
-
+        global $id;
     }
 
     /**create member management positive */
-  
+
     public function test_add_member_to_organization_positive()
-    {  
+    {
         $response = $this->post('/api/v1/manage/organization/create', $this->parameters, $this->headers);
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
-        $module_id=Organization::select('id')->where("uuid",$data['data']['id'])->first();
-        $GLOBALS['id']=$module_id->id;
-        $this->parameters['id']= $data['data']['id'];
+        $module_id = Organization::select('id')->where('uuid', $data['data']['id'])->first();
+        $GLOBALS['id'] = $module_id->id;
+        $this->parameters['id'] = $data['data']['id'];
         if ($data['success']) {
-        $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language='.$this->parameters['language'], $this->parameters, $this->headers);
-        $this->assertEquals(200, $response->getStatusCode());
+            $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/create?language='.$this->parameters['language'], $this->parameters, $this->headers);
+            $this->assertEquals(200, $response->getStatusCode());
         }
     }
 
     /**create member management negative */
     public function test_add_member_to_organization_negative()
-    {       
+    {
         $response = $this->post('/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['wrong_slug'].'/create?language='.$this->parameters['language'], [], $this->headers);
-       
+
         $this->assertEquals(422, $response->getStatusCode());
     }
 
@@ -164,26 +163,27 @@ class MemberManagementControllerTest extends TestCase
 
     /**Listing member management negative */
     public function test_listing_negative()
-    {   
+    {
         $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
         $response->assertStatus(404);
     }
 
     /**create member management positive */
     public function test_change_role_positive()
-    {   
-        $getid=MemberManagement::select('uuid')->where([
-            ["email","=",$this->parameters['invite_email'][0]],
-            ["module_id", "=", $GLOBALS['id'] ]
-            ])->first();
-        $this->parameters['id']=$getid->uuid;
+    {
+        $getid = MemberManagement::select('uuid')->where([
+            ['email', '=', $this->parameters['invite_email'][0]],
+            ['module_id', '=', $GLOBALS['id']],
+        ])->first();
+        $this->parameters['id'] = $getid->uuid;
         $response = $this->post('/api/v1/manage/member-management/organization/change-role', $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
+
     /**create member management positive */
     public function test_change_role_negative()
     {
-        $this->parameters['id']="";
+        $this->parameters['id'] = '';
         $response = $this->post('/api/v1/manage/member-management/organization/change-role', $this->parameters, $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
@@ -191,14 +191,14 @@ class MemberManagementControllerTest extends TestCase
     /**download positive */
     public function test_download_sample_positive()
     {
-        $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['language'],$this->headers);
+        $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**download negative */
     public function test_download_sample_negative()
     {
-        $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['wrong_language'],$this->headers);
+        $response = $this->get('/api/v1/manage/member-management/download-sample?language='.$this->parameters['wrong_language'], $this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
 
