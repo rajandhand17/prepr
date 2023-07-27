@@ -74,7 +74,6 @@ class LabRepository implements LabInterface
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
                 $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createdLab);
                 $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createdLab);
-
                 if ($request->is_achievement_enabled == 'yes') {
                     $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_achievements_image);
                 }
@@ -105,6 +104,7 @@ class LabRepository implements LabInterface
                 $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updatedLab->id);
                 $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updatedLab->id);
                 $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updatedLab->id);
+
                 $updatedLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($request, $updatedLab->id);
 
                 if ($request->is_achievement_enabled == 'yes') {
@@ -123,6 +123,8 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
+
             return false;
         }
     }

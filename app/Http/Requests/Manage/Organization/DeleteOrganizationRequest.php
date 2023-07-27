@@ -43,7 +43,7 @@ class DeleteOrganizationRequest extends FormRequest
     public function messages()
     {
         return[
-            'slug.required'=> __('responses.required_field'),
+            'slug.required'=> __('responses.slug_required'),
             'slug.exists'  => __('responses.slug_not_exists'),
 
         ];

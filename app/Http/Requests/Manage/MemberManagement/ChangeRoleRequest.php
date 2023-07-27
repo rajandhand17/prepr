@@ -43,10 +43,10 @@ class ChangeRoleRequest extends FormRequest
     public function messages()
     {
         return[
-            'id.required'       => __('responses.required_field'),
-            'id.exists'         => __('responses.not_exists'),
-            'role.required'     => __('responses.required_field'),
-            'role.exists'       => __('responses.not_exists'),
+            'id.required'       => __('responses.id_required'),
+            'id.exists'         => __('responses.id_not_exists'),
+            'role.required'     => __('responses.role_required'),
+            'role.exists'       => __('responses.role_not_exists'),
 
         ];
     }

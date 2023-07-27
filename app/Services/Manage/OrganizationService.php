@@ -29,9 +29,8 @@ class OrganizationService
             if ($request->has('search') && !empty($request->search)) {
                 $organization_list = $organization_list->where('organizations.title', 'like', '%'.$request->search.'%');
             }
-
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
                 $organization_list = $organization_list->where('organizations.status', $status);
             } else {
                 $organization_list = $organization_list->where('organizations.status', '1');
@@ -40,7 +39,6 @@ class OrganizationService
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
-
             if ($request->has('owner') && !empty($request->owner)) {
                 $organization_list = self::filterOrganizationBasedOnRoles($organization_list, $request);
             }
@@ -137,7 +135,6 @@ class OrganizationService
         try {
             DB::beginTransaction();
             $model = new Organization();
-
             $organization = new Organization();
             $organization->language = isset($request->language) ? $request->language : 'en';
             $organization->user_id = auth()->user()->id;
@@ -154,7 +151,6 @@ class OrganizationService
             $organization->status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : '3');
             $organization->total_employees = $request->total_employees;
             $organization->save();
-
             auth()->user()->attachRole('organization_owner', $organization);
 
             DB::commit();

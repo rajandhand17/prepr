@@ -191,6 +191,7 @@ class LabService
     {
         try {
             $lab = Lab::where('slug', $slug)->first();
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if ($lab !== null) {
                 $privacy = $lab->privacy;
                 if ($request->has('privacy')) {
@@ -227,7 +228,7 @@ class LabService
                 }
 
                 $lab->language = ($request->has('language')) ? $request->language : $lab->language;
-                $lab->organization_id = ($request->has('organization_id')) ? $request->organization_id : $lab->organization_id;
+                $lab->organization_id = $organization->id;
                 $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
                 $lab->title = ($request->has('title')) ? $request->title : $lab->title;
                 $lab->description = ($request->has('description')) ? $request->description : $lab->description;
@@ -247,6 +248,8 @@ class LabService
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
+
             return false;
         }
     }

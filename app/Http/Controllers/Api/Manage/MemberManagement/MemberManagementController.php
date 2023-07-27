@@ -88,11 +88,9 @@ class MemberManagementController extends AppBaseController
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
 
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' Not Found', 403);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
             }
-
             $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
-
             $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
 
             if ($getTemplate) {
@@ -119,6 +117,8 @@ class MemberManagementController extends AppBaseController
                 $response['current_page'] = 1;
                 $response['total_pages'] = 1;
                 $response['users'] = [];
+
+                return $this->sendResponse($response, __('responses.create_member_manger_failed'));
             }
 
             return $this->sendResponse($response, __('responses.member_manager_found'));
@@ -238,10 +238,10 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' Not Found', 403);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
             }
             if ($component != 'organization' && $request->role != 'User') {
-                return $this->sendError('Please select valid role for the invitees.', 403);
+                return $this->sendError(__('responses.select_valid_role_error'), 403);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
             if ($memberLists) {
@@ -298,7 +298,7 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' Not Found', 403);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
             }
             $member_management = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug, $component, $request);
             if ($member_management) {
@@ -343,7 +343,7 @@ class MemberManagementController extends AppBaseController
         try {
             $changeRoleResponse = $this->memberManagementRepository->changeRole($request, $component);
             if ($changeRoleResponse) {
-                return $this->sendResponse([], __('responses.role_assigned_sucessfully'));
+                return $this->sendResponse([], __('responses.role_assigned_successfully'));
             }
 
             return $this->sendError(__('responses.role_assigned_failed'), 400);

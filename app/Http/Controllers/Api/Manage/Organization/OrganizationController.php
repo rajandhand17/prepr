@@ -66,7 +66,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             if (!auth()->user()->isAbleTo('view_organization')) {
-                return $this->sendError('Forbidden', 403);
+                return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             $organization = $this->organizationRepository->getOrganizationList($request);
             if ($organization !== false) {
@@ -139,7 +139,7 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!auth()->user()->isAbleTo('view_organization', $organization)) {
-                return $this->sendError('Forbidden', 403);
+                return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             if ($organization) {
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
@@ -318,13 +318,13 @@ class OrganizationController extends AppBaseController
     {
         try {
             if (!auth()->user()->isAbleTo('create_organization')) {
-                return $this->sendError('Forbidden', 403);
+                return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             $profile_image_path = config('site-settings.default_organization_profile_image');
             $cover_image_path = config('site-settings.default_organization_cover_image');
             $checkOrganization = $this->organizationRepository->checkOrganizationExistBasedOnTitle($request);
             if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_name_unique'), 422);
+                return $this->sendError(__('responses.organization_title_unique'), 422);
             }
             $checkOrganizationInTrash = $this->organizationRepository->checkOrganizationExistInTrashBasedOnTitle($request);
             if (!$checkOrganizationInTrash) {
@@ -527,6 +527,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -561,7 +562,7 @@ class OrganizationController extends AppBaseController
                     $this->organizationRepository->updatesOrganizationMembers($request, $organization->id);
                 }
 
-                return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfull'), 200);
+                return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.organization_not_update'), 409);
@@ -619,7 +620,7 @@ class OrganizationController extends AppBaseController
         try {
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_name_unique'), 422);
+                return $this->sendError(__('responses.organization_title_unique'), 422);
             }
             if (!auth()->user()->isAbleTo('delete_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_delete_access_denied'), 403);

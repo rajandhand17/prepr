@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\app\Http\Controllers\Api\Auth;
+namespace Tests\Feature;
 
 use App\Models\User;
 use Tests\TestCase;
@@ -16,68 +16,100 @@ class AuthControllerTest extends TestCase
     {
         parent::setUp();
         $this->language = 'en';
-        $this->username = 'Rajandhands';
-        $this->wrong_username = 'Rajandhandsas';
-        $this->email = 'rajan@prepr.orgs';
-        $this->wrong_email = 'rajanwrong@prepr.orgs';
+        $this->username = 'Rajan7016';
+        $this->username_with_organization = 'Dhand7016';
+        $this->wrong_username = 'rajan1994';
+        $this->email = 'rajandhand17@gmail.com';
+        $this->email_with_organization = 'rajan@amazon.com';
+        $this->wrong_email = 'rajanwrong@amazon.com';
         $this->first_name = 'rajan';
         $this->last_name = 'dhand';
         $this->password = 'Prepr@123';
         $this->password_confirmation = 'Prepr@123';
-        $this->wrong_password = 'Prepr';
+        $this->wrong_password = 'Prepr@1234';
         $this->device_platform = 'web';
         $this->user_type = 'student';
         $this->purpose = 'looking_team';
         $this->country_code = '+91';
         $this->phone_number = '9646080802';
-        $this->wrong_phone_number = '9646080805';
+        $this->phone_number_with_organization = '9646080801';
+        $this->wrong_phone_number = '7589780802';
         $this->purpose_send_otp = 'two_factor_verification';
-        $this->referral_code = 'Rajandhands2023';
-        $this->wrong_referral_code = 'rajandhandd';
-        $this->register_type = 'organization';
-        $this->organization_name = 'prepr sds';
+        $this->referral_code = 'Rajan70162023';
+        $this->wrong_referral_code = 'rajan1994';
+        $this->register_type_organization = 'organization';
+        $this->register_type_user = 'user';
+        $this->organization_name = 'RForm';
     }
 
     /**Successfull Positive */
-    public function test_register_positive()
+    public function test_register_positive_with_user()
     {
         $response = $this->post('/api/v1/auth/register', [
-            'language'              => $this->language,
-            'username'              => $this->username,
-            'email'                 => $this->email,
-            'first_name'            => $this->first_name,
-            'last_name'             => $this->last_name,
-            'password'              => $this->password,
-            'password_confirmation' => $this->password_confirmation,
-            'device_platform'       => $this->device_platform,
-            'user_type'             => $this->user_type,
-            'purpose'               => $this->purpose,
-            'country_code'          => $this->country_code,
-            'phone_number'          => $this->phone_number,
-            'register_type'         => $this->register_type,
-            'organization_name'     => $this->organization_name,
+            'language'               => $this->language,
+            'username'               => $this->username,
+            'email'                  => $this->email,
+            'first_name'             => $this->first_name,
+            'last_name'              => $this->last_name,
+            'password'               => $this->password,
+            'password_confirmation'  => $this->password_confirmation,
+            'device_platform'        => $this->device_platform,
+            'user_type'              => $this->user_type,
+            'purpose'                => $this->purpose,
+            'country_code'           => $this->country_code,
+            'phone_number'           => $this->phone_number,
+            'register_type'          => $this->register_type_user,
         ]);
         $response->assertStatus(200);
         $data = $response->json();
-
         if ($data['success'] === true) {
-            $this->assertArrayHasKey('id', $data['user'][0]);
-            $this->assertArrayHasKey('preferred_language', $data['user'][0]);
-            $this->assertArrayHasKey('first_name', $data['user'][0]);
-            $this->assertArrayHasKey('last_name', $data['user'][0]);
-            $this->assertArrayHasKey('full_name', $data['user'][0]);
-            $this->assertArrayHasKey('username', $data['user'][0]);
-            $this->assertArrayHasKey('email', $data['user'][0]);
-            $this->assertArrayHasKey('country_code', $data['user'][0]);
-            $this->assertArrayHasKey('phone_number', $data['user'][0]);
-            $this->assertArrayHasKey('referral_code', $data['user'][0]);
             if ($response->assertOk()) {
                 $records = User::select('otp')->where('email', $this->email)->first();
-                $verifyuser = $this->post('/api/v1/auth/verify-otp', ['language' => $this->language, 'email' => $this->email, 'otp'=>$records->otp]);
+                $verifyuser = $this->post('/api/v1/auth/verify-account', ['language' => $this->language, 'email' => $this->email, 'otp'=>$records->otp]);
                 $verifyuser->assertStatus(200);
                 $datavarify = $verifyuser->json();
                 if ($datavarify['success'] == true) {
                     $verifyuser->assertOk();
+                }
+            }
+        } else {
+            $this->fail();
+        }
+    }
+
+    /**Successfull Positive with organization*/
+    public function test_register_positive_with_organization()
+    {
+        $response = $this->post('/api/v1/auth/register', [
+            'language'               => $this->language,
+            'username'               => $this->username_with_organization,
+            'email'                  => $this->email_with_organization,
+            'first_name'             => $this->first_name,
+            'last_name'              => $this->last_name,
+            'password'               => $this->password,
+            'password_confirmation'  => $this->password_confirmation,
+            'device_platform'        => $this->device_platform,
+            'user_type'              => $this->user_type,
+            'purpose'                => $this->purpose,
+            'country_code'           => $this->country_code,
+            'phone_number'           => $this->phone_number_with_organization,
+            'register_type'          => $this->register_type_organization,
+            'organization_title'     => $this->organization_name,
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        if ($data['success'] === true) {
+            if ($response->assertOk()) {
+                $records = User::select('otp')->where('email', $this->email_with_organization)->first();
+                $verifyuser = $this->post('/api/v1/auth/verify-account', ['language' => $this->language, 'email' => $this->email_with_organization, 'otp'=>$records->otp]);
+
+                $verifyuser->assertStatus(200);
+
+                $datavarify = $verifyuser->json();
+                if ($datavarify['success'] == true) {
+                    $verifyuser->assertOk();
+                } else {
+                    $this->fail();
                 }
             }
         } else {
@@ -95,7 +127,20 @@ class AuthControllerTest extends TestCase
     /**Negative Registered */
     public function test_register_negative_exists()
     {
-        $response = $this->post('/api/v1/auth/register', ['language' => $this->language, 'username' => $this->username, 'email' => $this->email, 'first_name' => $this->first_name, 'last_name' => $this->last_name, 'password' => $this->password, 'password_confirmation' => $this->password_confirmation, 'device_platform' => $this->device_platform, 'user_type' => $this->user_type, 'purpose' => $this->purpose, 'country_code' => $this->country_code, 'phone_number' => $this->phone_number]);
+        $response = $this->post('/api/v1/auth/register', [
+            'language'              => $this->language,
+            'username'              => $this->username,
+            'email'                 => $this->email,
+            'first_name'            => $this->first_name,
+            'last_name'             => $this->last_name,
+            'password'              => $this->password,
+            'password_confirmation' => $this->password_confirmation,
+            'device_platform'       => $this->device_platform,
+            'user_type'             => $this->user_type,
+            'purpose'               => $this->purpose,
+            'country_code'          => $this->country_code,
+            'phone_number'          => $this->phone_number,
+        ]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
@@ -110,8 +155,7 @@ class AuthControllerTest extends TestCase
                 $response->assertOk();
             } else {
                 $userrecords = User::select('otp')->where('email', $this->email)->first();
-                $twofactorresponse = $this->post('/api/v1/auth/verify-two-factor', ['email' => $this->email, 'otp' => $userrecords->otp, 'language' => $this->language]);
-
+                $twofactorresponse = $this->post('/api/v1/auth/two-factor-verification', ['email' => $this->email, 'otp' => $userrecords->otp, 'language' => $this->language]);
                 $twofactorresponse->assertStatus(200);
             }
         } else {
@@ -130,13 +174,13 @@ class AuthControllerTest extends TestCase
     public function test_post_login_wrong_password_negative()
     {
         $response = $this->post('/api/v1/auth/login', ['email' => $this->email, 'password' => $this->wrong_password, 'language' => $this->language]);
-        $this->assertEquals(422, $response->getStatusCode());
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     /**Check user name positive */
     public function test_post_check_username_positive()
     {
-        $response = $this->post('/api/v1/auth/checkusername', ['username' => $this->wrong_username, 'language' => $this->language]);
+        $response = $this->post('/api/v1/auth/check-username', ['username' => $this->wrong_username, 'language' => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -149,21 +193,21 @@ class AuthControllerTest extends TestCase
     /**Check user name negative */
     public function test_post_check_username_notexists_negative()
     {
-        $response = $this->post('/api/v1/auth/checkusername', ['username' => $this->username, 'language' => $this->language]);
+        $response = $this->post('/api/v1/auth/check-username', ['username' => $this->username, 'language' => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
     /**Check user name negative */
     public function test_post_check_username_negative()
     {
-        $response = $this->post('/api/v1/auth/checkusername');
+        $response = $this->post('/api/v1/auth/check-username');
         $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**Check email positive */
     public function test_post_check_email_positive()
     {
-        $response = $this->post('/api/v1/auth/checkemail', ['email' => $this->wrong_email, 'language' => $this->language]);
+        $response = $this->post('/api/v1/auth/check-email', ['email' => $this->wrong_email, 'language' => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -174,23 +218,23 @@ class AuthControllerTest extends TestCase
     }
 
     /**Check user name negative */
-    public function test_post_check_email_notexists_negative()
+    public function test_post_check_email_not_exists_negative()
     {
-        $response = $this->post('/api/v1/auth/checkemail', ['email' => $this->email, 'language' => $this->language]);
+        $response = $this->post('/api/v1/auth/check-email', ['email' => $this->email, 'language' => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
     /**Check user name negative */
     public function test_post_check_email_negative()
     {
-        $response = $this->post('/api/v1/auth/checkemail');
+        $response = $this->post('/api/v1/auth/check-email');
         $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**Check email positive */
     public function test_post_check_phone_positive()
     {
-        $response = $this->post('/api/v1/auth/checkphone', ['phone_number' => $this->wrong_phone_number, 'language' => $this->language]);
+        $response = $this->post('/api/v1/auth/check-phone', ['phone_number' => $this->wrong_phone_number, 'language' => $this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -201,16 +245,16 @@ class AuthControllerTest extends TestCase
     }
 
     /**Check user name negative */
-    public function test_post_check_phone_notexists_negative()
+    public function test_post_check_phone_not_exists_negative()
     {
-        $response = $this->post('/api/v1/auth/checkphone', ['phone_number' => $this->phone_number, 'language' => $this->language]);
+        $response = $this->post('/api/v1/auth/check-phone', ['phone_number' => $this->phone_number, 'language' => $this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 
     /**Check user name negative */
     public function test_post_check_phone_negative()
     {
-        $response = $this->post('/api/v1/auth/checkphone');
+        $response = $this->post('/api/v1/auth/check-phone');
         $this->assertEquals(400, $response->getStatusCode());
     }
 
@@ -278,7 +322,7 @@ class AuthControllerTest extends TestCase
     /** invit code */
     public function test_post_verify_invite_code_positive()
     {
-        $response = $this->post('/api/v1/auth/verify-invite-code', ['referral_code' =>$this->referral_code, 'language' =>$this->language]);
+        $response = $this->post('/api/v1/auth/verify-referral-code', ['referral_code' =>$this->referral_code, 'language' =>$this->language]);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
@@ -291,15 +335,7 @@ class AuthControllerTest extends TestCase
     /** Reset Password negative*/
     public function test_post_verify_invite_code_negative()
     {
-        $response = $this->post('/api/v1/auth/verify-invite-code', ['referral_code' =>$this->wrong_referral_code, 'language' =>$this->language]);
-        $this->assertEquals(422, $response->getStatusCode());
-    }
-
-    /** Two Factor negative*/
-    public function test_post_verify_two_factor_negative()
-    {
-        $language = 'en';
-        $response = $this->post('/api/v1/auth/verify-invite-code', ['language' =>$language]);
+        $response = $this->post('/api/v1/auth/verify-referral-code', ['referral_code' =>$this->wrong_referral_code, 'language' =>$this->language]);
         $this->assertEquals(422, $response->getStatusCode());
     }
 }

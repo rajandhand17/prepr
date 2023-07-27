@@ -22,17 +22,11 @@ class MemberManagementResource extends JsonResource
             $this->invitee_name = $user->first_name.' '.$user->last_name;
             $username = $user->username;
         }
-
         $type = ($this->type == '0') ? 'Invitation' : (($this->type == '1') ? 'Join Request' : 'Auto Created');
-
         $invite_type = ($this->invite_type == '0') ? 'Email' : (($this->invite_type == '1') ? 'Network' : (($this->invite_type == '2') ? 'Join Request' : 'CSV Upload'));
-
         $invtee_user = UserService::getUserById($this->inviter_id);
-
         $invite_status = ($this->invite_status == '0') ? 'Invited' : (($this->invite_status == '1') ? 'Accepted' : (($this->invite_status == '2') ? 'Pending' : (($this->invite_status == '3') ? 'Declined' : 'Auto Created')));
-
         $auto_invite = ($this->auto_invite == '0') ? 'No' : 'Yes';
-
         $email_status = ($this->email_status == '0') ? 'Scheduled' : (($this->email_status == '1') ? 'Sent' : (($this->email_status == '2') ? 'Failed' : 'NA'));
 
         return [
