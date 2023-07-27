@@ -49,5 +49,5 @@ class ChangeRoleRequest extends FormRequest
             'role.exists'       => __('responses.role_not_exists'),
 
         ];
-    } 
+    }
 }

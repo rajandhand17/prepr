@@ -100,6 +100,7 @@ class AuthController extends AppBaseController
             if ($login['success'] == false) {
                 return $this->sendError($login['message'], 401);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -172,6 +173,7 @@ class AuthController extends AppBaseController
                     return $this->sendError(__('responses.otp_correct_required'), 401);
                 }
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
