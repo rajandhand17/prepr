@@ -30,7 +30,7 @@ class OrganizationService
                 $organization_list = $organization_list->where('organizations.title', 'like', '%'.$request->search.'%');
             }
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
                 $organization_list = $organization_list->where('organizations.status', $status);
             } else {
                 $organization_list = $organization_list->where('organizations.status', '1');
