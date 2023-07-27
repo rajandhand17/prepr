@@ -18,10 +18,8 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
-//        Artisan::call('cache:clear');
-//        Artisan::call('route:clear');
-//        Artisan::call('config:clear');
-//        Artisan::call('migrate:refresh');
+//        Artisan::call('db:wipe');
+//        Artisan::call('migrate');
 //        Artisan::call('db:seed');
 //        Artisan::call('migrate-old-data:achievement-condition-list');
 //        Artisan::call('migrate-old-data:categories');
@@ -41,6 +39,7 @@ trait CreatesApplication
 //        Artisan::call('migrate-old-data:skill-stacks');
 //        Artisan::call('migrate-old-data:skill-groups');
 //        Artisan::call('passport:install');
+//        Artisan::call('optimize:clear');
 
         return $app;
     }
