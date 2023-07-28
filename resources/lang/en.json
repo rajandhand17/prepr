@@ -199,5 +199,13 @@
     "responses.api_receiver_required":"This :receiver field is required",
     "responses.api_not_found_required":"Not Found",
     "responses.member_manager_found":"Member manager list found!",
-    "responses.select_valid_role_error":"Please select valid role for the invitees."
+    "responses.select_valid_role_error":"Please select valid role for the invitees.",
+    "responses.already_followed_organization":"You have already followed!",
+    "responses.follow_organization_successfully":"You have successfully followed organization!",
+    "responses.already_unfollowed_organization":"You have already un-followed!",
+    "responses.unfollow_organization_successfully":"You have successfully un-followed organization!",
+    "responses.already_like_organization":"You have already liked!",
+    "responses.like_organization_successfully":"You have successfully liked organization!",
+    "responses.already_unlike_organization":"You have already unliked!",
+    "responses.unlike_organization_successfully":"You have successfully unliked organization!"
 }
