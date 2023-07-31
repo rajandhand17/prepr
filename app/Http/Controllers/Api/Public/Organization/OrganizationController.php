@@ -30,7 +30,7 @@ class OrganizationController extends AppBaseController
                 ];
                 return $this->sendResponse([$response], __('responses.found_organization_list'));
             }
-            return $this->sendError(__('responses.not_found_organization_list'), 400);
+            return $this->sendError(__('responses.not_found_organization_list'), 404);
         } catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -43,7 +43,7 @@ class OrganizationController extends AppBaseController
             if ($organization) {
                 return $this->sendResponse(PublicOrganizationResource::make($organization), __('responses.found_organization_list'));
             }
-            return $this->sendError(__('responses.organization_not_exists'), 404);
+            return $this->sendError(__('responses.organization_not_exists'),404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -52,7 +52,8 @@ class OrganizationController extends AppBaseController
     public function follow($slug){
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            if($organization){
+
+            if($organization!==null){
                 $checkFollowed=$this->organizationRepository->checkFollowUnfollowExists($organization->id,"1");
                 if($checkFollowed!==false && $checkFollowed->follow_unfollow=="1"){
                     return $this->sendError(__('responses.already_followed_organization'),400);
@@ -62,6 +63,7 @@ class OrganizationController extends AppBaseController
                     return $this->sendResponse([],__('responses.follow_organization_successfully'));
                 }
             }
+            return $this->sendError(__('responses.organization_not_exists'),404);
         } catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }
@@ -80,6 +82,7 @@ class OrganizationController extends AppBaseController
                     return $this->sendResponse([],__('responses.unfollow_organization_successfully'));
                 }
             }
+            return $this->sendError(__('responses.organization_not_exists'),404);
         } catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }
@@ -98,6 +101,7 @@ class OrganizationController extends AppBaseController
                     return $this->sendResponse([],__('responses.follow_organization_successfully'));
                 }
             }
+            return $this->sendError(__('responses.organization_not_exists'),404);
         } catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }
@@ -116,7 +120,24 @@ class OrganizationController extends AppBaseController
                     return $this->sendResponse([],__('responses.unlike_organization_successfully'));
                 }
             }
+            return $this->sendError(__('responses.organization_not_exists'),404);
+
         } catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    public  function  share($slug){
+        try{
+            $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            if($organization) {
+                $share = $this->organizationRepository->share($organization->id);
+                if($share){
+                return $this->sendResponse([],__('responses.share_organization_successfully'));
+            }
+            }
+            return $this->sendError(__('responses.organization_not_exists'),404);
+        }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }
     }

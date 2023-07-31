@@ -23,7 +23,7 @@ class OrganizationSocialActivitiesService
 
     public function checkLikeUnlikeExists($id,$action){
         try {
-            
+
             return OrganizationSocialActivities::where([
                 ['organization_id',"=",$id],
                 ['user_id',"=",Auth::user()->id],
@@ -134,4 +134,30 @@ class OrganizationSocialActivitiesService
         }
     }
 
+    public  function  share($organization_id){
+        try{
+            $share = OrganizationSocialActivities::where([
+                ['user_id',"=",Auth::user()->id],
+                ['organization_id',"=",$organization_id],
+            ])->first();
+            if(!$share){
+                $share=new OrganizationSocialActivities();
+                $share->user_id=Auth::user()->id;
+                $share->organization_id=$organization_id;
+                $share->share="1";
+                if($share->save()){
+                    return true;
+                }
+                return false;
+            }
+            $share->share="1";
+            if($share->save()){
+                return true;
+            }
+            return false;
+        }catch(\Exception $e){
+            dd($e);
+            return false;
+        }
+    }
 }

@@ -44,7 +44,7 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         }
     }
-    
+
     public function checkLikeUnlikeExists($id,$action){
         try {
             $response=$this->organizationSocialActivitiesService->checkLikeUnlikeExists($id,$action);
@@ -84,6 +84,15 @@ class OrganizationRepository implements OrganizationInterface
         try {
             return $this->organizationSocialActivitiesService->unlike($organization_id);
         } catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public  function  share($organization_id){
+        try {
+            return $this->organizationSocialActivitiesService->share($organization_id);
+        }catch (\Exception $e){
+            return $e;
             return false;
         }
     }

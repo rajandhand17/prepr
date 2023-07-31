@@ -12,10 +12,10 @@
     "responses.verify_success_already":"Your account has already been verified. Please continue to log in into your account!",
     "responses.user_login_success":"Welcome to your account!",
     "responses.verify_reference_success":"The referral code is available!",
-    "responses.verify_reference_error":"The referral code is not available!", 
+    "responses.verify_reference_error":"The referral code is not available!",
     "responses.account_not_verified":"Please verify your account to continue!",
     "responses.otp_correct_required":"Please enter a valid OTP!",
-    "responses.invalid_credentials":"Invalid credentials! please try again.", 
+    "responses.invalid_credentials":"Invalid credentials! please try again.",
     "responses.user_verify_email_otp":"Please check your email to get OTP for verification!",
     "responses.user_not_found": "Sorry! the user doesn't exist in our system.",
     "responses.check_otp_email":"Please check your email for OTP.",
@@ -207,5 +207,6 @@
     "responses.already_like_organization":"You have already liked!",
     "responses.like_organization_successfully":"You have successfully liked organization!",
     "responses.already_unlike_organization":"You have already unliked!",
-    "responses.unlike_organization_successfully":"You have successfully unliked organization!"
+    "responses.unlike_organization_successfully":"You have successfully unliked organization!",
+    "responses.share_organization_successfully":"You have successfully share organization!"
 }
