@@ -89,6 +89,32 @@ class PublicOrganizationControllerTest extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
+    public  function test_organization_view_with_search_positive() {
+        $response = $this->get('/api/v1/public/organization/'.$this->parameters['slug'].'?language='.$this->parameters['language'].'&search='.$this->parameters['slug'],$this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['success']){
+            $this->assertArrayHasKey('id', $data['data']);
+            $this->assertArrayHasKey('language',$data['data']);
+            $this->assertArrayHasKey('title',$data['data']);
+            $this->assertArrayHasKey('slug',$data['data']);
+            $this->assertArrayHasKey('description',$data['data']);
+            $this->assertArrayHasKey('cover_image',$data['data']);
+            $this->assertArrayHasKey('profile_image',$data['data']);
+            $this->assertArrayHasKey('website',$data['data']);
+            $this->assertArrayHasKey('about',$data['data']);
+            $this->assertArrayHasKey('category',$data['data']);
+            $response->assertOk();
+        }else {
+            $this->fail();
+        }
+    }
+
+    public  function test_organization_view_with_search_negative() {
+        $response = $this->get('/api/v1/public/organization/'.$this->parameters['wrong_slug'].'?language='.$this->parameters['language'].'&search='.$this->parameters['slug'],$this->headers);
+        $this->assertEquals(404, $response->getStatusCode());
+
+    }
     public  function  test_follow_organization_positive(){
         $response = $this->get('/api/v1/public/organization/'.$this->parameters['slug'].'/follow?language='.$this->parameters['language'],$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
@@ -121,7 +147,6 @@ class PublicOrganizationControllerTest extends TestCase
         $response = $this->get('/api/v1/public/organization/'.$this->parameters['slug'].'/un-like?language='.$this->parameters['language'],$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
-
     public  function  test_un_like_organization_negative(){
         $response = $this->get('/api/v1/public/organization/'.$this->parameters['wrong_slug'].'/un-like?language='.$this->parameters['language'],$this->headers);
         $this->assertEquals(404, $response->getStatusCode());
