@@ -11,14 +11,14 @@ class LabSocialActivity extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'lab_social_activity';
+    protected $table = 'lab_social_activities';
 
     protected $fillable = [
         'user_id',
         'lab_id',
-        'like_dislike',
         'follow_unfollow',
         'favourite',
+        'join_unjoin',
         'share',
     ];
 }
