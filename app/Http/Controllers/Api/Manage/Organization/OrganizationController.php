@@ -78,6 +78,7 @@ class OrganizationController extends AppBaseController
                     'total_pages'  => $organization->lastPage(),
                     'list'         => OrganizationResource::collection($organization),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_organization_list'));
             }
 
@@ -526,7 +527,7 @@ class OrganizationController extends AppBaseController
     {
         try {
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            
+
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }

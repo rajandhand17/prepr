@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\public\Lab\LabController;
+use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language','auth:api'])->group(function(){
-    Route::get('/',[LabController::class,'index']);
+Route::middleware(['language', 'auth:api'])->group(function () {
+    Route::get('/', [LabController::class, 'index']);
     Route::get('/{slug}', [LabController::class, 'show']);
     Route::get('/{slug}/join', [LabController::class, 'join']);
     Route::get('/{slug}/un-join', [LabController::class, 'unJoin']);

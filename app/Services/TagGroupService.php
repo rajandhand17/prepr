@@ -15,6 +15,7 @@ class TagGroupService
             if ($getTagGroupList) {
                 return $getTagGroupList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

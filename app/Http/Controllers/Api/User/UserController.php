@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api\User;
 
-use App\Console\Commands\OldDataMigration\User;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\User\UserSearchResource;
 use App\Repositories\Api\User\UserRepository;
 use Illuminate\Http\Request;
-use App\Models\User as users;
+
 class UserController extends AppBaseController
 {
     private $userRepository;

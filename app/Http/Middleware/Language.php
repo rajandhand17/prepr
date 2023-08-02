@@ -23,11 +23,13 @@ class Language
         try {
             if (isset($request->language) && !empty($request->language)) {
                 $check_language = \App\Models\Language::where('iso', $request->language)->first();
-                
+
                 if ($check_language) {
                     App::setlocale($request->language);
+
                     return $next($request);
                 }
+
                 return Response::json(ResponseUtil::makeError('Sorry! we are not supporting the language which you have requested for!.'), 400);
             }
 

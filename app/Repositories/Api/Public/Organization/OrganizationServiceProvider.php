@@ -13,7 +13,6 @@ class OrganizationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
     }
 
     /**

@@ -23,7 +23,7 @@ class LabController extends AppBaseController
     }
 
     public function index(Request $request)
-    {   
+    {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if (!$organization) {
