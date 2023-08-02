@@ -19,40 +19,40 @@ class OrganizationControllerTest extends TestCase
         parent::setUp();
 
         $this->parameters = [
-            'language'             => 'en',
-            'user_id'              => '10539',
-            'title'                => 'Amazon',
-            'wrong_title'          => 'Accenture',
-            'slug'                 => 'amazon',
-            'wrong_slug'           => 'Accenture',
-            'description'          => 'Describing the test cases of apis',
-            'website'              => 'https://amazon.com',
-            'about'                => 'testing',
-            'category'             => '2',
-            'wrong_category'       => '199999',
-            'status'               => 'publish',
-            'status_wrong'         => 'wrong_status',
-            'total_employees'      => '12',
-            'latitude'             => '43.467517',
-            'longitude'            => '-79.6876659',
-            'address'              => 'Oakville, ON, Canada',
-            'city'                 => 'Oakville',
-            'state'                => 'Ontario',
-            'email'                => 'rajan@amazon.com',
-            'another_email'        => 'rajandhand17@gmail.com',
-            'password'             => 'Prepr@123',
-            'country'              => 'Canada',
-            'search'               => 'Rforms',
-            'wrong_search'         => 'wrong',
-            'zip_code'             => 'L6M 3N5',
-            'user_type'            => 'organization',
-            'wrong_language'       => 'Hindi',
-            'sort_by_ascending'    => 'name-a-to-z',
+            'language'              => 'en',
+            'user_id'               => '10539',
+            'title'                 => 'Amazon',
+            'wrong_title'           => 'Accenture',
+            'slug'                  => 'amazon',
+            'wrong_slug'            => 'Accenture',
+            'description'           => 'Describing the test cases of apis',
+            'website'               => 'https://amazon.com',
+            'about'                 => 'testing',
+            'category'              => '2',
+            'wrong_category'        => '199999',
+            'status'                => 'publish',
+            'status_wrong'          => 'wrong_status',
+            'total_employees'       => '12',
+            'latitude'              => '43.467517',
+            'longitude'             => '-79.6876659',
+            'address'               => 'Oakville, ON, Canada',
+            'city'                  => 'Oakville',
+            'state'                 => 'Ontario',
+            'email'                 => 'rajan@amazon.com',
+            'another_email'         => 'rajandhand17@gmail.com',
+            'password'              => 'Prepr@123',
+            'country'               => 'Canada',
+            'search'                => 'Rforms',
+            'wrong_search'          => 'wrong',
+            'zip_code'              => 'L6M 3N5',
+            'user_type'             => 'organization',
+            'wrong_language'        => 'Hindi',
+            'sort_by_ascending'     => 'name-a-to-z',
             'sort_by_descending'    => 'name-z-to-a',
-            'sort_by_creation_date'=> 'creation_date',
-            'sort_by_wrong_input'  => 'default',
-            'owner'                => 'organization_owner',
-            'organization_address' => [
+            'sort_by_creation_date' => 'creation_date',
+            'sort_by_wrong_input'   => 'default',
+            'owner'                 => 'organization_owner',
+            'organization_address'  => [
                 [
                     'latitude' => '43.467517',
                     'longitude'=> '43.467517',
@@ -96,7 +96,7 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==[]){
+            if ($data['data'] !== []) {
                 $this->assertArrayHasKey('title', $data['data']);
                 $this->assertArrayHasKey('slug', $data['data']);
                 $this->assertArrayHasKey('description', $data['data']);
@@ -172,7 +172,7 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==[]){
+            if ($data['data'] !== []) {
                 $this->assertArrayHasKey('id', $data['data']['list'][0]);
                 $this->assertArrayHasKey('language', $data['data']['list'][0]);
                 $this->assertArrayHasKey('title', $data['data']['list'][0]);
@@ -204,7 +204,7 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==[]){
+            if ($data['data'] !== []) {
                 $this->assertArrayHasKey('id', $data['data']);
                 $this->assertArrayHasKey('language', $data['data']);
                 $this->assertArrayHasKey('title', $data['data']);
@@ -258,13 +258,13 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==[]){
-            $this->assertArrayHasKey('id', $data['data']);
-            $this->assertArrayHasKey('language', $data['data']);
-            $this->assertArrayHasKey('title', $data['data']);
-            $this->assertArrayHasKey('slug', $data['data']);
-            $this->assertArrayHasKey('description', $data['data']);
-            $this->assertArrayHasKey('cover_image', $data['data']);
+            if ($data['data'] !== []) {
+                $this->assertArrayHasKey('id', $data['data']);
+                $this->assertArrayHasKey('language', $data['data']);
+                $this->assertArrayHasKey('title', $data['data']);
+                $this->assertArrayHasKey('slug', $data['data']);
+                $this->assertArrayHasKey('description', $data['data']);
+                $this->assertArrayHasKey('cover_image', $data['data']);
             }
             $response->assertOk();
         } else {
@@ -286,13 +286,13 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']['list']!==[]){
-            $this->assertArrayHasKey('id', $data['data']['list'][0]);
-            $this->assertArrayHasKey('language', $data['data']['list'][0]);
-            $this->assertArrayHasKey('title', $data['data']['list'][0]);
-            $this->assertArrayHasKey('slug', $data['data']['list'][0]);
-            $this->assertArrayHasKey('description', $data['data']['list'][0]);
-            $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
+            if ($data['data']['list'] !== []) {
+                $this->assertArrayHasKey('id', $data['data']['list'][0]);
+                $this->assertArrayHasKey('language', $data['data']['list'][0]);
+                $this->assertArrayHasKey('title', $data['data']['list'][0]);
+                $this->assertArrayHasKey('slug', $data['data']['list'][0]);
+                $this->assertArrayHasKey('description', $data['data']['list'][0]);
+                $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
             }
             $response->assertOk();
         } else {
@@ -324,7 +324,7 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']['list']!==[]){
+            if ($data['data']['list'] !== []) {
                 $this->assertArrayHasKey('id', $data['data']['list'][0]);
                 $this->assertArrayHasKey('language', $data['data']['list'][0]);
                 $this->assertArrayHasKey('title', $data['data']['list'][0]);
@@ -363,13 +363,13 @@ class OrganizationControllerTest extends TestCase
         $data = $response->json();
 
         if ($data['success']) {
-            if($data['data']['list']!==[]){
-            $this->assertArrayHasKey('id', $data['data']['list'][0]);
-            $this->assertArrayHasKey('language', $data['data']['list'][0]);
-            $this->assertArrayHasKey('title', $data['data']['list'][0]);
-            $this->assertArrayHasKey('slug', $data['data']['list'][0]);
-            $this->assertArrayHasKey('description', $data['data']['list'][0]);
-            $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
+            if ($data['data']['list'] !== []) {
+                $this->assertArrayHasKey('id', $data['data']['list'][0]);
+                $this->assertArrayHasKey('language', $data['data']['list'][0]);
+                $this->assertArrayHasKey('title', $data['data']['list'][0]);
+                $this->assertArrayHasKey('slug', $data['data']['list'][0]);
+                $this->assertArrayHasKey('description', $data['data']['list'][0]);
+                $this->assertArrayHasKey('cover_image', $data['data']['list'][0]);
             }
             $response->assertOk();
         } else {
@@ -401,13 +401,13 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==[]){
-            $this->assertArrayHasKey('id', $data['data']);
-            $this->assertArrayHasKey('language', $data['data']);
-            $this->assertArrayHasKey('title', $data['data']);
-            $this->assertArrayHasKey('slug', $data['data']);
-            $this->assertArrayHasKey('description', $data['data']);
-            $this->assertArrayHasKey('cover_image', $data['data']);
+            if ($data['data'] !== []) {
+                $this->assertArrayHasKey('id', $data['data']);
+                $this->assertArrayHasKey('language', $data['data']);
+                $this->assertArrayHasKey('title', $data['data']);
+                $this->assertArrayHasKey('slug', $data['data']);
+                $this->assertArrayHasKey('description', $data['data']);
+                $this->assertArrayHasKey('cover_image', $data['data']);
             }
             $response->assertOk();
         } else {
@@ -422,13 +422,13 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==[]){
-            $this->assertArrayHasKey('id', $data['data']);
-            $this->assertArrayHasKey('language', $data['data']);
-            $this->assertArrayHasKey('title', $data['data']);
-            $this->assertArrayHasKey('slug', $data['data']);
-            $this->assertArrayHasKey('description', $data['data']);
-            $this->assertArrayHasKey('cover_image', $data['data']);
+            if ($data['data'] !== []) {
+                $this->assertArrayHasKey('id', $data['data']);
+                $this->assertArrayHasKey('language', $data['data']);
+                $this->assertArrayHasKey('title', $data['data']);
+                $this->assertArrayHasKey('slug', $data['data']);
+                $this->assertArrayHasKey('description', $data['data']);
+                $this->assertArrayHasKey('cover_image', $data['data']);
             }
             $response->assertOk();
         } else {
@@ -443,13 +443,13 @@ class OrganizationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==[]){
-            $this->assertArrayHasKey('id', $data['data']);
-            $this->assertArrayHasKey('language', $data['data']);
-            $this->assertArrayHasKey('title', $data['data']);
-            $this->assertArrayHasKey('slug', $data['data']);
-            $this->assertArrayHasKey('description', $data['data']);
-            $this->assertArrayHasKey('cover_image', $data['data']);
+            if ($data['data'] !== []) {
+                $this->assertArrayHasKey('id', $data['data']);
+                $this->assertArrayHasKey('language', $data['data']);
+                $this->assertArrayHasKey('title', $data['data']);
+                $this->assertArrayHasKey('slug', $data['data']);
+                $this->assertArrayHasKey('description', $data['data']);
+                $this->assertArrayHasKey('cover_image', $data['data']);
             }
             $response->assertOk();
         } else {
@@ -480,15 +480,17 @@ class OrganizationControllerTest extends TestCase
     }
 
     /**Delete the organization*/
-    public function test_organization_delete_positive(){
-        $response=$this->delete('/api/v1/manage/organization/'.$this->parameters['slug'].'/delete',$this->parameters,$this->headers);
+    public function test_organization_delete_positive()
+    {
+        $response = $this->delete('/api/v1/manage/organization/'.$this->parameters['slug'].'/delete', $this->parameters, $this->headers);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**Delete the organization*/
-    public function test_organization_delete_negative(){
-        $response=$this->delete('/api/v1/manage/organization/'.$this->parameters['slug'].'/delete',$this->parameters,$this->headers);
+    public function test_organization_delete_negative()
+    {
+        $response = $this->delete('/api/v1/manage/organization/'.$this->parameters['slug'].'/delete', $this->parameters, $this->headers);
         $this->assertEquals(422, $response->getStatusCode());
     }
 }

@@ -69,7 +69,7 @@ class AuthControllerTest extends TestCase
                 $verifyuser->assertStatus(200);
                 $datavarify = $verifyuser->json();
                 if ($datavarify['success'] == true) {
-                    if($datavarify['data']!==null){
+                    if ($datavarify['data'] !== null) {
                         $this->assertArrayHasKey('id', $datavarify['data']);
                         $this->assertArrayHasKey('preferred_language', $datavarify['data']);
                         $this->assertArrayHasKey('first_name', $datavarify['data']);
@@ -123,7 +123,7 @@ class AuthControllerTest extends TestCase
 
                 $datavarify = $verifyuser->json();
                 if ($datavarify['success'] == true) {
-                    if($datavarify['data']!==null){
+                    if ($datavarify['data'] !== null) {
                         $this->assertArrayHasKey('id', $datavarify['data']);
                         $this->assertArrayHasKey('preferred_language', $datavarify['data']);
                         $this->assertArrayHasKey('first_name', $datavarify['data']);
@@ -183,7 +183,7 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
-            if($data['data']!==null){
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('token', $data['data']['token']);
                 $this->assertArrayHasKey('id', $data['data']['user']);
                 $this->assertArrayHasKey('preferred_language', $data['data']['user']);
