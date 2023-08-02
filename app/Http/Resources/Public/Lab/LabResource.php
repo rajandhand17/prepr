@@ -15,7 +15,6 @@ class LabResource extends JsonResource
      */
     public function toArray($request)
     {
-
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
