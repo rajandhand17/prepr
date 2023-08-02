@@ -37,7 +37,6 @@ class RouteServiceProvider extends ServiceProvider
 
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
-
         });
     }
 
@@ -75,7 +74,4 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/organization/')->middleware('api')->group(base_path('routes/v1/public/organization.php'));
         Route::prefix('api/v1/public/lab/')->middleware('api')->group(base_path('routes/v1/public/lab.php'));
     }
-
-
-
 }
