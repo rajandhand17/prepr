@@ -17,7 +17,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null){
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('parent_category', $data['data'][0]);
@@ -42,7 +42,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('parent_category', $data['data'][0]);
@@ -67,7 +67,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -91,7 +91,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -115,7 +115,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -139,7 +139,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -164,7 +164,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('tag_image', $data['data'][0]);
@@ -190,7 +190,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('tag_image', $data['data'][0]);
@@ -216,7 +216,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -240,7 +240,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -264,7 +264,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -288,7 +288,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -312,7 +312,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -351,7 +351,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -375,7 +375,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -399,7 +399,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -423,7 +423,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -447,7 +447,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('icon', $data['data'][0]);
@@ -472,7 +472,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('icon', $data['data'][0]);
@@ -524,7 +524,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -547,17 +547,17 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/ranks?language=en');
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
-        if ($data['success']){
-            if($data['data']!==null){
-            $this->assertArrayHasKey('id', $data['data'][0]);
-            $this->assertArrayHasKey('title', $data['data'][0]);
-            $this->assertArrayHasKey('description', $data['data'][0]);
-            $this->assertArrayHasKey('image', $data['data'][0]);
-            $this->assertArrayHasKey('category', $data['data'][0]);
-            $this->assertArrayHasKey('point', $data['data'][0]);
-            $this->assertArrayHasKey('no_of_use', $data['data'][0]);
-            $this->assertArrayHasKey('status', $data['data'][0]);
-           }
+        if ($data['success']) {
+            if ($data['data'] !== null) {
+                $this->assertArrayHasKey('id', $data['data'][0]);
+                $this->assertArrayHasKey('title', $data['data'][0]);
+                $this->assertArrayHasKey('description', $data['data'][0]);
+                $this->assertArrayHasKey('image', $data['data'][0]);
+                $this->assertArrayHasKey('category', $data['data'][0]);
+                $this->assertArrayHasKey('point', $data['data'][0]);
+                $this->assertArrayHasKey('no_of_use', $data['data'][0]);
+                $this->assertArrayHasKey('status', $data['data'][0]);
+            }
             $response->assertOk();
         } else {
             $this->fail();
@@ -578,7 +578,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('description', $data['data'][0]);
@@ -608,7 +608,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -632,7 +632,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -656,7 +656,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -680,7 +680,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -704,7 +704,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('link', $data['data'][0]);
@@ -731,7 +731,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
                 $this->assertArrayHasKey('link', $data['data'][0]);
@@ -757,8 +757,8 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/flexible-date-duration?language=en');
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
-        if ($data['success']){
-            if($data['data']!==null) {
+        if ($data['success']) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -802,7 +802,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -826,7 +826,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
@@ -850,7 +850,7 @@ final class MasterControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            if($data['data']!==null) {
+            if ($data['data'] !== null) {
                 $this->assertArrayHasKey('id', $data['data'][0]);
                 $this->assertArrayHasKey('title', $data['data'][0]);
             }
