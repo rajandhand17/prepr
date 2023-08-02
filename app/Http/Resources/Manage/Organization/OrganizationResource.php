@@ -38,7 +38,7 @@ class OrganizationResource extends JsonResource
             'total_employees'              => $this->total_employees,
             'category'                     => $category,
             'lab_count'                    => $this->members->count(),
-            'challange_count'              => 0,
+            'challenge_count'              => 0,
             'resource_count'               => 0,
             'organization_users_count'     => 0,
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
