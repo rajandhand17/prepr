@@ -21,7 +21,7 @@ class PublicLabControllerTest extends TestCase
         $this->parameters = [
             'language'       => 'en',
             'wrong_language'  => 'hi',
-            'slug'           => 'prepr',
+            'slug'           => 'un-sdg-lab-1',
             'wrong_slug'     => 'wrong_slug',
             'email'          =>'rajan@amazon.com',
             'password'       =>'Prepr@123',
@@ -33,6 +33,58 @@ class PublicLabControllerTest extends TestCase
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
+    }
+
+    public function test_join_lab_public_lab_positive(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/join?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+
+    }
+    public function test_join_lab_public_lab_negative(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/join?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+
+    }
+    public function test_unjoin_lab_public_lab_positive(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/un-join?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+
+    }
+    public function test_unjoin_lab_public_lab_negative(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/un-join?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+
+    }
+    public function test_follow_lab_public_lab_positive(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/follow?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+
+    }
+    public function test_follow_lab_public_lab_negative(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/follow?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+
+    }
+    public function test_unfollow_lab_public_lab_positive(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/un-follow?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+
+    }
+    public function test_unfollow_lab_public_lab_negative(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/un-follow?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+
+    }
+
+    public function test_share_positive(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/share?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+
+    }
+    public function test_share_negative(){
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/share?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+
     }
     public function test_lab_list_positive()
     {
@@ -56,7 +108,7 @@ class PublicLabControllerTest extends TestCase
 
     public function test_lab_view_positive()
     {
-        $response = $this->get('/api/v1/public/lab/un-sdg-lab-1?language='.$this->parameters['language'],$this->headers);
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'?language='.$this->parameters['language'],$this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
 
@@ -69,6 +121,12 @@ class PublicLabControllerTest extends TestCase
             $this->assertArrayHasKey('privacy',$data['data']);
             $this->assertArrayHasKey('status',$data['data']);
         }
+    }
+
+    public function test_lab_view_negative()
+    {
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['wrong_slug'].'?language='.$this->parameters['language'],$this->headers);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
 }
