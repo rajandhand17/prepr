@@ -46,23 +46,24 @@ class ProjectStatus extends Command
             $project_status = DB::connection('mysql2')->table('project_status')->get();
             if ($project_status->count() > 0) {
                 foreach ($project_status as $key => $single_status) {
-                    $project_status_details = [
-                        'id'          => $single_status->id,
-                        'title'       => $single_status->name,
-                        'fr_CA_title' => $single_status->fr_CA_name,
-                    ];
-                    $check_project_status = Status::where($project_status_details)->first();
-                    if (!$check_project_status) {
-                        Status::create($project_status_details);
+                    $check_project_status = Status::where(['title' => $single_status->name, 'fr_CA_title' => $single_status->fr_CA_name])->first();
+                    if ($check_project_status) {
+                        $newProjectStatus = $check_project_status;
+                    } else {
+                        $newProjectStatus = new Status();
                     }
+
+                    $newProjectStatus->id          = $single_status->id;
+                    $newProjectStatus->title       = $single_status->name;
+                    $newProjectStatus->fr_CA_title = $single_status->fr_CA_name;
+                    $newProjectStatus->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project status table completed.');
-
                 return;
             }
             DB::rollback();
-            $this->error('No project type found.');
+            $this->error('No project status found.');
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());

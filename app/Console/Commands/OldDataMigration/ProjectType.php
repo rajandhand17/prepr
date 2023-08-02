@@ -46,19 +46,20 @@ class ProjectType extends Command
             $project_type = DB::connection('mysql2')->table('project_type')->get();
             if ($project_type->count() > 0) {
                 foreach ($project_type as $key => $single_type) {
-                    $project_type_details = [
-                        'id'          => $single_type->id,
-                        'title'       => $single_type->name,
-                        'fr_CA_title' => $single_type->fr_CA_name,
-                    ];
-                    $check_project_type = Type::where($project_type_details)->first();
-                    if (!$check_project_type) {
-                        Type::create($project_type_details);
+                    $check_project_type = Type::where(['title' => $single_type->name, 'fr_CA_title' => $single_type->fr_CA_name])->first();
+                    if ($check_project_type) {
+                        $newProjectType = $check_project_type;
+                    } else {
+                        $newProjectType = new Type();
                     }
+
+                    $newProjectType->id          = $single_type->id;
+                    $newProjectType->title       = $single_type->name;
+                    $newProjectType->fr_CA_title = $single_type->fr_CA_name;
+                    $newProjectType->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project type table completed.');
-
                 return;
             }
             DB::rollback();

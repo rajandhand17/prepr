@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Models\SkillGroup as ModelsSkillGroup;
 use DB;
 use Illuminate\Console\Command;
 
@@ -62,19 +63,21 @@ class SkillGroup extends Command
                         }
                     }
 
-                    $skill_group_details = [
-                        'id'                => $skill_group->id,
-                        'title'             => $skill_group->title,
-                        'fr_CA_title'       => $skill_group->fr_CA_title,
-                        'description'       => $skill_group->description,
-                        'fr_CA_description' => $skill_group->fr_CA_description,
-                        'skills'            => $skills,
-                        'skill_stacks'      => $skill_stacks,
-                    ];
-                    $check_skill_group = \App\Models\SkillGroup::where('title', $skill_group->title)->first();
-                    if (!$check_skill_group) {
-                        \App\Models\SkillGroup::create($skill_group_details);
+                    $check_skill_group = ModelsSkillGroup::where('title', $skill_group->title)->first();
+                    if ($check_skill_group) {
+                        $newSkillGroup = $check_skill_group;
+                    } else {
+                        $newSkillGroup = new SkillGroup();
                     }
+
+                    $newSkillGroup->id                = $skill_group->id;
+                    $newSkillGroup->title             = $skill_group->title;
+                    $newSkillGroup->fr_CA_title       = $skill_group->fr_CA_title;
+                    $newSkillGroup->description       = $skill_group->description;
+                    $newSkillGroup->fr_CA_description = $skill_group->fr_CA_description;
+                    $newSkillGroup->skills            = $skills;
+                    $newSkillGroup->skill_stacks      = $skill_stacks;
+                    $newSkillGroup->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skill groups table completed.');
@@ -84,6 +87,7 @@ class SkillGroup extends Command
             DB::rollback();
             $this->error('No skill groups found.');
         } catch (\Exception $e) {
+            dd($e);
             DB::rollback();
             $this->error($e->getMessage());
 

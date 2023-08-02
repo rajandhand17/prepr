@@ -43,18 +43,19 @@ class PitchTemplate extends Command
             $this->info('Migrating old data for pitch template table.');
             DB::beginTransaction();
 
-            $pitch_templates = DB::connection('mysql2')->table('pitch_templates')->get();
+            $pitch_templates = DB::connection('mysql2')->table('pitch_templates')->whereNull('deleted_at')->get();
             if ($pitch_templates->count() > 0) {
                 foreach ($pitch_templates as $key => $single_pitch_templates) {
-                    $pitch_templates_details = [
-                        'id'           => $single_pitch_templates->id,
-                        'title'        => $single_pitch_templates->title,
-                        'challenge_id' => $single_pitch_templates->challenge_id,
-                    ];
-                    $check_pitch_templates = PitchTemplates::where($pitch_templates_details)->first();
-                    if (!$check_pitch_templates) {
-                        PitchTemplates::create($pitch_templates_details);
+                    $check_pitch_templates = PitchTemplates::where('id', $single_pitch_templates->id)->first();
+                    if ($check_pitch_templates) {
+                        $newPitchTemplate = $check_pitch_templates;
+                    } else {
+                        $newPitchTemplate = new PitchTemplates;
                     }
+                    $newPitchTemplate->id = $single_pitch_templates->id;
+                    $newPitchTemplate->title = $single_pitch_templates->title;
+                    $newPitchTemplate->challenge_id = isset($single_pitch_templates->challenge_id) ? $single_pitch_templates->challenge_id : null;
+                    $newPitchTemplate->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for pitch template table completed.');
