@@ -18,7 +18,7 @@ return new class() extends Migration {
             $table->text('name');
             $table->text('description')->nullable();
             $table->text('position')->nullable();
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');

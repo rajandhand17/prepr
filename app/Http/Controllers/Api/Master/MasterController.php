@@ -329,10 +329,10 @@ class MasterController extends AppBaseController
         try {
             $type = $this->masterRepository->getProjectTypes($request);
             if ($type) {
-                return $this->sendResponse(ProjectTypeResource::collection($type), __('responses.found_project_industry_list'));
+                return $this->sendResponse(ProjectTypeResource::collection($type), __('responses.found_project_type_list'));
             }
 
-            return $this->sendResponse(null, __('responses.not_found_project_industry_list'));
+            return $this->sendResponse(null, __('responses.not_found_project_type_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -652,6 +652,7 @@ class MasterController extends AppBaseController
             if ($get_skill_groups) {
                 return $this->sendResponse(SkillGroupResource::collection($get_skill_groups), __('responses.found_skill_groups_list'));
             }
+
             return $this->sendResponse(null, __('responses.not_found_skill_groups_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -893,10 +894,10 @@ class MasterController extends AppBaseController
         try {
             $acheivement_condition_list = $this->masterRepository->getAchievementConditionLists($request);
             if ($acheivement_condition_list) {
-                return $this->sendResponse(AcheivementConditionListResource::collection($acheivement_condition_list), __('responses.found_acheivement_condition_list'));
+                return $this->sendResponse(AcheivementConditionListResource::collection($acheivement_condition_list), __('responses.found_achievement_condition_list'));
             }
 
-            return $this->sendResponse(null, __('responses.not_found_acheivement_condition_list'));
+            return $this->sendResponse(null, __('responses.not_found_achievement_condition_list'));
         } catch (\Exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }

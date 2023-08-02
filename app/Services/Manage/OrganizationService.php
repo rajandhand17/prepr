@@ -30,14 +30,13 @@ class OrganizationService
                 $organization_list = $organization_list->where('organizations.title', 'like', '%'.$request->search.'%');
             }
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
                 $organization_list = $organization_list->where('organizations.status', $status);
             } else {
                 $organization_list = $organization_list->where('organizations.status', '1');
             }
-            
+
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
-               
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
             if ($request->has('owner') && !empty($request->owner)) {
@@ -75,7 +74,7 @@ class OrganizationService
         }
     }
 
-    public static function checkOrganizationExistBasedOnTitle($request)
+    public static function checkOrganizationExistBasedOnTitle($request): bool
     {
         try {
             $organization_exists = Organization::select('id')->where('title', $request->title)->first();
@@ -189,6 +188,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
 
             return false;

@@ -10,10 +10,10 @@ use HiFolks\RandoPhp\Randomize;
 
 class LabService
 {
-    public static function getLabList($request)
+    public static function getLabList($request, $organization)
     {
         try {
-            $lab_list = Lab::select()->where('organization_id', '=', $request->organization_id);
+            $lab_list = Lab::select()->where('organization_id', '=', $organization->id);
 
             $lab_list = self::filterLabList($lab_list, $request);
 
@@ -80,7 +80,7 @@ class LabService
         }
     }
 
-    public static function getLabBasedOnSLug($slug)
+    public static function getLabBasedOnSlug($slug)
     {
         try {
             return Lab::where('slug', $slug)->first();
@@ -121,6 +121,26 @@ class LabService
                 $status = config('constants.lab_status.draft');
                 break;
         }
+
+        $type = config('constants.lab_type.na');
+        switch($request->type) {
+            case 'assess':
+                $type = config('constants.lab_type.assess');
+                break;
+            case 'onboard':
+                $type = config('constants.lab_type.onboard');
+                break;
+            case 'engage':
+                $type = config('constants.lab_type.engage');
+                break;
+            case 'grow':
+                $type = config('constants.lab_type.grow');
+                break;
+            default:
+                $type = config('constants.lab_type.na');
+                break;
+        }
+
         $privacy = config('constants.lab_privacy.no');
         switch($request->privacy) {
             case 'yes':
@@ -142,7 +162,7 @@ class LabService
         $lab->user_id = auth()->user()->id;
         $lab->organization_id = $organization->id;
         $lab->category_id = $request->category_id;
-
+        $lab->type = $type;
         $lab->slug = $slug;
         $lab->title = $request->title;
         $lab->description = $request->description;
@@ -163,6 +183,7 @@ class LabService
         $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
         $lab->is_verified = '0';
         $lab->save();
+
         return $lab;
     }
 
@@ -170,6 +191,7 @@ class LabService
     {
         try {
             $lab = Lab::where('slug', $slug)->first();
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if ($lab !== null) {
                 $privacy = $lab->privacy;
                 if ($request->has('privacy')) {
@@ -185,11 +207,32 @@ class LabService
                             break;
                     }
                 }
+
+                $type = config('constants.lab_type.na');
+                switch($request->type) {
+                    case 'assess':
+                        $type = config('constants.lab_type.assess');
+                        break;
+                    case 'onboard':
+                        $type = config('constants.lab_type.onboard');
+                        break;
+                    case 'engage':
+                        $type = config('constants.lab_type.engage');
+                        break;
+                    case 'grow':
+                        $type = config('constants.lab_type.grow');
+                        break;
+                    default:
+                        $type = config('constants.lab_type.na');
+                        break;
+                }
+
                 $lab->language = ($request->has('language')) ? $request->language : $lab->language;
-                $lab->organization_id = ($request->has('organization_id')) ? $request->organization_id : $lab->organization_id;
+                $lab->organization_id = $organization->id;
                 $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
                 $lab->title = ($request->has('title')) ? $request->title : $lab->title;
                 $lab->description = ($request->has('description')) ? $request->description : $lab->description;
+                $lab->type = $type;
                 $lab->privacy = $privacy;
                 $lab->media_type = 'image';
                 $lab->media = ($upload_cover_image != null) ? $upload_cover_image : $lab->cover_image;
@@ -205,6 +248,8 @@ class LabService
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
+
             return false;
         }
     }

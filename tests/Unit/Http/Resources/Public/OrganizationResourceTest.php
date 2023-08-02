@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Public;
 
-use App\Http\Resources\Public\OrganizationResource;
 use Tests\TestCase;
 
 /**

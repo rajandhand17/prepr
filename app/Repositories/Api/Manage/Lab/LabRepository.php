@@ -38,10 +38,10 @@ class LabRepository implements LabInterface
         $this->componentAssociationService = $componentAssociationService;
     }
 
-    public function getLabList($request)
+    public function getLabList($request, $organization)
     {
         try {
-            return $this->labService->getLabList($request);
+            return $this->labService->getLabList($request, $organization);
         } catch (\Exception $e) {
             return false;
         }
@@ -50,7 +50,7 @@ class LabRepository implements LabInterface
     public function getLabBasedOnSlug($slug)
     {
         try {
-            return $this->labService->getLabBasedOnSLug($slug);
+            return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
             return false;
         }
@@ -78,10 +78,12 @@ class LabRepository implements LabInterface
                     $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_achievements_image);
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
+
                 return $createdLab;
             });
             if ($createdLab) {
                 DB::commit();
+
                 return $createdLab;
             }
             DB::rollBack();
@@ -102,6 +104,7 @@ class LabRepository implements LabInterface
                 $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updatedLab->id);
                 $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updatedLab->id);
                 $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updatedLab->id);
+
                 $updatedLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($request, $updatedLab->id);
 
                 if ($request->is_achievement_enabled == 'yes') {
@@ -120,6 +123,8 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
+
             return false;
         }
     }
@@ -148,7 +153,7 @@ class LabRepository implements LabInterface
     public function checkSlug($slug)
     {
         try {
-            return $this->labService->getLabBasedOnSLug($slug);
+            return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
             return false;
         }

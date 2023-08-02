@@ -25,7 +25,7 @@ class LabExternalLinksService
         return true;
     }
 
-    public function updateLabExternalLinks($lab_id, $request)
+    public function updateLabExternalLinks($request, $lab_id)
     {
         try {
             if ($request->has('external_links') && $request->get('external_link_ids')) {

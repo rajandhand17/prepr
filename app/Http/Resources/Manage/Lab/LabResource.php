@@ -77,12 +77,33 @@ class LabResource extends JsonResource
             $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
+        $type = 'na';
+
+        switch($this->type) {
+            case '0':
+                $type = 'assess';
+                break;
+            case '1':
+                $type = 'onboard';
+                break;
+            case '2':
+                $type = 'engage';
+                break;
+            case '3':
+                $type = 'grow';
+                break;
+            default:
+                $type = 'na';
+                break;
+        }
+
         return [
             'id'                            => $this->uuid,
+            'type'                          => $type,
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization'                  => $this->organization->title,
-            'category'                      => $this->category->name,
+            'category'                      => $this->category->title,
             'slug'                          => $this->slug,
             'title'                         => $this->title,
             'description'                   => $this->description,

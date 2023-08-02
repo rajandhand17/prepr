@@ -29,9 +29,10 @@ class CheckComponentMiddleware
             if (in_array(request()->route()->parameter('component'), $components)) {
                 return $next($request);
             }
-            return Response::json(ResponseUtil::makeError('Please provide the valid component.'), 404);
+
+            return Response::json(ResponseUtil::makeError(__('responses.valid_component_error')), 404);
         } catch (\Exception $e) {
-            return Response::json(ResponseUtil::makeError('Something went wrong getting the component.'), 500);
+            return Response::json(ResponseUtil::makeError(__('responses.getting_component_error')), 500);
         }
     }
 }

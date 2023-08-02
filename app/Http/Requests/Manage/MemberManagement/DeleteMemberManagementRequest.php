@@ -43,8 +43,8 @@ class DeleteMemberManagementRequest extends FormRequest
     public function messages()
     {
         return[
-            'email.required'    => __('responses.email_required'),
-            'email.array'       => __('responses.array'),
+            'email.required'    => __('responses.email_field_required'),
+            'email.array'       => __('responses.member_manger_email'),
             'email.*.email'     => __('responses.valid_email_pattern'),
             'email.*.exists'    => __('responses.not_exists_email'),
         ];
