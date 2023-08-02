@@ -28,19 +28,16 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
         $this->routes(function () {
-            Route::middleware('api')
-                    ->prefix('api')
-                    ->group(base_path('routes/api.php'));
+            $this->mapApiRoutes();
+            $this->mapWebRoutes();
 
-            Route::middleware('web')->group(base_path('routes/web.php'));
             Route::prefix('api/v1/master/')->middleware('api')->group(base_path('routes/v1/master.php'));
             Route::prefix('api/v1/auth/')->middleware('api')->group(base_path('routes/v1/auth.php'));
-            Route::prefix('api/v1/manage/organization/')->middleware('api')->group(base_path('routes/v1/manage/organization.php'));
-            Route::prefix('api/v1/manage/member-management/')->middleware('api')->group(base_path('routes/v1/manage/member-management.php'));
-            Route::prefix('api/v1/manage/lab/')->middleware('api')->group(base_path('routes/v1/manage/lab.php'));
             Route::prefix('api/v1/user/')->middleware('api')->group(base_path('routes/v1/user.php'));
-            Route::prefix('api/v1/public/organization/')->middleware('api')->group(base_path('routes/v1/public/organization.php'));
-            Route::prefix('api/v1/public/lab/')->middleware('api')->group(base_path('routes/v1/public/lab.php'));
+
+            $this->mapManageRoutes();
+            $this->mapPublicRoutes();
+
         });
     }
 
@@ -55,4 +52,30 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
+
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')->group(base_path('routes/web.php'));
+    }
+
+    protected function mapApiRoutes()
+    {
+        Route::middleware('api')->prefix('api')->group(base_path('routes/api.php'));
+    }
+
+    protected function mapManageRoutes()
+    {
+        Route::prefix('api/v1/manage/organization/')->middleware('api')->group(base_path('routes/v1/manage/organization.php'));
+        Route::prefix('api/v1/manage/member-management/')->middleware('api')->group(base_path('routes/v1/manage/member-management.php'));
+        Route::prefix('api/v1/manage/lab/')->middleware('api')->group(base_path('routes/v1/manage/lab.php'));
+    }
+
+    protected function mapPublicRoutes()
+    {
+        Route::prefix('api/v1/public/organization/')->middleware('api')->group(base_path('routes/v1/public/organization.php'));
+        Route::prefix('api/v1/public/lab/')->middleware('api')->group(base_path('routes/v1/public/lab.php'));
+    }
+
+
+
 }
