@@ -31,8 +31,8 @@ class AuthControllerTest extends TestCase
         $this->user_type = 'student';
         $this->purpose = 'looking_team';
         $this->country_code = '+91';
-        $this->phone_number = '9646080802';
-        $this->phone_number_with_organization = '9646080801';
+        $this->phone_number = '9878245683';
+        $this->phone_number_with_organization = '8872845176';
         $this->wrong_phone_number = '7589780802';
         $this->purpose_send_otp = 'two_factor_verification';
         $this->referral_code = 'Rajan70162023';
@@ -69,6 +69,22 @@ class AuthControllerTest extends TestCase
                 $verifyuser->assertStatus(200);
                 $datavarify = $verifyuser->json();
                 if ($datavarify['success'] == true) {
+                    if ($datavarify['data'] !== null) {
+                        $this->assertArrayHasKey('id', $datavarify['data']);
+                        $this->assertArrayHasKey('preferred_language', $datavarify['data']);
+                        $this->assertArrayHasKey('first_name', $datavarify['data']);
+                        $this->assertArrayHasKey('last_name', $datavarify['data']);
+                        $this->assertArrayHasKey('full_name', $datavarify['data']);
+                        $this->assertArrayHasKey('username', $datavarify['data']);
+                        $this->assertArrayHasKey('email', $datavarify['data']);
+                        $this->assertArrayHasKey('profile_image', $datavarify['data']);
+                        $this->assertArrayHasKey('two_factor_verification', $datavarify['data']);
+                        $this->assertArrayHasKey('user_points', $datavarify['data']);
+                        $this->assertArrayHasKey('user_rank', $datavarify['data']);
+                        $this->assertArrayHasKey('verified_user', $datavarify['data']);
+                        $this->assertArrayHasKey('referral_code', $datavarify['data']);
+                        $this->assertArrayHasKey('is_profile_completed', $datavarify['data']);
+                    }
                     $verifyuser->assertOk();
                 }
             }
@@ -107,6 +123,22 @@ class AuthControllerTest extends TestCase
 
                 $datavarify = $verifyuser->json();
                 if ($datavarify['success'] == true) {
+                    if ($datavarify['data'] !== null) {
+                        $this->assertArrayHasKey('id', $datavarify['data']);
+                        $this->assertArrayHasKey('preferred_language', $datavarify['data']);
+                        $this->assertArrayHasKey('first_name', $datavarify['data']);
+                        $this->assertArrayHasKey('last_name', $datavarify['data']);
+                        $this->assertArrayHasKey('full_name', $datavarify['data']);
+                        $this->assertArrayHasKey('username', $datavarify['data']);
+                        $this->assertArrayHasKey('email', $datavarify['data']);
+                        $this->assertArrayHasKey('profile_image', $datavarify['data']);
+                        $this->assertArrayHasKey('two_factor_verification', $datavarify['data']);
+                        $this->assertArrayHasKey('user_points', $datavarify['data']);
+                        $this->assertArrayHasKey('user_rank', $datavarify['data']);
+                        $this->assertArrayHasKey('verified_user', $datavarify['data']);
+                        $this->assertArrayHasKey('referral_code', $datavarify['data']);
+                        $this->assertArrayHasKey('is_profile_completed', $datavarify['data']);
+                    }
                     $verifyuser->assertOk();
                 } else {
                     $this->fail();
@@ -151,6 +183,23 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success'] === true) {
+            if ($data['data'] !== null) {
+                $this->assertArrayHasKey('token', $data['data']['token']);
+                $this->assertArrayHasKey('id', $data['data']['user']);
+                $this->assertArrayHasKey('preferred_language', $data['data']['user']);
+                $this->assertArrayHasKey('first_name', $data['data']['user']);
+                $this->assertArrayHasKey('last_name', $data['data']['user']);
+                $this->assertArrayHasKey('full_name', $data['data']['user']);
+                $this->assertArrayHasKey('username', $data['data']['user']);
+                $this->assertArrayHasKey('email', $data['data']['user']);
+                $this->assertArrayHasKey('profile_image', $data['data']['user']);
+                $this->assertArrayHasKey('two_factor_verification', $data['data']['user']);
+                $this->assertArrayHasKey('user_points', $data['data']['user']);
+                $this->assertArrayHasKey('user_rank', $data['data']['user']);
+                $this->assertArrayHasKey('verified_user', $data['data']['user']);
+                $this->assertArrayHasKey('referral_code', $data['data']['user']);
+                $this->assertArrayHasKey('is_profile_completed', $data['data']['user']);
+            }
             if (isset($data['data']['token'])) {
                 $response->assertOk();
             } else {
