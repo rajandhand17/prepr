@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api\Public\Lab;
 
 use App\Http\Controllers\AppBaseController;
-use Exception;
-use Illuminate\Http\Request;
 use App\Http\Resources\Public\Lab\LabResource as  PublicLabResource;
 use App\Repositories\Api\Public\Lab\LabRepository;
+use Illuminate\Http\Request;
 
 class LabController extends AppBaseController
 {
@@ -21,7 +20,7 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getLabList($request);
-            if($lab){
+            if ($lab) {
                 $response = [
                     'total_count'  => $lab->total(),
                     'per_page'     => $lab->perPage(),
@@ -30,10 +29,12 @@ class LabController extends AppBaseController
                     'total_pages'  => $lab->lastPage(),
                     'list'         => PublicLabResource::collection($lab),
                 ];
+
                 return $this->sendResponse($response, 'responses.labs_fetched_successfully');
             }
+
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -42,10 +43,11 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
-            if ($lab){
+            if ($lab) {
                 return $this->sendResponse(PublicLabResource::make($lab), __('responses.labs_fetched_successfully'));
             }
-            return $this->sendError(__('responses.lab_slug_not_found'),404);
+
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
