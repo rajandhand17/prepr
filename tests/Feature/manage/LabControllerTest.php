@@ -17,8 +17,8 @@ class LabControllerTest extends TestCase
         parent::setUp();
         $this->parameters = [
             'language'               => 'en',
-            'email'                  =>'rajan@amazon.com',
-            'password'               =>'Prepr@123',
+            'email'                  => 'rajan@amazon.com',
+            'password'               => 'Prepr@123',
             'slug'                   => 'amazon-lab',
             'not_exists_slug'        => 'un-sdg-labs',
             'reference_id'           => '2',
@@ -93,17 +93,19 @@ class LabControllerTest extends TestCase
         $response = $this->post('/api/v1/manage/lab/'.$this->parameters['slug'].'/update', $this->parameters, $this->headers);
         $response->assertStatus(403);
     }
+
     public function test_lab_list_positive()
-    {   
-        $response = $this->get("/api/v1/manage/lab/?language=en&organization_id".$this->parameters['organization_id'],$this->headers);
+    {
+        $response = $this->get('/api/v1/manage/lab/?language=en&organization_id'.$this->parameters['organization_id'], $this->headers);
         dd($response);
         $response->assertStatus(200);
     }
+
     public function test_lab_view_positive()
     {
         $response = $this->get('/api/v1/manage/lab/'.$this->parameters['slug'].'?language=en', $this->headers);
         $response->assertStatus(200);
-    }   
+    }
 
     public function test_lab_view_negative()
     {
@@ -131,7 +133,7 @@ class LabControllerTest extends TestCase
 
     public function test_lab_check_title_negative()
     {
-        $response = $this->get('/api/v1/manage/lab/'.$this->parameters['title'].'?language=en',$this->headers);
+        $response = $this->get('/api/v1/manage/lab/'.$this->parameters['title'].'?language=en', $this->headers);
         $response->assertStatus(404);
     }
 }

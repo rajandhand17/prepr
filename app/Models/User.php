@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laratrust\Traits\LaratrustUserTrait;
 use Laravel\Passport\HasApiTokens;
+
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -81,6 +82,7 @@ class User extends Authenticatable
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
+
                 return $response;
             }
             if ($user) {
@@ -99,17 +101,21 @@ class User extends Authenticatable
                         if ($mail) {
                             return ['success' => true, 'message'=> __('responses.two_factor_otp'), 'code' => 2];
                         }
+
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code'=>null];
                     }
                     $data = User::where('email', $request->email)->first();
                     $response = ['success' => true,  'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+
                     return $response;
                 } else {
                     $response = ['success' => false, 'message'=>__('responses.invalid_credentials'), 'code' => 4];
+
                     return $response;
                 }
-            } else{
+            } else {
                 $response = ['success' => false, 'message'=>__('responses.user_not_found'), 'code' => 5];
+
                 return $response;
             }
         } catch (\Exception $e) {
@@ -128,9 +134,11 @@ class User extends Authenticatable
             if ($user) {
                 $token = $user->createToken(env('APP_NAME'))->accessToken;
                 $response = ['success' => true, 'token' => $token];
+
                 return $response;
             } else {
                 $response = ['success' => false, 'code' => 1];
+
                 return $response;
             }
         } catch (\Exception $e) {
@@ -192,9 +200,11 @@ class User extends Authenticatable
                         /**sending otp on registeres email */
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
+
                         return $success;
                     }
                     DB::rollback();
+
                     return ['success' => false, 'message' => __('responses.failed_email')];
                 }
                 DB::rollback();
@@ -249,6 +259,7 @@ class User extends Authenticatable
             if ($checkphone) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

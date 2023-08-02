@@ -2,49 +2,53 @@
 
 namespace App\Services\Public;
 
-use Illuminate\Support\Facades\Auth;
 use App\Models\LabSocialActivity;
+use Illuminate\Support\Facades\Auth;
+
 class LabSocialActivitiesService
 {
-    public  function  checkLabActivity($action,$id){
-        $checkJoinOrNot=LabSocialActivity::where([
-            ['user_id',"=",Auth::user()->id],
-            ['lab_id',"=",$id],
+    public function checkLabActivity($action, $id)
+    {
+        $checkJoinOrNot = LabSocialActivity::where([
+            ['user_id', '=', Auth::user()->id],
+            ['lab_id', '=', $id],
         ]);
-        if($action == 'join'){
-            $checkJoinOrNot->where('join_unjoin',"1");
-        }else if($action == 'unjoin'){
-            $checkJoinOrNot->where('join_unjoin',"2");
-        }else if($action == 'follow'){
-            $checkJoinOrNot->where('follow_unfollow',"1");
-        }else if($action == 'unfollow'){
-            $checkJoinOrNot->where('follow_unfollow',"2");
-        }else if($action == 'share'){
-            $checkJoinOrNot->where('share',"1");
+        if ($action == 'join') {
+            $checkJoinOrNot->where('join_unjoin', '1');
+        } elseif ($action == 'unjoin') {
+            $checkJoinOrNot->where('join_unjoin', '2');
+        } elseif ($action == 'follow') {
+            $checkJoinOrNot->where('follow_unfollow', '1');
+        } elseif ($action == 'unfollow') {
+            $checkJoinOrNot->where('follow_unfollow', '2');
+        } elseif ($action == 'share') {
+            $checkJoinOrNot->where('share', '1');
         }
-        return $checkJoinOrNot->first();
 
+        return $checkJoinOrNot->first();
     }
+
     public function joinLab($lab_id)
     {
         try {
-            $checkJoinOrNot=LabSocialActivity::where([
-                ['user_id',"=",Auth::user()->id],
-                ['lab_id',"=",$lab_id],
+            $checkJoinOrNot = LabSocialActivity::where([
+                ['user_id', '=', Auth::user()->id],
+                ['lab_id', '=', $lab_id],
             ])->first();
-            if(!$checkJoinOrNot){
-                $follow=new LabSocialActivity();
-                $follow->user_id=Auth::user()->id;
-                $follow->lab_id=$lab_id;
-                $follow->join_unjoin="1";
-                if($follow->save()){
+            if (!$checkJoinOrNot) {
+                $follow = new LabSocialActivity();
+                $follow->user_id = Auth::user()->id;
+                $follow->lab_id = $lab_id;
+                $follow->join_unjoin = '1';
+                if ($follow->save()) {
                     return true;
                 }
             }
-            $checkJoinOrNot->join_unjoin='1';
-            if($checkJoinOrNot->save()){
+            $checkJoinOrNot->join_unjoin = '1';
+            if ($checkJoinOrNot->save()) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -54,99 +58,109 @@ class LabSocialActivitiesService
     public function unjoinLab($lab_id)
     {
         try {
-            $checkJoinOrNot=LabSocialActivity::where([
-                ['user_id',"=",Auth::user()->id],
-                ['lab_id',"=",$lab_id],
+            $checkJoinOrNot = LabSocialActivity::where([
+                ['user_id', '=', Auth::user()->id],
+                ['lab_id', '=', $lab_id],
             ])->first();
-            if(!$checkJoinOrNot){
-                $follow=new LabSocialActivity();
-                $follow->user_id=Auth::user()->id;
-                $follow->lab_id=$lab_id;
-                $follow->join_unjoin="2";
-                if($follow->save()){
+            if (!$checkJoinOrNot) {
+                $follow = new LabSocialActivity();
+                $follow->user_id = Auth::user()->id;
+                $follow->lab_id = $lab_id;
+                $follow->join_unjoin = '2';
+                if ($follow->save()) {
                     return true;
                 }
             }
-            $checkJoinOrNot->join_unjoin="2";
-            if($checkJoinOrNot->save()){
+            $checkJoinOrNot->join_unjoin = '2';
+            if ($checkJoinOrNot->save()) {
                 return true;
             }
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-    public static function followLab($lab_id){
-        try {
-            $checkFollow=LabSocialActivity::where([
-                ['user_id',"=",Auth::user()->id],
-                ['lab_id',"=",$lab_id],
-            ])->first();
-            if(!$checkFollow){
-                $follow=new LabSocialActivity();
-                $follow->user_id=Auth::user()->id;
-                $follow->lab_id=$lab_id;
-                $follow->follow_unfollow="1";
-                if($follow->save()){
-                    return true;
-                }
-            }
-            $checkFollow->follow_unfollow='1';
-            if($checkFollow->save()){
-                return true;
-            }
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-    public static function unfollowLab($lab_id){
-        try {
-            $checkFollow=LabSocialActivity::where([
-                ['user_id',"=",Auth::user()->id],
-                ['lab_id',"=",$lab_id],
-            ])->first();
-            if(!$checkFollow){
-                $follow=new LabSocialActivity();
-                $follow->user_id=Auth::user()->id;
-                $follow->lab_id=$lab_id;
-                $follow->follow_unfollow="2";
-                if($follow->save()){
-                    return true;
-                }
-            }
-            $checkFollow->follow_unfollow='2';
-            if($checkFollow->save()){
-                return true;
-            }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public  function  share($lab_id){
-        try{
-            $share = LabSocialActivity::where([
-                ['user_id',"=",Auth::user()->id],
-                ['lab_id',"=",$lab_id],
+    public static function followLab($lab_id)
+    {
+        try {
+            $checkFollow = LabSocialActivity::where([
+                ['user_id', '=', Auth::user()->id],
+                ['lab_id', '=', $lab_id],
             ])->first();
-            if(!$share){
-                $share=new LabSocialActivity();
-                $share->user_id=Auth::user()->id;
-                $share->lab_id=$lab_id;
-                $share->share="1";
-                if($share->save()){
+            if (!$checkFollow) {
+                $follow = new LabSocialActivity();
+                $follow->user_id = Auth::user()->id;
+                $follow->lab_id = $lab_id;
+                $follow->follow_unfollow = '1';
+                if ($follow->save()) {
                     return true;
                 }
-                return false;
             }
-            $share->share="1";
-            if($share->save()){
+            $checkFollow->follow_unfollow = '1';
+            if ($checkFollow->save()) {
                 return true;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function unfollowLab($lab_id)
+    {
+        try {
+            $checkFollow = LabSocialActivity::where([
+                ['user_id', '=', Auth::user()->id],
+                ['lab_id', '=', $lab_id],
+            ])->first();
+            if (!$checkFollow) {
+                $follow = new LabSocialActivity();
+                $follow->user_id = Auth::user()->id;
+                $follow->lab_id = $lab_id;
+                $follow->follow_unfollow = '2';
+                if ($follow->save()) {
+                    return true;
+                }
+            }
+            $checkFollow->follow_unfollow = '2';
+            if ($checkFollow->save()) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function share($lab_id)
+    {
+        try {
+            $share = LabSocialActivity::where([
+                ['user_id', '=', Auth::user()->id],
+                ['lab_id', '=', $lab_id],
+            ])->first();
+            if (!$share) {
+                $share = new LabSocialActivity();
+                $share->user_id = Auth::user()->id;
+                $share->lab_id = $lab_id;
+                $share->share = '1';
+                if ($share->save()) {
+                    return true;
+                }
+
+                return false;
+            }
+            $share->share = '1';
+            if ($share->save()) {
+                return true;
+            }
+
+            return false;
+        } catch(\Exception $e) {
             return false;
         }
     }

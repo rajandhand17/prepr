@@ -2,25 +2,27 @@
 
 namespace App\Http\Resources\Public\Organization;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Helpers\UtilityHelper;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {   
+    {
         $category = $this->getCategory;
         if ($category) {
             $category = $this->getCategory->title;
         } else {
             $category = null;
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
