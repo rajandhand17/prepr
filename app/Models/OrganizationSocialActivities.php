@@ -6,19 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class LabSocialActivity extends Model
+class OrganizationSocialActivities extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
-    protected $table = 'lab_social_activities';
+    protected $table = 'organisation_social_activities';
 
     protected $fillable = [
-        'user_id',
+        'id',
+        'organisation_id',
         'lab_id',
-        'follow_unfollow',
-        'favourite',
-        'join_unjoin',
-        'share',
+        'followers',
     ];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

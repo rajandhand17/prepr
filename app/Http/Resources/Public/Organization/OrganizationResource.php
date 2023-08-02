@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Manage\Organization;
+namespace App\Http\Resources\Public\Organization;
 
 use App\Helpers\UtilityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -16,7 +16,6 @@ class OrganizationResource extends JsonResource
      */
     public function toArray($request)
     {
-        $status = ($this->status == '0') ? 'Draft' : (($this->status == '1') ? 'Published' : (($this->status == '2') ? 'Deactivated' : 'Archived'));
         $category = $this->getCategory;
         if ($category) {
             $category = $this->getCategory->title;
@@ -34,7 +33,6 @@ class OrganizationResource extends JsonResource
             'profile_image'                => $this->profile_image,
             'website'                      => $this->website,
             'about'                        => $this->about,
-            'status'                       => $status,
             'total_employees'              => $this->total_employees,
             'category'                     => $category,
             'lab_count'                    => $this->members->count(),
