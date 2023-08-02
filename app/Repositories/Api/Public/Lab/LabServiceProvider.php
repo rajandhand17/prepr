@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Api\public\Lab;
+namespace App\Repositories\Api\Public\Lab;
 
 use Illuminate\Support\ServiceProvider;
 

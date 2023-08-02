@@ -201,12 +201,19 @@ return [
         /*
          * API Service Providers
          */
+
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
+
+        /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
         App\Repositories\Api\Manage\MemberManagement\MemberManagementServiceProvider::class,
         App\Repositories\Api\Manage\Lab\LabServiceProvider::class,
+
+
+        /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
+        App\Repositories\Api\Public\Lab\LabServiceProvider::class,
     ],
 
     /*
