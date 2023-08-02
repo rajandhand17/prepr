@@ -13,6 +13,7 @@ class Lab extends Model
 
     protected $table = 'labs';
     protected $fillable = [
+        'type',
         'uuid',
         'language',
         'user_id',

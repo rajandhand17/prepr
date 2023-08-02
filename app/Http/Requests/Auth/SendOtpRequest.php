@@ -47,7 +47,7 @@ class SendOtpRequest extends FormRequest
             'email.email'             => __('responses.valid_email_pattern'),
             'email.max'               => __('responses.max_content_50'),
             'email.exists'            => __('responses.not_exists_email'),
-            'purpose.required'        => __('responses.api_purpose_required'),
+            'purpose.required'        => __('responses.purpose_required'),
 
         ];
     }

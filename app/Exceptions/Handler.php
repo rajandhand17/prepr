@@ -55,14 +55,14 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($e instanceof NotFoundException) {
-            return Response::json(ResponseUtil::makeError(__('responses.api_not_found_404')), 404);
+            return Response::json(ResponseUtil::makeError(__('responses.handler_not_found_404')), 404);
         }
 
         if ($e instanceof AuthenticationException) {
-            return Response::json(ResponseUtil::makeError(__('responses.api_access_denied_403')), 403);
+            return Response::json(ResponseUtil::makeError(__('responses.handler_access_denied_403')), 403);
         }
         if ($e instanceof MethodNotAllowedHttpException) {
-            return Response::json(ResponseUtil::makeError(__('responses.api_illegal_request_403')), 405);
+            return Response::json(ResponseUtil::makeError(__('responses.handler_illegal_request_403')), 405);
         }
 
         return parent::render($request, $e);

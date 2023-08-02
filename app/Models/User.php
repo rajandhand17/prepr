@@ -80,6 +80,7 @@ class User extends Authenticatable
         try {
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
+
             if ($user->verified_user == 0) {
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
 
@@ -96,7 +97,7 @@ class User extends Authenticatable
                         $user->save();
                         DB::commit();
                         /**sending otp on registeres number */
-                        $data = ['subject' => 'Two Factor Verification', 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
+                        $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
                             return ['success' => true, 'message'=> __('responses.two_factor_otp'), 'code' => 2];
@@ -193,7 +194,7 @@ class User extends Authenticatable
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
                 if ($userpersonal && $usersetting) {
-                    $data = ['subject' => 'Verify Your Email', 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
+                    $data = ['subject' => __('responses.verify_your_email'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                     $mail = SendMailHelper::sendMail($user, 'email.verify_otp', $data);
                     if ($mail) {
                         DB::commit();
@@ -278,7 +279,7 @@ class User extends Authenticatable
                 if ($user->save()) {
                     /**sending otp for forget password*/
                     if ($request->purpose === 'forget_password') {
-                        $data = ['subject' => 'Forget Password', 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
+                        $data = ['subject' =>__('responses.email_subject_forget_password'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                         $mail = SendMailHelper::sendMail($user, 'email.forget_password_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'forget_password', 'code' => 1];
@@ -290,7 +291,7 @@ class User extends Authenticatable
                     }
                     /**sending otp for verify email*/
                     if ($request->purpose === 'verify_email') {
-                        $data = ['subject' => 'Verify Your Email', 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
+                        $data = ['subject' =>__('responses.verify_your_email'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                         $mail = SendMailHelper::sendMail($user, 'email.verify_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'verify_email', 'code' => 2];
@@ -302,7 +303,7 @@ class User extends Authenticatable
                     }
                     /**send otp for two factor verification */
                     if ($request->purpose === 'two_factor_verification') {
-                        $data = ['subject' => 'Two Factor Verification', 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
+                        $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'two_factor_verification', 'code' => 3];
@@ -342,7 +343,7 @@ class User extends Authenticatable
                 $user->email_verified_at = Carbon::now();
                 $user->verified_user = '1';
                 if ($user->save()) {
-                    $data = ['subject' => 'Verified Successfully!', 'first_name' => $user->first_name, 'last_name' => $user->last_name];
+                    $data = ['subject' =>__('responses.email_subject_verified_successfully'), 'first_name' => $user->first_name, 'last_name' => $user->last_name];
                     $mail = SendMailHelper::sendMail($user, 'email.verified_successfully', $data);
                     if ($mail) {
                         $success = ['success' => true, 'user' => $user, 'code' => 2];
@@ -423,7 +424,7 @@ class User extends Authenticatable
             if ($user->otp == $request->otp) {
                 $user->password = Hash::make($request->password);
                 if ($user->save()) {
-                    $data = ['subject' => 'Reset Password Successfull!', 'first_name' => $user['first_name'], 'last_name' => $user['last_name']];
+                    $data = ['subject' => __('responses.email_subject_reset_password'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name']];
                     $mail = SendMailHelper::sendMail($user, 'email.reset_password', $data);
                     if ($mail) {
                         $success = ['success' => true, 'user' => $user];
