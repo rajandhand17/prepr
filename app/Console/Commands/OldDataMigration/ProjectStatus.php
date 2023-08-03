@@ -52,13 +52,14 @@ class ProjectStatus extends Command
                     } else {
                         $newProjectStatus = new Status();
                     }
-                    $newProjectStatus->id          = $single_status->id;
-                    $newProjectStatus->title       = $single_status->name;
+                    $newProjectStatus->id = $single_status->id;
+                    $newProjectStatus->title = $single_status->name;
                     $newProjectStatus->fr_CA_title = $single_status->fr_CA_name;
                     $newProjectStatus->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project status table completed.');
+
                 return;
             }
             DB::rollback();
@@ -66,6 +67,7 @@ class ProjectStatus extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

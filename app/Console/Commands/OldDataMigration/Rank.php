@@ -52,20 +52,21 @@ class Rank extends Command
                     } else {
                         $newRank = new Ranks();
                     }
-                    $newRank->id                 = $single_rank->id;
-                    $newRank->title              = $single_rank->name;
-                    $newRank->fr_CA_title        = $single_rank->fr_CA_name;
-                    $newRank->description        = $single_rank->description;
-                    $newRank->fr_CA_description  = $single_rank->fr_CA_description;
-                    $newRank->image              = $single_rank->image;
-                    $newRank->category           = $single_rank->category;
-                    $newRank->point              = $single_rank->point;
-                    $newRank->no_of_use          = $single_rank->no_of_use;
-                    $newRank->status             = $single_rank->status;
+                    $newRank->id = $single_rank->id;
+                    $newRank->title = $single_rank->name;
+                    $newRank->fr_CA_title = $single_rank->fr_CA_name;
+                    $newRank->description = $single_rank->description;
+                    $newRank->fr_CA_description = $single_rank->fr_CA_description;
+                    $newRank->image = $single_rank->image;
+                    $newRank->category = $single_rank->category;
+                    $newRank->point = $single_rank->point;
+                    $newRank->no_of_use = $single_rank->no_of_use;
+                    $newRank->status = $single_rank->status;
                     $newRank->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for ranks table completed.');
+
                 return;
             }
             DB::rollback();
@@ -73,6 +74,7 @@ class Rank extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

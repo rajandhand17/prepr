@@ -60,16 +60,17 @@ class TagGroup extends Command
                     } else {
                         $newTagGroup = new ModelsTagGroup();
                     }
-                    $newTagGroup->id                = $tag_group->id;
-                    $newTagGroup->title             = $tag_group->title;
-                    $newTagGroup->fr_CA_title       = $tag_group->fr_CA_title;
-                    $newTagGroup->description       = $tag_group->description;
+                    $newTagGroup->id = $tag_group->id;
+                    $newTagGroup->title = $tag_group->title;
+                    $newTagGroup->fr_CA_title = $tag_group->fr_CA_title;
+                    $newTagGroup->description = $tag_group->description;
                     $newTagGroup->fr_CA_description = $tag_group->fr_CA_description;
-                    $newTagGroup->tags              = $tags;
+                    $newTagGroup->tags = $tags;
                     $newTagGroup->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for tag groups table completed.');
+
                 return;
             }
             DB::rollback();
@@ -77,6 +78,7 @@ class TagGroup extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

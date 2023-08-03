@@ -52,13 +52,14 @@ class ProjectIndustry extends Command
                     } else {
                         $newProjectIndustry = new Industry();
                     }
-                    $newProjectIndustry->id          =  $single_industry->id;
-                    $newProjectIndustry->title       =  $single_industry->name;
-                    $newProjectIndustry->fr_CA_title =  $single_industry->fr_CA_name;
+                    $newProjectIndustry->id = $single_industry->id;
+                    $newProjectIndustry->title = $single_industry->name;
+                    $newProjectIndustry->fr_CA_title = $single_industry->fr_CA_name;
                     $newProjectIndustry->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project industry table completed.');
+
                 return;
             }
             DB::rollback();
@@ -66,6 +67,7 @@ class ProjectIndustry extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

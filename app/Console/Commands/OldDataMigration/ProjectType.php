@@ -52,13 +52,14 @@ class ProjectType extends Command
                     } else {
                         $newProjectType = new Type();
                     }
-                    $newProjectType->id          = $single_type->id;
-                    $newProjectType->title       = $single_type->name;
+                    $newProjectType->id = $single_type->id;
+                    $newProjectType->title = $single_type->name;
                     $newProjectType->fr_CA_title = $single_type->fr_CA_name;
                     $newProjectType->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project type table completed.');
+
                 return;
             }
             DB::rollback();
@@ -66,6 +67,7 @@ class ProjectType extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

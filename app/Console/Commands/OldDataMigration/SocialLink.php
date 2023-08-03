@@ -53,13 +53,14 @@ class SocialLink extends Command
                         $newSocialLink = new Link();
                     }
 
-                    $newSocialLink->id    = $single_social_link->id;
+                    $newSocialLink->id = $single_social_link->id;
                     $newSocialLink->title = $single_social_link->link_name;
-                    $newSocialLink->icon  = $single_social_link->link_icon;
+                    $newSocialLink->icon = $single_social_link->link_icon;
                     $newSocialLink->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for social link table completed.');
+
                 return;
             }
             DB::rollback();
@@ -67,6 +68,7 @@ class SocialLink extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

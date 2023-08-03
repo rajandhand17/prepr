@@ -50,7 +50,7 @@ class PitchTemplate extends Command
                     if ($check_pitch_templates) {
                         $newPitchTemplate = $check_pitch_templates;
                     } else {
-                        $newPitchTemplate = new PitchTemplates;
+                        $newPitchTemplate = new PitchTemplates();
                     }
                     $newPitchTemplate->id = $single_pitch_templates->id;
                     $newPitchTemplate->title = $single_pitch_templates->title;
@@ -59,6 +59,7 @@ class PitchTemplate extends Command
                 }
                 DB::commit();
                 $this->info('Migrating of old data for pitch template table completed.');
+
                 return;
             }
             DB::rollback();
@@ -66,6 +67,7 @@ class PitchTemplate extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
