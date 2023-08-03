@@ -82,4 +82,4 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
         
         After completing the above step, new database tables will be created, and the necessary data will be seeded into the database.
 3. # Note
-    Please note that these steps are specifically for setting up the "preprlabs_central_api" on Ubuntu and assume you have the necessary PHP and MySQL versions installed on your system. Make sure to follow the instructions carefully, and if any errors occur during the process, troubleshoot them accordingly.
+    Please note that these steps are specifically for setting up the "preprlabs_central_api" and assume you have the necessary PHP and MySQL versions installed on your system. Make sure to follow the instructions carefully, and if any errors occur during the process, troubleshoot them accordingly.
