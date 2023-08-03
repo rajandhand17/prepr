@@ -60,7 +60,6 @@ class SocialLink extends Command
                 }
                 DB::commit();
                 $this->info('Migrating of old data for social link table completed.');
-
                 return;
             }
             DB::rollback();
@@ -68,7 +67,6 @@ class SocialLink extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

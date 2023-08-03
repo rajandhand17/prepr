@@ -46,13 +46,12 @@ class ProjectStatus extends Command
             $project_status = DB::connection('mysql2')->table('project_status')->get();
             if ($project_status->count() > 0) {
                 foreach ($project_status as $key => $single_status) {
-                    $check_project_status = Status::where(['title' => $single_status->name, 'fr_CA_title' => $single_status->fr_CA_name])->first();
+                    $check_project_status = Status::where('title', $single_status->name)->first();
                     if ($check_project_status) {
                         $newProjectStatus = $check_project_status;
                     } else {
                         $newProjectStatus = new Status();
                     }
-
                     $newProjectStatus->id          = $single_status->id;
                     $newProjectStatus->title       = $single_status->name;
                     $newProjectStatus->fr_CA_title = $single_status->fr_CA_name;
@@ -67,7 +66,6 @@ class ProjectStatus extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

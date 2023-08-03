@@ -46,13 +46,12 @@ class Tag extends Command
             $tags = DB::connection('mysql2')->table('tags')->get();
             if ($tags->count() > 0) {
                 foreach ($tags as $key => $single_tags) {
-                    $check_tags = Tags::where(['title' => $single_tags->title,'fr_CA_title' => $single_tags->fr_CA_title,])->first();
+                    $check_tags = Tags::where('title', $single_tags->tag)->first();
                     if ($check_tags) {
                         $newTag = $check_tags;
                     } else {
                         $newTag = new Tags();
                     }
-
                     $newTag->id              = $single_tags->id;
                     $newTag->title           = $single_tags->tag;
                     $newTag->fr_CA_title     = $single_tags->fr_CA_tag;
@@ -63,7 +62,6 @@ class Tag extends Command
                 }
                 DB::commit();
                 $this->info('Migrating of old data for tags table completed.');
-
                 return;
             }
             DB::rollback();
@@ -71,7 +69,6 @@ class Tag extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

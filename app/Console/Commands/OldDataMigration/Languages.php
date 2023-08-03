@@ -62,7 +62,6 @@ class Languages extends Command
                 }
                 DB::commit();
                 $this->info('Migrating of old data for languages table completed.');
-
                 return;
             }
             DB::rollback();

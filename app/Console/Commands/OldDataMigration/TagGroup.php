@@ -60,7 +60,6 @@ class TagGroup extends Command
                     } else {
                         $newTagGroup = new ModelsTagGroup();
                     }
-
                     $newTagGroup->id                = $tag_group->id;
                     $newTagGroup->title             = $tag_group->title;
                     $newTagGroup->fr_CA_title       = $tag_group->fr_CA_title;
@@ -78,7 +77,6 @@ class TagGroup extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

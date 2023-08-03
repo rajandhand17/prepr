@@ -53,7 +53,6 @@ class Host extends Command
                     } else {
                         $newHost = new Hosts();
                     }
-
                     $newHost->id        = $single_host->id;
                     $newHost->title     = $single_host->name;
                     $newHost->link      = $single_host->link;
@@ -62,7 +61,6 @@ class Host extends Command
                 }
                 DB::commit();
                 $this->info('Migrating of old data for hosts table completed.');
-
                 return;
             }
             DB::rollback();
@@ -70,7 +68,6 @@ class Host extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

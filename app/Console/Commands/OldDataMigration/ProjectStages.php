@@ -46,7 +46,7 @@ class ProjectStages extends Command
             $project_stages = DB::connection('mysql2')->table('project_stage')->get();
             if ($project_stages->count() > 0) {
                 foreach ($project_stages as $key => $single_stages) {
-                    $check_project_stages = ProjectStage::where(['title' => $single_stages->name, 'fr_CA_title' => $single_stages->fr_CA_name])->first();
+                    $check_project_stages = ProjectStage::where('title', $single_stages->name)->first();
                     if ($check_project_stages) {
                         $newProjectStage = $check_project_stages;
                     } else {
@@ -59,7 +59,6 @@ class ProjectStages extends Command
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project stages table completed.');
-
                 return;
             }
             DB::rollback();
@@ -67,7 +66,6 @@ class ProjectStages extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

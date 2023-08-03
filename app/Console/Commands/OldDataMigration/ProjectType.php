@@ -46,13 +46,12 @@ class ProjectType extends Command
             $project_type = DB::connection('mysql2')->table('project_type')->get();
             if ($project_type->count() > 0) {
                 foreach ($project_type as $key => $single_type) {
-                    $check_project_type = Type::where(['title' => $single_type->name, 'fr_CA_title' => $single_type->fr_CA_name])->first();
+                    $check_project_type = Type::where('title', $single_type->name)->first();
                     if ($check_project_type) {
                         $newProjectType = $check_project_type;
                     } else {
                         $newProjectType = new Type();
                     }
-
                     $newProjectType->id          = $single_type->id;
                     $newProjectType->title       = $single_type->name;
                     $newProjectType->fr_CA_title = $single_type->fr_CA_name;
@@ -67,7 +66,6 @@ class ProjectType extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

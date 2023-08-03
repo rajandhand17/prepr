@@ -46,13 +46,12 @@ class Rank extends Command
             $ranks = DB::connection('mysql2')->table('ranks')->get();
             if ($ranks->count() > 0) {
                 foreach ($ranks as $key => $single_rank) {
-                    $check_ranks = Ranks::where(['title' => $single_rank->name, 'fr_CA_title' => $single_rank->fr_CA_name])->first();
+                    $check_ranks = Ranks::where('title', $single_rank->name)->first();
                     if ($check_ranks) {
                         $newRank = $check_ranks;
                     } else {
                         $newRank = new Ranks();
                     }
-
                     $newRank->id                 = $single_rank->id;
                     $newRank->title              = $single_rank->name;
                     $newRank->fr_CA_title        = $single_rank->fr_CA_name;
@@ -74,7 +73,6 @@ class Rank extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

@@ -46,13 +46,12 @@ class ProjectVerticals extends Command
             $project_verticals = DB::connection('mysql2')->table('project_verticals')->get();
             if ($project_verticals->count() > 0) {
                 foreach ($project_verticals as $key => $single_verticals) {
-                    $check_project_verticals = ProjectVertical::where(['title' => $single_verticals->name, 'fr_CA_title' => $single_verticals->fr_CA_name])->first();
+                    $check_project_verticals = ProjectVertical::where('title', $single_verticals->name)->first();
                     if ($check_project_verticals) {
                         $newProjectVertical = $check_project_verticals;
                     } else {
                         $newProjectVertical = new ProjectVertical();
                     }
-
                     $newProjectVertical->id          = $single_verticals->id;
                     $newProjectVertical->title       = $single_verticals->name;
                     $newProjectVertical->fr_CA_title = $single_verticals->fr_CA_name;
@@ -67,7 +66,6 @@ class ProjectVerticals extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }
