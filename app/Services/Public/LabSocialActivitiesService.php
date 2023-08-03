@@ -3,7 +3,6 @@
 namespace App\Services\Public;
 
 use App\Models\LabSocialActivity;
-use App\Models\OrganizationSocialActivities;
 use Illuminate\Support\Facades\Auth;
 
 class LabSocialActivitiesService
@@ -24,7 +23,7 @@ class LabSocialActivitiesService
     public function update($id,$column,$action): bool
     {
         try {
-          $records=LabSocialActivity::updateOrInsert(["user_id" => Auth::user()->id,
+            $records=LabSocialActivity::updateOrInsert(["user_id" => Auth::user()->id,
                 "lab_id" => $id,
             ], [
                 $column => $action,

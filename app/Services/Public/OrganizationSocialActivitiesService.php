@@ -7,14 +7,15 @@ use Illuminate\Support\Facades\Auth;
 
 class OrganizationSocialActivitiesService
 {
-    public function checkExists($id,$column,$action){
-        try{
+    public function checkSocialActivity($id, $column, $action)
+    {
+        try {
             return OrganizationSocialActivities::where([
                 ['organization_id', '=', $id],
                 ['user_id', '=', Auth::user()->id],
                 [$column, '=', $action],
             ])->first();
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -29,5 +30,5 @@ class OrganizationSocialActivitiesService
         }catch(\Exception $e){
             return false;
         }
-    }
+     }
 }

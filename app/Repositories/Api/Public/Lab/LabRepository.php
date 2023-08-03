@@ -18,7 +18,7 @@ class LabRepository implements LabInterface
     public function getList($request)
     {
         try {
-            $getLabList = $this->LabService->getLabList($request);
+            $getLabList = $this->LabService->getList($request);
             return $getLabList;
         } catch (\Exception $e) {
             return false;
@@ -39,25 +39,37 @@ class LabRepository implements LabInterface
         try {
             switch ($action) {
                 case 'join':
-                    $column="join_unjoin";
-                    $value="1";
+                    $column = 'join_unjoin';
+                    $value = '1';
                     break;
                 case 'un-join':
-                    $column="join_unjoin";
+                    $column = 'join_unjoin';
+                    $value = '2';
+                    break;
+                case 'follow':
+                    $column = 'follow_unfollow';
+                    $value = '1';
+                    break;
+                case 'un-follow':
+                    $column = 'follow_unfollow';
+                    $value = '2';
+                    break;
+                case 'share':
+                    $column = 'share';
+                    $value = '1';
+                    break;
+                case 'follow':
+                    $column="follow_unfollow";
+                    $value="1";
+                    break;
+                case 'un-follow':
+                    $column="follow_unfollow";
                     $value="2";
                     break;
-               case 'follow':
-                   $column="follow_unfollow";
-                   $value="1";
-                   break;
-              case 'un-follow':
-                   $column="follow_unfollow";
-                   $value="2";
-                   break;
-              case 'share':
-                  $column="share";
-                  $value="1";
-                  break;
+                case 'share':
+                    $column="share";
+                    $value="1";
+                    break;
                 case 'favourite':
                     $column="favourite";
                     $value="1";
@@ -74,12 +86,13 @@ class LabRepository implements LabInterface
             if($response!==null){
                 return $response;
             }
-            return ["column"=>$column, "action"=>$value];
+
+            return ['column'=>$column, 'action'=>$value];
         } catch (\Exception $e) {
             return false;
         }
     }
-    public function socialActivities($id,$column,$value): bool
+    public function socialActivity($id,$column,$value): bool
     {
         try {
             return $this->labSocialActivitiesService->update($id,$column,$value);

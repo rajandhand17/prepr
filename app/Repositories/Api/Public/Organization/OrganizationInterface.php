@@ -4,10 +4,9 @@ namespace App\Repositories\Api\Public\Organization;
 
 interface OrganizationInterface
 {
-    public function getOrganizationList($request);
+    public function getList($request);
 
     public function getOrganizationBasedOnSlug($slug);
-    public function socialActivities($id,$column,$action);
-    public function checkExists($id, $action);
-
+    public function socialActivity($id,$column,$action);
+    public function checkSocialActivity($lab_id,$action);
 }

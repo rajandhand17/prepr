@@ -6,7 +6,7 @@ use App\Models\Organization;
 
 class OrganizationService
 {
-    public static function getOrganizationList($request)
+    public static function getList($request)
     {
         try {
             $organization_list = Organization::select()->where('organizations.status', '1');
@@ -22,12 +22,13 @@ class OrganizationService
     public static function filterOrganizationList($request, $organization_list)
     {
         try {
-            if ($request->has('search') && !empty($request->search)){
+            if ($request->has('search') && !empty($request->search)) {
                 $organization_list = $organization_list->where('organizations.title', 'like', '%'.$request->search.'%');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $organization_list = $organization_list->whereIn('labs.category', $request->category);
             }
+
             return $organization_list;
         } catch (\Exception $e) {
             return false;

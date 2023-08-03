@@ -19,7 +19,7 @@ class OrganizationController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = $this->organizationRepository->getOrganizationList($request);
+            $organization = $this->organizationRepository->getList($request);
             if ($organization !== false) {
                 $response = [
                     'total_count'  => $organization->total(),
@@ -52,21 +52,22 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public  function socialActivities($slug, $action){
+    public  function socialActivity($slug, $action){
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if ($organization !== null) {
-                $checkOrganization = $this->organizationRepository->checkExists($organization->id, $action);
+                $checkOrganization = $this->organizationRepository->checkSocialActivity($organization->id, $action);
+                $action=str_replace("-","",$action);
                 if ($checkOrganization !== false && isset($checkOrganization->id)) {
-                    return $this->sendError(__('responses.already_followed_organization'), 400);
+                    return $this->sendError(__('responses.already_'.$action.'_organization'), 400);
                 }
-                $organization = $this->organizationRepository->socialActivities($organization->id,$checkOrganization['column'],$checkOrganization['action']);
+                $organization = $this->organizationRepository->socialActivity($organization->id,$checkOrganization['column'],$checkOrganization['action']);
                 if ($organization) {
-                    return $this->sendResponse([], __('responses.follow_organization_successfully'));
+                    return $this->sendResponse([], __('responses.'.$action.'_organization_successfully'));
                 }
             }
             return $this->sendError(__('responses.organization_not_exists'), 404);
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

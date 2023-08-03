@@ -16,47 +16,51 @@ class OrganizationRepository implements OrganizationInterface
         $this->organizationSocialActivitiesService = $organizationSocialActivitiesService;
     }
 
-    public function getOrganizationList($request)
-    {
-        try {
-            return $this->organizationService->getOrganizationList($request);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function getOrganizationBasedOnSlug($slug)
-    {
-        try {
-            return $this->organizationService->getOrganizationBasedOnSlug($slug);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-    public function socialActivities($id,$column,$action): bool
-    {
-        try {
-            $response = $this->organizationSocialActivitiesService->update($id,$column,$action);
-            if ($response) {
-                return $response;
-            }
-            return false;
-        }catch (\Exception $e){
+    public function getList($request){
+        try{
+            return $this->organizationService->getList($request);
+        }catch(\Exception $e){
         return false;
         }
     }
-    public function checkExists($id, $action)
+
+    public function getOrganizationBasedOnSlug($slug){
+        try{
+            return $this->organizationService->getOrganizationBasedOnSlug($slug);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+    public function socialActivity($id,$column,$action): bool
+    {
+        try{
+           return $this->organizationSocialActivitiesService->update($id,$column,$action);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+    public function checkSocialActivity($lab_id,$action)
     {
         try {
-            $column="";
-            $value="";
             switch ($action) {
                 case 'follow':
-                    $column="follow_unfollow";
-                    $value="1";
+                    $column = 'follow_unfollow';
+                    $value = '1';
                     break;
                 case 'un-follow':
-                    $column="follow_unfollow";
+                    $column = 'follow_unfollow';
+                    $value = '2';
+                    break;
+                case 'share':
+                    $column = 'share';
+                    $value = '1';
+                    break;
+                case 'favourite':
+                    $column="favourite";
+                    $value="1";
+                    break;
+                case 'un-favourite':
+                    $column="favourite";
                     $value="2";
                     break;
                 case 'like':
@@ -67,28 +71,15 @@ class OrganizationRepository implements OrganizationInterface
                     $column="like_dislike";
                     $value="2";
                     break;
-                case 'share':
-                    $column="share";
-                    $value="1";
-                    break;
-                case 'favourite':
-                    $column="favourite";
-                    $value="1";
-                    break;
-                case 'un-favourite':
-                    $column="favourite";
-                    $value="2";
-                    break;
                 default:
                     return false;
                     break;
-            };
-            $response = $this->organizationSocialActivitiesService->checkExists($id,$column, $value);
-            if ($response) {
+            }
+            $response=$this->organizationSocialActivitiesService->checkSocialActivity($lab_id,$column,$value);
+            if($response!==null){
                 return $response;
             }
-            $response=["column"=>$column, "action"=>$value];
-            return $response;
+            return ['column'=>$column, 'action'=>$value];
         } catch (\Exception $e) {
             return false;
         }
