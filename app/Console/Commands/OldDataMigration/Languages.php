@@ -51,7 +51,7 @@ class Languages extends Command
                     if ($checkLanguage) {
                         $newLanguage = $checkLanguage;
                     } else {
-                        $newLanguage = new Language;
+                        $newLanguage = new Language();
                     }
                     $newLanguage->id = $single_language->id;
                     $newLanguage->name = $single_language->lang_name;
@@ -62,6 +62,7 @@ class Languages extends Command
                 }
                 DB::commit();
                 $this->info('Migrating of old data for languages table completed.');
+
                 return;
             }
             DB::rollback();

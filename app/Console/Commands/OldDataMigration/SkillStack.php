@@ -60,16 +60,17 @@ class SkillStack extends Command
                     } else {
                         $newSkillStack = new SkillStacks();
                     }
-                    $newSkillStack->id                = $single_skill_stack->id;
-                    $newSkillStack->title             = $single_skill_stack->title;
-                    $newSkillStack->fr_CA_title       = $single_skill_stack->fr_CA_title;
-                    $newSkillStack->description       = $single_skill_stack->description;
+                    $newSkillStack->id = $single_skill_stack->id;
+                    $newSkillStack->title = $single_skill_stack->title;
+                    $newSkillStack->fr_CA_title = $single_skill_stack->fr_CA_title;
+                    $newSkillStack->description = $single_skill_stack->description;
                     $newSkillStack->fr_CA_description = $single_skill_stack->fr_CA_description;
-                    $newSkillStack->skills            = $skills;
+                    $newSkillStack->skills = $skills;
                     $newSkillStack->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skill stack table completed.');
+
                 return;
             }
             DB::rollback();
@@ -77,6 +78,7 @@ class SkillStack extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

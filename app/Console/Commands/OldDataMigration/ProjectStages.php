@@ -52,13 +52,14 @@ class ProjectStages extends Command
                     } else {
                         $newProjectStage = new ProjectStage();
                     }
-                    $newProjectStage->id           = $single_stages->id;
-                    $newProjectStage->title        = $single_stages->name;
-                    $newProjectStage->fr_CA_title  = $single_stages->fr_CA_name;
+                    $newProjectStage->id = $single_stages->id;
+                    $newProjectStage->title = $single_stages->name;
+                    $newProjectStage->fr_CA_title = $single_stages->fr_CA_name;
                     $newProjectStage->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project stages table completed.');
+
                 return;
             }
             DB::rollback();
@@ -66,6 +67,7 @@ class ProjectStages extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

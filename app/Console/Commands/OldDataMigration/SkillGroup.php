@@ -69,17 +69,18 @@ class SkillGroup extends Command
                     } else {
                         $newSkillGroup = new SkillGroup();
                     }
-                    $newSkillGroup->id                = $skill_group->id;
-                    $newSkillGroup->title             = $skill_group->title;
-                    $newSkillGroup->fr_CA_title       = $skill_group->fr_CA_title;
-                    $newSkillGroup->description       = $skill_group->description;
+                    $newSkillGroup->id = $skill_group->id;
+                    $newSkillGroup->title = $skill_group->title;
+                    $newSkillGroup->fr_CA_title = $skill_group->fr_CA_title;
+                    $newSkillGroup->description = $skill_group->description;
                     $newSkillGroup->fr_CA_description = $skill_group->fr_CA_description;
-                    $newSkillGroup->skills            = $skills;
-                    $newSkillGroup->skill_stacks      = $skill_stacks;
+                    $newSkillGroup->skills = $skills;
+                    $newSkillGroup->skill_stacks = $skill_stacks;
                     $newSkillGroup->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skill groups table completed.');
+
                 return;
             }
             DB::rollback();

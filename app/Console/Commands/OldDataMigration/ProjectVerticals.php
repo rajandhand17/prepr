@@ -52,13 +52,14 @@ class ProjectVerticals extends Command
                     } else {
                         $newProjectVertical = new ProjectVertical();
                     }
-                    $newProjectVertical->id          = $single_verticals->id;
-                    $newProjectVertical->title       = $single_verticals->name;
+                    $newProjectVertical->id = $single_verticals->id;
+                    $newProjectVertical->title = $single_verticals->name;
                     $newProjectVertical->fr_CA_title = $single_verticals->fr_CA_name;
                     $newProjectVertical->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project verticals table completed.');
+
                 return;
             }
             DB::rollback();
@@ -66,6 +67,7 @@ class ProjectVerticals extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

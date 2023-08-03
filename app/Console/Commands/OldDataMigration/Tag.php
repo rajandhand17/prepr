@@ -52,16 +52,17 @@ class Tag extends Command
                     } else {
                         $newTag = new Tags();
                     }
-                    $newTag->id              = $single_tags->id;
-                    $newTag->title           = $single_tags->tag;
-                    $newTag->fr_CA_title     = $single_tags->fr_CA_tag;
-                    $newTag->tag_image       = $single_tags->tag_image;
+                    $newTag->id = $single_tags->id;
+                    $newTag->title = $single_tags->tag;
+                    $newTag->fr_CA_title = $single_tags->fr_CA_tag;
+                    $newTag->tag_image = $single_tags->tag_image;
                     $newTag->fr_CA_tag_image = $single_tags->fr_CA_tag_image;
-                    $newTag->components      = $single_tags->category;
+                    $newTag->components = $single_tags->category;
                     $newTag->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for tags table completed.');
+
                 return;
             }
             DB::rollback();
@@ -69,6 +70,7 @@ class Tag extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
