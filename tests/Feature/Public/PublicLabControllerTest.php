@@ -48,6 +48,7 @@ class PublicLabControllerTest extends TestCase
     public function test_unjoin_lab_public_lab_positive()
     {
         $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/un-join?language='.$this->parameters['language'], $this->headers);
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -99,11 +100,11 @@ class PublicLabControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
         if ($data['success']) {
-            $this->assertArrayHasKey('id', $data['data']['data'][0]);
-            $this->assertArrayHasKey('language', $data['data']['data'][0]);
-            $this->assertArrayHasKey('title', $data['data']['data'][0]);
-            $this->assertArrayHasKey('slug', $data['data']['data'][0]);
-            $this->assertArrayHasKey('description', $data['data']['data'][0]);
+            $this->assertArrayHasKey('id', $data['data']['list'][0]);
+            $this->assertArrayHasKey('language', $data['data']['list'][0]);
+            $this->assertArrayHasKey('title', $data['data']['list'][0]);
+            $this->assertArrayHasKey('slug', $data['data']['list'][0]);
+            $this->assertArrayHasKey('description', $data['data']['list'][0]);
         }
     }
 

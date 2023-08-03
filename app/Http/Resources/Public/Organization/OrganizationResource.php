@@ -17,6 +17,7 @@ class OrganizationResource extends JsonResource
     public function toArray($request)
     {
         $category = $this->getCategory;
+
         if ($category) {
             $category = $this->getCategory->title;
         } else {

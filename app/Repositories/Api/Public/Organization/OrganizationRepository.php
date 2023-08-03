@@ -34,77 +34,63 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function checkFollowUnfollowExists($id, $action)
+    public function organizationSocialActivitiesService($id,$column,$action): bool
     {
         try {
-            $response = $this->organizationSocialActivitiesService->checkFollowUnfollowExists($id, $action);
+            $response = $this->organizationSocialActivitiesService->organizationSocialActivitiesService($id,$column,$action);
             if ($response) {
                 return $response;
             }
-
             return false;
-        } catch (\Exception $e) {
-            return false;
+        }catch (\Exception $e){
+        return false;
         }
     }
-
-    public function checkLikeUnlikeExists($id, $action)
+    public function checkExists($id, $action)
     {
         try {
-            $response = $this->organizationSocialActivitiesService->checkLikeUnlikeExists($id, $action);
+            $column="";
+            $value="";
+            switch ($action) {
+                case 'follow':
+                    $column="follow_unfollow";
+                    $value="1";
+                    break;
+                case 'un-follow':
+                    $column="follow_unfollow";
+                    $value="2";
+                    break;
+                case 'like':
+                    $column="like_dislike";
+                    $value="1";
+                    break;
+                case 'un-like':
+                    $column="like_dislike";
+                    $value="2";
+                    break;
+                case 'share':
+                    $column="share";
+                    $value="1";
+                    break;
+                case 'favorite':
+                    $column="favourite";
+                    $value="1";
+                    break;
+                case 'un-favorite':
+                    $column="favourite";
+                    $value="2";
+                    break;
+                default:
+                    return false;
+                    break;
+            };
+            $response = $this->organizationSocialActivitiesService->checkExists($id,$column, $value);
             if ($response) {
                 return $response;
             }
-
-            return false;
+            $response=["column"=>$column, "action"=>$value];
+            return $response;
         } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function follow($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->follow($organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function unfollow($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->unfollow($organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function like($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->like($organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function unlike($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->unlike($organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function share($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->share($organization_id);
-        } catch (\Exception $e) {
-            return $e;
-
             return false;
         }
     }

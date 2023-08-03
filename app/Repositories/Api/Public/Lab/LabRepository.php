@@ -36,15 +36,51 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function checkLabActivity($action, $lab_id)
+    public function checkLabActivity($lab_id,$action)
     {
         try {
-            return $this->labSocialActivitiesService->checkLabActivity($action, $lab_id);
+            switch ($action) {
+                case 'join':
+                    $column="join_unjoin";
+                    $value="1";
+                    break;
+                case 'un-join':
+                    $column="join_unjoin";
+                    $value="2";
+                    break;
+               case 'follow':
+                   $column="follow_unfollow";
+                   $value="1";
+                   break;
+              case 'un-follow':
+                   $column="follow_unfollow";
+                   $value="2";
+                   break;
+              case 'share':
+                  $column="share";
+                  $value="1";
+                  break;
+                default:
+                    return false;
+                    break;
+            }
+            $response=$this->labSocialActivitiesService->checkLabActivity($lab_id,$column,$value);
+            if($response!==null){
+                return $response;
+            }
+            return ["column"=>$column, "action"=>$value];
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }
-
+    public function labSocialActivitiesService($id,$column,$value){
+        try {
+            return $this->labSocialActivitiesService->store($id,$column,$value);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public function joinLab($lab_id)
     {
         try {

@@ -3,29 +3,37 @@
 namespace App\Services\Public;
 
 use App\Models\LabSocialActivity;
+use App\Models\OrganizationSocialActivities;
 use Illuminate\Support\Facades\Auth;
 
 class LabSocialActivitiesService
 {
-    public function checkLabActivity($action, $id)
+    public function checkLabActivity($id,$column,$value)
     {
-        $checkJoinOrNot = LabSocialActivity::where([
-            ['user_id', '=', Auth::user()->id],
-            ['lab_id', '=', $id],
-        ]);
-        if ($action == 'join') {
-            $checkJoinOrNot->where('join_unjoin', '1');
-        } elseif ($action == 'unjoin') {
-            $checkJoinOrNot->where('join_unjoin', '2');
-        } elseif ($action == 'follow') {
-            $checkJoinOrNot->where('follow_unfollow', '1');
-        } elseif ($action == 'unfollow') {
-            $checkJoinOrNot->where('follow_unfollow', '2');
-        } elseif ($action == 'share') {
-            $checkJoinOrNot->where('share', '1');
-        }
+        return LabSocialActivity::where([
+            'user_id' =>Auth::user()->id,
+            'lab_id' =>$id,
+            $column=>$value,
+        ])->first();
 
-        return $checkJoinOrNot->first();
+    }
+
+    public function store($id,$column,$action){
+        try {
+            $uniqueKey = ["user_id" => Auth::user()->id,
+                "lab_id" => $id,
+            ];
+            $productData = [
+                $column => $action,
+            ];
+            $records=LabSocialActivity::updateOrInsert($uniqueKey, $productData);
+            if($records){
+                return true;
+            }
+            return false;
+        }catch (\Exception $e){
+            return false;
+        }
     }
 
     public function joinLab($lab_id)

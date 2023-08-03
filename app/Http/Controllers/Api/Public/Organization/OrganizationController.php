@@ -52,105 +52,21 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
-    public function follow($slug)
-    {
+    public  function organizationSocialActivitiesService($slug, $action){
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-
             if ($organization !== null) {
-                $checkFollowed = $this->organizationRepository->checkFollowUnfollowExists($organization->id, '1');
-                if ($checkFollowed !== false && $checkFollowed->follow_unfollow == '1') {
+                $checkOrganization = $this->organizationRepository->checkExists($organization->id, $action);
+                if ($checkOrganization !== false && isset($checkOrganization->id)) {
                     return $this->sendError(__('responses.already_followed_organization'), 400);
                 }
-                $follow = $this->organizationRepository->follow($organization->id);
-                if ($follow) {
+                $organization = $this->organizationRepository->organizationSocialActivitiesService($organization->id,$checkOrganization['column'],$checkOrganization['action']);
+                if ($organization) {
                     return $this->sendResponse([], __('responses.follow_organization_successfully'));
                 }
             }
-
             return $this->sendError(__('responses.organization_not_exists'), 404);
-        } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function unFollow($slug)
-    {
-        try {
-            $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            if ($organization) {
-                $checkFollowed = $this->organizationRepository->checkFollowUnfollowExists($organization->id, '2');
-                if ($checkFollowed !== false && $checkFollowed->follow_unfollow == '2') {
-                    return $this->sendError(__('responses.already_unfollowed_organization'), 400);
-                }
-                $follow = $this->organizationRepository->unfollow($organization->id);
-                if ($follow) {
-                    return $this->sendResponse([], __('responses.unfollow_organization_successfully'));
-                }
-            }
-
-            return $this->sendError(__('responses.organization_not_exists'), 404);
-        } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function like($slug)
-    {
-        try {
-            $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            if ($organization) {
-                $checkLike = $this->organizationRepository->checkLikeUnlikeExists($organization->id, '1');
-                if ($checkLike !== false && $checkLike->like_dislike == '1') {
-                    return $this->sendError(__('responses.already_like_organization'), 400);
-                }
-                $like = $this->organizationRepository->like($organization->id);
-                if ($like) {
-                    return $this->sendResponse([], __('responses.follow_organization_successfully'));
-                }
-            }
-
-            return $this->sendError(__('responses.organization_not_exists'), 404);
-        } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function unlike($slug)
-    {
-        try {
-            $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            if ($organization) {
-                $checkLike = $this->organizationRepository->checkLikeUnlikeExists($organization->id, '2');
-                if ($checkLike !== false && $checkLike->like_dislike == '2') {
-                    return $this->sendError(__('responses.already_unlike_organization'), 400);
-                }
-                $like = $this->organizationRepository->unlike($organization->id);
-                if ($like) {
-                    return $this->sendResponse([], __('responses.unlike_organization_successfully'));
-                }
-            }
-
-            return $this->sendError(__('responses.organization_not_exists'), 404);
-        } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function share($slug)
-    {
-        try {
-            $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            if ($organization) {
-                $share = $this->organizationRepository->share($organization->id);
-                if ($share) {
-                    return $this->sendResponse([], __('responses.share_organization_successfully'));
-                }
-            }
-
-            return $this->sendError(__('responses.organization_not_exists'), 404);
-        } catch (\Exception $e) {
+            } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
