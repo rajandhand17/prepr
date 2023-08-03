@@ -6,5 +6,5 @@ interface LabInterface
 {
     public function getLabList($request);
 
-    public function labSocialActivitiesService($id,$column,$value);
+    public function labSocialActivitiesService($id, $column, $value);
 }

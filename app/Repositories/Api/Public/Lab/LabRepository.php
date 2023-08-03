@@ -36,51 +36,56 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function checkLabActivity($lab_id,$action)
+    public function checkLabActivity($lab_id, $action)
     {
         try {
             switch ($action) {
                 case 'join':
-                    $column="join_unjoin";
-                    $value="1";
+                    $column = 'join_unjoin';
+                    $value = '1';
                     break;
                 case 'un-join':
-                    $column="join_unjoin";
-                    $value="2";
+                    $column = 'join_unjoin';
+                    $value = '2';
                     break;
-               case 'follow':
-                   $column="follow_unfollow";
-                   $value="1";
-                   break;
-              case 'un-follow':
-                   $column="follow_unfollow";
-                   $value="2";
-                   break;
-              case 'share':
-                  $column="share";
-                  $value="1";
-                  break;
+                case 'follow':
+                    $column = 'follow_unfollow';
+                    $value = '1';
+                    break;
+                case 'un-follow':
+                    $column = 'follow_unfollow';
+                    $value = '2';
+                    break;
+                case 'share':
+                    $column = 'share';
+                    $value = '1';
+                    break;
                 default:
                     return false;
                     break;
             }
-            $response=$this->labSocialActivitiesService->checkLabActivity($lab_id,$column,$value);
-            if($response!==null){
+            $response = $this->labSocialActivitiesService->checkLabActivity($lab_id, $column, $value);
+            if ($response !== null) {
                 return $response;
             }
-            return ["column"=>$column, "action"=>$value];
+
+            return ['column'=>$column, 'action'=>$value];
         } catch (\Exception $e) {
             dd($e);
+
             return false;
         }
     }
-    public function labSocialActivitiesService($id,$column,$value){
+
+    public function labSocialActivitiesService($id, $column, $value)
+    {
         try {
-            return $this->labSocialActivitiesService->store($id,$column,$value);
-        }catch (\Exception $e) {
+            return $this->labSocialActivitiesService->store($id, $column, $value);
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function joinLab($lab_id)
     {
         try {
