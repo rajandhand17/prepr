@@ -7,7 +7,7 @@ interface OrganizationInterface
     public function getOrganizationList($request);
 
     public function getOrganizationBasedOnSlug($slug);
-    public function organizationSocialActivitiesService($id,$column,$action);
+    public function socialActivities($id,$column,$action);
     public function checkExists($id, $action);
 
 }

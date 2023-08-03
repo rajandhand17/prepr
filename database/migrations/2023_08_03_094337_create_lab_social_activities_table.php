@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -19,6 +20,7 @@ return new class() extends Migration {
             $table->enum('follow_unfollow', ['0', '1', '2'])->default('0')->comment('0->no-activity, 1=>follow,2=>unfollow');
             $table->enum('join_unjoin', ['0', '1', '2'])->default('0')->comment('0->no-activity,1=>join,2=>unjoin');
             $table->enum('share', ['0', '1'])->default('0')->comment('0->no-activity, 1=>share');
+            $table->enum('favourite', ['0', '1', '2'])->default('0')->comment('0->no-activity, 1=>favourite,2=>unfavored');
             $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

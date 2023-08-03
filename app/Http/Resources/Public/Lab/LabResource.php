@@ -15,6 +15,12 @@ class LabResource extends JsonResource
      */
     public function toArray($request)
     {
+        $category = $this->category;
+        if ($category) {
+            $category = $this->category->title;
+        } else {
+            $category = null;
+        }
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -24,6 +30,7 @@ class LabResource extends JsonResource
             'privacy'                      => $this->type,
             'media_type'                   => $this->media_type,
             'media'                        => $this->media,
+            'category'                     => $category,
             'status'                       => $this->status,
         ];
     }

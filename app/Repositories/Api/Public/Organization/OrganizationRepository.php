@@ -33,11 +33,10 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         }
     }
-
-    public function organizationSocialActivitiesService($id,$column,$action): bool
+    public function socialActivities($id,$column,$action): bool
     {
         try {
-            $response = $this->organizationSocialActivitiesService->organizationSocialActivitiesService($id,$column,$action);
+            $response = $this->organizationSocialActivitiesService->update($id,$column,$action);
             if ($response) {
                 return $response;
             }
@@ -72,11 +71,11 @@ class OrganizationRepository implements OrganizationInterface
                     $column="share";
                     $value="1";
                     break;
-                case 'favorite':
+                case 'favourite':
                     $column="favourite";
                     $value="1";
                     break;
-                case 'un-favorite':
+                case 'un-favourite':
                     $column="favourite";
                     $value="2";
                     break;

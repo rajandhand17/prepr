@@ -18,20 +18,14 @@ class OrganizationSocialActivitiesService
             return false;
         }
     }
-
-    public function organizationSocialActivitiesService($id,$column,$action){
+    public function update($id,$column,$action){
         try{
-            $uniqueKey = ["user_id" => Auth::user()->id,
+            $records=OrganizationSocialActivities::updateOrInsert(["user_id" => Auth::user()->id,
                 "organization_id" => $id,
-            ];
-            $productData = [
+            ],[
                 $column => $action,
-            ];
-            $records=OrganizationSocialActivities::updateOrInsert($uniqueKey, $productData);
-            if($records){
-                return true;
-            }
-            return false;
+            ]);
+            return true;
         }catch(\Exception $e){
             return false;
         }

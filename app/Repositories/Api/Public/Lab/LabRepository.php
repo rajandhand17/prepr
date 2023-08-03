@@ -15,12 +15,10 @@ class LabRepository implements LabInterface
         $this->LabService = $LabService;
         $this->labSocialActivitiesService = $labSocialActivitiesService;
     }
-
-    public function getLabList($request)
+    public function getList($request)
     {
         try {
             $getLabList = $this->LabService->getLabList($request);
-
             return $getLabList;
         } catch (\Exception $e) {
             return false;
@@ -36,7 +34,7 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function checkLabActivity($lab_id,$action)
+    public function checkSocialActivity($lab_id,$action)
     {
         try {
             switch ($action) {
@@ -60,68 +58,32 @@ class LabRepository implements LabInterface
                   $column="share";
                   $value="1";
                   break;
+                case 'favourite':
+                    $column="favourite";
+                    $value="1";
+                    break;
+                case 'un-favourite':
+                    $column="favourite";
+                    $value="2";
+                    break;
                 default:
                     return false;
                     break;
             }
-            $response=$this->labSocialActivitiesService->checkLabActivity($lab_id,$column,$value);
+            $response=$this->labSocialActivitiesService->checkSocialActivity($lab_id,$column,$value);
             if($response!==null){
                 return $response;
             }
             return ["column"=>$column, "action"=>$value];
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
-    public function labSocialActivitiesService($id,$column,$value){
+    public function socialActivities($id,$column,$value): bool
+    {
         try {
-            return $this->labSocialActivitiesService->store($id,$column,$value);
+            return $this->labSocialActivitiesService->update($id,$column,$value);
         }catch (\Exception $e) {
-            return false;
-        }
-    }
-    public function joinLab($lab_id)
-    {
-        try {
-            return $this->labSocialActivitiesService->joinLab($lab_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function unjoinLab($lab_id)
-    {
-        try {
-            return $this->labSocialActivitiesService->unjoinLab($lab_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function followLab($lab_id)
-    {
-        try {
-            return $this->labSocialActivitiesService->followLab($lab_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function unfollowLab($lab_id)
-    {
-        try {
-            return $this->labSocialActivitiesService->unfollowLab($lab_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function share($lab_id)
-    {
-        try {
-            return $this->labSocialActivitiesService->share($lab_id);
-        } catch (\Exception $e) {
             return false;
         }
     }
