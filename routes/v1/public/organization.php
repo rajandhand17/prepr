@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\public\Organization\OrganizationController;
+use App\Http\Controllers\Api\Public\Organization\OrganizationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language'])->group(function () {
