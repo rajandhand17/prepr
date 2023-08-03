@@ -11,6 +11,7 @@ class LabService
         try {
             $lab_list = Lab::select()->where('labs.status', '1');
             $lab_list = self::filterLabList($request, $lab_list);
+
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;

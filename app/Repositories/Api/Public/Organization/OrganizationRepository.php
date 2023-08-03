@@ -34,61 +34,64 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function organizationSocialActivitiesService($id,$column,$action): bool
+    public function organizationSocialActivitiesService($id, $column, $action): bool
     {
         try {
-            $response = $this->organizationSocialActivitiesService->organizationSocialActivitiesService($id,$column,$action);
+            $response = $this->organizationSocialActivitiesService->organizationSocialActivitiesService($id, $column, $action);
             if ($response) {
                 return $response;
             }
+
             return false;
-        }catch (\Exception $e){
-        return false;
+        } catch (\Exception $e) {
+            return false;
         }
     }
+
     public function checkExists($id, $action)
     {
         try {
-            $column="";
-            $value="";
+            $column = '';
+            $value = '';
             switch ($action) {
                 case 'follow':
-                    $column="follow_unfollow";
-                    $value="1";
+                    $column = 'follow_unfollow';
+                    $value = '1';
                     break;
                 case 'un-follow':
-                    $column="follow_unfollow";
-                    $value="2";
+                    $column = 'follow_unfollow';
+                    $value = '2';
                     break;
                 case 'like':
-                    $column="like_dislike";
-                    $value="1";
+                    $column = 'like_dislike';
+                    $value = '1';
                     break;
                 case 'un-like':
-                    $column="like_dislike";
-                    $value="2";
+                    $column = 'like_dislike';
+                    $value = '2';
                     break;
                 case 'share':
-                    $column="share";
-                    $value="1";
+                    $column = 'share';
+                    $value = '1';
                     break;
                 case 'favorite':
-                    $column="favourite";
-                    $value="1";
+                    $column = 'favourite';
+                    $value = '1';
                     break;
                 case 'un-favorite':
-                    $column="favourite";
-                    $value="2";
+                    $column = 'favourite';
+                    $value = '2';
                     break;
                 default:
                     return false;
                     break;
-            };
-            $response = $this->organizationSocialActivitiesService->checkExists($id,$column, $value);
+            }
+            $response = $this->organizationSocialActivitiesService->checkExists($id, $column, $value);
             if ($response) {
                 return $response;
             }
-            $response=["column"=>$column, "action"=>$value];
+            $response = ['column'=>$column, 'action'=>$value];
+
             return $response;
         } catch (\Exception $e) {
             return false;

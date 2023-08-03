@@ -52,7 +52,9 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public  function organizationSocialActivitiesService($slug, $action){
+
+    public function organizationSocialActivitiesService($slug, $action)
+    {
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if ($organization !== null) {
@@ -60,13 +62,14 @@ class OrganizationController extends AppBaseController
                 if ($checkOrganization !== false && isset($checkOrganization->id)) {
                     return $this->sendError(__('responses.already_followed_organization'), 400);
                 }
-                $organization = $this->organizationRepository->organizationSocialActivitiesService($organization->id,$checkOrganization['column'],$checkOrganization['action']);
+                $organization = $this->organizationRepository->organizationSocialActivitiesService($organization->id, $checkOrganization['column'], $checkOrganization['action']);
                 if ($organization) {
                     return $this->sendResponse([], __('responses.follow_organization_successfully'));
                 }
             }
+
             return $this->sendError(__('responses.organization_not_exists'), 404);
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

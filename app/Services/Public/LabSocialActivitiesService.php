@@ -3,35 +3,35 @@
 namespace App\Services\Public;
 
 use App\Models\LabSocialActivity;
-use App\Models\OrganizationSocialActivities;
 use Illuminate\Support\Facades\Auth;
 
 class LabSocialActivitiesService
 {
-    public function checkLabActivity($id,$column,$value)
+    public function checkLabActivity($id, $column, $value)
     {
         return LabSocialActivity::where([
-            'user_id' =>Auth::user()->id,
-            'lab_id' =>$id,
-            $column=>$value,
+            'user_id' => Auth::user()->id,
+            'lab_id'  => $id,
+            $column   => $value,
         ])->first();
-
     }
 
-    public function store($id,$column,$action){
+    public function store($id, $column, $action)
+    {
         try {
-            $uniqueKey = ["user_id" => Auth::user()->id,
-                "lab_id" => $id,
+            $uniqueKey = ['user_id' => Auth::user()->id,
+                'lab_id'            => $id,
             ];
             $productData = [
                 $column => $action,
             ];
-            $records=LabSocialActivity::updateOrInsert($uniqueKey, $productData);
-            if($records){
+            $records = LabSocialActivity::updateOrInsert($uniqueKey, $productData);
+            if ($records) {
                 return true;
             }
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

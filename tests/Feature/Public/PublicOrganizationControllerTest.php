@@ -158,6 +158,7 @@ class PublicOrganizationControllerTest extends TestCase
         $response = $this->get('/api/v1/public/organization/'.$this->parameters['slug'].'/favorite?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
+
     public function test_favorite_organization_negative()
     {
         $response = $this->get('/api/v1/public/organization/'.$this->parameters['wrong_slug'].'/favorite?language='.$this->parameters['language'], $this->headers);
@@ -175,6 +176,7 @@ class PublicOrganizationControllerTest extends TestCase
         $response = $this->get('/api/v1/public/organization/'.$this->parameters['wrong_slug'].'/un-favorite?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(404, $response->getStatusCode());
     }
+
     public function test_un_like_organization_positive()
     {
         $response = $this->get('/api/v1/public/organization/'.$this->parameters['slug'].'/un-like?language='.$this->parameters['language'], $this->headers);
