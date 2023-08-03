@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\public\Lab\LabController;
+use App\Http\Controllers\Api\Public\Lab\LabController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
