@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Public\Lab;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\Public\Lab\LabResource as  PublicLabResource;
+use App\Http\Resources\Public\Lab\LabResource;
 use App\Repositories\Api\Public\Lab\LabRepository;
 use Illuminate\Http\Request;
 
@@ -20,19 +20,17 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getList($request);
-            if ($lab) {
+            if ($lab!== false) {
                 $response = [
                     'total_count'  => $lab->total(),
                     'per_page'     => $lab->perPage(),
                     'count'        => $lab->count(),
                     'current_page' => $lab->currentPage(),
                     'total_pages'  => $lab->lastPage(),
-                    'list'         => PublicLabResource::collection($lab),
+                    'list'         => LabResource::collection($lab),
                 ];
-
                 return $this->sendResponse($response, 'responses.labs_fetched_successfully');
             }
-
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -60,7 +58,6 @@ class LabController extends AppBaseController
                 $checkLab = $this->labRepository->checkSocialActivity($checkLabExistsOrNot->id,$action);
                 $action=str_replace("-","",$action);
                 if ($checkLab!==null && isset($checkLab->id) ){
-
                     return $this->sendError(__('responses.already_'.$action.'_lab'), 400);
                 }
                 $lab = $this->labRepository->socialActivity($checkLabExistsOrNot->id,$checkLab['column'],$checkLab['action']);

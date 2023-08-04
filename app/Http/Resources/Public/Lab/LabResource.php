@@ -15,9 +15,9 @@ class LabResource extends JsonResource
      */
     public function toArray($request)
     {
-        $category = $this->category;
+        $category = $this->getCategory;
         if ($category) {
-            $category = $this->category->title;
+            $category = $this->getCategory->title;
         } else {
             $category = null;
         }
@@ -32,6 +32,9 @@ class LabResource extends JsonResource
             'media'                        => $this->media,
             'category'                     => $category,
             'status'                       => $this->status,
+            'likes'                        => $this->join()->count(),
+            'followers'                    => $this->followers()->count(),
+            'shares'                       => $this->shares()->count(),
         ];
     }
 }

@@ -32,6 +32,7 @@ class LabService
                     $lab_list = $lab_list->where('privacy', '=', 1);
                 }
             }
+
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $lab_list = $lab_list->whereIn('labs.category', $request->category);
             }
