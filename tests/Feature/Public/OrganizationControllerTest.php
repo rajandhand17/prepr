@@ -5,7 +5,7 @@ namespace Tests\Feature\Public;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
-class PublicOrganizationControllerTest extends TestCase
+class OrganizationControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
@@ -18,7 +18,7 @@ class PublicOrganizationControllerTest extends TestCase
 
         $this->parameters = [
             'language'        => 'en',
-            'wrong_language'  => 'hi',
+            'wrong_language'  => 'hindi',
             'slug'            => 'prepr',
             'wrong_slug'      => 'wrong_slug',
             'email'           => 'rajan@amazon.com',
@@ -150,6 +150,30 @@ class PublicOrganizationControllerTest extends TestCase
     public function test_like_organization_negative()
     {
         $response = $this->get('/api/v1/public/organization/'.$this->parameters['wrong_slug'].'/like?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function test_favorite_organization_positive()
+    {
+        $response = $this->get('/api/v1/public/organization/'.$this->parameters['slug'].'/favourite?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function test_favorite_organization_negative()
+    {
+        $response = $this->get('/api/v1/public/organization/'.$this->parameters['wrong_slug'].'/favourite?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function test_un_favorite_organization_positive()
+    {
+        $response = $this->get('/api/v1/public/organization/'.$this->parameters['slug'].'/un-favourite?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function test_un_favorite_organization_negative()
+    {
+        $response = $this->get('/api/v1/public/organization/'.$this->parameters['wrong_slug'].'/un-favourite?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(404, $response->getStatusCode());
     }
 

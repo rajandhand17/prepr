@@ -16,11 +16,11 @@ class OrganizationRepository implements OrganizationInterface
         $this->organizationSocialActivitiesService = $organizationSocialActivitiesService;
     }
 
-    public function getOrganizationList($request)
+    public function getList($request)
     {
         try {
-            return $this->organizationService->getOrganizationList($request);
-        } catch (\Exception $e) {
+            return $this->organizationService->getList($request);
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -29,82 +29,34 @@ class OrganizationRepository implements OrganizationInterface
     {
         try {
             return $this->organizationService->getOrganizationBasedOnSlug($slug);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getColumnNameValue($action)
+    {
+        try {
+            return $this->organizationSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkFollowUnfollowExists($id, $action)
+    public function checkSocialActivity($organization_id, $column, $action)
     {
         try {
-            $response = $this->organizationSocialActivitiesService->checkFollowUnfollowExists($id, $action);
-            if ($response) {
-                return $response;
-            }
-
-            return false;
-        } catch (\Exception $e) {
+            return $this->organizationSocialActivitiesService->checkSocialActivity($organization_id, $column, $action);
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function checkLikeUnlikeExists($id, $action)
+    public function captureSocialActivity($organization_id, $column, $action)
     {
         try {
-            $response = $this->organizationSocialActivitiesService->checkLikeUnlikeExists($id, $action);
-            if ($response) {
-                return $response;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function follow($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->follow($organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function unfollow($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->unfollow($organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function like($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->like($organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function unlike($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->unlike($organization_id);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function share($organization_id)
-    {
-        try {
-            return $this->organizationSocialActivitiesService->share($organization_id);
-        } catch (\Exception $e) {
-            return $e;
-
+            return $this->organizationSocialActivitiesService->captureSocialActivity($organization_id, $column, $action);
+        } catch(\Exception $e) {
             return false;
         }
     }

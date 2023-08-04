@@ -31,9 +31,4 @@ class LabAchievementRepository implements LabAchievementInterface
             return false;
         }
     }
-
-    public function uploadAchievementImage($image)
-    {
-        // TODO: Implement uploadAchievementImage() method.
-    }
 }

@@ -6,7 +6,7 @@ use App\Models\Organization;
 
 class OrganizationService
 {
-    public static function getOrganizationList($request)
+    public static function getList($request)
     {
         try {
             $organization_list = Organization::select()->where('organizations.status', '1');
@@ -24,6 +24,31 @@ class OrganizationService
         try {
             if ($request->has('search') && !empty($request->search)) {
                 $organization_list = $organization_list->where('organizations.title', 'like', '%'.$request->search.'%');
+            }
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $organization_list = $organization_list->whereIn('organizations.category', $request->category);
+            }
+
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
+                $getOrganizationLikedList = OrganizationSocialActivitiesService::getOrganizationsBasedOnActivity('like');
+
+                if ($getOrganizationLikedList && $getOrganizationLikedList->count() > 0) {
+                    $organization_list = $organization_list->whereIn('id', $getOrganizationLikedList->pluck('organization_id'));
+                }
+            }
+
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'followed') {
+                $getOrganizationLikedList = OrganizationSocialActivitiesService::getOrganizationsBasedOnActivity('follow');
+                if ($getOrganizationLikedList && $getOrganizationLikedList->count() > 0) {
+                    $organization_list = $organization_list->whereIn('organizations.id', $getOrganizationLikedList->pluck('organization_id'));
+                }
+            }
+
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourites') {
+                $getOrganizationLikedList = OrganizationSocialActivitiesService::getOrganizationsBasedOnActivity('favourite');
+                if ($getOrganizationLikedList && $getOrganizationLikedList->count() > 0) {
+                    $organization_list = $organization_list->whereIn('organizations.id', $getOrganizationLikedList->pluck('organization_id'));
+                }
             }
 
             return $organization_list;
