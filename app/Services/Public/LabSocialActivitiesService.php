@@ -27,13 +27,12 @@ class LabSocialActivitiesService
     public function captureSocialActivity($lab_id,$column,$action): bool
     {
         try {
-            $records=LabSocialActivity::updateOrInsert([
+            LabSocialActivity::updateOrInsert([
                 "user_id" => Auth::user()->id,
                 "lab_id" => $lab_id,
             ], [
                 $column => $action,
             ]);
-
             return true;
         } catch (\Exception $e) {
             return false;

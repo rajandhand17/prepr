@@ -20,7 +20,6 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getList($request);
-
             if($lab!== false) {
                 $response = [
                     'total_count'  => $lab->total(),
@@ -43,7 +42,7 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab) {
-                return $this->sendResponse(PublicLabResource::make($lab), __('responses.labs_fetched_successfully'));
+                return $this->sendResponse(LabResource::make($lab), __('responses.labs_fetched_successfully'));
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
@@ -71,7 +70,6 @@ class LabController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
                 }
             }
-
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
             } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

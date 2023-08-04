@@ -39,7 +39,6 @@ class LabService
                 $getLabJoinedList = LabSocialActivitiesService::getLabBasedOnActivity('follow');
                 if($getLabJoinedList && $getLabJoinedList->count() > 0){
                     $lab_list = $lab_list->whereIn('id', $getLabJoinedList->pluck('lab_id'));
-
                 }
             }
             if($request->has('social_type') && !empty($request->social_type) && $request->social_type== 'favourite'){
