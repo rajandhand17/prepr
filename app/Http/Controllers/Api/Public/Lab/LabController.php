@@ -53,19 +53,22 @@ class LabController extends AppBaseController
 
     public  function socialActivity($slug, $action){
         try {
-            $checkLabExistsOrNot = $this->labRepository->getLabBasedOnSlug($slug);
-            if ($checkLabExistsOrNot) {
-                $checkLab = $this->labRepository->checkSocialActivity($checkLabExistsOrNot->id,$action);
-                $action=str_replace("-","",$action);
-                if ($checkLab!==null && isset($checkLab->id) ){
+            $lab = $this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab !== null) {
+                $getColumnNameValue= $this->labRepository->getColumnNameValue($action);
+                if(!$getColumnNameValue){
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
+                }
+                $checkActivity = $this->labRepository->checkSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $action=str_replace("-","_",$action);
+                if ($checkActivity === true){
                     return $this->sendError(__('responses.already_'.$action.'_lab'), 400);
                 }
-                $lab = $this->labRepository->socialActivity($checkLabExistsOrNot->id,$checkLab['column'],$checkLab['action']);
+                $lab = $this->labRepository->captureSocialActivity($lab->id,$getColumnNameValue['column'],$getColumnNameValue['action']);
                 if ($lab) {
                     return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
                 }
             }
-
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
             } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

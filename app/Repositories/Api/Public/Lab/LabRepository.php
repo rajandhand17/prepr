@@ -34,68 +34,26 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function checkSocialActivity($lab_id,$action)
+    public function getColumnNameValue($action)
     {
         try {
-            switch ($action) {
-                case 'join':
-                    $column = 'join_unjoin';
-                    $value = '1';
-                    break;
-                case 'un-join':
-                    $column = 'join_unjoin';
-                    $value = '2';
-                    break;
-                case 'follow':
-                    $column = 'follow_unfollow';
-                    $value = '1';
-                    break;
-                case 'un-follow':
-                    $column = 'follow_unfollow';
-                    $value = '2';
-                    break;
-                case 'share':
-                    $column = 'share';
-                    $value = '1';
-                    break;
-                case 'follow':
-                    $column="follow_unfollow";
-                    $value="1";
-                    break;
-                case 'un-follow':
-                    $column="follow_unfollow";
-                    $value="2";
-                    break;
-                case 'share':
-                    $column="share";
-                    $value="1";
-                    break;
-                case 'favourite':
-                    $column="favourite";
-                    $value="1";
-                    break;
-                case 'un-favourite':
-                    $column="favourite";
-                    $value="2";
-                    break;
-                default:
-                    return false;
-                    break;
-            }
-            $response=$this->labSocialActivitiesService->checkSocialActivity($lab_id,$column,$value);
-            if($response!==null){
-                return $response;
-            }
-
-            return ['column'=>$column, 'action'=>$value];
+            return $this->labSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
             return false;
         }
     }
-    public function socialActivity($id,$column,$value): bool
+    public function checkSocialActivity($lab_id, $column, $action)
     {
         try {
-            return $this->labSocialActivitiesService->update($id,$column,$value);
+            return $this->labSocialActivitiesService->checkSocialActivity($lab_id,$column,$action);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function captureSocialActivity($lab_id,$column,$value)
+    {
+        try {
+            return $this->labSocialActivitiesService->captureSocialActivity($lab_id,$column,$value);
         }catch (\Exception $e) {
             return false;
         }

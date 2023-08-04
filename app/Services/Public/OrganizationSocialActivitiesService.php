@@ -76,8 +76,8 @@ class OrganizationSocialActivitiesService
     public function captureSocialActivity($id,$column,$action){
         try{
             OrganizationSocialActivities::updateOrInsert([
-                'user_id' => auth()->user()->id,
-                'organization_id' => $id,
+                "user_id" => auth()->user()->id,
+                "organization_id" => $id,
             ],[
                 $column => $action,
             ]);

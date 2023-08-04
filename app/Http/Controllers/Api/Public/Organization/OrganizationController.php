@@ -56,18 +56,15 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if ($organization !== null) {
-
                 $getColumnNameValue = $this->organizationRepository->getColumnNameValue($action);
                 if(!$getColumnNameValue){
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
-
                 $checkActivity = $this->organizationRepository->checkSocialActivity($organization->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action=str_replace("-","",$action);
-                if ($checkActivity === true) {
+                if ($checkActivity === true){
                     return $this->sendError(__('responses.already_'.$action.'_organization'), 400);
                 }
-
                 $organization = $this->organizationRepository->captureSocialActivity($organization->id,$getColumnNameValue['column'],$getColumnNameValue['action']);
                 if ($organization) {
                     return $this->sendResponse([], __('responses.'.$action.'_organization_successfully'));
