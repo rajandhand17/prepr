@@ -16,18 +16,20 @@ class OrganizationRepository implements OrganizationInterface
         $this->organizationSocialActivitiesService = $organizationSocialActivitiesService;
     }
 
-    public function getList($request){
-        try{
+    public function getList($request)
+    {
+        try {
             return $this->organizationService->getList($request);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function getOrganizationBasedOnSlug($slug){
-        try{
+    public function getOrganizationBasedOnSlug($slug)
+    {
+        try {
             return $this->organizationService->getOrganizationBasedOnSlug($slug);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -43,21 +45,19 @@ class OrganizationRepository implements OrganizationInterface
 
     public function checkSocialActivity($organization_id, $column, $action)
     {
-        try{
-            return $this->organizationSocialActivitiesService->checkSocialActivity($organization_id,$column,$action);
-        }catch(\Exception $e){
+        try {
+            return $this->organizationSocialActivitiesService->checkSocialActivity($organization_id, $column, $action);
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function captureSocialActivity($organization_id,$column,$action)
+    public function captureSocialActivity($organization_id, $column, $action)
     {
-        try{
-            return $this->organizationSocialActivitiesService->captureSocialActivity($organization_id,$column,$action);
-        }catch(\Exception $e){
+        try {
+            return $this->organizationSocialActivitiesService->captureSocialActivity($organization_id, $column, $action);
+        } catch(\Exception $e) {
             return false;
         }
     }
-
-
 }

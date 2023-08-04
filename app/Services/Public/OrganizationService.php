@@ -14,7 +14,6 @@ class OrganizationService
             $organization_list = self::filterOrganizationList($request, $organization_list);
 
             return $organization_list->paginate(config('site-settings.pagination_per_page'));
-
         } catch (\Exception $e) {
             return false;
         }
@@ -30,29 +29,27 @@ class OrganizationService
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
 
-            if($request->has('social_type') && !empty($request->social_type) && $request->social_type== 'liked'){
-
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
                 $getOrganizationLikedList = OrganizationSocialActivitiesService::getOrganizationsBasedOnActivity('like');
 
-                if($getOrganizationLikedList && $getOrganizationLikedList->count() > 0){
+                if ($getOrganizationLikedList && $getOrganizationLikedList->count() > 0) {
                     $organization_list = $organization_list->whereIn('id', $getOrganizationLikedList->pluck('organization_id'));
                 }
             }
 
-            if($request->has('social_type') && !empty($request->social_type) && $request->social_type== 'followed'){
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'followed') {
                 $getOrganizationLikedList = OrganizationSocialActivitiesService::getOrganizationsBasedOnActivity('follow');
-                if($getOrganizationLikedList && $getOrganizationLikedList->count() > 0){
+                if ($getOrganizationLikedList && $getOrganizationLikedList->count() > 0) {
                     $organization_list = $organization_list->whereIn('organizations.id', $getOrganizationLikedList->pluck('organization_id'));
                 }
             }
 
-            if($request->has('social_type') && !empty($request->social_type) && $request->social_type== 'favourites'){
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourites') {
                 $getOrganizationLikedList = OrganizationSocialActivitiesService::getOrganizationsBasedOnActivity('favourite');
-                if($getOrganizationLikedList && $getOrganizationLikedList->count() > 0){
+                if ($getOrganizationLikedList && $getOrganizationLikedList->count() > 0) {
                     $organization_list = $organization_list->whereIn('organizations.id', $getOrganizationLikedList->pluck('organization_id'));
                 }
             }
-
 
             return $organization_list;
         } catch (\Exception $e) {
