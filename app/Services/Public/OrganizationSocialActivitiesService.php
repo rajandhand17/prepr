@@ -8,7 +8,7 @@ class OrganizationSocialActivitiesService
 {
 
 
-    public function getColumnNameValue($action)
+    public static function getColumnNameValue($action)
     {
         try {
             $column = null;
@@ -85,5 +85,26 @@ class OrganizationSocialActivitiesService
         }catch(\Exception $e){
             return false;
         }
-     }
+    }
+
+    public static function getOrganizationsBasedOnActivity($action){
+        try{
+            if(auth()->check()){
+                $columnValue = self::getColumnNameValue($action);
+                if($columnValue !== false){
+                    $organization_ids = OrganizationSocialActivities::where(
+                        [
+                            'user_id' => auth()->user()->id,
+                            $columnValue['column'] => $columnValue['action']
+                        ])->get();
+                    return $organization_ids;
+                }
+                return false;
+            }
+            return false;
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
 }
