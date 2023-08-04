@@ -81,4 +81,28 @@ class Organization extends LaratrustTeam
     {
         return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('share','1');
     }
+
+    public function liked()
+    {
+        if(auth()->check()){
+            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id',auth()->user()->id)->where('like_dislike','1')->count() > 0) ? 'Yes' : 'No';
+        }
+        return 'NA';
+    }
+
+    public function followed()
+    {
+        if(auth()->check()) {
+            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth()->user()->id)->where('follow_unfollow', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+        return 'NA';
+    }
+
+    public function favourite()
+    {
+        if(auth()->check()) {
+            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id',auth()->user()->id)->where('favourite','1')->count() > 0) ? 'Yes' : 'No';
+        }
+        return 'NA';
+    }
 }

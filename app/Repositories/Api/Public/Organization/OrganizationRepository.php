@@ -20,7 +20,7 @@ class OrganizationRepository implements OrganizationInterface
         try{
             return $this->organizationService->getList($request);
         }catch(\Exception $e){
-        return false;
+            return false;
         }
     }
 
