@@ -29,7 +29,7 @@ class LabController extends AppBaseController
                     'total_pages'  => $lab->lastPage(),
                     'list'         => LabResource::collection($lab),
                 ];
-                return $this->sendResponse($response, 'responses.labs_fetched_successfully');
+                return $this->sendResponse($response, 'responses.found_labs_list');
             }
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
@@ -42,9 +42,8 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab) {
-                return $this->sendResponse(LabResource::make($lab), __('responses.labs_fetched_successfully'));
+                return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'));
             }
-
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
