@@ -54,7 +54,6 @@ class PitchTemplate extends Command
                     }
                     $newPitchTemplate->id = $single_pitch_templates->id;
                     $newPitchTemplate->title = $single_pitch_templates->title;
-                    $newPitchTemplate->challenge_id = isset($single_pitch_templates->challenge_id) ? $single_pitch_templates->challenge_id : null;
                     $newPitchTemplate->save();
                 }
                 DB::commit();
