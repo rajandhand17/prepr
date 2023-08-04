@@ -54,18 +54,19 @@ class SkillStack extends Command
                             $skills = [$single_skill_stack->skills];
                         }
                     }
-                    $skill_stack_details = [
-                        'id'                => $single_skill_stack->id,
-                        'title'             => $single_skill_stack->title,
-                        'fr_CA_title'       => $single_skill_stack->fr_CA_title,
-                        'description'       => $single_skill_stack->description,
-                        'fr_CA_description' => $single_skill_stack->fr_CA_description,
-                        'skills'            => $skills,
-                    ];
-                    $check_skills = SkillStacks::where('title', $single_skill_stack->title)->first();
-                    if (!$check_skills) {
-                        SkillStacks::create($skill_stack_details);
+                    $check_skill_stacks = SkillStacks::where('title', $single_skill_stack->title)->first();
+                    if ($check_skill_stacks) {
+                        $newSkillStack = $check_skill_stacks;
+                    } else {
+                        $newSkillStack = new SkillStacks();
                     }
+                    $newSkillStack->id = $single_skill_stack->id;
+                    $newSkillStack->title = $single_skill_stack->title;
+                    $newSkillStack->fr_CA_title = $single_skill_stack->fr_CA_title;
+                    $newSkillStack->description = $single_skill_stack->description;
+                    $newSkillStack->fr_CA_description = $single_skill_stack->fr_CA_description;
+                    $newSkillStack->skills = $skills;
+                    $newSkillStack->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for skill stack table completed.');

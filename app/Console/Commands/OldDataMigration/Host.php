@@ -46,16 +46,17 @@ class Host extends Command
             $hosts = DB::connection('mysql2')->table('hosts')->get();
             if ($hosts->count() > 0) {
                 foreach ($hosts as $key => $single_host) {
-                    $hosts_details = [
-                        'id'     => $single_host->id,
-                        'title'  => $single_host->name,
-                        'link'   => $single_host->link,
-                        'image'  => $single_host->image,
-                    ];
-                    $check_hosts = Hosts::where($hosts_details)->first();
-                    if (!$check_hosts) {
-                        Hosts::create($hosts_details);
+                    $check_hosts = Hosts::where(['title' => $single_host->name, 'link' => $single_host->link])->first();
+                    if ($check_hosts) {
+                        $newHost = $check_hosts;
+                    } else {
+                        $newHost = new Hosts();
                     }
+                    $newHost->id = $single_host->id;
+                    $newHost->title = $single_host->name;
+                    $newHost->link = $single_host->link;
+                    $newHost->image = $single_host->image;
+                    $newHost->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for hosts table completed.');
