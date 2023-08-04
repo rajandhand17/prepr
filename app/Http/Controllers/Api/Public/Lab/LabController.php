@@ -29,9 +29,9 @@ class LabController extends AppBaseController
                     'total_pages'  => $lab->lastPage(),
                     'list'         => LabResource::collection($lab),
                 ];
-                return $this->sendResponse($response, 'responses.found_labs_list');
+                return $this->sendResponse($response, __('responses.found_labs_list'));
             }
-            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
