@@ -85,14 +85,6 @@ class LabSocialActivitiesService
                     $column='favourite';
                     $value="2";
                     break;
-                case 'join':
-                    $column='join_unjoin';
-                    $value="1";
-                    break;
-                case 'un-join':
-                    $column='join_unjoin';
-                    $value="2";
-                    break;
                 default:
                     $column = null;
                     $value = null;

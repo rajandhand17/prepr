@@ -23,18 +23,15 @@ class LabService
             if ($request->has('search') && !empty($request->search)) {
                 $lab_list = $lab_list->where('lab.title', 'like', '%'.$request->search.'%');
             }
+
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $lab_list = $lab_list->whereIn('labs.category', $request->category);
             }
+
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $lab_list = $lab_list->where('organization_id', '=', $request->organization_id);
             }
-            if($request->has('social_type') && !empty($request->social_type) && $request->social_type== 'join'){
-                $getLabJoinedList = LabSocialActivitiesService::getLabBasedOnActivity('join');
-                if($getLabJoinedList && $getLabJoinedList->count() > 0){
-                    $lab_list = $lab_list->whereIn('id', $getLabJoinedList->pluck('lab_id'));
-                }
-            }
+
             if($request->has('social_type') && !empty($request->social_type) && $request->social_type== 'followed'){
                 $getLabJoinedList = LabSocialActivitiesService::getLabBasedOnActivity('follow');
                 if($getLabJoinedList && $getLabJoinedList->count() > 0){

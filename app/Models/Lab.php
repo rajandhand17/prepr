@@ -95,10 +95,6 @@ class Lab extends Model
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
 
-    public  function  join(){
-        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('join_unjoin','1');
-    }
-
     public function followers(){
         return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('follow_unfollow','1');
     }
