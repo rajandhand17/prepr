@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Public\Lab;
 
-use App\Http\Resources\Public\Organization\OrganizationAddressResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabResource extends JsonResource
