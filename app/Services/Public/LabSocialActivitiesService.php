@@ -3,7 +3,7 @@
 namespace App\Services\Public;
 
 use App\Models\LabSocialActivity;
-
+use Illuminate\Support\Facades\Auth;
 class LabSocialActivitiesService
 {
     public function checkSocialActivity($lab_id,$column,$action)
