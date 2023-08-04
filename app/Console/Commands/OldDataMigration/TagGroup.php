@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Models\TagGroup as ModelsTagGroup;
 use DB;
 use Illuminate\Console\Command;
 
@@ -53,18 +54,19 @@ class TagGroup extends Command
                             $tags = [$tag_group->tags];
                         }
                     }
-                    $tag_group_details = [
-                        'id'                => $tag_group->id,
-                        'title'             => $tag_group->title,
-                        'fr_CA_title'       => $tag_group->fr_CA_title,
-                        'description'       => $tag_group->description,
-                        'fr_CA_description' => $tag_group->fr_CA_description,
-                        'tags'              => $tags,
-                    ];
-                    $check_tag_group = \App\Models\TagGroup::where('title', $tag_group->title)->first();
-                    if (!$check_tag_group) {
-                        \App\Models\TagGroup::create($tag_group_details);
+                    $check_tag_group = ModelsTagGroup::where('title', $tag_group->title)->first();
+                    if ($check_tag_group) {
+                        $newTagGroup = $check_tag_group;
+                    } else {
+                        $newTagGroup = new ModelsTagGroup();
                     }
+                    $newTagGroup->id = $tag_group->id;
+                    $newTagGroup->title = $tag_group->title;
+                    $newTagGroup->fr_CA_title = $tag_group->fr_CA_title;
+                    $newTagGroup->description = $tag_group->description;
+                    $newTagGroup->fr_CA_description = $tag_group->fr_CA_description;
+                    $newTagGroup->tags = $tags;
+                    $newTagGroup->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for tag groups table completed.');

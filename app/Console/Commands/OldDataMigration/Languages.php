@@ -47,17 +47,18 @@ class Languages extends Command
 
             if ($languages->count() > 0) {
                 foreach ($languages as $key => $single_language) {
-                    $language_details = [
-                        'id'          => $single_language->id,
-                        'name'        => $single_language->lang_name,
-                        'iso'         => $single_language->lang_iso,
-                        'status'      => $single_language->status,
-                        'is_imported' => $single_language->is_imported,
-                    ];
-                    $checkCategory = Language::where($language_details)->first();
-                    if (!$checkCategory) {
-                        Language::create($language_details);
+                    $checkLanguage = Language::where(['name' => $single_language->lang_name, 'iso' => $single_language->lang_iso])->first();
+                    if ($checkLanguage) {
+                        $newLanguage = $checkLanguage;
+                    } else {
+                        $newLanguage = new Language();
                     }
+                    $newLanguage->id = $single_language->id;
+                    $newLanguage->name = $single_language->lang_name;
+                    $newLanguage->iso = $single_language->lang_iso;
+                    $newLanguage->status = $single_language->status;
+                    $newLanguage->is_imported = $single_language->is_imported;
+                    $newLanguage->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for languages table completed.');
