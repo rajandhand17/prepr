@@ -8,5 +8,5 @@ Route::middleware(['language'])->group(function () {
     Route::get('/{slug}', [OrganizationController::class, 'show']);
 });
 Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::get('/{slug}/{activity}', [OrganizationController::class, 'socialActivity']);
+    Route::post('/{slug}/{activity}', [OrganizationController::class, 'socialActivity']);
 });

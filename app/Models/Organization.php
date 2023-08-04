@@ -66,4 +66,19 @@ class Organization extends LaratrustTeam
     {
         return $this->hasMany(Lab::class, 'organization_id', 'id');
     }
+
+    public function likes()
+    {
+        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('like_dislike','1');
+    }
+
+    public function followers()
+    {
+        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('follow_unfollow','1');
+    }
+
+    public function shares()
+    {
+        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('share','1');
+    }
 }
