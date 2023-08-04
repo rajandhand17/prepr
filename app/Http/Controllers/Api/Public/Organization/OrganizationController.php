@@ -59,7 +59,7 @@ class OrganizationController extends AppBaseController
 
                 $getColumnNameValue = $this->organizationRepository->getColumnNameValue($action);
                 if(!$getColumnNameValue){
-                    return $this->sendError('Invalid Request', 400);
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
 
                 $checkActivity = $this->organizationRepository->checkSocialActivity($organization->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
