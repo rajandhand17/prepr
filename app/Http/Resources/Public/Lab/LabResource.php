@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\Lab;
 
+use App\Http\Resources\Public\Organization\OrganizationAddressResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabResource extends JsonResource
@@ -36,6 +37,9 @@ class LabResource extends JsonResource
             'likes'                        => $this->join()->count(),
             'followers'                    => $this->followers()->count(),
             'shares'                       => $this->shares()->count(),
+            'lab_address'                  => LabAddressResource::collection($this->address),
+            'lab_achievement'              => LabAchievementResource::collection($this->achievement),
+            'lab_external_links'           => LabExternalLinksResource::collection($this->external_links),
         ];
     }
 }

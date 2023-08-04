@@ -19,9 +19,7 @@ class LabRepository implements LabInterface
     public function getList($request)
     {
         try {
-            $getLabList = $this->LabService->getList($request);
-
-            return $getLabList;
+             return $this->LabService->getList($request);
         } catch (\Exception $e) {
             return false;
         }

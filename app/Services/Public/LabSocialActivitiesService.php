@@ -3,8 +3,6 @@
 namespace App\Services\Public;
 
 use App\Models\LabSocialActivity;
-use App\Models\OrganizationSocialActivities;
-use Illuminate\Support\Facades\Auth;
 
 class LabSocialActivitiesService
 {
@@ -47,7 +45,7 @@ class LabSocialActivitiesService
             if(auth()->check()){
                 $columnValue = self::getColumnNameValue($action);
                 if($columnValue !== false){
-                    $organization_ids = OrganizationSocialActivities::where(
+                    $organization_ids = LabSocialActivity::where(
                         [
                             'user_id' => auth()->user()->id,
                             $columnValue['column'] => $columnValue['action']
@@ -104,8 +102,31 @@ class LabSocialActivitiesService
             if($column != null && $value != null){
                 return ['column' => $column, 'action' => $value];
             }
+
             return false;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnActivity($action)
+    {
+        try {
+            if (auth()->check()) {
+                $columnValue = self::getColumnNameValue($action);
+                if ($columnValue !== false) {
+                    $lab_ids = LabSocialActivity::where(
+                        [
+                            'user_id'              => auth()->user()->id,
+                            $columnValue['column'] => $columnValue['action'],
+                        ]
+                    )->get();
+                    return $lab_ids;
+                }
+                return false;
+            }
+            return false;
+        } catch(\Exception $e) {
             return false;
         }
     }

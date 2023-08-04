@@ -18,4 +18,5 @@ class LabExternalLinks extends Model
         'social_media_link',
         'social_link_id',
     ];
+
 }

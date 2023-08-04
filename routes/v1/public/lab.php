@@ -4,11 +4,11 @@ use App\Http\Controllers\Api\Public\Lab\LabController;
 use Illuminate\Support\Facades\Route;
 
 $middleware = ['language'];
-if(\request()->has('social_type')){
-    $middleware = ['language','auth:api'];
+if (\request()->has('social_type')) {
+    $middleware = ['language', 'auth:api'];
 }
 
-Route::middleware(['language'])->group(function () {
+Route::middleware($middleware)->group(function () {
     Route::get('/', [LabController::class, 'index']);
     Route::get('/{slug}', [LabController::class, 'show']);
 });

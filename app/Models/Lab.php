@@ -37,7 +37,7 @@ class Lab extends Model
 
     public function address()
     {
-        return $this->hasOne(LabAddress::class, 'lab_id', 'id');
+        return $this->hasMany(LabAddress::class, 'lab_id', 'id');
     }
 
     public function organization()
@@ -57,7 +57,7 @@ class Lab extends Model
 
     public function achievement()
     {
-        return $this->hasOne(LabAcheivement::class, 'lab_id', 'id');
+        return $this->hasMany(LabAcheivement::class, 'lab_id', 'id');
     }
 
     public function external_links()

@@ -20,7 +20,8 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getList($request);
-            if ($lab!== false) {
+
+            if($lab!== false) {
                 $response = [
                     'total_count'  => $lab->total(),
                     'per_page'     => $lab->perPage(),
