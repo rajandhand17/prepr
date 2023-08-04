@@ -31,57 +31,33 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         }
     }
-    public function socialActivity($id,$column,$action): bool
-    {
-        try{
-           return $this->organizationSocialActivitiesService->update($id,$column,$action);
-        }catch(\Exception $e){
-            return false;
-        }
-    }
-    public function checkSocialActivity($lab_id,$action)
+
+    public function getColumnNameValue($action)
     {
         try {
-            switch ($action) {
-                case 'follow':
-                    $column = 'follow_unfollow';
-                    $value = '1';
-                    break;
-                case 'un-follow':
-                    $column = 'follow_unfollow';
-                    $value = '2';
-                    break;
-                case 'share':
-                    $column = 'share';
-                    $value = '1';
-                    break;
-                case 'favourite':
-                    $column="favourite";
-                    $value="1";
-                    break;
-                case 'un-favourite':
-                    $column="favourite";
-                    $value="2";
-                    break;
-                case 'like':
-                    $column="like_dislike";
-                    $value="1";
-                    break;
-                case 'un-like':
-                    $column="like_dislike";
-                    $value="2";
-                    break;
-                default:
-                    return false;
-                    break;
-            }
-            $response=$this->organizationSocialActivitiesService->checkSocialActivity($lab_id,$column,$value);
-            if($response!==null){
-                return $response;
-            }
-            return ['column'=>$column, 'action'=>$value];
+            return $this->organizationSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
             return false;
         }
     }
+
+    public function checkSocialActivity($organization_id, $column, $action)
+    {
+        try{
+            return $this->organizationSocialActivitiesService->checkSocialActivity($organization_id,$column,$action);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
+    public function captureSocialActivity($organization_id,$column,$action)
+    {
+        try{
+            return $this->organizationSocialActivitiesService->captureSocialActivity($organization_id,$column,$action);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
+
 }

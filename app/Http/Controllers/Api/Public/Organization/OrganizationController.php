@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\public\Organization;
+namespace App\Http\Controllers\Api\Public\Organization;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\Public\Organization\OrganizationResource as PublicOrganizationResource;
+use App\Http\Resources\Public\Organization\OrganizationResource;
 use App\Repositories\Api\Public\Organization\OrganizationRepository;
 use Illuminate\Http\Request;
 
@@ -19,18 +19,18 @@ class OrganizationController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = $this->organizationRepository->getList($request);
-            if ($organization !== false) {
+            $organizations = $this->organizationRepository->getList($request);
+            if ($organizations !== false) {
                 $response = [
-                    'total_count'  => $organization->total(),
-                    'per_page'     => $organization->perPage(),
-                    'count'        => $organization->count(),
-                    'current_page' => $organization->currentPage(),
-                    'total_pages'  => $organization->lastPage(),
-                    'list'         => PublicOrganizationResource::collection($organization),
+                    'total_count'  => $organizations->total(),
+                    'per_page'     => $organizations->perPage(),
+                    'count'        => $organizations->count(),
+                    'current_page' => $organizations->currentPage(),
+                    'total_pages'  => $organizations->lastPage(),
+                    'list'         => OrganizationResource::collection($organizations),
                 ];
 
-                return $this->sendResponse([$response], __('responses.found_organization_list'));
+                return $this->sendResponse($response, __('responses.found_organization_list'));
             }
 
             return $this->sendError(__('responses.not_found_organization_list'), 404);
@@ -44,7 +44,7 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if ($organization) {
-                return $this->sendResponse(PublicOrganizationResource::make($organization), __('responses.found_organization_list'));
+                return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
             }
 
             return $this->sendError(__('responses.organization_not_exists'), 404);
@@ -56,12 +56,19 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if ($organization !== null) {
-                $checkOrganization = $this->organizationRepository->checkSocialActivity($organization->id, $action);
+
+                $getColumnNameValue = $this->organizationRepository->getColumnNameValue($action);
+                if(!$getColumnNameValue){
+                    return $this->sendError('Invalid Request', 400);
+                }
+
+                $checkActivity = $this->organizationRepository->checkSocialActivity($organization->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action=str_replace("-","",$action);
-                if ($checkOrganization !== false && isset($checkOrganization->id)) {
+                if ($checkActivity === true) {
                     return $this->sendError(__('responses.already_'.$action.'_organization'), 400);
                 }
-                $organization = $this->organizationRepository->socialActivity($organization->id,$checkOrganization['column'],$checkOrganization['action']);
+
+                $organization = $this->organizationRepository->captureSocialActivity($organization->id,$getColumnNameValue['column'],$getColumnNameValue['action']);
                 if ($organization) {
                     return $this->sendResponse([], __('responses.'.$action.'_organization_successfully'));
                 }

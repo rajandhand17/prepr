@@ -3,26 +3,81 @@
 namespace App\Services\Public;
 
 use App\Models\OrganizationSocialActivities;
-use Illuminate\Support\Facades\Auth;
 
 class OrganizationSocialActivitiesService
 {
-    public function checkSocialActivity($id, $column, $action)
+
+
+    public function getColumnNameValue($action)
     {
         try {
-            return OrganizationSocialActivities::where([
-                ['organization_id', '=', $id],
-                ['user_id', '=', Auth::user()->id],
-                [$column, '=', $action],
-            ])->first();
+            $column = null;
+            $value = null;
+            switch ($action) {
+                case 'follow':
+                    $column = 'follow_unfollow';
+                    $value = '1';
+                    break;
+                case 'un-follow':
+                    $column = 'follow_unfollow';
+                    $value = '2';
+                    break;
+                case 'share':
+                    $column = 'share';
+                    $value = '1';
+                    break;
+                case 'favourite':
+                    $column='favourite';
+                    $value="1";
+                    break;
+                case 'un-favourite':
+                    $column='favourite';
+                    $value="2";
+                    break;
+                case 'like':
+                    $column='like_dislike';
+                    $value="1";
+                    break;
+                case 'un-like':
+                    $column='like_dislike';
+                    $value="2";
+                    break;
+                default:
+                    $column = null;
+                    $value = null;
+                    break;
+            }
+            if($column != null && $value != null){
+                return ['column' => $column, 'action' => $value];
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkSocialActivity($organization_id, $column, $action)
+    {
+        try {
+            $checkActivity = OrganizationSocialActivities::where(
+                    [
+                    'organization_id' => $organization_id,
+                    'user_id' => auth()->user()->id,
+                    $column => $action
+                    ])->first();
+            if($checkActivity != null){
+                return true;
+            }
+            return false;
         } catch(\Exception $e) {
             return false;
         }
     }
-    public function update($id,$column,$action){
+    public function captureSocialActivity($id,$column,$action){
         try{
-            $records=OrganizationSocialActivities::updateOrInsert(["user_id" => Auth::user()->id,
-                "organization_id" => $id,
+            OrganizationSocialActivities::updateOrInsert([
+                'user_id' => auth()->user()->id,
+                'organization_id' => $id,
             ],[
                 $column => $action,
             ]);
