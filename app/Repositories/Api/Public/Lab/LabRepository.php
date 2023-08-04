@@ -15,10 +15,12 @@ class LabRepository implements LabInterface
         $this->LabService = $LabService;
         $this->labSocialActivitiesService = $labSocialActivitiesService;
     }
+
     public function getList($request)
     {
         try {
             $getLabList = $this->LabService->getList($request);
+
             return $getLabList;
         } catch (\Exception $e) {
             return false;
@@ -34,7 +36,7 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function checkSocialActivity($lab_id,$action)
+    public function checkSocialActivity($lab_id, $action)
     {
         try {
             switch ($action) {
@@ -59,31 +61,31 @@ class LabRepository implements LabInterface
                     $value = '1';
                     break;
                 case 'follow':
-                    $column="follow_unfollow";
-                    $value="1";
+                    $column = 'follow_unfollow';
+                    $value = '1';
                     break;
                 case 'un-follow':
-                    $column="follow_unfollow";
-                    $value="2";
+                    $column = 'follow_unfollow';
+                    $value = '2';
                     break;
                 case 'share':
-                    $column="share";
-                    $value="1";
+                    $column = 'share';
+                    $value = '1';
                     break;
                 case 'favourite':
-                    $column="favourite";
-                    $value="1";
+                    $column = 'favourite';
+                    $value = '1';
                     break;
                 case 'un-favourite':
-                    $column="favourite";
-                    $value="2";
+                    $column = 'favourite';
+                    $value = '2';
                     break;
                 default:
                     return false;
                     break;
             }
-            $response=$this->labSocialActivitiesService->checkSocialActivity($lab_id,$column,$value);
-            if($response!==null){
+            $response = $this->labSocialActivitiesService->checkSocialActivity($lab_id, $column, $value);
+            if ($response !== null) {
                 return $response;
             }
 
@@ -92,11 +94,12 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-    public function socialActivity($id,$column,$value): bool
+
+    public function socialActivity($id, $column, $value): bool
     {
         try {
-            return $this->labSocialActivitiesService->update($id,$column,$value);
-        }catch (\Exception $e) {
+            return $this->labSocialActivitiesService->update($id, $column, $value);
+        } catch (\Exception $e) {
             return false;
         }
     }

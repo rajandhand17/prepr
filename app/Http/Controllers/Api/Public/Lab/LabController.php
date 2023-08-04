@@ -53,24 +53,24 @@ class LabController extends AppBaseController
         }
     }
 
-    public  function socialActivity($slug, $action){
+    public function socialActivity($slug, $action)
+    {
         try {
             $checkLabExistsOrNot = $this->labRepository->getLabBasedOnSlug($slug);
             if ($checkLabExistsOrNot) {
-                $checkLab = $this->labRepository->checkSocialActivity($checkLabExistsOrNot->id,$action);
-                $action=str_replace("-","",$action);
-                if ($checkLab!==null && isset($checkLab->id) ){
-
+                $checkLab = $this->labRepository->checkSocialActivity($checkLabExistsOrNot->id, $action);
+                $action = str_replace('-', '', $action);
+                if ($checkLab !== null && isset($checkLab->id)) {
                     return $this->sendError(__('responses.already_'.$action.'_lab'), 400);
                 }
-                $lab = $this->labRepository->socialActivity($checkLabExistsOrNot->id,$checkLab['column'],$checkLab['action']);
+                $lab = $this->labRepository->socialActivity($checkLabExistsOrNot->id, $checkLab['column'], $checkLab['action']);
                 if ($lab) {
                     return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
                 }
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

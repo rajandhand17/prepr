@@ -87,6 +87,7 @@ class LabControllerTest extends TestCase
         $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'/favourite?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
+
     public function test_favorite_organization_negative()
     {
         $response = $this->get('/api/v1/public/lab/'.$this->parameters['wrong_slug'].'/favourite?language='.$this->parameters['language'], $this->headers);

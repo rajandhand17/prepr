@@ -69,40 +69,43 @@ class Organization extends LaratrustTeam
 
     public function likes()
     {
-        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('like_dislike','1');
+        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('like_dislike', '1');
     }
 
     public function followers()
     {
-        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('follow_unfollow','1');
+        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('follow_unfollow', '1');
     }
 
     public function shares()
     {
-        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('share','1');
+        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('share', '1');
     }
 
     public function liked()
     {
-        if(auth()->check()){
-            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id',auth()->user()->id)->where('like_dislike','1')->count() > 0) ? 'Yes' : 'No';
+        if (auth()->check()) {
+            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth()->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'NA';
     }
 
     public function followed()
     {
-        if(auth()->check()) {
+        if (auth()->check()) {
             return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth()->user()->id)->where('follow_unfollow', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'NA';
     }
 
     public function favourite()
     {
-        if(auth()->check()) {
-            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id',auth()->user()->id)->where('favourite','1')->count() > 0) ? 'Yes' : 'No';
+        if (auth()->check()) {
+            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth()->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'NA';
     }
 }
