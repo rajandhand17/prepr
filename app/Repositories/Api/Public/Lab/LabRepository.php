@@ -15,10 +15,12 @@ class LabRepository implements LabInterface
         $this->LabService = $LabService;
         $this->labSocialActivitiesService = $labSocialActivitiesService;
     }
+
     public function getList($request)
     {
         try {
             $getLabList = $this->LabService->getList($request);
+
             return $getLabList;
         } catch (\Exception $e) {
             return false;

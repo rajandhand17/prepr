@@ -21,6 +21,7 @@ class LabResource extends JsonResource
         } else {
             $category = null;
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,

@@ -6,8 +6,6 @@ use App\Models\OrganizationSocialActivities;
 
 class OrganizationSocialActivitiesService
 {
-
-
     public static function getColumnNameValue($action)
     {
         try {
@@ -27,29 +25,30 @@ class OrganizationSocialActivitiesService
                     $value = '1';
                     break;
                 case 'favourite':
-                    $column='favourite';
-                    $value="1";
+                    $column = 'favourite';
+                    $value = '1';
                     break;
                 case 'un-favourite':
-                    $column='favourite';
-                    $value="2";
+                    $column = 'favourite';
+                    $value = '2';
                     break;
                 case 'like':
-                    $column='like_dislike';
-                    $value="1";
+                    $column = 'like_dislike';
+                    $value = '1';
                     break;
                 case 'un-like':
-                    $column='like_dislike';
-                    $value="2";
+                    $column = 'like_dislike';
+                    $value = '2';
                     break;
                 default:
                     $column = null;
                     $value = null;
                     break;
             }
-            if($column != null && $value != null){
+            if ($column != null && $value != null) {
                 return ['column' => $column, 'action' => $value];
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -60,51 +59,60 @@ class OrganizationSocialActivitiesService
     {
         try {
             $checkActivity = OrganizationSocialActivities::where(
-                    [
+                [
                     'organization_id' => $organization_id,
-                    'user_id' => auth()->user()->id,
-                    $column => $action
-                    ])->first();
-            if($checkActivity != null){
+                    'user_id'         => auth()->user()->id,
+                    $column           => $action,
+                ]
+            )->first();
+            if ($checkActivity != null) {
                 return true;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
         }
     }
-    public function captureSocialActivity($id,$column,$action){
-        try{
+
+    public function captureSocialActivity($id, $column, $action)
+    {
+        try {
             OrganizationSocialActivities::updateOrInsert([
                 "user_id" => auth()->user()->id,
                 "organization_id" => $id,
             ],[
                 $column => $action,
             ]);
+
             return true;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public static function getOrganizationsBasedOnActivity($action){
-        try{
-            if(auth()->check()){
+    public static function getOrganizationsBasedOnActivity($action)
+    {
+        try {
+            if (auth()->check()) {
                 $columnValue = self::getColumnNameValue($action);
-                if($columnValue !== false){
+                if ($columnValue !== false) {
                     $organization_ids = OrganizationSocialActivities::where(
                         [
-                            'user_id' => auth()->user()->id,
-                            $columnValue['column'] => $columnValue['action']
-                        ])->get();
+                            'user_id'              => auth()->user()->id,
+                            $columnValue['column'] => $columnValue['action'],
+                        ]
+                    )->get();
+
                     return $organization_ids;
                 }
+
                 return false;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
-
 }

@@ -35,8 +35,9 @@ class LabSocialActivitiesService
             ], [
                 $column => $action,
             ]);
+
             return true;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

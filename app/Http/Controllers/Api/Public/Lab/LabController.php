@@ -51,7 +51,8 @@ class LabController extends AppBaseController
         }
     }
 
-    public  function socialActivity($slug, $action){
+    public function socialActivity($slug, $action)
+    {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
@@ -69,6 +70,7 @@ class LabController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
                 }
             }
+
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
             } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

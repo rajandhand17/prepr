@@ -52,12 +52,14 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public  function socialActivity($slug, $action){
+
+    public function socialActivity($slug, $action)
+    {
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if ($organization !== null) {
                 $getColumnNameValue = $this->organizationRepository->getColumnNameValue($action);
-                if(!$getColumnNameValue){
+                if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
                 $checkActivity = $this->organizationRepository->checkSocialActivity($organization->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
@@ -70,6 +72,7 @@ class OrganizationController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_organization_successfully'));
                 }
             }
+
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
