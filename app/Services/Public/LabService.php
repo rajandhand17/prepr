@@ -11,6 +11,7 @@ class LabService
         try {
             $lab_list = Lab::select()->where('labs.status', '1');
             $lab_list = self::filterLabList($request, $lab_list);
+
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;
@@ -32,18 +33,19 @@ class LabService
                 $lab_list = $lab_list->where('organization_id', '=', $request->organization_id);
             }
 
-            if($request->has('social_type') && !empty($request->social_type) && $request->social_type== 'followed'){
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'followed') {
                 $getLabJoinedList = LabSocialActivitiesService::getLabBasedOnActivity('follow');
-                if($getLabJoinedList && $getLabJoinedList->count() > 0){
+                if ($getLabJoinedList && $getLabJoinedList->count() > 0) {
                     $lab_list = $lab_list->whereIn('id', $getLabJoinedList->pluck('lab_id'));
                 }
             }
-            if($request->has('social_type') && !empty($request->social_type) && $request->social_type== 'favourite'){
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourite') {
                 $getLabJoinedList = LabSocialActivitiesService::getLabBasedOnActivity('favourite');
-                if($getLabJoinedList && $getLabJoinedList->count() > 0){
+                if ($getLabJoinedList && $getLabJoinedList->count() > 0) {
                     $lab_list = $lab_list->whereIn('id', $getLabJoinedList->pluck('lab_id'));
                 }
             }
+
             return $lab_list;
         } catch (\Exception $e) {
             return false;
@@ -58,5 +60,4 @@ class LabService
             return false;
         }
     }
-
 }

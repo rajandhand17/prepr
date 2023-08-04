@@ -19,7 +19,7 @@ class LabRepository implements LabInterface
     public function getList($request)
     {
         try {
-             return $this->LabService->getList($request);
+            return $this->LabService->getList($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -42,19 +42,21 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
     public function checkSocialActivity($lab_id, $column, $action)
     {
         try {
-            return $this->labSocialActivitiesService->checkSocialActivity($lab_id,$column,$action);
+            return $this->labSocialActivitiesService->checkSocialActivity($lab_id, $column, $action);
         } catch (\Exception $e) {
             return false;
         }
     }
-    public function captureSocialActivity($lab_id,$column,$value)
+
+    public function captureSocialActivity($lab_id, $column, $value)
     {
         try {
-            return $this->labSocialActivitiesService->captureSocialActivity($lab_id,$column,$value);
-        }catch (\Exception $e) {
+            return $this->labSocialActivitiesService->captureSocialActivity($lab_id, $column, $value);
+        } catch (\Exception $e) {
             return false;
         }
     }

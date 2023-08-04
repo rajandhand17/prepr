@@ -4,57 +4,66 @@ namespace App\Services\Public;
 
 use App\Models\LabSocialActivity;
 use Illuminate\Support\Facades\Auth;
+
 class LabSocialActivitiesService
 {
-    public function checkSocialActivity($lab_id,$column,$action)
+    public function checkSocialActivity($lab_id, $column, $action)
     {
         try {
-            $checkActivity =LabSocialActivity::where(
+            $checkActivity = LabSocialActivity::where(
                 [
-                    'lab_id' => $lab_id,
+                    'lab_id'  => $lab_id,
                     'user_id' => auth()->user()->id,
-                    $column => $action
-                ])->first();
-            if($checkActivity != null){
+                    $column   => $action,
+                ]
+            )->first();
+            if ($checkActivity != null) {
                 return true;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function captureSocialActivity($lab_id,$column,$action): bool
+    public function captureSocialActivity($lab_id, $column, $action): bool
     {
         try {
             LabSocialActivity::updateOrInsert([
-                "user_id" => Auth::user()->id,
-                "lab_id" => $lab_id,
+                'user_id' => Auth::user()->id,
+                'lab_id'  => $lab_id,
             ], [
                 $column => $action,
             ]);
+
             return true;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getLabsBasedOnActivity($action){
-        try{
-            if(auth()->check()){
+    public static function getLabsBasedOnActivity($action)
+    {
+        try {
+            if (auth()->check()) {
                 $columnValue = self::getColumnNameValue($action);
-                if($columnValue !== false){
+                if ($columnValue !== false) {
                     $organization_ids = LabSocialActivity::where(
                         [
-                            'user_id' => auth()->user()->id,
-                            $columnValue['column'] => $columnValue['action']
-                        ])->get();
+                            'user_id'              => auth()->user()->id,
+                            $columnValue['column'] => $columnValue['action'],
+                        ]
+                    )->get();
+
                     return $organization_ids;
                 }
+
                 return false;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -78,19 +87,19 @@ class LabSocialActivitiesService
                     $value = '1';
                     break;
                 case 'favourite':
-                    $column='favourite';
-                    $value="1";
+                    $column = 'favourite';
+                    $value = '1';
                     break;
                 case 'un-favourite':
-                    $column='favourite';
-                    $value="2";
+                    $column = 'favourite';
+                    $value = '2';
                     break;
                 default:
                     $column = null;
                     $value = null;
                     break;
             }
-            if($column != null && $value != null){
+            if ($column != null && $value != null) {
                 return ['column' => $column, 'action' => $value];
             }
 
@@ -112,10 +121,13 @@ class LabSocialActivitiesService
                             $columnValue['column'] => $columnValue['action'],
                         ]
                     )->get();
+
                     return $lab_ids;
                 }
+
                 return false;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;

@@ -79,9 +79,9 @@ class OrganizationSocialActivitiesService
     {
         try {
             OrganizationSocialActivities::updateOrInsert([
-                "user_id" => auth()->user()->id,
-                "organization_id" => $id,
-            ],[
+                'user_id'         => auth()->user()->id,
+                'organization_id' => $id,
+            ], [
                 $column => $action,
             ]);
 

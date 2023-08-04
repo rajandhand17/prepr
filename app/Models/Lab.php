@@ -95,12 +95,13 @@ class Lab extends Model
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
 
-    public function followers(){
-        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('follow_unfollow','1');
+    public function followers()
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('follow_unfollow', '1');
     }
 
-    public  function shares(){
-        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share','1');
+    public function shares()
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
     }
-
 }
