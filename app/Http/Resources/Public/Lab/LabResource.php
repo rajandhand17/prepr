@@ -33,7 +33,7 @@ class LabResource extends JsonResource
             'media'                        => $this->media,
             'category'                     => $category,
             'status'                       => $this->status,
-            'likes'                        => $this->join()->count(),
+            //'likes'                        => $this->join()->count(),
             'followers'                    => $this->followers()->count(),
             'shares'                       => $this->shares()->count(),
             'lab_address'                  => LabAddressResource::collection($this->address),

@@ -11,4 +11,8 @@ interface LabInterface
     public function captureSocialActivity($id, $column, $value);
 
     public function checkSocialActivity($lab_id, $column, $action);
+
+    public function joinLab($lab,$component,$request);
+
+    public function unJoinLab($lab,$component,$request);
 }

@@ -83,7 +83,6 @@ class MemberManagementRepository implements MemberManagementInterface
                     return false;
                 }
             }
-
             if (is_array($memberList) && count($memberList) > 0) {
                 $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject, $component, $request, $memberList);
 

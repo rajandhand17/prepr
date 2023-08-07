@@ -13,5 +13,8 @@ Route::middleware($middleware)->group(function () {
     Route::get('/{slug}', [LabController::class, 'show']);
 });
 Route::middleware(['language', 'auth:api'])->group(function () {
+    Route::post('/{slug}/join', [LabController::class, 'joinLab']);
+    Route::delete('/{slug}/un-join', [LabController::class, 'unJoinLab']);
     Route::post('/{slug}/{activity}', [LabController::class, 'socialActivity']);
 });
+

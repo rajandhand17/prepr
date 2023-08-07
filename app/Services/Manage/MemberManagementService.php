@@ -242,6 +242,33 @@ class MemberManagementService
             return false;
         }
     }
+    public static function getRecordsFromUserArray($user)
+    {
+        try {
+            $memberList = [];
+            if (($user)) {
+             //   foreach ($userData as $user) {
+
+                    $memberList[] = [
+                        'type'          => config('constants.member_management_type.join_request'),
+                        'invite_type'   => config('constants.member_management_invite_type.join_request'),
+                        'invitee_name'  => $user->full_name,
+                        'invitee_email' => $user->email,
+                    ];
+              //  }
+                if (!empty($memberList)) {
+                    return $memberList;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return $e;
+            return false;
+        }
+    }
 
     public static function addMembers($componentCollectionObject, $component, $request, $memberList)
     {
@@ -261,7 +288,6 @@ class MemberManagementService
                     break;
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
-
             switch ($request->auto_invite) {
                 case 'Yes' || 'YES' || 'yes':
                     $auto_invite = config('constants.member_management_auto_invite.yes');
@@ -301,7 +327,6 @@ class MemberManagementService
                                     $invite_status = config('constants.member_management_invite_status.auto_created');
                                 }
                             }
-
                             $subject = $request->subject_line;
                             $emailBody = $request->email_body;
                             if (empty($request->subject_line) || empty($request->email_body)) {
@@ -360,13 +385,31 @@ class MemberManagementService
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
-
-            return $e;
-
             return false;
         }
     }
-
+    public  function checkJoinedOrNot($checkComponentBasedOnSlug, $component, $email){
+        try {
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.member_management_component_type.organization');
+                    break;
+                case 'lab':
+                    $module_type = config('constants.member_management_component_type.lab');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
+            }
+            $records=MemberManagement::where('email', $email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
+            if($records){
+                return true;
+            }
+            return false;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
     public static function deleteMembers($checkComponentBasedOnSlug, $component, $request)
     {
         try {
@@ -382,6 +425,7 @@ class MemberManagementService
                     break;
             }
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
+
             if ($member_manger) {
                 return true;
             }

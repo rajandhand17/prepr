@@ -4,16 +4,18 @@ namespace App\Repositories\Api\Public\Lab;
 
 use App\Services\Public\LabService;
 use App\Services\Public\LabSocialActivitiesService;
-
+use App\Services\Manage\MemberManagementService;
 class LabRepository implements LabInterface
 {
     private $LabService;
     private $labSocialActivitiesService;
+    private $memberManagementService;
 
-    public function __construct(LabService $LabService, LabSocialActivitiesService $labSocialActivitiesService)
+    public function __construct(LabService $LabService, LabSocialActivitiesService $labSocialActivitiesService,MemberManagementService $memberManagementService)
     {
         $this->LabService = $LabService;
         $this->labSocialActivitiesService = $labSocialActivitiesService;
+        $this->memberManagementService = $memberManagementService;
     }
 
     public function getList($request)
@@ -56,6 +58,36 @@ class LabRepository implements LabInterface
     {
         try {
             return $this->labSocialActivitiesService->captureSocialActivity($lab_id, $column, $value);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function joinLab($lab,$component,$request){
+        try {
+            $user =auth()->user();
+            $memberList = $this->memberManagementService->getRecordsFromUserArray($user);
+            if (!$memberList && !count($memberList) > 0) {
+                return false;
+            }
+            return $this->memberManagementService->addMembers($lab,$component,$request,$memberList);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+    public function unJoinLab($lab,$component,$request){
+        try {
+            return $this->memberManagementService->deleteMembers($lab,$component,$request);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function checkJoinedOrNot($lab,$component){
+        try {
+            $email =auth()->user()->email;
+
+            return $this->memberManagementService->checkJoinedOrNot($lab,$component,$email);
         } catch (\Exception $e) {
             return false;
         }
