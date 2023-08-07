@@ -226,7 +226,61 @@ class MemberManagementControllerTest extends TestCase
         $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
         $response->assertStatus(404);
     }
+    public function test_accept_members_join_request_positive()
+    {
+        $this->parameters['component'] = 'lab';
+        $this->parameters['slug'] = 'un-sdg-lab-1';
+        $response = $this->post(
+            '/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/request/accept',
+            [
+                'language' => $this->parameters['language'],
+            ],
+            $this->headers
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 
+    public function test_accept_members_join_request_negative()
+    {
+        $this->parameters['component'] = 'lab';
+        $this->parameters['slug'] = 'un-sdg-lab-1';
+        $response = $this->post(
+            '/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/request/accept',
+            [
+                'language' => $this->parameters['language'],
+            ],
+            $this->headers
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function test_decline_members_join_request_positive()
+    {
+        $this->parameters['component'] = 'lab';
+        $this->parameters['slug'] = 'un-sdg-lab-2';
+        $response = $this->post(
+            '/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/request/decline',
+            [
+                'language' => $this->parameters['language'],
+            ],
+            $this->headers
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function test_decline_members_join_request_negative()
+    {
+        $this->parameters['component'] = 'lab';
+        $this->parameters['slug'] = 'un-sdg-lab-2';
+        $response = $this->post(
+            '/api/v1/manage/member-management/'.$this->parameters['component'].'/'.$this->parameters['slug'].'/request/decline',
+            [
+                'language' => $this->parameters['language'],
+            ],
+            $this->headers
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+    }
     /**create member management positive */
     public function test_change_role_positive()
     {
@@ -316,4 +370,5 @@ class MemberManagementControllerTest extends TestCase
         );
         $this->assertEquals(422, $response->getStatusCode());
     }
+
 }

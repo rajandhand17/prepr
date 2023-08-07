@@ -23,6 +23,12 @@ class LabControllerTest extends TestCase
             'wrong_slug'      => 'wrong_slug',
             'email'           => 'rajan@amazon.com',
             'password'        => 'Prepr@123',
+            'type'            => 'join_request',
+            'invite_type'     => 'join_request',
+            'subject_line'     => 'Successfully Joined Lab',
+            'email_body'     => 'You have successfully joined Lab',
+            'auto_invite'     => 'yes',
+
         ];
         Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
         $user = Auth::user();

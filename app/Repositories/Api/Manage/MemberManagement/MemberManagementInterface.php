@@ -16,5 +16,7 @@ interface MemberManagementInterface
 
     public function deleteMembers($checkComponentBasedOnSlug, $component, $request);
 
+    public  function checkLabStatus($checkComponentBasedOnSlug,$component);
+    public function acceptOrRejectLabJoinRequest($checkComponentBasedOnSlug,$component,$action);
     public function changeRole($request, $component);
 }

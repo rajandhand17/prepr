@@ -85,9 +85,7 @@ class LabRepository implements LabInterface
 
     public function checkJoinedOrNot($lab,$component){
         try {
-            $email =auth()->user()->email;
-
-            return $this->memberManagementService->checkJoinedOrNot($lab,$component,$email);
+            return $this->memberManagementService->checkJoinedOrNot($lab,$component);
         } catch (\Exception $e) {
             return false;
         }

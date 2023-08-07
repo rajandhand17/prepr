@@ -311,6 +311,27 @@ class MemberManagementController extends AppBaseController
         }
     }
 
+    public function acceptOrRejectLabJoinRequest($component,$slug,$action)
+    {
+        try {
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
+            }
+            $checkLabStatus=$this->memberManagementRepository->checkLabStatus($checkComponentBasedOnSlug,$component);
+            if($checkLabStatus){
+                $member_management = $this->memberManagementRepository->acceptOrRejectLabJoinRequest($checkComponentBasedOnSlug,$component,$action);
+                if ($member_management) {
+                    return $this->sendResponse(null, __('responses.member_manger_delete'));
+                }
+            return $this->sendError(__('responses.member_manger_not_delete'), 400);
+            }
+            return $this->sendError(__('responses.request_not_exist'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function downloadSample()
     {
         try {

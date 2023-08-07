@@ -284,5 +284,6 @@
     "responses.favourite_lab_successfully":"You have successfully added this lab as favourite!",
     "responses.un_favourite_lab_successfully":"The Lab have been successfully removed from favourites!!",
     "responses.already_favourite_lab":"The Lab is already being added to favourites!",
+    "responses.request_not_exist": "This member management request is not exist!",
     "responses.already_un_favourite_lab":"The Lab is already being removed from favourites!"
 }

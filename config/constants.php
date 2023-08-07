@@ -118,7 +118,7 @@ return [
 
     'lab_component'=> [
         'lab'            => 'lab',
-        'organization'            => 'organization',
+        'organization'   => 'organization',
     ],
 
 ];

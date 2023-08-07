@@ -10,4 +10,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{component}/{slug}', [MemberManagementController::class, 'index'])->middleware('check.component');
     Route::post('/{component}/{slug}/create ', [MemberManagementController::class, 'create'])->middleware('check.component');
     Route::post('/{component}/{slug}/delete ', [MemberManagementController::class, 'delete'])->middleware('check.component');
+    Route::post('/{component}/{slug}/request/{action}', [MemberManagementController::class, 'acceptOrRejectLabJoinRequest']);
 });

@@ -388,7 +388,7 @@ class MemberManagementService
             return false;
         }
     }
-    public  function checkJoinedOrNot($checkComponentBasedOnSlug, $component, $email){
+    public  function checkJoinedOrNot($checkComponentBasedOnSlug, $component){
         try {
             switch ($component) {
                 case 'organization':
@@ -401,7 +401,7 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-            $records=MemberManagement::where('email', $email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
+            $records=MemberManagement::where('email', auth()->user()->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
             if($records){
                 return true;
             }
@@ -435,7 +435,57 @@ class MemberManagementService
             return false;
         }
     }
-
+    public static function checkLabStatus($checkComponentBasedOnSlug,$component){
+        try {
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.member_management_component_type.organization');
+                    break;
+                case 'lab':
+                    $module_type = config('constants.member_management_component_type.lab');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
+            }
+            $member_manger = MemberManagement::where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>"2"])->first();
+            if($member_manger){
+                return true;
+            }
+            return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+    public static function acceptOrRejectLabJoinRequest($checkComponentBasedOnSlug,$component,$action)
+    {
+        try{
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.member_management_component_type.organization');
+                    break;
+                case 'lab':
+                    $module_type = config('constants.member_management_component_type.lab');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
+            }
+            $member_manger = MemberManagement::where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>'2'])->first();
+            if($member_manger){
+            $member_manger->invite_status=config('constants.member_management_invite_status.accepted');
+            $member_manger->inviter_id=auth()->user()->id;
+            if($member_manger->save()){
+                return true;
+            }
+            }else{
+                return false;
+            }
+            return false;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
     public static function changeRoleByUuid($request, $component)
     {
         try {
