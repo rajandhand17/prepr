@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public\Lab;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Public\Lab\JoinLabRequest;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Repositories\Api\Public\Lab\LabRepository;
 use Illuminate\Http\Request;
@@ -52,7 +53,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function joinLab(Request $request,$slug){
+    public function joinLab(JoinLabRequest $request,$slug){
         try {
             $lab=$this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
