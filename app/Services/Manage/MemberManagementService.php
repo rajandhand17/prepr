@@ -252,6 +252,7 @@ class MemberManagementService
                         'invite_type'   => config('constants.member_management_invite_type.join_request'),
                         'invitee_name'  => auth()->user()->full_name,
                         'invitee_email' => auth()->user()->email,
+                        'invite_status'=>config('constants.member_management_invite_status.pending'),
                     ];
                 if (!empty($memberList)) {
                     return $memberList;
@@ -313,7 +314,11 @@ class MemberManagementService
                             if ($auto_invite == 1) {
                                 $invite_status = config('constants.member_management_invite_status.accepted');
                             }
-
+                            if(isset($member['invite_status'])){
+                                $invite_status =$member['invite_status'];
+                            }else{
+                                $invite_status =$member['type'];
+                            }
                             if ($auto_invite == 2) {
                                 if ($member['type'] == '1') {
                                     $invite_status = config('constants.member_management_invite_status.pending');
@@ -321,6 +326,7 @@ class MemberManagementService
                                     $invite_status = config('constants.member_management_invite_status.auto_created');
                                 }
                             }
+
                             $subject = $request->subject_line;
                             $emailBody = $request->email_body;
                             if (empty($request->subject_line) || empty($request->email_body)) {
@@ -350,7 +356,7 @@ class MemberManagementService
                                 'role'          => $request->role,
                                 'email'         => $member['invitee_email'],
                                 'auto_invite'   => $auto_invite,
-                                'invite_status' => $member['type'],
+                                'invite_status' => $invite_status,
                                 'invitee_name'  => $member['invitee_name'],
                                 'email_status'  => config('constants.member_management_email_status.scheduled'),
                                 'subject_line'  => $subject,
