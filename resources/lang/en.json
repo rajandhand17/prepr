@@ -288,5 +288,10 @@
     "responses.already_un_favourite_lab":"The Lab is already being removed from favourites!",
 
     "responses.join_type_in":"Sorry! we are not supporting this type which you have requested for!",
-    "responses.join_invite_type_in":"Sorry! we are not supporting this invite type which you have requested for!"
+    "responses.join_invite_type_in":"Sorry! we are not supporting this invite type which you have requested for!",
+
+    "responses.join_request_accept_successfully": "You have accepted the join request successfully!",
+    "responses.join_request_accept_failed": "You have failed to accept the join request",
+    "responses.join_request_decline_successfully": "You have declined the join request successfully",
+    "responses.join_request_decline_failed": "You have failed to decline the join request"
 }

@@ -7,7 +7,7 @@ use App\Models\MemberManagement;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
-
+use stdClass;
 class MemberManagementService
 {
     public static function getComponentBasedUsers($componentCollectionObject, $component, $request)
@@ -242,30 +242,24 @@ class MemberManagementService
             return false;
         }
     }
-    public static function getRecordsFromUserArray($user)
+    public static function getRecordsFromJoinRequestArray()
     {
         try {
             $memberList = [];
-            if (($user)) {
-             //   foreach ($userData as $user) {
-
-                    $memberList[] = [
+            if (auth()->user()) {
+                     $memberList[] = [
                         'type'          => config('constants.member_management_type.join_request'),
                         'invite_type'   => config('constants.member_management_invite_type.join_request'),
-                        'invitee_name'  => $user->full_name,
-                        'invitee_email' => $user->email,
+                        'invitee_name'  => auth()->user()->full_name,
+                        'invitee_email' => auth()->user()->email,
                     ];
-              //  }
                 if (!empty($memberList)) {
                     return $memberList;
                 }
-
                 return false;
             }
-
             return false;
         } catch (\Exception $e) {
-            return $e;
             return false;
         }
     }
@@ -390,17 +384,7 @@ class MemberManagementService
     }
     public  function checkJoinedOrNot($checkComponentBasedOnSlug, $component){
         try {
-            switch ($component) {
-                case 'organization':
-                    $module_type = config('constants.member_management_component_type.organization');
-                    break;
-                case 'lab':
-                    $module_type = config('constants.member_management_component_type.lab');
-                    break;
-                default:
-                    $module_type = null;
-                    break;
-            }
+            $module_type = config('constants.member_management_component_type.lab');
             $records=MemberManagement::where('email', auth()->user()->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
             if($records){
                 return true;
@@ -425,7 +409,6 @@ class MemberManagementService
                     break;
             }
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
-
             if ($member_manger) {
                 return true;
             }
@@ -435,20 +418,10 @@ class MemberManagementService
             return false;
         }
     }
-    public static function checkLabStatus($checkComponentBasedOnSlug,$component){
+    public static function checkLabStatus($request,$checkComponentBasedOnSlug,$component){
         try {
-            switch ($component) {
-                case 'organization':
-                    $module_type = config('constants.member_management_component_type.organization');
-                    break;
-                case 'lab':
-                    $module_type = config('constants.member_management_component_type.lab');
-                    break;
-                default:
-                    $module_type = null;
-                    break;
-            }
-            $member_manger = MemberManagement::where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>"2"])->first();
+            $module_type = config('constants.member_management_component_type.lab');
+            $member_manger = MemberManagement::whereIn("email",[$request->email])->where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>"2"])->first();
             if($member_manger){
                 return true;
             }
@@ -457,29 +430,24 @@ class MemberManagementService
             return false;
         }
     }
-    public static function acceptOrRejectLabJoinRequest($checkComponentBasedOnSlug,$component,$action)
+    public static function acceptOrRejectLabJoinRequest($request,$checkComponentBasedOnSlug,$component,$action)
     {
         try{
-            switch ($component) {
-                case 'organization':
-                    $module_type = config('constants.member_management_component_type.organization');
-                    break;
-                case 'lab':
-                    $module_type = config('constants.member_management_component_type.lab');
-                    break;
-                default:
-                    $module_type = null;
-                    break;
+            $module_type = config('constants.member_management_component_type.lab');
+            switch($action){
+                case "accept":
+                $invite_status=config('constants.member_management_invite_status.accepted');
+                break;
+                case "decline":
+                $invite_status=config('constants.member_management_invite_status.declined');
+                break;
             }
-            $member_manger = MemberManagement::where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>'2'])->first();
+            $member_manger = MemberManagement::whereIn("email",[$request->email])->where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>'2'])->first();
             if($member_manger){
-            $member_manger->invite_status=config('constants.member_management_invite_status.accepted');
+            $member_manger->invite_status=$invite_status;
             $member_manger->inviter_id=auth()->user()->id;
-            if($member_manger->save()){
-                return true;
-            }
-            }else{
-                return false;
+            $member_manger->save();
+            return true;
             }
             return false;
         }catch (\Exception $e){
@@ -538,6 +506,21 @@ class MemberManagementService
                 'email_status'
             )->where($filterData)->get();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getRecordsFromJoinRequestObject(){
+        try {
+            $requestedData = new stdClass;
+            $requestedData->type ="join_request";
+            $requestedData->invite_type ="join_request";
+            $requestedData->auto_invite ="NA";
+            $requestedData->role =NULL;
+            $requestedData->subject_line ="Successfully Joined Lab";
+            $requestedData->email_body ="You have successfully joined Lab";
+            return $requestedData;
+        }catch (\Exception $e) {
             return false;
         }
     }

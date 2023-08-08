@@ -311,20 +311,20 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function acceptOrRejectLabJoinRequest($component,$slug,$action)
+    public function acceptOrRejectLabJoinRequest(Request $request,$component,$slug,$action)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
             }
-            $checkLabStatus=$this->memberManagementRepository->checkLabStatus($checkComponentBasedOnSlug,$component);
+            $checkLabStatus=$this->memberManagementRepository->checkLabStatus($request,$checkComponentBasedOnSlug,$component);
             if($checkLabStatus){
-                $member_management = $this->memberManagementRepository->acceptOrRejectLabJoinRequest($checkComponentBasedOnSlug,$component,$action);
+                $member_management = $this->memberManagementRepository->acceptOrRejectLabJoinRequest($request,$checkComponentBasedOnSlug,$component,$action);
                 if ($member_management) {
-                    return $this->sendResponse(null, __('responses.member_manger_delete'));
+                    return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }
-            return $this->sendError(__('responses.member_manger_not_delete'), 400);
+            return $this->sendError(__('responses.join_request_'.$action.'_failed'), 400);
             }
             return $this->sendError(__('responses.request_not_exist'), 400);
         } catch(\Exception $e) {

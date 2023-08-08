@@ -7,11 +7,11 @@ use App\Http\Requests\Public\Lab\JoinLabRequest;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Repositories\Api\Public\Lab\LabRepository;
 use Illuminate\Http\Request;
+use stdClass;
 
 class LabController extends AppBaseController
 {
     private $labRepository;
-
     public function __construct(LabRepository $labRepository)
     {
         $this->labRepository = $labRepository;
@@ -53,47 +53,6 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function joinLab(JoinLabRequest $request,$slug){
-        try {
-            $lab=$this->labRepository->getLabBasedOnSlug($slug);
-            if ($lab !== null) {
-                $component=config('constants.lab_component.lab');
-                $checkActivity = $this->labRepository->checkJoinedOrNot($lab,$component);
-                if ($checkActivity === true) {
-                    return $this->sendError(__('responses.already_join_lab'), 400);
-                }
-                $joinLab=$this->labRepository->joinLab($lab,$component,$request);
-                if($joinLab){
-                    return $this->sendResponse([], __('responses.join_lab_successfully'));
-                }
-
-            }
-            return $this->sendError(__('responses.lab_slug_not_found'), 404);
-        }catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-    public function unJoinLab(Request $request,$slug){
-        try {
-            $lab=$this->labRepository->getLabBasedOnSlug($slug);
-            if ($lab !== null) {
-                $component=config('constants.lab_component.lab');
-                $checkActivity = $this->labRepository->checkJoinedOrNot($lab,$component);
-                if ($checkActivity === false) {
-                    return $this->sendError(__('responses.already_un_join_lab'), 400);
-                }
-                $request->email=[Auth()->user()->email];
-                $joinLab=$this->labRepository->unJoinLab($lab,$component,$request);
-                if($joinLab){
-                    return $this->sendResponse([], __('responses.un_join_lab_successfully'));
-                }
-                return $this->sendError(__('responses.join_lab_failed'), 400);
-            }
-            return $this->sendError(__('responses.lab_slug_not_found'), 404);
-        }catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
     public function socialActivity($slug, $action)
     {
         try {
@@ -116,6 +75,58 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function joinLab($slug){
+        try {
+            $lab=$this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab !== null) {
+               $component=config('constants.lab_component.lab');
+                $checkActivity = $this->labRepository->checkJoinedOrNot($lab,$component);
+                if ($checkActivity === true) {
+                    return $this->sendError(__('responses.already_join_lab'), 400);
+                }
+                $memberList = $this->labRepository->getRecordsFromJoinRequestArray();
+                if (!$memberList && !count($memberList) > 0) {
+                    return $this->sendError(__('responses.send_error'), 404);
+                }
+                $requestedData=$this->labRepository->getRecordsFromJoinRequestObject();
+
+                if(!$requestedData){
+                    return $this->sendError(__('responses.send_error'), 403);
+                }
+                $joinLab=$this->labRepository->joinLab($lab,$component,$requestedData,$memberList);
+                if($joinLab){
+                    return $this->sendResponse([], __('responses.join_lab_successfully'));
+                }
+                return $this->sendError(__('responses.join_lab_failed'), 400);
+            }
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        }catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+    public function unJoinLab($slug){
+        try {
+            $lab=$this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab !== null) {
+                $component=config('constants.lab_component.lab');
+                $checkActivity = $this->labRepository->checkJoinedOrNot($lab,$component);
+                if ($checkActivity === false) {
+                    return $this->sendError(__('responses.already_un_join_lab'), 400);
+                }
+               $data = new stdClass;
+               $data->email =[Auth()->user()->email];
+               $joinLab=$this->labRepository->unJoinLab($lab,$component,$data);
+               if($joinLab){
+                    return $this->sendResponse([], __('responses.un_join_lab_successfully'));
+               }
+               return $this->sendError(__('responses.join_lab_failed'), 400);
+            }
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

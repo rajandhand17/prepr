@@ -63,13 +63,8 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function joinLab($lab,$component,$request){
+    public function joinLab($lab,$component,$request,$memberList){
         try {
-            $user =auth()->user();
-            $memberList = $this->memberManagementService->getRecordsFromUserArray($user);
-            if (!$memberList && !count($memberList) > 0) {
-                return false;
-            }
             return $this->memberManagementService->addMembers($lab,$component,$request,$memberList);
         }catch (\Exception $e){
             return false;
@@ -86,6 +81,22 @@ class LabRepository implements LabInterface
     public function checkJoinedOrNot($lab,$component){
         try {
             return $this->memberManagementService->checkJoinedOrNot($lab,$component);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public  function getRecordsFromJoinRequestArray(){
+        try {
+            return $this->memberManagementService->getRecordsFromJoinRequestArray();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public  function getRecordsFromJoinRequestObject(){
+        try {
+            return $this->memberManagementService->getRecordsFromJoinRequestObject();
         } catch (\Exception $e) {
             return false;
         }
