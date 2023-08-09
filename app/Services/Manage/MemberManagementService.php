@@ -242,7 +242,7 @@ class MemberManagementService
             return false;
         }
     }
-    public static function getRecordsFromJoinRequestArray()
+    public static function getRecordsFromJoinRequest()
     {
         try {
             $memberList = [];
@@ -424,15 +424,17 @@ class MemberManagementService
             return false;
         }
     }
-    public static function checkLabStatus($request,$checkComponentBasedOnSlug,$component){
+    public static function checkLabJoinUnjoinStatus($request,$checkComponentBasedOnSlug,$component){
         try {
             $module_type = config('constants.member_management_component_type.lab');
-            $member_manger = MemberManagement::whereIn("email",[$request->email])->where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>"2"])->first();
+
+            $member_manger = MemberManagement::whereIn("email",$request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>"2"])->get();
             if($member_manger){
                 return true;
             }
             return false;
         } catch(\Exception $e) {
+            dd($e);
             return false;
         }
     }
@@ -448,14 +450,13 @@ class MemberManagementService
                 $invite_status=config('constants.member_management_invite_status.declined');
                 break;
             }
-            $member_manger = MemberManagement::whereIn("email",[$request->email])->where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>'2'])->first();
-            if($member_manger){
-            $member_manger->invite_status=$invite_status;
-            $member_manger->inviter_id=auth()->user()->id;
-            $member_manger->save();
-            return true;
+            $member_manger = MemberManagement::whereIn("email",$request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id,'module_type'=>$module_type,'invite_status'=>'2'])->get();
+            foreach ($member_manger as $member){
+                $member->invite_status=$invite_status;
+                $member->inviter_id=auth()->user()->id;
+                $member->save();
             }
-            return false;
+            return true;
         }catch (\Exception $e){
             return false;
         }
@@ -516,7 +517,7 @@ class MemberManagementService
         }
     }
 
-    public static function getRecordsFromJoinRequestObject(){
+    public static function setJoinRequestParameters(){
         try {
             $requestedData = new stdClass;
             $requestedData->type ="join_request";

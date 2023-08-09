@@ -88,12 +88,11 @@ class LabController extends AppBaseController
                 if ($checkActivity === true) {
                     return $this->sendError(__('responses.already_join_lab'), 400);
                 }
-                $memberList = $this->labRepository->getRecordsFromJoinRequestArray();
+                $memberList = $this->labRepository->getRecordsFromJoinRequest();
                 if (!$memberList && !count($memberList) > 0) {
                     return $this->sendError(__('responses.send_error'), 404);
                 }
-                $requestedData=$this->labRepository->getRecordsFromJoinRequestObject();
-
+                $requestedData=$this->labRepository->setJoinRequestParameters();
                 if(!$requestedData){
                     return $this->sendError(__('responses.send_error'), 403);
                 }
@@ -118,7 +117,7 @@ class LabController extends AppBaseController
                     return $this->sendError(__('responses.already_un_join_lab'), 400);
                 }
                $data = new stdClass;
-               $data->email =[Auth()->user()->email];
+               $data->email =[auth()->user()->email];
                $joinLab=$this->labRepository->unJoinLab($lab,$component,$data);
                if($joinLab){
                     return $this->sendResponse([], __('responses.un_join_lab_successfully'));

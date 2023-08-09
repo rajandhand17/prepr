@@ -86,17 +86,17 @@ class LabRepository implements LabInterface
         }
     }
 
-    public  function getRecordsFromJoinRequestArray(){
+    public  function getRecordsFromJoinRequest(){
         try {
-            return $this->memberManagementService->getRecordsFromJoinRequestArray();
+            return $this->memberManagementService->getRecordsFromJoinRequest();
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public  function getRecordsFromJoinRequestObject(){
+    public  function setJoinRequestParameters(){
         try {
-            return $this->memberManagementService->getRecordsFromJoinRequestObject();
+            return $this->memberManagementService->setJoinRequestParameters();
         } catch (\Exception $e) {
             return false;
         }

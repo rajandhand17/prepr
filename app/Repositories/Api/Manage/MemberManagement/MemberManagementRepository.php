@@ -108,9 +108,9 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-    public  function checkLabStatus($request,$checkComponentBasedOnSlug,$component){
+    public  function checkLabJoinUnjoinStatus($request,$checkComponentBasedOnSlug,$component){
         try {
-            return  $this->memberManagementService->checkLabStatus($request,$checkComponentBasedOnSlug,$component);
+            return  $this->memberManagementService->checkLabJoinUnjoinStatus($request,$checkComponentBasedOnSlug,$component);
         }catch (\Exception $e) {
             return false;
         }

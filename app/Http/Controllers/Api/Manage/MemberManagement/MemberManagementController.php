@@ -318,7 +318,7 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
             }
-            $checkLabStatus=$this->memberManagementRepository->checkLabStatus($request,$checkComponentBasedOnSlug,$component);
+            $checkLabStatus=$this->memberManagementRepository->checkLabJoinUnjoinStatus($request,$checkComponentBasedOnSlug,$component);
             if($checkLabStatus){
                 $member_management = $this->memberManagementRepository->acceptOrRejectLabJoinRequest($request,$checkComponentBasedOnSlug,$component,$action);
                 if ($member_management) {
