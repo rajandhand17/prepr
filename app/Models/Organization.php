@@ -84,8 +84,8 @@ class Organization extends LaratrustTeam
 
     public function liked()
     {
-        if (auth()->check()) {
-            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth()->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
+        if (auth('api')->check()) {
+            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
         }
 
         return 'NA';
@@ -93,8 +93,8 @@ class Organization extends LaratrustTeam
 
     public function followed()
     {
-        if (auth()->check()) {
-            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth()->user()->id)->where('follow_unfollow', '1')->count() > 0) ? 'Yes' : 'No';
+        if (auth('api')->check()) {
+            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth('api')->user()->id)->where('follow_unfollow', '1')->count() > 0) ? 'Yes' : 'No';
         }
 
         return 'NA';
@@ -102,8 +102,8 @@ class Organization extends LaratrustTeam
 
     public function favourite()
     {
-        if (auth()->check()) {
-            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth()->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
+        if (auth('api')->check()) {
+            return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
         }
 
         return 'NA';
