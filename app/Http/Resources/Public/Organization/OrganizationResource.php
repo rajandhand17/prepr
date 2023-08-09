@@ -40,6 +40,14 @@ class OrganizationResource extends JsonResource
             'challenge_count'              => 0,
             'resource_count'               => 0,
             'organization_users_count'     => 0,
+            'likes'                        => $this->likes()->count(),
+            'followers'                    => $this->followers()->count(),
+            'shares'                       => $this->shares()->count(),
+
+            'liked'                        => $this->liked(),
+            'followed'                     => $this->followed(),
+            'favourite'                    => $this->favourite(),
+
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->members),

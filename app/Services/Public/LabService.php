@@ -6,11 +6,12 @@ use App\Models\Lab;
 
 class LabService
 {
-    public function getLabList($request)
+    public function getList($request)
     {
         try {
             $lab_list = Lab::select()->where('labs.status', '1');
             $lab_list = self::filterLabList($request, $lab_list);
+
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;
@@ -31,8 +32,8 @@ class LabService
                     $lab_list = $lab_list->where('privacy', '=', 1);
                 }
             }
-            if ($request->has('category_id') && !empty($request->category_id)) {
-                $lab_list = $lab_list->where('category_id', '=', $request->category_id);
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $lab_list = $lab_list->whereIn('labs.category', $request->category);
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $lab_list = $lab_list->where('organization_id', '=', $request->organization_id);

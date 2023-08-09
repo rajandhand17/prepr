@@ -46,15 +46,16 @@ class ProjectIndustry extends Command
             $project_industry = DB::connection('mysql2')->table('project_industry')->get();
             if ($project_industry->count() > 0) {
                 foreach ($project_industry as $key => $single_industry) {
-                    $project_industry_details = [
-                        'id'          => $single_industry->id,
-                        'title'       => $single_industry->name,
-                        'fr_CA_title' => $single_industry->fr_CA_name,
-                    ];
-                    $check_project_industry = Industry::where($project_industry_details)->first();
-                    if (!$check_project_industry) {
-                        Industry::create($project_industry_details);
+                    $check_project_industry = Industry::where('title', $single_industry->name)->first();
+                    if ($check_project_industry) {
+                        $newProjectIndustry = $check_project_industry;
+                    } else {
+                        $newProjectIndustry = new Industry();
                     }
+                    $newProjectIndustry->id = $single_industry->id;
+                    $newProjectIndustry->title = $single_industry->name;
+                    $newProjectIndustry->fr_CA_title = $single_industry->fr_CA_name;
+                    $newProjectIndustry->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project industry table completed.');

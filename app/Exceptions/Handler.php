@@ -49,13 +49,11 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            dd($e);
         });
     }
 
     public function render($request, Throwable $e)
     {
-        dd($e);
         if ($e instanceof NotFoundException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_not_found_404')), 404);
         }
@@ -66,6 +64,10 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof MethodNotAllowedHttpException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_illegal_request_403')), 405);
+        }
+
+        if ($e->getStatusCode() === 500) {
+            return Response::json(ResponseUtil::makeError(__('responses.send_error')), 500);
         }
 
         return parent::render($request, $e);

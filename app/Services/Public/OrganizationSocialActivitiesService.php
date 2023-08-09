@@ -3,36 +3,115 @@
 namespace App\Services\Public;
 
 use App\Models\OrganizationSocialActivities;
-use Illuminate\Support\Facades\Auth;
 
 class OrganizationSocialActivitiesService
 {
-    public function checkExists($id,$column,$action){
-        try{
-            return OrganizationSocialActivities::where([
-                ['organization_id', '=', $id],
-                ['user_id', '=', Auth::user()->id],
-                [$column, '=', $action],
-            ])->first();
-        }catch(\Exception $e){
+    public static function getColumnNameValue($action)
+    {
+        try {
+            $column = null;
+            $value = null;
+            switch ($action) {
+                case 'follow':
+                    $column = 'follow_unfollow';
+                    $value = '1';
+                    break;
+                case 'un-follow':
+                    $column = 'follow_unfollow';
+                    $value = '2';
+                    break;
+                case 'share':
+                    $column = 'share';
+                    $value = '1';
+                    break;
+                case 'favourite':
+                    $column = 'favourite';
+                    $value = '1';
+                    break;
+                case 'un-favourite':
+                    $column = 'favourite';
+                    $value = '2';
+                    break;
+                case 'like':
+                    $column = 'like_dislike';
+                    $value = '1';
+                    break;
+                case 'un-like':
+                    $column = 'like_dislike';
+                    $value = '2';
+                    break;
+                default:
+                    $column = null;
+                    $value = null;
+                    break;
+            }
+            if ($column != null && $value != null) {
+                return ['column' => $column, 'action' => $value];
+            }
+
+            return false;
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function organizationSocialActivitiesService($id,$column,$action){
-        try{
-            $uniqueKey = ["user_id" => Auth::user()->id,
-                "organization_id" => $id,
-            ];
-            $productData = [
-                $column => $action,
-            ];
-            $records=OrganizationSocialActivities::updateOrInsert($uniqueKey, $productData);
-            if($records){
+    public function checkSocialActivity($organization_id, $column, $action)
+    {
+        try {
+            $checkActivity = OrganizationSocialActivities::where(
+                [
+                    'organization_id' => $organization_id,
+                    'user_id'         => auth()->user()->id,
+                    $column           => $action,
+                ]
+            )->first();
+            if ($checkActivity != null) {
                 return true;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function captureSocialActivity($id, $column, $action)
+    {
+        try {
+            OrganizationSocialActivities::updateOrInsert([
+                'user_id'         => auth()->user()->id,
+                'organization_id' => $id,
+            ], [
+                $column => $action,
+            ]);
+
+            return true;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationsBasedOnActivity($action)
+    {
+        try {
+            if (auth()->check()) {
+                $columnValue = self::getColumnNameValue($action);
+                if ($columnValue !== false) {
+                    $organization_ids = OrganizationSocialActivities::where(
+                        [
+                            'user_id'              => auth()->user()->id,
+                            $columnValue['column'] => $columnValue['action'],
+                        ]
+                    )->get();
+
+                    return $organization_ids;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch(\Exception $e) {
             return false;
         }
     }

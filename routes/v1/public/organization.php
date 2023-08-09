@@ -3,10 +3,14 @@
 use App\Http\Controllers\Api\Public\Organization\OrganizationController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language'])->group(function () {
+$middleware = ['language'];
+if (\request()->has('social_type')) {
+    $middleware = ['language', 'auth:api'];
+}
+Route::middleware($middleware)->group(function () {
     Route::get('/', [OrganizationController::class, 'index']);
     Route::get('/{slug}', [OrganizationController::class, 'show']);
 });
 Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::get('/{slug}/{activity}', [OrganizationController::class, 'organizationSocialActivitiesService']);
+    Route::post('/{slug}/{activity}', [OrganizationController::class, 'socialActivity']);
 });
