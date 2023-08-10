@@ -17,17 +17,17 @@ class LabControllerTest extends TestCase
         parent::setUp();
 
         $this->parameters = [
-            'language'        => 'en',
-            'wrong_language'  => 'hi',
-            'slug'            => 'un-sdg-lab-1',
-            'wrong_slug'      => 'wrong_slug',
-            'email'           => 'rajan@amazon.com',
-            'password'        => 'Prepr@123',
-            'type'            => 'join_request',
-            'invite_type'     => 'join_request',
+            'language'         => 'en',
+            'wrong_language'   => 'hi',
+            'slug'             => 'un-sdg-lab-1',
+            'wrong_slug'       => 'wrong_slug',
+            'email'            => 'rajan@amazon.com',
+            'password'         => 'Prepr@123',
+            'type'             => 'join_request',
+            'invite_type'      => 'join_request',
             'subject_line'     => 'Successfully Joined Lab',
-            'email_body'     => 'You have successfully joined Lab',
-            'auto_invite'     => 'yes',
+            'email_body'       => 'You have successfully joined Lab',
+            'auto_invite'      => 'yes',
 
         ];
         Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
@@ -104,6 +104,7 @@ class LabControllerTest extends TestCase
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/join?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
+
     public function test_join_negative()
     {
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/join?language='.$this->parameters['language'], $this->parameters, $this->headers);
@@ -115,12 +116,14 @@ class LabControllerTest extends TestCase
         $response = $this->delete('/api/v1/public/lab/'.$this->parameters['slug'].'/un-join?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
+
     public function test_un_join_negative()
     {
         $response = $this->delete('/api/v1/public/lab/'.$this->parameters['slug'].'/un-join?language='.$this->parameters['language'], $this->parameters, $this->headers);
 
         $this->assertEquals(400, $response->getStatusCode());
     }
+
     public function test_lab_list_positive()
     {
         $response = $this->get('/api/v1/public/lab?language='.$this->parameters['language'], $this->headers);

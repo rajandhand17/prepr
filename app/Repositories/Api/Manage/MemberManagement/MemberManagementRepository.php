@@ -108,20 +108,24 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-    public  function checkLabJoinUnjoinStatus($request,$checkComponentBasedOnSlug,$component){
+    public function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
+    {
         try {
-            return  $this->memberManagementService->checkLabJoinUnjoinStatus($request,$checkComponentBasedOnSlug,$component);
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
-    public function acceptOrRejectLabJoinRequest($request,$checkComponentBasedOnSlug,$component,$action){
-        try {
-            return $this->memberManagementService->acceptOrRejectLabJoinRequest($request,$checkComponentBasedOnSlug,$component,$action);
+            return  $this->memberManagementService->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
         } catch (\Exception $e) {
             return false;
         }
     }
+
+    public function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
+    {
+        try {
+            return $this->memberManagementService->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function changeRole($request, $component)
     {
         try {
