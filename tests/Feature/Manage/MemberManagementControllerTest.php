@@ -226,6 +226,7 @@ class MemberManagementControllerTest extends TestCase
         $response = $this->get('/api/v1/manage/member-management/'.$this->parameters['wrong_component'].'/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
         $response->assertStatus(404);
     }
+
     public function test_accept_members_join_request_positive()
     {
         $this->parameters['component'] = 'lab';
@@ -281,6 +282,7 @@ class MemberManagementControllerTest extends TestCase
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
+
     /**create member management positive */
     public function test_change_role_positive()
     {
@@ -370,5 +372,4 @@ class MemberManagementControllerTest extends TestCase
         );
         $this->assertEquals(422, $response->getStatusCode());
     }
-
 }

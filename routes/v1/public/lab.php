@@ -17,4 +17,3 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::delete('/{slug}/un-join', [LabController::class, 'unJoinLab']);
     Route::post('/{slug}/{activity}', [LabController::class, 'socialActivity']);
 });
-
