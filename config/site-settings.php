@@ -4,7 +4,7 @@ return [
     'pagination_per_page'                           => '15',
     'listing_limit'                                 => '20',
     'dropdown_listing_limit'                        => '20',
-    'aws_url'                                       => env('AWS_URL'),
+    'aws_url'                                       => env('CDN_URL'),
 
     'default_user_profile_image'                    => 'default_images/user.webp',
 
