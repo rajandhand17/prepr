@@ -83,7 +83,6 @@ class MemberManagementRepository implements MemberManagementInterface
                     return false;
                 }
             }
-
             if (is_array($memberList) && count($memberList) > 0) {
                 $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject, $component, $request, $memberList);
 
@@ -104,6 +103,24 @@ class MemberManagementRepository implements MemberManagementInterface
     {
         try {
             return $this->memberManagementService->deleteMembers($checkComponentBasedOnSlug, $component, $request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
+    {
+        try {
+            return  $this->memberManagementService->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
+    {
+        try {
+            return $this->memberManagementService->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
         } catch (\Exception $e) {
             return false;
         }

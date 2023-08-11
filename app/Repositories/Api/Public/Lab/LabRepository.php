@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\Lab;
 
+use App\Services\Manage\MemberManagementService;
 use App\Services\Public\LabService;
 use App\Services\Public\LabSocialActivitiesService;
 
@@ -9,19 +10,19 @@ class LabRepository implements LabInterface
 {
     private $LabService;
     private $labSocialActivitiesService;
+    private $memberManagementService;
 
-    public function __construct(LabService $LabService, LabSocialActivitiesService $labSocialActivitiesService)
+    public function __construct(LabService $LabService, LabSocialActivitiesService $labSocialActivitiesService, MemberManagementService $memberManagementService)
     {
         $this->LabService = $LabService;
         $this->labSocialActivitiesService = $labSocialActivitiesService;
+        $this->memberManagementService = $memberManagementService;
     }
 
     public function getList($request)
     {
         try {
-            $getLabList = $this->LabService->getList($request);
-
-            return $getLabList;
+            return $this->LabService->getList($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -36,69 +37,73 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function checkSocialActivity($lab_id, $action)
+    public function getColumnNameValue($action)
     {
         try {
-            switch ($action) {
-                case 'join':
-                    $column = 'join_unjoin';
-                    $value = '1';
-                    break;
-                case 'un-join':
-                    $column = 'join_unjoin';
-                    $value = '2';
-                    break;
-                case 'follow':
-                    $column = 'follow_unfollow';
-                    $value = '1';
-                    break;
-                case 'un-follow':
-                    $column = 'follow_unfollow';
-                    $value = '2';
-                    break;
-                case 'share':
-                    $column = 'share';
-                    $value = '1';
-                    break;
-                case 'follow':
-                    $column = 'follow_unfollow';
-                    $value = '1';
-                    break;
-                case 'un-follow':
-                    $column = 'follow_unfollow';
-                    $value = '2';
-                    break;
-                case 'share':
-                    $column = 'share';
-                    $value = '1';
-                    break;
-                case 'favourite':
-                    $column = 'favourite';
-                    $value = '1';
-                    break;
-                case 'un-favourite':
-                    $column = 'favourite';
-                    $value = '2';
-                    break;
-                default:
-                    return false;
-                    break;
-            }
-            $response = $this->labSocialActivitiesService->checkSocialActivity($lab_id, $column, $value);
-            if ($response !== null) {
-                return $response;
-            }
-
-            return ['column'=>$column, 'action'=>$value];
+            return $this->labSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function socialActivity($id, $column, $value): bool
+    public function checkSocialActivity($lab_id, $column, $action)
     {
         try {
-            return $this->labSocialActivitiesService->update($id, $column, $value);
+            return $this->labSocialActivitiesService->checkSocialActivity($lab_id, $column, $action);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function captureSocialActivity($lab_id, $column, $value)
+    {
+        try {
+            return $this->labSocialActivitiesService->captureSocialActivity($lab_id, $column, $value);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function joinLab($lab, $component, $request, $memberList)
+    {
+        try {
+            return $this->memberManagementService->addMembers($lab, $component, $request, $memberList);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function unJoinLab($lab, $component, $request)
+    {
+        try {
+            return $this->memberManagementService->deleteMembers($lab, $component, $request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkJoinedOrNot($lab, $component)
+    {
+        try {
+            return $this->memberManagementService->checkJoinedOrNot($lab, $component);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getRecordsFromJoinRequest()
+    {
+        try {
+            return $this->memberManagementService->getRecordsFromJoinRequest();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function setJoinRequestParameters()
+    {
+        try {
+            return $this->memberManagementService->setJoinRequestParameters();
         } catch (\Exception $e) {
             return false;
         }

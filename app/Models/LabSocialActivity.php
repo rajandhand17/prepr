@@ -18,7 +18,6 @@ class LabSocialActivity extends Model
         'lab_id',
         'follow_unfollow',
         'favourite',
-        'join_unjoin',
         'share',
     ];
 }
