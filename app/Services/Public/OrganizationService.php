@@ -31,7 +31,6 @@ class OrganizationService
 
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
                 $getOrganizationLikedList = OrganizationSocialActivitiesService::getOrganizationsBasedOnActivity('like');
-
                 if ($getOrganizationLikedList && $getOrganizationLikedList->count() > 0) {
                     $organization_list = $organization_list->whereIn('id', $getOrganizationLikedList->pluck('organization_id'));
                 }
