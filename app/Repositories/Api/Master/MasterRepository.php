@@ -21,6 +21,7 @@ use App\Models\SocialConnect;
 use App\Models\SocialLink;
 use App\Models\Tag;
 use App\Services\CategoryService;
+
 class MasterRepository implements MasterInterface
 {
     private $categoryService;
