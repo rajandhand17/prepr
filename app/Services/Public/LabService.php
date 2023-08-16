@@ -32,6 +32,7 @@ class LabService
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $lab_list = $lab_list->where('organization_id', '=', $request->organization_id);
             }
+
             return $lab_list;
         } catch (\Exception $e) {
             return false;
