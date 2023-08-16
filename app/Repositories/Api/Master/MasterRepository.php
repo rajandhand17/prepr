@@ -7,7 +7,6 @@ use App\Models\FlexibleExpireDateDuration;
 use App\Models\Host;
 use App\Models\LabCondition;
 use App\Models\PitchTemplate;
-use App\Models\ProjectIndustry;
 use App\Models\ProjectStage;
 use App\Models\ProjectStatus;
 use App\Models\ProjectSubmissionRequirement;
@@ -21,13 +20,14 @@ use App\Models\SocialConnect;
 use App\Models\SocialLink;
 use App\Models\Tag;
 use App\Services\CategoryService;
+use App\Services\ProjectIndustryService;
 
 class MasterRepository implements MasterInterface
 {
     private $categoryService;
     private $skill;
     private $tag;
-    private $project_industry;
+    private $projectIndustryService;
     private $project_type;
     private $project_stage;
     private $project_verticals;
@@ -44,12 +44,12 @@ class MasterRepository implements MasterInterface
     private $lab_condition;
     private $social_connect;
 
-    public function __construct(CategoryService $categoryService, Skill $skill, Tag $tag, ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
+    public function __construct(CategoryService $categoryService, Skill $skill, Tag $tag, ProjectIndustryService $projectIndustryService, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
     {
         $this->categoryService = $categoryService;
         $this->skill = $skill;
         $this->tag = $tag;
-        $this->project_industry = $project_industry;
+        $this->projectIndustryService = $projectIndustryService;
         $this->project_type = $project_type;
         $this->project_stage = $project_stage;
         $this->project_verticals = $project_verticals;
@@ -97,7 +97,7 @@ class MasterRepository implements MasterInterface
     public function getProjectIndustries($request)
     {
         try {
-            return $this->project_industry->getProjectIndustries($request->language, $request->search);
+            return $this->projectIndustryService->getProjectIndustries($request->language, $request->search);
         } catch (\Exception $e) {
             return false;
         }
