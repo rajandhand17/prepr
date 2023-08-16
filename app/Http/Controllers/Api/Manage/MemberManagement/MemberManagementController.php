@@ -29,59 +29,6 @@ class MemberManagementController extends AppBaseController
         $this->memberManagementRepository = $memberManagementRepository;
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/v1/member-management/{component}/{slug}?language=en",
-     *     tags={"Member Management API -  List"},
-     *     summary="Finds lists of Member Management",
-     *     description="Get all the Member Management",
-     *     security={{"bearerAuth":{}}},
-     *     operationId="index",
-     *
-     *     @OA\Parameter(
-     *         name="language",
-     *         in="path",
-     *         required=true,
-     *         description="language define the choosen language",
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="component",
-     *         in="path",
-     *         required=true,
-     *         description="component define type",
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="slug",
-     *         in="path",
-     *         required=true,
-     *         description="slug define the organization slug",
-     *
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Not found!",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Bad request!",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error!",
-     *
-     *     ),
-     * )
-     */
     public function index($component, $slug, Request $request)
     {
         try {
@@ -127,112 +74,6 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/v1/member-management/{component}/{slug}/create?language=en",
-     *     tags={"Member Management API -  create"},
-     *     summary="Send request for create member management",
-     *     operationId="creates",
-     *
-     *     @OA\Parameter(
-     *         name="type",
-     *         in="query",
-     *         description="Enter type for member management!",
-     *         required=true,
-     *         explode=true,
-     *     ),
-     *     @OA\Parameter(
-     *         name="invite_type",
-     *         in="query",
-     *         description="Enter invite-type for member management!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="role",
-     *         in="query",
-     *         description="Enter role for member management!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="module_id",
-     *         in="query",
-     *         description="Enter module_id for member management!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="inviter_id",
-     *         in="query",
-     *         description="Enter inviter id for member management!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="subject_line",
-     *         in="query",
-     *         description="Enter subject line for member management!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="email_body",
-     *         in="query",
-     *         description="Enter email body for member management!",
-     *         required=true,
-     *         explode=true,
-     *
-     *     ),
-     *     @OA\Parameter(
-     *         name="invite_status",
-     *         in="query",
-     *         description="Enter invite status for member management!",
-     *         required=true,
-     *         explode=true,
-     *     ),
-     *     @OA\Parameter(
-     *         name="invite_email",
-     *         in="query",
-     *         description="Enter invite email for member management!",
-     *         required=true,
-     *         explode=true,
-     *     ),
-     *     @OA\Parameter(
-     *         name="inviter_id",
-     *         in="query",
-     *         description="Enter inviter id for member management!",
-     *         required=true,
-     *         explode=true,
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Not found!",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Bad request!",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal Server Error!",
-     *
-     *     ),
-     * )
-     */
     public function create($component, $slug, CreateMemberManagementRequest $request)
     {
         try {
@@ -254,45 +95,6 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/v1/member-management/{component}/{slug}/delete?language=en",
-     *     tags={"Member Management API - delete"},
-     *     summary="Member management apis delete",
-     *     operationId="deletes",
-     *
-     *     @OA\Parameter(
-     *         name="id[]",
-     *         in="query",
-     *         description="Member management delete id",
-     *         required=true,
-     *         explode=true,
-     *
-     *         @OA\Schema(type="array", @OA\Items(type="integer")),
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Not found!",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Bad request!",
-     *
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal Server Error!",
-     *
-     *     ),
-     * )
-     */
     public function delete($component, $slug, DeleteMemberManagementRequest $request)
     {
         try {
@@ -306,6 +108,29 @@ class MemberManagementController extends AppBaseController
             }
 
             return $this->sendError(__('responses.member_manger_not_delete'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function acceptOrRejectLabJoinRequest(Request $request, $component, $slug, $action)
+    {
+        try {
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
+            }
+            $checkLabStatus = $this->memberManagementRepository->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
+            if ($checkLabStatus) {
+                $member_management = $this->memberManagementRepository->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+                if ($member_management) {
+                    return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
+                }
+
+                return $this->sendError(__('responses.join_request_'.$action.'_failed'), 400);
+            }
+
+            return $this->sendError(__('responses.request_not_exist'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

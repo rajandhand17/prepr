@@ -116,4 +116,9 @@ return [
         'lab-group'      => '5',
     ],
 
+    'lab_component'=> [
+        'lab'            => 'lab',
+        'organization'   => 'organization',
+    ],
+
 ];

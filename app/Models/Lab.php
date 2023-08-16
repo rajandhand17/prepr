@@ -37,7 +37,7 @@ class Lab extends Model
 
     public function address()
     {
-        return $this->hasOne(LabAddress::class, 'lab_id', 'id');
+        return $this->hasMany(LabAddress::class, 'lab_id', 'id');
     }
 
     public function organization()
@@ -50,14 +50,14 @@ class Lab extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function category()
+    public function getCategory()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     public function achievement()
     {
-        return $this->hasOne(LabAcheivement::class, 'lab_id', 'id');
+        return $this->hasMany(LabAcheivement::class, 'lab_id', 'id');
     }
 
     public function external_links()
@@ -93,5 +93,37 @@ class Lab extends Model
     public function component_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
+    }
+
+    public function shares()
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
+    }
+
+    public function liked()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
+    }
+
+    public function joined()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('join_unjoin', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
+    }
+
+    public function favourite()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
     }
 }

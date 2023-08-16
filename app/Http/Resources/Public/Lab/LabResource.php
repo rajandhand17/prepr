@@ -15,9 +15,9 @@ class LabResource extends JsonResource
      */
     public function toArray($request)
     {
-        $category = $this->category;
+        $category = $this->getCategory;
         if ($category) {
-            $category = $this->category->title;
+            $category = $this->getCategory->title;
         } else {
             $category = null;
         }
@@ -33,6 +33,12 @@ class LabResource extends JsonResource
             'media'                        => $this->media,
             'category'                     => $category,
             'status'                       => $this->status,
+            'joined'                       => $this->joined(),
+            'liked'                        => $this->liked(),
+            'favourite'                    => $this->favourite(),
+            'lab_address'                  => LabAddressResource::collection($this->address),
+            'lab_achievement'              => LabAchievementResource::collection($this->achievement),
+            'lab_external_links'           => LabExternalLinksResource::collection($this->external_links),
         ];
     }
 }

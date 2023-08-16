@@ -231,7 +231,7 @@ class MasterRepository implements MasterInterface
     public function getSocialConnect($request)
     {
         try {
-            return $this->social_connect->getSocialConnect($request->language, $request->search);
+            return $this->social_connect->getSocialCon0nect($request->language, $request->search);
         } catch (\Exception) {
             return false;
         }

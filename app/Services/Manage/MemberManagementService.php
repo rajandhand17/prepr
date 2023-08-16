@@ -7,6 +7,7 @@ use App\Models\MemberManagement;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
+use stdClass;
 
 class MemberManagementService
 {
@@ -243,6 +244,31 @@ class MemberManagementService
         }
     }
 
+    public static function getRecordsFromJoinRequest()
+    {
+        try {
+            $memberList = [];
+            if (auth()->user()) {
+                $memberList[] = [
+                    'type'          => config('constants.member_management_type.join_request'),
+                    'invite_type'   => config('constants.member_management_invite_type.join_request'),
+                    'invitee_name'  => auth()->user()->full_name,
+                    'invitee_email' => auth()->user()->email,
+                    'invite_status' => config('constants.member_management_invite_status.pending'),
+                ];
+                if (!empty($memberList)) {
+                    return $memberList;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function addMembers($componentCollectionObject, $component, $request, $memberList)
     {
         try {
@@ -261,7 +287,6 @@ class MemberManagementService
                     break;
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
-
             switch ($request->auto_invite) {
                 case 'Yes' || 'YES' || 'yes':
                     $auto_invite = config('constants.member_management_auto_invite.yes');
@@ -293,7 +318,11 @@ class MemberManagementService
                             if ($auto_invite == 1) {
                                 $invite_status = config('constants.member_management_invite_status.accepted');
                             }
-
+                            if (isset($member['invite_status'])) {
+                                $invite_status = $member['invite_status'];
+                            } else {
+                                $invite_status = $member['type'];
+                            }
                             if ($auto_invite == 2) {
                                 if ($member['type'] == '1') {
                                     $invite_status = config('constants.member_management_invite_status.pending');
@@ -331,7 +360,7 @@ class MemberManagementService
                                 'role'          => $request->role,
                                 'email'         => $member['invitee_email'],
                                 'auto_invite'   => $auto_invite,
-                                'invite_status' => $member['type'],
+                                'invite_status' => $invite_status,
                                 'invitee_name'  => $member['invitee_name'],
                                 'email_status'  => config('constants.member_management_email_status.scheduled'),
                                 'subject_line'  => $subject,
@@ -361,8 +390,21 @@ class MemberManagementService
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return $e;
+            return false;
+        }
+    }
 
+    public function checkJoinedOrNot($checkComponentBasedOnSlug, $component)
+    {
+        try {
+            $module_type = config('constants.member_management_component_type.lab');
+            $records = MemberManagement::where('email', auth()->user()->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
+            if ($records) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -388,6 +430,49 @@ class MemberManagementService
 
             return false;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
+    {
+        try {
+            $module_type = config('constants.member_management_component_type.lab');
+
+            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->get();
+            if ($member_manger) {
+                return true;
+            }
+
+            return false;
+        } catch(\Exception $e) {
+            dd($e);
+
+            return false;
+        }
+    }
+
+    public static function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
+    {
+        try {
+            $module_type = config('constants.member_management_component_type.lab');
+            switch($action) {
+                case 'accept':
+                    $invite_status = config('constants.member_management_invite_status.accepted');
+                    break;
+                case 'decline':
+                    $invite_status = config('constants.member_management_invite_status.declined');
+                    break;
+            }
+            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->get();
+            foreach ($member_manger as $member) {
+                $member->invite_status = $invite_status;
+                $member->inviter_id = auth()->user()->id;
+                $member->save();
+            }
+
+            return true;
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -443,6 +528,23 @@ class MemberManagementService
                 'invitee_name',
                 'email_status'
             )->where($filterData)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function setJoinRequestParameters()
+    {
+        try {
+            $requestedData = new stdClass();
+            $requestedData->type = 'join_request';
+            $requestedData->invite_type = 'join_request';
+            $requestedData->auto_invite = 'NA';
+            $requestedData->role = null;
+            $requestedData->subject_line = 'Successfully Joined Lab';
+            $requestedData->email_body = 'You have successfully joined Lab';
+
+            return $requestedData;
         } catch (\Exception $e) {
             return false;
         }

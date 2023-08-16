@@ -43,11 +43,10 @@ class OrganizationResource extends JsonResource
             'likes'                        => $this->likes()->count(),
             'followers'                    => $this->followers()->count(),
             'shares'                       => $this->shares()->count(),
-
             'liked'                        => $this->liked(),
             'followed'                     => $this->followed(),
             'favourite'                    => $this->favourite(),
-
+            'shared'                       => $this->shared(),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->members),
