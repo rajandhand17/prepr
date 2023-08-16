@@ -22,13 +22,13 @@ class ProjectIndustryService
                 if (!$column_name || !Schema::hasColumn('skills', $column_name)) {
                     return false;
                 }
-                $project_industry_list = ProjectIndustry::select('id', $column_name . ' as title');
+                $project_industry_list = ProjectIndustry::select('id', $column_name.' as title');
             }
 
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $project_industry_list = $project_industry_list->where($column_name, 'like', '%' . $search . '%');
+                $project_industry_list = $project_industry_list->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table

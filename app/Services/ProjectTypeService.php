@@ -22,13 +22,13 @@ class ProjectTypeService
                 if (!$column_name || !Schema::hasColumn('project_types', $column_name)) {
                     return false;
                 }
-                $project_type_list = ProjectType::select('id', $column_name . ' as title');
+                $project_type_list = ProjectType::select('id', $column_name.' as title');
             }
 
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $project_type_list = $project_type_list->where($column_name, 'like', '%' . $search . '%');
+                $project_type_list = $project_type_list->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table
