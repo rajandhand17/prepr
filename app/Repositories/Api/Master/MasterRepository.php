@@ -3,7 +3,6 @@
 namespace App\Repositories\Api\Master;
 
 use App\Models\AchievementConditionList;
-use App\Models\Category;
 use App\Models\FlexibleExpireDateDuration;
 use App\Models\Host;
 use App\Models\LabCondition;
@@ -21,10 +20,10 @@ use App\Models\SkillStack;
 use App\Models\SocialConnect;
 use App\Models\SocialLink;
 use App\Models\Tag;
-
+use App\Services\CategoryService;
 class MasterRepository implements MasterInterface
 {
-    private $category;
+    private $categoryService;
     private $skill;
     private $tag;
     private $project_industry;
@@ -44,9 +43,9 @@ class MasterRepository implements MasterInterface
     private $lab_condition;
     private $social_connect;
 
-    public function __construct(Category $category, Skill $skill, Tag $tag, ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
+    public function __construct(CategoryService $categoryService, Skill $skill, Tag $tag, ProjectIndustry $project_industry, ProjectType $project_type, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
     {
-        $this->category = $category;
+        $this->categoryService = $categoryService;
         $this->skill = $skill;
         $this->tag = $tag;
         $this->project_industry = $project_industry;
@@ -70,7 +69,7 @@ class MasterRepository implements MasterInterface
     public function getCategories($request)
     {
         try {
-            return $this->category->getCategories($request->language, $request->search, $request->component);
+            return $this->categoryService->getCategories($request->language, $request->search, $request->component);
         } catch (\Exception $e) {
             return false;
         }

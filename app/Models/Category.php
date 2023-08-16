@@ -29,45 +29,4 @@ class Category extends Model
     {
         return $this->hasOne(self::class, 'id', 'parent_id');
     }
-
-    public function getCategories($language = 'en', $search = null, $component = null)
-    {
-        try {
-            if ($language == 'en') {
-                $category_list = static::select('id', 'title', 'parent_id');
-            } else {
-                //get column name based on language
-                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
-
-                //check whether the column exist in the db or not
-                if (!$column_name || !Schema::hasColumn('categories', $column_name)) {
-                    return false;
-                }
-                $category_list = static::select('id', $column_name.' as title', 'parent_id');
-            }
-
-            //Search categories based on user input
-            if ($search != null) {
-                $column_name = isset($column_name) ? $column_name : 'title';
-                $category_list = $category_list->where($column_name, 'like', '%'.$search.'%');
-            }
-
-            //get categories based on component
-            if ($component != null) {
-                $category_list = $category_list->where($component, 'like', '%'.$component.'%');
-            }
-
-            //take 20 results based from the table
-            $category_list = $category_list->take(config('site-settings.dropdown_listing_limit'))->get();
-
-            //check if there are any results
-            if (!$category_list->isEmpty()) {
-                return $category_list;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 }
