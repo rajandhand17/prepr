@@ -7,7 +7,6 @@ use App\Models\FlexibleExpireDateDuration;
 use App\Models\Host;
 use App\Models\LabCondition;
 use App\Models\PitchTemplate;
-use App\Models\ProjectStage;
 use App\Models\ProjectStatus;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\ProjectVertical;
@@ -21,6 +20,7 @@ use App\Models\Tag;
 use App\Services\CategoryService;
 use App\Services\ProjectIndustryService;
 use App\Services\ProjectTypeService;
+use App\Services\ProjectStageService;
 
 class MasterRepository implements MasterInterface
 {
@@ -29,7 +29,7 @@ class MasterRepository implements MasterInterface
     private $tag;
     private $projectIndustryService;
     private $projectTypeService;
-    private $project_stage;
+    private $projectStageService;
     private $project_verticals;
     private $project_status;
     private $social_link;
@@ -44,14 +44,14 @@ class MasterRepository implements MasterInterface
     private $lab_condition;
     private $social_connect;
 
-    public function __construct(CategoryService $categoryService, Skill $skill, Tag $tag, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStage $project_stage, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
+    public function __construct(CategoryService $categoryService, Skill $skill, Tag $tag, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVertical $project_verticals, ProjectStatus $project_status, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
     {
         $this->categoryService = $categoryService;
         $this->skill = $skill;
         $this->tag = $tag;
         $this->projectIndustryService = $projectIndustryService;
         $this->projectTypeService = $projectTypeService;
-        $this->project_stage = $project_stage;
+        $this->projectStageService = $projectStageService;
         $this->project_verticals = $project_verticals;
         $this->project_status = $project_status;
         $this->social_link = $social_link;
@@ -115,7 +115,7 @@ class MasterRepository implements MasterInterface
     public function getStages($request)
     {
         try {
-            return $this->project_stage->getProjectStages($request->language, $request->search);
+            return $this->projectStageService->getProjectStages($request->language, $request->search);
         } catch(\Exception $e) {
             return false;
         }
