@@ -14,7 +14,6 @@ class CategoryService
             if ($language == 'en') {
                 $category_list = Category::select('id', 'title', 'parent_id', 'components');
             } else {
-
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
 
@@ -22,18 +21,18 @@ class CategoryService
                 if (!$column_name || !Schema::hasColumn('categories', $column_name)) {
                     return false;
                 }
-                $category_list = Category::select('id', $column_name . ' as title', 'parent_id', 'components');
+                $category_list = Category::select('id', $column_name.' as title', 'parent_id', 'components');
             }
 
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $category_list = $category_list->where($column_name, 'like', '%' . $search . '%');
+                $category_list = $category_list->where($column_name, 'like', '%'.$search.'%');
             }
 
             //get categories based on component
             if ($component != null) {
-                $category_list = $category_list->where('components', 'like', '%' . $component . '%');
+                $category_list = $category_list->where('components', 'like', '%'.$component.'%');
             }
 
             //take 20 results based from the table
