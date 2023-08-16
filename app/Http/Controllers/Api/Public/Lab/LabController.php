@@ -36,6 +36,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch (\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

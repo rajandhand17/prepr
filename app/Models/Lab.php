@@ -104,4 +104,35 @@ class Lab extends Model
     {
         return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
     }
+
+    public function followed()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('follow_unfollow', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+        return 'NA';
+    }
+    public function joined()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('join_unjoin', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+        return 'NA';
+    }
+
+    public function shared()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('share', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+        return 'NA';
+    }
+
+    public function favourite()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+        return 'NA';
+    }
 }
