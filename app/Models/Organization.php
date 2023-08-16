@@ -96,6 +96,7 @@ class Organization extends LaratrustTeam
         if (auth('api')->check()) {
             return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth('api')->user()->id)->where('follow_unfollow', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'NA';
     }
 
@@ -108,7 +109,8 @@ class Organization extends LaratrustTeam
         return 'NA';
     }
 
-    public function shared(){
+    public function shared()
+    {
         if (auth('api')->check()) {
             return ($this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('user_id', auth('api')->user()->id)->where('share', '1')->count() > 0) ? 'Yes' : 'No';
         }

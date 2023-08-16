@@ -44,7 +44,7 @@ class OrganizationResource extends JsonResource
             'followers'                    => $this->followers()->count(),
             'shares'                       => $this->shares()->count(),
             'liked'                        => $this->liked(),
-            'followed'                     =>$this->followed(),
+            'followed'                     => $this->followed(),
             'favourite'                    => $this->favourite(),
             'shared'                       => $this->shared(),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),

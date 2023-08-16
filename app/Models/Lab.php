@@ -95,7 +95,6 @@ class Lab extends Model
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
 
-
     public function shares()
     {
         return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
@@ -106,20 +105,25 @@ class Lab extends Model
         if (auth('api')->check()) {
             return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'NA';
     }
+
     public function joined()
     {
         if (auth('api')->check()) {
             return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('join_unjoin', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'NA';
     }
+
     public function favourite()
     {
         if (auth('api')->check()) {
             return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'NA';
     }
 }
