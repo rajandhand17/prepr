@@ -95,20 +95,16 @@ class Lab extends Model
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
 
-    public function followers()
-    {
-        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('follow_unfollow', '1');
-    }
 
     public function shares()
     {
         return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
     }
 
-    public function followed()
+    public function liked()
     {
         if (auth('api')->check()) {
-            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('follow_unfollow', '1')->count() > 0) ? 'Yes' : 'No';
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
         }
         return 'NA';
     }
@@ -119,15 +115,6 @@ class Lab extends Model
         }
         return 'NA';
     }
-
-    public function shared()
-    {
-        if (auth('api')->check()) {
-            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('share', '1')->count() > 0) ? 'Yes' : 'No';
-        }
-        return 'NA';
-    }
-
     public function favourite()
     {
         if (auth('api')->check()) {
