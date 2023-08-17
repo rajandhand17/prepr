@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-
     public function getSkills($language = 'en', $search = null)
     {
         try {
@@ -22,7 +21,7 @@ class SkillService
                 if (!$column_name || !Schema::hasColumn('skills', $column_name)) {
                     return false;
                 }
-                $skill_list = Skill::select('id', $column_name . ' as title');
+                $skill_list = Skill::select('id', $column_name.' as title');
             }
 
             //Search categories based on user input
@@ -48,10 +47,11 @@ class SkillService
     public function filterSKillList($getSkillsList, $sKill_column_name, $search)
     {
         try {
-            $getSkillsList = $getSkillsList->where($sKill_column_name, 'like', '%' . $search . '%');
+            $getSkillsList = $getSkillsList->where($sKill_column_name, 'like', '%'.$search.'%');
             if ($getSkillsList) {
                 return $getSkillsList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
