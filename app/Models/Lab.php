@@ -107,14 +107,13 @@ class Lab extends Model
         return 'NA';
     }
 
-//    public function joined()
-//    {
-//        if (auth('api')->check()) {
-//            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('join_unjoin', '1')->count() > 0) ? 'Yes' : 'No';
-//        }
-//
-//        return 'NA';
-//    }
+    public function joined()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1',"invite_status"=>'1']);
+        }
+        return 'NA';
+    }
 
     public function favourite()
     {
@@ -135,4 +134,9 @@ class Lab extends Model
     {
         return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
     }
+
+    public function members(){
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1',"invite_status"=>'1']);
+    }
+
 }
