@@ -19,8 +19,8 @@ use App\Models\SocialLink;
 use App\Models\Tag;
 use App\Services\CategoryService;
 use App\Services\ProjectIndustryService;
-use App\Services\ProjectTypeService;
 use App\Services\ProjectStageService;
+use App\Services\ProjectTypeService;
 
 class MasterRepository implements MasterInterface
 {
