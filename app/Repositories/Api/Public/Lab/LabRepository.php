@@ -100,10 +100,10 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function setJoinRequestParameters()
+    public function setJoinRequestParameters($language)
     {
         try {
-            return $this->memberManagementService->setJoinRequestParameters();
+            return $this->memberManagementService->setJoinRequestParameters($language);
         } catch (\Exception $e) {
             return false;
         }
