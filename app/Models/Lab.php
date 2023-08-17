@@ -110,7 +110,7 @@ class Lab extends Model
     public function joined()
     {
         if (auth('api')->check()) {
-            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1',"invite_status"=>'1']);
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1',"invite_status"=>'1',"email"=>auth()->user()->email]);
         }
         return 'NA';
     }
