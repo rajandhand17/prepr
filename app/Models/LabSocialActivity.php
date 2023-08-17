@@ -16,7 +16,7 @@ class LabSocialActivity extends Model
     protected $fillable = [
         'user_id',
         'lab_id',
-        'follow_unfollow',
+        'like_dislike',
         'favourite',
         'share',
     ];

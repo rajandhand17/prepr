@@ -21,13 +21,13 @@ class ProjectVerticalService
                 if (!$column_name || !Schema::hasColumn('project_verticals', $column_name)) {
                     return false;
                 }
-                $project_verticals_list = ProjectVertical::select('id', $column_name . ' as title');
+                $project_verticals_list = ProjectVertical::select('id', $column_name.' as title');
             }
 
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $project_verticals_list = $project_verticals_list->where($column_name, 'like', '%' . $search . '%');
+                $project_verticals_list = $project_verticals_list->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table
