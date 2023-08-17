@@ -28,6 +28,11 @@ class LabResource extends JsonResource
         $skill_stacks = [];
         $tags = [];
         $tag_groups = [];
+        $category = NULL;
+
+        if($this->getCategory){
+            $category = $this->getCategory->title;
+        }
 
         if ($this->address) {
             $address = [
@@ -103,7 +108,7 @@ class LabResource extends JsonResource
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization'                  => $this->organization->title,
-            'category'                      => $this->category->title,
+            'category'                      => $category,
             'slug'                          => $this->slug,
             'title'                         => $this->title,
             'description'                   => $this->description,
