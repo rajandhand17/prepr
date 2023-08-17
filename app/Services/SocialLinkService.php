@@ -16,7 +16,7 @@ class SocialLinkService
             }
 
             //take 20 results based from the table
-            $social_link_list = $social_link_list->take(20)->get();
+            $social_link_list = $social_link_list->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$social_link_list->isEmpty()) {

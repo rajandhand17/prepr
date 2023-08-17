@@ -32,7 +32,7 @@ class ProjectIndustryService
             }
 
             //take 20 results based from the table
-            $project_industry_list = $project_industry_list->take(20)->get();
+            $project_industry_list = $project_industry_list->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$project_industry_list->isEmpty()) {

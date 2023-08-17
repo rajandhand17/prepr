@@ -29,7 +29,7 @@ class ProjectSubmissionRequirementService
             }
 
             //take 20 results based from the table
-            $project_submission_requirements = $project_submission_requirements->take(20)->get();
+            $project_submission_requirements = $project_submission_requirements->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$project_submission_requirements->isEmpty()) {

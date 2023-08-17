@@ -32,7 +32,7 @@ class ProjectTypeService
             }
 
             //take 20 results based from the table
-            $project_type_list = $project_type_list->take(20)->get();
+            $project_type_list = $project_type_list->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$project_type_list->isEmpty()) {

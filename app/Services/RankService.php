@@ -31,7 +31,7 @@ class RankService
             }
 
             //take 20 results based from the table
-            $rank = $rank->take(20)->get();
+            $rank = $rank->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$rank->isEmpty()) {

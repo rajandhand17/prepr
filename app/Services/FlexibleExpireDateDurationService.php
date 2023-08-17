@@ -32,7 +32,7 @@ class FlexibleExpireDateDurationService
             }
 
             //take 20 results based from the table
-            $flexible_date_duration = $flexible_date_duration->take(20)->get();
+            $flexible_date_duration = $flexible_date_duration->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$flexible_date_duration->isEmpty()) {

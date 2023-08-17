@@ -31,7 +31,7 @@ class ProjectStageService
             }
 
             //take 20 results based from the table
-            $project_stage_list = $project_stage_list->take(20)->get();
+            $project_stage_list = $project_stage_list->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$project_stage_list->isEmpty()) {

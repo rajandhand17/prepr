@@ -13,7 +13,7 @@ class LabConditionService
             if ($search != null) {
                 $labConditions = $labConditions->where('title', 'like', '%'.$search.'%');
             }
-            $labConditions = $labConditions->take(20)->get();
+            $labConditions = $labConditions->take(config('site-settings.dropdown_listing_limit'))->get();
             //  return $host;
             if (!$labConditions->isEmpty()) {
                 return $labConditions;

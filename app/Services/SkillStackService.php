@@ -46,7 +46,7 @@ class SkillStackService
             }
 
             //take 20 results based from the table
-            $skill_stacks = $skill_stacks->take(20)->get();
+            $skill_stacks = $skill_stacks->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$skill_stacks->isEmpty()) {

@@ -31,7 +31,7 @@ class ProjectVerticalService
             }
 
             //take 20 results based from the table
-            $project_verticals_list = $project_verticals_list->take(20)->get();
+            $project_verticals_list = $project_verticals_list->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$project_verticals_list->isEmpty()) {

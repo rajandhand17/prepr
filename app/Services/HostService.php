@@ -13,7 +13,7 @@ class HostService
             if ($search != null) {
                 $host = $host->where('title', 'like', '%'.$search.'%');
             }
-            $host = $host->take(20)->get();
+            $host = $host->take(config('site-settings.dropdown_listing_limit'))->get();
             //  return $host;
             if (!$host->isEmpty()) {
                 return $host;

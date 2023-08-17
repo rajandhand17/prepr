@@ -57,7 +57,7 @@ class SkillGroupService
             }
 
             //take 20 results based from the table
-            $skill_group = $skill_group->take(20)->get();
+            $skill_group = $skill_group->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$skill_group->isEmpty()) {

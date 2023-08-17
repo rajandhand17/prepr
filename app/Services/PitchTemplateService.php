@@ -18,7 +18,7 @@ class PitchTemplateService
             }
 
             //take 20 results based from the table
-            $pitch_temple_list = $pitch_temple_list->take(20)->get();
+            $pitch_temple_list = $pitch_temple_list->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$pitch_temple_list->isEmpty()) {

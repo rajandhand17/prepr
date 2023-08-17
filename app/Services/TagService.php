@@ -54,7 +54,7 @@ class TagService
             }
 
             //take 20 results based from the table
-            $tag_list = $tag_list->take(20)->get();
+            $tag_list = $tag_list->take(config('site-settings.dropdown_listing_limit'))->get();
 
             //check if there are any results
             if (!$tag_list->isEmpty()) {
