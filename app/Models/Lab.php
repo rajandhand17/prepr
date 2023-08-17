@@ -34,10 +34,13 @@ class Lab extends Model
         'is_notification_enabled',
         'is_verified',
     ];
-
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
     public function address()
     {
-        return $this->hasMany(LabAddress::class, 'lab_id', 'id');
+        return $this->hasOne(LabAddress::class, 'lab_id', 'id');
     }
 
     public function organization()
@@ -57,7 +60,7 @@ class Lab extends Model
 
     public function achievement()
     {
-        return $this->hasMany(LabAcheivement::class, 'lab_id', 'id');
+        return $this->hasOne(LabAcheivement::class, 'lab_id', 'id');
     }
 
     public function external_links()
@@ -95,11 +98,6 @@ class Lab extends Model
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
 
-    public function shares()
-    {
-        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
-    }
-
     public function liked()
     {
         if (auth('api')->check()) {
@@ -109,14 +107,14 @@ class Lab extends Model
         return 'NA';
     }
 
-    public function joined()
-    {
-        if (auth('api')->check()) {
-            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('join_unjoin', '1')->count() > 0) ? 'Yes' : 'No';
-        }
-
-        return 'NA';
-    }
+//    public function joined()
+//    {
+//        if (auth('api')->check()) {
+//            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('join_unjoin', '1')->count() > 0) ? 'Yes' : 'No';
+//        }
+//
+//        return 'NA';
+//    }
 
     public function favourite()
     {
@@ -125,5 +123,16 @@ class Lab extends Model
         }
 
         return 'NA';
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('like_dislike', '1');
+    }
+
+
+    public function shares()
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
     }
 }
