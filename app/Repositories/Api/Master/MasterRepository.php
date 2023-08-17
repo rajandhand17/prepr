@@ -2,12 +2,6 @@
 
 namespace App\Repositories\Api\Master;
 
-use App\Models\AchievementConditionList;
-use App\Models\FlexibleExpireDateDuration;
-use App\Models\Host;
-use App\Models\LabCondition;
-use App\Models\PitchTemplate;
-use App\Models\SocialConnect;
 use App\Services\CategoryService;
 use App\Services\ProjectIndustryService;
 use App\Services\ProjectStageService;
@@ -21,6 +15,12 @@ use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\SocialLinkService;
 use App\Services\TagService;
+use App\Services\AchievementConditionListService;
+use App\Services\HostService;
+use App\Services\FlexibleExpireDateDurationService;
+use App\Services\PitchTemplateService;
+use App\Services\LabConditionService;
+use App\Services\SocialConnectService;
 
 class MasterRepository implements MasterInterface
 {
@@ -37,14 +37,14 @@ class MasterRepository implements MasterInterface
     private $skillStackService;
     private $rankService;
     private $projectSubmissionRequirements;
-    private $achievement_condition_list;
-    private $host;
-    private $flexible_expireDate_duration;
-    private $pitch_template;
-    private $lab_condition;
-    private $social_connect;
+    private $achievementConditionListService;
+    private $hostService;
+    private $flexibleExpireDateDurationService;
+    private $pitchTemplateService;
+    private $labConditionService;
+    private $socialConnectService;
 
-    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
+    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;
@@ -59,12 +59,12 @@ class MasterRepository implements MasterInterface
         $this->skillStackService = $skillStackService;
         $this->rankService = $rankService;
         $this->projectSubmissionRequirements = $projectSubmissionRequirements;
-        $this->achievement_condition_list = $achievement_condition_list;
-        $this->host = $host;
-        $this->flexible_expireDate_duration = $flexible_expireDate_duration;
-        $this->pitch_template = $pitch_template;
-        $this->lab_condition = $lab_condition;
-        $this->social_connect = $social_connect;
+        $this->achievementConditionListService = $achievementConditionListService;
+        $this->hostService = $hostService;
+        $this->flexibleExpireDateDurationService = $flexibleExpireDateDurationService;
+        $this->pitchTemplateService = $pitchTemplateService;
+        $this->labConditionService = $labConditionService;
+        $this->socialConnectService = $socialConnectService;
     }
 
     public function getCategories($request)
@@ -187,7 +187,7 @@ class MasterRepository implements MasterInterface
     public function getAchievementConditionLists($request)
     {
         try {
-            return $this->achievement_condition_list->getAchievementConditionLists($request->language, $request->search);
+            return $this->achievementConditionListService->getAchievementConditionLists($request->language, $request->search);
         } catch(\Exception) {
             return false;
         }
@@ -196,7 +196,7 @@ class MasterRepository implements MasterInterface
     public function getHosts($request)
     {
         try {
-            return $this->host->getHosts($request->language, $request->search);
+            return $this->hostService->getHosts($request->language, $request->search);
         } catch(\Exception) {
             return false;
         }
@@ -205,7 +205,7 @@ class MasterRepository implements MasterInterface
     public function getFlexibleDateDurations($request)
     {
         try {
-            return $this->flexible_expireDate_duration->getFlexibleDateDurations($request->language, $request->search);
+            return $this->flexibleExpireDateDurationService->getFlexibleDateDurations($request->language, $request->search);
         } catch(\Exception) {
             return false;
         }
@@ -214,7 +214,7 @@ class MasterRepository implements MasterInterface
     public function getPitchTemplates($request)
     {
         try {
-            return $this->pitch_template->getPitchTemplates($request->language, $request->search);
+            return $this->pitchTemplateService->getPitchTemplates($request->language, $request->search);
         } catch (\Exception) {
             return false;
         }
@@ -223,7 +223,7 @@ class MasterRepository implements MasterInterface
     public function getLabConditions($request)
     {
         try {
-            return $this->lab_condition->getLabConditions($request->language, $request->search);
+            return $this->labConditionService->getLabConditions($request->language, $request->search);
         } catch (\Exception) {
             return false;
         }
@@ -232,7 +232,7 @@ class MasterRepository implements MasterInterface
     public function getSocialConnect($request)
     {
         try {
-            return $this->social_connect->getSocialCon0nect($request->language, $request->search);
+            return $this->socialConnectService->getSocialConnect($request->language, $request->search);
         } catch (\Exception) {
             return false;
         }
