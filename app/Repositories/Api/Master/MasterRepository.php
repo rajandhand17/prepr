@@ -7,10 +7,6 @@ use App\Models\FlexibleExpireDateDuration;
 use App\Models\Host;
 use App\Models\LabCondition;
 use App\Models\PitchTemplate;
-use App\Models\ProjectSubmissionRequirement;
-use App\Models\Rank;
-use App\Models\SkillGroup;
-use App\Models\SkillStack;
 use App\Models\SocialConnect;
 use App\Services\CategoryService;
 use App\Services\ProjectIndustryService;
@@ -21,6 +17,10 @@ use App\Services\ProjectVerticalService;
 use App\Services\SkillService;
 use App\Services\SocialLinkService;
 use App\Services\TagService;
+use App\Services\SkillGroupService;
+use App\Services\SkillStackService;
+use App\Services\RankService;
+use App\Services\ProjectSubmissionRequirementService;
 
 class MasterRepository implements MasterInterface
 {
@@ -33,10 +33,10 @@ class MasterRepository implements MasterInterface
     private $projectVerticalService;
     private $projectStatusService;
     private $socialLinkService;
-    private $skill_group;
-    private $skill_stack;
-    private $rank;
-    private $project_submission_requirements;
+    private $skillGroupService;
+    private $skillStackService;
+    private $rankService;
+    private $projectSubmissionRequirements;
     private $achievement_condition_list;
     private $host;
     private $flexible_expireDate_duration;
@@ -44,7 +44,7 @@ class MasterRepository implements MasterInterface
     private $lab_condition;
     private $social_connect;
 
-    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
+    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;
@@ -55,10 +55,10 @@ class MasterRepository implements MasterInterface
         $this->projectVerticalService = $projectVerticalService;
         $this->projectStatusService = $projectStatusService;
         $this->socialLinkService = $socialLinkService;
-        $this->skill_group = $skill_group;
-        $this->skill_stack = $skill_stack;
-        $this->rank = $rank;
-        $this->project_submission_requirements = $project_submission_requirements;
+        $this->skillGroupService = $skillGroupService;
+        $this->skillStackService = $skillStackService;
+        $this->rankService = $rankService;
+        $this->projectSubmissionRequirements = $projectSubmissionRequirements;
         $this->achievement_condition_list = $achievement_condition_list;
         $this->host = $host;
         $this->flexible_expireDate_duration = $flexible_expireDate_duration;
@@ -151,7 +151,7 @@ class MasterRepository implements MasterInterface
     public function getSkillGroups($request)
     {
         try {
-            return $this->skill_group->getSkillGroups($request->language, $request->search, $request->skill_stacks, $request->skills);
+            return $this->skillGroupService->getSkillGroups($request->language, $request->search, $request->skill_stacks, $request->skills);
         } catch(\Exception $e) {
             return false;
         }
@@ -160,7 +160,7 @@ class MasterRepository implements MasterInterface
     public function getSkillStacks($request)
     {
         try {
-            return $this->skill_stack->getSkillStacks($request->language, $request->search);
+            return $this->skillStackService->getSkillStacks($request->language, $request->search);
         } catch(\Exception) {
             return false;
         }
@@ -169,7 +169,7 @@ class MasterRepository implements MasterInterface
     public function getRanks($request)
     {
         try {
-            return $this->rank->getRanks($request->language, $request->search);
+            return $this->rankService->getRanks($request->language, $request->search);
         } catch(\Exception) {
             return false;
         }
@@ -178,7 +178,7 @@ class MasterRepository implements MasterInterface
     public function getProjectSubmissionRequirements($request)
     {
         try {
-            return $this->project_submission_requirements->getProjectSubmissionRequirements($request->language, $request->search);
+            return $this->projectSubmissionRequirements->getProjectSubmissionRequirements($request->language, $request->search);
         } catch(\Exception) {
             return false;
         }
