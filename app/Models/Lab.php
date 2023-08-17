@@ -34,10 +34,12 @@ class Lab extends Model
         'is_notification_enabled',
         'is_verified',
     ];
+
     public function getMediaAttribute($value)
     {
         return config('site-settings.aws_url').$value;
     }
+
     public function address()
     {
         return $this->hasOne(LabAddress::class, 'lab_id', 'id');
@@ -110,8 +112,9 @@ class Lab extends Model
     public function joined()
     {
         if (auth('api')->check()) {
-            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1',"invite_status"=>'1',"email"=>auth()->user()->email]);
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1', 'invite_status'=>'1', 'email'=>auth()->user()->email]);
         }
+
         return 'NA';
     }
 
@@ -129,14 +132,13 @@ class Lab extends Model
         return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('like_dislike', '1');
     }
 
-
     public function shares()
     {
         return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
     }
 
-    public function members(){
-        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1',"invite_status"=>'1']);
+    public function members()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1', 'invite_status'=>'1']);
     }
-
 }

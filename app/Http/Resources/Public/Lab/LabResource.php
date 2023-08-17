@@ -21,6 +21,7 @@ class LabResource extends JsonResource
         } else {
             $category = null;
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -36,7 +37,7 @@ class LabResource extends JsonResource
             'likes'                        => $this->likes()->count(),
             'shares'                       => $this->shares()->count(),
 
-//            'joined'                       => $this->joined(),
+            //            'joined'                       => $this->joined(),
             'liked'                        => $this->liked(),
             'favourite'                    => $this->favourite(),
             'lab_address'                  => LabAddressResource::make($this->address),

@@ -82,7 +82,7 @@ class LabController extends AppBaseController
         }
     }
 
-    public function joinLab($slug,Request $request)
+    public function joinLab($slug, Request $request)
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
