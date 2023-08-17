@@ -74,12 +74,12 @@ class LabSocialActivitiesService
             $column = null;
             $value = null;
             switch ($action) {
-                case 'follow':
-                    $column = 'follow_unfollow';
+                case 'like':
+                    $column = 'like_dislike';
                     $value = '1';
                     break;
-                case 'un-follow':
-                    $column = 'follow_unfollow';
+                case 'dis-like':
+                    $column = 'like_dislike';
                     $value = '2';
                     break;
                 case 'share':

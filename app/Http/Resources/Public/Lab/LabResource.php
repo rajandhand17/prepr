@@ -33,11 +33,15 @@ class LabResource extends JsonResource
             'media'                        => $this->media,
             'category'                     => $category,
             'status'                       => $this->status,
-            'joined'                       => $this->joined(),
+
+            'likes'                        => $this->likes()->count(),
+            'shares'                       => $this->shares()->count(),
+
+//            'joined'                       => $this->joined(),
             'liked'                        => $this->liked(),
             'favourite'                    => $this->favourite(),
-            'lab_address'                  => LabAddressResource::collection($this->address),
-            'lab_achievement'              => LabAchievementResource::collection($this->achievement),
+            'lab_address'                  => LabAddressResource::make($this->address),
+            'lab_achievement'              => LabAchievementResource::make($this->achievement),
             'lab_external_links'           => LabExternalLinksResource::collection($this->external_links),
         ];
     }

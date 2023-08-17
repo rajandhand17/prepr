@@ -28,4 +28,10 @@ class LabAcheivement extends Model
     protected $casts = [
         'achievement_condition' => 'json',
     ];
+
+
+    public function getAchievementImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
 }
