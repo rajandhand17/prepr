@@ -78,7 +78,7 @@ class LabSocialActivitiesService
                     $column = 'like_dislike';
                     $value = '1';
                     break;
-                case 'dis-like':
+                case 'un-like':
                     $column = 'like_dislike';
                     $value = '2';
                     break;
