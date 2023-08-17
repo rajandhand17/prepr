@@ -21,6 +21,7 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getList($request);
+
             if ($lab !== false) {
                 $response = [
                     'total_count'  => $lab->total(),
@@ -81,7 +82,7 @@ class LabController extends AppBaseController
         }
     }
 
-    public function joinLab($slug)
+    public function joinLab($slug, Request $request)
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
@@ -95,7 +96,7 @@ class LabController extends AppBaseController
                 if (!$memberList && !count($memberList) > 0) {
                     return $this->sendError(__('responses.send_error'), 404);
                 }
-                $requestedData = $this->labRepository->setJoinRequestParameters();
+                $requestedData = $this->labRepository->setJoinRequestParameters($request->language);
                 if (!$requestedData) {
                     return $this->sendError(__('responses.send_error'), 403);
                 }

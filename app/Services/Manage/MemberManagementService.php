@@ -288,17 +288,33 @@ class MemberManagementService
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
             switch ($request->auto_invite) {
-                case 'Yes' || 'YES' || 'yes':
+                case 'Yes':
                     $auto_invite = config('constants.member_management_auto_invite.yes');
                     break;
-                case 'No' || 'NO' || 'no':
+                case 'No':
                     $auto_invite = config('constants.member_management_auto_invite.no');
                     break;
-                case 'Na' || 'NA' || 'na' :
+                case 'NA' :
                     $auto_invite = config('constants.member_management_auto_invite.na');
                     break;
                 default:
                     $auto_invite = config('constants.member_management_auto_invite.no');
+            }
+            switch ($request->email_status) {
+                case 'scheduled':
+                    $email_status = config('constants.member_management_email_status.scheduled');
+                    break;
+                case 'sent':
+                    $email_status = config('constants.member_management_email_status.sent');
+                    break;
+                case 'failed':
+                    $email_status = config('constants.member_management_email_status.fail');
+                    break;
+                case 'NA':
+                    $email_status = config('constants.member_management_email_status.na');
+                    break;
+                default:
+                    $email_status = config('constants.member_management_auto_invite.scheduled');
             }
             if ($module_type !== null) {
                 DB::beginTransaction();
@@ -349,7 +365,6 @@ class MemberManagementService
                                     }
                                 }
                             }
-
                             MemberManagement::create([
                                 'uuid'          => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                                 'type'          => $member['type'],
@@ -362,7 +377,7 @@ class MemberManagementService
                                 'auto_invite'   => $auto_invite,
                                 'invite_status' => $invite_status,
                                 'invitee_name'  => $member['invitee_name'],
-                                'email_status'  => config('constants.member_management_email_status.scheduled'),
+                                'email_status'  => $email_status,
                                 'subject_line'  => $subject,
                                 'email_body'    => $emailBody,
                             ]);
@@ -533,7 +548,7 @@ class MemberManagementService
         }
     }
 
-    public static function setJoinRequestParameters()
+    public static function setJoinRequestParameters($language)
     {
         try {
             $requestedData = new stdClass();
@@ -541,8 +556,10 @@ class MemberManagementService
             $requestedData->invite_type = 'join_request';
             $requestedData->auto_invite = 'NA';
             $requestedData->role = null;
-            $requestedData->subject_line = 'Successfully Joined Lab';
-            $requestedData->email_body = 'You have successfully joined Lab';
+            $requestedData->subject_line = null;
+            $requestedData->email_body = null;
+            $requestedData->language = $language;
+            $requestedData->email_status = 'NA';
 
             return $requestedData;
         } catch (\Exception $e) {
