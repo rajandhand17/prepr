@@ -1,4 +1,4 @@
-pp<?php
+<?php
 
 use App\Http\Controllers\Api\Public\Lab\LabController;
 use Illuminate\Support\Facades\Route;
