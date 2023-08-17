@@ -300,18 +300,18 @@ class MemberManagementService
                 default:
                     $auto_invite = config('constants.member_management_auto_invite.no');
             }
-            switch ($request->email_status){
+            switch ($request->email_status) {
                 case 'scheduled':
-                    $email_status=config('constants.member_management_email_status.scheduled');
+                    $email_status = config('constants.member_management_email_status.scheduled');
                     break;
                 case 'sent':
-                    $email_status=config('constants.member_management_email_status.sent');
+                    $email_status = config('constants.member_management_email_status.sent');
                     break;
                 case 'failed':
-                    $email_status=config('constants.member_management_email_status.fail');
+                    $email_status = config('constants.member_management_email_status.fail');
                     break;
                 case 'NA':
-                    $email_status=config('constants.member_management_email_status.na');
+                    $email_status = config('constants.member_management_email_status.na');
                     break;
                 default:
                     $email_status = config('constants.member_management_auto_invite.scheduled');
@@ -404,6 +404,7 @@ class MemberManagementService
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
@@ -557,8 +558,9 @@ class MemberManagementService
             $requestedData->role = null;
             $requestedData->subject_line = null;
             $requestedData->email_body = null;
-            $requestedData->language=$language;
-            $requestedData->email_status='NA';
+            $requestedData->language = $language;
+            $requestedData->email_status = 'NA';
+
             return $requestedData;
         } catch (\Exception $e) {
             return false;
