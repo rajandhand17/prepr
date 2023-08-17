@@ -20,12 +20,12 @@ class ProjectSubmissionRequirementService
                 if (!$column_name || !Schema::hasColumn('project_submission_requirements', $column_name)) {
                     return false;
                 }
-                $project_submission_requirements = ProjectSubmissionRequirement::select('id', $column_name . ' as title', 'status');
+                $project_submission_requirements = ProjectSubmissionRequirement::select('id', $column_name.' as title', 'status');
             }
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $project_submission_requirements = $project_submission_requirements->where($column_name, 'like', '%' . $search . '%');
+                $project_submission_requirements = $project_submission_requirements->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table
