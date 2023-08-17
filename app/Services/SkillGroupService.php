@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\LanguageColumnHelper;
 use App\Models\SkillGroup;
 use Illuminate\Support\Facades\Schema;
+
 class SkillGroupService
 {
     public static function getSkillGroupsBasedOnIds($skill_group_ids)
@@ -36,23 +37,23 @@ class SkillGroupService
                     return false;
                 }
 
-                $skill_group = SkillGroup::select('id', $column_name . ' as title', 'skill_stacks', 'skills', 'description');
+                $skill_group = SkillGroup::select('id', $column_name.' as title', 'skill_stacks', 'skills', 'description');
             }
 
             //Search skill name based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $skill_group = $skill_group->where($column_name, 'like', '%' . $search . '%');
+                $skill_group = $skill_group->where($column_name, 'like', '%'.$search.'%');
             }
 
             //Search skill stacks based on used input
             if ($skill_stacks != null) {
-                $skill_group = $skill_group->where('skill_stacks', 'like', '%' . $skill_stacks . '%');
+                $skill_group = $skill_group->where('skill_stacks', 'like', '%'.$skill_stacks.'%');
             }
 
             //Search skill based on used input
             if ($skills != null) {
-                $skill_group = $skill_group->where('skills', 'like', '%' . $skills . '%');
+                $skill_group = $skill_group->where('skills', 'like', '%'.$skills.'%');
             }
 
             //take 20 results based from the table

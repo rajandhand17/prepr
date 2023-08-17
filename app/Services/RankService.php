@@ -22,12 +22,12 @@ class RankService
                 }
                 $description = LanguageColumnHelper::getLanguageColumnName($language, 'description');
 
-                $rank = Rank::select('id', $column_name . ' as title', $description . ' as description', 'image', 'category', 'point', 'no_of_use', 'status');
+                $rank = Rank::select('id', $column_name.' as title', $description.' as description', 'image', 'category', 'point', 'no_of_use', 'status');
             }
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $rank = $rank->where($column_name, 'like', '%' . $search . '%');
+                $rank = $rank->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table

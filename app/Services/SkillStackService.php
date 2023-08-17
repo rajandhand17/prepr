@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\LanguageColumnHelper;
 use App\Models\SkillStack;
 use Illuminate\Support\Facades\Schema;
+
 class SkillStackService
 {
     public static function getSkillStacksBasedOnIds($skill_stack_ids)
@@ -36,12 +37,12 @@ class SkillStackService
                     return false;
                 }
                 $description = LanguageColumnHelper::getLanguageColumnName($language, 'description');
-                $skill_stacks = SkillStack::select('id', $column_name . ' as title', 'skills', $description . ' as description');
+                $skill_stacks = SkillStack::select('id', $column_name.' as title', 'skills', $description.' as description');
             }
 
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $skill_stacks = $skill_stacks->where($column_name, 'like', '%' . $search . '%');
+                $skill_stacks = $skill_stacks->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table

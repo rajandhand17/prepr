@@ -12,15 +12,15 @@ use App\Services\CategoryService;
 use App\Services\ProjectIndustryService;
 use App\Services\ProjectStageService;
 use App\Services\ProjectStatusService;
+use App\Services\ProjectSubmissionRequirementService;
 use App\Services\ProjectTypeService;
 use App\Services\ProjectVerticalService;
+use App\Services\RankService;
+use App\Services\SkillGroupService;
 use App\Services\SkillService;
+use App\Services\SkillStackService;
 use App\Services\SocialLinkService;
 use App\Services\TagService;
-use App\Services\SkillGroupService;
-use App\Services\SkillStackService;
-use App\Services\RankService;
-use App\Services\ProjectSubmissionRequirementService;
 
 class MasterRepository implements MasterInterface
 {
