@@ -33,11 +33,11 @@ class LabResource extends JsonResource
             'media'                        => $this->media,
             'category'                     => $category,
             'status'                       => $this->status,
-
+            'member_count'                 => $this->members()->count(),
             'likes'                        => $this->likes()->count(),
             'shares'                       => $this->shares()->count(),
 
-//            'joined'                       => $this->joined(),
+            //            'joined'                       => $this->joined(),
             'liked'                        => $this->liked(),
             'favourite'                    => $this->favourite(),
             'lab_address'                  => LabAddressResource::make($this->address),

@@ -28,9 +28,9 @@ class LabResource extends JsonResource
         $skill_stacks = [];
         $tags = [];
         $tag_groups = [];
-        $category = NULL;
+        $category = null;
 
-        if($this->getCategory){
+        if ($this->getCategory) {
             $category = $this->getCategory->title;
         }
 
