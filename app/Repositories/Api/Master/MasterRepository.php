@@ -18,8 +18,8 @@ use App\Services\ProjectStageService;
 use App\Services\ProjectStatusService;
 use App\Services\ProjectTypeService;
 use App\Services\ProjectVerticalService;
-use App\Services\SocialLinkService;
 use App\Services\SkillService;
+use App\Services\SocialLinkService;
 use App\Services\TagService;
 
 class MasterRepository implements MasterInterface

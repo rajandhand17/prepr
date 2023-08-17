@@ -67,13 +67,13 @@ class SkillService
                 if (!$column_name || !Schema::hasColumn('skills', $column_name)) {
                     return false;
                 }
-                $skill_list = Skill::select('id', $column_name . ' as title');
+                $skill_list = Skill::select('id', $column_name.' as title');
             }
 
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $skill_list = $skill_list->where($column_name, 'like', '%' . $search . '%');
+                $skill_list = $skill_list->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table
