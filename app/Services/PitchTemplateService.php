@@ -14,7 +14,7 @@ class PitchTemplateService
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $pitch_temple_list = $pitch_temple_list->where($column_name, 'like', '%' . $search . '%');
+                $pitch_temple_list = $pitch_temple_list->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table

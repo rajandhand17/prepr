@@ -11,7 +11,7 @@ class LabConditionService
         try {
             $labConditions = LabCondition::select('id', 'title');
             if ($search != null) {
-                $labConditions = $labConditions->where('title', 'like', '%' . $search . '%');
+                $labConditions = $labConditions->where('title', 'like', '%'.$search.'%');
             }
             $labConditions = $labConditions->take(20)->get();
             //  return $host;

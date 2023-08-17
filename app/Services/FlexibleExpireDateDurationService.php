@@ -22,13 +22,13 @@ class FlexibleExpireDateDurationService
                 if (!$column_name || !Schema::hasColumn('flexible_expire_date_durations', $column_name)) {
                     return false;
                 }
-                $flexible_date_duration = FlexibleExpireDateDuration::select('id', $column_name . ' as title');
+                $flexible_date_duration = FlexibleExpireDateDuration::select('id', $column_name.' as title');
             }
 
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $flexible_date_duration = $flexible_date_duration->where($column_name, 'like', '%' . $search . '%');
+                $flexible_date_duration = $flexible_date_duration->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table
