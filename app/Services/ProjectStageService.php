@@ -21,13 +21,13 @@ class ProjectStageService
                 if (!$column_name || !Schema::hasColumn('project_stages', $column_name)) {
                     return false;
                 }
-                $project_stage_list = ProjectStage::select('id', $column_name . ' as title');
+                $project_stage_list = ProjectStage::select('id', $column_name.' as title');
             }
 
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $project_stage_list = $project_stage_list->where($column_name, 'like', '%' . $search . '%');
+                $project_stage_list = $project_stage_list->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table
@@ -43,5 +43,4 @@ class ProjectStageService
             return false;
         }
     }
-
 }
