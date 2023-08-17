@@ -9,30 +9,30 @@ use App\Models\LabCondition;
 use App\Models\PitchTemplate;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\Rank;
-use App\Models\Skill;
 use App\Models\SkillGroup;
 use App\Models\SkillStack;
 use App\Models\SocialConnect;
-use App\Models\SocialLink;
-use App\Models\Tag;
 use App\Services\CategoryService;
 use App\Services\ProjectIndustryService;
 use App\Services\ProjectStageService;
 use App\Services\ProjectTypeService;
 use App\Services\ProjectVerticalService;
 use App\Services\ProjectStatusService;
+use App\Services\SocialLinkService;
+use App\Services\SkillService;
+use App\Services\TagService;
 
 class MasterRepository implements MasterInterface
 {
     private $categoryService;
-    private $skill;
-    private $tag;
+    private $skillService;
+    private $tagService;
     private $projectIndustryService;
     private $projectTypeService;
     private $projectStageService;
     private $projectVerticalService;
     private $projectStatusService;
-    private $social_link;
+    private $socialLinkService;
     private $skill_group;
     private $skill_stack;
     private $rank;
@@ -44,17 +44,17 @@ class MasterRepository implements MasterInterface
     private $lab_condition;
     private $social_connect;
 
-    public function __construct(CategoryService $categoryService, Skill $skill, Tag $tag, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLink $social_link, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
+    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroup $skill_group, SkillStack $skill_stack, Rank $rank, ProjectSubmissionRequirement $project_submission_requirements, AchievementConditionList $achievement_condition_list, Host $host, FlexibleExpireDateDuration $flexible_expireDate_duration, PitchTemplate $pitch_template, LabCondition $lab_condition, SocialConnect $social_connect)
     {
         $this->categoryService = $categoryService;
-        $this->skill = $skill;
-        $this->tag = $tag;
+        $this->skillService = $skillService;
+        $this->tagService = $tagService;
         $this->projectIndustryService = $projectIndustryService;
         $this->projectTypeService = $projectTypeService;
         $this->projectStageService = $projectStageService;
         $this->projectVerticalService = $projectVerticalService;
         $this->projectStatusService = $projectStatusService;
-        $this->social_link = $social_link;
+        $this->socialLinkService = $socialLinkService;
         $this->skill_group = $skill_group;
         $this->skill_stack = $skill_stack;
         $this->rank = $rank;
@@ -79,7 +79,7 @@ class MasterRepository implements MasterInterface
     public function getSkills($request)
     {
         try {
-            return $this->skill->getSkills($request->language, $request->search);
+            return $this->skillService->getSkills($request->language, $request->search);
         } catch (\Exception $e) {
             return false;
         }
@@ -88,7 +88,7 @@ class MasterRepository implements MasterInterface
     public function getTags($request)
     {
         try {
-            return $this->tag->getTags($request->language, $request->search);
+            return $this->tagService->getTags($request->language, $request->search);
         } catch (\Exception $e) {
             return false;
         }
@@ -142,7 +142,7 @@ class MasterRepository implements MasterInterface
     public function getSocialLinks($request)
     {
         try {
-            return $this->social_link->getSocialLinks($request->language, $request->search);
+            return $this->socialLinkService->getSocialLinks($request->language, $request->search);
         } catch(\Exception $e) {
             return false;
         }
