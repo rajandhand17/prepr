@@ -12,7 +12,7 @@ class SocialLinkService
             $social_link_list = SocialLink::select('id', 'title', 'icon');
             //Search categories based on user input
             if ($search != null) {
-                $social_link_list = $social_link_list->where('title', 'like', '%' . $search . '%');
+                $social_link_list = $social_link_list->where('title', 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table

@@ -34,10 +34,12 @@ class Lab extends Model
         'is_notification_enabled',
         'is_verified',
     ];
+
     public function getMediaAttribute($value)
     {
         return config('site-settings.aws_url').$value;
     }
+
     public function address()
     {
         return $this->hasOne(LabAddress::class, 'lab_id', 'id');
@@ -129,7 +131,6 @@ class Lab extends Model
     {
         return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('like_dislike', '1');
     }
-
 
     public function shares()
     {

@@ -44,13 +44,13 @@ class TagService
                     return false;
                 }
 
-                $tag_list = Tag::select('id', $column_name . ' as title', $image_column . ' as tag_image');
+                $tag_list = Tag::select('id', $column_name.' as title', $image_column.' as tag_image');
             }
 
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $tag_list = $tag_list->where($column_name, 'like', '%' . $search . '%');
+                $tag_list = $tag_list->where($column_name, 'like', '%'.$search.'%');
             }
 
             //take 20 results based from the table
