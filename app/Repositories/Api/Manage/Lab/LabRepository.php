@@ -68,9 +68,7 @@ class LabRepository implements LabInterface
     public function createLab($request, $upload_profile_image, $upload_achievements_image)
     {
         try {
-
             $createdLab = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image) {
-
                 $createLab = $this->labService->createLab($request, $upload_profile_image);
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createLab);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLab);
@@ -82,13 +80,13 @@ class LabRepository implements LabInterface
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLab);
 
                 return [
-                    'createdLab' => $createLab,
-                    'createdLabAddress' => $createdLabAddress,
+                    'createdLab'                  => $createLab,
+                    'createdLabAddress'           => $createdLabAddress,
                     'createdLabSkillAssociations' => $createdLabSkillAssociations,
-                    'createdLabTagAssociations' => $createdLabTagAssociations,
-                    'createdLabExternalLinks' => $createdLabExternalLinks,
-                    'createdLabAchievement' => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
-                    'createdLabAssociations' => $createdLabAssociations
+                    'createdLabTagAssociations'   => $createdLabTagAssociations,
+                    'createdLabExternalLinks'     => $createdLabExternalLinks,
+                    'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
+                    'createdLabAssociations'      => $createdLabAssociations,
                 ];
             });
             if (
@@ -101,6 +99,7 @@ class LabRepository implements LabInterface
                 $createdLab['createdLabAssociations']
             ) {
                 DB::commit();
+
                 return $createdLab['createdLab'];
             }
             DB::rollBack();
@@ -130,13 +129,13 @@ class LabRepository implements LabInterface
                 $updatedLabAssociations = $this->componentAssociationService->updateLabAssociation($request, $updateLab->id);
 
                 return [
-                    'updatedLab' => $updateLab,
-                    'updatedLabAddress' => $updatedLabAddress,
+                    'updatedLab'                  => $updateLab,
+                    'updatedLabAddress'           => $updatedLabAddress,
                     'updatedLabSkillAssociations' => $updatedLabSkillAssociations,
-                    'updatedLabTagAssociations' => $updatedLabTagAssociations,
-                    'updatedLabExternalLinks' => $updatedLabExternalLinks,
-                    'updatedLabAchievement' => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
-                    'updatedLabAssociations' => $updatedLabAssociations
+                    'updatedLabTagAssociations'   => $updatedLabTagAssociations,
+                    'updatedLabExternalLinks'     => $updatedLabExternalLinks,
+                    'updatedLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
+                    'updatedLabAssociations'      => $updatedLabAssociations,
                 ];
             });
             if (
@@ -149,6 +148,7 @@ class LabRepository implements LabInterface
                 $updatedLab['updatedLabAssociations']
             ) {
                 DB::commit();
+
                 return $updatedLab['createdLab'];
             }
             DB::rollBack();
