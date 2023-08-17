@@ -18,9 +18,9 @@ use App\Models\Tag;
 use App\Services\CategoryService;
 use App\Services\ProjectIndustryService;
 use App\Services\ProjectStageService;
+use App\Services\ProjectStatusService;
 use App\Services\ProjectTypeService;
 use App\Services\ProjectVerticalService;
-use App\Services\ProjectStatusService;
 
 class MasterRepository implements MasterInterface
 {
