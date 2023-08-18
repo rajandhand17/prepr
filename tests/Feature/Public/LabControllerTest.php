@@ -21,8 +21,8 @@ class LabControllerTest extends TestCase
             'wrong_language'   => 'hi',
             'slug'             => 'un-sdg-lab-1',
             'wrong_slug'       => 'wrong_slug',
-            'email'            => 'rajan@amazon.com',
-            'password'         => 'Prepr@123',
+            'email'            => 'schagpar@gmail.com',
+            'password'         => 'Test@1234',
             'type'             => 'join_request',
             'invite_type'      => 'join_request',
             'subject_line'     => 'Successfully Joined Lab',
@@ -39,27 +39,27 @@ class LabControllerTest extends TestCase
         ];
     }
 
-    public function test_follow_lab_public_lab_positive()
+    public function test_like_lab_public_lab_positive()
     {
-        $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/follow?language='.$this->parameters['language'], $this->parameters, $this->headers);
+        $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/like?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function test_follow_lab_public_lab_negative()
+    public function test_like_lab_public_lab_negative()
     {
-        $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/follow?language='.$this->parameters['language'], $this->parameters, $this->headers);
+        $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/like?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    public function test_unfollow_lab_public_lab_positive()
+    public function test_un_like_lab_public_lab_positive()
     {
-        $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/un-follow?language='.$this->parameters['language'], $this->parameters, $this->headers);
+        $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/un-like?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function test_unfollow_lab_public_lab_negative()
+    public function test_un_like_lab_public_lab_negative()
     {
-        $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/un-follow?language='.$this->parameters['language'], $this->parameters, $this->headers);
+        $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/un-like?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
 

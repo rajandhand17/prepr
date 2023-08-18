@@ -49,6 +49,21 @@ class OrganizationService
                     $organization_list = $organization_list->whereIn('organizations.id', $getOrganizationLikedList->pluck('organization_id'));
                 }
             }
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $organization_list = $organization_list->orderBy('organizations.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $organization_list = $organization_list->orderBy('organizations.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $organization_list = $organization_list->orderBy('organizations.created_at', 'ASC');
+                        break;
+                    default:
+                        $organization_list = $organization_list->orderBy('organizations.id', 'ASC');
+                }
+            }
 
             return $organization_list;
         } catch (\Exception $e) {
