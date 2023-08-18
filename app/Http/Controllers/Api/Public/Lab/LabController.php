@@ -47,7 +47,7 @@ class LabController extends AppBaseController
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
 
             if ($lab) {
-                return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'));
+                return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);

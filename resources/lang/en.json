@@ -293,5 +293,13 @@
     "responses.join_request_accept_successfully": "You have accepted the join request successfully!",
     "responses.join_request_accept_failed": "You have failed to accept the join request",
     "responses.join_request_decline_successfully": "You have declined the join request successfully",
-    "responses.join_request_decline_failed": "You have failed to decline the join request"
+    "responses.join_request_decline_failed": "You have failed to decline the join request",
+
+    "responses.already_like_lab":"The Lab is already liked by you!",
+    "responses.like_lab_successfully":"The Lab have been liked successfully by you!",
+    "responses.already_un_like_lab":"The Lab is already being dis-liked by you!",
+    "responses.un_like_lab_successfully":"The Lab have been dis-liked successfully by you!",
+
+    "responses.found_lab_view":"The lab has been successfully retrieved",
+    "responses.not_found_lab_view":"The labs has not been retrieved with success."
 }
