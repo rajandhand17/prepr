@@ -64,6 +64,7 @@ class OrganizationService
                         $organization_list = $organization_list->orderBy('organizations.id', 'ASC');
                 }
             }
+
             return $organization_list;
         } catch (\Exception $e) {
             return false;

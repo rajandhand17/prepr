@@ -59,6 +59,7 @@ class LabService
                         $lab_list = $lab_list->orderBy('labs.id', 'ASC');
                 }
             }
+
             return $lab_list;
         } catch (\Exception $e) {
             return false;
