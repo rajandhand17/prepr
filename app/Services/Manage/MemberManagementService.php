@@ -96,7 +96,7 @@ class MemberManagementService
                         $invite_type = config('constants.member_management_invite_type.network');
                         break;
                     case 'join_request':
-                        $invite_type = config('constants.member_management_invite_type.csv');
+                        $invite_type = config('constants.member_management_invite_type.join_request');
                         break;
                     case 'csv':
                         $invite_type = config('constants.member_management_invite_type.csv');
