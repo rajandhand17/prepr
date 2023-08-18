@@ -21,23 +21,4 @@ class Host extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-
-    public function getHosts($language = 'en', $search = null)
-    {
-        try {
-            $host = static::select('id', 'title', 'link', 'image', 'status');
-            if ($search != null) {
-                $host = $host->where('title', 'like', '%'.$search.'%');
-            }
-            $host = $host->take(20)->get();
-            //  return $host;
-            if (!$host->isEmpty()) {
-                return $host;
-            }
-
-            return false;
-        } catch(\Exception $e) {
-            return false;
-        }
-    }
 }
