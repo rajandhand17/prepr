@@ -167,7 +167,6 @@ class LabService
         $lab->title = $request->title;
         $lab->description = $request->description;
         $lab->privacy = $privacy;
-
         $lab->media_type = 'image';
         $lab->media = $upload_cover_image;
 

@@ -28,7 +28,6 @@ class LabService
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $lab_list = $lab_list->whereIn('labs.category_id', $request->category);
             }
-
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $lab_list = $lab_list->whereIn('organization_id', $request->organization_id);
             }
