@@ -41,4 +41,8 @@ interface MasterInterface
     public function getLabConditions($request);
 
     public function getSocialConnect($request);
+
+    public function getDuration($request);
+
+    public  function getLevels($request);
 }
