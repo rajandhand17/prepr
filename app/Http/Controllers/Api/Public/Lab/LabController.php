@@ -21,7 +21,6 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getList($request);
-
             if ($lab !== false) {
                 $response = [
                     'total_count'  => $lab->total(),

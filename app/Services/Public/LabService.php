@@ -14,6 +14,7 @@ class LabService
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }
@@ -22,12 +23,13 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_list = $lab_list->where('lab.title', 'like', '%'.$request->search.'%');
+                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $lab_list = $lab_list->whereIn('labs.category_id', $request->category);
             }
+
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $lab_list = $lab_list->whereIn('organization_id', $request->organization_id);
             }
@@ -59,6 +61,30 @@ class LabService
                 }
             }
 
+            if ($request->has('privacy') && !empty($request->privacy)){
+                switch ($request->privacy){
+                    case 'public':
+                        $lab_list = $lab_list->where('labs.privacy', '0');
+                        break;
+                    case 'private':
+                        $lab_list = $lab_list->where('labs.privacy', '1');
+                        break;
+                    default:
+                        $lab_list=$lab_list;
+                }
+            }
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)){
+                $lab_list=$lab_list->join('lab_skills_groups_stack', 'labs.id', '=', 'lab_skills_groups_stack.lab_id')
+                    ->whereIn('lab_skills_groups_stack.foreign_id', $request->skills)
+                    ->where('lab_skills_groups_stack.type','0')
+                    ->whereNull('lab_skills_groups_stack.deleted_at');
+            }
+            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)){
+                $lab_list=$lab_list->join('lab_tags_groups', 'labs.id', '=', 'lab_tags_groups.lab_id')
+                    ->whereIn('lab_tags_groups.foreign_id', $request->tags)
+                    ->where('lab_tags_groups.type','0')
+                    ->whereNull('lab_tags_groups.deleted_at');
+            }
             return $lab_list;
         } catch (\Exception $e) {
             return false;
