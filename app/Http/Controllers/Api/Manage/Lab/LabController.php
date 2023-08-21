@@ -68,7 +68,6 @@ class LabController extends AppBaseController
         try {
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = null;
-
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
                 if (!$uploaded_cover_image) {
