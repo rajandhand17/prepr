@@ -14,7 +14,6 @@ class LabService
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
