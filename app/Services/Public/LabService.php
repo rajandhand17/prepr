@@ -22,7 +22,7 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_list = $lab_list->where('labs.title', 'like', '%' . $request->search . '%');
+                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -84,6 +84,7 @@ class LabService
                         ->distinct();
                 })->distinct('labs.uuid');
             }
+
             return $lab_list;
         } catch (\Exception $e) {
             return false;
