@@ -93,7 +93,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_stored_failed'), 400);
         } catch (\Exception $e) {
-             return $this->sendError(__('responses.send_error'), 500);
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
