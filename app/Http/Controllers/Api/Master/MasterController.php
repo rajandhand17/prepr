@@ -1200,27 +1200,31 @@ class MasterController extends AppBaseController
         }
     }
 
-    public function getDuration(Request $request){
+    public function getDuration(Request $request)
+    {
         try {
-            $duration=$this->masterRepository->getDuration($request);
-            if($duration){
-                return $this->sendResponse($duration,__('responses.found_duration'));
+            $duration = $this->masterRepository->getDuration($request);
+            if ($duration) {
+                return $this->sendResponse($duration, __('responses.found_duration'));
             }
-            return $this->sendResponse(null,__('responses.not_found_duration'));
-        }catch (\Exception $e){
+
+            return $this->sendResponse(null, __('responses.not_found_duration'));
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function getLevels(Request $request){
+    public function getLevels(Request $request)
+    {
         try {
-            $levels=$this->masterRepository->getLevels($request);
-            if($levels){
-                return $this->sendResponse($levels,__('responses.found_levels'));
+            $levels = $this->masterRepository->getLevels($request);
+            if ($levels) {
+                return $this->sendResponse($levels, __('responses.found_levels'));
             }
-            return $this->sendResponse(null,__('responses.not_found_levels'));
-        }catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'),500);
+
+            return $this->sendResponse(null, __('responses.not_found_levels'));
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

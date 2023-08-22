@@ -53,8 +53,8 @@ class LabService
                 }
             }
 
-            if ($request->has('privacy') && !empty($request->privacy)){
-                switch ($request->privacy){
+            if ($request->has('privacy') && !empty($request->privacy)) {
+                switch ($request->privacy) {
                     case 'public':
                         $lab_list = $lab_list->where('labs.privacy', '0');
                         break;
@@ -62,7 +62,7 @@ class LabService
                         $lab_list = $lab_list->where('labs.privacy', '1');
                         break;
                     default:
-                        $lab_list=$lab_list;
+                        $lab_list = $lab_list;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
@@ -85,6 +85,7 @@ class LabService
                         ->distinct();
                 })->distinct('labs.uuid');
             }
+
             return $lab_list;
         } catch (\Exception $e) {
             return false;

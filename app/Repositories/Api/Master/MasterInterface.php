@@ -44,5 +44,5 @@ interface MasterInterface
 
     public function getDuration($request);
 
-    public  function getLevels($request);
+    public function getLevels($request);
 }
