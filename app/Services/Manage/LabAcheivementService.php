@@ -48,7 +48,7 @@ class LabAcheivementService
         return true;
     }
 
-    public function updateLabAchievement($request,$lab_id,  $upload_achievement_image)
+    public function updateLabAchievement($request, $lab_id, $upload_achievement_image)
     {
         try {
             $checkExistsLabAcheivement = LabAcheivement::where('lab_id', $lab_id)->first();

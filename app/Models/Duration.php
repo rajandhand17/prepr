@@ -17,5 +17,4 @@ class Duration extends Model
         'title',
         'fr_CA_title',
     ];
-
 }
