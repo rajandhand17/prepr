@@ -43,7 +43,6 @@ class LabService
                     $lab_list = $lab_list->whereIn('id', $getLabFavouriteList->pluck('lab_id'));
                 }
             }
-
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
@@ -60,8 +59,8 @@ class LabService
                 }
             }
 
-            if ($request->has('privacy') && !empty($request->privacy)) {
-                switch ($request->privacy) {
+            if ($request->has('privacy') && !empty($request->privacy)){
+                switch ($request->privacy){
                     case 'public':
                         $lab_list = $lab_list->where('labs.privacy', '0');
                         break;
@@ -69,19 +68,19 @@ class LabService
                         $lab_list = $lab_list->where('labs.privacy', '1');
                         break;
                     default:
-                        $lab_list = $lab_list;
+                        $lab_list=$lab_list;
                 }
             }
-            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
-                $lab_list = $lab_list->join('lab_skills_groups_stack', 'labs.id', '=', 'lab_skills_groups_stack.lab_id')
-                ->whereIn('lab_skills_groups_stack.foreign_id', $request->skills)
-                    ->where('lab_skills_groups_stack.type', '0')
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)){
+                $lab_list=$lab_list->join('lab_skills_groups_stack', 'labs.id', '=', 'lab_skills_groups_stack.lab_id')
+                    ->whereIn('lab_skills_groups_stack.foreign_id', $request->skills)
+                    ->where('lab_skills_groups_stack.type','0')
                     ->whereNull('lab_skills_groups_stack.deleted_at');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $lab_list = $lab_list->join('lab_tags_groups', 'labs.id', '=', 'lab_tags_groups.lab_id')
-                ->whereIn('lab_tags_groups.foreign_id', $request->tags)
-                    ->where('lab_tags_groups.type', '0')
+            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)){
+                $lab_list=$lab_list->join('lab_tags_groups', 'labs.id', '=', 'lab_tags_groups.lab_id')
+                    ->whereIn('lab_tags_groups.foreign_id', $request->tags)
+                    ->where('lab_tags_groups.type','0')
                     ->whereNull('lab_tags_groups.deleted_at');
             }
             return $lab_list;
