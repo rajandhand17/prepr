@@ -246,10 +246,10 @@ class MasterRepository implements MasterInterface
         }
     }
 
-    public function getDuration($request)
+    public function getDurations($request)
     {
         try {
-            return $this->durationService->getDuration($request->language, $request->search);
+            return $this->durationService->getDurations($request->language, $request->search);
         } catch (\Exception $e) {
             return false;
         }

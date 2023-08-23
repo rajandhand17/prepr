@@ -6,7 +6,7 @@ use App\Models\Duration;
 
 class DurationService
 {
-    public function getDuration($language = 'en', $search = null)
+    public function getDurations($language = 'en', $search = null)
     {
         try {
             $duration = Duration::select('title', 'fr_CA_title');
@@ -14,7 +14,6 @@ class DurationService
                 $duration = $duration->where('title', 'like', '%'.$search.'%');
             }
             $duration = $duration->get();
-
             return $duration;
         } catch(\Exception $e) {
             return false;

@@ -1200,10 +1200,10 @@ class MasterController extends AppBaseController
         }
     }
 
-    public function getDuration(Request $request)
+    public function getDurations(Request $request)
     {
         try {
-            $duration = $this->masterRepository->getDuration($request);
+            $duration = $this->masterRepository->getDurations($request);
             if ($duration) {
                 return $this->sendResponse($duration, __('responses.found_duration'));
             }
