@@ -1203,11 +1203,10 @@ class MasterController extends AppBaseController
     public function getDurations(Request $request)
     {
         try {
-            $duration = $this->masterRepository->getDurations($request);
-            if ($duration) {
-                return $this->sendResponse($duration, __('responses.found_duration'));
+            $durations = $this->masterRepository->getDurations($request);
+            if ($durations) {
+                return $this->sendResponse($durations, __('responses.found_duration'));
             }
-
             return $this->sendResponse(null, __('responses.not_found_duration'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
