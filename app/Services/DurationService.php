@@ -14,9 +14,10 @@ class DurationService
                 $durations = $durations->where('title', 'like', '%'.$search.'%');
             }
             $durations = $durations->get();
+
             return $durations;
         } catch(\Exception $e) {
-           return false;
+            return false;
         }
     }
 }

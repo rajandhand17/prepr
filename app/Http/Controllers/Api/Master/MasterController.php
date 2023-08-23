@@ -1204,11 +1204,12 @@ class MasterController extends AppBaseController
 
     public function getDurations(Request $request)
     {
-        try{
+        try {
             $durations = $this->masterRepository->getDurations($request);
             if ($durations) {
                 return $this->sendResponse(DurationsResource::collection($durations), __('responses.found_duration'));
             }
+
             return $this->sendResponse(null, __('responses.not_found_duration'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -1222,6 +1223,7 @@ class MasterController extends AppBaseController
             if ($levels) {
                 return $this->sendResponse(LevelsResource::collection($levels), __('responses.found_levels'));
             }
+
             return $this->sendResponse(null, __('responses.not_found_levels'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

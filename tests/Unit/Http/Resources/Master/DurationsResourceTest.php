@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Master;
 
-use App\Http\Resources\Master\DurationsResource;
 use Tests\TestCase;
 
 /**

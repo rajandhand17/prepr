@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Master;
 
-use App\Http\Resources\Master\LevelsResource;
 use Tests\TestCase;
 
 /**
