@@ -28,7 +28,7 @@ class LabRepository implements LabInterface
 
     private $durationService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService,DurationService $durationService)
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -39,7 +39,7 @@ class LabRepository implements LabInterface
         $this->labAcheivementService = $labAcheivementService;
         $this->skillService = $skillService;
         $this->componentAssociationService = $componentAssociationService;
-        $this->durationService=$durationService;
+        $this->durationService = $durationService;
     }
 
     public function getLabList($request, $organization)
@@ -82,6 +82,7 @@ class LabRepository implements LabInterface
                     $createdLabAchievement = $this->labAcheivementService->createLabAchievement($request, $createLab, $upload_achievements_image);
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLab);
+
                 return [
                     'createdLab'                  => $createLab,
                     'createdLabAddress'           => $createdLabAddress,
@@ -154,6 +155,7 @@ class LabRepository implements LabInterface
                 return $updatedLab['updatedLab'];
             }
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -200,5 +202,4 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-
 }

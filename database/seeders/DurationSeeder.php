@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Duration;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DurationSeeder extends Seeder
@@ -13,22 +12,22 @@ class DurationSeeder extends Seeder
      */
     public function run(): void
     {
-        $duration=[
+        $duration = [
             [
-                'title'=>'0 - 14 Days',
-                'fr_CA_title'=>'0 - 14 jours',
-            ],[
-                'title'=>'0 - 1 Month',
-                'fr_CA_title'=>'0 - 1 mois',
-            ]
+                'title'      => '0 - 14 Days',
+                'fr_CA_title'=> '0 - 14 jours',
+            ], [
+                'title'      => '0 - 1 Month',
+                'fr_CA_title'=> '0 - 1 mois',
+            ],
         ];
-        foreach($duration as $durations){
+        foreach ($duration as $durations) {
             Duration::updateOrCreate([
-                'title'=>$durations['title'],
-                'fr_CA_title'=>$durations['fr_CA_title'],
-            ],[
-                'title'=>$durations['title'],
-                'fr_CA_title'=>$durations['fr_CA_title'],
+                'title'      => $durations['title'],
+                'fr_CA_title'=> $durations['fr_CA_title'],
+            ], [
+                'title'      => $durations['title'],
+                'fr_CA_title'=> $durations['fr_CA_title'],
             ]);
         }
     }

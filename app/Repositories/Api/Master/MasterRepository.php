@@ -50,7 +50,7 @@ class MasterRepository implements MasterInterface
 
     private $levelService;
 
-    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService,LevelService $levelService)
+    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;
@@ -71,8 +71,8 @@ class MasterRepository implements MasterInterface
         $this->pitchTemplateService = $pitchTemplateService;
         $this->labConditionService = $labConditionService;
         $this->socialConnectService = $socialConnectService;
-        $this->durationService=$durationService;
-        $this->levelService=$levelService;
+        $this->durationService = $durationService;
+        $this->levelService = $levelService;
     }
 
     public function getCategories($request)
@@ -246,18 +246,20 @@ class MasterRepository implements MasterInterface
         }
     }
 
-    public function getDuration($request){
+    public function getDuration($request)
+    {
         try {
             return $this->durationService->getDuration($request->language, $request->search);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public  function getLevels($request){
+    public function getLevels($request)
+    {
         try {
             return $this->levelService->getLevels($request->language, $request->search);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
