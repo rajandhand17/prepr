@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Master\AcheivementConditionListResource;
 use App\Http\Resources\Master\CategoryResource;
+use App\Http\Resources\Master\DurationsResource;
 use App\Http\Resources\Master\FlexibleDateDurationResource;
 use App\Http\Resources\Master\HostResource;
 use App\Http\Resources\Master\LabConditionResource;
+use App\Http\Resources\Master\LevelsResource;
 use App\Http\Resources\Master\ProjectIndustryResource;
 use App\Http\Resources\Master\ProjectStageResource;
 use App\Http\Resources\Master\ProjectStatusResource;
@@ -1195,7 +1197,35 @@ class MasterController extends AppBaseController
             }
 
             return $this->sendResponse(null, __('responses.not_found_social_connect_list'));
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getDurations(Request $request)
+    {
+        try {
+            $durations = $this->masterRepository->getDurations($request);
+            if ($durations) {
+                return $this->sendResponse(DurationsResource::collection($durations), __('responses.found_duration'));
+            }
+
+            return $this->sendResponse(null, __('responses.not_found_duration'));
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getLevels(Request $request)
+    {
+        try {
+            $levels = $this->masterRepository->getLevels($request);
+            if ($levels) {
+                return $this->sendResponse(LevelsResource::collection($levels), __('responses.found_levels'));
+            }
+
+            return $this->sendResponse(null, __('responses.not_found_levels'));
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

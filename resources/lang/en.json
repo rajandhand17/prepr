@@ -301,5 +301,14 @@
     "responses.un_like_lab_successfully":"The Lab have been dis-liked successfully by you!",
 
     "responses.found_lab_view":"The lab has been successfully retrieved",
-    "responses.not_found_lab_view":"The labs has not been retrieved with success."
+    "responses.not_found_lab_view":"The labs has not been retrieved with success.",
+
+    "responses.found_duration":"The duration list has been successfully retrieved",
+    "responses.not_found_duration":"The list of duration has not been retrieved with success.",
+
+    "responses.duration_id_required": "The duration id is required",
+    "responses.duration_id_exists": "The provided duration id is not exists!",
+
+    "responses.level_id_required": "The level id is required",
+    "responses.level_id_exists": "The provided level id is not exists!"
 }

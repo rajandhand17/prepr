@@ -23,4 +23,6 @@ Route::middleware(['language'])->group(function () {
     Route::get('/pitch-templates', [MasterController::class, 'getPitchTemplates']);
     Route::get('/lab-conditions', [MasterController::class, 'getLabConditions']);
     Route::get('/social-connect', [MasterController::class, 'getSocialConnect']);
+    Route::get('/durations', [MasterController::class, 'getDurations']);
+    Route::get('/levels', [MasterController::class, 'getLevels']);
 });

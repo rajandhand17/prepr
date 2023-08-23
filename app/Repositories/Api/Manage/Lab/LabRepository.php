@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\Lab;
 
+use App\Services\DurationService;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
@@ -25,7 +26,9 @@ class LabRepository implements LabInterface
     private $skillService;
     private $componentAssociationService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService)
+    private $durationService;
+
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -36,6 +39,7 @@ class LabRepository implements LabInterface
         $this->labAcheivementService = $labAcheivementService;
         $this->skillService = $skillService;
         $this->componentAssociationService = $componentAssociationService;
+        $this->durationService = $durationService;
     }
 
     public function getLabList($request, $organization)
@@ -149,7 +153,7 @@ class LabRepository implements LabInterface
             ) {
                 DB::commit();
 
-                return $updatedLab['createdLab'];
+                return $updatedLab['updatedLab'];
             }
             DB::rollBack();
 

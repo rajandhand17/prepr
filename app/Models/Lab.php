@@ -19,6 +19,8 @@ class Lab extends Model
         'user_id',
         'organization_id',
         'category_id',
+        'duration_id',
+        'level_id',
         'slug',
         'title',
         'description',

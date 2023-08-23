@@ -67,7 +67,7 @@ class SkillGroup extends Command
                     if ($check_skill_group) {
                         $newSkillGroup = $check_skill_group;
                     } else {
-                        $newSkillGroup = new SkillGroup();
+                        $newSkillGroup = new \App\Models\SkillGroup();
                     }
                     $newSkillGroup->id = $skill_group->id;
                     $newSkillGroup->title = $skill_group->title;
