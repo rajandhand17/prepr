@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             EmailTemplateSeeder::class,
             FlexibleDateDurationSeeder::class,
             LevelsSeeder::class,
-            DurationsSeeder::class
+            DurationsSeeder::class,
         ]);
     }
 }
