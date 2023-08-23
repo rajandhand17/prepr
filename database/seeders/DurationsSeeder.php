@@ -19,16 +19,16 @@ class DurationsSeeder extends Seeder
             ], [
                 'title'      => '2 -4 hours',
                 'fr_CA_title'=> '24 heures',
-            ],[
+            ], [
                 'title'      => '4 -8 hours',
                 'fr_CA_title'=> '48 heures',
-            ],[
+            ], [
                 'title'      => '1 -2 Days',
                 'fr_CA_title'=> '12 jours',
-            ],[
+            ], [
                 'title'      => '3 -5 Days',
                 'fr_CA_title'=> '3 à 5 jours',
-            ],[
+            ], [
                 'title'      => '5+ Days',
                 'fr_CA_title'=> '5+ jours',
             ],

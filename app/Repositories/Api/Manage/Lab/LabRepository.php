@@ -111,6 +111,7 @@ class LabRepository implements LabInterface
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
