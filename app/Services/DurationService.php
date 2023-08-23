@@ -16,7 +16,7 @@ class DurationService
             $durations = $durations->get();
             return $durations;
         } catch(\Exception $e) {
-            return false;
+           return false;
         }
     }
 }

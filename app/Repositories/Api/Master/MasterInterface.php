@@ -42,7 +42,7 @@ interface MasterInterface
 
     public function getSocialConnect($request);
 
-    public function getDuration($request);
+    public function getDurations($request);
 
     public function getLevels($request);
 }
