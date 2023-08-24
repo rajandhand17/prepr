@@ -85,7 +85,7 @@ class LabControllerTest extends TestCase
     }
 
     public function test_lab_update_positive()
-    {
+    {   $this->parameters['_method']='put';
         $response = $this->post('api/v1/manage/lab/'.$this->parameters['slug'].'/update', $this->parameters, $this->headers);
         $response->assertStatus(200);
     }
