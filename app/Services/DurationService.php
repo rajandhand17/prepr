@@ -11,16 +11,16 @@ class DurationService
     public function getDurations($language = 'en', $search = null)
     {
         try {
-            if($language=='en'){
-                $durations = Duration::select('id','title');
-            }else{
+            if ($language == 'en') {
+                $durations = Duration::select('id', 'title');
+            } else {
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
                 //check whether the column exist in the db or not
 
                 if (!$column_name || !Schema::hasColumn('durations', $column_name)) {
                     return false;
                 }
-                $durations = Duration::select('id',$column_name.' as title');
+                $durations = Duration::select('id', $column_name.' as title');
             }
 
             if ($search != null) {
@@ -31,6 +31,7 @@ class DurationService
             if (!$durations->isEmpty()) {
                 return $durations;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;

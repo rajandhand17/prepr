@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
-use App\Models\Duration;
 use App\Models\Levels;
 use Illuminate\Support\Facades\Schema;
 
@@ -12,16 +11,16 @@ class LevelService
     public function getLevels($language, $search)
     {
         try {
-            if($language=='en'){
-                $levels = Levels::select('id','title');
-            }else{
+            if ($language == 'en') {
+                $levels = Levels::select('id', 'title');
+            } else {
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
                 //check whether the column exist in the db or not
 
                 if (!$column_name || !Schema::hasColumn('durations', $column_name)) {
                     return false;
                 }
-                $levels = Levels::select('id',$column_name.' as title');
+                $levels = Levels::select('id', $column_name.' as title');
             }
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
@@ -31,6 +30,7 @@ class LevelService
             if (!$levels->isEmpty()) {
                 return $levels;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
