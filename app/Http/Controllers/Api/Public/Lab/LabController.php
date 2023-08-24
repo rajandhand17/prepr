@@ -46,7 +46,7 @@ class LabController extends AppBaseController
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
 
             if ($lab) {
-                return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'));
+                return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
@@ -81,7 +81,7 @@ class LabController extends AppBaseController
         }
     }
 
-    public function joinLab($slug)
+    public function joinLab($slug, Request $request)
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
@@ -95,7 +95,7 @@ class LabController extends AppBaseController
                 if (!$memberList && !count($memberList) > 0) {
                     return $this->sendError(__('responses.send_error'), 404);
                 }
-                $requestedData = $this->labRepository->setJoinRequestParameters();
+                $requestedData = $this->labRepository->setJoinRequestParameters($request->language);
                 if (!$requestedData) {
                     return $this->sendError(__('responses.send_error'), 403);
                 }

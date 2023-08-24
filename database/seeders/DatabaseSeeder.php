@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             AssignPermissionToRolesSeeder::class,
             EmailTemplateSeeder::class,
             FlexibleDateDurationSeeder::class,
+            LevelsSeeder::class,
+            DurationsSeeder::class,
         ]);
     }
 }

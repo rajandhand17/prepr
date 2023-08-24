@@ -162,12 +162,13 @@ class LabService
         $lab->user_id = auth()->user()->id;
         $lab->organization_id = $organization->id;
         $lab->category_id = $request->category_id;
+        $lab->duration_id = $request->duration_id;
+        $lab->level_id = $request->level_id;
         $lab->type = $type;
         $lab->slug = $slug;
         $lab->title = $request->title;
         $lab->description = $request->description;
         $lab->privacy = $privacy;
-
         $lab->media_type = 'image';
         $lab->media = $upload_cover_image;
 
@@ -230,6 +231,8 @@ class LabService
                 $lab->language = ($request->has('language')) ? $request->language : $lab->language;
                 $lab->organization_id = $organization->id;
                 $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
+                $lab->duration_id = ($request->has('duration_id')) ? $request->duration_id : $lab->duration_id;
+                $lab->level_id = ($request->has('level_id')) ? $request->level_id : $lab->level_id;
                 $lab->title = ($request->has('title')) ? $request->title : $lab->title;
                 $lab->description = ($request->has('description')) ? $request->description : $lab->description;
                 $lab->type = $type;

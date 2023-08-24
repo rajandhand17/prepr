@@ -108,5 +108,4 @@ class Organization extends LaratrustTeam
 
         return 'NA';
     }
-
 }

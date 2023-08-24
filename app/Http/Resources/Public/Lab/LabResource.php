@@ -22,6 +22,28 @@ class LabResource extends JsonResource
             $category = null;
         }
 
+        $joined_status = $this->joined();
+        $join_status = 'No';
+        if ($joined_status) {
+            switch ($joined_status->invite_status) {
+                case '0':
+                    $join_status = 'Invited';
+                    break;
+                case '1':
+                    $join_status = 'Yes';
+                    break;
+                case '2':
+                    $join_status = 'Pending';
+                    break;
+                case '3':
+                    $join_status = 'No';
+                    break;
+                default:
+                    $join_status = 'No';
+                    break;
+            }
+        }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -33,11 +55,10 @@ class LabResource extends JsonResource
             'media'                        => $this->media,
             'category'                     => $category,
             'status'                       => $this->status,
-
+            'member_count'                 => $this->members()->count(),
             'likes'                        => $this->likes()->count(),
             'shares'                       => $this->shares()->count(),
-
-//            'joined'                       => $this->joined(),
+            'joined'                       => $join_status,
             'liked'                        => $this->liked(),
             'favourite'                    => $this->favourite(),
             'lab_address'                  => LabAddressResource::make($this->address),

@@ -249,8 +249,8 @@
     "responses.handler_bad_request":"402! Bad Request.",
     "responses.already_follow_organization":"The Organization is already being followed by you!",
     "responses.follow_organization_successfully":"The Organization have been followed successfully by you!",
-    "responses.already_unfollow_organization":"The Organization is already being un-followed by you!",
-    "responses.unfollow_organization_successfully":"The Organization have been un-followed successfully by you!",
+    "responses.already_un_follow_organization":"The Organization is already being un-followed by you!",
+    "responses.un_follow_organization_successfully":"The Organization have been un-followed successfully by you!",
     "responses.already_like_organization":"The Organization is already liked by you!",
     "responses.like_organization_successfully":"The Organization have been liked successfully by you!",
     "responses.already_un_like_organization":"The Organization is already being dis-liked by you!",
@@ -293,5 +293,22 @@
     "responses.join_request_accept_successfully": "You have accepted the join request successfully!",
     "responses.join_request_accept_failed": "You have failed to accept the join request",
     "responses.join_request_decline_successfully": "You have declined the join request successfully",
-    "responses.join_request_decline_failed": "You have failed to decline the join request"
+    "responses.join_request_decline_failed": "You have failed to decline the join request",
+
+    "responses.already_like_lab":"The Lab is already liked by you!",
+    "responses.like_lab_successfully":"The Lab have been liked successfully by you!",
+    "responses.already_un_like_lab":"The Lab is already being dis-liked by you!",
+    "responses.un_like_lab_successfully":"The Lab have been dis-liked successfully by you!",
+
+    "responses.found_lab_view":"The lab has been successfully retrieved",
+    "responses.not_found_lab_view":"The labs has not been retrieved with success.",
+
+    "responses.found_duration":"The duration list has been successfully retrieved",
+    "responses.not_found_duration":"The list of duration has not been retrieved with success.",
+
+    "responses.duration_id_required": "The duration id is required",
+    "responses.duration_id_exists": "The provided duration id is not exists!",
+
+    "responses.level_id_required": "The level id is required",
+    "responses.level_id_exists": "The provided level id is not exists!"
 }

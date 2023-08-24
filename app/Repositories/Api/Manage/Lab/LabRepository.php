@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\Lab;
 
+use App\Services\DurationService;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
@@ -25,7 +26,9 @@ class LabRepository implements LabInterface
     private $skillService;
     private $componentAssociationService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService)
+    private $durationService;
+
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -36,6 +39,7 @@ class LabRepository implements LabInterface
         $this->labAcheivementService = $labAcheivementService;
         $this->skillService = $skillService;
         $this->componentAssociationService = $componentAssociationService;
+        $this->durationService = $durationService;
     }
 
     public function getLabList($request, $organization)
@@ -69,22 +73,38 @@ class LabRepository implements LabInterface
     {
         try {
             $createdLab = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image) {
-                $createdLab = $this->labService->createLab($request, $upload_profile_image);
-                $createdLabAddress = $this->labAddressService->createLabAddress($request, $createdLab);
-                $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createdLab);
-                $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createdLab);
-                $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createdLab);
+                $createLab = $this->labService->createLab($request, $upload_profile_image);
+                $createdLabAddress = $this->labAddressService->createLabAddress($request, $createLab);
+                $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLab);
+                $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createLab);
+                $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createLab);
                 if ($request->is_achievement_enabled == 'yes') {
-                    $createdLabAcheivement = $this->labAcheivementService->createLabAchievement($request, $createdLab, $upload_achievements_image);
+                    $createdLabAchievement = $this->labAcheivementService->createLabAchievement($request, $createLab, $upload_achievements_image);
                 }
-                $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createdLab);
+                $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLab);
 
-                return $createdLab;
+                return [
+                    'createdLab'                  => $createLab,
+                    'createdLabAddress'           => $createdLabAddress,
+                    'createdLabSkillAssociations' => $createdLabSkillAssociations,
+                    'createdLabTagAssociations'   => $createdLabTagAssociations,
+                    'createdLabExternalLinks'     => $createdLabExternalLinks,
+                    'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
+                    'createdLabAssociations'      => $createdLabAssociations,
+                ];
             });
-            if ($createdLab) {
+            if (
+                $createdLab['createdLab'] &&
+                $createdLab['createdLabAddress'] &&
+                $createdLab['createdLabSkillAssociations'] &&
+                $createdLab['createdLabTagAssociations'] &&
+                $createdLab['createdLabExternalLinks'] &&
+                $createdLab['createdLabAchievement'] &&
+                $createdLab['createdLabAssociations']
+            ) {
                 DB::commit();
 
-                return $createdLab;
+                return $createdLab['createdLab'];
             }
             DB::rollBack();
 
@@ -100,24 +120,40 @@ class LabRepository implements LabInterface
     {
         try {
             $updatedLab = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
-                $updatedLab = $this->labService->updateLab($slug, $request, $upload_cover_image);
-                $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updatedLab->id);
-                $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updatedLab->id);
-                $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updatedLab->id);
+                $updateLab = $this->labService->updateLab($slug, $request, $upload_cover_image);
+                $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updateLab->id);
+                $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updateLab->id);
+                $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updateLab->id);
 
-                $updatedLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($request, $updatedLab->id);
+                $updatedLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($request, $updateLab->id);
 
                 if ($request->is_achievement_enabled == 'yes') {
-                    $updatedLabAcheivement = $this->labAcheivementService->updateLabAchievement($request, $updatedLab->id, $upload_achievement_image);
+                    $updatedLabAchievement = $this->labAcheivementService->updateLabAchievement($request, $updateLab->id, $upload_achievement_image);
                 }
-                $updatedLabAssociations = $this->componentAssociationService->updateLabAssociation($request, $updatedLab->id);
+                $updatedLabAssociations = $this->componentAssociationService->updateLabAssociation($request, $updateLab->id);
 
-                return $updatedLab;
+                return [
+                    'updatedLab'                  => $updateLab,
+                    'updatedLabAddress'           => $updatedLabAddress,
+                    'updatedLabSkillAssociations' => $updatedLabSkillAssociations,
+                    'updatedLabTagAssociations'   => $updatedLabTagAssociations,
+                    'updatedLabExternalLinks'     => $updatedLabExternalLinks,
+                    'updatedLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
+                    'updatedLabAssociations'      => $updatedLabAssociations,
+                ];
             });
-            if ($updatedLab) {
+            if (
+                $updatedLab['updatedLab'] &&
+                $updatedLab['updatedLabAddress'] &&
+                $updatedLab['updatedLabSkillAssociations'] &&
+                $updatedLab['updatedLabTagAssociations'] &&
+                $updatedLab['updatedLabExternalLinks'] &&
+                $updatedLab['updatedLabAchievement'] &&
+                $updatedLab['updatedLabAssociations']
+            ) {
                 DB::commit();
 
-                return $updatedLab;
+                return $updatedLab['updatedLab'];
             }
             DB::rollBack();
 

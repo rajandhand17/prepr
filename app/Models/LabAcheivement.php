@@ -29,7 +29,6 @@ class LabAcheivement extends Model
         'achievement_condition' => 'json',
     ];
 
-
     public function getAchievementImageAttribute($value)
     {
         return config('site-settings.aws_url').$value;

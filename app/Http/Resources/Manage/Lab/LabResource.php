@@ -28,9 +28,9 @@ class LabResource extends JsonResource
         $skill_stacks = [];
         $tags = [];
         $tag_groups = [];
-        $category = NULL;
+        $category = null;
 
-        if($this->getCategory){
+        if ($this->getCategory) {
             $category = $this->getCategory->title;
         }
 
@@ -116,6 +116,7 @@ class LabResource extends JsonResource
             'media_type'                    => $this->media_type,
             'media'                         => $this->media,
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
+            'member_count'                  => $this->members()->count(),
             'total_share'                   => $this->total_share,
             'is_auto_created'               => ($this->is_auto_created == '1') ? 'yes' : 'no',
             'is_resource_sequential'        => ($this->is_resource_sequential == '1') ? 'yes' : 'no',
