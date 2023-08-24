@@ -30,10 +30,20 @@ class LabResource extends JsonResource
         $tag_groups = [];
         $category = null;
         $category_id = null;
+        $duration_id = null;
+        $level_id = null;
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
             $category_id = $this->getCategory->id;
+        }
+
+        if ($this->duration_id) {
+            $duration_id = $this->duration_id;
+        }
+
+        if ($this->level_id) {
+            $level_id = $this->level_id;
         }
 
         if ($this->address) {
@@ -113,6 +123,8 @@ class LabResource extends JsonResource
             'organization'                  => $this->organization->title,
             'category_id'                   => $category_id,
             'category'                      => $category,
+            'duration_id'                   => $duration_id,
+            'level_id'                      => $level_id,
             'slug'                          => $this->slug,
             'title'                         => $this->title,
             'description'                   => $this->description,
