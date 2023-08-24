@@ -15,11 +15,14 @@ class LabResource extends JsonResource
      */
     public function toArray($request)
     {
-        $category = $this->getCategory;
-        if ($category) {
+        $category = null;
+        $category_name = null;
+
+        if ($this->getCategory) {
             $category = $this->getCategory->id;
-        } else {
-            $category = null;
+        }
+        if ($this->getCategory) {
+            $category_name = $this->getCategory->title;
         }
 
         $joined_status = $this->joined();
@@ -54,6 +57,7 @@ class LabResource extends JsonResource
             'media_type'                   => $this->media_type,
             'media'                        => $this->media,
             'category'                     => $category,
+            'category_name'                => $category_name,
             'status'                       => $this->status,
             'member_count'                 => $this->members()->count(),
             'likes'                        => $this->likes()->count(),
