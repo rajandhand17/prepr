@@ -17,7 +17,9 @@ class LabResource extends JsonResource
     {
         $category_id = null;
         $category = null;
+        $duration = null;
         $duration_id = null;
+        $level = null;
         $level_id = null;
 
         if ($this->getCategory) {
@@ -25,12 +27,14 @@ class LabResource extends JsonResource
             $category = $this->getCategory->title;
         }
 
-        if ($this->duration_id) {
-            $duration_id = $this->duration_id;
+        if ($this->durations) {
+            $duration = $this->durations->title;
+            $duration_id = $this->durations->id;
         }
 
-        if ($this->level_id) {
-            $level_id = $this->level_id;
+        if ($this->levels) {
+            $level = $this->levels->title;
+            $level_id = $this->levels->id;
         }
 
         $joined_status = $this->joined();
@@ -68,8 +72,10 @@ class LabResource extends JsonResource
             'category'                     => $category,
             'organization_id'              => $this->organization->uuid,
             'organization'                 => $this->organization->title,
-            'duration_id'                  => $duration_id,
-            'level_id'                     => $level_id,
+            'duration'                      => $duration,
+            'duration_id'                   => $duration_id,
+            'level'                         => $level,
+            'level_id'                      => $level_id,
             'status'                       => $this->status,
             'member_count'                 => $this->members()->count(),
             'likes'                        => $this->likes()->count(),
