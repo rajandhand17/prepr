@@ -154,5 +154,4 @@ class Lab extends Model
     {
         return $this->belongsTo(Level::class, 'level_id', 'id');
     }
-
 }
