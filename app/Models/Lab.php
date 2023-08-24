@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Monolog\Level;
 
 class Lab extends Model
 {
@@ -147,6 +148,11 @@ class Lab extends Model
     public function durations()
     {
         return $this->belongsTo(Duration::class, 'duration_id', 'id');
+    }
+
+    public function levels()
+    {
+        return $this->belongsTo(Level::class, 'level_id', 'id');
     }
 
 }
