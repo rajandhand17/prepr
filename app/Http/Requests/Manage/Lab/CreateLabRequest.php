@@ -34,6 +34,8 @@ class CreateLabRequest extends FormRequest
             'description'            => 'required_if:request_type,publish|nullable',
             'organization_id'        => 'required|exists:organizations,uuid',
             'category_id'            => 'required|exists:categories,id',
+            'duration_id'            => 'required|exists:durations,id',
+            'level_id'               => 'required|exists:levels,id',
             'privacy'                => 'required_if:request_type,publish|in:yes,no',
             'location'               => 'required_if:request_type,publish|nullable',
             'latitude'               => 'required_if:request_type,publish|nullable',
@@ -145,7 +147,6 @@ class CreateLabRequest extends FormRequest
             'description.required_if'        => __('responses.description_required'),
             'country.required_if'            => __('responses.country_required'),
             'city.required_if'               => __('responses.city_required'),
-            'organizartion_id.required'      => __('responses.organization_id_required'),
             'location.required_if'           => __('responses.location_required'),
             'category_id.required'           => __('responses.category_id_required'),
             'category_id.exists'             => __('responses.category_not_found'),
@@ -193,6 +194,10 @@ class CreateLabRequest extends FormRequest
             'auto_invite.in'                 => __('responses.choose_yes_no'),
             'invite_email.required'          => __('responses.invite_email_required'),
             'invite_email.csv'               => __('responses.choose_csv_file'),
+            'duration_id.required'           => __('responses.duration_id_required'),
+            'duration_id.exists'             => __('responses.duration_id_exists'),
+            'level_id.required'              => __('responses.level_id_required'),
+            'level_id.exists'                => __('responses.level_id_exists'),
         ];
     }
 }

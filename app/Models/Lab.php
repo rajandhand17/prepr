@@ -19,6 +19,8 @@ class Lab extends Model
         'user_id',
         'organization_id',
         'category_id',
+        'duration_id',
+        'level_id',
         'slug',
         'title',
         'description',
@@ -112,7 +114,7 @@ class Lab extends Model
     public function joined()
     {
         if (auth('api')->check()) {
-            return ($this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1', 'email' => auth('api')->user()->email])->count() > 0) ? 'Yes' : 'No';
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'email' => auth('api')->user()->email])->first();
         }
 
         return 'NA';

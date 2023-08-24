@@ -300,6 +300,7 @@ class MemberManagementService
                 default:
                     $auto_invite = config('constants.member_management_auto_invite.no');
             }
+            $email_status = config('constants.member_management_auto_invite.scheduled');
             switch ($request->email_status) {
                 case 'scheduled':
                     $email_status = config('constants.member_management_email_status.scheduled');
@@ -461,8 +462,6 @@ class MemberManagementService
 
             return false;
         } catch(\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
