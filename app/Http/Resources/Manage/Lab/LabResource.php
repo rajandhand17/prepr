@@ -31,7 +31,7 @@ class LabResource extends JsonResource
         $category = null;
 
         if ($this->getCategory) {
-            $category = $this->getCategory->title;
+            $category = $this->getCategory->id;
         }
 
         if ($this->address) {
@@ -107,7 +107,7 @@ class LabResource extends JsonResource
             'type'                          => $type,
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
-            'organization'                  => $this->organization->title,
+            'organization'                  => $this->organization->uuid,
             'category'                      => $category,
             'slug'                          => $this->slug,
             'title'                         => $this->title,

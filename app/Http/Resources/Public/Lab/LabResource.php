@@ -17,7 +17,7 @@ class LabResource extends JsonResource
     {
         $category = $this->getCategory;
         if ($category) {
-            $category = $this->getCategory->title;
+            $category = $this->getCategory->id;
         } else {
             $category = null;
         }
