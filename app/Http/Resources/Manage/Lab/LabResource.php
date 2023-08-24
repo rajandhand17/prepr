@@ -29,13 +29,11 @@ class LabResource extends JsonResource
         $tags = [];
         $tag_groups = [];
         $category = null;
-        $category_name = null;
+        $category_id = null;
 
         if ($this->getCategory) {
-            $category = $this->getCategory->id;
-        }
-        if ($this->getCategory) {
-            $category_name = $this->getCategory->title;
+            $category = $this->getCategory->title;
+            $category_id = $this->getCategory->id;
         }
 
         if ($this->address) {
@@ -111,10 +109,10 @@ class LabResource extends JsonResource
             'type'                          => $type,
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
-            'organization'                  => $this->organization->uuid,
-            'organization_name'             => $this->organization->title,
+            'organization_id'               => $this->organization->uuid,
+            'organization'                  => $this->organization->title,
+            'category_id'                   => $category_id,
             'category'                      => $category,
-            'category_name'                 => $category_name,
             'slug'                          => $this->slug,
             'title'                         => $this->title,
             'description'                   => $this->description,
