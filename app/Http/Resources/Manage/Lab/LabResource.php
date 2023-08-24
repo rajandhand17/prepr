@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\Lab;
 
+use App\Helpers\UtilityHelper;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -160,6 +161,7 @@ class LabResource extends JsonResource
             'resource_module_count'         => 0,
             'resource_collection_count'     => 0,
             'resource_group_count'          => 0,
+            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }
 }

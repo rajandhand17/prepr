@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\Lab;
 
+use App\Helpers\UtilityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabResource extends JsonResource
@@ -86,6 +87,7 @@ class LabResource extends JsonResource
             'lab_address'                  => LabAddressResource::make($this->address),
             'lab_achievement'              => LabAchievementResource::make($this->achievement),
             'lab_external_links'           => LabExternalLinksResource::collection($this->external_links),
+            'last_updated'                 => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }
 }
