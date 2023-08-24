@@ -2,20 +2,36 @@
 
 namespace App\Services;
 
+use App\Helpers\LanguageColumnHelper;
+use App\Models\Duration;
 use App\Models\Levels;
+use Illuminate\Support\Facades\Schema;
 
 class LevelService
 {
     public function getLevels($language, $search)
     {
         try {
-            $levels = Levels::select('title', 'fr_CA_title');
-            if ($levels) {
-                $levels = $levels->where('title', 'like', '%'.$search.'%');
-            }
-            $levels = $levels->get();
+            if($language=='en'){
+                $levels = Levels::select('id','title');
+            }else{
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
+                //check whether the column exist in the db or not
 
-            return $levels;
+                if (!$column_name || !Schema::hasColumn('durations', $column_name)) {
+                    return false;
+                }
+                $levels = Levels::select('id',$column_name.' as title');
+            }
+            if ($search != null) {
+                $column_name = isset($column_name) ? $column_name : 'title';
+                $levels = $levels->where($column_name, 'like', '%'.$search.'%');
+            }
+            $levels = $levels->take(config('site-settings.dropdown_listing_limit'))->get();
+            if (!$levels->isEmpty()) {
+                return $levels;
+            }
+            return false;
         } catch(\Exception $e) {
             return false;
         }
