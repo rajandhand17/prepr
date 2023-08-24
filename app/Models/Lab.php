@@ -148,5 +148,4 @@ class Lab extends Model
     {
         return $this->belongsTo(Duration::class, 'duration_id', 'id');
     }
-
 }
