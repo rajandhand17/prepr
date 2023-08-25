@@ -143,4 +143,14 @@ class Lab extends Model
     {
         return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1', 'invite_status'=>'1']);
     }
+
+    public function durations()
+    {
+        return $this->belongsTo(Duration::class, 'duration_id', 'id');
+    }
+
+    public function levels()
+    {
+        return $this->belongsTo(Levels::class, 'level_id', 'id');
+    }
 }

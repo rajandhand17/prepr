@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\Lab;
 
+use App\Helpers\UtilityHelper;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -29,9 +30,25 @@ class LabResource extends JsonResource
         $tags = [];
         $tag_groups = [];
         $category = null;
+        $category_id = null;
+        $duration = null;
+        $duration_id = null;
+        $level = null;
+        $level_id = null;
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
+            $category_id = $this->getCategory->id;
+        }
+
+        if ($this->durations) {
+            $duration = $this->durations->title;
+            $duration_id = $this->durations->id;
+        }
+
+        if ($this->levels) {
+            $level = $this->levels->title;
+            $level_id = $this->levels->id;
         }
 
         if ($this->address) {
@@ -107,8 +124,14 @@ class LabResource extends JsonResource
             'type'                          => $type,
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
+            'organization_id'               => $this->organization->uuid,
             'organization'                  => $this->organization->title,
+            'category_id'                   => $category_id,
             'category'                      => $category,
+            'duration'                      => $duration,
+            'duration_id'                   => $duration_id,
+            'level'                         => $level,
+            'level_id'                      => $level_id,
             'slug'                          => $this->slug,
             'title'                         => $this->title,
             'description'                   => $this->description,
@@ -138,6 +161,7 @@ class LabResource extends JsonResource
             'resource_module_count'         => 0,
             'resource_collection_count'     => 0,
             'resource_group_count'          => 0,
+            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }
 }
