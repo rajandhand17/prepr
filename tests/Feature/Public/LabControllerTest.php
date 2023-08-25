@@ -611,10 +611,9 @@ class LabControllerTest extends TestCase
     }
     public function test_lab_view_positive()
     {
-        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->parameters, $this->headers);
+        $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $response->json();
-
         if ($data['success']) {
             $this->assertArrayHasKey('id', $data['data']);
             $this->assertArrayHasKey('language', $data['data']);
