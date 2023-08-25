@@ -7,16 +7,18 @@ use DB;
 
 class LabProgramRepository implements LabProgramInterface
 {
-    public function __construct($request)
+    private $labProgramService;
+    public function __construct(LabProgramService $labProgramService)
     {
-
+        $this->labProgramService=$labProgramService;
     }
 
-    public function create($request){
+    public function createLabProgram($request){
         try{
-
-        }catch(Exception $e){
+        return $this->labProgramService->createLabProgram($request);
+        }catch(\Exception $e){
             return false;
         }
     }
+
 }
