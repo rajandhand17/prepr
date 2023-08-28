@@ -534,8 +534,8 @@ class OrganizationController extends AppBaseController
             if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_update_access_denied'), 403);
             }
-            $profile_images_path = str_replace(config('site-settings.aws_url'), '', $checkOrganization->profile_image);;
-            $cover_images_path = str_replace(config('site-settings.aws_url'), '', $checkOrganization->cover_image);;
+            $profile_images_path = str_replace(config('site-settings.aws_url'), '', $checkOrganization->profile_image);
+            $cover_images_path = str_replace(config('site-settings.aws_url'), '', $checkOrganization->cover_image);
             if ($request->profile_image !== null) {
                 $profile_image_path = $this->organizationRepository->uploadOrganizationProfileImage($request);
                 if ($profile_image_path == false) {
