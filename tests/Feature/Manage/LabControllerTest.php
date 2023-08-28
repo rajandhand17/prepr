@@ -18,17 +18,19 @@ class LabControllerTest extends TestCase
         parent::setUp();
         $this->parameters = [
             'language'               => 'en',
-            'email'                  => 'rajan@amazon.com',
-            'password'               => 'Prepr@123',
-            'slug'                   => 'amazon-lab',
-            'not_exists_slug'        => 'un-sdg-labs',
+            'email'                  => 'schagpar@gmail.com',
+            'password'               => 'Test@1234',
+            'slug'                   => 'un-sdg-lab-1',
+            'not_exists_slug'        => 'un-sdg-lab-2',
             'reference_id'           => '2',
+            'duration_id'            => '1',
+            'level_id'               => '1',
             'reference_type'         => 'lab',
             'like_component'         => 'like',
             'dislike_component'      => 'dislike',
-            'title'                  => 'Amazon Lab',
-            'not_exist_title'        => 'UN SDG Labs',
-            'organization_id'        => UtilityHelper::checkComponentSlugExistOrNot('organization', 'rform')->uuid,
+            'title'                  => 'UN SDG Lab 1',
+            'not_exist_title'        => 'UN SDG Lab 2',
+            'organization_id'        => UtilityHelper::checkComponentSlugExistOrNot('organization', 'xyz-pvt-ltd')->uuid,
             'category_id'            => '1',
             'description'            => 'This lab is focused on driving awareness around the 17 UN sustainable development goals and to enable students and employees across the globe to co-lab and co-solve to create meaningful solutions.',
             'privacy'                => 'yes',
@@ -41,8 +43,8 @@ class LabControllerTest extends TestCase
             'skill_groups.*'         => ['1', '2', '3'],
             'tags'                   => ['1', '2', '3'],
             'tag_groups'             => ['1', '2', '3'],
-            'external_links'         => ['https://facebook.com', 'https://twiter.com'],
-            'external_link_ids'      => ['1', '2', '3'],
+            // 'external_links'         => ['https://facebook.com', 'https://twiter.com'],
+            // 'external_link_ids'      => ['1', '2', '3'],
             'request_type'           => 'publish',
             'type'                   => 'onboard',
             'is_notification_enabled'=> 'yes',
@@ -63,6 +65,7 @@ class LabControllerTest extends TestCase
         Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
         $user = Auth::user();
         $this->token = $user->createToken(env('APP_NAME'))->accessToken;
+
         $this->headers = [
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
