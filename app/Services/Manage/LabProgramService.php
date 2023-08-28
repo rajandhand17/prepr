@@ -60,7 +60,7 @@ class LabProgramService{
             $labProgram->title      =$request->title;
             $labProgram->description=$request->description;
             $labProgram->lab_id     =$request->lab_id;
-            $labProgram->user_id    =$request->user_id;
+            $labProgram->user_id    =auth()->user()->id;
             $labProgram->media      =$upload_media;
             $labProgram->privacy    =$privacy;
             $labProgram->status     =$status;
