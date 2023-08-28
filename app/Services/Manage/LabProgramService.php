@@ -2,17 +2,15 @@
 
 namespace App\Services\Manage;
 
-use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
-use App\Helpers\UtilityHelper;
-use App\Models\Lab;
 use App\Models\LabProgram;
-use HiFolks\RandoPhp\Randomize;
 
-class LabProgramService{
+class LabProgramService
+{
+    public function getLabProgramList($request)
+    {
+        $getLabProgramList = LabProgram::select();
 
-    public function getLabProgramList($request){
-        $getLabProgramList=LabProgram::select();
         return $getLabProgramList->get();
     }
 
@@ -24,8 +22,10 @@ class LabProgramService{
             return false;
         }
     }
-    public function createLabProgram($request,$upload_media){
-        try{
+
+    public function createLabProgram($request, $upload_media)
+    {
+        try {
             $privacy = config('constants.lab_privacy.no');
             switch($request->privacy) {
                 case 'yes':
@@ -55,25 +55,25 @@ class LabProgramService{
                     break;
             }
 
-            $labProgram=new LabProgram();
-            $labProgram->language   =$request->language;
-            $labProgram->title      =$request->title;
-            $labProgram->description=$request->description;
-            $labProgram->lab_id     =$request->lab_id;
-            $labProgram->user_id    =auth()->user()->id;
-            $labProgram->media      =$upload_media;
-            $labProgram->privacy    =$privacy;
-            $labProgram->status     =$status;
-            $labProgram->is_auto_created="0";
-            $labProgram->prize      =$request->prize;
-            $labProgram->points     =$request->points;
-            $labProgram->trophy     =$request->trophy;
+            $labProgram = new LabProgram();
+            $labProgram->language = $request->language;
+            $labProgram->title = $request->title;
+            $labProgram->description = $request->description;
+            $labProgram->lab_id = $request->lab_id;
+            $labProgram->user_id = auth()->user()->id;
+            $labProgram->media = $upload_media;
+            $labProgram->privacy = $privacy;
+            $labProgram->status = $status;
+            $labProgram->is_auto_created = '0';
+            $labProgram->prize = $request->prize;
+            $labProgram->points = $request->points;
+            $labProgram->trophy = $request->trophy;
             $labProgram->save();
+
             return $labProgram;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
-
     }
 
     public static function uploadLabProgramMedia($image)
@@ -83,6 +83,7 @@ class LabProgramService{
             if ($upload_lab_cover_image == false) {
                 return false;
             }
+
             return $upload_lab_cover_image;
         } catch (\Exception $e) {
             return false;

@@ -10,28 +10,35 @@ use Illuminate\Http\Request;
 class LabProgramController extends AppBaseController
 {
     private $labProgramRepository;
-    public function __construct(LabProgramRepository $labProgramRepository){
-        $this->labProgramRepository=$labProgramRepository;
+
+    public function __construct(LabProgramRepository $labProgramRepository)
+    {
+        $this->labProgramRepository = $labProgramRepository;
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         try {
-            $listLabProgram=$this->labProgramRepository->getLabProgramList($request);
+            $listLabProgram = $this->labProgramRepository->getLabProgramList($request);
+
             return $listLabProgram;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function show($slug){
-        try{
-        $view = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
-        }catch(\Exception $e){
+    public function show($slug)
+    {
+        try {
+            $view = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function create(CreateLabProgramRequest $request){
-        try{
+
+    public function create(CreateLabProgramRequest $request)
+    {
+        try {
             $upload_media = config('site-settings.default_lab_program_profile_image');
             if ($request->media !== null) {
                 $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
@@ -40,12 +47,13 @@ class LabProgramController extends AppBaseController
                 }
                 $upload_media = $uploaded_media;
             }
-            $createLabProgram=$this->labProgramRepository->createLabProgram($request,$upload_media);
-            if($createLabProgram){
+            $createLabProgram = $this->labProgramRepository->createLabProgram($request, $upload_media);
+            if ($createLabProgram) {
                 return true;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
