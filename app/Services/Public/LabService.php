@@ -90,6 +90,14 @@ class LabService
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $lab_list = $lab_list->whereIn('level_id', $request->level_id);
             }
+            if ($request->has('request_status') && !empty($request->request_status)) {
+                if (auth('api')->check()) {
+                    $lab_list = $lab_list->join('member_management', 'labs.id', '=', 'member_management.module_id')
+                        ->where('member_management.module_type', '1')
+                        ->where('member_management.invite_status', '2')
+                        ->where('member_management.email', auth('api')->user()->email);
+                }
+            }
 
             return $lab_list;
         } catch (\Exception $e) {
