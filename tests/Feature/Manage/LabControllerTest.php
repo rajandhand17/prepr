@@ -23,8 +23,8 @@ class LabControllerTest extends TestCase
             'slug'                   => 'un-sdg-lab-1',
             'not_exists_slug'        => 'un-sdg-lab-2',
             'reference_id'           => '2',
-            'duration_id'            =>'1',
-            'level_id'               =>'1',
+            'duration_id'            => '1',
+            'level_id'               => '1',
             'reference_type'         => 'lab',
             'like_component'         => 'like',
             'dislike_component'      => 'dislike',
@@ -43,8 +43,8 @@ class LabControllerTest extends TestCase
             'skill_groups.*'         => ['1', '2', '3'],
             'tags'                   => ['1', '2', '3'],
             'tag_groups'             => ['1', '2', '3'],
-           // 'external_links'         => ['https://facebook.com', 'https://twiter.com'],
-           // 'external_link_ids'      => ['1', '2', '3'],
+            // 'external_links'         => ['https://facebook.com', 'https://twiter.com'],
+            // 'external_link_ids'      => ['1', '2', '3'],
             'request_type'           => 'publish',
             'type'                   => 'onboard',
             'is_notification_enabled'=> 'yes',
@@ -85,7 +85,8 @@ class LabControllerTest extends TestCase
     }
 
     public function test_lab_update_positive()
-    {   $this->parameters['_method']='put';
+    {
+        $this->parameters['_method'] = 'put';
         $response = $this->post('api/v1/manage/lab/'.$this->parameters['slug'].'/update', $this->parameters, $this->headers);
         $response->assertStatus(200);
     }
