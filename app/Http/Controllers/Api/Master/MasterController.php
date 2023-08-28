@@ -174,7 +174,8 @@ class MasterController extends AppBaseController
      *
      *     ),
      *     @OA\Parameter(
-     *         name="search",
+     *
+     *     *         name="search",
      *         in="query",
      *         description="Search values that needed to be considered for filter",
      *         required=false,

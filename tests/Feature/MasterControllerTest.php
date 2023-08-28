@@ -866,4 +866,50 @@ final class MasterControllerTest extends TestCase
         $response = $this->get('/api/v1/master/social-connect');
         $this->assertEquals(400, $response->getStatusCode());
     }
+
+    public function test_durations_positive(): void
+    {
+        $response = $this->get('/api/v1/master/durations?language=en');
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['success']) {
+            if ($data['data'] !== null) {
+                $this->assertArrayHasKey('id', $data['data'][0]);
+                $this->assertArrayHasKey('title', $data['data'][0]);
+            }
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
+    }
+
+    /**SocialConnect negative test case */
+    public function test_durations_nagtive(): void
+    {
+        $response = $this->get('/api/v1/master/durations');
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function test_levels_positive(): void
+    {
+        $response = $this->get('/api/v1/master/levels?language=en');
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['success']) {
+            if ($data['data'] !== null) {
+                $this->assertArrayHasKey('id', $data['data'][0]);
+                $this->assertArrayHasKey('title', $data['data'][0]);
+            }
+            $response->assertOk();
+        } else {
+            $this->fail();
+        }
+    }
+
+    /**SocialConnect negative test case */
+    public function test_levels_nagtive(): void
+    {
+        $response = $this->get('/api/v1/master/levels');
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 }
