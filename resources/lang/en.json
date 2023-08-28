@@ -200,6 +200,7 @@
     "responses.achievement_name_required":"This achievement name field is required",
     "responses.achievement_points_required":"This achievement points field is required",
     "responses.achievement_image_required":"This achievement image field is required",
+    "responses.achievement_conditions_required":"This achievement conditions field is required",
     "responses.achievement_conditions_array":"The achievement conditions should be an array",
     "responses.challenge_id_required":"This challenge id field is required",
     "responses.challenge_path_id_required":"This challenge path id field is required",
