@@ -17,34 +17,34 @@ class LabControllerTest extends TestCase
         parent::setUp();
 
         $this->parameters = [
-            'language'         => 'en',
-            'wrong_language'   => 'hi',
-            'title'            => 'UN SDG Lab 1',
-            'category'         => '1',
-            'organization_id'  => '582',
-            'organization_id_not_exists'  => '5821',
-            'slug'             => 'un-sdg-lab-1',
-            'wrong_slug'       => 'wrong_slug',
-            'email'            => 'schagpar@gmail.com',
-            'password'         => 'Test@1234',
-            'type'             => 'join_request',
-            'invite_type'      => 'join_request',
-            'subject_line'     => 'Successfully Joined Lab',
-            'email_body'       => 'You have successfully joined Lab',
-            'auto_invite'      => 'yes',
+            'language'                     => 'en',
+            'wrong_language'               => 'hi',
+            'title'                        => 'UN SDG Lab 1',
+            'category'                     => '1',
+            'organization_id'              => '582',
+            'organization_id_not_exists'   => '5821',
+            'slug'                         => 'un-sdg-lab-1',
+            'wrong_slug'                   => 'wrong_slug',
+            'email'                        => 'schagpar@gmail.com',
+            'password'                     => 'Test@1234',
+            'type'                         => 'join_request',
+            'invite_type'                  => 'join_request',
+            'subject_line'                 => 'Successfully Joined Lab',
+            'email_body'                   => 'You have successfully joined Lab',
+            'auto_invite'                  => 'yes',
             'sort_by_name_z_to_a'          => 'name-z-to-a',
             'sort_by_name_a_to_z'          => 'name-a-to-z',
-            'social_type_liked'=> 'liked',
-            'social_type_liked_wrong'=> 'like',
-            'social_type_favourites'=> 'favourites',
-            'social_type_favourites_wrong'=> 'favourit',
-            'skills'         => '1',
-            'wrong_skills'   => '111',
-            'privacy_private'=> 'private',
-            'privacy_public' => 'privacy_public',
-            'wrong_privacy'  => 'not_exists',
-            'tags'           => '1',
-            'wrong_tags'     => '111',
+            'social_type_liked'            => 'liked',
+            'social_type_liked_wrong'      => 'like',
+            'social_type_favourites'       => 'favourites',
+            'social_type_favourites_wrong' => 'favourit',
+            'skills'                       => '1',
+            'wrong_skills'                 => '111',
+            'privacy_private'              => 'private',
+            'privacy_public'               => 'privacy_public',
+            'wrong_privacy'                => 'not_exists',
+            'tags'                         => '1',
+            'wrong_tags'                   => '111',
 
         ];
         Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
@@ -67,6 +67,7 @@ class LabControllerTest extends TestCase
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/like?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
+
     public function test_favorite_organization_positive()
     {
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/favourite?language='.$this->parameters['language'], $this->parameters, $this->headers);
@@ -78,6 +79,7 @@ class LabControllerTest extends TestCase
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['wrong_slug'].'/favourite?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(404, $response->getStatusCode());
     }
+
     public function test_share_positive()
     {
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/share?language='.$this->parameters['language'], $this->parameters, $this->headers);
@@ -144,6 +146,7 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('favourite', $data['data']['list'][0]);
         }
     }
+
     public function test_lab_list_negative()
     {
         $response = $this->get('/api/v1/public/lab?language='.$this->parameters['wrong_language'], $this->headers);
@@ -192,7 +195,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -238,7 +240,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -284,7 +285,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -330,7 +330,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -376,7 +375,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -422,7 +420,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -468,7 +465,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -514,7 +510,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -560,7 +555,6 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
 
@@ -606,9 +600,9 @@ class LabControllerTest extends TestCase
             $this->assertArrayHasKey('current_page', $data['data']);
             $this->assertArrayHasKey('total_pages', $data['data']);
             $this->assertArrayHasKey('list', $data['data']);
-
         }
     }
+
     public function test_lab_view_positive()
     {
         $response = $this->get('/api/v1/public/lab/'.$this->parameters['slug'].'?language='.$this->parameters['language'], $this->headers);
@@ -639,7 +633,6 @@ class LabControllerTest extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-
     public function test_un_like_lab_public_lab_positive()
     {
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/un-like?language='.$this->parameters['language'], $this->parameters, $this->headers);
@@ -651,7 +644,6 @@ class LabControllerTest extends TestCase
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['slug'].'/un-like?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(400, $response->getStatusCode());
     }
-
 
     public function test_un_favorite_organization_positive()
     {
