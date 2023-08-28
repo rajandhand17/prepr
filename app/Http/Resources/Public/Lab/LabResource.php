@@ -40,7 +40,7 @@ class LabResource extends JsonResource
 
         $joined_status = $this->joined();
         $join_status = 'No';
-        if ($joined_status) {
+        if ($joined_status != 'NA' && $joined_status != null) {
             switch ($joined_status->invite_status) {
                 case '0':
                     $join_status = 'Invited';
