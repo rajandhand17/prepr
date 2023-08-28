@@ -103,7 +103,7 @@ class LabController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 403);
             }
-            $upload_cover_image = null;
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             $upload_achievement_image = null;
 
             if ($request->cover_image !== null) {
