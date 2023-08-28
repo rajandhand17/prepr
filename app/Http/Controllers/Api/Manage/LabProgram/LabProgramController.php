@@ -16,8 +16,8 @@ class LabProgramController extends AppBaseController
 
     public function index(Request $request){
         try {
-        $listLabProgram=$this->labProgramRepository->getLabProgramList($request);
-        return $listLabProgram;
+            $listLabProgram=$this->labProgramRepository->getLabProgramList($request);
+            return $listLabProgram;
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
