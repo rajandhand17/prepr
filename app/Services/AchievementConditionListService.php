@@ -58,7 +58,7 @@ class AchievementConditionListService
                 if (!$column_name || !Schema::hasColumn('achievement_condition_lists', $column_name)) {
                     return false;
                 }
-                $achievement_name = AchievementConditionList::select('id', $column_name . ' as title');
+                $achievement_name = AchievementConditionList::select('id', $column_name.' as title');
             }
             $achievement_name = $achievement_name->where('id', $achievement_condition)->first();
 
