@@ -2,25 +2,25 @@
 
 /**
  * @OA\Tag(
- *     name="MemberManagementController",
- *     description="Operations related to MemberManagementController"
+ *     name="InvitationManagementController",
+ *     description="Operations related to InvitationManagementController"
  * )
  */
 
-namespace App\Http\Controllers\Api\Public\MemberManagement;
+namespace App\Http\Controllers\Api\Public\InvitationManagement;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Repositories\Api\Public\MemberManagement\MemberManagementRepository;
+use App\Repositories\Api\Public\InvitationManagement\InvitationManagementRepository;
 use Illuminate\Http\Request;
 
-class MemberManagementController extends AppBaseController
+class InvitationManagementController extends AppBaseController
 {
-    private $memberManagementRepository;
+    private $invitationManagementRepository;
 
-    public function __construct(MemberManagementRepository $memberManagementRepository)
+    public function __construct(InvitationManagementRepository $invitationManagementRepository)
     {
-        $this->memberManagementRepository = $memberManagementRepository;
+        $this->invitationManagementRepository = $invitationManagementRepository;
     }
 
     public function acceptOrRejectLabJoinRequest(Request $request, $component, $slug, $action)
@@ -30,9 +30,9 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
             }
-            $checkLabStatus = $this->memberManagementRepository->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
+            $checkLabStatus = $this->invitationManagementRepository->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
             if ($checkLabStatus) {
-                $member_management = $this->memberManagementRepository->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+                $member_management = $this->invitationManagementRepository->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
                 if ($member_management) {
                     return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }

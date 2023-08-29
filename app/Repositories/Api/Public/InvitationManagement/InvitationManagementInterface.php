@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Api\Public\MemberManagement;
+namespace App\Repositories\Api\Public\InvitationManagement;
 
-interface MemberManagementInterface
+interface InvitationManagementInterface
 {
     public function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
 }

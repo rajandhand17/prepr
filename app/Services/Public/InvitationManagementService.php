@@ -4,7 +4,7 @@ namespace App\Services\Public;
 
 use App\Models\MemberManagement;
 
-class MemberManagementService
+class InvitationManagementService
 {
     public static function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
     {
