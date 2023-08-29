@@ -3,10 +3,11 @@
 namespace App\Http\Resources\Public\Lab;
 
 use App\Helpers\UtilityHelper;
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
+use Illuminate\Http\Resources\Json\JsonResource;
+
 class LabResource extends JsonResource
 {
     /**
