@@ -44,4 +44,27 @@ class AchievementConditionListService
             return false;
         }
     }
+
+    public static function getAchievementConditionByID($language = 'en', $achievement_condition)
+    {
+        try {
+            if ($language == 'en') {
+                $achievement_name = AchievementConditionList::select('id', 'title');
+            } else {
+                //get column title based on language
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
+
+                //check whether the column exist in the db or not
+                if (!$column_name || !Schema::hasColumn('achievement_condition_lists', $column_name)) {
+                    return false;
+                }
+                $achievement_name = AchievementConditionList::select('id', $column_name . ' as title');
+            }
+            $achievement_name = $achievement_name->where('id', $achievement_condition)->first();
+
+            return $achievement_name;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
 }

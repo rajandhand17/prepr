@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
+use App\Services\AchievementConditionListService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -32,6 +33,7 @@ class LabResource extends JsonResource
         $skill_stacks = [];
         $tags = [];
         $tag_groups = [];
+        $achievement = [];
         $address = [];
 
         if ($this->getCategory) {
@@ -88,6 +90,25 @@ class LabResource extends JsonResource
             ];
         }
 
+
+        if ($this->achievement) {
+            $achievement_conditions = [];
+            foreach ($this->achievement->achievement_condition as $achievement_condition) {
+                $check_achievement_condition = AchievementConditionListService::getAchievementConditionByID($this->language, $achievement_condition);
+                // $achievement_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                $achievement_conditions[] = [
+                    'id' => $check_achievement_condition->id,
+                    'title' => $check_achievement_condition->title,
+                ];
+            }
+            $achievement = [
+                'achievement_name'      => $this->achievement->achievement_name,
+                'achievement_points'    => $this->achievement->achievement_points,
+                'achievement_image'     => $this->achievement->achievement_image,
+                'achievement_condition' => $achievement_conditions,
+            ];
+        }
+
         $joined_status = $this->joined();
         $join_status = 'No';
         if ($joined_status != 'NA' && $joined_status != null) {
@@ -141,7 +162,7 @@ class LabResource extends JsonResource
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
             'lab_address'                   => LabAddressResource::make($this->address),
-            'lab_achievement'               => LabAchievementResource::make($this->achievement),
+            'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
