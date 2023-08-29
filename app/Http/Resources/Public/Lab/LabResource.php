@@ -33,7 +33,6 @@ class LabResource extends JsonResource
         $tags = [];
         $tag_groups = [];
         $address = [];
-        $achievement = [];
 
         if ($this->getCategory) {
             $category_id = $this->getCategory->id;
@@ -77,15 +76,6 @@ class LabResource extends JsonResource
         if ($this->tag_groups) {
             $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
             $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->achievement) {
-            $achievement = [
-                'achievement_name'      => $this->achievement->achievement_name,
-                'achievement_points'    => $this->achievement->achievement_points,
-                'achievement_condition' => $this->achievement->achievement_condition,
-                'achievement_image'     => $this->achievement->achievement_image,
-            ];
         }
 
         if ($this->address) {
@@ -151,7 +141,7 @@ class LabResource extends JsonResource
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
             'lab_address'                   => LabAddressResource::make($this->address),
-            'lab_achievement'               => $achievement,
+            'lab_achievement'               => LabAchievementResource::make($this->achievement),
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
