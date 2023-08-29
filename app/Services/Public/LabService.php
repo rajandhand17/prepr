@@ -92,10 +92,24 @@ class LabService
             }
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
-                    $lab_list = $lab_list->join('member_management', 'labs.id', '=', 'member_management.module_id')
-                        ->where('member_management.module_type', '1')
-                        ->where('member_management.invite_status', '2')
-                        ->where('member_management.email', auth('api')->user()->email);
+                    $status_array = ['accepted', 'pending', 'declined'];
+                    if (in_array($request->request_status, $status_array)) {
+                        $lab_list = $lab_list->join('member_management', 'labs.id', '=', 'member_management.module_id')
+                        ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email]);
+                        switch ($request->request_status) {
+                            case 'accepted':
+                                $lab_list->where('member_management.invite_status', '1');
+                                break;
+                            case 'pending':
+                                $lab_list->where('member_management.invite_status', '2');
+                                break;
+                            case 'declined':
+                                $lab_list->where('member_management.invite_status', '3');
+                                break;
+                            default:
+                                $lab_list;
+                        }
+                    }
                 }
             }
 

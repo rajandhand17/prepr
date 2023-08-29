@@ -4,7 +4,9 @@ namespace App\Http\Resources\Public\Lab;
 
 use App\Helpers\UtilityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use App\Services\SkillGroupService;
+use App\Services\SkillService;
+use App\Services\SkillStackService;
 class LabResource extends JsonResource
 {
     /**
@@ -36,6 +38,25 @@ class LabResource extends JsonResource
         if ($this->levels) {
             $level = $this->levels->title;
             $level_id = $this->levels->id;
+        }
+
+        if ($this->skills) {
+            $associatedSkills = $this->skills->pluck('foreign_id');
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        }
+
+        if ($this->skill_groups) {
+            $associatedSkillGroups = $this->skill_groups->pluck('foreign_id');
+            $skill_groups = SkillGroupService::getSkillGroupsBasedOnIds($associatedSkillGroups)->pluck('title', 'id');
+
+            if ($skill_groups->isEmpty()) {
+                $skill_groups = $this->skill_groups->pluck('foreign_id');
+            }
+        }
+
+        if ($this->skill_stacks) {
+            $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
+            $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
         $joined_status = $this->joined();
@@ -79,6 +100,9 @@ class LabResource extends JsonResource
             'level_id'                      => $level_id,
             'status'                        => $this->status,
             'member_count'                  => $this->members()->count(),
+            'skills'                        => $skills,
+            'skill_groups'                  => $skill_groups,
+            'skill_stacks'                  => $skill_stacks,
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'joined'                        => $join_status,
