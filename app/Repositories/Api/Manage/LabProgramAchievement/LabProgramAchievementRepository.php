@@ -6,17 +6,17 @@ use App\Services\Manage\LabProgramAchievementsService;
 
 class LabProgramAchievementRepository implements LabProgramAchievementInterface
 {
-    private $LabProgramAchievementService;
+    private $labProgramAchievementService;
 
-    public function __construct(LabProgramAchievementsService $LabProgramAchievementService)
+    public function __construct(LabProgramAchievementsService $labProgramAchievementService)
     {
-        $this->LabProgramAchievementService = $LabProgramAchievementService;
+        $this->labProgramAchievementService = $labProgramAchievementService;
     }
 
     public function uploadAchievementImage($image)
     {
         try {
-            return $this->LabProgramAchievementService->uploadAchievementImage($image);
+            return $this->labProgramAchievementService->uploadAchievementImage($image);
         } catch (\Exception $e) {
             return false;
         }
@@ -25,9 +25,10 @@ class LabProgramAchievementRepository implements LabProgramAchievementInterface
     public function updateAchievementImage($image)
     {
         try {
-            return $this->LabProgramAchievementService->updateAchievementImage($image);
+            return $this->labProgramAchievementService->updateAchievementImage($image);
         } catch (\Exception $e) {
             return false;
         }
     }
+
 }

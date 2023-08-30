@@ -83,6 +83,36 @@ class LabProgramController extends AppBaseController
         }
     }
 
+    public function update($slug,Request $request){
+        try{
+            $checkComponentBasedOnSlug = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.slug_not_exists'), 403);
+            }
+            $upload_media = config('site-settings.default_lab_program_profile_image');
+            if ($request->media !== null) {
+                $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
+                if (!$uploaded_media) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_media = $uploaded_media;
+            }
+            $upload_achievement_image=null;
+            if ($request->achievement_image !== null) {
+                $uploaded_achievement_image = $this->labProgramAchievements->uploadAchievementImage($request->achievement_image);
+                if (!$uploaded_achievement_image){
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_achievement_image = $uploaded_achievement_image;
+            }
+            $createLabProgram = $this->labProgramRepository->updateLabProgram($slug,$request, $upload_media,$upload_achievement_image);
+            if ($createLabProgram) {
+                return $this->sendResponse($createLabProgram,__("responses.lab_program_stored_success"),200);
+            }
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
     public function checkSlug($slug, Request $request){
         try{
             $checkLabProgramSlugExistsOrNot=$this->labProgramRepository->checkSlug($slug);
