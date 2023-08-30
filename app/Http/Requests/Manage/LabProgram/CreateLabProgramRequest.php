@@ -26,11 +26,10 @@ class CreateLabProgramRequest extends FormRequest
         return [
             'title'                  => 'required|unique:lab_programs,title',
             'description'            => 'required',
-            'lab_id'                 => 'required|exists:labs,uuid',
-            'user_id'                => 'required|exists:users,id',
+            //'lab_id'                 => 'required|exists:labs,uuid',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required',
-            'is_auto_create'         => 'required',
+            'is_auto_created'         => 'required',
             'trophy'                 => 'required',
 
         ];
@@ -53,12 +52,10 @@ class CreateLabProgramRequest extends FormRequest
             'description.required'   => 'responses.lab_program_description_required',
             'lab_id.required'        => 'responses.lab_program_required',
             'lab_id.exists'          => 'responses.lab_program_lab_id_unique',
-            'user_id.required'       => 'responses.lab_program_user_id_required',
-            'user_id.exists'         => 'responses.lab_program_user_id_unique',
             'privacy.required'       => 'responses.lab_program_privacy_required',
             'privacy.in'             => 'responses.lab_program_privacy_in',
             'status.required'        => 'responses.lab_program_status_required',
-            'is_auto_create.required'=> 'responses.lab_program_is_auto_create_required',
+            'is_auto_created.required'=> 'responses.lab_program_is_auto_create_required',
             'trophy.required'        => 'responses.lab_program_trophy_required',
         ];
     }

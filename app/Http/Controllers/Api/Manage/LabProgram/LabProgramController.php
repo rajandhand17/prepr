@@ -4,25 +4,42 @@ namespace App\Http\Controllers\Api\Manage\LabProgram;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
+use App\Http\Resources\Manage\Lab\LabResource;
+use App\Http\Resources\Manage\LabProgram\LabProgramResource;
+use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
 use App\Repositories\Api\Manage\LabProgram\LabProgramRepository;
+use App\Repositories\Api\Manage\LabProgramAchievement\LabProgramAchievementRepository;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
 {
     private $labProgramRepository;
 
-    public function __construct(LabProgramRepository $labProgramRepository)
+    private $labProgramAchievements;
+
+    public function __construct(LabProgramRepository $labProgramRepository, LabProgramAchievementRepository $labProgramAchievements)
     {
         $this->labProgramRepository = $labProgramRepository;
+        $this->labProgramAchievements=$labProgramAchievements;
     }
 
     public function index(Request $request)
     {
         try {
             $listLabProgram = $this->labProgramRepository->getLabProgramList($request);
-
-            return $listLabProgram;
-        } catch(\Exception $e) {
+            if ($listLabProgram) {
+                $response = [
+                    'total_count' => $listLabProgram->total(),
+                    'per_page' => $listLabProgram->perPage(),
+                    'count' => $listLabProgram->count(),
+                    'current_page' => $listLabProgram->currentPage(),
+                    'total_pages' => $listLabProgram->lastPage(),
+                    'list' => LabProgramResource::collection($listLabProgram),
+                ];
+                return $this->sendResponse($response, __('responses.found_lab_program_list'));
+            }
+            return $this->sendError(__('responses.not_found_lab_program_list'), 400);
+        }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -31,6 +48,7 @@ class LabProgramController extends AppBaseController
     {
         try {
             $view = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            return $view;
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -47,14 +65,60 @@ class LabProgramController extends AppBaseController
                 }
                 $upload_media = $uploaded_media;
             }
-            $createLabProgram = $this->labProgramRepository->createLabProgram($request, $upload_media);
-            if ($createLabProgram) {
-                return true;
+            $upload_achievement_image=null;
+            if ($request->achievement_image !== null) {
+                $uploaded_achievement_image = $this->labProgramAchievements->uploadAchievementImage($request->achievement_image);
+                if (!$uploaded_achievement_image){
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_achievement_image = $uploaded_achievement_image;
             }
-
-            return false;
-        } catch(\Exception $e) {
+            $createLabProgram = $this->labProgramRepository->createLabProgram($request, $upload_media,$upload_achievement_image);
+            if ($createLabProgram) {
+                return $this->sendResponse($createLabProgram,__("responses.lab_program_stored_success"),200);
+            }
+            return $this->sendError(__("responses.lab_program_stored_failed"),403);
+        } catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkSlug($slug, Request $request){
+        try{
+            $checkLabProgramSlugExistsOrNot=$this->labProgramRepository->checkSlug($slug);
+            if ($checkLabProgramSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.lab_slug_available'), 200);
+            }
+            return $this->sendError(__('responses.slug_not_exists'), 400);
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkName($title){
+        try {
+            $checkNameLabProgram=$this->labProgramRepository->checkNameExistsOrNot($title);
+            if($checkNameLabProgram==false){
+                return $this->sendResponse([],__('responses.lab_program_name_available'));
+            }
+            return $this->sendError(__('responses.lab_program_name_not_available'),403);
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+    public function delete($slug,Request $request){
+        try{
+            $checkLabProgramSlugExistsOrNot=$this->labProgramRepository->checkSlug($slug);
+            if ($checkLabProgramSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.lab_program_not_found'), 404);
+            }
+            $deletLabProgram=$this->labProgramRepository->delete($slug);
+            if($deletLabProgram){
+                return $this->sendResponse(null, __('responses.lab_program_delete'));
+            }
+            return $this->sendError(__('responses.lab_program_not_delete'), 400);
+        }catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 }

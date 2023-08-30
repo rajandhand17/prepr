@@ -3,6 +3,8 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
+use App\Models\Lab;
 use App\Models\LabProgram;
 
 class LabProgramService
@@ -11,7 +13,7 @@ class LabProgramService
     {
         $getLabProgramList = LabProgram::select();
 
-        return $getLabProgramList->get();
+        return $getLabProgramList->paginate(config('site-settings.pagination_per_page'));
     }
 
     public static function getLabProgramBasedOnSlug($slug)
@@ -54,12 +56,19 @@ class LabProgramService
                     $status = config('constants.lab_status.draft');
                     break;
             }
-
+            $model = new LabProgram();
+            $slug = UtilityHelper::generateSlug($request->title, $model);
+            $labIdJson = json_encode($request->lab_id);
             $labProgram = new LabProgram();
             $labProgram->language = $request->language;
             $labProgram->title = $request->title;
+            $labProgram->slug = $slug;
             $labProgram->description = $request->description;
-            $labProgram->lab_id = $request->lab_id;
+            $labProgram->lab_id = $labIdJson;
+            $labProgram->organization_id  = $request->organization_id;
+            $labProgram->category_id  = $request->category_id;
+            $labProgram->duration_id = $request->duration_id;
+            $labProgram->level_id  = $request->level_id;
             $labProgram->user_id = auth()->user()->id;
             $labProgram->media = $upload_media;
             $labProgram->privacy = $privacy;
@@ -69,7 +78,6 @@ class LabProgramService
             $labProgram->points = $request->points;
             $labProgram->trophy = $request->trophy;
             $labProgram->save();
-
             return $labProgram;
         } catch(\Exception $e) {
             return false;
@@ -86,6 +94,34 @@ class LabProgramService
 
             return $upload_lab_cover_image;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkSlug($slug){
+        try {
+            return LabProgram::where('slug',$slug)->first();
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function delete($slug){
+        try{
+            return LabProgram::where('slug',$slug)->delete();
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function checkNameExistsOrNot($title){
+        try{
+            $checkLabProgramName = LabProgram::where('title', $title)->first();
+            if ($checkLabProgramName) {
+                return true;
+            }
+            return false;
+        }catch (\Exception $e){
             return false;
         }
     }

@@ -310,5 +310,18 @@
     "responses.duration_id_exists": "The provided duration id is not exists!",
 
     "responses.level_id_required": "The level id is required",
-    "responses.level_id_exists": "The provided level id is not exists!"
+    "responses.level_id_exists": "The provided level id is not exists!",
+
+    "responses.lab_program_not_found": "The Lab Program(s) which you are looking doesn't exist in our system.",
+    "responses.found_lab_program_list":"The lab programs list has been successfully retrieved",
+    "responses.not_found_lab_program_list":"The list of lab programs has not been retrieved with success.",
+
+    "responses.lab_program_delete":"The lab program has been deleted successfully!",
+    "responses.lab_program_not_delete":"The lab program was not deleted!",
+
+    "responses.lab_program_name_not_available":"This lab program name is not available!",
+    "responses.lab_program_name_available":"This lab program name is available!",
+
+    "responses.lab_program_stored_success":"Congratulations! You have successfully created a Lab.",
+    "responses.lab_program_stored_failed":"Oops! The Creation Lab has failed."
 }

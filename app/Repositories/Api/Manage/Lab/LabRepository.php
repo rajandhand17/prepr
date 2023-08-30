@@ -8,6 +8,7 @@ use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
 use App\Services\Manage\LabExternalLinksService;
 use App\Services\Manage\LabProgramService;
+use App\Services\Manage\LabService;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
 use App\Services\Manage\MemberManagementService;
@@ -28,7 +29,7 @@ class LabRepository implements LabInterface
 
     private $durationService;
 
-    public function __construct(LabProgramService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService)
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
