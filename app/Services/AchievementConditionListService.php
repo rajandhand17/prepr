@@ -45,11 +45,11 @@ class AchievementConditionListService
         }
     }
 
-    public static function getAchievementConditionByID($language = 'en', $achievement_condition)
+    public static function getAchievementConditionByID($language = 'en', $achievement_condition_id)
     {
         try {
             if ($language == 'en') {
-                $achievement_name = AchievementConditionList::select('id', 'title');
+                $achievement_condition = AchievementConditionList::select('id', 'title');
             } else {
                 //get column title based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -58,12 +58,12 @@ class AchievementConditionListService
                 if (!$column_name || !Schema::hasColumn('achievement_condition_lists', $column_name)) {
                     return false;
                 }
-                $achievement_name = AchievementConditionList::select('id', $column_name . ' as title');
+                $achievement_condition = AchievementConditionList::select('id', $column_name . ' as title');
             }
-            $achievement_name = $achievement_name->where('id', $achievement_condition)->first();
+            $achievement_condition = $achievement_condition->find($achievement_condition_id);
 
-            return $achievement_name;
-        } catch (\Throwable $th) {
+            return $achievement_condition;
+        } catch (\Exception $e) {
             return false;
         }
     }
