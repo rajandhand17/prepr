@@ -16,10 +16,11 @@ class LabAchievementResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'                   => $this->id,
-            'achievement_name'     => $this->achievement_name,
-            'achievement_points'   => $this->achievement_points,
-            'achievement_image'    => $this->achievement_image,
+            'id'                    => $this->id,
+            'achievement_name'      => $this->achievement_name,
+            'achievement_points'    => $this->achievement_points,
+            'achievement_image'     => $this->achievement_image,
+            'achievement_condition' => $this->achievement_condition,
         ];
     }
 }
