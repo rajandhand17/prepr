@@ -78,6 +78,32 @@ class LabProgramRepository implements LabProgramInterface
         }
     }
 
+    public function updateLabProgram($slug,$request, $upload_media,$upload_achievement_image){
+        try{
+            $createLabProgram=DB::transaction(function () use ($slug,$request, $upload_media,$upload_achievement_image) {
+                $updateLabProgram=$this->labProgramService->updateLabProgram($slug,$request, $upload_media);
+                $labProgramAchievement = $this->labProgramAchievementService->updateLabProgramAchievement($request, $updateLabProgram->id, $upload_achievement_image);
+                $labProgramSkillsGroupsStack = $this->labProgramSkillsGroupsStackService->updateLabProgramSkillsGroupsStack($request, $updateLabProgram->id);
+                $labProgramTagsGroupsService = $this->labProgramTagsGroupsService->updateLabProgramTagsGroups($request, $updateLabProgram->id);
+
+                return [
+                    "updateLabProgram"=>$updateLabProgram,
+                    "labProgramAchievement"=>$labProgramAchievement,
+                    "labProgramSkillsGroupsStack"=>$labProgramSkillsGroupsStack,
+                    "labProgramTagsGroupsService"=>$labProgramTagsGroupsService,
+                ];
+            });
+            if($createLabProgram['updateLabProgram'] && $createLabProgram['labProgramAchievement'] && $createLabProgram['labProgramSkillsGroupsStack']){
+                DB::commit();
+                return true;
+            }
+            DB::rollback();
+            return false;
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
     public function checkSlug($slug){
         try {
             $checkLabProgramSlug=$this->labProgramService->checkSlug($slug);

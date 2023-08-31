@@ -51,10 +51,10 @@ class LabProgramAchievementsService
     public function updateLabProgramAchievement($request, $lab_programs_id, $upload_achievement_image)
     {
         try {
-            $checkExistsLabAchievement = LabProgramsAchievements::where('lab_programs_id', $lab_programs_id)->first();
+            $checkExistsLabAchievement = LabProgramsAchievement::where('lab_program_id', $lab_programs_id)->first();
             if (!$checkExistsLabAchievement) {
-                $labAchievement = new LabProgramsAchievements();
-                $labAchievement->lab_programs_id = $lab_programs_id;
+                $labAchievement = new LabProgramsAchievement();
+                $labAchievement->lab_program_id = $lab_programs_id;
                 $labAchievement->achievement_name = $request->achievement_name;
                 $labAchievement->achievement_points = $request->achievement_points;
                 $labAchievement->achievement_condition = $request->achievement_conditions;
@@ -64,7 +64,7 @@ class LabProgramAchievementsService
             }
             $checkExistsLabAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsLabAchievement->achievement_name;
             $checkExistsLabAchievement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : $checkExistsLabAchievement->achievement_points;
-            $checkExistsLabAchievement->achievement_condition = ($request->has('achievement_conditions')) ? $request->achievement_conditions : $checkExistsLabAchievement->achievement_conditions;
+            $checkExistsLabAchievement->achievement_condition = ($request->has('achievement_condition')) ? $request->achievement_condition : $checkExistsLabAchievement->achievement_condition;
             $checkExistsLabAchievement->achievement_image = ($upload_achievement_image) ? $upload_achievement_image : $checkExistsLabAchievement->achievement_image;
             $checkExistsLabAchievement->save();
 

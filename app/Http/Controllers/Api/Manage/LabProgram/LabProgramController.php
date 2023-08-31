@@ -105,10 +105,11 @@ class LabProgramController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $createLabProgram = $this->labProgramRepository->updateLabProgram($slug,$request, $upload_media,$upload_achievement_image);
-            if ($createLabProgram) {
-                return $this->sendResponse($createLabProgram,__("responses.lab_program_stored_success"),200);
+            $updateLabProgram = $this->labProgramRepository->updateLabProgram($slug,$request, $upload_media,$upload_achievement_image);
+            if ($updateLabProgram) {
+                return $this->sendResponse($updateLabProgram,__("responses.lab_program_update_successfully"),200);
             }
+            return $this->sendError(__("responses.lab_program_not_update"),403);
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }

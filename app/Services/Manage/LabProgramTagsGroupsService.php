@@ -34,4 +34,55 @@ class LabProgramTagsGroupsService
         }
         return true;
     }
+
+    public function updateLabProgramTagsGroups($request, $lab_program_id){
+        try {
+            if ($request->has('tags')) {
+                if (count($request->tags) > 0) {
+                    $getExistsLabTags = LabTagsGroups::where([
+                        ['lab_program_id', '=', $lab_program_id],
+                        ['type', '=', '0'],
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsLabTags, $request->tags);
+                    $deleteNonExisting = LabTagsGroups::where([
+                        ['lab_program_id', '=', $lab_program_id],
+                        ['type', '=', '0'],
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newTags = array_diff($request->tags, $getExistsLabTags);
+                    foreach ($newTags as $tag) {
+                        $LabSkillsGroupsStack = new LabTagsGroups();
+                        $LabSkillsGroupsStack->lab_program_id = $lab_program_id;
+                        $LabSkillsGroupsStack->foreign_id = $tag;
+                        $LabSkillsGroupsStack->type = '0';
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
+            }
+            if ($request->has('tag_groups')) {
+                if (count($request->tag_groups) > 0) {
+                    $getExistsLabTagsGroups = LabTagsGroups::where([
+                        ['lab_program_id', '=', $lab_program_id],
+                        ['type', '=', '1'],
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsLabTagsGroups, $request->tag_groups);
+                    $deleteNonExisting = LabTagsGroups::where([
+                        ['lab_program_id', '=', $lab_program_id],
+                        ['type', '=', '1'],
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newTagsGroups = array_diff($request->tag_groups, $getExistsLabTagsGroups);
+                    foreach ($newTagsGroups as $tag_group) {
+                        $LabSkillsGroupsStack = new LabTagsGroups();
+                        $LabSkillsGroupsStack->lab_program_id = $lab_program_id;
+                        $LabSkillsGroupsStack->foreign_id = $tag_group;
+                        $LabSkillsGroupsStack->type = '1';
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

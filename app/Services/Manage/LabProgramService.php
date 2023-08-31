@@ -12,10 +12,24 @@ class LabProgramService
     public function getLabProgramList($request)
     {
         $getLabProgramList = LabProgram::select();
-
+        $getLabProgramList = self::filterLabList($getLabProgramList, $request);
         return $getLabProgramList->paginate(config('site-settings.pagination_per_page'));
     }
 
+    public static function filterLabList($getLabProgramList, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $getLabProgramList = $getLabProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+            }
+            if($request->has('skills') && !empty($request->skills)){
+                $getLabProgramList = $getLabProgramList->where('lab_programs_skills_groups_stack.foreign_id', 'like', '%'.$request->skills.'%');
+            }
+            return $getLabProgramList;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public static function getLabProgramBasedOnSlug($slug)
     {
         try {
@@ -122,6 +136,60 @@ class LabProgramService
             }
             return false;
         }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function updateLabProgram($slug,$request, $upload_media){
+        try{
+        $labProgram=LabProgram::where('slug',$request->slug)->first();
+        $privacy = config('constants.lab_privacy.no');
+            switch($request->privacy) {
+                case 'yes':
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+                case 'no':
+                    $privacy = config('constants.lab_privacy.no');
+                    break;
+                default:
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+            }
+
+            $status = config('constants.lab_status.draft');
+            switch($request->status) {
+                case 'draft':
+                    $status = config('constants.lab_status.draft');
+                    break;
+                case 'publish':
+                    $status = config('constants.lab_status.publish');
+                    break;
+                case 'archive':
+                    $status = config('constants.lab_status.archive');
+                    break;
+                default:
+                    $status = config('constants.lab_status.draft');
+                    break;
+            }
+            $labIdJson = json_encode($request->lab_id);
+            $labProgram->language = ($request->has('language')) ? $request->language : $labProgram->language;
+            $labProgram->title = ($request->has('title')) ? $request->title : $request->title;
+            $labProgram->description = ($request->has('description')) ? $request->description : $request->description;
+            $labProgram->lab_id = $labIdJson;
+            $labProgram->organization_id  =($request->has('organization_id')) ? $request->organization_id : $request->organization_id;
+            $labProgram->category_id  = ($request->has('category_id')) ? $request->category_id : $request->category_id;
+            $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $request->duration_id;
+            $labProgram->level_id  = ($request->has('level_id')) ? $request->level_id : $request->level_id;
+            $labProgram->media = ($upload_media) ? $upload_media : $labProgram->media ;
+            $labProgram->privacy = $privacy;
+            $labProgram->status = $status;
+            $labProgram->is_auto_created = '0';
+            $labProgram->prize = ($request->has('prize')) ? $request->prize : $request->prize;
+            $labProgram->points = ($request->has('points')) ? $request->points : $request->points;
+            $labProgram->trophy = ($request->has('trophy')) ? $request->trophy : $request->trophy;
+            $labProgram->save();
+            return $labProgram;
+        } catch (\Exception $e){
             return false;
         }
     }
