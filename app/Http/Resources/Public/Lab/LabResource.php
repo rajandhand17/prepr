@@ -3,10 +3,10 @@
 namespace App\Http\Resources\Public\Lab;
 
 use App\Helpers\UtilityHelper;
+use App\Services\AchievementConditionListService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\AchievementConditionListService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -89,7 +89,6 @@ class LabResource extends JsonResource
                 'country'   => $this->address->country,
             ];
         }
-
 
         if ($this->achievement) {
             $achievement_conditions = [];

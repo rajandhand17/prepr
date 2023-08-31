@@ -68,7 +68,7 @@ class LabResource extends JsonResource
                 $check_achievement_condition = AchievementConditionListService::getAchievementConditionByID($this->language, $achievement_condition);
                 $achievement_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
                 $achievement_conditions[] = [
-                    'id' => $check_achievement_condition->id,
+                    'id'    => $check_achievement_condition->id,
                     'title' => $check_achievement_condition->title,
                 ];
             }
