@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\LabProgram;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
+use App\Http\Requests\Manage\LabProgram\UpdateLabProgramRequest;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
@@ -47,8 +48,11 @@ class LabProgramController extends AppBaseController
     public function show($slug)
     {
         try {
-            $view = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
-            return $view;
+            $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labProgram) {
+                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
+            }
+            return $this->sendError(__('responses.not_found_lab_program_list'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -65,7 +69,7 @@ class LabProgramController extends AppBaseController
                 }
                 $upload_media = $uploaded_media;
             }
-            $upload_achievement_image=null;
+            $upload_achievement_image=config('site-settings.default_lab_program_profile_image');
             if ($request->achievement_image !== null) {
                 $uploaded_achievement_image = $this->labProgramAchievements->uploadAchievementImage($request->achievement_image);
                 if (!$uploaded_achievement_image){
@@ -83,7 +87,7 @@ class LabProgramController extends AppBaseController
         }
     }
 
-    public function update($slug,Request $request){
+    public function update($slug,UpdateLabProgramRequest $request){
         try{
             $checkComponentBasedOnSlug = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {

@@ -190,6 +190,7 @@
     "responses.privacy_required":"This privacy field is required",
     "responses.organization_id_required":"This organization id field is required",
     "responses.lab_title_unique":"Sorry,this title already registered with us, Please choose another one",
+    "responses.lab_program_title_unique":"Sorry,this title already registered with us, Please choose another one",
     "responses.location_required":"This location field is required",
     "responses.category_id_required":"This category id field is required",
     "responses.category_not_found":"This category is not found",

@@ -248,7 +248,7 @@ class LabProgramService
 
     public function updateLabProgram($slug,$request, $upload_media){
         try{
-        $labProgram=LabProgram::where('slug',$request->slug)->first();
+        $labProgram=LabProgram::where('slug',$slug)->first();
         $privacy = config('constants.lab_privacy.no');
             switch($request->privacy) {
                 case 'yes':
