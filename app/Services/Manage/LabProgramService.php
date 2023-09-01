@@ -8,6 +8,7 @@ use App\Models\Lab;
 use App\Models\LabProgram;
 use App\Models\LabProgramsSkillsGroupsStack;
 use App\Services\Public\LabProgramSocialActivitiesService;
+use HiFolks\RandoPhp\Randomize;
 
 class LabProgramService
 {
@@ -70,7 +71,7 @@ class LabProgramService
                         ->where('lab_programs_skills_groups_stack.type', '0')
                         ->whereNull('lab_programs_skills_groups_stack.deleted_at')
                         ->distinct();
-                })->distinct('lab_programs.id');
+                })->distinct('lab_programs.uuid');
             }
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.id', function ($query) use ($request) {
@@ -80,7 +81,7 @@ class LabProgramService
                         ->where('lab_programs_tags_groups.type', '0')
                         ->whereNull('lab_programs_tags_groups.deleted_at')
                         ->distinct();
-                })->distinct('lab_programs.id');
+                })->distinct('lab_programs.uuid');
             }
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $labProgramList = $labProgramList->whereIn('duration_id', $request->duration_id);
@@ -178,6 +179,7 @@ class LabProgramService
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $labIdJson = json_encode($request->lab_id);
             $labProgram = new LabProgram();
+            $labProgram->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $labProgram->language = $request->language;
             $labProgram->title = $request->title;
             $labProgram->slug = $slug;

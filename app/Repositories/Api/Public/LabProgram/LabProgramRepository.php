@@ -26,7 +26,6 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->getList($request);
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }

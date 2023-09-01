@@ -14,7 +14,6 @@ class LabProgramService
 
             return $labProgramList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
@@ -72,7 +71,7 @@ class LabProgramService
                         ->where('lab_programs_skills_groups_stack.type', '0')
                         ->whereNull('lab_programs_skills_groups_stack.deleted_at')
                         ->distinct();
-                })->distinct('lab_programs.id');
+                })->distinct('lab_programs.uuid');
             }
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.id', function ($query) use ($request) {
@@ -82,7 +81,7 @@ class LabProgramService
                         ->where('lab_programs_tags_groups.type', '0')
                         ->whereNull('lab_programs_tags_groups.deleted_at')
                         ->distinct();
-                })->distinct('lab_programs.id');
+                })->distinct('lab_programs.uuid');
             }
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $labProgramList = $labProgramList->whereIn('duration_id', $request->duration_id);
