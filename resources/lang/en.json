@@ -274,7 +274,7 @@
     "responses.un_join_lab_successfully":"You have successfully un-joined lab!",
     "responses.already_un_join_lab":"You have already un-join this lab!",
     "responses.already_follow_lab":"The Lab is already being followed by you!!",
-    "responses.share_lab_successfully":"The Organization have been shared successfully by you!",
+    "responses.share_lab_successfully":"The Lab have been shared successfully by you!",
     "responses.already_share_lab":"The Lab is already being shared by you!",
     "responses.already_un_follow_lab":"The Lab is already being un-followed by you!",
     "responses.follow_lab_successfully":"The Lab have been followed successfully by you",
@@ -327,5 +327,23 @@
     "responses.lab_program_stored_failed":"Oops! The Creation Lab has failed.",
 
     "responses.lab_program_update_successfully":"The Lab Program has been updated successfully",
-    "responses.lab_program_not_update":"There were some issues being encountered while updating the lab Program!"
+    "responses.lab_program_not_update":"There were some issues being encountered while updating the lab Program!",
+
+    "responses.already_like_lab_program":"The Lab Program is already liked by you!",
+    "responses.like_lab_program_successfully":"The Lab Program have been liked successfully by you!",
+    "responses.already_un_like_lab_program":"The Lab Program is already being dis-liked by you!",
+    "responses.un_like_lab_program_successfully":"The Lab Program have been dis-liked successfully by you!",
+    "responses.already_follow_lab_program":"The Lab Program is already being followed by you!!",
+    "responses.share_lab_program_successfully":"The Lab Program have been shared successfully by you!",
+    "responses.already_share_lab_program":"The Lab Program is already being shared by you!",
+    "responses.already_un_follow_lab_program":"The Lab Program is already being un-followed by you!",
+    "responses.follow_lab_program_successfully":"The Lab Program have been followed successfully by you",
+    "responses.un_follow_lab_program_successfully":"The Lab Program have been un-followed successfully by you!",
+    "responses.un_follow_lab_program_failed":"You have failed to unfollowed this lab program!",
+    "responses.share_lab_program_failed":"You have failed to share this lab program!",
+    "responses.follow_lab_program_failed":"You have failed to followed this lab program!",
+    "responses.favourite_lab_program_successfully":"You have successfully added this lab program as favourite!",
+    "responses.un_favourite_lab_program_successfully":"The Lab Program have been successfully removed from favourites!!",
+    "responses.already_favourite_lab_program":"The Lab Program is already being added to favourites!",
+    "responses.already_un_favourite_lab_program":"The Lab Program is already being removed from favourites!"
 }

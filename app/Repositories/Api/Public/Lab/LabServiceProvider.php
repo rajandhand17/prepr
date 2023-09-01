@@ -22,6 +22,6 @@ class LabServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Public\Lab\LabInterface', 'App\Repositories\Api\Public\Lab\LabRepository');
+        $this->app->bind('App\Repositories\Api\Public\Lab\LabProgramInterface', 'App\Repositories\Api\Public\Lab\LabProgramRepository');
     }
 }
