@@ -79,6 +79,7 @@
     "responses.unique_phone_number":"Please provide unique phone number,this is already registered with us!",
     "responses.country_code_numeric_allowed":"The country code should be in numeric!",
     "responses.organization_title_unique":"The organization title should be unique!",
+    "responses.lab_program_lab_id_unique":"The lab should be unique!",
     "responses.register_type_required":"This register type field is required",
     "responses.register_type_in":"Registration can be done for '<b>users</b> or <b>organizations</b> only.",
     "responses.registration_success":"Your account has been successfully registered. Please verify your email address!",
@@ -314,6 +315,8 @@
     "responses.level_id_required": "The level id is required",
     "responses.level_id_exists": "The provided level id is not exists!",
 
+    "responses.lab_program_lab_id_required": "The provided Lab id is not exists!",
+
     "responses.lab_program_not_found": "The Lab Program(s) which you are looking doesn't exist in our system.",
     "responses.found_lab_program_list":"The lab programs list has been successfully retrieved",
     "responses.not_found_lab_program_list":"The list of lab programs has not been retrieved with success.",
@@ -346,5 +349,7 @@
     "responses.favourite_lab_program_successfully":"You have successfully added this lab program as favourite!",
     "responses.un_favourite_lab_program_successfully":"The Lab Program have been successfully removed from favourites!!",
     "responses.already_favourite_lab_program":"The Lab Program is already being added to favourites!",
-    "responses.already_un_favourite_lab_program":"The Lab Program is already being removed from favourites!"
+    "responses.already_un_favourite_lab_program":"The Lab Program is already being removed from favourites!",
+
+    "responses.lab_program_privacy_in": "The Lab Program should be between Yes and No"
 }

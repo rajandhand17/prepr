@@ -47,16 +47,17 @@ class CreateLabProgramRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required'         => __('responses.lab_program_title_required'),
+            'title.required'         => __('responses.title_required'),
             'title.unique'           => __('responses.lab_program_title_unique'),
-            'description.required'   => 'responses.lab_program_description_required',
-            'lab_id.required'        => 'responses.lab_program_required',
-            'lab_id.exists'          => 'responses.lab_program_lab_id_unique',
-            'privacy.required'       => 'responses.lab_program_privacy_required',
-            'privacy.in'             => 'responses.lab_program_privacy_in',
-            'status.required'        => 'responses.lab_program_status_required',
-            'is_auto_created.required'=> 'responses.lab_program_is_auto_create_required',
-            'trophy.required'        => 'responses.lab_program_trophy_required',
+            'description.required'   => __('responses.description_required'),
+            'lab_id.required'        => __('responses.lab_program_lab_id_required'),
+            'lab_id.exists'          => __('responses.lab_program_lab_id_unique'),
+            'privacy.required'       => __('responses.privacy_required'),
+            'privacy.in'             => __('responses.lab_program_privacy_in'),
+            'status.required'        => __('responses.status_required'),
+            'status.in'              => __('responses.status_in'),
+            'is_auto_created.required'=> __('responses.lab_program_is_auto_create_required'),
+            'trophy.required'        => __('responses.lab_program_trophy_required'),
         ];
     }
 }

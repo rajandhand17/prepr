@@ -47,9 +47,9 @@ class UpdateLabProgramRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required'         => __('responses.lab_program_title_required'),
+            'title.required'         => __('responses.title_required'),
             'title.unique'           => __('responses.lab_program_title_unique'),
-            'description.required'   => __('responses.lab_program_description_required'),
+            'description.required'   => __('responses.description_required'),
             'lab_id.required'        => __('responses.lab_program_required'),
             'lab_id.exists'          => __('responses.lab_program_lab_id_unique'),
             'privacy.required'       => __('responses.lab_program_privacy_required'),
