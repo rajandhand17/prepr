@@ -163,7 +163,7 @@ class User extends Authenticatable
             $user->full_name = $name;
             $user->username = $request->username;
             $user->email = $request->email;
-            $user->password = Hash::make($request->password);
+            $user->password = ($request->sso_registration == 'no') ? Hash::make($request->password) : null;
             $user->country_code = ($request->has('country_code')) ? $request->country_code : null;
             $user->phone_number = ($request->has('phone_number')) ? $request->phone_number : null;
             $user->otp = $otp;
