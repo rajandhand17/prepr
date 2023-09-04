@@ -29,8 +29,8 @@ class RegisterFormRequest extends FormRequest
             'first_name'             => 'required|max:20|string',
             'last_name'              => 'required|string|max:20',
             'username'               => 'required|max:20|regex:/^[A-Za-z0-9_-]*$/|unique:users,username',
-            'password'               => 'required|min:6',
-            'password_confirmation'  => 'required|same:password',
+            'password'               => 'required_if:sso_registration,==,no|min:6',
+            'password_confirmation'  => 'required_if:sso_registration,==,no|same:password',
             'email'                  => 'required|email|max:50|unique:users,email',
             'user_type'              => 'required',
             'purpose'                => 'required',
@@ -38,6 +38,7 @@ class RegisterFormRequest extends FormRequest
             'country_code'           => 'nullable|numeric',
             'register_type'          => 'required|in:organization,user',
             'organization_title'     => 'required_if:register_type,==,organization|unique:organizations,title',
+            'sso_registration'       => 'required|in:yes,no',
         ];
     }
 
