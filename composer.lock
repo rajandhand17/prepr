@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e99d6e0506bf4fe02cfdfeef3eaf87f",
+    "content-hash": "a4393d5d8df5200cf3f698fec2f7e3e2",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.280.0",
+            "version": "3.280.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "bf4f3079bc59af44a752677cfbcd43f7953c4343"
+                "reference": "d68b83b3bc39b70bf33e9b8b5166facbe3e4fe9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bf4f3079bc59af44a752677cfbcd43f7953c4343",
-                "reference": "bf4f3079bc59af44a752677cfbcd43f7953c4343",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d68b83b3bc39b70bf33e9b8b5166facbe3e4fe9b",
+                "reference": "d68b83b3bc39b70bf33e9b8b5166facbe3e4fe9b",
                 "shasum": ""
             },
             "require": {
@@ -151,9 +151,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.280.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.280.2"
             },
-            "time": "2023-08-30T18:19:33+00:00"
+            "time": "2023-09-01T18:06:10+00:00"
         },
         {
             "name": "brick/math",
@@ -5683,16 +5683,16 @@
         },
         {
             "name": "swagger-api/swagger-ui",
-            "version": "v5.4.2",
+            "version": "v5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swagger-api/swagger-ui.git",
-                "reference": "ded8d637ad6321abb41bfb68d110aa8012f6fa2b"
+                "reference": "8137a8b337a445bff75871de15ec71751548c235"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/ded8d637ad6321abb41bfb68d110aa8012f6fa2b",
-                "reference": "ded8d637ad6321abb41bfb68d110aa8012f6fa2b",
+                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/8137a8b337a445bff75871de15ec71751548c235",
+                "reference": "8137a8b337a445bff75871de15ec71751548c235",
                 "shasum": ""
             },
             "type": "library",
@@ -5738,9 +5738,9 @@
             ],
             "support": {
                 "issues": "https://github.com/swagger-api/swagger-ui/issues",
-                "source": "https://github.com/swagger-api/swagger-ui/tree/v5.4.2"
+                "source": "https://github.com/swagger-api/swagger-ui/tree/v5.5.0"
             },
-            "time": "2023-08-17T19:09:58+00:00"
+            "time": "2023-09-04T07:52:07+00:00"
         },
         {
             "name": "symfony/console",

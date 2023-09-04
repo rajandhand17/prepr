@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Http\Resources\Public\Lab;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class LabNameListResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            "id"=>$this->uuid,
+            "title"=>$this->title,
+            "media"=>$this->media,
+        ];
+    }
+}

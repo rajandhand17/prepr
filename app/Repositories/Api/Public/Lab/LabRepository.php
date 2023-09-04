@@ -108,4 +108,12 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
+    public function getName(){
+        try {
+            return $this->LabService->getName();
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

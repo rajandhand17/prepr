@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api\Manage\LabProgram;
 
+
+use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabProgramAchievementsService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabProgramSkillsGroupsStackService;
@@ -16,12 +18,15 @@ class LabProgramRepository implements LabProgramInterface
     private $labProgramSkillsGroupsStackService;
 
     private $labProgramTagsGroupsService;
-    public function __construct(LabProgramService $labProgramService, LabProgramAchievementsService $labProgramAchievementService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, LabProgramTagsGroupsService $labProgramTagsGroupsService)
+
+    private $componentAssociationService;
+    public function __construct(LabProgramService $labProgramService, LabProgramAchievementsService $labProgramAchievementService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, LabProgramTagsGroupsService $labProgramTagsGroupsService,ComponentAssociationService $componentAssociationService)
     {
         $this->labProgramService = $labProgramService;
         $this->labProgramAchievementService=$labProgramAchievementService;
         $this->labProgramSkillsGroupsStackService=$labProgramSkillsGroupsStackService;
         $this->labProgramTagsGroupsService=$labProgramTagsGroupsService;
+        $this->componentAssociationService=$componentAssociationService;
     }
 
     public function getLabProgramList($request)
@@ -56,24 +61,28 @@ class LabProgramRepository implements LabProgramInterface
         try {
             $createLabProgram=DB::transaction(function () use ($request, $upload_media,$upload_achievement_image) {
                 $createdLabProgram = $this->labProgramService->createLabProgram($request, $upload_media);
-                $labProgramAchievement = $this->labProgramAchievementService->createLabProgramAchievement($request, $createdLabProgram->id, $upload_achievement_image);
                 $labProgramSkillsGroupsStack = $this->labProgramSkillsGroupsStackService->createLabProgramSkillsGroupsStack($request, $createdLabProgram->id);
+                if($request->is_achievement_enabled == 'yes'){
+                 $labProgramAchievement = $this->labProgramAchievementService->createLabProgramAchievement($request, $createdLabProgram->id, $upload_achievement_image);
+                }
                 $labProgramTagsGroupsService = $this->labProgramTagsGroupsService->createLabProgramTagsGroups($request, $createdLabProgram->id);
-                    return [
+                $componentAssociation= $this->componentAssociationService->labProgramAssociation($request,$createdLabProgram);
+                return [
                         "createLabProgram"=>$createdLabProgram,
-                        "labProgramAchievement"=>$labProgramAchievement,
                         "labProgramSkillsGroupsStack"=>$labProgramSkillsGroupsStack,
                         "labProgramTagsGroupsService"=>$labProgramTagsGroupsService,
+                        "componentAssociation"=>$componentAssociation,
                     ];
             });
-            if($createLabProgram['createLabProgram'] && $createLabProgram['labProgramAchievement'] && $createLabProgram['labProgramSkillsGroupsStack'] && $createLabProgram['labProgramTagsGroupsService']){
+            if($createLabProgram['createLabProgram'] && $createLabProgram['labProgramSkillsGroupsStack'] && $createLabProgram['labProgramTagsGroupsService'] && $createLabProgram['componentAssociation']){
                 DB::commit();
                  return true;
             }
             DB::rollback();
             return false;
-        } catch(\Exception $e) {
+        } catch(\Exception $e){
             DB::rollback();
+            dd($e);
             return false;
         }
     }

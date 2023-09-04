@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public\Lab;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Repositories\Api\Public\Lab\LabRepository;
 use Illuminate\Http\Request;
@@ -134,6 +135,30 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getName()
+    {
+        try {
+            $lab = $this->labRepository->getName();
+            if ($lab) {
+
+                $response = [
+                    'total_count'  => $lab->total(),
+                    'per_page'     => $lab->perPage(),
+                    'count'        => $lab->count(),
+                    'current_page' => $lab->currentPage(),
+                    'total_pages'  => $lab->lastPage(),
+                    'list'         => LabNameListResource::collection($lab),
+                ];
+                return $this->sendResponse($response, __('responses.found_labs_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_labs_list'), 404);
+        } catch (\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

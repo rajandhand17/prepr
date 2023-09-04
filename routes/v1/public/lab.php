@@ -10,6 +10,7 @@ if (\request()->has('social_type')) {
 
 Route::middleware($middleware)->group(function () {
     Route::get('/', [LabController::class, 'index']);
+    Route::get('/get-name', [LabController::class, 'getName']);
     Route::get('/{slug}', [LabController::class, 'show']);
 });
 Route::middleware(['language', 'auth:api'])->group(function () {

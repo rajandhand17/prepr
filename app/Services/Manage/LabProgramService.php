@@ -91,50 +91,10 @@ class LabProgramService
             }
             return $labProgramList;
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
 
-//    public static function filterLabList($getLabProgramList, $request)
-//    {
-//        try {
-//            if ($request->has('search') && !empty($request->search)) {
-//                $getLabProgramList = $getLabProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
-//            }
-//            /*Need to recheck start*/
-//            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
-//                $getLabProgramList = $getLabProgramList->whereIn('lab_programs.id', function ($query) use ($request){
-//                    $query->select('lab_programs_skills_groups_stack.lab_program_id')
-//                        ->from('lab_programs_skills_groups_stack')
-//                        ->whereIn('lab_programs_skills_groups_stack.foreign_id', $request->skills)
-//                        ->where('lab_programs_skills_groups_stack.type', '0')
-//                        ->whereNull('lab_programs_skills_groups_stack.deleted_at')
-//                        ->distinct();
-//                })->distinct('lab_programs.id');
-//            }
-//            /*Need to recheck end*/
-//            if ($request->has('sort_by') && !empty($request->sort_by)) {
-//                switch ($request->sort_by) {
-//                    case 'name-a-to-z':
-//                        $getLabProgramList = $getLabProgramList->orderBy('lab_programs.title', 'ASC');
-//                        break;
-//                    case 'name-z-to-a':
-//                        $getLabProgramList = $getLabProgramList->orderBy('lab_programs.title', 'DESC');
-//                        break;
-//                    case 'creation_date':
-//                        $getLabProgramList = $getLabProgramList->orderBy('lab_programs.created_at', 'ASC');
-//                        break;
-//                    default:
-//                        $getLabProgramList = $getLabProgramList->orderBy('lab_programs.id', 'ASC');
-//                }
-//            }
-//
-//            return $getLabProgramList;
-//        }catch (\Exception $e) {
-//            return false;
-//        }
-//    }
     public static function getLabProgramBasedOnSlug($slug)
     {
         try {
@@ -190,13 +150,13 @@ class LabProgramService
             $labProgram->duration_id = $request->duration_id;
             $labProgram->level_id  = $request->level_id;
             $labProgram->user_id = auth()->user()->id;
+            $labProgram->media_type = 'image';
             $labProgram->media = $upload_media;
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
             $labProgram->is_auto_created = '0';
-            $labProgram->prize = $request->prize;
-            $labProgram->points = $request->points;
-            $labProgram->trophy = $request->trophy;
+            $labProgram->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
+            $labProgram->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
             $labProgram->save();
             return $labProgram;
         } catch(\Exception $e) {
