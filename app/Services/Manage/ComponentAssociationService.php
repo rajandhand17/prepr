@@ -359,4 +359,163 @@ class ComponentAssociationService
         }
         return true;
     }
+
+    public function updateLabProgramAssociation($request, $lab_programs)
+    {
+        try {
+            if ($request->has('lab_id')) {
+                $sequence = 1;
+                if (count($request->lab_id) > 0) {
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['lab_id', '!=', null],
+                    ])->pluck('lab_id')->toArray();
+                    $nonExistingIds = array_diff($existComponentAssociation, $request->lab_id);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('lab_id', $nonExistingIds)->delete();
+                    $newComponentAssociation = array_diff($request->lab_id, $existComponentAssociation);
+                    $sequence = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['lab_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
+                    foreach ($newComponentAssociation as $lab_id) {
+                        $sequence++;
+                        $LabSkillsGroupsStack = new ComponentAssociation();
+                        $LabSkillsGroupsStack->lab_program_id = $lab_programs;
+                        $LabSkillsGroupsStack->lab_id = $lab_id;
+                        $LabSkillsGroupsStack->sequence = $sequence;
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
+            }
+            if ($request->has('challenges')) {
+                $sequence = 1;
+                if (count($request->challenges) > 0) {
+                    $existComponentAssociationchallenge = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['challenge_id', '!=', null],
+                    ])->pluck('challenge_id')->toArray();
+                    $nonExistingIdsChallengeId = array_diff($existComponentAssociationchallenge, $request->challenges);
+                    $deleteNonExistingComponentAssociationChallenges = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('challenge_id', $nonExistingIdsChallengeId)->delete();
+                    $newComponentAssociationChallenge = array_diff($request->challenges, $existComponentAssociationchallenge);
+                    $sequence = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['challenge_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    foreach ($newComponentAssociationChallenge as $challenge) {
+                        $sequence++;
+                        $LabSkillsGroupsStack = new ComponentAssociation();
+                        $LabSkillsGroupsStack->lab_program_id = $lab_programs;
+                        $LabSkillsGroupsStack->challenge_id = $challenge;
+                        $LabSkillsGroupsStack->sequence = $sequence;
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
+            }
+
+            if ($request->has('challenge_paths')) {
+                $sequence = 1;
+                if (count($request->challenge_paths) > 0) {
+                    $existComponentAssociationChallengePathId = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['challenge_path_id', '!=', null],
+                    ])->pluck('challenge_path_id')->toArray();
+                    $nonExistingIdsChallengePathId = array_diff($existComponentAssociationChallengePathId, $request->challenge_paths);
+                    $deleteNonExistingComponentAssociationChallengesPath = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('challenge_path_id', $nonExistingIdsChallengePathId)->delete();
+                    $newComponentAssociationChallengePathId = array_diff($request->challenges, $existComponentAssociationchallenge);
+                    $sequence = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['challenge_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
+                    foreach ($newComponentAssociationChallengePathId as $challenge_path) {
+                        $sequence++;
+                        $LabSkillsGroupsStack = new ComponentAssociation();
+                        $LabSkillsGroupsStack->lab_program_id = $lab_programs;
+                        $LabSkillsGroupsStack->challenge_path_id = $challenge_path;
+                        $LabSkillsGroupsStack->sequence = $sequence;
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
+            }
+
+            if ($request->has('resource_modules')) {
+                $sequence = 1;
+                if (count($request->resource_modules) > 0) {
+                    $existComponentAssociationResourceModuleId = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['resource_module_id', '!=', null],
+                    ])->pluck('resource_module_id')->toArray();
+                    $nonExistingIdsResourceModuleId = array_diff($existComponentAssociationResourceModuleId, $request->resource_modules);
+                    $deleteNonExistingResourceModuleId = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('resource_module_id', $nonExistingIdsResourceModuleId)->delete();
+                    $newComponentAssociationResourceModuleId = array_diff($request->resource_modules, $existComponentAssociationResourceModuleId);
+                    $sequence = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['resource_module_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    foreach ($newComponentAssociationResourceModuleId as $resource_module) {
+                        $sequence++;
+                        $LabSkillsGroupsStack = new ComponentAssociation();
+                        $LabSkillsGroupsStack->lab_program_id = $lab_programs;
+                        $LabSkillsGroupsStack->resource_module_id = $resource_module;
+                        $LabSkillsGroupsStack->sequence = $sequence;
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
+            }
+
+            if ($request->has('resource_groups')) {
+                $sequence = 1;
+                if (count($request->resource_groups) > 0) {
+                    $existComponentAssociationResourceGroupId = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['resource_group_id', '!=', null],
+                    ])->pluck('resource_group_id')->toArray();
+                    $nonExistingIdsResourceGroupId = array_diff($existComponentAssociationResourceGroupId, $request->resource_groups);
+                    $deleteNonExistingResourceGroupId = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('resource_group_id', $nonExistingIdsResourceGroupId)->delete();
+                    $newComponentAssociationResourceGroupId = array_diff($request->resource_groups, $existComponentAssociationResourceGroupId);
+                    $sequence = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['resource_group_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    foreach ($newComponentAssociationResourceGroupId as $resource_group) {
+                        $sequence++;
+                        $LabSkillsGroupsStack = new ComponentAssociation();
+                        $LabSkillsGroupsStack->lab_program_id = $lab_programs;
+                        $LabSkillsGroupsStack->resource_group_id = $resource_group;
+                        $LabSkillsGroupsStack->sequence = $sequence;
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
+            }
+
+            if ($request->has('resource_collections')) {
+                $sequence = 1;
+                if (count($request->resource_collections) > 0) {
+                    //ResourceCollectionId
+                    $existComponentAssociationResourceCollectionId = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['resource_collection_id', '!=', null],
+                    ])->pluck('resource_collection_id')->toArray();
+                    $nonExistingIdsResourceCollectionId = array_diff($existComponentAssociationResourceCollectionId, $request->resource_collections);
+                    $deleteNonExistingResourceGroupId = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('resource_collection_id', $nonExistingIdsResourceCollectionId)->delete();
+                    $newComponentAssociationResourceGroupId = array_diff($request->resource_collections, $existComponentAssociationResourceCollectionId);
+                    $sequence = ComponentAssociation::where([
+                        ['lab_program_id', '=', $lab_programs],
+                        ['resource_collection_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    foreach ($newComponentAssociationResourceGroupId as $resource_collection) {
+                        $sequence++;
+                        $LabSkillsGroupsStack = new ComponentAssociation();
+                        $LabSkillsGroupsStack->lab_program_id = $lab_programs;
+                        $LabSkillsGroupsStack->resource_collection_id = $resource_collection;
+                        $LabSkillsGroupsStack->sequence = $sequence;
+                        $LabSkillsGroupsStack->save();
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -24,7 +24,7 @@ class UpdateLabProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'                  => 'required|unique:lab_programs,title',
+            'title'                  => 'unique:lab_programs,title',
             'description'            => 'required',
             //'lab_id'                 => 'required|exists:labs,uuid',
             'privacy'                => 'required|in:yes,no',

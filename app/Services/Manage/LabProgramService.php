@@ -239,20 +239,19 @@ class LabProgramService
             }
             $labIdJson = json_encode($request->lab_id);
             $labProgram->language = ($request->has('language')) ? $request->language : $labProgram->language;
-            $labProgram->title = ($request->has('title')) ? $request->title : $request->title;
-            $labProgram->description = ($request->has('description')) ? $request->description : $request->description;
+            $labProgram->title = ($request->has('title')) ? $request->title : $labProgram->title;
+            $labProgram->description = ($request->has('description')) ? $request->description : $labProgram->description;
             $labProgram->lab_id = $labIdJson;
-            $labProgram->organization_id  =($request->has('organization_id')) ? $request->organization_id : $request->organization_id;
-            $labProgram->category_id  = ($request->has('category_id')) ? $request->category_id : $request->category_id;
-            $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $request->duration_id;
-            $labProgram->level_id  = ($request->has('level_id')) ? $request->level_id : $request->level_id;
+            $labProgram->organization_id  =($request->has('organization_id')) ? $request->organization_id : $labProgram->organization_id;
+            $labProgram->category_id  = ($request->has('category_id')) ? $request->category_id : $labProgram->category_id;
+            $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $labProgram->duration_id;
+            $labProgram->level_id  = ($request->has('level_id')) ? $request->level_id : $labProgram->level_id;
             $labProgram->media = ($upload_media) ? $upload_media : $labProgram->media ;
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
             $labProgram->is_auto_created = '0';
-            $labProgram->prize = ($request->has('prize')) ? $request->prize : $request->prize;
-            $labProgram->points = ($request->has('points')) ? $request->points : $request->points;
-            $labProgram->trophy = ($request->has('trophy')) ? $request->trophy : $request->trophy;
+            $labProgram->is_sequential =($request->has('is_sequential')) ? ($request->is_sequential == 'yes') ? '1' : '0' : $labProgram->is_sequential;
+            $labProgram->is_achievement_enabled =($request->has('is_achievement_enabled')) ? ($request->is_achievement_enabled == 'yes') ? '1' : '0' : $labProgram->is_achievement_enabled;
             $labProgram->save();
             return $labProgram;
         } catch (\Exception $e){

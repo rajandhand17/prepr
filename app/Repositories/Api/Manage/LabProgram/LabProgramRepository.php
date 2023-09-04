@@ -91,18 +91,20 @@ class LabProgramRepository implements LabProgramInterface
         try{
             $createLabProgram=DB::transaction(function () use ($slug,$request, $upload_media,$upload_achievement_image) {
                 $updateLabProgram=$this->labProgramService->updateLabProgram($slug,$request, $upload_media);
-                $labProgramAchievement = $this->labProgramAchievementService->updateLabProgramAchievement($request, $updateLabProgram->id, $upload_achievement_image);
+                if($request->is_achievement_enabled == 'yes') {
+                    $labProgramAchievement = $this->labProgramAchievementService->updateLabProgramAchievement($request, $updateLabProgram->id, $upload_achievement_image);
+                }
                 $labProgramSkillsGroupsStack = $this->labProgramSkillsGroupsStackService->updateLabProgramSkillsGroupsStack($request, $updateLabProgram->id);
                 $labProgramTagsGroupsService = $this->labProgramTagsGroupsService->updateLabProgramTagsGroups($request, $updateLabProgram->id);
-
+                $componentAssociation= $this->componentAssociationService->updateLabProgramAssociation($request,$updateLabProgram->id);
                 return [
                     "updateLabProgram"=>$updateLabProgram,
-                    "labProgramAchievement"=>$labProgramAchievement,
                     "labProgramSkillsGroupsStack"=>$labProgramSkillsGroupsStack,
                     "labProgramTagsGroupsService"=>$labProgramTagsGroupsService,
+                    "componentAssociation"=>$componentAssociation,
                 ];
             });
-            if($createLabProgram['updateLabProgram'] && $createLabProgram['labProgramAchievement'] && $createLabProgram['labProgramSkillsGroupsStack']){
+            if($createLabProgram['updateLabProgram'] && $createLabProgram['componentAssociation'] && $createLabProgram['labProgramSkillsGroupsStack']){
                 DB::commit();
                 return true;
             }
