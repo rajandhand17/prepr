@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Api\Public\LabProgram;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\Public\Lab\LabResource;
 use App\Http\Resources\public\LabProgram\LabProgramResource;
-use App\Services\Manage\OrganizationService;
-use Illuminate\Http\Request;
 use App\Repositories\Api\Public\LabProgram\LabProgramRepository;
+use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
 {
     protected $labProgramRepository;
-    public function __construct(LabProgramRepository $labProgramRepository){
-       $this->labProgramRepository=$labProgramRepository;
+
+    public function __construct(LabProgramRepository $labProgramRepository)
+    {
+        $this->labProgramRepository = $labProgramRepository;
     }
 
     public function index(Request $request)
@@ -29,6 +29,7 @@ class LabProgramController extends AppBaseController
                     'total_pages'  => $labProgram->lastPage(),
                     'list'         => LabProgramResource::collection($labProgram),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_lab_program_list'));
             }
 

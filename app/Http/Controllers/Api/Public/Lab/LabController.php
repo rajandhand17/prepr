@@ -31,6 +31,7 @@ class LabController extends AppBaseController
                     'total_pages'  => $lab->lastPage(),
                     'list'         => LabResource::collection($lab),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_labs_list'));
             }
 
@@ -144,7 +145,6 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getName();
             if ($lab) {
-
                 $response = [
                     'total_count'  => $lab->total(),
                     'per_page'     => $lab->perPage(),
@@ -153,12 +153,14 @@ class LabController extends AppBaseController
                     'total_pages'  => $lab->lastPage(),
                     'list'         => LabNameListResource::collection($lab),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_labs_list'));
             }
 
             return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch (\Exception $e) {
             dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

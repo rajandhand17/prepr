@@ -2,14 +2,12 @@
 
 namespace App\Services\Manage;
 
-
 use App\Models\LabProgramsSkillsGroupsStack;
-use App\Models\LabSkillsGroupsStack;
 
 class LabProgramSkillsGroupsStackService
 {
-    public function createLabProgramSkillsGroupsStack($request,$lab_program_id){
-
+    public function createLabProgramSkillsGroupsStack($request, $lab_program_id)
+    {
         if ($request->has('skills')) {
             if (count($request->skills) > 0) {
                 foreach ($request->skills as $skill) {
@@ -43,11 +41,13 @@ class LabProgramSkillsGroupsStackService
                 }
             }
         }
+
         return true;
     }
 
-    public function updateLabProgramSkillsGroupsStack($request,$lab_program_id){
-        try{
+    public function updateLabProgramSkillsGroupsStack($request, $lab_program_id)
+    {
+        try {
             if ($request->has('skills')) {
                 if (count($request->skills) > 0) {
                     $getExistsSkills = LabProgramsSkillsGroupsStack::where([
@@ -111,8 +111,9 @@ class LabProgramSkillsGroupsStackService
                     }
                 }
             }
+
             return true;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

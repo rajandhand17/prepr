@@ -14,6 +14,7 @@ class LabProgramAchievementsService
             if ($upload_Achievement_image == false) {
                 return false;
             }
+
             return $upload_Achievement_image;
         } catch (\Exception $e) {
             return false;
@@ -36,16 +37,16 @@ class LabProgramAchievementsService
 
     public function createLabProgramAchievement($request, $labProgramId, $upload_achievements_image)
     {
-            $achievementCondition = json_encode($request->achievement_condition);
-            $labProgramAchievement = new LabProgramsAchievement();
-            $labProgramAchievement->lab_program_id =$labProgramId;
-            $labProgramAchievement->achievement_name=$request->achievement_name;
-            $labProgramAchievement->achievement_points=$request->achievement_points;
-            $labProgramAchievement->achievement_condition=$achievementCondition;
-            $labProgramAchievement->achievement_image=$upload_achievements_image;
-            $labProgramAchievement->save();
-            return true;
+        $achievementCondition = json_encode($request->achievement_condition);
+        $labProgramAchievement = new LabProgramsAchievement();
+        $labProgramAchievement->lab_program_id = $labProgramId;
+        $labProgramAchievement->achievement_name = $request->achievement_name;
+        $labProgramAchievement->achievement_points = $request->achievement_points;
+        $labProgramAchievement->achievement_condition = $achievementCondition;
+        $labProgramAchievement->achievement_image = $upload_achievements_image;
+        $labProgramAchievement->save();
 
+        return true;
     }
 
     public function updateLabProgramAchievement($request, $lab_programs_id, $upload_achievement_image)
@@ -60,6 +61,7 @@ class LabProgramAchievementsService
                 $labAchievement->achievement_condition = $request->achievement_conditions;
                 $labAchievement->achievement_image = $upload_achievement_image;
                 $labAchievement->save();
+
                 return true;
             }
             $checkExistsLabAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsLabAchievement->achievement_name;

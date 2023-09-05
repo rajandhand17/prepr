@@ -11,9 +11,9 @@ class LabProgramsAchievement extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="lab_programs_achievements";
+    protected $table = 'lab_programs_achievements';
 
-    protected  $fillable=[
+    protected $fillable = [
         'lab_program_id',
         'achievement_name',
         'achievement_points',

@@ -11,9 +11,9 @@ class LabProgramSocialActivity extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="lab_program_social_activities";
+    protected $table = 'lab_program_social_activities';
 
-    protected $fillable=[
+    protected $fillable = [
         'user_id',
         'lab_program_id',
         'follow_unfollow',

@@ -83,6 +83,7 @@ class User extends Authenticatable
 
             if ($user->verified_user == 0) {
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
+
                 return $response;
             }
             if ($user) {
@@ -120,6 +121,7 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             $response = ['success' => false, 'message'=>__('responses.send_error'), 'code' => 6];
+
             return $response;
         }
     }

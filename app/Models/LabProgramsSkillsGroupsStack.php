@@ -11,9 +11,9 @@ class LabProgramsSkillsGroupsStack extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table='lab_programs_skills_groups_stack';
+    protected $table = 'lab_programs_skills_groups_stack';
 
-    protected $fillable=[
+    protected $fillable = [
         'lab_program_id',
         'foreign_id',
         'type',
