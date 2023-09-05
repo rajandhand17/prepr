@@ -14,8 +14,8 @@ class LabProgramSocialActivitiesService
             $checkActivity = LabProgramSocialActivity::where(
                 [
                     'lab_program_id'  => $labProgram,
-                    'user_id' => auth()->user()->id,
-                     $column   => $action,
+                    'user_id'         => auth()->user()->id,
+                    $column           => $action,
                 ]
             )->first();
             if ($checkActivity != null) {
@@ -32,11 +32,12 @@ class LabProgramSocialActivitiesService
     {
         try {
             LabProgramSocialActivity::updateOrInsert([
-                'user_id' => Auth::user()->id,
+                'user_id'         => Auth::user()->id,
                 'lab_program_id'  => $labProgram,
             ], [
                 $column => $action,
             ]);
+
             return true;
         } catch (\Exception $e) {
             return false;
@@ -55,10 +56,13 @@ class LabProgramSocialActivitiesService
                             $columnValue['column'] => $columnValue['action'],
                         ]
                     )->get();
+
                     return $organization_ids;
                 }
+
                 return false;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;

@@ -4,9 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Lab;
 use App\Models\LabProgram;
-use App\Models\LabProgramsSkillsGroupsStack;
 use App\Services\Public\LabProgramSocialActivitiesService;
 use HiFolks\RandoPhp\Randomize;
 
@@ -16,13 +14,15 @@ class LabProgramService
     {
         $getLabProgramList = LabProgram::select();
         $getLabProgramList = self::filterLabList($getLabProgramList, $request);
+
         return $getLabProgramList->paginate(config('site-settings.pagination_per_page'));
     }
-    public function filterLabList($labProgramList,$request)
+
+    public function filterLabList($labProgramList, $request)
     {
-        try{
-            if($request->has('search') && !empty($request->search)) {
-                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%' . $request->search . '%');
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
@@ -89,6 +89,7 @@ class LabProgramService
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $labProgramList = $labProgramList->whereIn('level_id', $request->level_id);
             }
+
             return $labProgramList;
         } catch (\Exception $e) {
             return false;
@@ -145,10 +146,10 @@ class LabProgramService
             $labProgram->slug = $slug;
             $labProgram->description = $request->description;
             $labProgram->lab_id = $labIdJson;
-            $labProgram->organization_id  = $request->organization_id;
-            $labProgram->category_id  = $request->category_id;
+            $labProgram->organization_id = $request->organization_id;
+            $labProgram->category_id = $request->category_id;
             $labProgram->duration_id = $request->duration_id;
-            $labProgram->level_id  = $request->level_id;
+            $labProgram->level_id = $request->level_id;
             $labProgram->user_id = auth()->user()->id;
             $labProgram->media_type = 'image';
             $labProgram->media = $upload_media;
@@ -158,6 +159,7 @@ class LabProgramService
             $labProgram->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
             $labProgram->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
             $labProgram->save();
+
             return $labProgram;
         } catch(\Exception $e) {
             return false;
@@ -178,38 +180,43 @@ class LabProgramService
         }
     }
 
-    public static function checkSlug($slug){
+    public static function checkSlug($slug)
+    {
         try {
-            return LabProgram::where('slug',$slug)->first();
-        }catch (\Exception $e){
+            return LabProgram::where('slug', $slug)->first();
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function delete($slug){
-        try{
-            return LabProgram::where('slug',$slug)->delete();
-        }catch (\Exception $e){
+    public function delete($slug)
+    {
+        try {
+            return LabProgram::where('slug', $slug)->delete();
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkNameExistsOrNot($title){
-        try{
+    public function checkNameExistsOrNot($title)
+    {
+        try {
             $checkLabProgramName = LabProgram::where('title', $title)->first();
             if ($checkLabProgramName) {
                 return true;
             }
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function updateLabProgram($slug,$request, $upload_media){
-        try{
-        $labProgram=LabProgram::where('slug',$slug)->first();
-        $privacy = config('constants.lab_privacy.no');
+    public function updateLabProgram($slug, $request, $upload_media)
+    {
+        try {
+            $labProgram = LabProgram::where('slug', $slug)->first();
+            $privacy = config('constants.lab_privacy.no');
             switch($request->privacy) {
                 case 'yes':
                     $privacy = config('constants.lab_privacy.yes');
@@ -242,19 +249,20 @@ class LabProgramService
             $labProgram->title = ($request->has('title')) ? $request->title : $labProgram->title;
             $labProgram->description = ($request->has('description')) ? $request->description : $labProgram->description;
             $labProgram->lab_id = $labIdJson;
-            $labProgram->organization_id  =($request->has('organization_id')) ? $request->organization_id : $labProgram->organization_id;
-            $labProgram->category_id  = ($request->has('category_id')) ? $request->category_id : $labProgram->category_id;
+            $labProgram->organization_id = ($request->has('organization_id')) ? $request->organization_id : $labProgram->organization_id;
+            $labProgram->category_id = ($request->has('category_id')) ? $request->category_id : $labProgram->category_id;
             $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $labProgram->duration_id;
-            $labProgram->level_id  = ($request->has('level_id')) ? $request->level_id : $labProgram->level_id;
-            $labProgram->media = ($upload_media) ? $upload_media : $labProgram->media ;
+            $labProgram->level_id = ($request->has('level_id')) ? $request->level_id : $labProgram->level_id;
+            $labProgram->media = ($upload_media) ? $upload_media : $labProgram->media;
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
             $labProgram->is_auto_created = '0';
-            $labProgram->is_sequential =($request->has('is_sequential')) ? ($request->is_sequential == 'yes') ? '1' : '0' : $labProgram->is_sequential;
-            $labProgram->is_achievement_enabled =($request->has('is_achievement_enabled')) ? ($request->is_achievement_enabled == 'yes') ? '1' : '0' : $labProgram->is_achievement_enabled;
+            $labProgram->is_sequential = ($request->has('is_sequential')) ? ($request->is_sequential == 'yes') ? '1' : '0' : $labProgram->is_sequential;
+            $labProgram->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? ($request->is_achievement_enabled == 'yes') ? '1' : '0' : $labProgram->is_achievement_enabled;
             $labProgram->save();
+
             return $labProgram;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

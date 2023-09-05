@@ -4,8 +4,6 @@ namespace App\Repositories\Api\Public\LabProgram;
 
 use App\Services\Public\LabProgramService;
 use App\Services\Public\LabProgramSocialActivitiesService;
-use App\Services\Public\LabService;
-use App\Services\Public\LabSocialActivitiesService;
 use App\Services\Public\MemberManagementService;
 
 class LabProgramRepository implements LabProgramInterface

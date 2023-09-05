@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Manage\LabProgram;
 
-use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,7 +14,6 @@ class LabProgramResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
         return [
             'id'                            => $this->id,
             'language'                      => $this->language,

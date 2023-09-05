@@ -28,6 +28,7 @@ class LabAcheivementService
             if ($upload_acheivement_image == false) {
                 return false;
             }
+
             return $upload_acheivement_image;
         } catch (\Exception $e) {
             return false;

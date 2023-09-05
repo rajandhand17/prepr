@@ -27,10 +27,10 @@ class UpdateLabProgram extends FormRequest
             'title'                  => 'required|unique:lab_programs,title',
             'description'            => 'required',
             //'lab_id'                 => 'required|exists:labs,uuid',
-            'privacy'                => 'required|in:yes,no',
-            'status'                 => 'required',
+            'privacy'                 => 'required|in:yes,no',
+            'status'                  => 'required',
             'is_auto_created'         => 'required',
-            'trophy'                 => 'required',
+            'trophy'                  => 'required',
 
         ];
     }
@@ -47,16 +47,16 @@ class UpdateLabProgram extends FormRequest
     public function messages()
     {
         return [
-            'title.required'         => __('responses.lab_program_title_required'),
-            'title.unique'           => __('responses.lab_program_title_unique'),
-            'description.required'   => 'responses.lab_program_description_required',
-            'lab_id.required'        => 'responses.lab_program_required',
-            'lab_id.exists'          => 'responses.lab_program_lab_id_unique',
-            'privacy.required'       => 'responses.lab_program_privacy_required',
-            'privacy.in'             => 'responses.lab_program_privacy_in',
-            'status.required'        => 'responses.lab_program_status_required',
+            'title.required'          => __('responses.lab_program_title_required'),
+            'title.unique'            => __('responses.lab_program_title_unique'),
+            'description.required'    => 'responses.lab_program_description_required',
+            'lab_id.required'         => 'responses.lab_program_required',
+            'lab_id.exists'           => 'responses.lab_program_lab_id_unique',
+            'privacy.required'        => 'responses.lab_program_privacy_required',
+            'privacy.in'              => 'responses.lab_program_privacy_in',
+            'status.required'         => 'responses.lab_program_status_required',
             'is_auto_created.required'=> 'responses.lab_program_is_auto_create_required',
-            'trophy.required'        => 'responses.lab_program_trophy_required',
+            'trophy.required'         => 'responses.lab_program_trophy_required',
         ];
     }
 }

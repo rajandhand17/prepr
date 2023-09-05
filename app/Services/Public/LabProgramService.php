@@ -22,7 +22,7 @@ class LabProgramService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%' . $request->search . '%');
+                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
@@ -89,6 +89,7 @@ class LabProgramService
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $labProgramList = $labProgramList->whereIn('level_id', $request->level_id);
             }
+
             return $labProgramList;
         } catch (\Exception $e) {
             return false;

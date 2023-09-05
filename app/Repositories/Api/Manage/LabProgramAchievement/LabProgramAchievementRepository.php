@@ -30,5 +30,4 @@ class LabProgramAchievementRepository implements LabProgramAchievementInterface
             return false;
         }
     }
-
 }

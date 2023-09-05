@@ -7,7 +7,6 @@ use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
 use App\Services\Manage\LabExternalLinksService;
-use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
