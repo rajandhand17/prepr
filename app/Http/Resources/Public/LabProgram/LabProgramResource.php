@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\public\LabProgram;
+namespace App\Http\Resources\Public\LabProgram;
 
 use App\Services\AchievementConditionListService;
 use App\Services\SkillGroupService;
