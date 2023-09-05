@@ -15,6 +15,7 @@ class LabProgramResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             'id'                            => $this->id,
             'language'                      => $this->language,
@@ -24,13 +25,9 @@ class LabProgramResource extends JsonResource
             'lab_id'                        => $this->lab_id,
             'user_id'                       => $this->user_id,
             'media'                         => $this->media,
-            'privacy'                       => $this->privacy,
-            'status'                        => $this->status,
+            'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
+            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_auto_created'               => $this->is_auto_created,
-            'prize'                         => $this->prize,
-            'points'                        => $this->points,
-            'trophy'                        => $this->trophy,
-
         ];
     }
 }
