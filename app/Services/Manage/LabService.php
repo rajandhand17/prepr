@@ -298,4 +298,15 @@ class LabService
             return false;
         }
     }
+
+    public function getLabListName($request,$organization){
+        try {
+            $lab_list = Lab::select('uuid','title','media')->where('organization_id', '=', $organization->id);
+            $lab_list = self::filterLabList($lab_list, $request);
+            $limit=config('site-settings.listing_limit');
+            return $lab_list->limit($limit)->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Manage\Lab;
 
-use App\Services\Manage\LabProgramService;
+use App\Services\Manage\LabService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,7 +27,7 @@ class UpdateLabRequest extends FormRequest
      */
     public function rules()
     {
-        $lab = LabProgramService::getLabBasedOnSlug(request()->route('slug'));
+        $lab = LabService::getLabBasedOnSlug(request()->route('slug'));
         if (!$lab) {
             throw new NotFoundException();
         }

@@ -315,7 +315,9 @@
     "responses.level_id_required": "The level id is required",
     "responses.level_id_exists": "The provided level id is not exists!",
 
-    "responses.lab_program_lab_id_required": "The provided Lab id is not exists!",
+    "responses.lab_id_required": "The Lab id is required!",
+    "responses.lab_id_exists": "The provided Lab id is not exists!",
+    "responses.lab_id_array": "This status should be an array!",
 
     "responses.lab_program_not_found": "The Lab Program(s) which you are looking doesn't exist in our system.",
     "responses.found_lab_program_list":"The lab programs list has been successfully retrieved",

@@ -203,4 +203,13 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
+    public function getLabListName($request,$organization){
+        try {
+            $getLabListName=$this->labService->getLabListName($request,$organization);
+            return $getLabListName;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

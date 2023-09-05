@@ -86,8 +86,6 @@ class LabProgramRepository implements LabProgramInterface
             return false;
         } catch(\Exception $e) {
             DB::rollback();
-            dd($e);
-
             return false;
         }
     }
