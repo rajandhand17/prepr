@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['language'])->group(function () {
     Route::post('/register', [AuthController::class, 'registerUser']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/sso-login', [AuthController::class, 'ssologin']);
+    Route::post('/sso-login', [AuthController::class, 'ssoLogin']);
     Route::post('/two-factor-verification', [AuthController::class, 'twoFactorVerification']);
     Route::post('/check-username', [AuthController::class, 'checkUsername']);
     Route::post('/check-email', [AuthController::class, 'checkEmail']);

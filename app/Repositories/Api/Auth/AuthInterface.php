@@ -26,5 +26,5 @@ interface AuthInterface
 
     public function twoFactorVerification($request);
 
-    public function SSOlogin($request);
+    public function ssoLogin($request);
 }
