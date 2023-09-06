@@ -445,6 +445,7 @@ class User extends Authenticatable
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     /** SSO Login*/
     public function ssoLogin($request)
     {
@@ -461,9 +462,11 @@ class User extends Authenticatable
                     $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
                 }
                 $response = ['success' => true,  'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+
                 return $response;
             } else {
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
+
                 return $response;
             }
         } catch (\Exception $e) {

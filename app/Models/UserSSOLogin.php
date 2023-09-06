@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class UserSSOLogin extends Model
 {
@@ -14,7 +14,7 @@ class UserSSOLogin extends Model
     protected $table = 'user_sso_login';
 
     protected $fillable = [
-        'user_id', 'sso_type', 'sub', 'access_token'
+        'user_id', 'sso_type', 'sub', 'access_token',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -31,9 +31,11 @@ class UserSSOLogin extends Model
             $usersso->save();
             if ($usersso) {
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch (Exception $e) {
             DB::rollback();
