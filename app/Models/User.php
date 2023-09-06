@@ -445,4 +445,26 @@ class User extends Authenticatable
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    /** SSO Login*/
+    public function ssoLogin($request)
+    {
+        try {
+            /**checking user exists or not */
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                $token = $user->createToken(env('APP_NAME'))->accessToken;
+                dd($token);
+                $user->save();
+                $response = ['success' => true,  'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                return $response;
+            } else {
+                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
+                return $response;
+            }
+        } catch (\Exception $e) {
+
+            dd($e);
+        }
+    }
 }

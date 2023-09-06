@@ -25,4 +25,6 @@ interface AuthInterface
     public function resetPassword($request);
 
     public function twoFactorVerification($request);
+
+    public function SSOlogin($request);
 }

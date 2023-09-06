@@ -14,6 +14,7 @@ use App\Http\Requests\Auth\SendOtpRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
+use App\Http\Requests\Auth\SSOLoginFormRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
@@ -856,6 +857,71 @@ class AuthController extends AppBaseController
             if ($resetcode['success'] === false) {
                 return $this->sendError($resetcode['message'], 403);
             }
+
+            return $this->sendError(__('responses.send_error'), 500);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/auth/SSOlogin",
+     *     tags={"Auth API - SSO Login"},
+     *     summary="Send request for check SSO login",
+     *     operationId="SSO login",
+     *
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="Enter email of related to account!",
+     *         required=true,
+     *         explode=true,
+     *     ),
+     *     @OA\Parameter(
+     *         name="sso_type",
+     *         in="query",
+     *         description="Enter sso type of account!",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *
+     *     ),
+     * )
+     */
+    public function ssoLogin(SSOLoginFormRequest $request)
+    {
+        try {
+            $ssorequest = $this->authRepository->ssoLogin($request);
+            dd($ssorequest);
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
