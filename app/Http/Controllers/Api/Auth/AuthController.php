@@ -921,8 +921,13 @@ class AuthController extends AppBaseController
     {
         try {
             $ssorequest = $this->authRepository->ssoLogin($request);
-            dd($ssorequest);
-
+            if ($ssorequest['success'] == true) {
+                $response = ['token' => LoginResource::make(json_decode(json_encode($ssorequest), false)), 'user' => UserResource::make($ssorequest['user']), 'code' => $ssorequest['code']];
+                return $this->sendResponse($response, $ssorequest['message'], 200);
+            }
+            if ($ssorequest['success'] == false) {
+                return $this->sendError($ssorequest['message'], 401);
+            }
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
