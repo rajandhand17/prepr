@@ -11,10 +11,10 @@ use App\Http\Requests\Auth\LoginFormRequest;
 use App\Http\Requests\Auth\RegisterFormRequest;
 use App\Http\Requests\Auth\ResetPasswordFormRequest;
 use App\Http\Requests\Auth\SendOtpRequest;
+use App\Http\Requests\Auth\SSOLoginFormRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
-use App\Http\Requests\Auth\SSOLoginFormRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
@@ -923,11 +923,13 @@ class AuthController extends AppBaseController
             $ssorequest = $this->authRepository->ssoLogin($request);
             if ($ssorequest['success'] == true) {
                 $response = ['token' => LoginResource::make(json_decode(json_encode($ssorequest), false)), 'user' => UserResource::make($ssorequest['user']), 'code' => $ssorequest['code']];
+
                 return $this->sendResponse($response, $ssorequest['message'], 200);
             }
             if ($ssorequest['success'] == false) {
                 return $this->sendError($ssorequest['message'], 401);
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
