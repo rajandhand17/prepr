@@ -41,7 +41,6 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_lab_program_list'), 400);
         } catch(\Exception $e) {
-            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -83,7 +82,6 @@ class LabProgramController extends AppBaseController
             if ($createLabProgram) {
                 return $this->sendResponse($createLabProgram, __('responses.lab_program_stored_success'), 200);
             }
-
             return $this->sendError(__('responses.lab_program_stored_failed'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
