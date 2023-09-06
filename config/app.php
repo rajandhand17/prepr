@@ -214,6 +214,8 @@ return [
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
         App\Repositories\Api\Public\Lab\LabServiceProvider::class,
+        App\Repositories\Api\Public\LabProgram\LabProgramServiceProvider::class,
+
     ],
 
     /*

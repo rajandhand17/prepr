@@ -186,13 +186,9 @@ class LabController extends AppBaseController
             }
             $getLabListName=$this->labRepository->getLabListName($request,$organization);
             if ($getLabListName) {
-                $response = [
-                    'total_count' => $getLabListName->total(),
-                    'count' => $getLabListName->count(),
-                     'list'         => LabListNameResource::collection($getLabListName),
-                ];
+                $response =LabListNameResource::collection($getLabListName);
             }
-                return $this->sendResponse($response, __('responses.found_labs_list'));
+                return $this->sendResponse($getLabListName, __('responses.found_labs_list'));
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }

@@ -11,4 +11,14 @@ interface LabProgramInterface
     public function uploadLabProgramMedia($media);
 
     public function createLabProgram($request, $upload_media, $upload_achievement_image);
+
+    public function updateLabProgram($slug, $request, $upload_media, $upload_achievement_image);
+
+    public function checkSlug($slug);
+
+    public function delete($slug);
+
+    public function checkNameExistsOrNot($title);
+
+
 }

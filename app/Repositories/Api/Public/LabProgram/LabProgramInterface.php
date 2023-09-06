@@ -12,9 +12,5 @@ interface LabProgramInterface
 
     public function checkSocialActivity($lab_id, $column, $action);
 
-    public function checkJoinedOrNot($lab, $component);
 
-    public function joinLabProgram($lab, $component, $request, $memberList);
-
-    public function unJoinLabProgram($lab, $component, $request);
 }

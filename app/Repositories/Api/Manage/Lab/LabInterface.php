@@ -19,4 +19,6 @@ interface LabInterface
     public function checkSlug($slug);
 
     public function checkNameExistsOrNot($slug);
+
+    public function getLabListName($request,$organization);
 }

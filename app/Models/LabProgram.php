@@ -15,17 +15,23 @@ class LabProgram extends Model
 
     protected $fillable = [
         'language',
+        'uuid',
         'title',
+        'slug',
         'description',
         'lab_id',
         'user_id',
+        'organization_id',
+        'category_id',
+        'duration_id',
+        'level_id',
+        'media_type',
         'media',
         'privacy',
         'status',
         'is_auto_created',
-        'prize',
-        'points',
-        'trophy',
+        'is_achievement_enabled',
+        'is_sequential',
     ];
 
 
