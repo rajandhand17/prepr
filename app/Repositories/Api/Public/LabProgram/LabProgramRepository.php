@@ -9,6 +9,7 @@ class LabProgramRepository implements LabProgramInterface
 {
     private $labProgramService;
     private $labProgramSocialActivitiesService;
+
     public function __construct(LabProgramService $labProgramService, LabProgramSocialActivitiesService $labProgramSocialActivitiesService)
     {
         $this->labProgramService = $labProgramService;

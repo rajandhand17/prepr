@@ -20,5 +20,5 @@ interface LabInterface
 
     public function checkNameExistsOrNot($slug);
 
-    public function getLabListName($request,$organization);
+    public function getLabListName($request, $organization);
 }

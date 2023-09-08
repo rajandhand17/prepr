@@ -34,15 +34,16 @@ class LabProgram extends Model
         'is_sequential',
     ];
 
-
     public function component_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_program_id', 'id');
     }
 
-    public function getOrganization(){
+    public function getOrganization()
+    {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
+
     public function getCategory()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
@@ -52,6 +53,7 @@ class LabProgram extends Model
     {
         return $this->hasOne(LabProgramsAchievement::class, 'lab_program_id', 'id');
     }
+
     public function tags()
     {
         return $this->hasMany(LabProgramsTagsGroups::class, 'lab_program_id', 'id')->where('type', '0');
@@ -61,6 +63,7 @@ class LabProgram extends Model
     {
         return $this->hasMany(LabProgramsTagsGroups::class, 'lab_program_id', 'id')->where('type', '1');
     }
+
     public function skills()
     {
         return $this->hasMany(LabProgramsSkillsGroupsStack::class, 'lab_program_id', 'id')->where('type', '0');
