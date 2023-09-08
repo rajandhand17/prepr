@@ -353,5 +353,10 @@
     "responses.already_favourite_lab_program":"The Lab Program is already being added to favourites!",
     "responses.already_un_favourite_lab_program":"The Lab Program is already being removed from favourites!",
 
-    "responses.lab_program_privacy_in": "The Lab Program should be between Yes and No"
+    "responses.lab_program_privacy_in": "The Lab Program should be between Yes and No",
+    "responses.sso_type_required_field":"This sso_type field is required",
+    "responses.sub_required_field":"This sub field is required",
+    "responses.access_token_required_field":"This access token field is required",
+    "responses.invalid_sso_type":"Error: We couldn't authorize your login. Please verify your details and try again."
+
 }

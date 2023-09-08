@@ -445,4 +445,58 @@ class User extends Authenticatable
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    /** SSO Login*/
+    public function ssoLogin($request)
+    {
+        try {
+            /**checking user exists or not */
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                $ssoKey = null;
+                switch ($request->sso_type) {
+                    case 'google':
+                        $ssoKey = '1';
+                        break;
+                    case 'linkedin':
+                        $ssoKey = '2';
+                        break;
+                    case 'microsoft':
+                        $ssoKey = '3';
+                        break;
+                    case 'apple':
+                        $ssoKey = '4';
+                        break;
+                    case 'magnet':
+                        $ssoKey = '5';
+                        break;
+                    default:
+                        $ssoKey = null;
+                        break;
+                }
+
+                if ($ssoKey === null) {
+                    $response = ['success' => false, 'message' => __('responses.invalid_sso_type'), 'code' => 4];
+
+                    return $response;
+                }
+                $token = $user->createToken(env('APP_NAME'))->accessToken;
+                $checkSSODetails = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $ssoKey])->first();
+                if ($checkSSODetails == null) {
+                    $usersso = UserSSOLogin::create($user, $request);
+                } else {
+                    $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
+                }
+                $response = ['success' => true,  'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+
+                return $response;
+            } else {
+                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
+
+                return $response;
+            }
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

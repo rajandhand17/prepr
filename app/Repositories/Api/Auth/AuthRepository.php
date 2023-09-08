@@ -111,4 +111,13 @@ class AuthRepository implements AuthInterface
             return false;
         }
     }
+
+    public function ssoLogin($request)
+    {
+        try {
+            return $this->user->ssoLogin($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
