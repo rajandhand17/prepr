@@ -306,7 +306,7 @@ class OrganizationController extends AppBaseController
      *         response=400,
      *         description="Bad request!",
      *
-     *0     ),
+     *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal server error!",
