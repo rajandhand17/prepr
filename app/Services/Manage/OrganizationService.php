@@ -254,10 +254,8 @@ class OrganizationService
             if ($organization != null) {
                 return $organization;
             }
-
             return false;
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }

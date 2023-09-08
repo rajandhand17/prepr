@@ -240,10 +240,15 @@ class LabProgramService
                     $status = config('constants.lab_status.draft');
                     break;
             }
+            if($request->has('organization_id')){
+            $organization_id=Organization::where('uuid',$request->organization_id)->first()->id;
+            }else{
+                $organization_id=$labProgram->organization_id;
+            }
             $labProgram->language = ($request->has('language')) ? $request->language : $labProgram->language;
             $labProgram->title = ($request->has('title')) ? $request->title : $labProgram->title;
             $labProgram->description = ($request->has('description')) ? $request->description : $labProgram->description;
-            $labProgram->organization_id = ($request->has('organization_id')) ? $request->organization_id : $labProgram->organization_id;
+            $labProgram->organization_id = $organization_id;
             $labProgram->category_id = ($request->has('category_id')) ? $request->category_id : $labProgram->category_id;
             $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $labProgram->duration_id;
             $labProgram->level_id = ($request->has('level_id')) ? $request->level_id : $labProgram->level_id;

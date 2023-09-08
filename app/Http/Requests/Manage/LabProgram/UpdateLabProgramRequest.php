@@ -33,11 +33,11 @@ class UpdateLabProgramRequest extends FormRequest
         $base_rules= [
             'title'                 => 'required|max:255|unique:lab_programs,title,'.$labProgram->id,
             'description'           => 'required',
-            'organization_id'       => 'required|exists:organizations,id',
+            'organization_id'       => 'required|exists:organizations,uuid',
             'category_id'           => 'required|exists:categories,id',
             'level_id'              => 'required|exists:levels,id',
             'duration_id'           => 'required|exists:durations,id',
-            'lab_id'                => 'required|exists:labs,id|array',
+            'lab_id'                => 'required|exists:labs,uuid|array',
             'is_sequential'         => 'in:yes,no',
             'privacy'               => 'in:yes,no',
             'is_achievement_enabled' => 'in:yes,no',

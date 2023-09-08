@@ -296,8 +296,10 @@ class ComponentAssociationService
     public function updateLabProgramAssociation($request, $lab_programs)
     {
         try {
-            if ($request->has('lab_id')) {
+            if ($request->has('lab_id')){
                 $sequence = 1;
+                $getLabId =LabService::getLabIdBasedOnUUIDArray($request->lab_id);
+                $request->merge(['lab_id' => $getLabId]);
                 if (count($request->lab_id) > 0) {
                     $existComponentAssociation = ComponentAssociation::where([
                         ['lab_program_id', '=', $lab_programs],
@@ -309,7 +311,7 @@ class ComponentAssociationService
                     $sequence = ComponentAssociation::where([
                         ['lab_program_id', '=', $lab_programs],
                         ['lab_id', '!=', null],
-                    ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
                     foreach ($newComponentAssociation as $lab_id) {
                         $sequence++;
                         $LabSkillsGroupsStack = new ComponentAssociation();
@@ -323,6 +325,7 @@ class ComponentAssociationService
 
             return true;
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }

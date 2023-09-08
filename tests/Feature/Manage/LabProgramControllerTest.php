@@ -54,7 +54,6 @@ class LabProgramControllerTest extends TestCase
     public function test_lab_program_manage_create_positive(): void
     {
         $response = $this->post('/api/v1/manage/lab-program/create', $this->parameters, $this->headers);
-        dd($response);
         $response->assertStatus(200);
     }
 
@@ -90,7 +89,7 @@ class LabProgramControllerTest extends TestCase
 
     public function test_lab_program_manage_list_positive(): void
     {
-        $response = $this->get('/api/v1/manage/lab-program/?language=en', $this->headers);
+        $response = $this->get('/api/v1/manage/lab-program/?language=en&organization_id[]=OA3fsgv5EK', $this->headers);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success']) {
@@ -99,7 +98,9 @@ class LabProgramControllerTest extends TestCase
             $this->assertArrayHasKey('title', $data['data']['list'][0]);
             $this->assertArrayHasKey('slug', $data['data']['list'][0]);
             $this->assertArrayHasKey('description', $data['data']['list'][0]);
-            $this->assertArrayHasKey('lab_id', $data['data']['list'][0]);
+            $this->assertArrayHasKey('lab', $data['data']['list'][0]);
+            $this->assertArrayHasKey('organization', $data['data']['list'][0]);
+            $this->assertArrayHasKey('category_id', $data['data']['list'][0]);
             $this->assertArrayHasKey('user_id', $data['data']['list'][0]);
             $this->assertArrayHasKey('media', $data['data']['list'][0]);
             $this->assertArrayHasKey('privacy', $data['data']['list'][0]);

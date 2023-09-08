@@ -6,6 +6,7 @@ use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
+use App\Models\Organization;
 use HiFolks\RandoPhp\Randomize;
 
 class LabService
@@ -313,6 +314,19 @@ class LabService
             $lab_list = self::filterLabList($lab_list, $request);
             $limit=config('site-settings.listing_limit');
             return $lab_list->limit($limit)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabIdBasedOnUUIDArray($uuid){
+        try {
+            $lab = Lab::whereIn('uuid', $uuid)->pluck('id')->all();
+            if ($lab != null) {
+                return $lab;
+            }
+
+            return false;
         } catch (\Exception $e) {
             return false;
         }
