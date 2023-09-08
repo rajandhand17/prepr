@@ -311,5 +311,11 @@
     "responses.duration_id_exists": "The provided duration id is not exists!",
 
     "responses.level_id_required": "The level id is required",
-    "responses.level_id_exists": "The provided level id is not exists!"
+    "responses.level_id_exists": "The provided level id is not exists!",
+
+    "responses.sso_type_required_field":"This sso_type field is required",
+    "responses.sub_required_field":"This sub field is required",
+    "responses.access_token_required_field":"This access token field is required",
+    "responses.invalid_sso_type":"SSO Authorization Error: We couldn't authorize your login. Please verify your details and try again."
+
 }
