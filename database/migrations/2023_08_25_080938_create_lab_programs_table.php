@@ -34,8 +34,6 @@ return new class() extends Migration {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('duration_id')->references('id')->on('durations')->onDelete('cascade');
-            $table->foreign('level_id')->references('id')->on('levels')->onDelete('cascade');
         });
     }
 

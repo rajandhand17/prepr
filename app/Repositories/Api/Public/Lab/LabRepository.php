@@ -108,5 +108,4 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-
 }

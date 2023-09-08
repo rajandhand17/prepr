@@ -35,10 +35,10 @@ class LabProgramControllerTest extends TestCase
             'skill_stacks'           => ['1'],
             'tag_groups'             => ['1'],
             'is_sequential'          => 'yes',
-            'is_achievement_enabled'=>'no',
+            'is_achievement_enabled' => 'no',
             'achievement_name'       => 'Achievement Name',
             'achievement_points'     => '1000',
-            'achievement_condition'=> ['1'],
+            'achievement_condition'  => ['1'],
         ];
 
         $this->baseUrl = '/api/v1/manage/';

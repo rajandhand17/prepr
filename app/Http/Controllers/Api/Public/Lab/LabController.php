@@ -21,7 +21,7 @@ class LabController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if($request->organization_id && is_array($request->organization_id)){
+            if ($request->organization_id && is_array($request->organization_id)) {
                 $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
                 if (!$organization) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
@@ -41,6 +41,7 @@ class LabController extends AppBaseController
 
                 return $this->sendResponse($response, __('responses.found_labs_list'));
             }
+
             return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

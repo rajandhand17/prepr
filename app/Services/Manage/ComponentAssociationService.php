@@ -290,6 +290,7 @@ class ComponentAssociationService
                 }
             }
         }
+
         return true;
     }
 

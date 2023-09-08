@@ -34,16 +34,16 @@ class LabProgramResource extends JsonResource
         $duration_id = null;
         $level = null;
         $level_id = null;
-        $organization=null;
-        $organization_id=null;
-        if($this->component_association){
-            foreach($this->component_association as $association){
-                $componentAssociation[$association->lab_id]=LabService::getLabBasedOnId($association->lab_id);
+        $organization = null;
+        $organization_id = null;
+        if ($this->component_association) {
+            foreach ($this->component_association as $association) {
+                $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
             }
         }
-        if($this->getOrganization){
-            $organization=$this->getOrganization->title;
-            $organization_id=$this->getOrganization->uuid;
+        if ($this->getOrganization) {
+            $organization = $this->getOrganization->title;
+            $organization_id = $this->getOrganization->uuid;
         }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -87,7 +87,7 @@ class LabProgramResource extends JsonResource
 
         if ($this->achievement) {
             $achievement_conditions = [];
-            $condition=json_decode($this->achievement->achievement_condition);
+            $condition = json_decode($this->achievement->achievement_condition);
 
             foreach ($condition as $achievement_condition) {
                 $check_achievement_condition = AchievementConditionListService::getAchievementConditionByID($this->language, $achievement_condition);
@@ -100,6 +100,7 @@ class LabProgramResource extends JsonResource
                 'achievement_condition' => json_decode(json_encode($achievement_conditions)),
             ];
         }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -126,7 +127,7 @@ class LabProgramResource extends JsonResource
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
-            'is_sequential'                 => ($this->is_sequential == '1') ? 'yes':'no',
+            'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
         ];
     }
 }
