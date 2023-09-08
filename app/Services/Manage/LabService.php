@@ -89,6 +89,14 @@ class LabService
         }
     }
 
+    public static function getLabBasedOnId($Id)
+    {
+        try {
+            return Lab::select('uuid','title', 'media')->where('id', $Id)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
     public static function uploadLabCoverImage($image)
     {
         try {

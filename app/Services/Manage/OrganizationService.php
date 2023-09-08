@@ -247,6 +247,21 @@ class OrganizationService
         }
     }
 
+    public static function getOrganizationExistBasedOnUuidArray($uuid)
+    {
+        try {
+            $organization = Organization::select('id')->whereIn('uuid', $uuid)->get();
+            if ($organization != null) {
+                return $organization;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            dd($e);
+            return false;
+        }
+    }
+
     public static function getOrganizationListOnlyNameAndUuid($request)
     {
         try {

@@ -39,6 +39,10 @@ class LabProgram extends Model
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_program_id', 'id');
     }
+
+    public function getOrganization(){
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
     public function getCategory()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');

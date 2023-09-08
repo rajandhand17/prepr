@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\ComponentAssociation;
+use App\Models\Lab;
 
 class ComponentAssociationService
 {
@@ -279,8 +280,9 @@ class ComponentAssociationService
             $sequence = 1;
             if (count($request->lab_id) > 0) {
                 foreach ($request->lab_id as $lab) {
+                    $lab_id = Lab::where('uuid', $lab)->select('id')->first()->id;
                     $LabSkillsGroupsStack = new ComponentAssociation();
-                    $LabSkillsGroupsStack->lab_id = $lab;
+                    $LabSkillsGroupsStack->lab_id = $lab_id;
                     $LabSkillsGroupsStack->lab_program_id = $labProgram->id;
                     $LabSkillsGroupsStack->sequence = $sequence;
                     $LabSkillsGroupsStack->save();

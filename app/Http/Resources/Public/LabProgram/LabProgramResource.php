@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Public\LabProgram;
 
 use App\Services\AchievementConditionListService;
+use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -21,6 +22,7 @@ class LabProgramResource extends JsonResource
     public function toArray(Request $request): array
     {
         $achievement = [];
+        $componentAssociation = [];
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
@@ -32,7 +34,17 @@ class LabProgramResource extends JsonResource
         $duration_id = null;
         $level = null;
         $level_id = null;
-
+        $organization=null;
+        $organization_id=null;
+        if($this->component_association){
+            foreach($this->component_association as $association){
+                $componentAssociation[$association->lab_id]=LabService::getLabBasedOnId($association->lab_id);
+            }
+        }
+        if($this->getOrganization){
+            $organization=$this->getOrganization->title;
+            $organization_id=$this->getOrganization->uuid;
+        }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
             $category_id = $this->getCategory->id;
@@ -94,10 +106,11 @@ class LabProgramResource extends JsonResource
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'lab_id'                        => $this->lab_id,
+            'lab'                           => $componentAssociation,
             'user_id'                       => $this->user_id,
-            'media'                         => $this->media,
-            'organization_id'               => $this->organization_id,
+            'media'                         => config('site-settings.aws_url').$this->media,
+            'organization'                  => $organization,
+            'organization_id'               => $organization_id,
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration_id'                   => $duration_id,

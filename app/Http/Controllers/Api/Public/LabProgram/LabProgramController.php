@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Public\LabProgram;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\public\LabProgram\LabProgramResource;
 use App\Repositories\Api\Public\LabProgram\LabProgramRepository;
+use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
@@ -19,6 +20,14 @@ class LabProgramController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            if($request->organization_id && is_array($request->organization_id)){
+                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+
+                if (!$organization) {
+                    return $this->sendError(__('responses.organization_not_found'), 404);
+                }
+                $request->merge(['organization_id' => $organization]);
+            }
             $labProgram = $this->labProgramRepository->getList($request);
             if ($labProgram !== false) {
                 $response = [

@@ -8,6 +8,7 @@ use App\Http\Requests\Manage\LabProgram\UpdateLabProgramRequest;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
 use App\Repositories\Api\Manage\LabProgram\LabProgramRepository;
 use App\Repositories\Api\Manage\LabProgramAchievement\LabProgramAchievementRepository;
+use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
@@ -25,7 +26,11 @@ class LabProgramController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $listLabProgram = $this->labProgramRepository->getLabProgramList($request);
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $listLabProgram = $this->labProgramRepository->getLabProgramList($request,$organization);
             if ($listLabProgram) {
                 $response = [
                     'total_count'  => $listLabProgram->total(),

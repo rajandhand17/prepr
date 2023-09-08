@@ -5,16 +5,16 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\LabProgram;
+use App\Models\Organization;
 use App\Services\Public\LabProgramSocialActivitiesService;
 use HiFolks\RandoPhp\Randomize;
 
 class LabProgramService
 {
-    public function getLabProgramList($request)
+    public function getLabProgramList($request,$organization)
     {
-        $getLabProgramList = LabProgram::select();
+        $getLabProgramList = LabProgram::select()->where('organization_id', '=', $organization->id);
         $getLabProgramList = self::filterLabList($getLabProgramList, $request);
-
         return $getLabProgramList->paginate(config('site-settings.pagination_per_page'));
     }
 
@@ -26,9 +26,6 @@ class LabProgramService
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
-            }
-            if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $labProgramList = $labProgramList->whereIn('organization_id', $request->organization_id);
             }
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
@@ -138,15 +135,14 @@ class LabProgramService
             }
             $model = new LabProgram();
             $slug = UtilityHelper::generateSlug($request->title, $model);
-            $labIdJson = json_encode($request->lab_id);
+            $organization_id=Organization::where('uuid',$request->organization_id)->first()->id;
             $labProgram = new LabProgram();
             $labProgram->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $labProgram->language = $request->language;
             $labProgram->title = $request->title;
             $labProgram->slug = $slug;
             $labProgram->description = $request->description;
-            $labProgram->lab_id = $labIdJson;
-            $labProgram->organization_id = $request->organization_id;
+            $labProgram->organization_id = $organization_id;
             $labProgram->category_id = $request->category_id;
             $labProgram->duration_id = $request->duration_id;
             $labProgram->level_id = $request->level_id;
@@ -244,11 +240,9 @@ class LabProgramService
                     $status = config('constants.lab_status.draft');
                     break;
             }
-            $labIdJson = json_encode($request->lab_id);
             $labProgram->language = ($request->has('language')) ? $request->language : $labProgram->language;
             $labProgram->title = ($request->has('title')) ? $request->title : $labProgram->title;
             $labProgram->description = ($request->has('description')) ? $request->description : $labProgram->description;
-            $labProgram->lab_id = $labIdJson;
             $labProgram->organization_id = ($request->has('organization_id')) ? $request->organization_id : $labProgram->organization_id;
             $labProgram->category_id = ($request->has('category_id')) ? $request->category_id : $labProgram->category_id;
             $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $labProgram->duration_id;

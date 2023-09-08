@@ -30,10 +30,10 @@ class LabProgramRepository implements LabProgramInterface
         $this->componentAssociationService = $componentAssociationService;
     }
 
-    public function getLabProgramList($request)
+    public function getLabProgramList($request,$organization)
     {
         try {
-            return $this->labProgramService->getLabProgramList($request);
+            return $this->labProgramService->getLabProgramList($request,$organization);
         } catch (\Exception $e) {
             return false;
         }

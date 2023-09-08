@@ -17,7 +17,6 @@ return new class() extends Migration {
             $table->string('title');
             $table->string('slug')->nullable();
             $table->longText('description')->nullable();
-            $table->json('lab_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
             $table->unsignedBigInteger('category_id');
