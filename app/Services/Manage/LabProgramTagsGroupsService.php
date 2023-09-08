@@ -43,7 +43,7 @@ class LabProgramTagsGroupsService
                     $getExistsLabTags = LabTagsGroups::where([
                         ['lab_program_id', '=', $lab_program_id],
                         ['type', '=', '0'],
-                    ])->pluck('foreign_id')->toArray();
+                    ])->pluck('foreign_id')->all();
                     $nonExistingIds = array_diff($getExistsLabTags, $request->tags);
                     $deleteNonExisting = LabTagsGroups::where([
                         ['lab_program_id', '=', $lab_program_id],
@@ -64,7 +64,7 @@ class LabProgramTagsGroupsService
                     $getExistsLabTagsGroups = LabTagsGroups::where([
                         ['lab_program_id', '=', $lab_program_id],
                         ['type', '=', '1'],
-                    ])->pluck('foreign_id')->toArray();
+                    ])->pluck('foreign_id')->all();
                     $nonExistingIds = array_diff($getExistsLabTagsGroups, $request->tag_groups);
                     $deleteNonExisting = LabTagsGroups::where([
                         ['lab_program_id', '=', $lab_program_id],

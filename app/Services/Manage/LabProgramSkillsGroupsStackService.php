@@ -53,7 +53,7 @@ class LabProgramSkillsGroupsStackService
                     $getExistsSkills = LabProgramsSkillsGroupsStack::where([
                         ['lab_program_id', '=', $lab_program_id],
                         ['type', '=', '0'],
-                    ])->pluck('foreign_id')->toArray();
+                    ])->pluck('foreign_id')->all();
                     $nonExistingIds = array_diff($getExistsSkills, $request->skills);
                     $deleteNonExistingSkills = LabProgramsSkillsGroupsStack::where([
                         ['lab_program_id', '=', $lab_program_id],
@@ -74,7 +74,7 @@ class LabProgramSkillsGroupsStackService
                     $getExistsSkillsGroup = LabProgramsSkillsGroupsStack::where([
                         ['lab_program_id', '=', $lab_program_id],
                         ['type', '=', '1'],
-                    ])->pluck('foreign_id')->toArray();
+                    ])->pluck('foreign_id')->all();
                     $nonExistingIds = array_diff($getExistsSkillsGroup, $request->skill_groups);
                     $deleteNonExistingSkillsGroup = LabProgramsSkillsGroupsStack::where([
                         ['lab_program_id', '=', $lab_program_id],
@@ -95,7 +95,7 @@ class LabProgramSkillsGroupsStackService
                     $getExistsSkillStack = LabProgramsSkillsGroupsStack::where([
                         ['lab_program_id', '=', $lab_program_id],
                         ['type', '=', '2'],
-                    ])->pluck('foreign_id')->toArray();
+                    ])->pluck('foreign_id')->all();
                     $nonExistingIds = array_diff($getExistsSkillStack, $request->skill_stacks);
                     $deleteNonExistingSkillStack = LabProgramsSkillsGroupsStack::where([
                         ['lab_program_id', '=', $lab_program_id],
