@@ -315,6 +315,7 @@
 
     "responses.sso_type_required_field":"This sso_type field is required",
     "responses.sub_required_field":"This sub field is required",
-    "responses.access_token_required_field":"This access token field is required"
+    "responses.access_token_required_field":"This access token field is required",
+    "responses.invalid_sso_type":"Invalid SSO! please try again."
 
 }

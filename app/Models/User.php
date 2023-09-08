@@ -453,9 +453,34 @@ class User extends Authenticatable
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
             if ($user) {
+                $ssoKey = null;
+                switch ($request->sso_type) {
+                    case 'google':
+                        $ssoKey = '1';
+                        break;
+                    case 'linkedin':
+                        $ssoKey = '2';
+                        break;
+                    case 'microsoft':
+                        $ssoKey = '3';
+                        break;
+                    case 'apple':
+                        $ssoKey = '4';
+                        break;
+                    case 'magnet':
+                        $ssoKey = '5';
+                        break;
+                    default:
+                        $ssoKey = null;
+                        break;
+                }
+
+                if ($ssoKey === null) {
+                    $response = ['success' => false, 'message' => __('responses.invalid_sso_type'), 'code' => 4];
+                    return $response;
+                }
                 $token = $user->createToken(env('APP_NAME'))->accessToken;
-                $user->save();
-                $checkSSODetails = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->first();
+                $checkSSODetails = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $ssoKey])->first();
                 if ($checkSSODetails == null) {
                     $usersso = UserSSOLogin::create($user, $request);
                 } else {
