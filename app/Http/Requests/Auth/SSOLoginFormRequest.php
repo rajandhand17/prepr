@@ -27,7 +27,7 @@ class SSOLoginFormRequest extends FormRequest
     {
         return [
             'email'         => 'required|email|max:50|exists:users,email',
-            'sso_type'      => 'required',
+            'sso_type'      => 'required|in:google,linkedin,microsoft,apple,magnet',
             'sub'           => 'required',
             'access_token'  => 'required',
         ];
