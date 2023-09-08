@@ -21,7 +21,7 @@ class LabProgramControllerTest extends TestCase
             'wrong_slug'             => 'lorem-ipsum-lroe-not-exists',
             'title'                  => 'Lorem ipsum dolor',
             'wrong_title'            => 'Lorem ipsum dolor sit amet',
-            'lab_id'               => ['0bKnoTg14s'],
+            'lab_id'                 => ['0bKnoTg14s'],
             'description'            => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             'privacy'                => 'yes',
             'status'                 => 'published',
@@ -35,12 +35,12 @@ class LabProgramControllerTest extends TestCase
             'level_id'               => '1',
             'achievement_name'       => 'Achievement Name',
             'achievement_points'     => '1000',
-            'achievement_condition'=> ['1'],
-            'skills'               => ['1'],
-            'tags'                 => ['1'],
-            'skill_groups'         => ['1'],
-            'skill_stacks'         => ['1'],
-            'tag_groups'           => ['1'],
+            'achievement_condition'  => ['1'],
+            'skills'                 => ['1'],
+            'tags'                   => ['1'],
+            'skill_groups'           => ['1'],
+            'skill_stacks'           => ['1'],
+            'tag_groups'             => ['1'],
         ];
 
         $this->baseUrl = '/api/v1/public/';

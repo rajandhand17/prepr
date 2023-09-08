@@ -11,6 +11,4 @@ interface LabProgramInterface
     public function captureSocialActivity($id, $column, $value);
 
     public function checkSocialActivity($lab_id, $column, $action);
-
-
 }

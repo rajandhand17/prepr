@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Manage\LabProgram;
 
 interface LabProgramInterface
 {
-    public function getLabProgramList($request,$organization);
+    public function getLabProgramList($request, $organization);
 
     public function getLabProgramBasedOnSlug($slug);
 
@@ -19,6 +19,4 @@ interface LabProgramInterface
     public function delete($slug);
 
     public function checkNameExistsOrNot($title);
-
-
 }

@@ -11,10 +11,11 @@ use HiFolks\RandoPhp\Randomize;
 
 class LabProgramService
 {
-    public function getLabProgramList($request,$organization)
+    public function getLabProgramList($request, $organization)
     {
         $getLabProgramList = LabProgram::select()->where('organization_id', '=', $organization->id);
         $getLabProgramList = self::filterLabList($getLabProgramList, $request);
+
         return $getLabProgramList->paginate(config('site-settings.pagination_per_page'));
     }
 
@@ -135,7 +136,7 @@ class LabProgramService
             }
             $model = new LabProgram();
             $slug = UtilityHelper::generateSlug($request->title, $model);
-            $organization_id=Organization::where('uuid',$request->organization_id)->first()->id;
+            $organization_id = Organization::where('uuid', $request->organization_id)->first()->id;
             $labProgram = new LabProgram();
             $labProgram->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $labProgram->language = $request->language;

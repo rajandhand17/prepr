@@ -178,19 +178,21 @@ class LabController extends AppBaseController
         }
     }
 
-    public function getList(Request $request){
+    public function getList(Request $request)
+    {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
-            $getLabListName=$this->labRepository->getLabListName($request,$organization);
+            $getLabListName = $this->labRepository->getLabListName($request, $organization);
             if ($getLabListName) {
-                $response =LabListNameResource::collection($getLabListName);
+                $response = LabListNameResource::collection($getLabListName);
             }
-                return $this->sendResponse($getLabListName, __('responses.found_labs_list'));
-        }catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'),500);
+
+            return $this->sendResponse($getLabListName, __('responses.found_labs_list'));
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

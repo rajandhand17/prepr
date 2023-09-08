@@ -19,7 +19,6 @@ class SkillGroupService
 
             return false;
         } catch (\Exception $e) {
-
             return false;
         }
     }
