@@ -26,6 +26,7 @@ class LabProgramControllerTest extends TestCase
             'wrong_slug'             => 'lorem-ipsum-lroe-not-exists',
             'wrong_title'            => 'Lorem ipsum dolor',
             'organization_id'        => 'OA3fsgv5EK',
+            'wrong_organization_id'  => 'OA3fsgv5EKQs',
             'category_id'            => '1',
             'duration_id'            => '1',
             'level_id'               => '1',
@@ -89,7 +90,7 @@ class LabProgramControllerTest extends TestCase
 
     public function test_lab_program_manage_list_positive(): void
     {
-        $response = $this->get('/api/v1/manage/lab-program/?language=en&organization_id[]=OA3fsgv5EK', $this->headers);
+        $response = $this->get('/api/v1/manage/lab-program/?language=en&organization_id[]='.$this->parameters['organization_id'], $this->headers);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success']) {
@@ -107,6 +108,13 @@ class LabProgramControllerTest extends TestCase
             $this->assertArrayHasKey('privacy', $data['data']['list'][0]);
             $this->assertArrayHasKey('status', $data['data']['list'][0]);
         }
+    }
+
+    public function test_lab_program_manage_list_negative(): void
+    {
+        $response = $this->get('/api/v1/manage/lab-program/?language=en&organization_id[]='.$this->parameters['wrong_organization_id'], $this->headers);
+        $response->assertStatus(404);
+
     }
 
     public function test_lab_program_manage_view_positive(): void
