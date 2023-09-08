@@ -477,6 +477,7 @@ class User extends Authenticatable
 
                 if ($ssoKey === null) {
                     $response = ['success' => false, 'message' => __('responses.invalid_sso_type'), 'code' => 4];
+
                     return $response;
                 }
                 $token = $user->createToken(env('APP_NAME'))->accessToken;
