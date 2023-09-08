@@ -23,7 +23,6 @@ class LabController extends AppBaseController
         try {
             if($request->organization_id && is_array($request->organization_id)){
                 $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-
                 if (!$organization) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
                 }
@@ -42,7 +41,6 @@ class LabController extends AppBaseController
 
                 return $this->sendResponse($response, __('responses.found_labs_list'));
             }
-
             return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -53,7 +51,6 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
-
             if ($lab) {
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
