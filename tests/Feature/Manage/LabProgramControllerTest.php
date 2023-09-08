@@ -16,7 +16,7 @@ class LabProgramControllerTest extends TestCase
         $this->parameters = [
             'language'               => 'en',
             'title'                  => 'lorem ipsum lroe',
-            'lab_id'                 => ['1'],
+            'lab_id'                 => ['0bKnoTg14s'],
             'description'            => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             'privacy'                => 'yes',
             'status'                 => 'published',
@@ -25,15 +25,15 @@ class LabProgramControllerTest extends TestCase
             'slug'                   => 'lorem-ipsum-lroe',
             'wrong_slug'             => 'lorem-ipsum-lroe-not-exists',
             'wrong_title'            => 'Lorem ipsum dolor',
-            'organization_id'        => '46',
+            'organization_id'        => 'OA3fsgv5EK',
             'category_id'            => '1',
             'duration_id'            => '1',
             'level_id'               => '1',
-            'skills'               => ['1'],
-            'tags'                 => ['1'],
-            'skill_groups'         => ['1'],
-            'skill_stacks'         => ['1'],
-            'tag_groups'           => ['1'],
+            'skills'                 => ['1'],
+            'tags'                   => ['1'],
+            'skill_groups'           => ['1'],
+            'skill_stacks'           => ['1'],
+            'tag_groups'             => ['1'],
             'is_sequential'          => 'yes',
             'is_achievement_enabled'=>'no',
             'achievement_name'       => 'Achievement Name',
@@ -54,6 +54,7 @@ class LabProgramControllerTest extends TestCase
     public function test_lab_program_manage_create_positive(): void
     {
         $response = $this->post('/api/v1/manage/lab-program/create', $this->parameters, $this->headers);
+        dd($response);
         $response->assertStatus(200);
     }
 
