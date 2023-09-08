@@ -254,6 +254,7 @@ class OrganizationService
             if ($organization != null) {
                 return $organization;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

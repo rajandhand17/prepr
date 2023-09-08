@@ -6,7 +6,6 @@ use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
-use App\Models\Organization;
 use HiFolks\RandoPhp\Randomize;
 
 class LabService
@@ -322,7 +321,8 @@ class LabService
         }
     }
 
-    public static function getLabIdBasedOnUUIDArray($uuid){
+    public static function getLabIdBasedOnUUIDArray($uuid)
+    {
         try {
             $lab = Lab::whereIn('uuid', $uuid)->pluck('id')->all();
             if ($lab != null) {

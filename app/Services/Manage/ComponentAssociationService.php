@@ -297,9 +297,9 @@ class ComponentAssociationService
     public function updateLabProgramAssociation($request, $lab_programs)
     {
         try {
-            if ($request->has('lab_id')){
+            if ($request->has('lab_id')) {
                 $sequence = 1;
-                $getLabId =LabService::getLabIdBasedOnUUIDArray($request->lab_id);
+                $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_id);
                 $request->merge(['lab_id' => $getLabId]);
                 if (count($request->lab_id) > 0) {
                     $existComponentAssociation = ComponentAssociation::where([
