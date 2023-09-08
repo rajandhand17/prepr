@@ -241,10 +241,10 @@ class LabProgramService
                     $status = config('constants.lab_status.draft');
                     break;
             }
-            if($request->has('organization_id')){
-            $organization_id=Organization::where('uuid',$request->organization_id)->first()->id;
-            }else{
-                $organization_id=$labProgram->organization_id;
+            if ($request->has('organization_id')) {
+                $organization_id = Organization::where('uuid', $request->organization_id)->first()->id;
+            } else {
+                $organization_id = $labProgram->organization_id;
             }
             $labProgram->language = ($request->has('language')) ? $request->language : $labProgram->language;
             $labProgram->title = ($request->has('title')) ? $request->title : $labProgram->title;
