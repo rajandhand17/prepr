@@ -114,7 +114,6 @@ class LabProgramControllerTest extends TestCase
     {
         $response = $this->get('/api/v1/manage/lab-program/?language=en&organization_id[]='.$this->parameters['wrong_organization_id'], $this->headers);
         $response->assertStatus(404);
-
     }
 
     public function test_lab_program_manage_view_positive(): void
