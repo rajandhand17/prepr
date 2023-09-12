@@ -1,61 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Invitation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
-            color: #333;
-            background-color: #f6f6f6;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 24px;
-            margin: 0 0 20px;
-            text-align: center;
-        }
-        p {
-            margin: 0 0 10px;
-        }
-        button {
-            display: block;
-            margin: 20px auto 0;
-            padding: 10px 20px;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #3e8e41;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<title>Reset your password</title>
+	<style>
+		*{ margin:0; padding: 0; }
+		body{ background: #fff; margin: 0; padding: 0; font-family: 'Arial'; }
+
+		@media only screen and (max-width: 640px)  {
+					body[yahoo] .deviceWidth {width:100%!important; padding:0; }
+					body[yahoo] .center {text-align: center!important;}
+					body[yahoo] .banners {width:100% !important;}
+			}
+
+	@media only screen and (max-width: 479px) {
+		body[yahoo] .deviceWidth {width:100%!important; padding:0; }
+	}
+
+	</style>
 </head>
-<body>
-    <div class="container">
-        <h1>Event Invitation</h1>
-        <p>Dear Test,</p>
-        <p>You are cordially invited to attend our upcoming event, ****, on **** at ****.</p>
-        <p>The event will be held at , and will feature ****. We hope that you will be able to join us for this exciting occasion.</p>
-        <p>Please RSVP by **** to let us know if you will be attending.</p>
-        <button>RSVP Now</button>
-        <p>Thank you, and we look forward to seeing you soon!</p>                      
-        <p>Sincerely,</p>
-        <p>Test</p>
-    </div>
+<body yahoo="fix">
+	<table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" align="center">
+		<tr>
+			<td width="100%" align="center">
+				<table width="650" bgcolor="#F6F6F6" cellpadding="0" cellspacing="0" align="center" class="deviceWidth">
+					<tr>
+						<td align="center" style="padding: 10px 0;"><img src="/" alt=""></td>
+					</tr>
+					<tr>
+						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear {{ ucfirst($data['invitee_name']); }},<br>
+                    </tr>
+
+					<tr>
+						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">{{$data['mailBody']}} </td>
+					</tr>
+					<tr>
+						<td style="border-bottom: 1px #cecece solid;">&nbsp;</td>
+					</tr>
+
+					<tr>
+	                    <td bgcolor="#dbdada" style="font-family:Helvetica, Arial, sans-serif; font-size:11px; color:#7b7b7b; padding:5px 20px 15px; vertical-align:middle; text-align:center;" width="100%">
+	                        You received this email to inform / update you about your
+	                        product or account.<br>
+	                        <a style="text-decoration:underline; color:#7b7b7b;" target="_blank" href="https://prepr.org/contact/">
+	                            Click here
+	                        </a>
+	                            to view our contact details | Read our
+	                        <a style="text-decoration:underline; color:#7b7b7b;" target="_blank" href="https://prepr.org/privacy-policy/">
+	                            Privacy Policy
+	                        </a>
+	                    </td>
+                	</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
 </body>
 </html>
