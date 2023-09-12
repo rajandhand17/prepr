@@ -37,13 +37,11 @@ class LabProgramController extends AppBaseController
                     'total_pages'  => $labProgram->lastPage(),
                     'list'         => LabProgramResource::collection($labProgram),
                 ];
-
                 return $this->sendResponse($response, __('responses.found_lab_program_list'));
             }
-
-            return $this->sendError(__('responses.not_found_lab_program_list'), 404);
+                return $this->sendError(__('responses.not_found_lab_program_list'), 404);
         } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
+               return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
@@ -54,7 +52,6 @@ class LabProgramController extends AppBaseController
             if ($labProgram) {
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
             }
-
             return $this->sendError(__('responses.not_found_lab_program_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -80,7 +77,6 @@ class LabProgramController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_lab_program_successfully'));
                 }
             }
-
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
