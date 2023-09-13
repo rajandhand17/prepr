@@ -1,59 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Reset your password</title>
-	<style>
-		*{ margin:0; padding: 0; }
-		body{ background: #fff; margin: 0; padding: 0; font-family: 'Arial'; }
-
-		@media only screen and (max-width: 640px)  {
-					body[yahoo] .deviceWidth {width:100%!important; padding:0; }
-					body[yahoo] .center {text-align: center!important;}
-					body[yahoo] .banners {width:100% !important;}
-			}
-
-	@media only screen and (max-width: 479px) {
-		body[yahoo] .deviceWidth {width:100%!important; padding:0; }
-	}
-
-	</style>
-</head>
-<body yahoo="fix">
-	<table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" align="center">
+<table align="center" cellpadding="0" cellspacing="0" style="width:100%">
+	<tbody>
 		<tr>
-			<td width="100%" align="center">
-				<table width="650" bgcolor="#F6F6F6" cellpadding="0" cellspacing="0" align="center" class="deviceWidth">
+			<td>
+			<table align="center" border="0" cellpadding="5" cellspacing="5" class="deviceWidth" style="background:#f6f6f6; box-shadow:0px 0px 4px 1px #f5f5f5; font-family:Arial,Helvetica,sans-serif; padding:15px; width:650px">
+				<tbody>
 					<tr>
-						<td align="center" style="padding: 10px 0;"><img src="/" alt=""></td>
+						<td style="text-align:center"><img alt="" src="https://preprlabs.org/uploads/settings/site_logo.png" /></td>
 					</tr>
 					<tr>
-						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear {{ ucfirst($data['invitee_name']); }},<br>
-                    </tr>
-
-					<tr>
-						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">{{$data['mailBody']}} </td>
+						<td>Dear {{ $emailData['invitee_name'] }},</td>
 					</tr>
 					<tr>
-						<td style="border-bottom: 1px #cecece solid;">&nbsp;</td>
+						<td style="text-align:center"><img alt="" height="75px" src="{cover_image}" /></td>
 					</tr>
-
 					<tr>
-	                    <td bgcolor="#dbdada" style="font-family:Helvetica, Arial, sans-serif; font-size:11px; color:#7b7b7b; padding:5px 20px 15px; vertical-align:middle; text-align:center;" width="100%">
-	                        You received this email to inform / update you about your
-	                        product or account.<br>
-	                        <a style="text-decoration:underline; color:#7b7b7b;" target="_blank" href="https://prepr.org/contact/">
-	                            Click here
-	                        </a>
-	                            to view our contact details | Read our
-	                        <a style="text-decoration:underline; color:#7b7b7b;" target="_blank" href="https://prepr.org/privacy-policy/">
-	                            Privacy Policy
-	                        </a>
-	                    </td>
-                	</tr>
-				</table>
+						<td>{{  $emailData['body'] }}</td>
+					</tr>
+					<tr>
+                        <br/>
+						<td style="text-align:center"><a href="{{ $emailData['slug'] }}" style="color: #fff; background: #44C1E0; text-decoration: none; font-size: 18px; padding: 10px 50px; border-radius: 4px; ">Click here</a></td>
+					</tr>
+					<tr>
+                        <td>Feel free to write us at <a href="mailto:support@prepr.com" style="color:#44C1E0; text-decoration: none;">support@prepr.org</a>&nbsp;for any assistance. We will be happy to help.<br />
+						&nbsp;</td>
+					</tr>
+					<tr>
+						<td>Regards,<br />
+						Prepr team</td>
+					</tr>
+				</tbody>
+			</table>
 			</td>
 		</tr>
-	</table>
-</body>
-</html>
+	</tbody>
+</table>

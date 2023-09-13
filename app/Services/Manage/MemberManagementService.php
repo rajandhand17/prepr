@@ -4,9 +4,11 @@ namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
+use App\Notifications\InviteMemberNotification;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Facades\Notification;
 use stdClass;
 
 class MemberManagementService
@@ -350,12 +352,12 @@ class MemberManagementService
 
                             $subject = $request->subject_line;
                             $emailBody = $request->email_body;
+                            $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
                             if (empty($request->subject_line) || empty($request->email_body)) {
                                 $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
 
                                 if ($getTemplate) {
                                     //replace component title and user name with actual data
-                                    $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
                                     $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $componentCollectionObject->title, $getTemplate->body_content));
 
                                     if (empty($request->subject_line)) {
@@ -383,6 +385,10 @@ class MemberManagementService
                                 'email_body'    => $emailBody,
                             ]);
 
+                            $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : "Solver";
+                            $email_detail = ['invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                            Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
+
                             $invited_emails[] = $member['invitee_email'];
                         } else {
                             $already_members[] = $member['invitee_email'];
@@ -404,6 +410,7 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
 
             return false;
