@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Auth;
 
-use App\Http\Requests\Auth\MagnetSSOLoginFormRequest;
 use Tests\TestCase;
 
 /**

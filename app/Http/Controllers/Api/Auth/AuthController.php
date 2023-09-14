@@ -942,9 +942,8 @@ class AuthController extends AppBaseController
     public function magnetSsoLogin(MagnetSSOLoginFormRequest $request)
     {
         try {
-
             $checkMagnetSSOUser = $this->handleMagnetResponse($request);
-            if($checkMagnetSSOUser['status'] == 'error') {
+            if ($checkMagnetSSOUser['status'] == 'error') {
                 return $this->sendError($checkMagnetSSOUser['message'], 402);
             }
             dd($checkMagnetSSOUser);
