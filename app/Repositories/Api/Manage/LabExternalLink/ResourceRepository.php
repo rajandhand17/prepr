@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Manage\LabExternalLink;
 
 use App\Services\Manage\LabExternalLinksService;
 
-class LabExternalLinkRepository implements LabExternalLinkInterface
+class ResourceRepository implements ResourceInterface
 {
     protected $labExternalLinksService;
 
