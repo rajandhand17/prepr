@@ -385,7 +385,7 @@ class MemberManagementService
                                 'email_body'    => $emailBody,
                             ]);
 
-                            $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : "Solver";
+                            $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
 
