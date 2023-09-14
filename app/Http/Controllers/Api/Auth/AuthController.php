@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\CheckPhoneRequest;
 use App\Http\Requests\Auth\CheckUsernameRequest;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\LoginFormRequest;
+use App\Http\Requests\Auth\MagnetSSOLoginFormRequest;
 use App\Http\Requests\Auth\RegisterFormRequest;
 use App\Http\Requests\Auth\ResetPasswordFormRequest;
 use App\Http\Requests\Auth\SendOtpRequest;
@@ -18,9 +19,11 @@ use App\Http\Requests\Auth\VerifyTwoFactorRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
+use App\Traits\MagnetTrait;
 
 class AuthController extends AppBaseController
 {
+    use MagnetTrait;
     private AuthRepository $authRepository;
 
     public function __construct(AuthRepository $authRepository)
@@ -921,6 +924,31 @@ class AuthController extends AppBaseController
     {
         try {
             $ssorequest = $this->authRepository->ssoLogin($request);
+            if ($ssorequest['success'] == true) {
+                $response = ['token' => LoginResource::make(json_decode(json_encode($ssorequest), false)), 'user' => UserResource::make($ssorequest['user']), 'code' => $ssorequest['code']];
+
+                return $this->sendResponse($response, $ssorequest['message'], 200);
+            }
+            if ($ssorequest['success'] == false) {
+                return $this->sendError($ssorequest['message'], 401);
+            }
+
+            return $this->sendError(__('responses.send_error'), 500);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function magnetSsoLogin(MagnetSSOLoginFormRequest $request)
+    {
+        try {
+            $checkMagnetSSOUser = $this->handleMagnetResponse($request);
+            if ($checkMagnetSSOUser['status'] == 'error') {
+                return $this->sendError($checkMagnetSSOUser['message'], 402);
+            }
+            dd($checkMagnetSSOUser);
+            $ssorequest = $this->authRepository->magnetSsoLogin($checkMagnetSSOUser);
+
             if ($ssorequest['success'] == true) {
                 $response = ['token' => LoginResource::make(json_decode(json_encode($ssorequest), false)), 'user' => UserResource::make($ssorequest['user']), 'code' => $ssorequest['code']];
 

@@ -7,6 +7,7 @@ Route::middleware(['language'])->group(function () {
     Route::post('/register', [AuthController::class, 'registerUser']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/sso-login', [AuthController::class, 'ssoLogin']);
+    Route::post('/sso-login/magnet', [AuthController::class, 'magnetSsoLogin']);
     Route::post('/two-factor-verification', [AuthController::class, 'twoFactorVerification']);
     Route::post('/check-username', [AuthController::class, 'checkUsername']);
     Route::post('/check-email', [AuthController::class, 'checkEmail']);
