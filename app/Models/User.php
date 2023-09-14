@@ -492,6 +492,7 @@ class User extends Authenticatable
                 return $response;
             } else {
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
+
                 return $response;
             }
         } catch (\Exception $e) {
@@ -499,7 +500,8 @@ class User extends Authenticatable
         }
     }
 
-    public function magnetSsoLogin($magnetUserDetails){
+    public function magnetSsoLogin($magnetUserDetails)
+    {
         try {
             /**checking user exists or not */
             $user = User::where('email', $magnetUserDetails['data']->email)->first();
@@ -523,10 +525,11 @@ class User extends Authenticatable
                 return $response;
             } else {
                 $userData = [
-                    'user' => $magnetUserDetails['data'],
-                    'access_token' => $magnetUserDetails['access_token']
+                    'user'         => $magnetUserDetails['data'],
+                    'access_token' => $magnetUserDetails['access_token'],
                 ];
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData,  'code' => 5];
+
                 return $response;
             }
         } catch (\Exception $e) {
