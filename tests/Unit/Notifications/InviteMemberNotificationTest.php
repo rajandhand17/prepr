@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Notifications;
 
-use App\Notifications\InviteMemberNotification;
 use Tests\TestCase;
 
 /**

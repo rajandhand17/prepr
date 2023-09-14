@@ -35,7 +35,7 @@ class InviteMemberNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject($this->emailData['subject'])
             ->view('email.member_manager_invite_users', ['emailData' => $this->emailData]);
     }
