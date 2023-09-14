@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('resource_rating', function (Blueprint $table) {
+        Schema::create('resource_module_tags', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('resource_id')->nullable();
-            $table->bigInteger('user_id')->nullable();
-            $table->bigInteger('rating_id')->nullable();
+            $table->unsignedBigInteger('resource_module_id');
+            $table->bigInteger('tag_id');
             $table->timestamps();
-            $table->softDelete();
+            $table->softDeletes();
+            $table->foreign('resource_module_id')->references('id')->on('resource_module')->onDelete('cascade');
+
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('resource_rating');
+        Schema::dropIfExists('resource_module_tags');
     }
 };

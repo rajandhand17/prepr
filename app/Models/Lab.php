@@ -94,7 +94,7 @@ class Lab extends Model
 
     public function tag_groups()
     {
-        return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id');
+        return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id')->where('type', '1');
     }
 
     public function component_association()

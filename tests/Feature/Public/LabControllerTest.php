@@ -656,4 +656,27 @@ class LabControllerTest extends TestCase
         $response = $this->post('/api/v1/public/lab/'.$this->parameters['wrong_slug'].'/un-favourite?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(404, $response->getStatusCode());
     }
+
+    public function test_lab_list_name_and_id_positive()
+    {
+        $response = $this->get('/api/v1/public/lab/get-name?language='.$this->parameters['language'], $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $response->json();
+        if ($data['success']) {
+            $this->assertArrayHasKey('total_count', $data['data']);
+            $this->assertArrayHasKey('per_page', $data['data']);
+            $this->assertArrayHasKey('count', $data['data']);
+            $this->assertArrayHasKey('current_page', $data['data']);
+            $this->assertArrayHasKey('total_pages', $data['data']);
+            $this->assertArrayHasKey('id', $data['data']['list'][0]);
+            $this->assertArrayHasKey('title', $data['data']['list'][0]);
+            $this->assertArrayHasKey('media', $data['data']['list'][0]);
+        }
+    }
+
+    public function test_lab_list_name_and_id_negative()
+    {
+        $response = $this->get('/api/v1/public/lab/get-name?language='.$this->parameters['wrong_language'], $this->headers);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 }

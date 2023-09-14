@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('resource_skills', function (Blueprint $table) {
+        Schema::create('scorm', function (Blueprint $table) {
             $table->id();
+            $table->text('uuid');
+            $table->string('resource_type');
             $table->bigInteger('resource_id');
-            $table->bigInteger('skill_id');
+            $table->text('title');
+            $table->text('origin_file')->nullable();
+            $table->string('version')->nullable();
+            $table->double('ratio')->nullable();
+            $table->text('identifier')->nullable();
+            $table->text('entry_url')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('resource_skills');
+        Schema::dropIfExists('scorm');
     }
 };

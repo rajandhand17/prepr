@@ -66,7 +66,7 @@ class Handler extends ExceptionHandler
             return Response::json(ResponseUtil::makeError(__('responses.handler_illegal_request_403')), 405);
         }
 
-        if ($e->getStatusCode() === 500) {
+        if ($e) {
             return Response::json(ResponseUtil::makeError(__('responses.send_error')), 500);
         }
 

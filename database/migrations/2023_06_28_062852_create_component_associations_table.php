@@ -14,7 +14,7 @@ return new class() extends Migration {
     {
         Schema::create('component_associations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('lab_id');
+            $table->bigInteger('lab_id')->nullable();
             $table->bigInteger('lab_program_id')->nullable();
             $table->bigInteger('challenge_id')->nullable();
             $table->bigInteger('challenge_path_id')->nullable();

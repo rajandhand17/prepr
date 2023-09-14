@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\Lab;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
+use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
@@ -157,7 +158,7 @@ class LabController extends AppBaseController
                 return $this->sendResponse([], __('responses.lab_slug_available'), 200);
             }
 
-            return $this->sendError(__('responses.slug_not_exists'), 400);
+            return $this->sendError(__('responses.already_exists'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -172,6 +173,24 @@ class LabController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.lab_name_available'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getList(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $getLabListName = $this->labRepository->getLabListName($request, $organization);
+            if ($getLabListName) {
+                $response = LabListNameResource::collection($getLabListName);
+            }
+
+            return $this->sendResponse($getLabListName, __('responses.found_labs_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

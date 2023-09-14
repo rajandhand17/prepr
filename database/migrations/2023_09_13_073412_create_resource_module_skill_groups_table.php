@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('resource_tags', function (Blueprint $table) {
+        Schema::create('resource_module_skill_groups', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('resource_id');
-            $table->bigInteger('tag_id');
+            $table->unsignedBigInteger('resource_module_id');
+            $table->bigInteger('skill_groups');
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('resource_module_id')->references('id')->on('resource_module')->onDelete('cascade');
+
         });
     }
 
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('resource_tags');
+        Schema::dropIfExists('resource_module_skill_groups');
     }
 };

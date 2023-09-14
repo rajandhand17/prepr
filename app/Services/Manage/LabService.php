@@ -89,6 +89,15 @@ class LabService
         }
     }
 
+    public static function getLabBasedOnId($Id)
+    {
+        try {
+            return Lab::select('uuid', 'title', 'media')->where('id', $Id)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function uploadLabCoverImage($image)
     {
         try {
@@ -291,6 +300,33 @@ class LabService
             $checklabName = Lab::where('title', $title)->first();
             if ($checklabName) {
                 return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getLabListName($request, $organization)
+    {
+        try {
+            $lab_list = Lab::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $lab_list = self::filterLabList($lab_list, $request);
+            $limit = config('site-settings.listing_limit');
+
+            return $lab_list->limit($limit)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabIdBasedOnUUIDArray($uuid)
+    {
+        try {
+            $lab = Lab::whereIn('uuid', $uuid)->pluck('id')->all();
+            if ($lab != null) {
+                return $lab;
             }
 
             return false;

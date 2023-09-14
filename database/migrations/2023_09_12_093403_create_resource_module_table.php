@@ -20,14 +20,13 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->longText('description')->nullable();
-            $table->enum('status',['0', '1'])->comment('open=>0', 'closed=>1')->nullable();
+            $table->enum('status',['0', '1'])->comment('open=>0,closed=>1')->nullable();
             $table->enum('is_auto_created', ['0', '1'])->comment('0-> no, 1-> yes')->default('0');
             $table->enum('is_global', ['0', '1'])->comment('0-> no, 1-> yes')->default('0');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
