@@ -13,9 +13,9 @@ class LabSocialActivitiesService
             if (auth()->check()) {
                 $checkActivity = LabSocialActivity::where(
                     [
-                        'lab_id' => $lab_id,
+                        'lab_id'  => $lab_id,
                         'user_id' => auth()->user()->id,
-                        $column => $action,
+                        $column   => $action,
                     ]
                 )->first();
                 if ($checkActivity != null) {
@@ -24,6 +24,7 @@ class LabSocialActivitiesService
 
                 return false;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -36,13 +37,14 @@ class LabSocialActivitiesService
             if (auth()->check()) {
                 LabSocialActivity::updateOrInsert([
                     'user_id' => auth::user()->id,
-                    'lab_id' => $lab_id,
+                    'lab_id'  => $lab_id,
                 ], [
                     $column => $action,
                 ]);
 
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
