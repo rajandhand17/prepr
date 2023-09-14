@@ -368,22 +368,23 @@ class MemberManagementService
                                     }
                                 }
                             }
-                            MemberManagement::create([
-                                'uuid'          => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-                                'type'          => $member['type'],
-                                'invite_type'   => $member['invite_type'],
-                                'module_id'     => $componentCollectionObject->id,
-                                'module_type'   => $module_type,
-                                'inviter_id'    => ($member['type'] == 0) ? auth()->user()->id : $componentCollectionObject->user_id,
-                                'role'          => $request->role,
-                                'email'         => $member['invitee_email'],
-                                'auto_invite'   => $auto_invite,
-                                'invite_status' => $invite_status,
-                                'invitee_name'  => $member['invitee_name'],
-                                'email_status'  => $email_status,
-                                'subject_line'  => $subject,
-                                'email_body'    => $emailBody,
-                            ]);
+                            // COMMENTED FOR TEMP, Till emails with Sendgrid done
+                            // MemberManagement::create([
+                            //     'uuid'          => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                            //     'type'          => $member['type'],
+                            //     'invite_type'   => $member['invite_type'],
+                            //     'module_id'     => $componentCollectionObject->id,
+                            //     'module_type'   => $module_type,
+                            //     'inviter_id'    => ($member['type'] == 0) ? auth()->user()->id : $componentCollectionObject->user_id,
+                            //     'role'          => $request->role,
+                            //     'email'         => $member['invitee_email'],
+                            //     'auto_invite'   => $auto_invite,
+                            //     'invite_status' => $invite_status,
+                            //     'invitee_name'  => $member['invitee_name'],
+                            //     'email_status'  => $email_status,
+                            //     'subject_line'  => $subject,
+                            //     'email_body'    => $emailBody,
+                            // ]);
 
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : "Solver";
                             $email_detail = ['invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
