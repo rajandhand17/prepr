@@ -19,5 +19,10 @@ class AchievementConditionList extends Model
         'fr_CA_title',
     ];
 
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

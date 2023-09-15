@@ -134,7 +134,7 @@ class LabResource extends JsonResource
             'description'                   => $this->description,
             'privacy'                       => $this->type,
             'media_type'                    => $this->media_type,
-            'media'                         => config('site-settings.aws_url').$this->media,
+            'media'                         => $this->media,
             'category_id'                   => $category_id,
             'category'                      => $category,
             'organization_id'               => $this->organization->uuid,
