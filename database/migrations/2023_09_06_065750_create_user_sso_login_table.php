@@ -15,8 +15,8 @@ return new class() extends Migration {
             $table->unsignedBigInteger('user_id')->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->enum('sso_type', ['1', '2', '3', '4', '5'])->comment('1->Google, 2=>Linkedin,3=>Microsoft,4=>Apple,5=>Magnet');
-            $table->string('sub');
-            $table->longText('access_token');
+            $table->string('sub')->nullable();
+            $table->longText('access_token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

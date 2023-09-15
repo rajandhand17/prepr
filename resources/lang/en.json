@@ -3,6 +3,7 @@
     "responses.provide_language":"Please provide the language.",
     "responses.something_wrong_setup_language":"Something went wrong during setting up the application language.",
     "responses.email_field_required":"This email field is required.",
+    "responses.code_field_required":"This code field is required.",
     "responses.valid_email_pattern":"Please enter valid email!",
     "responses.max_content_50":"Maximum character limit for this is 50.",
     "responses.not_exists_email":"The provided email is not exists!",

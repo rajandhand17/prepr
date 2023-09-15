@@ -27,4 +27,6 @@ interface AuthInterface
     public function twoFactorVerification($request);
 
     public function ssoLogin($request);
+
+    public function magnetSsoLogin($magnetUserDetails);
 }
