@@ -86,18 +86,10 @@ class LabProgramResource extends JsonResource
         }
 
         if ($this->achievement) {
-            $achievement_conditions = [];
-            $condition = json_decode($this->achievement->achievement_condition);
-
-            foreach ($condition as $achievement_condition) {
-                $check_achievement_condition = AchievementConditionListService::getAchievementConditionByID($this->language, $achievement_condition);
-                $achievement_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
-            }
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
                 'achievement_points'    => $this->achievement->achievement_points,
-                'achievement_image'     => config('site-settings.aws_url').$this->achievement->achievement_image,
-                'achievement_condition' => json_decode(json_encode($achievement_conditions)),
+                'achievement_image'     => $this->achievement->achievement_image,
             ];
         }
 

@@ -330,8 +330,8 @@
     "responses.lab_program_name_not_available":"This lab program name is not available!",
     "responses.lab_program_name_available":"This lab program name is available!",
 
-    "responses.lab_program_stored_success":"Congratulations! You have successfully created a Lab.",
-    "responses.lab_program_stored_failed":"Oops! The Creation Lab has failed.",
+    "responses.lab_program_stored_success":"Congratulations! You have successfully created a Lab Program.",
+    "responses.lab_program_stored_failed":"Oops! The Creation Lab Program has failed.",
 
     "responses.lab_program_update_successfully":"The Lab Program has been updated successfully",
     "responses.lab_program_not_update":"There were some issues being encountered while updating the lab Program!",
