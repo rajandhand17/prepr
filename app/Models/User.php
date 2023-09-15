@@ -499,4 +499,41 @@ class User extends Authenticatable
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function magnetSsoLogin($magnetUserDetails)
+    {
+        try {
+            /**checking user exists or not */
+            $user = User::where('email', $magnetUserDetails['data']->email)->first();
+            if ($user) {
+                $ssoKey = '5';
+
+                if ($ssoKey === null) {
+                    $response = ['success' => false, 'message' => __('responses.invalid_sso_type'), 'code' => 4];
+
+                    return $response;
+                }
+                $token = $user->createToken(env('APP_NAME'))->accessToken;
+//                $checkSSODetails = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $ssoKey])->first();
+//                if ($checkSSODetails == null) {
+//                    $usersso = UserSSOLogin::create($user, $request);
+//                } else {
+//                    $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
+//                }
+                $response = ['success' => true,  'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+
+                return $response;
+            } else {
+                $userData = [
+                    'user'         => $magnetUserDetails['data'],
+                    'access_token' => $magnetUserDetails['access_token'],
+                ];
+                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData,  'code' => 5];
+
+                return $response;
+            }
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
