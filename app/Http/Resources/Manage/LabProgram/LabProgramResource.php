@@ -102,7 +102,7 @@ class LabProgramResource extends JsonResource
             'description'                   => $this->description,
             'lab'                           => $componentAssociation,
             'user_id'                       => $this->user_id,
-            'media'                         => config('site-settings.aws_url').$this->media,
+            'media'                         => $this->media,
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
             'category_id'                   => $category_id,

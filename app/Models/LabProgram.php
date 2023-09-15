@@ -34,6 +34,11 @@ class LabProgram extends Model
         'is_sequential',
     ];
 
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
     public function component_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_program_id', 'id');
