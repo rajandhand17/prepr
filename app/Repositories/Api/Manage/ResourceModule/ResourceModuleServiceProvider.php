@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Api\Manage\Resource;
+namespace App\Repositories\Api\Manage\ResourceModule;
 
 use Illuminate\Support\ServiceProvider;
 
-class ResourceServiceProvider extends ServiceProvider
+class ResourceModuleServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -22,6 +22,6 @@ class ResourceServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Resource\ResourceInterface', 'App\Repositories\Api\Manage\Resource\ResourceRepository');
+        $this->app->bind('App\Repositories\Api\ResourceModule\ResourceModuleInterface', 'App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository');
     }
 }

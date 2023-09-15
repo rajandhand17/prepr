@@ -4,20 +4,26 @@ namespace App\Http\Controllers\Api\Manage\Resource;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Resource\CreateResourceRequest;
-use App\Repositories\Api\Manage\Resource\ResourceRepository;
+use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
 use Illuminate\Http\Request;
 
 class ResourceController extends AppBaseController
 {
-    private $resourceRepository;
+    private $resourceModuleRepository;
 
-    function __construct(ResourceRepository $resourceRepository){
-        $this->resourceRepository = $resourceRepository;
+    function __construct(ResourceModuleRepository $resourceModuleRepository){
+        $this->resourceModuleRepository = $resourceModuleRepository;
     }
 
+    public function index(){
+        try{
+        }catch(\Exception $e){
+            return $this->sendError(__('response.send_error'));
+        }
+    }
     public function create(Request $request){
         try{
-            $createResource=$this->resourceRepository->store($request);
+            $createResource=$this->resourceModuleRepository->createResourceModule($request);
         }catch(\Exception $e){
             return $this->sendError(__('response.send_error'));
         }
