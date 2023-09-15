@@ -46,7 +46,6 @@ class UpdateLabProgramRequest extends FormRequest
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
             $base_rules['achievement_points'] = 'required';
-            $base_rules['achievement_condition'] = 'required|array';
             $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
         }
 

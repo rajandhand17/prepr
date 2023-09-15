@@ -15,7 +15,6 @@ return new class() extends Migration {
             $table->unsignedBigInteger('lab_program_id');
             $table->string('achievement_name');
             $table->integer('achievement_points');
-            $table->json('achievement_condition');
             $table->text('achievement_image');
             $table->timestamps();
             $table->softDeletes();
