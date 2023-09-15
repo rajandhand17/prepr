@@ -13,6 +13,13 @@ class ResourceModuleRepository implements ResourceModuleInterface
         $this->$resourceModuleService = $resourceModuleService;
     }
 
+    public function index($request){
+        try{
+
+        }catch(\Exception $e){
+            return false;
+        }
+    }
     public function createResourceModule($request)
     {
         return  $this->resourceModuleService->createResourceModule($request);

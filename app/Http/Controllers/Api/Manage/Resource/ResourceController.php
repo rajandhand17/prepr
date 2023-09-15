@@ -17,6 +17,7 @@ class ResourceController extends AppBaseController
 
     public function index(){
         try{
+
         }catch(\Exception $e){
             return $this->sendError(__('response.send_error'));
         }
@@ -24,6 +25,7 @@ class ResourceController extends AppBaseController
     public function create(Request $request){
         try{
             $createResource=$this->resourceModuleRepository->createResourceModule($request);
+
         }catch(\Exception $e){
             return $this->sendError(__('response.send_error'));
         }
