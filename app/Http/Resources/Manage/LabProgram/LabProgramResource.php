@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Manage\LabProgram;
 
-use App\Services\AchievementConditionListService;
 use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -86,7 +85,6 @@ class LabProgramResource extends JsonResource
         }
 
         if ($this->achievement) {
-
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
                 'achievement_points'    => $this->achievement->achievement_points,
