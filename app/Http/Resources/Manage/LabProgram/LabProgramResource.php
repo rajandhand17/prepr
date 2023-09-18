@@ -88,7 +88,7 @@ class LabProgramResource extends JsonResource
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
                 'achievement_points'    => $this->achievement->achievement_points,
-                'achievement_image'     => config('site-settings.aws_url').$this->achievement->achievement_image,
+                'achievement_image'     => $this->achievement->achievement_image,
             ];
         }
 
