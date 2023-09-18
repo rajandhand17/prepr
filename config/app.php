@@ -195,6 +195,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
 
@@ -215,6 +216,8 @@ return [
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
         App\Repositories\Api\Public\Lab\LabServiceProvider::class,
         App\Repositories\Api\Public\LabProgram\LabProgramServiceProvider::class,
+        App\Repositories\Api\Public\InvitationManagement\InvitationManagementServiceProvider::class,
+
 
     ],
 
