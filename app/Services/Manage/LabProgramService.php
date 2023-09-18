@@ -14,12 +14,12 @@ class LabProgramService
     public function getLabProgramList($request, $organization)
     {
         $getLabProgramList = LabProgram::select()->where('organization_id', '=', $organization->id);
-        $getLabProgramList = self::filterLabList($getLabProgramList, $request);
+        $getLabProgramList = self::filterLabProgramList($getLabProgramList, $request);
 
         return $getLabProgramList->paginate(config('site-settings.pagination_per_page'));
     }
 
-    public function filterLabList($labProgramList, $request)
+    public function filterLabProgramList($labProgramList, $request)
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
