@@ -19,5 +19,10 @@ class SocialLink extends Model
         'icon',
     ];
 
+    public function getIconAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

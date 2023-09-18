@@ -18,7 +18,7 @@ class SocialLinkResource extends JsonResource
         return [
             'id'    => $this->id,
             'title' => $this->title,
-            'icon'  => config('site-settings.aws_url').$this->icon,
+            'icon'  => $this->icon,
         ];
     }
 }

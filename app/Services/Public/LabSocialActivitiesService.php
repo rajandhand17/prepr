@@ -10,15 +10,19 @@ class LabSocialActivitiesService
     public function checkSocialActivity($lab_id, $column, $action)
     {
         try {
-            $checkActivity = LabSocialActivity::where(
-                [
-                    'lab_id'  => $lab_id,
-                    'user_id' => auth()->user()->id,
-                    $column   => $action,
-                ]
-            )->first();
-            if ($checkActivity != null) {
-                return true;
+            if (auth()->check()) {
+                $checkActivity = LabSocialActivity::where(
+                    [
+                        'lab_id'  => $lab_id,
+                        'user_id' => auth()->user()->id,
+                        $column   => $action,
+                    ]
+                )->first();
+                if ($checkActivity != null) {
+                    return true;
+                }
+
+                return false;
             }
 
             return false;
@@ -30,14 +34,18 @@ class LabSocialActivitiesService
     public function captureSocialActivity($lab_id, $column, $action): bool
     {
         try {
-            LabSocialActivity::updateOrInsert([
-                'user_id' => Auth::user()->id,
-                'lab_id'  => $lab_id,
-            ], [
-                $column => $action,
-            ]);
+            if (auth()->check()) {
+                LabSocialActivity::updateOrInsert([
+                    'user_id' => auth::user()->id,
+                    'lab_id'  => $lab_id,
+                ], [
+                    $column => $action,
+                ]);
 
-            return true;
+                return true;
+            }
+
+            return false;
         } catch (\Exception $e) {
             return false;
         }

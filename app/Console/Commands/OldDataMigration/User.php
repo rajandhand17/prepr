@@ -40,10 +40,11 @@ class User extends Command
     public function handle()
     {
         try {
+            $insertArr = [];
             $this->info('Migrating old data for users table.');
             DB::beginTransaction();
-            $users = DB::connection('mysql2')->table('users')->get();
-            if ($users->count() > 0) {
+
+            DB::connection('mysql2')->table('users')->chunkById(1000, function ($users) {
                 foreach ($users as $key => $single_user) {
                     if ($single_user->email == null) {
                         continue;
@@ -108,13 +109,10 @@ class User extends Command
 
                     $user->attachRole('user');
                 }
-                DB::commit();
-                $this->info('Migrating of old data for users table completed.');
+            });
 
-                return;
-            }
-            DB::rollback();
-            $this->error('No user found.');
+            DB::commit();
+            $this->info('Migrating of old data for users table completed.');
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());

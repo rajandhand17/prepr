@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/', [LabController::class, 'index']);
+    Route::get('/get-list', [LabController::class, 'getList']);
     Route::get('{slug}', [LabController::class, 'show']);
     Route::post('/create', [LabController::class, 'create']);
     Route::put('/{slug}/update', [LabController::class, 'update']);

@@ -1,0 +1,269 @@
+<?php
+
+namespace App\Services\Manage;
+
+use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
+use App\Models\LabProgram;
+use App\Models\Organization;
+use App\Services\Public\LabProgramSocialActivitiesService;
+use HiFolks\RandoPhp\Randomize;
+
+class LabProgramService
+{
+    public function getLabProgramList($request, $organization)
+    {
+        $getLabProgramList = LabProgram::select()->where('organization_id', '=', $organization->id);
+        $getLabProgramList = self::filterLabProgramList($getLabProgramList, $request);
+
+        return $getLabProgramList->paginate(config('site-settings.pagination_per_page'));
+    }
+
+    public function filterLabProgramList($labProgramList, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+            }
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
+            }
+            if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
+                $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
+                $labIds = LabProgramSocialActivitiesService::getLabProgramsBasedOnActivity($activityType)->pluck('lab_program_id');
+                $labProgramList->whereIn('lab_programs.id', $labIds);
+            }
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $labProgramList->orderBy('lab_programs.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $labProgramList->orderBy('lab_programs.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $labProgramList->orderBy('lab_programs.created_at', 'ASC');
+                        break;
+                    default:
+                        $labProgramList->orderBy('lab_programs.id', 'ASC');
+                }
+            }
+
+            if ($request->has('privacy') && !empty($request->privacy)) {
+                switch ($request->privacy) {
+                    case 'public':
+                        $labProgramList = $labProgramList->where('lab_programs.privacy', '0');
+                        break;
+                    case 'private':
+                        $labProgramList = $labProgramList->where('lab_programs.privacy', '1');
+                        break;
+                    default:
+                        $labProgramList = $labProgramList;
+                }
+            }
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
+                $labProgramList = $labProgramList->whereIn('lab_programs.id', function ($query) use ($request) {
+                    $query->select('lab_programs_skills_groups_stack.lab_program_id')
+                        ->from('lab_programs_skills_groups_stack')
+                        ->whereIn('lab_programs_skills_groups_stack.foreign_id', $request->skills)
+                        ->where('lab_programs_skills_groups_stack.type', '0')
+                        ->whereNull('lab_programs_skills_groups_stack.deleted_at')
+                        ->distinct();
+                })->distinct('lab_programs.uuid');
+            }
+            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
+                $labProgramList = $labProgramList->whereIn('lab_programs.id', function ($query) use ($request) {
+                    $query->select('lab_programs_tags_groups.lab_program_id')
+                        ->from('lab_programs_tags_groups')
+                        ->whereIn('lab_programs_tags_groups.foreign_id', $request->tags)
+                        ->where('lab_programs_tags_groups.type', '0')
+                        ->whereNull('lab_programs_tags_groups.deleted_at')
+                        ->distinct();
+                })->distinct('lab_programs.uuid');
+            }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $labProgramList = $labProgramList->whereIn('duration_id', $request->duration_id);
+            }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $labProgramList = $labProgramList->whereIn('level_id', $request->level_id);
+            }
+
+            return $labProgramList;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabProgramBasedOnSlug($slug)
+    {
+        try {
+            return LabProgram::where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createLabProgram($request, $upload_media)
+    {
+        try {
+            $privacy = config('constants.lab_privacy.no');
+            switch($request->privacy) {
+                case 'yes':
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+                case 'no':
+                    $privacy = config('constants.lab_privacy.no');
+                    break;
+                default:
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+            }
+
+            $status = config('constants.lab_status.draft');
+            switch($request->status) {
+                case 'draft':
+                    $status = config('constants.lab_status.draft');
+                    break;
+                case 'publish':
+                    $status = config('constants.lab_status.publish');
+                    break;
+                case 'archive':
+                    $status = config('constants.lab_status.archive');
+                    break;
+                default:
+                    $status = config('constants.lab_status.draft');
+                    break;
+            }
+            $model = new LabProgram();
+            $slug = UtilityHelper::generateSlug($request->title, $model);
+            $organization_id = Organization::where('uuid', $request->organization_id)->first()->id;
+            $labProgram = new LabProgram();
+            $labProgram->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $labProgram->language = $request->language;
+            $labProgram->title = $request->title;
+            $labProgram->slug = $slug;
+            $labProgram->description = $request->description;
+            $labProgram->organization_id = $organization_id;
+            $labProgram->category_id = $request->category_id;
+            $labProgram->duration_id = $request->duration_id;
+            $labProgram->level_id = $request->level_id;
+            $labProgram->user_id = auth()->user()->id;
+            $labProgram->media_type = 'image';
+            $labProgram->media = $upload_media;
+            $labProgram->privacy = $privacy;
+            $labProgram->status = $status;
+            $labProgram->is_auto_created = '0';
+            $labProgram->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
+            $labProgram->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
+            $labProgram->save();
+
+            return $labProgram;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function uploadLabProgramMedia($image)
+    {
+        try {
+            $upload_lab_cover_image = FileUploadHelper::uploadImageToS3($image, 'lab_program');
+            if ($upload_lab_cover_image == false) {
+                return false;
+            }
+
+            return $upload_lab_cover_image;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkSlug($slug)
+    {
+        try {
+            return LabProgram::where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function delete($slug)
+    {
+        try {
+            return LabProgram::where('slug', $slug)->delete();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $checkLabProgramName = LabProgram::where('title', $title)->first();
+            if ($checkLabProgramName) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateLabProgram($slug, $request, $upload_media)
+    {
+        try {
+            $labProgram = LabProgram::where('slug', $slug)->first();
+            $privacy = config('constants.lab_privacy.no');
+            switch($request->privacy) {
+                case 'yes':
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+                case 'no':
+                    $privacy = config('constants.lab_privacy.no');
+                    break;
+                default:
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+            }
+
+            $status = config('constants.lab_status.draft');
+            switch($request->status) {
+                case 'draft':
+                    $status = config('constants.lab_status.draft');
+                    break;
+                case 'publish':
+                    $status = config('constants.lab_status.publish');
+                    break;
+                case 'archive':
+                    $status = config('constants.lab_status.archive');
+                    break;
+                default:
+                    $status = config('constants.lab_status.draft');
+                    break;
+            }
+            if ($request->has('organization_id')) {
+                $organization_id = Organization::where('uuid', $request->organization_id)->first()->id;
+            } else {
+                $organization_id = $labProgram->organization_id;
+            }
+            $labProgram->language = ($request->has('language')) ? $request->language : $labProgram->language;
+            $labProgram->title = ($request->has('title')) ? $request->title : $labProgram->title;
+            $labProgram->description = ($request->has('description')) ? $request->description : $labProgram->description;
+            $labProgram->organization_id = $organization_id;
+            $labProgram->category_id = ($request->has('category_id')) ? $request->category_id : $labProgram->category_id;
+            $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $labProgram->duration_id;
+            $labProgram->level_id = ($request->has('level_id')) ? $request->level_id : $labProgram->level_id;
+            $labProgram->media = ($upload_media) ? $upload_media : $labProgram->media;
+            $labProgram->privacy = $privacy;
+            $labProgram->status = $status;
+            $labProgram->is_auto_created = '0';
+            $labProgram->is_sequential = ($request->has('is_sequential')) ? ($request->is_sequential == 'yes') ? '1' : '0' : $labProgram->is_sequential;
+            $labProgram->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? ($request->is_achievement_enabled == 'yes') ? '1' : '0' : $labProgram->is_achievement_enabled;
+            $labProgram->save();
+
+            return $labProgram;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}
