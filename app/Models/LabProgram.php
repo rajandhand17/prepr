@@ -97,9 +97,8 @@ class LabProgram extends Model
     public function favourite()
     {
         if (auth('api')->check()) {
-            return ($this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
+            return $this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1');
         }
-
         return 'NA';
     }
 

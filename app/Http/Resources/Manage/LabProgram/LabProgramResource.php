@@ -35,10 +35,15 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $favourite=null;
+
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
             }
+        }
+        if($this->favourite){
+           $favourite= count($this->favourite) ? "yes" : "no";
         }
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
@@ -73,7 +78,6 @@ class LabProgramResource extends JsonResource
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
-
         if ($this->tags) {
             $associatedSkillStacks = $this->tags->pluck('foreign_id');
             $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
@@ -115,6 +119,7 @@ class LabProgramResource extends JsonResource
             'tags'                          => $tags,
             'tag_groups'                    => $tag_groups,
             'achievement'                   => $achievement,
+            'favourite'                     => $favourite,
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
