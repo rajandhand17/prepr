@@ -80,8 +80,7 @@ class LabProgramController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_lab_program_successfully'));
                 }
             }
-
-            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            return $this->sendError(__('responses.lab_program_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
