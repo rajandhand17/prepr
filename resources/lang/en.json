@@ -187,6 +187,7 @@
     "responses.not_found_user_list":"The list of user has not been retrieved with success.",
     "responses.request_type_required":"This request type field is required",
     "responses.lab_slug_not_found":"No labs are associated with this slug!",
+    "responses.lab_program_slug_not_found":"No lab programs are associated with this slug!",
     "responses.request_type_status":"Request type status can be between '<b>draft</b> ,<b>publish</b> or <b>archive</b>' only",
     "responses.type_in":"Request type status can be between '<b>assess</b> ,<b>onboard</b>,<b>engage</b>,<b>,grow</b>, or <b>na</b>' only",
     "responses.privacy_required":"This privacy field is required",
@@ -321,8 +322,8 @@
     "responses.lab_id_array": "This status should be an array!",
 
     "responses.lab_program_not_found": "The Lab Program(s) which you are looking doesn't exist in our system.",
-    "responses.found_lab_program_list":"The lab programs list has been successfully retrieved",
-    "responses.not_found_lab_program_list":"The list of lab programs has not been retrieved with success.",
+    "responses.found_lab_program_list":"The lab programs has been successfully retrieved",
+    "responses.not_found_lab_program_list":"The lab program has not been retrieved with success.",
 
     "responses.lab_program_delete":"The lab program has been deleted successfully!",
     "responses.lab_program_not_delete":"The lab program was not deleted!",
