@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class ResourceModule extends Model
+{
+    use HasFactory;
+    use SoftDeletes;
+
+    protected $table="resource_module";
+
+    protected $fillable=[
+        "uuid",
+        "language",
+        "user_id",
+        "organization_id",
+        "title",
+        "slug",
+        "description",
+        "status",
+        "is_auto_created",
+        "is_global",
+    ];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+}

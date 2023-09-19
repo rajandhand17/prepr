@@ -10,19 +10,46 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
     public function __construct(ResourceModuleService $resourceModuleService)
     {
-        $this->$resourceModuleService = $resourceModuleService;
+        $this->resourceModuleService = $resourceModuleService;
     }
 
-    public function index($request){
+    public function getResourceModuleList($request){
         try{
-
+            return  $this->resourceModuleService->getResourceModuleList($request);
         }catch(\Exception $e){
             return false;
         }
     }
     public function createResourceModule($request)
     {
-        return  $this->resourceModuleService->createResourceModule($request);
+        try{
+            return  $this->resourceModuleService->createResourceModule($request);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
 
+    public function getResourceModuleBasedOnSlug($slug){
+        try{
+            return $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function checkSlug($slug){
+        try{
+            return $this->resourceModuleService->checkSlug($slug);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function delete($slug){
+        try{
+            return $this->resourceModuleService->delete($slug);
+        }catch (\Exception $e){
+            return false;
+        }
     }
 }

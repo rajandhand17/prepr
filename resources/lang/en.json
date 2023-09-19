@@ -292,7 +292,7 @@
     "responses.already_un_favourite_lab":"The Lab is already being removed from favourites!",
 
     "responses.join_type_in":"Sorry! we are not supporting this type which you have requested for!",
-    "responses.join_invite_type_in":"Sorry! we are not supporting this invite type which you have requested for!",
+    "responses.join_invite_type_in":"Sorry! we are not supporting this invite type whic.h you have requested for!",
 
     "responses.join_request_accept_successfully": "You have accepted the join request successfully!",
     "responses.join_request_accept_failed": "You have failed to accept the join request",
@@ -358,6 +358,9 @@
     "responses.sso_type_required_field":"This sso_type field is required",
     "responses.sub_required_field":"This sub field is required",
     "responses.access_token_required_field":"This access token field is required",
-    "responses.invalid_sso_type":"Error: We couldn't authorize your login. Please verify your details and try again."
+    "responses.invalid_sso_type":"Error: We couldn't authorize your login. Please verify your details and try again.",
 
+    "responses.resource_module_not_found": "The Lab Program(s) which you are looking doesn't exist in our system.",
+    "responses.found_resource_module_list":"The lab programs list has been successfully retrieved",
+    "responses.not_found_resource_module_list":"The list of lab programs has not been retrieved with success."
 }

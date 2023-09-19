@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Manage\Resource\ResourceController;
+use App\Http\Controllers\Api\Manage\ResourceModule\ResourceModuleController;
+
 Route::middleware(['language', 'auth:api'])->group(function (){
-    Route::post('/', [ResourceController::class, 'index']);
-    Route::post('/create', [ResourceController::class, 'create']);
-    Route::post('/delete', [ResourceController::class, 'delete']);
+    Route::get('/', [ResourceModuleController::class, 'index']);
+    Route::get('/{slug}', [ResourceModuleController::class, 'show']);
+    Route::post('/create', [ResourceModuleController::class, 'create']);
+    Route::delete('/{slug}/delete', [ResourceModuleController::class, 'delete']);
 });
 
