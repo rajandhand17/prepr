@@ -124,6 +124,8 @@ class LabProgramResource extends JsonResource
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
+            'liked'                         => $this->liked(),
+            'member_count'                  => '0', //Static for temporary basis
         ];
     }
 }
