@@ -317,7 +317,7 @@ class OrganizationController extends AppBaseController
     public function create(CreateOrganizationRequest $request)
     {
         try {
-            if(!auth()->user()->isAbleTo('create_organization')) {
+            if (!auth()->user()->isAbleTo('create_organization')) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             $profile_image_path = config('site-settings.default_organization_profile_image');

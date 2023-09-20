@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('resource_module_id');
             $table->integer('foreign_id');
-            $table->enum('type', ['0', '1', '2','3'])->comment('0->skills, 1->group,2->stack,3->tag');
+            $table->enum('type', ['0', '1', '2', '3'])->comment('0->skills, 1->group,2->stack,3->tag');
             $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
             $table->timestamps();
         });

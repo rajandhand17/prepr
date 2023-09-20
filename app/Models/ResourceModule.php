@@ -11,18 +11,18 @@ class ResourceModule extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="resource_modules";
+    protected $table = 'resource_modules';
 
-    protected $fillable=[
-        "uuid",
-        "language",
-        "user_id",
-        "organization_id",
-        "title",
-        "slug",
-        "description",
-        "status",
-        "is_global",
+    protected $fillable = [
+        'uuid',
+        'language',
+        'user_id',
+        'organization_id',
+        'title',
+        'slug',
+        'description',
+        'status',
+        'is_global',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
