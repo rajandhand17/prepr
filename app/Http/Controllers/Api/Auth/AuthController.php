@@ -963,4 +963,33 @@ class AuthController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getOTPForAutomation($email)
+    {
+        try {
+            if ($email) {
+                if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
+                    $checkUser = $this->authRepository->getOtp($email);
+                    if ($checkUser) {
+                        if (isset($checkUser['code']) && $checkUser['code'] == 1) {
+                            return $this->sendError(__('responses.not_exists_email'), 402);
+                        }
+                        $response = [
+                            'otp' => $checkUser,
+                        ];
+
+                        return $this->sendResponse($response, 'success');
+                    }
+
+                    return $this->sendError(__('responses.send_error'), 500);
+                }
+
+                return $this->sendError(__('responses.valid_email_pattern'), 402);
+            }
+
+            return $this->sendError(__('responses.email_field_required'), 402);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

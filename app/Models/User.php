@@ -533,4 +533,20 @@ class User extends Authenticatable
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getOtp($email)
+    {
+        try {
+            $user = User::where(['email' => $email])->first();
+            if ($user) {
+                return $user->otp;
+            } else {
+                $response = ['success' => false, 'code' => 1];
+
+                return $response;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
