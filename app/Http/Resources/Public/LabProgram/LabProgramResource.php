@@ -35,7 +35,7 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-        $favourite=null;
+        $favourite = null;
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
@@ -92,8 +92,8 @@ class LabProgramResource extends JsonResource
                 'achievement_image'     => $this->achievement->achievement_image,
             ];
         }
-        if($this->favourite){
-            $favourite= count($this->favourite) ? "yes" : "no";
+        if ($this->favourite) {
+            $favourite = count($this->favourite) ? 'yes' : 'no';
         }
 
         return [
