@@ -97,7 +97,7 @@ class LabProgram extends Model
     public function favourite()
     {
         if (auth('api')->check()) {
-            return $this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1');
+            return ($this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where(['favourite' => '1', 'user_id' => auth('api')->user()->id])->count() > 0) ? 'Yes' : 'No';
         }
 
         return 'NA';
@@ -106,7 +106,7 @@ class LabProgram extends Model
     public function liked()
     {
         if (auth('api')->check()) {
-            return ($this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
+            return ($this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where(['like_dislike' => '1', 'user_id' => auth('api')->user()->id])->count() > 0) ? 'Yes' : 'No';
         }
 
         return 'NA';
