@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Public\LabProgram;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\public\LabProgram\LabProgramResource;
+use App\Http\Resources\Public\LabProgram\LabProgramResource;
 use App\Repositories\Api\Public\LabProgram\LabProgramRepository;
 use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
@@ -81,7 +81,7 @@ class LabProgramController extends AppBaseController
                 }
             }
 
-            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            return $this->sendError(__('responses.lab_program_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

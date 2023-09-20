@@ -35,6 +35,7 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $favourite = null;
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
@@ -115,10 +116,13 @@ class LabProgramResource extends JsonResource
             'tags'                          => $tags,
             'tag_groups'                    => $tag_groups,
             'achievement'                   => $achievement,
+            'favorites'                     => $this->favourite(),
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
+            'liked'                         => $this->liked(),
+            'member_count'                  => '0', //Static for temporary basis
         ];
     }
 }
