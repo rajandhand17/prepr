@@ -91,13 +91,13 @@ class ResourceModuleController extends AppBaseController
 
     public function checkSlug($slug){
         try{
-            $checkResourceModuleNameExistsOrNot=$this->resourceModuleRepository->checkSlug($slug);
-            if ($checkResourceModuleNameExistsOrNot) {
-                return $this->sendError(__('responses.resource_module_not_available'));
+                $checkResourceModuleNameExistsOrNot=$this->resourceModuleRepository->checkSlug($slug);
+                if ($checkResourceModuleNameExistsOrNot) {
+                    return $this->sendError(__('responses.resource_module_not_available'));
+                }
+                return $this->sendResponse([], __('responses.resource_module_name_available'), 400);
+            }catch(\Exception $e){
+                return $this->sendError(__('response.send_error'));
             }
-            return $this->sendResponse([], __('responses.resource_module_name_available'), 400);
-        }catch(\Exception $e){
-            return $this->sendError(__('response.send_error'));
-        }
     }
 }
