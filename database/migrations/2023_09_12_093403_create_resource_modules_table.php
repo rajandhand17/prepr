@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('resource_module', function (Blueprint $table) {
+        Schema::create('resource_modules', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
             $table->string('language')->default('en');
