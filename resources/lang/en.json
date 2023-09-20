@@ -363,7 +363,11 @@
     "responses.access_token_required_field":"This access token field is required",
     "responses.invalid_sso_type":"Error: We couldn't authorize your login. Please verify your details and try again.",
 
-    "responses.resource_module_not_found": "The Lab Program(s) which you are looking doesn't exist in our system.",
-    "responses.found_resource_module_list":"The lab programs list has been successfully retrieved",
-    "responses.not_found_resource_module_list":"The list of lab programs has not been retrieved with success."
+    "responses.resource_module_not_found": "The Resource Module which you are looking doesn't exist in our system.",
+    "responses.found_resource_module_list":"The Resource Module list has been successfully retrieved",
+    "responses.not_found_resource_module_list":"The list of resource module has not been retrieved with success.",
+
+
+    "responses.resource_module_not_available":"This resource module name is not available!",
+    "responses.resource_module_name_available":"This resource module name is available!"
 }

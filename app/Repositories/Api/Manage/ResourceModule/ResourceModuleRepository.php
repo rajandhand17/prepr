@@ -8,6 +8,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
 {
     protected $resourceModuleService;
 
+    protected $resourceModuleDetails;
+
     public function __construct(ResourceModuleService $resourceModuleService)
     {
         $this->resourceModuleService = $resourceModuleService;
@@ -49,6 +51,21 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try{
             return $this->resourceModuleService->delete($slug);
         }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function deleteMedia($resource_module_id){
+        try{
+            return $this->resourceModuleService->deleteMedia($resource_module_id);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+    public function checkName($title){
+        try{
+            return $this->resourceModuleService->checkName($title);
+        }catch(\Exception $e){
             return false;
         }
     }

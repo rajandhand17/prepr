@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('social_link_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('resource_module_id')->references('id')->on('resource_module')->onDelete('cascade');
+            $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
 
         });
     }

@@ -17,7 +17,7 @@ class ResourceModuleService {
            return false;
        }
     }
-    public function filterResourceModuleList($request, $resourceModule){
+    public static function filterResourceModuleList($request, $resourceModule){
             try{
                 if ($request->has('search') && !empty($request->search)) {
                     $resourceModule = $resourceModule->where('resource_module.title', 'like', '%'.$request->search.'%');
@@ -50,6 +50,14 @@ class ResourceModuleService {
         try {
             return resourceModule::where('slug',$slug)->delete();
         }catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkName($title){
+        try {
+            return resourceModule::where('title',$title)->first();
+        }catch(\Exception $e){
             return false;
         }
     }

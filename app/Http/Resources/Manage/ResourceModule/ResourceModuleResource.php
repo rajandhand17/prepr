@@ -17,14 +17,7 @@ class ResourceModuleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id'                           => $this->uuid,
-            'language'                     => $this->language,
-            'title'                        => $this->title,
-            'slug'                         => $this->slug,
-            'description'                  => $this->description,
-            'status'                       => ($this->status == '0') ? 'open' : 'close',
-            'is_global'                    => ($this->is_global=='0') ? 'no' : 'yes',
-        ];
+        return parent::toArray($request);
+
     }
 }

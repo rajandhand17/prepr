@@ -11,7 +11,7 @@ class ResourceModule extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="resource_module";
+    protected $table="resource_modules";
 
     protected $fillable=[
         "uuid",
@@ -22,7 +22,6 @@ class ResourceModule extends Model
         "slug",
         "description",
         "status",
-        "is_auto_created",
         "is_global",
     ];
 

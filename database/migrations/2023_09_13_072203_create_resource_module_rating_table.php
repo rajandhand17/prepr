@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('rating',['0','1','2','3','4','5']);
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('resource_module_id')->references('id')->on('resource_module')->onDelete('cascade');
+            $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
 
         });
     }
