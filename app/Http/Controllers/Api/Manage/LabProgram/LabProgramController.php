@@ -41,8 +41,10 @@ class LabProgramController extends AppBaseController
                     'total_pages'  => $listLabProgram->lastPage(),
                     'list'         => LabProgramResource::collection($listLabProgram),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_lab_program_list'));
             }
+
             return $this->sendError(__('responses.not_found_lab_program_list'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

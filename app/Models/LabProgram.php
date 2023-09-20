@@ -99,6 +99,7 @@ class LabProgram extends Model
         if (auth('api')->check()) {
             return $this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1');
         }
+
         return 'NA';
     }
 
