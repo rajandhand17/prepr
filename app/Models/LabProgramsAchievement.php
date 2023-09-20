@@ -17,7 +17,11 @@ class LabProgramsAchievement extends Model
         'lab_program_id',
         'achievement_name',
         'achievement_points',
-        'achievement_condition',
         'achievement_image',
     ];
+
+    public function getAchievementImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
 }

@@ -34,6 +34,11 @@ class LabProgram extends Model
         'is_sequential',
     ];
 
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
     public function component_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_program_id', 'id');
@@ -92,15 +97,19 @@ class LabProgram extends Model
     public function favourite()
     {
         if (auth('api')->check()) {
-            return ($this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
+            return ($this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where(['favourite' => '1', 'user_id' => auth('api')->user()->id])->count() > 0) ? 'Yes' : 'No';
         }
 
         return 'NA';
     }
 
-    public function likes()
+    public function liked()
     {
-        return $this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('like_dislike', '1');
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where(['like_dislike' => '1', 'user_id' => auth('api')->user()->id])->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
     }
 
     public function shares()

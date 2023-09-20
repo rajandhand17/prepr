@@ -31,6 +31,7 @@ class LabProgramController extends AppBaseController
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
             $listLabProgram = $this->labProgramRepository->getLabProgramList($request, $organization);
+
             if ($listLabProgram) {
                 $response = [
                     'total_count'  => $listLabProgram->total(),
@@ -55,10 +56,10 @@ class LabProgramController extends AppBaseController
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if ($labProgram) {
-                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
+                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
 
-            return $this->sendError(__('responses.not_found_lab_program_list'), 404);
+            return $this->sendError(__('responses.not_found_lab_program_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

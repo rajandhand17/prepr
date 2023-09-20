@@ -42,7 +42,6 @@ class LabProgramAchievementsService
         $labProgramAchievement->lab_program_id = $labProgramId;
         $labProgramAchievement->achievement_name = $request->achievement_name;
         $labProgramAchievement->achievement_points = $request->achievement_points;
-        $labProgramAchievement->achievement_condition = $achievementCondition;
         $labProgramAchievement->achievement_image = $upload_achievements_image;
         $labProgramAchievement->save();
 
@@ -58,7 +57,6 @@ class LabProgramAchievementsService
                 $labAchievement->lab_program_id = $lab_programs_id;
                 $labAchievement->achievement_name = $request->achievement_name;
                 $labAchievement->achievement_points = $request->achievement_points;
-                $labAchievement->achievement_condition = $request->achievement_conditions;
                 $labAchievement->achievement_image = $upload_achievement_image;
                 $labAchievement->save();
 
@@ -66,7 +64,6 @@ class LabProgramAchievementsService
             }
             $checkExistsLabAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsLabAchievement->achievement_name;
             $checkExistsLabAchievement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : $checkExistsLabAchievement->achievement_points;
-            $checkExistsLabAchievement->achievement_condition = ($request->has('achievement_condition')) ? $request->achievement_condition : $checkExistsLabAchievement->achievement_condition;
             $checkExistsLabAchievement->achievement_image = ($upload_achievement_image) ? $upload_achievement_image : $checkExistsLabAchievement->achievement_image;
             $checkExistsLabAchievement->save();
 
@@ -79,9 +76,9 @@ class LabProgramAchievementsService
     public static function deleteLabAchievement($lab_id)
     {
         try {
-            $checkLabAchievementExists = LabProgramsAchievements::where('lab_programs_id', $lab_id)->first();
+            $checkLabAchievementExists = LabProgramsAchievement::where('lab_programs_id', $lab_id)->first();
             if ($checkLabAchievementExists) {
-                $deleteLabAchievement = LabProgramsAchievements::where('lab_programs_id', $lab_id)->delete();
+                $deleteLabAchievement = LabProgramsAchievement::where('lab_programs_id', $lab_id)->delete();
                 if (!$deleteLabAchievement) {
                     return false;
                 }

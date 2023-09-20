@@ -10,7 +10,7 @@ class LabProgramService
     {
         try {
             $labProgramList = LabProgram::select();
-            $labProgramList = self::filterLabList($request, $labProgramList);
+            $labProgramList = self::filterLabProgramList($request, $labProgramList);
 
             return $labProgramList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
@@ -18,7 +18,7 @@ class LabProgramService
         }
     }
 
-    public function filterLabList($request, $labProgramList)
+    public function filterLabProgramList($request, $labProgramList)
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
