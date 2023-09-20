@@ -15,57 +15,65 @@ class ResourceModuleRepository implements ResourceModuleInterface
         $this->resourceModuleService = $resourceModuleService;
     }
 
-    public function getResourceModuleList($request){
-        try{
+    public function getResourceModuleList($request)
+    {
+        try {
             return  $this->resourceModuleService->getResourceModuleList($request);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
+
     public function createResourceModule($request)
     {
-        try{
+        try {
             return  $this->resourceModuleService->createResourceModule($request);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function getResourceModuleBasedOnSlug($slug){
-        try{
+    public function getResourceModuleBasedOnSlug($slug)
+    {
+        try {
             return $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkSlug($slug){
-        try{
+    public function checkSlug($slug)
+    {
+        try {
             return $this->resourceModuleService->checkSlug($slug);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function delete($slug){
-        try{
+    public function delete($slug)
+    {
+        try {
             return $this->resourceModuleService->delete($slug);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteMedia($resource_module_id){
-        try{
+    public function deleteMedia($resource_module_id)
+    {
+        try {
             return $this->resourceModuleService->deleteMedia($resource_module_id);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
-    public function checkName($title){
-        try{
+
+    public function checkName($title)
+    {
+        try {
             return $this->resourceModuleService->checkName($title);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
