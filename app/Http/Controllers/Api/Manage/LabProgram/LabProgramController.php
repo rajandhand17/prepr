@@ -54,10 +54,10 @@ class LabProgramController extends AppBaseController
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if ($labProgram) {
-                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
+                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
 
-            return $this->sendError(__('responses.not_found_lab_program_list'), 404);
+            return $this->sendError(__('responses.not_found_lab_program_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
