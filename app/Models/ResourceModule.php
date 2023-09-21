@@ -26,4 +26,12 @@ class ResourceModule extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function detailed(){
+        return $this->belongsTo(ResourceModuleDetail::class,'resource_module_id','id');
+    }
+
+    public function users(){
+        return $this->hasMany(User::class,'user_id','id');
+    }
 }

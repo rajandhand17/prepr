@@ -32,7 +32,7 @@ class ResourceModuleService {
 
     public function getResourceModuleBasedOnSlug($slug){
         try {
-            return resourceModule::where('slug',$slug)->first();
+            return ResourceModule::select()->where('slug',$slug)->first();
         }catch(\Exception $e){
             return false;
         }
@@ -40,7 +40,7 @@ class ResourceModuleService {
 
     public function checkSlug($slug){
         try {
-            return resourceModule::where('slug',$slug)->first();
+            return ResourceModule::where('slug',$slug)->first();
         }catch(\Exception $e) {
             return false;
         }
@@ -48,7 +48,7 @@ class ResourceModuleService {
 
     public static function delete($slug){
         try {
-            return resourceModule::where('slug',$slug)->delete();
+            return ResourceModule::where('slug',$slug)->delete();
         }catch(\Exception $e) {
             return false;
         }
@@ -56,7 +56,7 @@ class ResourceModuleService {
 
     public static function checkName($title){
         try {
-            return resourceModule::where('title',$title)->first();
+            return ResourceModule::where('title',$title)->first();
         }catch(\Exception $e){
             return false;
         }

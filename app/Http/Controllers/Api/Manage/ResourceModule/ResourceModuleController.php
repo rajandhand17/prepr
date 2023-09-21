@@ -19,6 +19,7 @@ class ResourceModuleController extends AppBaseController
     public function index(Request $request){
         try{
            $responseModuleList=$this->resourceModuleRepository->getResourceModuleList($request);
+
            if ($responseModuleList){
                 $response = [
                     'total_count'  => $responseModuleList->total(),
@@ -26,7 +27,7 @@ class ResourceModuleController extends AppBaseController
                     'count'        => $responseModuleList->count(),
                     'current_page' => $responseModuleList->currentPage(),
                     'total_pages'  => $responseModuleList->lastPage(),
-                    'list'         => ResourceModuleResource::make($responseModuleList),
+                    'list'         => ResourceModuleResource::collection($responseModuleList),
                 ];
                 return $this->sendResponse($response, __('responses.found_resource_module_list'));
             }
@@ -42,9 +43,9 @@ class ResourceModuleController extends AppBaseController
             if($responseView){
                 return $this->sendResponse(ResourceModuleResource::make($responseView), __('responses.found_resource_module_list'));
             }
-            return $responseView;
+            return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         }catch(\Exception $e){
-            return $this->sendError(__('response.send_error'),500);
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 
@@ -52,14 +53,13 @@ class ResourceModuleController extends AppBaseController
         try{
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot == false) {
-                return $this->sendError(__('responses.lab_program_not_found'), 404);
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
             $deleteResourceModule = $this->resourceModuleRepository->delete($slug);
             if($deleteResourceModule) {
-                return $this->sendResponse(null, __('responses.lab_program_delete'));
+                return $this->sendResponse(null, __('responses.resource_module_delete'));
             }
-
-            return $this->sendError(__('responses.lab_program_not_delete'), 400);
+            return $this->sendError(__('responses.resource_module_not_delete'), 400);
         }catch(\Exception $e){
             return $this->sendError(__('response.send_error'),500);
         }
@@ -69,8 +69,9 @@ class ResourceModuleController extends AppBaseController
         try{
             $deleteResourceModule = $this->resourceModuleRepository->deleteMedia($resource_module_id);
             if($deleteResourceModule) {
-                return $this->sendResponse(null, __('responses.lab_program_delete'));
+                return $this->sendResponse(null, __('responses.resource_module_delete'),200);
             }
+            return $this->sendError(__('responses.resource_module_not_delete'), 400);
         }catch(\Exception $e){
             return $this->sendError(__('response.send_response'));
         }
@@ -80,7 +81,7 @@ class ResourceModuleController extends AppBaseController
         try{
             $checkResourceModuleNameExistsOrNot=$this->resourceModuleRepository->checkName($title);
             if ($checkResourceModuleNameExistsOrNot) {
-                return $this->sendError(__('responses.resource_module_not_available'));
+                return $this->sendError(__('responses.resource_module_name_not_available'));
             }
 
             return $this->sendResponse([], __('responses.resource_module_name_available'), 400);
@@ -93,9 +94,9 @@ class ResourceModuleController extends AppBaseController
         try{
                 $checkResourceModuleNameExistsOrNot=$this->resourceModuleRepository->checkSlug($slug);
                 if ($checkResourceModuleNameExistsOrNot) {
-                    return $this->sendError(__('responses.resource_module_not_available'));
+                    return $this->sendError(__('responses.resource_module_slug_not_available'));
                 }
-                return $this->sendResponse([], __('responses.resource_module_name_available'), 400);
+                return $this->sendResponse([], __('responses.resource_module_slug_available'), 400);
             }catch(\Exception $e){
                 return $this->sendError(__('response.send_error'));
             }
