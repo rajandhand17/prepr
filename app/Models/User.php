@@ -82,6 +82,7 @@ class User extends Authenticatable
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
+
                 return $response;
             }
             if ($user) {
@@ -119,6 +120,7 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             $response = ['success' => false, 'message'=>__('responses.send_error'), 'code' => 6];
+
             return $response;
         }
     }
@@ -531,6 +533,22 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getOtp($email)
+    {
+        try {
+            $user = User::where(['email' => $email])->first();
+            if ($user) {
+                return $user->otp;
+            } else {
+                $response = ['success' => false, 'code' => 1];
+
+                return $response;
+            }
+        } catch (\Exception $e) {
+            return false;
         }
     }
 }

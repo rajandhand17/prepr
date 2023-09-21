@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Manage\ResourceModule;
 
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use Tests\TestCase;
 
 /**
