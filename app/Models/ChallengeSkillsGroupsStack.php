@@ -16,5 +16,5 @@ class ChallengeSkillsGroupsStack extends Model
         'challenge_id',
         'foreign_id',
         'type',
-    ]
+    ];
 }
