@@ -129,4 +129,13 @@ class AuthRepository implements AuthInterface
             return false;
         }
     }
+
+    public function getOtp($email)
+    {
+        try {
+            return $this->user->getOtp($email);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

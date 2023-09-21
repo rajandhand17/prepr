@@ -17,4 +17,5 @@ Route::middleware(['language'])->group(function () {
     Route::post('/verify-referral-code', [AuthController::class, 'referralCode']);
     Route::post('/forget-password', [AuthController::class, 'forgetPassword']);
     Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+    Route::get('/get-otp-for-automation/{email}', [AuthController::class, 'getOTPForAutomation']);
 });
