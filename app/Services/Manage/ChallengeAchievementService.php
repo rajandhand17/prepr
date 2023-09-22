@@ -27,7 +27,7 @@ class ChallengeAchievementService
         try {
             $challengeAchievement = new ChallengeAchievement();
             $challengeAchievement->challenge_id = $challenge->id;
-            $challengeAchievement->achievement_type = "0";
+            $challengeAchievement->achievement_type = '0';
             $challengeAchievement->achievement_name = $request->achievement_name;
             $challengeAchievement->achievement_prize = $request->achievement_prize;
             $challengeAchievement->achievement_points = $request->achievement_points;
@@ -38,7 +38,7 @@ class ChallengeAchievementService
                 foreach ($request->winner_achievement_participation as $key => $value) {
                     $challengeIncentiveAchievement = new ChallengeAchievement();
                     $challengeIncentiveAchievement->challenge_id = $challenge->id;
-                    $challengeIncentiveAchievement->achievement_type = "1";
+                    $challengeIncentiveAchievement->achievement_type = '1';
                     $challengeIncentiveAchievement->achievement_name = $request->winner_achievement_name[$key];
                     $challengeIncentiveAchievement->achievement_prize = $request->winner_achievement_prize[$key];
                     $challengeIncentiveAchievement->achievement_points = $request->winner_achievement_points[$key];
@@ -46,6 +46,7 @@ class ChallengeAchievementService
                     $challengeIncentiveAchievement->save();
                 }
             }
+
             return true;
         } catch (Exception $th) {
             return false;
