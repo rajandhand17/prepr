@@ -129,18 +129,9 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.send_error'),500);
         }
     }
-
-    public function details(Request $request){
-        try{
-
-        }catch(\Exception $e){
-            return $this->sendError(__('responses.send_error'),500);
-        }
-    }
-
     public function addLinks(){
         try{
-
+            $addLinks=
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }

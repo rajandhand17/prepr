@@ -11,5 +11,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/create', [ResourceModuleController::class, 'createResourceModule']);
     Route::delete('/{slug}/delete', [ResourceModuleController::class, 'delete']);
     Route::post('/add-links', [ResourceModuleController::class, 'addLinks']);
-    Route::post('/details', [ResourceModuleController::class, 'details']);
 });
