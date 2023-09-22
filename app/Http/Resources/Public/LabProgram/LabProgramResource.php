@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Public\LabProgram;
 
-use App\Models\MemberManagement;
 use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -42,7 +41,7 @@ class LabProgramResource extends JsonResource
                 $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
                 $componentAssociation[$association->lab_id]['liked'] = LabService::getLabBasedOnId($association->lab_id)->liked();
                 $componentAssociation[$association->lab_id]['saved'] = LabService::getLabBasedOnId($association->lab_id)->favourite();
-                $componentAssociation[$association->lab_id]['member_count'] =  LabService::getLabBasedOnId($association->lab_id)->members()->count();
+                $componentAssociation[$association->lab_id]['member_count'] = LabService::getLabBasedOnId($association->lab_id)->members()->count();
             }
         }
         if ($this->getOrganization) {
@@ -98,35 +97,35 @@ class LabProgramResource extends JsonResource
         }
 
         return [
-            'id'                            => $this->uuid,
-            'language'                      => $this->language,
-            'title'                         => $this->title,
-            'slug'                          => $this->slug,
-            'description'                   => $this->description,
+            'id'                             => $this->uuid,
+            'language'                       => $this->language,
+            'title'                          => $this->title,
+            'slug'                           => $this->slug,
+            'description'                    => $this->description,
             'labs'                           => $componentAssociation,
-            'user_id'                       => $this->user_id,
-            'media'                         => $this->media,
-            'organization'                  => $organization,
-            'organization_id'               => $organization_id,
-            'category_id'                   => $category_id,
-            'category'                      => $category,
-            'duration_id'                   => $duration_id,
-            'duration'                      => $duration,
-            'level_id'                      => $level_id,
-            'level'                         => $level,
-            'skills'                        => $skills,
-            'skill_groups'                  => $skill_groups,
-            'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
-            'achievement'                   => $achievement,
-            'favourite'                     => $this->favourite(),
-            'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
-            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
-            'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
-            'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
-            'liked'                         => $this->liked(),
-            'member_count'                  => '0', //Static for temporary basis
+            'user_id'                        => $this->user_id,
+            'media'                          => $this->media,
+            'organization'                   => $organization,
+            'organization_id'                => $organization_id,
+            'category_id'                    => $category_id,
+            'category'                       => $category,
+            'duration_id'                    => $duration_id,
+            'duration'                       => $duration,
+            'level_id'                       => $level_id,
+            'level'                          => $level,
+            'skills'                         => $skills,
+            'skill_groups'                   => $skill_groups,
+            'skill_stacks'                   => $skill_stacks,
+            'tags'                           => $tags,
+            'tag_groups'                     => $tag_groups,
+            'achievement'                    => $achievement,
+            'favourite'                      => $this->favourite(),
+            'privacy'                        => ($this->privacy == '1') ? 'yes' : 'no',
+            'status'                         => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
+            'is_achievement_enabled'         => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
+            'is_sequential'                  => ($this->is_sequential == '1') ? 'yes' : 'no',
+            'liked'                          => $this->liked(),
+            'member_count'                   => '0', //Static for temporary basis
         ];
     }
 }

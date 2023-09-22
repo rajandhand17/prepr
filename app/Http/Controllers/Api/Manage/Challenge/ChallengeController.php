@@ -15,8 +15,8 @@ class ChallengeController extends AppBaseController
 
     public function __construct(ChallengeRepository $challengeRepository, ChallengeAchievementRepository $challengeAchievementRepository)
     {
-        $this->challengeRepository              = $challengeRepository;
-        $this->challengeAchievementRepository   = $challengeAchievementRepository;
+        $this->challengeRepository = $challengeRepository;
+        $this->challengeAchievementRepository = $challengeAchievementRepository;
     }
 
     public function create(Request $request)
