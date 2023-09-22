@@ -17,6 +17,8 @@ return new class() extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('duration_id');
+            $table->unsignedBigInteger('level_id');
             $table->string('slug')->nullable();
             $table->string('title')->nullable();
             $table->longText('description')->nullable();

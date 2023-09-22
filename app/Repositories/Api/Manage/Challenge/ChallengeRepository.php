@@ -23,10 +23,10 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function createChallenge($request)
+    public function createChallenge($request, $upload_cover_image)
     {
         try {
-            $createChallenge = $this->challengeService->createChallenge($request);
+            $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
             dd($createChallenge, 'In Repository');
         } catch (Exception $th) {
             dd($th, 'In Repository');

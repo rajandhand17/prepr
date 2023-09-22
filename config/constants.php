@@ -121,4 +121,34 @@ return [
         'organization'   => 'organization',
     ],
 
+    'challenge_status' => [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
+    ],
+
+    'challenge_privacy' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'project_privacy' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_notification_enabled' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_open_close' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_auto_created' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
 ];

@@ -27,9 +27,6 @@ class ChallengeController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-
-            $upload_achievement_image = config('site-settings.default_challenge_profile_image');
-
             $challenge = $this->challengeRepository->createChallenge($request, $upload_cover_image);
         } catch (Exception $th) {
             dd($th, 'In Controller');
