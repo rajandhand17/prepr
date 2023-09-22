@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\ChallengeAchievement\ChallengeAchievementRepository;
+use App\Repositories\Api\Manage\ChallengeSponsor\ChallengeSponsorRepository;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -12,11 +13,13 @@ class ChallengeController extends AppBaseController
 {
     private ChallengeRepository $challengeRepository;
     private ChallengeAchievementRepository $challengeAchievementRepository;
+    private ChallengeSponsorRepository $challengeSponsorRepository;
 
-    public function __construct(ChallengeRepository $challengeRepository, ChallengeAchievementRepository $challengeAchievementRepository)
+    public function __construct(ChallengeRepository $challengeRepository, ChallengeAchievementRepository $challengeAchievementRepository, ChallengeSponsorRepository $challengeSponsorRepository)
     {
         $this->challengeRepository = $challengeRepository;
         $this->challengeAchievementRepository = $challengeAchievementRepository;
+        $this->challengeSponsorRepository = $challengeSponsorRepository;
     }
 
     public function create(Request $request)

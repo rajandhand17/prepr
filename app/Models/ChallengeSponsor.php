@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ChallengeSponser extends Model
+class ChallengeSponsor extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'challenge_sponsers';
+    protected $table = 'challenge_sponsors';
     protected $fillable = [
         'challenge_id',
         'host_id',
