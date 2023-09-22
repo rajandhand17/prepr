@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use DB;
+use phpDocumentor\Reflection\Types\Null_;
 
 class Lab extends Model
 {
@@ -107,7 +109,6 @@ class Lab extends Model
         if (auth('api')->check()) {
             return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
         }
-
         return 'NA';
     }
 
