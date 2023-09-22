@@ -107,7 +107,6 @@ class Lab extends Model
         if (auth('api')->check()) {
             return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
         }
-
         return 'NA';
     }
 
