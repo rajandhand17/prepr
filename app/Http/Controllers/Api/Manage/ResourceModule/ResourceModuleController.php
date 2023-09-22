@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Resource\CreateResourceRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
-use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Repositories\Api\Manage\ResourceModule\ResourceModuleDetailRepository;
 use Illuminate\Http\Request;
 
 class ResourceModuleController extends AppBaseController
 {
     private $resourceModuleRepository;
 
-    public function __construct(ResourceModuleRepository $resourceModuleRepository)
+    private $responseModuleDetailsRepository;
+
+    public function __construct(ResourceModuleDetailRepository $resourceModuleRepository)
     {
         $this->resourceModuleRepository = $resourceModuleRepository;
     }
@@ -64,7 +67,7 @@ class ResourceModuleController extends AppBaseController
             }
             return $this->sendError(__('responses.resource_module_not_delete'), 400);
         }catch(\Exception $e){
-            return $this->sendError(__('response.send_error'),500);
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 
@@ -77,7 +80,7 @@ class ResourceModuleController extends AppBaseController
             }
             return $this->sendError(__('responses.resource_module_not_delete'), 400);
         }catch(\Exception $e){
-            return $this->sendError(__('response.send_response'));
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 
@@ -91,7 +94,7 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_module_name_available'), 400);
         } catch(\Exception $e) {
-            return $this->sendError(__('response.send_error'));
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 
@@ -103,7 +106,43 @@ class ResourceModuleController extends AppBaseController
                 }
                 return $this->sendResponse([], __('responses.resource_module_slug_available'), 400);
             }catch(\Exception $e){
-                return $this->sendError(__('response.send_error'));
+                return $this->sendError(__('responses.send_error'),500);
             }
+    }
+
+    public function createResourceModule(CreateResourceRequest $request){
+        try{
+            $upload_media = config('site-settings.default_resource_module_cover_image');
+            if ($request->media !== null){
+                $uploaded_media = $this->resourceModuleRepository->uploadResourceModuleMedia($request->media);
+                if (!$uploaded_media) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_media = $uploaded_media;
+            }
+            $createResourceModule=$this->resourceModuleRepository->createResourceModule($request,$upload_media);
+            if($createResourceModule){
+                return $this->sendResponse(__('responses.resource_module_stored_success'),200);
+            }
+            return $this->sendError(__('responses.resource_module_stored_failed'), 403);
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    public function details(Request $request){
+        try{
+
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    public function addLinks(){
+        try{
+
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
     }
 }

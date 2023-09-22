@@ -121,4 +121,10 @@ return [
         'organization'   => 'organization',
     ],
 
+    'resource_module_status'=> [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
+    ],
+
 ];

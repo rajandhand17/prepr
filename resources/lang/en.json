@@ -375,5 +375,8 @@
     "responses.resource_module_delete":"The resource module has been deleted successfully!",
     "responses.resource_module_not_delete":"The resource module has been not deleted!",
     "responses.resource_module_slug_not_found": "The resource module which you are looking doesn't exist in our system.",
-    "responses.not_found_resource_module_view":"The resource module has not been retrieved with success."
+    "responses.not_found_resource_module_view":"The resource module has not been retrieved with success.",
+
+    "responses.resource_module_stored_success":"Congratulations! You have successfully created a resource module.",
+    "responses.resource_module_stored_failed":"Oops! The Creation resource module has failed."
 }

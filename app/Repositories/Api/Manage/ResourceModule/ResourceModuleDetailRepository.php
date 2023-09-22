@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Manage\ResourceModule;
 
 use App\Services\Manage\ResourceModuleService;
 
-class ResourceModuleRepository implements ResourceModuleInterface
+class ResourceModuleDetailRepository implements ResourceModuleDetailInterface
 {
     protected $resourceModuleService;
 
@@ -24,15 +24,22 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function createResourceModule($request)
+    public function createResourceModule($request,$upload_media)
     {
         try {
-            return  $this->resourceModuleService->createResourceModule($request);
+            return  $this->resourceModuleService->createResourceModule($request,$upload_media);
         } catch(\Exception $e) {
             return false;
         }
     }
 
+    public function uploadResourceModuleMedia($media){
+        try {
+            return $this->resourceModuleService->uploadResourceModuleMedia($media);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
     public function getResourceModuleBasedOnSlug($slug)
     {
         try {
