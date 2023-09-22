@@ -137,8 +137,6 @@ class ChallengeService
 
             return $challenge;
         } catch (Exception $th) {
-            dd($th, 'In Service');
-
             return false;
         }
     }

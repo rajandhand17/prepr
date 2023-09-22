@@ -6,5 +6,5 @@ interface ChallengeInterface
 {
     public function uploadChallengeCoverImage($image);
 
-    public function createChallenge($request, $upload_cover_image);
+    public function createChallenge($request, $upload_cover_image, $upload_achievement_image);
 }

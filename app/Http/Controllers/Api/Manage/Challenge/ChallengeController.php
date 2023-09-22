@@ -4,16 +4,19 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
+use App\Repositories\Api\Manage\ChallengeAchievement\ChallengeAchievementRepository;
 use Exception;
 use Illuminate\Http\Request;
 
 class ChallengeController extends AppBaseController
 {
     private ChallengeRepository $challengeRepository;
+    private ChallengeAchievementRepository $challengeAchievementRepository;
 
-    public function __construct(ChallengeRepository $challengeRepository)
+    public function __construct(ChallengeRepository $challengeRepository, ChallengeAchievementRepository $challengeAchievementRepository)
     {
-        $this->challengeRepository = $challengeRepository;
+        $this->challengeRepository              = $challengeRepository;
+        $this->challengeAchievementRepository   = $challengeAchievementRepository;
     }
 
     public function create(Request $request)
@@ -27,7 +30,17 @@ class ChallengeController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-            $challenge = $this->challengeRepository->createChallenge($request, $upload_cover_image);
+
+            $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
+            if ($request->achievement_image !== null) {
+                $uploaded_achievement_image = $this->challengeAchievementRepository->uploadChallengeAchievementImage($request->achievement_image);
+                if (!$uploaded_achievement_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_achievement_image = $uploaded_achievement_image;
+            }
+            $createChallenge = $this->challengeRepository->createChallenge($request, $upload_cover_image, $upload_achievement_image);
+            dd($createChallenge);
         } catch (Exception $th) {
             dd($th, 'In Controller');
 

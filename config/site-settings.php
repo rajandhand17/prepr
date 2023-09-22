@@ -18,7 +18,7 @@ return [
     'default_lab_program_profile_image'             => 'default_images/lab-program.webp',
     'default_lab_program_cover_image'               => 'default_images/lab-program.webp',
 
-    'default_challenge_profile_image'               => 'default_images/challenge.webp',
+    'default_challenge_achievement_image'           => 'default_images/challenge.webp',
     'default_challenge_cover_image'                 => 'default_images/challenge.webp',
 
     'default_challenge_path_profile_image'          => 'default_images/challenge-path.webp',
