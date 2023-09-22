@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
-use App\Services\Manage\OrganizationService;
 use Exception;
 
 class ChallengeService
@@ -15,6 +14,7 @@ class ChallengeService
             if ($upload_challenge_cover_image == false) {
                 return false;
             }
+
             return $upload_challenge_cover_image;
         } catch (\Exception $e) {
             return false;
@@ -26,9 +26,9 @@ class ChallengeService
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             dd($request->all());
-
         } catch (Exception $th) {
-            dd($th, "In Service");
+            dd($th, 'In Service');
+
             return false;
         }
     }
