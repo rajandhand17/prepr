@@ -27,9 +27,10 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             $createChallenge = $this->challengeService->createChallenge($request);
-            dd($createChallenge, "In Repository");
+            dd($createChallenge, 'In Repository');
         } catch (Exception $th) {
-            dd($th, "In Repository");
+            dd($th, 'In Repository');
+
             return false;
         }
     }

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Manage\Challenge;
 
-use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use Tests\TestCase;
 
 /**
