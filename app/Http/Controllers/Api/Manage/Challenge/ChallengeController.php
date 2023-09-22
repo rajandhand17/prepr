@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
-use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -34,7 +32,8 @@ class ChallengeController extends AppBaseController
 
             $challenge = $this->challengeRepository->createChallenge($request, $upload_cover_image);
         } catch (Exception $th) {
-            dd($th, "In Controller");
+            dd($th, 'In Controller');
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
