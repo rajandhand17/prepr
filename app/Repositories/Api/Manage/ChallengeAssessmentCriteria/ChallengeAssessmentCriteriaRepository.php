@@ -9,7 +9,7 @@ class ChallengeAssessmentCriteriaRepository implements ChallengeAssessmentCriter
 {
     private $challengeAssessmentCriteriaService;
 
-    public function __construct(ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService
+    public function __construct(ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService)
     {
         $this->challengeAssessmentCriteriaService = $challengeAssessmentCriteriaService;
     }
