@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Services\Manage\ChallengeAchievementService;
+use App\Services\Manage\ChallengeRequirementService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ChallengeSponsorService;
@@ -16,14 +17,16 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeSponsorService;
     private $challengeSkillsGroupsStackService;
     private $challengeTagsGroupsService;
+    private $challengeRequirementService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
         $this->challengeSponsorService = $challengeSponsorService;
         $this->challengeSkillsGroupsStackService = $challengeSkillsGroupsStackService;
         $this->challengeTagsGroupsService = $challengeTagsGroupsService;
+        $this->challengeRequirementService = $challengeRequirementService;
     }
 
     public function uploadChallengeCoverImage($image)
@@ -43,8 +46,9 @@ class ChallengeRepository implements ChallengeInterface
             $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
             $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
             $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
+            $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
 
-            dd($createChallenge, $createChallengeAchievement, $createChallengeSponsor, $createChallengeSkillsGroupsStack, $createChallengeTagsGroups, 'In Repository');
+            dd($createChallenge, 'In Repository');
         } catch (Exception $th) {
             dd($th, 'In Repository');
 
