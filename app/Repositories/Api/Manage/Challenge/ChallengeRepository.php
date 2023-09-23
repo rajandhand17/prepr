@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentCriteriaService;
+use App\Services\Manage\ChallengeProjectTemplateService;
 use App\Services\Manage\ChallengeRequirementService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
@@ -20,8 +21,9 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeTagsGroupsService;
     private $challengeRequirementService;
     private $challengeAssessmentCriteriaService;
+    private $challengeProjectTemplateService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
@@ -30,6 +32,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeTagsGroupsService = $challengeTagsGroupsService;
         $this->challengeRequirementService = $challengeRequirementService;
         $this->challengeAssessmentCriteriaService = $challengeAssessmentCriteriaService;
+        $this->challengeProjectTemplateService = $challengeProjectTemplateService;
     }
 
     public function uploadChallengeCoverImage($image)
@@ -51,6 +54,7 @@ class ChallengeRepository implements ChallengeInterface
             $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
             $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
             $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id);
+            $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
 
             dd($createChallenge, 'In Repository');
         } catch (Exception $th) {
