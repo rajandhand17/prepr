@@ -65,6 +65,7 @@ class ChallengeAssessmentService
             return true;
         } catch (Exception $th) {
             dd($th);
+
             return false;
         }
     }
