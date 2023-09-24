@@ -6,20 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ResourceModuleDetail extends Model
+class ResourceModuleSkillsGroupsStack extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'resource_module_details';
-
+    protected $tableName = 'resource_module_skills_groups_stacks';
     protected $fillable = [
         'resource_module_id',
-        'title',
+        'foreign_id',
         'type',
-        'path',
-        'social_link_id',
     ];
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

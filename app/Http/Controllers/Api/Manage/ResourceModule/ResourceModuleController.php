@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Manage\Resource\CreateResourceRequest;
+use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
+use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
+use App\Http\Requests\Manage\ResourceModuleDetail\AddLinksResourceRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
-use App\Repositories\Api\Manage\ResourceModule\ResourceModuleDetailRepository;
+use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Repositories\Api\Manage\ResourceModuleDetail\ResourceModuleDetailRepository;
 use Illuminate\Http\Request;
 
 class ResourceModuleController extends AppBaseController
@@ -14,9 +17,10 @@ class ResourceModuleController extends AppBaseController
 
     private $responseModuleDetailsRepository;
 
-    public function __construct(ResourceModuleDetailRepository $resourceModuleRepository)
+    public function __construct(ResourceModuleRepository $resourceModuleRepository, ResourceModuleDetailRepository $responseModuleDetailsRepository)
     {
         $this->resourceModuleRepository = $resourceModuleRepository;
+        $this->responseModuleDetailsRepository = $responseModuleDetailsRepository;
     }
 
     public function index(Request $request){
@@ -61,22 +65,9 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $deleteResourceModule = $this->resourceModuleRepository->delete($slug);
+            $deleteResourceModule = $this->resourceModuleRepository->delete($slug,$checkResourceModuleSlugExistsOrNot->id);
             if($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_delete'));
-            }
-            return $this->sendError(__('responses.resource_module_not_delete'), 400);
-        }catch(\Exception $e){
-            return $this->sendError(__('responses.send_error'),500);
-        }
-    }
-
-    public function deleteMedia($resource_module_id)
-    {
-        try {
-            $deleteResourceModule = $this->resourceModuleRepository->deleteMedia($resource_module_id);
-            if($deleteResourceModule) {
-                return $this->sendResponse(null, __('responses.resource_module_delete'),200);
             }
             return $this->sendError(__('responses.resource_module_not_delete'), 400);
         }catch(\Exception $e){
@@ -110,15 +101,15 @@ class ResourceModuleController extends AppBaseController
             }
     }
 
-    public function createResourceModule(CreateResourceRequest $request){
+    public function createResourceModule(CreateResourceModuleRequest $request){
         try{
             $upload_media = config('site-settings.default_resource_module_cover_image');
-            if ($request->media !== null){
-                $uploaded_media = $this->resourceModuleRepository->uploadResourceModuleMedia($request->media);
-                if (!$uploaded_media) {
+            if ($request->cover_image !== null){
+                $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleMedia($request->cover_image);
+                if (!$uploaded_cover_image) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $upload_media = $uploaded_media;
+                $upload_media = $uploaded_cover_image;
             }
             $createResourceModule=$this->resourceModuleRepository->createResourceModule($request,$upload_media);
             if($createResourceModule){
@@ -129,9 +120,66 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.send_error'),500);
         }
     }
-    public function addLinks(){
+    public function addLinks(AddLinksResourceRequest $request,$slug){
         try{
-            $addLinks=
+            $type=config('constants.resource_module_type.url');
+              $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+                if ($checkResourceModuleSlugExistsOrNot == false) {
+                    return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+                }
+            $addLinks= $this->responseModuleDetailsRepository->addLinks($request,$checkResourceModuleSlugExistsOrNot->id,$type);
+            if($addLinks){
+                return $this->sendResponse(__('responses.add_links_success'),200);
+            }
+           return $this->sendError(__('responses.add_links_failed'), 403);
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    public function fileUpload(Request $request,$slug){
+        try{
+            $type=config('constants.resource_module_type.image');
+            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+            if ($checkResourceModuleSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+            }
+            $uploaded_media = config('site-settings.default_resource_module_cover_image');
+            if ($request->file_upload !== null && $request->file_upload){
+                $uploaded_media = $this->responseModuleDetailsRepository->uploadResouceModuleFileUpload($request->file_upload);
+                if (!$uploaded_media) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+            }
+            $insertData=$this->responseModuleDetailsRepository->insertData($uploaded_media,$checkResourceModuleSlugExistsOrNot->id,$type);
+            if($insertData){
+                return $this->sendResponse(__('responses.file_upload_success'),200);
+            }
+            return $this->sendResponse(__('responses.add_links_success'),200);
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
+
+    public function update(UpdateResourceModuleRequest $request,$slug){
+        try{
+            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+            if ($checkResourceModuleSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+            }
+            $upload_media = config('site-settings.default_resource_module_cover_image');
+            if ($request->media !== null){
+                $uploaded_media = $this->resourceModuleRepository->uploadResourceModuleMedia($request->media);
+                if (!$uploaded_media) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_media = $uploaded_media;
+            }
+            $updateResourceModule = $this->resourceModuleRepository->updateResourceModule($slug, $request, $upload_media);
+            if ($updateResourceModule) {
+                return $this->sendResponse($updateResourceModule, __('responses.resource_module_update_success'), 200);
+            }
+            return $this->sendError(__('responses.resource_module_stored_failed'), 403);
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }

@@ -22,6 +22,6 @@ class ResourceModuleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\ResourceModule\ResourceModuleInterface', 'App\Repositories\Api\Manage\ResourceModule\ResourceModuleDetailRepository');
+        $this->app->bind('App\Repositories\Api\ResourceModule\ResourceModuleInterface', 'App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository');
     }
 }

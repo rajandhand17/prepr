@@ -5,6 +5,8 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use App\Models\ResourceModuleDetail;
+use App\Services\SocialLinkService;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceModuleService
@@ -32,7 +34,7 @@ class ResourceModuleService
         }
     }
 
-    public function getResourceModuleBasedOnSlug($slug){
+    public static function getResourceModuleBasedOnSlug($slug){
         try {
             return ResourceModule::select()->where('slug',$slug)->first();
         }catch(\Exception $e){
@@ -104,9 +106,9 @@ class ResourceModuleService
         }
     }
 
-    public function uploadResourceModuleMedia($image){
+    public function uploadResourceModuleMedia($cover_image){
         try {
-            $upload_resource_module_cover_image = FileUploadHelper::uploadImageToS3($image, 'resource_module');
+            $upload_resource_module_cover_image = FileUploadHelper::uploadImageToS3($cover_image, 'resource_module');
             if ($upload_resource_module_cover_image == false){
                 return false;
             }
@@ -115,4 +117,37 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public function updateResourceModule($slug, $request, $cover_image){
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $status = config('constants.resource_module_status.draft');
+            switch($request->status){
+                case 'publish':
+                    $status = config('constants.resource_module_status.publish');
+                    break;
+                case 'archive':
+                    $status = config('constants.resource_module_status.archive');
+                    break;
+                default:
+                    $status = config('constants.resource_module_status.draft');
+                    break;
+            }
+            $resourceModule=ResourceModule::where('slug', $slug)->first();
+            $resourceModule->uuid=Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $resourceModule->language = $request->language;
+            $resourceModule->title = $request->title;
+            $resourceModule->description = $request->description;
+            $resourceModule->media_type=$request->media_type;
+            $resourceModule->media=$cover_image;
+            $resourceModule->privacy=($request->privacy=='yes')?'1':'0';
+            $resourceModule->status=$status;
+            $resourceModule->is_global=($request->is_global=='yes')?'1':'0';
+            $resourceModule->save();
+            return $resourceModule;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
 }

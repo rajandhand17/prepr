@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Repositories\Api\Manage\ResourceModule;
+
+use App\Services\Manage\ResourceModuleDetailService;
+use App\Services\Manage\ResourceModuleRatingService;
+use App\Services\Manage\ResourceModuleService;
+use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
+use DB;
+
+class ResourceModuleRepository implements ResourceModuleInterface
+{
+    protected $resourceModuleService;
+
+    protected $resourceModuleDetails;
+
+    protected $resouceModuleSkillsGroupStackService;
+
+    protected $resourceModuleRatingService;
+
+    public function __construct(ResourceModuleService $resourceModuleService,ResourceModuleDetailService $resourceModuleDetails,ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService,ResourceModuleRatingService $resourceModuleRatingService)
+    {
+        $this->resourceModuleService = $resourceModuleService;
+        $this->resourceModuleDetails = $resourceModuleDetails;
+        $this->resouceModuleSkillsGroupStackService=$resouceModuleSkillsGroupStackService;
+        $this->resourceModuleRatingService=$resourceModuleRatingService;
+    }
+
+    public function getResourceModuleList($request)
+    {
+        try {
+            return  $this->resourceModuleService->getResourceModuleList($request);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createResourceModule($request,$upload_media)
+    {
+        try {
+            return  $this->resourceModuleService->createResourceModule($request,$upload_media);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function uploadResourceModuleMedia($cover_image){
+        try {
+            return $this->resourceModuleService->uploadResourceModuleMedia($cover_image);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+    public function getResourceModuleBasedOnSlug($slug)
+    {
+        try {
+            return $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkSlug($slug)
+    {
+        try {
+            return $this->resourceModuleService->checkSlug($slug);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function delete($slug,$resource_module_id)
+    {
+        try{
+            // Start a database transaction
+            $deleteResourceModule = DB::transaction(function () use ($slug, $resource_module_id) {
+                // Delete the resource module itself
+                $deleteResourceModule = $this->resourceModuleService->delete($slug);
+                // Delete resource module details
+                $deleteResourceModuleDetails = $this->resourceModuleDetails->delete($resource_module_id);
+                // Delete resource module skills group stack
+                $deleteResourceModuleSkillsGroupStack = $this->resouceModuleSkillsGroupStackService->delete($resource_module_id);
+                // Delete resource module rating
+                $deleteResourceModuleRating = $this->resourceModuleRatingService->delete($resource_module_id);
+                // Return the results of each deletion
+                return [
+                    "resourceModule" => $deleteResourceModule,
+                    "resourceModuleDetails" => $deleteResourceModuleDetails,
+                    "resourceModuleSkillsGroupStack" => $deleteResourceModuleSkillsGroupStack,
+                    "resourceModuleRating" => $deleteResourceModuleRating,
+                ];
+            });
+            //check all tables responses
+            if ($deleteResourceModule["resourceModule"] && $deleteResourceModule["resourceModuleDetails"] && $deleteResourceModule["resourceModuleSkillsGroupStack"] && $deleteResourceModule['resourceModuleRating']){
+                DB::commit();
+                return true;
+            }
+            DB::rollback();
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+
+
+    public function checkName($title)
+    {
+        try {
+            return $this->resourceModuleService->checkName($title);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateResourceModule($slug, $request, $upload_media){
+        try {
+            return $this->resourceModuleService->updateResourceModule($slug, $request, $upload_media);
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+}

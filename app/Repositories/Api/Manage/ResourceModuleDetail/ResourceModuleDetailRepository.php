@@ -2,26 +2,40 @@
 
 namespace App\Repositories\Api\Manage\ResourceModuleDetail;
 
+use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\Manage\ResourceModuleService;
 
 class ResourceModuleDetailRepository implements ResourceModuleDetailInterface
 {
-    protected $resourceModuleService;
 
-    protected $resourceModuleDetails;
+    protected $resourceModuleDetailsService;
 
-    public function __construct(ResourceModuleService $resourceModuleService)
+    public function __construct(ResourceModuleDetailService $resourceModuleDetailsService)
     {
-        $this->resourceModuleService = $resourceModuleService;
+        $this->resourceModuleDetailsService = $resourceModuleDetailsService;
     }
 
-    public function getResourceModuleList($request)
-    {
-        try {
-            return  $this->resourceModuleService->getResourceModuleList($request);
-        } catch(\Exception $e) {
+    public function addLinks($request,$resource_module_id,$type){
+        try{
+            return $this->resourceModuleDetailsService->addLinks($request,$resource_module_id,$type);
+        }catch(\Exception $e) {
             return false;
         }
     }
 
+    public function uploadResouceModuleFileUpload($files){
+        try{
+            return $this->resourceModuleDetailsService->uploadResouceModuleFile($files);
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function insertData($uploaded_media,$resource_module_id,$type){
+        try{
+            return $this->resourceModuleDetailsService->insertData($uploaded_media,$resource_module_id,$type);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
 }

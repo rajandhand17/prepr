@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Requests\Manage\Resource;
+namespace App\Http\Requests\Manage\ResourceModule;
 
+use App\Services\Manage\LabProgramService;
+use App\Services\Manage\ResourceModuleService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use League\Container\Exception\NotFoundException;
 
-class CreateResourceRequest extends FormRequest
+class UpdateResourceModuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,14 +19,6 @@ class CreateResourceRequest extends FormRequest
         return true;
     }
 
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors(),
-        ], 422));
-    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -31,8 +26,12 @@ class CreateResourceRequest extends FormRequest
      */
     public function rules(): array
     {
+        $labProgram =ResourceModuleService::getResourceModuleBasedOnSlug(request()->route('slug'));
+        if (!$labProgram) {
+            throw new NotFoundException();
+        }
         $base_rules = [
-            'title'                  => 'required|unique:resource_modules,title',
+            'title'                  => 'required|max:255|unique:lab_programs,title,'.$labProgram->id,
             'description'            => 'required',
             'organization_id'        => 'required|exists:organizations,uuid',
             'privacy'                => 'required|in:yes,no',
@@ -41,6 +40,15 @@ class CreateResourceRequest extends FormRequest
 
         ];
         return $base_rules;
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages(){

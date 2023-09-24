@@ -23,11 +23,10 @@ class ResourceModuleResource extends JsonResource
             'slug'                                    => $this->slug,
             'description'                             => $this->description,
             'media_type'                              => $this->media_type,
-            'media'                                   => $this->media,
+            'cover_image'                             => $this->media,
             'privacy'                                 => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                                  => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_global'                               => ($this->is_global == '1') ? 'yes' : 'no',
-
         ];
     }
 }

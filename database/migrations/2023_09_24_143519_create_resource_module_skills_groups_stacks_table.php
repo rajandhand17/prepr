@@ -4,19 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('resource_module_skills_groups_stack', function (Blueprint $table) {
+        Schema::create('resource_module_skills_groups_stacks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('resource_module_id');
             $table->integer('foreign_id');
             $table->enum('type', ['0', '1', '2', '3'])->comment('0->skills, 1->group,2->stack,3->tag');
-            $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
+
         });
     }
 
@@ -25,6 +28,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('resource_module_skills_groups_stack');
+        Schema::dropIfExists('resource_module_skills_groups_stacks');
     }
 };

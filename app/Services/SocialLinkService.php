@@ -6,7 +6,7 @@ use App\Models\SocialLink;
 
 class SocialLinkService
 {
-    public function getSocialLinks($language = 'en', $search = null)
+    public static function getSocialLinks($language = 'en', $search = null)
     {
         try {
             $social_link_list = SocialLink::select('id', 'title', 'icon');

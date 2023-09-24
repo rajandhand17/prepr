@@ -12,9 +12,7 @@ interface ResourceModuleInterface
 
     public function checkSlug($slug);
 
-    public function delete($slug);
-
-    public function deleteMedia($resource_module_id);
+    public function delete($slug,$resource_module_id);
 
     public function checkName($title);
 
