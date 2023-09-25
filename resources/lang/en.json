@@ -383,5 +383,9 @@
     "responses.challenge_stored_success":"Congratulations! You have successfully created a Challenge.",
     "responses.challenge_stored_failed":"Oops! The creation Challenge has failed.",
     "responses.found_challenge_detail":"The Challenge has been successfully retrieved",
-    "responses.found_not_challenge_detail":"The Challenge has been not successfully retrieved"
+    "responses.found_not_challenge_detail":"The Challenge has been not successfully retrieved",
+    "responses.challenge_not_found": "The Challenge(s) which you are looking doesn't exist in our system.",
+    "responses.challenge_delete":"The challenge has been deleted successfully!",
+    "responses.challenge_not_delete":"The challenge was not deleted!",
+    "responses.challenge_delete_access_denied":"Sorry! You are not allowed to delete this challenge."
 }

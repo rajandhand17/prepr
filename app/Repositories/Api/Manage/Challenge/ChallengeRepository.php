@@ -174,7 +174,28 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->getChallengeBasedOnSlug($slug);
-        } catch (\Exception $e) {
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
+    public function deleteChallenge($lab_id, $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $deleteChallenge = $this->challengeService->deleteChallenge($lab_id);
+            if ($deleteChallenge == false) {
+                DB::rollBack();
+
+                return false;
+            }
+            DB::commit();
+
+            return true;
+        } catch (Exception $th) {
+            DB::rollBack();
+
             return false;
         }
     }
