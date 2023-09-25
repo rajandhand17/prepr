@@ -26,7 +26,51 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_module.title', 'like', '%'.$request->search.'%');
+                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
+            }
+
+            if ($request->has('status') && !empty($request->status)) {
+                switch ($request->status) {
+                    case 'draft':
+                        $status = config('constants.resource_module_status.draft');
+                        break;
+                    case 'published':
+                        $status = config('constants.resource_module_status.publish');
+                        break;
+                    case 'archive':
+                        $status = config('constants.resource_module_status.archive');
+                        break;
+                    default:
+                        $status = null;
+                }
+                $resourceModule = $resourceModule->where('resource_modules.status',$status);
+            }
+
+            if ($request->has('privacy') && !empty($request->privacy)) {
+                switch ($request->privacy) {
+                    case 'no':
+                        $privacy = config('constants.resource_module_privacy.no');
+                        break;
+                    case 'yes':
+                        $privacy = config('constants.resource_module_privacy.yes');
+                        break;
+                    default:
+                        $privacy = null;
+                }
+                $resourceModule = $resourceModule->where('resource_modules.privacy',$privacy);
+            }
+            if ($request->has('is_global') && !empty($request->is_global)) {
+                switch ($request->is_global) {
+                    case 'no':
+                        $is_global = config('constants.resource_module_is_global.no');
+                        break;
+                    case 'yes':
+                        $is_global = config('constants.resource_module_is_global.yes');
+                        break;
+                    default:
+                        $privacy = null;
+                }
+                $resourceModule = $resourceModule->where('resource_modules.is_global',$is_global);
             }
             return $resourceModule;
         } catch(\Exception $e) {

@@ -138,4 +138,12 @@ return [
         'Embedded_Cover_Video' => '7',
     ],
 
+    'resource_module_privacy'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+    'resource_module_is_global'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
 ];

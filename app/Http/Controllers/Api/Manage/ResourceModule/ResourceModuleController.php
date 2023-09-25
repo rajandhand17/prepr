@@ -8,7 +8,6 @@ use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModuleDetail\AddLinksResourceRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
-use App\Repositories\Api\Manage\ResourceModuleDetail\ResourceModuleDetailRepository;
 use Illuminate\Http\Request;
 
 class ResourceModuleController extends AppBaseController
