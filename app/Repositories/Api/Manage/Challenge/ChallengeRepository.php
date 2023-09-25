@@ -13,6 +13,7 @@ use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTagsGroupsService;
 use Exception;
 use Illuminate\Support\Facades\DB;
+
 class ChallengeRepository implements ChallengeInterface
 {
     private $challengeService;
@@ -50,7 +51,7 @@ class ChallengeRepository implements ChallengeInterface
     public function createChallenge($request, $upload_cover_image, $upload_achievement_image)
     {
         try {
-            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image){
+            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image) {
                 $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
@@ -62,15 +63,15 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
 
                 return [
-                    'createChallenge' => $createChallenge,
-                    'createChallengeAchievement' => $createChallengeAchievement,
-                    'createChallengeSponsor' => $createChallengeSponsor,
-                    'createChallengeSkillsGroupsStack' => $createChallengeSkillsGroupsStack,
-                    'createChallengeTagsGroups' => $createChallengeTagsGroups,
-                    'createChallengeRequirement' => $createChallengeRequirement,
+                    'createChallenge'                   => $createChallenge,
+                    'createChallengeAchievement'        => $createChallengeAchievement,
+                    'createChallengeSponsor'            => $createChallengeSponsor,
+                    'createChallengeSkillsGroupsStack'  => $createChallengeSkillsGroupsStack,
+                    'createChallengeTagsGroups'         => $createChallengeTagsGroups,
+                    'createChallengeRequirement'        => $createChallengeRequirement,
                     'createChallengeAssessmentCriteria' => $createChallengeAssessmentCriteria,
-                    'createChallengeAssessment' => $createChallengeAssessment,
-                    'createChallengeProjectTemplate' => $createChallengeProjectTemplate,
+                    'createChallengeAssessment'         => $createChallengeAssessment,
+                    'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
                 ];
             });
 
@@ -84,11 +85,12 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['createChallengeAssessmentCriteria'] &&
                 $createChallenge['createChallengeAssessment'] &&
                 $createChallenge['createChallengeProjectTemplate']
-                ) {
-                    DB::commit();
-                    return $createChallenge['createChallenge'];
-                }
-                DB::rollback();
+            ) {
+                DB::commit();
+
+                return $createChallenge['createChallenge'];
+            }
+            DB::rollback();
 
             return false;
         } catch (Exception $th) {

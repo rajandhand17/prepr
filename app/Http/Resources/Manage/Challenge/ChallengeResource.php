@@ -4,13 +4,13 @@ namespace App\Http\Resources\Manage\Challenge;
 
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
 use App\Services\UserService;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChallengeResource extends JsonResource
 {
@@ -125,7 +125,7 @@ class ChallengeResource extends JsonResource
         }
 
         return [
-            'id' => $this->uuid,
+            'id'                            => $this->uuid,
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'               => $this->organization->uuid,
