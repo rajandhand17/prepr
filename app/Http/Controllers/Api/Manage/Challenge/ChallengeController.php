@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
+use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\ChallengeAchievement\ChallengeAchievementRepository;
-use App\Repositories\Api\Manage\ChallengeSponsor\ChallengeSponsorRepository;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -13,16 +14,14 @@ class ChallengeController extends AppBaseController
 {
     private ChallengeRepository $challengeRepository;
     private ChallengeAchievementRepository $challengeAchievementRepository;
-    private ChallengeSponsorRepository $challengeSponsorRepository;
 
-    public function __construct(ChallengeRepository $challengeRepository, ChallengeAchievementRepository $challengeAchievementRepository, ChallengeSponsorRepository $challengeSponsorRepository)
+    public function __construct(ChallengeRepository $challengeRepository, ChallengeAchievementRepository $challengeAchievementRepository)
     {
         $this->challengeRepository = $challengeRepository;
         $this->challengeAchievementRepository = $challengeAchievementRepository;
-        $this->challengeSponsorRepository = $challengeSponsorRepository;
     }
 
-    public function create(Request $request)
+    public function create(CreateChallengeRequest $request)
     {
         try {
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
@@ -43,10 +42,13 @@ class ChallengeController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
             $createChallenge = $this->challengeRepository->createChallenge($request, $upload_cover_image, $upload_achievement_image);
-            dd($createChallenge);
-        } catch (Exception $th) {
-            dd($th, 'In Controller');
 
+            if ($createChallenge != false) {
+                return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_stored_failed'), 400);;
+        } catch (Exception $th) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

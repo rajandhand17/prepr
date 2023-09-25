@@ -41,4 +41,27 @@ class ProjectSubmissionRequirementService
             return false;
         }
     }
+
+    public static function getProjectSubmissionRequirementByID($language = 'en', $project_condition_id)
+    {
+        try {
+            if ($language == 'en') {
+                $project_submission_requirement = ProjectSubmissionRequirement::select('id', 'title');
+            } else {
+                //get column title based on language
+                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
+
+                //check whether the column exist in the db or not
+                if (!$column_name || !Schema::hasColumn('project_submission_requirements', $column_name)) {
+                    return false;
+                }
+                $project_submission_requirement = ProjectSubmissionRequirement::select('id', $column_name . ' as title');
+            }
+            $project_condition = $project_submission_requirement->find($project_condition_id);
+
+            return $project_condition;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

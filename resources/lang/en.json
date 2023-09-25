@@ -361,6 +361,25 @@
     "responses.sso_type_required_field":"This sso_type field is required",
     "responses.sub_required_field":"This sub field is required",
     "responses.access_token_required_field":"This access token field is required",
-    "responses.invalid_sso_type":"Error: We couldn't authorize your login. Please verify your details and try again."
+    "responses.invalid_sso_type":"Error: We couldn't authorize your login. Please verify your details and try again.",
 
+    "responses.challenge_title_unique":"Sorry,this title already registered with us, Please choose another one",
+    "responses.challenge_source_link":"Sorry, Website-URL of the content is in valid.",
+    "responses.achievement_prize":"This achievement prize field is required",
+    "responses.winner_achievement_image_required":"This winner achievement conditions field is required",
+    "responses.winner_achievement_image_array":"The winner achievement conditions should be an array",
+    "responses.winner_achievement_participation_required":"This winner achievement conditions field is required",
+    "responses.winner_achievement_participation_array":"The winner achievement conditions should be an array",
+    "responses.winner_achievement_name_required":"This winner achievement conditions field is required",
+    "responses.winner_achievement_name_array":"The winner achievement conditions should be an array",
+    "responses.winner_achievement_prize_required":"This winner achievement conditions field is required",
+    "responses.winner_achievement_prize_array":"The winner achievement conditions should be an array",
+    "responses.winner_achievement_points_required":"This winner achievement conditions field is required",
+    "responses.winner_achievement_points_array":"The winner achievement conditions should be an array",
+    "responses.host_id_required":"This host field is required",
+    "responses.host_id_array":"The host should be an array",
+    "responses.project_submission_requirement_ids_required":"This project submission requirement field is required",
+    "responses.project_submission_requirement_ids_array":"The project submission requirement should be an array",
+    "responses.challenge_stored_success":"Congratulations! You have successfully created a Challenge.",
+    "responses.challenge_stored_failed":"Oops! The creation Challenge has failed."
 }

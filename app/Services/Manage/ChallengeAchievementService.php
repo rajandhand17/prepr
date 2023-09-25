@@ -36,6 +36,7 @@ class ChallengeAchievementService
 
             if ($request->winner_achievement_participation !== null) {
                 foreach ($request->winner_achievement_participation as $key => $value) {
+                    $upload_achievement_image = FileUploadHelper::uploadImageToS3($request->winner_achievement_image[$key], 'achievement');
                     $challengeIncentiveAchievement = new ChallengeAchievement();
                     $challengeIncentiveAchievement->challenge_id = $challenge;
                     $challengeIncentiveAchievement->achievement_type = '1';

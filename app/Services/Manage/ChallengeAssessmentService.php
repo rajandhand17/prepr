@@ -26,7 +26,7 @@ class ChallengeAssessmentService
                 }
 
                 $challenge_visibility_type = config('constants.challenge_visibility_type.users');
-                switch ($request->assessment_type == 'close') {
+                switch ($request->visibility == 'close') {
                     case 'hidden':
                         $challenge_visibility_type = config('constants.challenge_visibility_type.hidden');
                         break;

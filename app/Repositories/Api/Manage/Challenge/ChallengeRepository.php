@@ -12,7 +12,7 @@ use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTagsGroupsService;
 use Exception;
-
+use Illuminate\Support\Facades\DB;
 class ChallengeRepository implements ChallengeInterface
 {
     private $challengeService;
@@ -50,20 +50,48 @@ class ChallengeRepository implements ChallengeInterface
     public function createChallenge($request, $upload_cover_image, $upload_achievement_image)
     {
         try {
-            $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
-            $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
-            $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
-            $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
-            $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
-            $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
-            $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id);
-            $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id);
-            $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
+            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image){
+                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
+                $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
+                $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
+                $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
+                $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
+                $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
+                $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id);
+                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id);
+                $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
 
-            dd($createChallenge, 'In Repository');
+                return [
+                    'createChallenge' => $createChallenge,
+                    'createChallengeAchievement' => $createChallengeAchievement,
+                    'createChallengeSponsor' => $createChallengeSponsor,
+                    'createChallengeSkillsGroupsStack' => $createChallengeSkillsGroupsStack,
+                    'createChallengeTagsGroups' => $createChallengeTagsGroups,
+                    'createChallengeRequirement' => $createChallengeRequirement,
+                    'createChallengeAssessmentCriteria' => $createChallengeAssessmentCriteria,
+                    'createChallengeAssessment' => $createChallengeAssessment,
+                    'createChallengeProjectTemplate' => $createChallengeProjectTemplate,
+                ];
+            });
+
+            if (
+                $createChallenge['createChallenge'] &&
+                $createChallenge['createChallengeAchievement'] &&
+                $createChallenge['createChallengeSponsor'] &&
+                $createChallenge['createChallengeSkillsGroupsStack'] &&
+                $createChallenge['createChallengeTagsGroups'] &&
+                $createChallenge['createChallengeRequirement'] &&
+                $createChallenge['createChallengeAssessmentCriteria'] &&
+                $createChallenge['createChallengeAssessment'] &&
+                $createChallenge['createChallengeProjectTemplate']
+                ) {
+                    DB::commit();
+                    return $createChallenge['createChallenge'];
+                }
+                DB::rollback();
+
+            return false;
         } catch (Exception $th) {
-            dd($th, 'In Repository');
-
             return false;
         }
     }
