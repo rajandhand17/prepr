@@ -51,4 +51,18 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function show($slug)
+    {
+        try {
+            $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if ($challenge) {
+                return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_detail'), 200);
+            }
+
+            return $this->sendError(__('responses.found_not_challenge_detail'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
