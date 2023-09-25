@@ -9,14 +9,14 @@ use App\Models\ResourceModuleDetail;
 
 class ResourceModuleDetailService
 {
-    public function addLinks($request,$resource_module_id,$type){
-        try {
+   public function insertRecords($resource_module_id,$title,$type,$path,$social_link_id){
+        try{
             $resourceModuleDetailed=new ResourceModuleDetail();
             $resourceModuleDetailed->resource_module_id=$resource_module_id;
-            $resourceModuleDetailed->title=$request->title;
+            $resourceModuleDetailed->title=$title;
             $resourceModuleDetailed->type=$type;
-            $resourceModuleDetailed->path=$request->path;
-            $resourceModuleDetailed->social_link_id=$request->social_link_id;
+            $resourceModuleDetailed->path=$path;
+            $resourceModuleDetailed->social_link_id=$social_link_id;
             $resourceModuleDetailed->save();
             return $resourceModuleDetailed;
         }catch (\Exception $e){
@@ -24,36 +24,32 @@ class ResourceModuleDetailService
         }
     }
 
-    public function uploadResouceModuleFile($image){
+    public function addLinks($resource_module_id,$title,$type,$path,$social_link_id){
+       try{
+           foreach ($title as $key => $value){
+               $resourceModuleDetailed=self::insertRecords($resource_module_id,$value,$type[$key],$path[$key],$social_link_id[$key]);
+               if(!$resourceModuleDetailed){
+                   return false;
+               }
+           }
+           return true;
+       }catch (\Exception $e){
+           return false;
+       }
+    }
+    public function fileUpload($request,$resource_module_id,$type){
         try{
-            foreach($image as $file){
-                $upload_resource_module_cover_image[] = FileUploadHelper::uploadImageToS3($file, 'resource_module');
+            foreach ($request->file_upload as $file){
+                $upload_resource_module_cover_image= FileUploadHelper::uploadImageToS3($file, 'resource_module');
                 if ($upload_resource_module_cover_image == false){
                     return false;
                 }
-
-            }
-            return $upload_resource_module_cover_image;
-        }catch (\Exception $e){
-            return false;
-        }
-    }
-
-    public function insertData($uploaded_media,$resource_module_id,$type){
-        try{
-
-            foreach ($uploaded_media as $media){
-                $resourceModuleDetailed=new ResourceModuleDetail();
-                $resourceModuleDetailed->resource_module_id=$resource_module_id;
-                $resourceModuleDetailed->title="image";
-                $resourceModuleDetailed->type=$type;
-                $resourceModuleDetailed->path=$media;
-                if(!$resourceModuleDetailed->save()){
+                $imagePath=explode('/',$upload_resource_module_cover_image);
+                $resourceModuleDetailed=self::insertRecords($resource_module_id,$imagePath[count($imagePath)-1],$type,$upload_resource_module_cover_image,null);
+                if(!$resourceModuleDetailed){
                     return false;
                 }
-
             }
-
             return true;
         }catch (\Exception $e){
             return false;

@@ -384,6 +384,7 @@
     "responses.add_links_failed":"Oops! The Add Links of resource module has failed..",
 
     "responses.file_upload_success":"Congratulations! You have successfully upload Image.",
+    "responses.file_upload_failed":"Oops! The upload Image of resource module has failed.",
 
     "responses.resource_module_update_success":"Congratulations! You have successfully update resource module.",
     "responses.resource_module_update_failed":"Oops! The Updation of resource module has failed."

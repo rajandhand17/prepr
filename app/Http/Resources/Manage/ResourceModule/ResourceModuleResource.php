@@ -18,7 +18,7 @@ class ResourceModuleResource extends JsonResource
             'id'                                      => $this->uuid,
             'language'                                => $this->language,
             'title'                                   => $this->title,
-            'user_id'                                 => $this->user_id,
+            'user'                                    => $this->users->first_name.' '.$this->users->last_name,
             'organization_id'                         => $this->organization_id,
             'slug'                                    => $this->slug,
             'description'                             => $this->description,
@@ -27,6 +27,11 @@ class ResourceModuleResource extends JsonResource
             'privacy'                                 => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                                  => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_global'                               => ($this->is_global == '1') ? 'yes' : 'no',
+            'links'                                   => $this->resource_module_url,
+            'files'                                   => $this->resource_module_image,
+            'documents'                               => $this->resource_module_document,
+            'video'                                   => $this->resource_module_video,
+            'audio'                                   => $this->resource_module_audio,
 
         ];
     }

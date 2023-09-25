@@ -120,4 +120,20 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
+
+    public function fileUpload($request,$resource_module_id,$type){
+        try{
+            return $this->resourceModuleDetails->fileUpload($request,$resource_module_id,$type);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
+    public function addLinks($request,$resource_module_id,$type){
+        try{
+            return $this->resourceModuleDetails->addLinks($resource_module_id,$request->title,$type,$request->path,$request->social_link_id);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
 }

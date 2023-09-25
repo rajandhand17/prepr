@@ -15,12 +15,10 @@ class ResourceModuleController extends AppBaseController
 {
     private $resourceModuleRepository;
 
-    private $responseModuleDetailsRepository;
 
-    public function __construct(ResourceModuleRepository $resourceModuleRepository, ResourceModuleDetailRepository $responseModuleDetailsRepository)
+    public function __construct(ResourceModuleRepository $resourceModuleRepository,)
     {
         $this->resourceModuleRepository = $resourceModuleRepository;
-        $this->responseModuleDetailsRepository = $responseModuleDetailsRepository;
     }
 
     public function index(Request $request){
@@ -127,7 +125,7 @@ class ResourceModuleController extends AppBaseController
                 if ($checkResourceModuleSlugExistsOrNot == false) {
                     return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
                 }
-            $addLinks= $this->responseModuleDetailsRepository->addLinks($request,$checkResourceModuleSlugExistsOrNot->id,$type);
+            $addLinks= $this->resourceModuleRepository->addLinks($request,$checkResourceModuleSlugExistsOrNot->id,$type);
             if($addLinks){
                 return $this->sendResponse(__('responses.add_links_success'),200);
             }
@@ -144,18 +142,11 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $uploaded_media = config('site-settings.default_resource_module_cover_image');
-            if ($request->file_upload !== null && $request->file_upload){
-                $uploaded_media = $this->responseModuleDetailsRepository->uploadResouceModuleFileUpload($request->file_upload);
-                if (!$uploaded_media) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
-                }
-            }
-            $insertData=$this->responseModuleDetailsRepository->insertData($uploaded_media,$checkResourceModuleSlugExistsOrNot->id,$type);
+            $insertData=$this->resourceModuleRepository->fileUpload($request,$checkResourceModuleSlugExistsOrNot->id,$type);
             if($insertData){
                 return $this->sendResponse(__('responses.file_upload_success'),200);
             }
-            return $this->sendResponse(__('responses.add_links_success'),200);
+            return $this->sendError(__('responses.file_upload_failed'),500);
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }
