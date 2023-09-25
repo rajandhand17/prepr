@@ -6,18 +6,15 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
-use App\Repositories\Api\Manage\ChallengeAchievement\ChallengeAchievementRepository;
 use Exception;
 
 class ChallengeController extends AppBaseController
 {
     private ChallengeRepository $challengeRepository;
-    private ChallengeAchievementRepository $challengeAchievementRepository;
 
-    public function __construct(ChallengeRepository $challengeRepository, ChallengeAchievementRepository $challengeAchievementRepository)
+    public function __construct(ChallengeRepository $challengeRepository)
     {
         $this->challengeRepository = $challengeRepository;
-        $this->challengeAchievementRepository = $challengeAchievementRepository;
     }
 
     public function create(CreateChallengeRequest $request)
@@ -34,7 +31,7 @@ class ChallengeController extends AppBaseController
 
             $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
             if ($request->achievement_image !== null) {
-                $uploaded_achievement_image = $this->challengeAchievementRepository->uploadChallengeAchievementImage($request->achievement_image);
+                $uploaded_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
                 if (!$uploaded_achievement_image) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }

@@ -98,6 +98,77 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
+    public function uploadChallengeParticipationAchievementImage($image)
+    {
+        try {
+            return $this->challengeAchievementService->uploadChallengeParticipationAchievementImage($image);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
+    public function createChallengeSponsor($request, $challenge)
+    {
+        try {
+            return $this->challengeSponsorService->createChallengeSponsor($request, $challenge);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
+    public function createChallengeSkillsGroupsStack($request, $challenge)
+    {
+        try {
+            return $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $challenge);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
+    public function createChallengeTagsGroups($request, $challenge)
+    {
+        try {
+            return $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $challenge);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
+    public function createChallengeRequirement($request, $challenge)
+    {
+        try {
+            return $this->challengeRequirementService->createChallengeRequirement($request, $challenge);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
+    public function createChallengeAssessmentCriteria($request, $challenge)
+    {
+        try {
+            return $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $challenge);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
+    public function createChallengeAssessment($request, $challenge)
+    {
+        try {
+            return $this->challengeAssessmentService->createChallengeAssessment($request, $challenge);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
+    public function createChallengeProjectTemplate($request, $challenge)
+    {
+        try {
+            return $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $challenge);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
     public function getChallengeBasedOnSlug($slug)
     {
         try {
