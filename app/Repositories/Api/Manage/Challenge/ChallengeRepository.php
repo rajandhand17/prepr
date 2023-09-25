@@ -169,6 +169,7 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
     public function getChallengeBasedOnSlug($slug)
     {
         try {
