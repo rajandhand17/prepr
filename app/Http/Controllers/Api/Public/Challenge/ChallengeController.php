@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers\Api\Public\Challenge;
+
+use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Public\Challenge\ChallengeResource;
+use App\Repositories\Api\Public\Challenge\ChallengeRepository;
+use App\Services\Manage\OrganizationService;
+use Illuminate\Http\Request;
+use stdClass;
+
+class ChallengeController extends AppBaseController
+{
+    private $challengeRepository;
+
+    public function __construct(ChallengeRepository $challengeRepository)
+    {
+        $this->challengeRepository = $challengeRepository;
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            if ($request->organization_id && is_array($request->organization_id)) {
+                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                if (!$organization) {
+                    return $this->sendError(__('responses.organization_not_found'), 404);
+                }
+                $request->merge(['organization_id' => $organization]);
+            }
+            $challenges = $this->challengeRepository->getList($request);
+            if ($challenges !== false) {
+                $response = [
+                    'total_count'  => $challenges->total(),
+                    'per_page'     => $challenges->perPage(),
+                    'count'        => $challenges->count(),
+                    'current_page' => $challenges->currentPage(),
+                    'total_pages'  => $challenges->lastPage(),
+                    'list'         => ChallengeResource::collection($challenges),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_labs_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_labs_list'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function show(Request $request, $slug)
+    {
+        try {
+            $lab = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if ($lab) {
+                return $this->sendResponse(ChallengeResource::make($lab), __('responses.found_lab_view'));
+            }
+
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function socialActivity($slug, $action)
+    {
+        try {
+            $lab = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if ($lab !== null) {
+                $getColumnNameValue = $this->challengeRepository->getColumnNameValue($action);
+                if (!$getColumnNameValue) {
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
+                }
+                $checkActivity = $this->challengeRepository->checkSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $action = str_replace('-', '_', $action);
+                if ($checkActivity === true) {
+                    return $this->sendError(__('responses.already_'.$action.'_lab'), 400);
+                }
+                $lab = $this->challengeRepository->captureSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                if ($lab) {
+                    return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
+                }
+            }
+
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+}

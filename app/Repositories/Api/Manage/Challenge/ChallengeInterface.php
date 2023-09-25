@@ -7,4 +7,8 @@ interface ChallengeInterface
     public function uploadChallengeCoverImage($image);
 
     public function createChallenge($request, $upload_cover_image, $upload_achievement_image);
+
+    public function checkSlug($slug);
+
+    public function checkNameExistsOrNot($title);
 }

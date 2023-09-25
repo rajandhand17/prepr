@@ -1,0 +1,17 @@
+<?php
+
+use App\Http\Controllers\Api\Public\Challenge\ChallengeController;
+use Illuminate\Support\Facades\Route;
+
+$middleware = ['language'];
+if (\request()->has('social_type')) {
+    $middleware = ['language', 'auth:api'];
+}
+
+Route::middleware($middleware)->group(function () {
+    Route::get('/', [ChallengeController::class, 'index']);
+    Route::get('/{slug}', [ChallengeController::class, 'show']);
+});
+Route::middleware(['language', 'auth:api'])->group(function () {
+    Route::post('/{slug}/{activity}', [ChallengeController::class, 'socialActivity']);
+});

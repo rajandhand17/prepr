@@ -152,7 +152,7 @@
     "responses.organization_delete_access_denied":"Sorry! You are not allowed to delete this organization.",
     "responses.organization_delete":"The organization has been deleted successfully!",
     "responses.organization_not_delete":"The organization has been not deleted!",
-    "responses.lab_slug_available":"Success is yours! This slug is available",
+    "responses.lab_slug_available":"Success is yours! This lab slug is available",
     "responses.already_exists":"Sorry, this slug is not available",
     "responses.not_found_required":"Not Found",
     "responses.invite_email_required":"This invite email field is required",
@@ -361,6 +361,11 @@
     "responses.sso_type_required_field":"This sso_type field is required",
     "responses.sub_required_field":"This sub field is required",
     "responses.access_token_required_field":"This access token field is required",
-    "responses.invalid_sso_type":"Error: We couldn't authorize your login. Please verify your details and try again."
+    "responses.invalid_sso_type":"Error: We couldn't authorize your login. Please verify your details and try again.",
 
+
+
+    "responses.challenge_slug_available":"Success is yours! This challenge slug is available.",
+    "responses.challenge_name_not_available":"Sorry,this title already registered with us, Please choose another one.",
+    "responses.challenge_name_available":"Success is yours! This challenge title is available."
 }

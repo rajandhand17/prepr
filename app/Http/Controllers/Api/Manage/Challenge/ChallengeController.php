@@ -50,4 +50,32 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function checkSlug($slug)
+    {
+        try {
+            $checkLabSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
+            if ($checkLabSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.challenge_slug_available'), 200);
+            }
+
+            return $this->sendError(__('responses.already_exists'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkName($title)
+    {
+        try {
+            $checkLabNameExistsOrNot = $this->challengeRepository->checkNameExistsOrNot($title);
+            if ($checkLabNameExistsOrNot) {
+                return $this->sendError(__('responses.challenge_name_not_available'));
+            }
+
+            return $this->sendResponse([], __('responses.challenge_name_available'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
