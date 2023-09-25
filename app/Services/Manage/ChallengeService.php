@@ -140,4 +140,13 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengeBasedOnSlug($slug)
+    {
+        try {
+            return Challenge::where('slug', $slug)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

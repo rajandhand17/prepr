@@ -169,4 +169,13 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
+    public function getChallengeBasedOnSlug($slug)
+    {
+        try {
+            return $this->challengeService->getChallengeBasedOnSlug($slug);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
