@@ -27,6 +27,7 @@ class ResourceModuleResource extends JsonResource
             'privacy'                                 => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                                  => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_global'                               => ($this->is_global == '1') ? 'yes' : 'no',
+
         ];
     }
 }

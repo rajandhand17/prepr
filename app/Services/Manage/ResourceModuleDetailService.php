@@ -26,9 +26,12 @@ class ResourceModuleDetailService
 
     public function uploadResouceModuleFile($image){
         try{
-            $upload_resource_module_cover_image = FileUploadHelper::uploadImageToS3($image, 'resource_module');
-            if ($upload_resource_module_cover_image == false){
-                return false;
+            foreach($image as $file){
+                $upload_resource_module_cover_image[] = FileUploadHelper::uploadImageToS3($file, 'resource_module');
+                if ($upload_resource_module_cover_image == false){
+                    return false;
+                }
+
             }
             return $upload_resource_module_cover_image;
         }catch (\Exception $e){
@@ -38,13 +41,20 @@ class ResourceModuleDetailService
 
     public function insertData($uploaded_media,$resource_module_id,$type){
         try{
-            $resourceModuleDetailed=new ResourceModuleDetail();
-            $resourceModuleDetailed->resource_module_id=$resource_module_id;
-            $resourceModuleDetailed->title="image";
-            $resourceModuleDetailed->type=$type;
-            $resourceModuleDetailed->path=$uploaded_media;
-            $resourceModuleDetailed->save();
-            return $resourceModuleDetailed;
+
+            foreach ($uploaded_media as $media){
+                $resourceModuleDetailed=new ResourceModuleDetail();
+                $resourceModuleDetailed->resource_module_id=$resource_module_id;
+                $resourceModuleDetailed->title="image";
+                $resourceModuleDetailed->type=$type;
+                $resourceModuleDetailed->path=$media;
+                if(!$resourceModuleDetailed->save()){
+                    return false;
+                }
+
+            }
+
+            return true;
         }catch (\Exception $e){
             return false;
         }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Manage\ResourceModuleDetail;
 
+use App\Services\Manage\ResourceModuleService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use League\Container\Exception\NotFoundException;
 
 class AddLinksResourceRequest extends FormRequest
 {
@@ -23,8 +25,9 @@ class AddLinksResourceRequest extends FormRequest
      */
     public function rules(): array
     {
+
         $base_rules = [
-            'title'                  => 'required|unique:resource_module_details,title',
+            'title'                  => 'required|max:255',
             'path'                   => 'required',
             'social_link_id'         => 'required',
 
