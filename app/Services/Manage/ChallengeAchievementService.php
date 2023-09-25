@@ -8,7 +8,7 @@ use Exception;
 
 class ChallengeAchievementService
 {
-    public function uploadChallengeAchievementImage($image)
+    public function uploadChallengeParticipationAchievementImage($image)
     {
         try {
             $upload_achievement_image = FileUploadHelper::uploadImageToS3($image, 'achievement');
@@ -36,14 +36,14 @@ class ChallengeAchievementService
 
             if ($request->winner_achievement_participation !== null) {
                 foreach ($request->winner_achievement_participation as $key => $value) {
-                    $upload_achievement_image = FileUploadHelper::uploadImageToS3($request->winner_achievement_image[$key], 'achievement');
+                    $upload_incentive_achievement_image = FileUploadHelper::uploadImageToS3($request->winner_achievement_image[$key], 'achievement');
                     $challengeIncentiveAchievement = new ChallengeAchievement();
                     $challengeIncentiveAchievement->challenge_id = $challenge;
                     $challengeIncentiveAchievement->achievement_type = '1';
                     $challengeIncentiveAchievement->achievement_name = $request->winner_achievement_name[$key];
                     $challengeIncentiveAchievement->achievement_prize = $request->winner_achievement_prize[$key];
                     $challengeIncentiveAchievement->achievement_points = $request->winner_achievement_points[$key];
-                    $challengeIncentiveAchievement->achievement_image = $upload_achievement_image;
+                    $challengeIncentiveAchievement->achievement_image = $upload_incentive_achievement_image;
                     $challengeIncentiveAchievement->save();
                 }
             }
