@@ -26,12 +26,12 @@ class UpdateResourceModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $labProgram =ResourceModuleService::getResourceModuleBasedOnSlug(request()->route('slug'));
-        if (!$labProgram) {
+        $resourceModuleService =ResourceModuleService::getResourceModuleBasedOnSlug(request()->route('slug'));
+        if (!$resourceModuleService) {
             throw new NotFoundException();
         }
         $base_rules = [
-            'title'                  => 'required|max:255|unique:lab_programs,title,'.$labProgram->id,
+            'title'                  => 'required|max:255|unique:lab_programs,title,'.$resourceModuleService->id,
             'description'            => 'required',
             'organization_id'        => 'required|exists:organizations,uuid',
             'privacy'                => 'required|in:yes,no',
