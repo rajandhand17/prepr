@@ -187,12 +187,15 @@ class ChallengeRepository implements ChallengeInterface
             $deleteChallenge = $this->challengeService->deleteChallenge($lab_id);
             if ($deleteChallenge == false) {
                 DB::rollBack();
+
                 return false;
             }
             DB::commit();
+
             return true;
         } catch (Exception $th) {
             DB::rollBack();
+
             return false;
         }
     }

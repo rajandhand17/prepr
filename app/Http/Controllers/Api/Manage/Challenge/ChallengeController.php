@@ -6,8 +6,8 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 
 class ChallengeController extends AppBaseController
 {
