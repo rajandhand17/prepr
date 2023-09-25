@@ -55,7 +55,7 @@ class ProjectSubmissionRequirementService
                 if (!$column_name || !Schema::hasColumn('project_submission_requirements', $column_name)) {
                     return false;
                 }
-                $project_submission_requirement = ProjectSubmissionRequirement::select('id', $column_name . ' as title');
+                $project_submission_requirement = ProjectSubmissionRequirement::select('id', $column_name.' as title');
             }
             $project_condition = $project_submission_requirement->find($project_condition_id);
 

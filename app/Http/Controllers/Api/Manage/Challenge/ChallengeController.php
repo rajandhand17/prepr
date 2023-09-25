@@ -8,7 +8,6 @@ use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\ChallengeAchievement\ChallengeAchievementRepository;
 use Exception;
-use Illuminate\Http\Request;
 
 class ChallengeController extends AppBaseController
 {
@@ -47,7 +46,7 @@ class ChallengeController extends AppBaseController
                 return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
             }
 
-            return $this->sendError(__('responses.challenge_stored_failed'), 400);;
+            return $this->sendError(__('responses.challenge_stored_failed'), 400);
         } catch (Exception $th) {
             return $this->sendError(__('responses.send_error'), 500);
         }
