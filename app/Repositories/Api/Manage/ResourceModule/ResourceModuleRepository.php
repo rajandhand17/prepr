@@ -12,16 +12,16 @@ class ResourceModuleRepository implements ResourceModuleInterface
 {
     protected $resourceModuleService;
 
-    protected $resourceModuleDetails;
+    protected $resourceModuleDetailsService;
 
     protected $resouceModuleSkillsGroupStackService;
 
     protected $resourceModuleRatingService;
 
-    public function __construct(ResourceModuleService $resourceModuleService,ResourceModuleDetailService $resourceModuleDetails,ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService,ResourceModuleRatingService $resourceModuleRatingService)
+    public function __construct(ResourceModuleService $resourceModuleService,ResourceModuleDetailService $resourceModuleDetailsService,ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService,ResourceModuleRatingService $resourceModuleRatingService)
     {
         $this->resourceModuleService = $resourceModuleService;
-        $this->resourceModuleDetails = $resourceModuleDetails;
+        $this->resourceModuleDetailsService = $resourceModuleDetailsService;
         $this->resouceModuleSkillsGroupStackService=$resouceModuleSkillsGroupStackService;
         $this->resourceModuleRatingService=$resourceModuleRatingService;
     }
@@ -77,7 +77,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 // Delete the resource module itself
                 $deleteResourceModule = $this->resourceModuleService->delete($slug);
                 // Delete resource module details
-                $deleteResourceModuleDetails = $this->resourceModuleDetails->delete($resource_module_id);
+                $deleteResourceModuleDetailsService = $this->resourceModuleDetailsService->delete($resource_module_id);
                 // Delete resource module skills group stack
                 $deleteResourceModuleSkillsGroupStack = $this->resouceModuleSkillsGroupStackService->delete($resource_module_id);
                 // Delete resource module rating
@@ -85,7 +85,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 // Return the results of each deletion
                 return [
                     "resourceModule" => $deleteResourceModule,
-                    "resourceModuleDetails" => $deleteResourceModuleDetails,
+                    "resourceModuleDetails" => $deleteResourceModuleDetailsService,
                     "resourceModuleSkillsGroupStack" => $deleteResourceModuleSkillsGroupStack,
                     "resourceModuleRating" => $deleteResourceModuleRating,
                 ];
@@ -123,7 +123,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
     public function fileUpload($request,$resource_module_id,$type){
         try{
-            return $this->resourceModuleDetails->fileUpload($request,$resource_module_id,$type);
+            return $this->resourceModuleDetailsService->fileUpload($request,$resource_module_id,$type);
         }catch(\Exception $e){
             return false;
         }
@@ -131,7 +131,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
     public function addLinks($request,$resource_module_id,$type){
         try{
-            return $this->resourceModuleDetails->addLinks($resource_module_id,$request->title,$type,$request->path,$request->social_link_id);
+            return $this->resourceModuleDetailsService->addLinks($resource_module_id,$request->title,$type,$request->path,$request->social_link_id);
         }catch(\Exception $e){
             return false;
         }
