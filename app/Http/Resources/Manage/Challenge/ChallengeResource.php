@@ -154,11 +154,11 @@ class ChallengeResource extends JsonResource
         if ($this->challenge_custom_timelines) {
             $challenge_custom_timelines = $this->challenge_custom_timelines->map(function ($item) {
                 return [
-                    'custom_timelines_title' => $item->custom_timelines_title,
-                    'custom_timelines_date' => $item->custom_timelines_date,
+                    'custom_timelines_title'       => $item->custom_timelines_title,
+                    'custom_timelines_date'        => $item->custom_timelines_date,
                     'custom_timelines_description' => $item->custom_timelines_description,
-                    'custom_timelines_duration' => $item->custom_timelines_duration,
-                    'schedule_custom_notify' => $item->schedule_custom_notify,
+                    'custom_timelines_duration'    => $item->custom_timelines_duration,
+                    'schedule_custom_notify'       => $item->schedule_custom_notify,
                 ];
             });
         }

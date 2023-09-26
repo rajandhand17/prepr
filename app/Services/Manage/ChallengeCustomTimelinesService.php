@@ -25,6 +25,7 @@ class ChallengeCustomTimelinesService
                     }
                 }
             }
+
             return true;
         } catch (Exception $th) {
             return false;
