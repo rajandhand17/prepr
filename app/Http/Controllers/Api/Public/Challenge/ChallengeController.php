@@ -7,7 +7,6 @@ use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Repositories\Api\Public\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
-use stdClass;
 
 class ChallengeController extends AppBaseController
 {

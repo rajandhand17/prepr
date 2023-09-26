@@ -14,8 +14,8 @@ class ChallengeSocialActivitiesService
                 $checkActivity = ChallengeSocialActivity::where(
                     [
                         'challenge_id'  => $challenge_id,
-                        'user_id' => auth()->user()->id,
-                        $column   => $action,
+                        'user_id'       => auth()->user()->id,
+                        $column         => $action,
                     ]
                 )->first();
                 if ($checkActivity != null) {
@@ -36,7 +36,7 @@ class ChallengeSocialActivitiesService
         try {
             if (auth()->check()) {
                 ChallengeSocialActivity::updateOrInsert([
-                    'user_id' => auth::user()->id,
+                    'user_id'       => auth::user()->id,
                     'challenge_id'  => $challenge_id,
                 ], [
                     $column => $action,
@@ -116,5 +116,4 @@ class ChallengeSocialActivitiesService
             return false;
         }
     }
-
 }
