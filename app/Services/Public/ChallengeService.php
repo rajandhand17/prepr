@@ -2,14 +2,14 @@
 
 namespace App\Services\Public;
 
-use App\Models\Lab;
+use App\Models\Challenge;
 
 class ChallengeService
 {
     public function getList($request)
     {
         try {
-            $lab_list = Lab::select()->where('labs.status', '1');
+            $lab_list = Challenge::select()->where('labs.status', '1');
             $lab_list = self::filterLabList($request, $lab_list);
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
@@ -122,7 +122,7 @@ class ChallengeService
     public function getLabBasedOnSlug($slug)
     {
         try {
-            return Lab::where('slug', $slug)->first();
+            return Challenge::where('slug', $slug)->first();
         } catch (\Exception $e) {
             return false;
         }
