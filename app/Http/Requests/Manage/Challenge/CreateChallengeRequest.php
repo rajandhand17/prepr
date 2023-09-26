@@ -82,6 +82,13 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['host_id.*'] = 'required|numeric';
         }
 
+        if ($this->has('timeline_type') == 'flexible' && $this->request->has('custom_timelines_title') !== null && $this->request->has('custom_timelines_date') !== null) {
+            $base_rules['custom_timelines_title'] = 'array';
+            $base_rules['custom_timelines_title.*'] = 'required';
+            $base_rules['custom_timelines_date'] = 'array';
+            $base_rules['custom_timelines_date.*'] = 'required';
+        }
+
         if ($this->has('assessment_title') !== null && $this->has('assessment_score') !== null && $this->has('assessment_weight') !== null) {
             $base_rules['assessment_title'] = 'array';
             $base_rules['assessment_title.*'] = 'required';
@@ -167,6 +174,10 @@ class CreateChallengeRequest extends FormRequest
             'host_id.array'                               => __('responses.host_id_array'),
             'project_submission_requirement_ids.required' => __('responses.project_submission_requirement_ids_required'),
             'project_submission_requirement_ids.array'    => __('responses.project_submission_requirement_ids_array'),
+            'custom_timelines_title.required'             => __('responses.custom_timelines_title_required'),
+            'custom_timelines_title.array'                => __('responses.custom_timelines_title_array'),
+            'custom_timelines_date.required'              => __('responses.custom_timelines_date_required'),
+            'custom_timelines_date.array'                 => __('responses.custom_timelines_date_array'),
         ];
     }
 }

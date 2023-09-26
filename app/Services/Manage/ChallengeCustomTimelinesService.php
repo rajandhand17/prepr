@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Services\Manage;
+
+use App\Models\ChallengeCustomTimelines;
+use Exception;
+
+class ChallengeCustomTimelinesService
+{
+    public function createChallengeCustomTimelines($request, $challenge)
+    {
+        try {
+            if ($request->timeline_type == 'flexible') {
+                if ($request->custom_timelines_title !== null && $request->custom_timelines_date !== null) {
+                    foreach ($request->custom_timelines_title as $key => $value) {
+                        $custom_date = date('Y-m-d H:i:s', strtotime($request->custom_timelines_date[$key]));
+                        $challengeCustomTimeline = new ChallengeCustomTimelines();
+                        $challengeCustomTimeline->challenge_id = $challenge;
+                        $challengeCustomTimeline->custom_timelines_title = $request->custom_timelines_title[$key];
+                        $challengeCustomTimeline->custom_timelines_date = $custom_date;
+                        $challengeCustomTimeline->custom_timelines_description = $request->custom_timelines_description[$key];
+                        $challengeCustomTimeline->custom_timelines_duration = $request->custom_timelines_duration[$key];
+                        $challengeCustomTimeline->schedule_custom_notify = $request->schedule_custom_notify[$key];
+                        $challengeCustomTimeline->save();
+                    }
+                }
+            }
+            return true;
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+}

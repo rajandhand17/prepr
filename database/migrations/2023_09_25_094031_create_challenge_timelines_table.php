@@ -12,7 +12,7 @@ return new class() extends Migration {
     {
         Schema::create('challenge_timelines', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('challenge_id');
+            $table->unsignedBigInteger('challenge_id');
             $table->enum('timeline_type', ['0', '1'])->comment('0 -> flexible, 1 -> restricted');
             $table->timestamp('open_call_date')->nullable()->comment('Date of restricted challenge, start challenge');
             $table->longText('open_call_date_description')->nullable();
@@ -27,6 +27,7 @@ return new class() extends Migration {
             $table->enum('flexible_date_duration', ['days', 'weeks', 'months'])->comment('Number of days, week or month, from start to end')->default('days');
             $table->enum('automatic_alert', ['0', '1'])->comment('0 -> Day before submission deadline reminder, 1 -> Week before submission deadline reminder')->default('0');
             $table->timestamp('flexible_expire_deadline')->nullable()->comment('Date of flexible challenge expiration if any');
+            $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

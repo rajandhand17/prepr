@@ -5,6 +5,7 @@ namespace App\Repositories\Api\Manage\Challenge;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentCriteriaService;
 use App\Services\Manage\ChallengeAssessmentService;
+use App\Services\Manage\ChallengeCustomTimelinesService;
 use App\Services\Manage\ChallengeProjectTemplateService;
 use App\Services\Manage\ChallengeRequirementService;
 use App\Services\Manage\ChallengeService;
@@ -27,8 +28,9 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeProjectTemplateService;
     private $challengeAssessmentService;
     private $challengeTimelinesService;
+    private $challengeCustomTimelinesService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
@@ -40,6 +42,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeProjectTemplateService = $challengeProjectTemplateService;
         $this->challengeAssessmentService = $challengeAssessmentService;
         $this->challengeTimelinesService = $challengeTimelinesService;
+        $this->challengeCustomTimelinesService = $challengeCustomTimelinesService;
     }
 
     public function uploadChallengeCoverImage($image)
@@ -65,6 +68,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id);
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
                 $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
+                $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
 
                 return [
                     'createChallenge'                   => $createChallenge,
@@ -77,6 +81,7 @@ class ChallengeRepository implements ChallengeInterface
                     'createChallengeAssessment'         => $createChallengeAssessment,
                     'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
                     'createChallengeTimelines'          => $createChallengeTimelines,
+                    'createChallengeCustomTimelines'    => $createChallengeCustomTimelines,
                 ];
             });
 
@@ -90,7 +95,8 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['createChallengeAssessmentCriteria'] &&
                 $createChallenge['createChallengeAssessment'] &&
                 $createChallenge['createChallengeProjectTemplate'] &&
-                $createChallenge['createChallengeTimelines']
+                $createChallenge['createChallengeTimelines'] &&
+                $createChallenge['createChallengeCustomTimelines']
             ) {
                 DB::commit();
 
