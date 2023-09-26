@@ -101,7 +101,7 @@ class CreateChallengeRequest extends FormRequest
         if ($this->request->has('assessment_type') !== null) {
             $base_rules['assessment_type'] = 'required|in:open,close';
             $base_rules['visibility'] = 'required|in:users,hidden';
-            $base_rules['guidelines'] = 'required_if:request_type,publish|';
+            $base_rules['guidelines'] = 'required_if:request_type,publish';
             $base_rules['attachments'] = 'required_if:request_type,publish||mimes:jpeg,jpg,png,webp|max:1024';
             if ($this->assessment_type == 'close' && $this->members_email !== null) {
                 $base_rules['members_email'] = 'array';
@@ -110,19 +110,19 @@ class CreateChallengeRequest extends FormRequest
         }
 
         if ($this->has('timeline_type') == 'restricted') {
-            $base_rules['open_call_date'] = 'required';
-            $base_rules['open_call_date_description'] = 'required';
-            $base_rules['last_call_date'] = 'required';
-            $base_rules['last_call_date_description'] = 'required';
-            $base_rules['application_deadline_date'] = 'required';
-            $base_rules['application_deadline_date_description'] = 'required';
-            $base_rules['submission_deadline_date'] = 'required';
-            $base_rules['submission_deadline_date_description'] = 'required';
+            $base_rules['open_call_date'] = 'required_if:request_type,publish';
+            $base_rules['open_call_date_description'] = 'required_if:request_type,publish';
+            $base_rules['last_call_date'] = 'required_if:request_type,publish';
+            $base_rules['last_call_date_description'] = 'required_if:request_type,publish';
+            $base_rules['application_deadline_date'] = 'required_if:request_type,publish';
+            $base_rules['application_deadline_date_description'] = 'required_if:request_type,publish';
+            $base_rules['submission_deadline_date'] = 'required_if:request_type,publish';
+            $base_rules['submission_deadline_date_description'] = 'required_if:request_type,publish';
         }
 
         if ($this->has('timeline_type') == 'flexible') {
-            $base_rules['flexible_date_number'] = 'required';
-            $base_rules['flexible_date_duration'] = 'required';
+            $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
         }
 
         return $base_rules;
