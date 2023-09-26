@@ -126,7 +126,7 @@ class ResourceModuleController extends AppBaseController
         try{
             $type=config('constants.resource_module_type.url');
               $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
-                if ($checkResourceModuleSlugExistsOrNot == false) {
+                if ($checkResourceModuleSlugExistsOrNot == false){
                     return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
                 }
             $addLinks= $this->resourceModuleRepository->addLinks($request,$checkResourceModuleSlugExistsOrNot->id,$type);
