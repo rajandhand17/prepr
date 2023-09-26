@@ -3,8 +3,8 @@
 namespace App\Services\Manage;
 
 use App\Models\ChallengeTimelines;
-use Exception;
 use Carbon\Carbon;
+use Exception;
 
 class ChallengeTimelinesService
 {
@@ -58,6 +58,7 @@ class ChallengeTimelinesService
                 $challengeFlexibleTimeLine->flexible_expire_deadline = $request->$flexibleDeadlineDate;
                 $challengeFlexibleTimeLine->save();
             }
+
             return true;
         } catch (Exception $th) {
             return false;

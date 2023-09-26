@@ -128,7 +128,7 @@ class ChallengeResource extends JsonResource
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
                 $challenge_timelines = [
-                    'timeline_type'                 => "Flexible",
+                    'timeline_type'                 => 'Flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
                     'flexible_date_duration'        => $this->challenge_timelines->flexible_date_duration,
                     'automatic_alert'               => $this->challenge_timelines->automatic_alert,
@@ -136,7 +136,7 @@ class ChallengeResource extends JsonResource
                 ];
             } elseif ($this->challenge_timelines->timeline_type == '1') {
                 $challenge_timelines = [
-                    'timeline_type'                         => "Restricted",
+                    'timeline_type'                         => 'Restricted',
                     'open_call_date'                        => $this->challenge_timelines->open_call_date,
                     'open_call_date_description'            => $this->challenge_timelines->open_call_date_description,
                     'last_call_date'                        => $this->challenge_timelines->last_call_date,
