@@ -111,18 +111,18 @@ class CreateChallengeRequest extends FormRequest
 
         if ($this->has('timeline_type') == 'restricted') {
             $base_rules['open_call_date'] = 'required';
-            $base_rules['open_call_date_description'] = required;
-            $base_rules['last_call_date'] = required;
-            $base_rules['last_call_date_description'] = required;
-            $base_rules['application_deadline_date'] = required;
-            $base_rules['application_deadline_date_description'] = required;
-            $base_rules['submission_deadline_date'] = required;
-            $base_rules['submission_deadline_date_description'] = required;
+            $base_rules['open_call_date_description'] = 'required';
+            $base_rules['last_call_date'] = 'required';
+            $base_rules['last_call_date_description'] = 'required';
+            $base_rules['application_deadline_date'] = 'required';
+            $base_rules['application_deadline_date_description'] = 'required';
+            $base_rules['submission_deadline_date'] = 'required';
+            $base_rules['submission_deadline_date_description'] = 'required';
         }
 
         if ($this->has('timeline_type') == 'flexible') {
-            $base_rules['flexible_date_number']     = required;
-            $base_rules['flexible_date_duration']   = required;
+            $base_rules['flexible_date_number'] = 'required';
+            $base_rules['flexible_date_duration'] = 'required';
         }
 
         return $base_rules;
@@ -154,7 +154,7 @@ class CreateChallengeRequest extends FormRequest
             'request_type.required'                       => __('responses.request_type_required'),
             'privacy.in'                                  => __('responses.choose_yes_no'),
             'privacy.required'                            => __('responses.privacy_required'),
-w            'source_link'                                 => __('responses.challenge_source_link'),
+            'source_link'                                 => __('responses.challenge_source_link'),
             'is_notification_enabled.in'                  => __('responses.choose_yes_no'),
             'project_privacy.in'                          => __('responses.choose_yes_no'),
             'is_open'                                     => __('responses.choose_yes_no'),
