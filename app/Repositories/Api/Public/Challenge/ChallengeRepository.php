@@ -60,5 +60,4 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
-
 }

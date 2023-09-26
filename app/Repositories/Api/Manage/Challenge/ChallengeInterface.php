@@ -13,7 +13,7 @@ interface ChallengeInterface
     public function checkSlug($slug);
 
     public function checkNameExistsOrNot($title);
-    
+
     public function createChallengeSponsor($request, $challenge);
 
     public function createChallengeSkillsGroupsStack($request, $challenge);

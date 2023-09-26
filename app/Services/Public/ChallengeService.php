@@ -85,7 +85,6 @@ class ChallengeService
                 })->distinct('challenges.uuid');
             }
 
-
             return $challenge_list;
         } catch (\Exception $e) {
             return false;
@@ -100,5 +99,4 @@ class ChallengeService
             return false;
         }
     }
-
 }
