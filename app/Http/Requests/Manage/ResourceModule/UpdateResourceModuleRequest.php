@@ -32,8 +32,9 @@ class UpdateResourceModuleRequest extends FormRequest
         }
         $base_rules = [
             'title'                  => 'required|max:255|unique:lab_programs,title,'.$resourceModuleService->id,
-            'description'            => 'required',
             'organization_id'        => 'required|exists:organizations,uuid',
+            'description'            => 'required',
+            'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,published,archive',
             'is_global'              => 'required|in:yes,no'
@@ -62,7 +63,10 @@ class UpdateResourceModuleRequest extends FormRequest
             'privacy.in'                     => __('responses.choose_yes_no'),
             'status.required'                => __('responses.status_required'),
             'status.in'                      => __('responses.status_in'),
-            'is_global.required'             => __('responses.choose_yes_no')
+            'is_global.required'             => __('responses.choose_yes_no'),
+            'cover_image.mimes'              => __('responses.cover_image_type'),
+            'cover_image.max'                => __('responses.cover_image_max'),
+
         ];
     }
 }

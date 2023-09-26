@@ -11,10 +11,10 @@ use HiFolks\RandoPhp\Randomize;
 
 class ResourceModuleService
 {
-    public static function getResourceModuleList($request)
+    public static function getResourceModuleList($request,$organization)
     {
         try {
-            $resourceModule = ResourceModule::select();
+            $resourceModule = ResourceModule::select()->where('organization_id', '=', $organization->id);
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch(\Exception $e) {
@@ -70,8 +70,25 @@ class ResourceModuleService
                     default:
                         $privacy = null;
                 }
+
                 $resourceModule = $resourceModule->where('resource_modules.is_global',$is_global);
             }
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $resourceModule = $resourceModule->orderBy('resource_modules.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $resourceModule = $resourceModule->orderBy('resource_modules.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $resourceModule = $resourceModule->orderBy('resource_modules.created_at', 'ASC');
+                        break;
+                    default:
+                        $resourceModule = $resourceModule->orderBy('resource_modules.id', 'ASC');
+                }
+            }
+
             return $resourceModule;
         } catch(\Exception $e) {
             return false;
@@ -113,7 +130,7 @@ class ResourceModuleService
         }
     }
 
-    public function createResourceModule($request,$media){
+    public function createResourceModule($request,$upload_cover_image){
         try{
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $status = config('constants.resource_module_status.draft');
@@ -138,8 +155,7 @@ class ResourceModuleService
             $resourceModule->title = $request->title;
             $resourceModule->slug = $slug;
             $resourceModule->description = $request->description;
-            $resourceModule->media_type=$request->media_type;
-            $resourceModule->media=$media;
+            $resourceModule->media=$upload_cover_image;
             $resourceModule->privacy=($request->privacy=='yes')?'1':'0';
             $resourceModule->status=$status;
             $resourceModule->is_global=($request->is_global=='yes')?'1':'0';
@@ -182,7 +198,6 @@ class ResourceModuleService
             $resourceModule->language = $request->language;
             $resourceModule->title = $request->title;
             $resourceModule->description = $request->description;
-            $resourceModule->media_type=$request->media_type;
             $resourceModule->media=$cover_image;
             $resourceModule->privacy=($request->privacy=='yes')?'1':'0';
             $resourceModule->status=$status;

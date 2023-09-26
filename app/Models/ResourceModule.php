@@ -32,31 +32,31 @@ class ResourceModule extends Model
         return config('site-settings.aws_url').$value;
     }
 
-    public function resource_module_document(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->where('type', '=','0');
+    public function documents(){
+        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','0');
     }
-    public function resource_module_video(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->where('type', '=','1');
+    public function video(){
+        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','1');
     }
-    public function resource_module_audio(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->where('type', '=','2');
+    public function audio(){
+        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','2');
     }
 
-    public function resource_module_embedded(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->where('type', '=','3');
+    public function embedded(){
+        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','3');
     }
-    public function resource_module_embedded_audio(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->where('type', '=','4');
+    public function embedded_audio(){
+        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','4');
     }
-    public function resource_module_url(){
+    public function url(){
         return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path','social_link_id')->where('type', '=','5');
     }
 
-    public function resource_module_image(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->where('type', '=','6');
+    public function image(){
+        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','6');
     }
 
-    public function resource_module_Embedded_Cover_Video(){
+    public function embedded_cover_video(){
         return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->where('type', '=','7');
     }
     public function users(){

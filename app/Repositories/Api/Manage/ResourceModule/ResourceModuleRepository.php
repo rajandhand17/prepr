@@ -26,19 +26,19 @@ class ResourceModuleRepository implements ResourceModuleInterface
         $this->resourceModuleRatingService=$resourceModuleRatingService;
     }
 
-    public function getResourceModuleList($request)
+    public function getResourceModuleList($request,$organization)
     {
         try {
-            return  $this->resourceModuleService->getResourceModuleList($request);
+            return  $this->resourceModuleService->getResourceModuleList($request,$organization);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function createResourceModule($request,$upload_media)
+    public function createResourceModule($request,$upload_cover_image)
     {
         try {
-            return  $this->resourceModuleService->createResourceModule($request,$upload_media);
+            return  $this->resourceModuleService->createResourceModule($request,$upload_cover_image);
         } catch(\Exception $e) {
             return false;
         }
@@ -113,9 +113,9 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function updateResourceModule($slug, $request, $upload_media){
+    public function updateResourceModule($slug, $request, $upload_cover_image){
         try {
-            return $this->resourceModuleService->updateResourceModule($slug, $request, $upload_media);
+            return $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image);
         }catch(\Exception $e) {
             return false;
         }

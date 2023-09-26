@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Manage\ResourceModule;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
-use App\Http\Requests\Manage\ResourceModuleDetail\AddLinksResourceRequest;
+use App\Http\Requests\Manage\ResourceModuleDetail\AddLinksResourceModuleRequest;
+use App\Http\Requests\Manage\ResourceModuleDetail\FileUploadResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class ResourceModuleController extends AppBaseController
@@ -22,7 +24,11 @@ class ResourceModuleController extends AppBaseController
 
     public function index(Request $request){
         try{
-            $responseModuleList=$this->resourceModuleRepository->getResourceModuleList($request);
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $responseModuleList=$this->resourceModuleRepository->getResourceModuleList($request,$organization);
             if ($responseModuleList){
                 $response = [
                     'total_count'  => $responseModuleList->total(),
@@ -97,7 +103,7 @@ class ResourceModuleController extends AppBaseController
             }
     }
 
-    public function createResourceModule(CreateResourceModuleRequest $request){
+    public function create(CreateResourceModuleRequest $request){
         try{
             $upload_media = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null){
@@ -105,9 +111,9 @@ class ResourceModuleController extends AppBaseController
                 if (!$uploaded_cover_image) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $upload_media = $uploaded_cover_image;
+                $upload_cover_image = $uploaded_cover_image;
             }
-            $createResourceModule=$this->resourceModuleRepository->createResourceModule($request,$upload_media);
+            $createResourceModule=$this->resourceModuleRepository->createResourceModule($request,$upload_cover_image);
             if($createResourceModule){
                 return $this->sendResponse(__('responses.resource_module_stored_success'),200);
             }
@@ -116,7 +122,7 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.send_error'),500);
         }
     }
-    public function addLinks(AddLinksResourceRequest $request,$slug){
+    public function addLinks(AddLinksResourceModuleRequest $request,$slug){
         try{
             $type=config('constants.resource_module_type.url');
               $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
@@ -133,7 +139,7 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function fileUpload(Request $request,$slug){
+    public function fileUpload(FileUploadResourceModuleRequest $request,$slug){
         try{
             $type=config('constants.resource_module_type.image');
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
@@ -156,15 +162,15 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $upload_media = config('site-settings.default_resource_module_cover_image');
-            if ($request->media !== null){
-                $uploaded_media = $this->resourceModuleRepository->uploadResourceModuleMedia($request->media);
-                if (!$uploaded_media) {
+            $upload_cover_image = config('site-settings.default_resource_module_cover_image');
+            if ($request->cover_image !== null){
+                $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleMedia($request->cover_image);
+                if (!$uploaded_cover_image) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $upload_media = $uploaded_media;
+                $upload_cover_image = $uploaded_cover_image;
             }
-            $updateResourceModule = $this->resourceModuleRepository->updateResourceModule($slug, $request, $upload_media);
+            $updateResourceModule = $this->resourceModuleRepository->updateResourceModule($slug, $request, $upload_cover_image);
             if ($updateResourceModule) {
                 return $this->sendResponse($updateResourceModule, __('responses.resource_module_update_success'), 200);
             }

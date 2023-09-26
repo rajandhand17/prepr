@@ -387,5 +387,15 @@
     "responses.file_upload_failed":"Oops! The upload Image of resource module has failed.",
 
     "responses.resource_module_update_success":"Congratulations! You have successfully update resource module.",
-    "responses.resource_module_update_failed":"Oops! The Updation of resource module has failed."
+    "responses.resource_module_update_failed":"Oops! The Updation of resource module has failed.",
+
+    "responses.file_upload_required": "The file upload field is required.",
+    "responses.file_upload_array": "The file upload field must be an array",
+    "responses.file_upload_type": "The file upload field must be a file of type: jpeg, jpg, png, webp",
+    "responses.file_upload_max": "The file upload field must not have more than 1024 items.",
+
+    "responses.social_id_not_exists": "The selected social link id is invalid.",
+
+    "responses.cover_image_type": "The cover image field must be a file of type: jpeg, jpg, png, webp.",
+    "responses.cover_image_max": "The cover image field must not be greater than 1024 kilobytes."
 }

@@ -14,6 +14,26 @@ class ResourceModuleResource extends JsonResource
      */
     public function toArray($request)
     {
+            $links=[];
+            $files=[];
+            $documents=[];
+            $video=[];
+            $audio=[];
+            if($this->url){
+                $links=$this->url;
+            }
+            if($this->image){
+                $files=$this->image;
+            }
+            if($this->documents){
+                $documents=$this->documents;
+            }
+            if($this->video){
+                $video=$this->video;
+            }
+            if($this->audio){
+                $audio=$this->audio;
+            }
         return [
             'id'                                      => $this->uuid,
             'language'                                => $this->language,
@@ -27,11 +47,11 @@ class ResourceModuleResource extends JsonResource
             'privacy'                                 => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                                  => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_global'                               => ($this->is_global == '1') ? 'yes' : 'no',
-            'links'                                   => $this->resource_module_url,
-            'files'                                   => $this->resource_module_image,
-            'documents'                               => $this->resource_module_document,
-            'video'                                   => $this->resource_module_video,
-            'audio'                                   => $this->resource_module_audio,
+            'links'                                   => $links,
+            'files'                                   => $files,
+            'documents'                               => $documents,
+            'video'                                   => $video,
+            'audio'                                   => $audio,
 
         ];
     }

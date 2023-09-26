@@ -2,13 +2,11 @@
 
 namespace App\Http\Requests\Manage\ResourceModuleDetail;
 
-use App\Services\Manage\ResourceModuleService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use League\Container\Exception\NotFoundException;
 
-class AddLinksResourceRequest extends FormRequest
+class FileUploadResourceModuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,17 +21,6 @@ class AddLinksResourceRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
-    public function rules(): array
-    {
-
-        $base_rules = [
-            'title'                  => 'required|max:255',
-            'path'                   => 'required',
-            'social_link_id'         => 'required',
-
-        ];
-        return $base_rules;
-    }
 
     public function failedValidation(Validator $validator)
     {
@@ -43,13 +30,19 @@ class AddLinksResourceRequest extends FormRequest
             'data'      => $validator->errors(),
         ], 422));
     }
+    public function rules(): array
+    {
+        $base_rules = [
+            'file_upload'                  => 'required|array|max:1024',
+        ];
+        return $base_rules;
+    }
 
     public function messages(){
         return [
-            'title.required'                 => __('responses.title_required'),
-            'title.unique'                   => __('responses.lab_program_title_unique'),
-            'path.unique'                   => __('responses.lab_program_title_unique'),
-            'social_link_id.unique'          => __('responses.lab_program_title_unique'),
+            'file_upload.required'              => __('responses.file_upload_required'),
+            'file_upload.array'                 => __('responses.file_upload_array'),
+            'file_upload.max'                   => __('responses.file_upload_max'),
         ];
     }
 }
