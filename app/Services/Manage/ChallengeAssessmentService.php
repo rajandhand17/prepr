@@ -26,7 +26,7 @@ class ChallengeAssessmentService
                 }
 
                 $challenge_visibility_type = config('constants.challenge_visibility_type.users');
-                switch ($request->assessment_type == 'close') {
+                switch ($request->visibility == 'close') {
                     case 'hidden':
                         $challenge_visibility_type = config('constants.challenge_visibility_type.hidden');
                         break;
@@ -45,7 +45,7 @@ class ChallengeAssessmentService
                         $challengeAssessment->challenge_id = $challenge;
                         $challengeAssessment->assessment_type = $challenge_assessment_type;
                         $challengeAssessment->visibility = $challenge_visibility_type;
-                        $challengeAssessment->members_email = $request->members_email[$key]; // TODO confirm with Vinod about email
+                        $challengeAssessment->members_email = $request->members_email[$key];
                         $challengeAssessment->guidelines = $request->guidelines;
                         $challengeAssessment->attachments = $upload_assessment_image;
                         $challengeAssessment->save();

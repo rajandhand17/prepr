@@ -39,10 +39,10 @@ class ChallengeController extends AppBaseController
                     'list'         => ChallengeResource::collection($challenges),
                 ];
 
-                return $this->sendResponse($response, __('responses.found_labs_list'));
+                return $this->sendResponse($response, __('responses.found_challenges_list'));
             }
 
-            return $this->sendError(__('responses.not_found_labs_list'), 404);
+            return $this->sendError(__('responses.not_found_challenges_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -53,10 +53,10 @@ class ChallengeController extends AppBaseController
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if ($challenge) {
-                return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_lab_view'));
+                return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_view'));
             }
 
-            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            return $this->sendError(__('responses.challenge_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -78,11 +78,11 @@ class ChallengeController extends AppBaseController
                 }
                 $challenge = $this->challengeRepository->captureSocialActivity($challenge->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 if ($challenge) {
-                    return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
+                    return $this->sendResponse([], __('responses.'.$action.'_challenge_successfully'));
                 }
             }
 
-            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            return $this->sendError(__('responses.challenge_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

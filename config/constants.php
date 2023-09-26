@@ -163,4 +163,9 @@ return [
         'users'   => '1',
         'hidden'  => '2',
     ],
+
+    'challenge_timeline_type' => [
+        'flexible'   => '0',
+        'restricted' => '1',
+    ],
 ];

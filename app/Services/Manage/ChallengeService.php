@@ -163,4 +163,15 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function deleteChallenge($challenge_id)
+    {
+        try {
+            Challenge::find($challenge_id)->delete();
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
