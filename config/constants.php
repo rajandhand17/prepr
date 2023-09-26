@@ -165,7 +165,7 @@ return [
     ],
 
     'challenge_timeline_type' => [
-        'flexible'  => '0',
+        'flexible'   => '0',
         'restricted' => '1',
     ],
 ];
