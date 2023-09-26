@@ -119,4 +119,9 @@ class Challenge extends Model
     {
         return $this->hasMany(ChallengeAssessment::class, 'challenge_id', 'id');
     }
+
+    public function challenge_timelines()
+    {
+        return $this->hasOne(ChallengeTimelines::class, 'challenge_id', 'id');
+    }
 }

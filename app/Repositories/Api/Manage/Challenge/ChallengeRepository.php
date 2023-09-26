@@ -11,6 +11,7 @@ use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTagsGroupsService;
+use App\Services\Manage\ChallengeTimelinesService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -25,8 +26,9 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeAssessmentCriteriaService;
     private $challengeProjectTemplateService;
     private $challengeAssessmentService;
+    private $challengeTimelinesService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
@@ -37,6 +39,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeAssessmentCriteriaService = $challengeAssessmentCriteriaService;
         $this->challengeProjectTemplateService = $challengeProjectTemplateService;
         $this->challengeAssessmentService = $challengeAssessmentService;
+        $this->challengeTimelinesService = $challengeTimelinesService;
     }
 
     public function uploadChallengeCoverImage($image)
@@ -61,6 +64,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id);
                 $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id);
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
+                $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
 
                 return [
                     'createChallenge'                   => $createChallenge,
@@ -72,6 +76,7 @@ class ChallengeRepository implements ChallengeInterface
                     'createChallengeAssessmentCriteria' => $createChallengeAssessmentCriteria,
                     'createChallengeAssessment'         => $createChallengeAssessment,
                     'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
+                    'createChallengeTimelines'          => $createChallengeTimelines,
                 ];
             });
 
@@ -84,7 +89,8 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['createChallengeRequirement'] &&
                 $createChallenge['createChallengeAssessmentCriteria'] &&
                 $createChallenge['createChallengeAssessment'] &&
-                $createChallenge['createChallengeProjectTemplate']
+                $createChallenge['createChallengeProjectTemplate'] &&
+                $createChallenge['createChallengeTimelines']
             ) {
                 DB::commit();
 
