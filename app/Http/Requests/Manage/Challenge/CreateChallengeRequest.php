@@ -109,6 +109,22 @@ class CreateChallengeRequest extends FormRequest
             }
         }
 
+        if ($this->has('timeline_type') == 'restricted') {
+            $base_rules['open_call_date'] = 'required';
+            $base_rules['open_call_date_description'] = required;
+            $base_rules['last_call_date'] = required;
+            $base_rules['last_call_date_description'] = required;
+            $base_rules['application_deadline_date'] = required;
+            $base_rules['application_deadline_date_description'] = required;
+            $base_rules['submission_deadline_date'] = required;
+            $base_rules['submission_deadline_date_description'] = required;
+        }
+
+        if ($this->has('timeline_type') == 'flexible') {
+            $base_rules['flexible_date_number'] = required;
+            $base_rules['flexible_date_duration'] = required;
+        }
+
         return $base_rules;
     }
 
