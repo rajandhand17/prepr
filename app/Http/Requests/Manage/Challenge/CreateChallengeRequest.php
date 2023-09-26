@@ -121,8 +121,8 @@ class CreateChallengeRequest extends FormRequest
         }
 
         if ($this->has('timeline_type') == 'flexible') {
-            $base_rules['flexible_date_number']     = required;
-            $base_rules['flexible_date_duration']   = required;
+            $base_rules['flexible_date_number'] = required;
+            $base_rules['flexible_date_duration'] = required;
         }
 
         return $base_rules;
