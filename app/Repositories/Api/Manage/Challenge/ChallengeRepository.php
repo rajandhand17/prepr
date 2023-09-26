@@ -211,4 +211,24 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
+    public function checkSlug($slug)
+    {
+        try {
+            return $this->challengeService->getChallengeBasedOnSlug($slug);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $labSlug = $this->challengeService->checkNameExistsOrNot($title);
+
+            return $labSlug;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -10,6 +10,10 @@ interface ChallengeInterface
 
     public function createChallenge($request, $upload_cover_image, $upload_achievement_image);
 
+    public function checkSlug($slug);
+
+    public function checkNameExistsOrNot($title);
+
     public function createChallengeSponsor($request, $challenge);
 
     public function createChallengeSkillsGroupsStack($request, $challenge);
