@@ -154,7 +154,7 @@ class CreateChallengeRequest extends FormRequest
             'request_type.required'                       => __('responses.request_type_required'),
             'privacy.in'                                  => __('responses.choose_yes_no'),
             'privacy.required'                            => __('responses.privacy_required'),
-w            'source_link'                                 => __('responses.challenge_source_link'),
+            'source_link'                                 => __('responses.challenge_source_link'),
             'is_notification_enabled.in'                  => __('responses.choose_yes_no'),
             'project_privacy.in'                          => __('responses.choose_yes_no'),
             'is_open'                                     => __('responses.choose_yes_no'),
