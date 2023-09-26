@@ -3,19 +3,17 @@
 namespace App\Repositories\Api\Public\Challenge;
 
 use App\Services\Public\ChallengeService;
-use App\Services\Public\LabSocialActivitiesService;
+use App\Services\Public\ChallengeSocialActivitiesService;
 
 class ChallengeRepository implements ChallengeInterface
 {
     private $challengeService;
-    private $labSocialActivitiesService;
-    private $memberManagementService;
+    private $challengeSocialActivitiesService;
 
-    public function __construct(ChallengeService $challengeService, LabSocialActivitiesService $labSocialActivitiesService, MemberManagementService $memberManagementService)
+    public function __construct(ChallengeService $challengeService, ChallengeSocialActivitiesService $challengeSocialActivitiesService)
     {
         $this->challengeService = $challengeService;
-        $this->labSocialActivitiesService = $labSocialActivitiesService;
-        $this->memberManagementService = $memberManagementService;
+        $this->challengeSocialActivitiesService = $challengeSocialActivitiesService;
     }
 
     public function getList($request)
@@ -30,7 +28,7 @@ class ChallengeRepository implements ChallengeInterface
     public function getChallengeBasedOnSlug($slug)
     {
         try {
-            return $this->challengeService->getLabBasedOnSlug($slug);
+            return $this->challengeService->getChallengeBasedOnSlug($slug);
         } catch (\Exception $e) {
             return false;
         }
@@ -39,7 +37,7 @@ class ChallengeRepository implements ChallengeInterface
     public function getColumnNameValue($action)
     {
         try {
-            return $this->labSocialActivitiesService->getColumnNameValue($action);
+            return $this->challengeSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
             return false;
         }
@@ -48,7 +46,7 @@ class ChallengeRepository implements ChallengeInterface
     public function checkSocialActivity($challenge_id, $column, $action)
     {
         try {
-            return $this->labSocialActivitiesService->checkSocialActivity($challenge_id, $column, $action);
+            return $this->challengeSocialActivitiesService->checkSocialActivity($challenge_id, $column, $action);
         } catch (\Exception $e) {
             return false;
         }
@@ -57,7 +55,7 @@ class ChallengeRepository implements ChallengeInterface
     public function captureSocialActivity($challenge_id, $column, $value)
     {
         try {
-            return $this->labSocialActivitiesService->captureSocialActivity($challenge_id, $column, $value);
+            return $this->challengeSocialActivitiesService->captureSocialActivity($challenge_id, $column, $value);
         } catch (\Exception $e) {
             return false;
         }

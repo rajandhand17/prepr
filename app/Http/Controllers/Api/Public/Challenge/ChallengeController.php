@@ -51,9 +51,9 @@ class ChallengeController extends AppBaseController
     public function show(Request $request, $slug)
     {
         try {
-            $lab = $this->challengeRepository->getChallengeBasedOnSlug($slug);
-            if ($lab) {
-                return $this->sendResponse(ChallengeResource::make($lab), __('responses.found_lab_view'));
+            $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if ($challenge) {
+                return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_lab_view'));
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
@@ -65,19 +65,19 @@ class ChallengeController extends AppBaseController
     public function socialActivity($slug, $action)
     {
         try {
-            $lab = $this->challengeRepository->getChallengeBasedOnSlug($slug);
-            if ($lab !== null) {
+            $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if ($challenge !== null) {
                 $getColumnNameValue = $this->challengeRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
-                $checkActivity = $this->challengeRepository->checkSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $checkActivity = $this->challengeRepository->checkSocialActivity($challenge->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
                 if ($checkActivity === true) {
                     return $this->sendError(__('responses.already_'.$action.'_lab'), 400);
                 }
-                $lab = $this->challengeRepository->captureSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
-                if ($lab) {
+                $challenge = $this->challengeRepository->captureSocialActivity($challenge->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                if ($challenge) {
                     return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
                 }
             }
