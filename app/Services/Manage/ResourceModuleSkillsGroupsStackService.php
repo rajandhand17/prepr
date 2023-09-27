@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\LabSkillsGroupsStack;
 use App\Models\ResourceModuleSkillsGroupsStack;
 
 class ResourceModuleSkillsGroupsStackService
@@ -124,6 +123,7 @@ class ResourceModuleSkillsGroupsStackService
             if($resourceModuleSkillsGroupsStack!==null){
                 return ResourceModuleSkillsGroupsStack::where('resource_module_id', $resource_module_id)->delete();
             }
+
             return true;
         } catch(\Exception $e) {
             return false;

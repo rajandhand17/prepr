@@ -29,16 +29,16 @@ class ResourceModuleRepository implements ResourceModuleInterface
         $this->resourceModuleRatingService=$resourceModuleRatingService;
     }
 
-    public function getResourceModuleList($request,$organization)
+    public function getResourceModuleList($request, $organization)
     {
         try {
-            return  $this->resourceModuleService->getResourceModuleList($request,$organization);
+            return  $this->resourceModuleService->getResourceModuleList($request, $organization);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function createResourceModule($request,$upload_cover_image)
+    public function createResourceModule($request, $upload_cover_image)
     {
         try {
             $createLabProgram = DB::transaction(function () use ($request,$upload_cover_image) {
@@ -62,13 +62,15 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function uploadResourceModuleMedia($cover_image){
+    public function uploadResourceModuleMedia($cover_image)
+    {
         try {
             return $this->resourceModuleService->uploadResourceModuleMedia($cover_image);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
+
     public function getResourceModuleBasedOnSlug($slug)
     {
         try {
@@ -87,9 +89,9 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function delete($slug,$resource_module_id)
+    public function delete($slug, $resource_module_id)
     {
-        try{
+        try {
             // Start a database transaction
             $deleteResourceModule = DB::transaction(function () use ($slug, $resource_module_id) {
                 // Delete the resource module itself
@@ -114,16 +116,16 @@ class ResourceModuleRepository implements ResourceModuleInterface
             //check all tables responses
             if ($deleteResourceModule["resourceModule"] && $deleteResourceModule["resourceModuleDetails"] && $deleteResourceModule["resourceModuleSkillsGroupStack"] && $deleteResourceModule['resourceModuleRating'] && $deleteResourceModule['deleteResourceModuleTagsGroups']){
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
-
-
 
     public function checkName($title)
     {
@@ -134,7 +136,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function updateResourceModule($slug, $request, $upload_cover_image){
+    public function updateResourceModule($slug, $request, $upload_cover_image)
+    {
         try {
             $createResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image) {
                 $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image);
@@ -159,18 +162,20 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function fileUpload($request,$resource_module_id,$type){
-        try{
-            return $this->resourceModuleDetailsService->fileUpload($request,$resource_module_id,$type);
-        }catch(\Exception $e){
+    public function fileUpload($request, $resource_module_id, $type)
+    {
+        try {
+            return $this->resourceModuleDetailsService->fileUpload($request, $resource_module_id, $type);
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function addLinks($request,$resource_module_id,$type){
-        try{
-            return $this->resourceModuleDetailsService->addLinks($resource_module_id,$request->title,$type,$request->path,$request->social_link_id);
-        }catch(\Exception $e){
+    public function addLinks($request, $resource_module_id, $type)
+    {
+        try {
+            return $this->resourceModuleDetailsService->addLinks($resource_module_id, $request->title, $type, $request->path, $request->social_link_id);
+        } catch(\Exception $e) {
             return false;
         }
     }

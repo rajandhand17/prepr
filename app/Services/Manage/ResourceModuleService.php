@@ -5,17 +5,16 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
-use App\Models\ResourceModuleDetail;
-use App\Services\SocialLinkService;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceModuleService
 {
-    public static function getResourceModuleList($request,$organization)
+    public static function getResourceModuleList($request, $organization)
     {
         try {
             $resourceModule = ResourceModule::select()->where('organization_id', '=', $organization->id);
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
+
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch(\Exception $e) {
             return false;
@@ -43,7 +42,7 @@ class ResourceModuleService
                     default:
                         $status = null;
                 }
-                $resourceModule = $resourceModule->where('resource_modules.status',$status);
+                $resourceModule = $resourceModule->where('resource_modules.status', $status);
             }
 
             if ($request->has('privacy') && !empty($request->privacy)) {
@@ -57,7 +56,7 @@ class ResourceModuleService
                     default:
                         $privacy = null;
                 }
-                $resourceModule = $resourceModule->where('resource_modules.privacy',$privacy);
+                $resourceModule = $resourceModule->where('resource_modules.privacy', $privacy);
             }
             if ($request->has('is_global') && !empty($request->is_global)) {
                 switch ($request->is_global) {
@@ -71,7 +70,7 @@ class ResourceModuleService
                         $privacy = null;
                 }
 
-                $resourceModule = $resourceModule->where('resource_modules.is_global',$is_global);
+                $resourceModule = $resourceModule->where('resource_modules.is_global', $is_global);
             }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
@@ -95,10 +94,11 @@ class ResourceModuleService
         }
     }
 
-    public static function getResourceModuleBasedOnSlug($slug){
+    public static function getResourceModuleBasedOnSlug($slug)
+    {
         try {
-            return ResourceModule::select()->where('slug',$slug)->first();
-        }catch(\Exception $e){
+            return ResourceModule::select()->where('slug', $slug)->first();
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -130,11 +130,12 @@ class ResourceModuleService
         }
     }
 
-    public function createResourceModule($request,$upload_cover_image){
-        try{
+    public function createResourceModule($request, $upload_cover_image)
+    {
+        try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $status = config('constants.resource_module_status.draft');
-            switch($request->status){
+            switch($request->status) {
                 case 'publish':
                     $status = config('constants.resource_module_status.publish');
                     break;
@@ -145,44 +146,48 @@ class ResourceModuleService
                     $status = config('constants.resource_module_status.draft');
                     break;
             }
-            $model=new ResourceModule();
+            $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($request->title, $model);
-            $resourceModule=new ResourceModule();
-            $resourceModule->uuid=Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $resourceModule = new ResourceModule();
+            $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
             $resourceModule->user_id = auth()->user()->id;
             $resourceModule->organization_id = $organization->id;
             $resourceModule->title = $request->title;
             $resourceModule->slug = $slug;
             $resourceModule->description = $request->description;
-            $resourceModule->media=$upload_cover_image;
-            $resourceModule->privacy=($request->privacy=='yes')?'1':'0';
-            $resourceModule->status=$status;
-            $resourceModule->is_global=($request->is_global=='yes')?'1':'0';
+            $resourceModule->media = $upload_cover_image;
+            $resourceModule->privacy = ($request->privacy == 'yes') ? '1' : '0';
+            $resourceModule->status = $status;
+            $resourceModule->is_global = ($request->is_global == 'yes') ? '1' : '0';
             $resourceModule->save();
+
             return $resourceModule;
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function uploadResourceModuleMedia($cover_image){
+    public function uploadResourceModuleMedia($cover_image)
+    {
         try {
             $upload_resource_module_cover_image = FileUploadHelper::uploadImageToS3($cover_image, 'resource_module');
-            if ($upload_resource_module_cover_image == false){
+            if ($upload_resource_module_cover_image == false) {
                 return false;
             }
+
             return $upload_resource_module_cover_image;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function updateResourceModule($slug, $request, $cover_image){
+    public function updateResourceModule($slug, $request, $cover_image)
+    {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $status = config('constants.resource_module_status.draft');
-            switch($request->status){
+            switch($request->status) {
                 case 'publish':
                     $status = config('constants.resource_module_status.publish');
                     break;
@@ -193,20 +198,20 @@ class ResourceModuleService
                     $status = config('constants.resource_module_status.draft');
                     break;
             }
-            $resourceModule=ResourceModule::where('slug', $slug)->first();
-            $resourceModule->uuid=Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $resourceModule = ResourceModule::where('slug', $slug)->first();
+            $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
             $resourceModule->title = $request->title;
             $resourceModule->description = $request->description;
-            $resourceModule->media=$cover_image;
-            $resourceModule->privacy=($request->privacy=='yes')?'1':'0';
-            $resourceModule->status=$status;
-            $resourceModule->is_global=($request->is_global=='yes')?'1':'0';
+            $resourceModule->media = $cover_image;
+            $resourceModule->privacy = ($request->privacy == 'yes') ? '1' : '0';
+            $resourceModule->status = $status;
+            $resourceModule->is_global = ($request->is_global == 'yes') ? '1' : '0';
             $resourceModule->save();
+
             return $resourceModule;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
-
 }

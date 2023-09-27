@@ -2,9 +2,7 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ResourceModule;
 use App\Models\ResourceModuleRating;
-use App\Models\ResourceModuleSkillsGroupsStack;
 
 class ResourceModuleRatingService
 {
@@ -15,6 +13,7 @@ class ResourceModuleRatingService
             if($resourceModuleRating!==null){
                 return ResourceModuleRating::where('resource_module_id', $resource_module_id)->delete();
             }
+
             return true;
         } catch(\Exception $e) {
             return false;
