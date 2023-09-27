@@ -42,7 +42,7 @@ class LabProgramResource extends JsonResource
                 $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
                 $componentAssociation[$association->lab_id]['liked'] = LabService::getLabBasedOnId($association->lab_id)->liked();
                 $componentAssociation[$association->lab_id]['favourite'] = LabService::getLabBasedOnId($association->lab_id)->favourite();
-                $componentAssociation[$association->lab_id]['member_count'] =  LabService::getLabBasedOnId($association->lab_id)->members()->count();
+                $componentAssociation[$association->lab_id]['member_count'] = LabService::getLabBasedOnId($association->lab_id)->members()->count();
             }
         }
         if ($this->getOrganization) {
@@ -102,7 +102,7 @@ class LabProgramResource extends JsonResource
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'labs'                       => $componentAssociation,
+            'labs'                          => $componentAssociation,
             'user_id'                       => $this->user_id,
             'media'                         => $this->media,
             'organization'                  => $organization,
