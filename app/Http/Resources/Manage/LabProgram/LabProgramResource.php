@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\LabProgram;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -39,6 +40,9 @@ class LabProgramResource extends JsonResource
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
+                $componentAssociation[$association->lab_id]['liked'] = LabService::getLabBasedOnId($association->lab_id)->liked();
+                $componentAssociation[$association->lab_id]['favourite'] = LabService::getLabBasedOnId($association->lab_id)->favourite();
+                $componentAssociation[$association->lab_id]['member_count'] =  LabService::getLabBasedOnId($association->lab_id)->members()->count();
             }
         }
         if ($this->getOrganization) {
@@ -98,7 +102,7 @@ class LabProgramResource extends JsonResource
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'lab'                           => $componentAssociation,
+            'labs'                       => $componentAssociation,
             'user_id'                       => $this->user_id,
             'media'                         => $this->media,
             'organization'                  => $organization,
@@ -121,7 +125,8 @@ class LabProgramResource extends JsonResource
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
             'liked'                         => $this->liked(),
-            'member_count'                  => '0', //Static for temporary basis
+            'member_count'                  => '0', //Static for temporary basis,
+            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }
 }
