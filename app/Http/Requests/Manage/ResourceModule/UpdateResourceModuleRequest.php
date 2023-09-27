@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Manage\ResourceModule;
 
-use App\Services\Manage\LabProgramService;
 use App\Services\Manage\ResourceModuleService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +25,7 @@ class UpdateResourceModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $resourceModuleService =ResourceModuleService::getResourceModuleBasedOnSlug(request()->route('slug'));
+        $resourceModuleService = ResourceModuleService::getResourceModuleBasedOnSlug(request()->route('slug'));
         if (!$resourceModuleService) {
             throw new NotFoundException();
         }
@@ -37,9 +36,10 @@ class UpdateResourceModuleRequest extends FormRequest
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,published,archive',
-            'is_global'              => 'required|in:yes,no'
+            'is_global'              => 'required|in:yes,no',
 
         ];
+
         return $base_rules;
     }
 
@@ -52,7 +52,8 @@ class UpdateResourceModuleRequest extends FormRequest
         ], 422));
     }
 
-    public function messages(){
+    public function messages()
+    {
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.lab_program_title_unique'),

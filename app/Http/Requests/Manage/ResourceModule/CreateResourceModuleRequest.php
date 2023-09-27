@@ -24,6 +24,7 @@ class CreateResourceModuleRequest extends FormRequest
             'data'      => $validator->errors(),
         ], 422));
     }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -38,14 +39,15 @@ class CreateResourceModuleRequest extends FormRequest
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,published,archive',
-            'is_global'              => 'required|in:yes,no'
+            'is_global'              => 'required|in:yes,no',
 
         ];
 
         return $base_rules;
     }
 
-    public function messages(){
+    public function messages()
+    {
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.lab_program_title_unique'),

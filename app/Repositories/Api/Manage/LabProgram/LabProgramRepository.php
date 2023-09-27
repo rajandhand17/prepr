@@ -68,6 +68,7 @@ class LabProgramRepository implements LabProgramInterface
                 }
                 $labProgramTagsGroupsService = $this->labProgramTagsGroupsService->createLabProgramTagsGroups($request, $createdLabProgram->id);
                 $componentAssociation = $this->componentAssociationService->labProgramAssociation($request, $createdLabProgram);
+
                 return [
                     'createLabProgram'           => $createdLabProgram,
                     'labProgramSkillsGroupsStack'=> $labProgramSkillsGroupsStack,
@@ -77,6 +78,7 @@ class LabProgramRepository implements LabProgramInterface
             });
             if ($createLabProgram['createLabProgram'] && $createLabProgram['labProgramSkillsGroupsStack'] && $createLabProgram['labProgramTagsGroupsService'] && $createLabProgram['componentAssociation']) {
                 DB::commit();
+
                 return true;
             }
             DB::rollback();

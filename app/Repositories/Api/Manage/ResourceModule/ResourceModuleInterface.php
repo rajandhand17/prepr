@@ -4,9 +4,9 @@ namespace App\Repositories\Api\Manage\ResourceModule;
 
 interface ResourceModuleInterface
 {
-    public function getResourceModuleList($request,$organization);
+    public function getResourceModuleList($request, $organization);
 
-    public function createResourceModule($request,$upload_media);
+    public function createResourceModule($request, $upload_media);
 
     public function getResourceModuleBasedOnSlug($slug);
 
@@ -14,5 +14,5 @@ interface ResourceModuleInterface
 
     public function checkName($title);
 
-    public function delete($slug,$resource_module_id);
+    public function delete($slug, $resource_module_id);
 }

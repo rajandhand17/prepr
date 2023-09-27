@@ -29,6 +29,7 @@ class AddLinksResourceModuleRequest extends FormRequest
             'social_link_id'         => 'required|exists:social_links,id',
 
         ];
+
         return $base_rules;
     }
 
@@ -41,11 +42,12 @@ class AddLinksResourceModuleRequest extends FormRequest
         ], 422));
     }
 
-    public function messages(){
+    public function messages()
+    {
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.lab_program_title_unique'),
-            'path.unique'                   => __('responses.lab_program_title_unique'),
+            'path.unique'                    => __('responses.lab_program_title_unique'),
             'social_link_id.unique'          => __('responses.lab_program_title_unique'),
             'social_link_id.exists'          => __('responses.social_id_not_exists'),
         ];
