@@ -10,6 +10,76 @@ use HiFolks\RandoPhp\Randomize;
 
 class ChallengeService
 {
+    public static function getChallengeList($request, $organization)
+    {
+        try {
+            $challenge_list = Challenge::select()->where('organization_id', '=', $organization->id);
+
+            $challenge_list = self::filterChallengeList($challenge_list, $request);
+
+            return $challenge_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function filterChallengeList($challenge_list, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $challenge_list = $challenge_list->where('challenges.title', 'like', '%' . $request->search . '%');
+            }
+
+            if ($request->has('status') && !empty($request->status)) {
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $challenge_list = $challenge_list->where('challenges.status', $status);
+            } else {
+                $challenge_list = $challenge_list->where('challenges.status', '1');
+            }
+
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $challenge_list = $challenge_list->whereIn('challenges.category', $request->category);
+            }
+
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $challenge_list = $challenge_list->orderBy('challenges.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $challenge_list = $challenge_list->orderBy('challenges.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $challenge_list = $challenge_list->orderBy('challenges.created_at', 'ASC');
+                        break;
+                    default:
+                        $challenge_list = $challenge_list->orderBy('challenges.id', 'ASC');
+                }
+            }
+
+            if ($request->has('privacy')) {
+                $privacy = null;
+                switch ($request->privacy) {
+                    case 'yes':
+                        $privacy = config('constants.challenge_privacy.yes');
+                        break;
+                    case 'no':
+                        $privacy = config('constants.challenge_privacy.no');
+                        break;
+                    default:
+                        $privacy = null;
+                }
+                if ($privacy != null) {
+                    $challenge_list = $challenge_list->where('privacy', $privacy);
+                }
+            }
+
+            return $challenge_list;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function uploadChallengeCoverImage($image)
     {
         try {

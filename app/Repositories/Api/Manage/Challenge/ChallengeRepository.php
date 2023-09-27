@@ -45,6 +45,14 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeCustomTimelinesService = $challengeCustomTimelinesService;
     }
 
+    public function getChallengeList($request, $organization)
+    {
+        try {
+            return $this->challengeService->getChallengeList($request, $organization);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
     public function uploadChallengeCoverImage($image)
     {
         try {

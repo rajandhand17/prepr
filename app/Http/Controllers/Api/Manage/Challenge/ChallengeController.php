@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
+use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,34 @@ class ChallengeController extends AppBaseController
     public function __construct(ChallengeRepository $challengeRepository)
     {
         $this->challengeRepository = $challengeRepository;
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
+            $challenge = $this->challengeRepository->getChallengeList($request, $organization);
+            if ($challenge) {
+                $response = [
+                    'total_count'  => $challenge->total(),
+                    'per_page'     => $challenge->perPage(),
+                    'count'        => $challenge->count(),
+                    'current_page' => $challenge->currentPage(),
+                    'total_pages'  => $challenge->lastPage(),
+                    'list'         => ChallengeResource::collection($challenge),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_challenges_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_challenges_list'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
 
     public function create(CreateChallengeRequest $request)
