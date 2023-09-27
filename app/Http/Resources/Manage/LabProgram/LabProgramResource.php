@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\LabProgram;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -98,7 +99,7 @@ class LabProgramResource extends JsonResource
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'lab'                           => $componentAssociation,
+            'lab_ids'                           => $componentAssociation,
             'user_id'                       => $this->user_id,
             'media'                         => $this->media,
             'organization'                  => $organization,
@@ -121,7 +122,8 @@ class LabProgramResource extends JsonResource
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
             'liked'                         => $this->liked(),
-            'member_count'                  => '0', //Static for temporary basis
+            'member_count'                  => '0', //Static for temporary basis,
+            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }
 }
