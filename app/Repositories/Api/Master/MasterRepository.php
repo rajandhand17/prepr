@@ -23,6 +23,7 @@ use App\Services\SkillStackService;
 use App\Services\SocialConnectService;
 use App\Services\SocialLinkService;
 use App\Services\TagService;
+use Exception;
 
 class MasterRepository implements MasterInterface
 {
@@ -45,9 +46,7 @@ class MasterRepository implements MasterInterface
     private $pitchTemplateService;
     private $labConditionService;
     private $socialConnectService;
-
     private $durationService;
-
     private $levelService;
 
     public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService)
@@ -260,6 +259,15 @@ class MasterRepository implements MasterInterface
         try {
             return $this->levelService->getLevels($request->language, $request->search);
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getPitchTaskData($request)
+    {
+        try {
+            return $this->pitchTemplateService->getPitchTemplatesBasedOnId($request->template_id);
+        } catch (Exception $th) {
             return false;
         }
     }

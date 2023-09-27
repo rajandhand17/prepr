@@ -200,6 +200,7 @@ class ChallengeResource extends JsonResource
             'challenge_assessment_criteria' => $challenge_assessment_criteria,
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
+            'challenge_template'            => $this->challenge_project_template,
         ];
     }
 }

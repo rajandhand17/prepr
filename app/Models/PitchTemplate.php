@@ -9,15 +9,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PitchTemplate extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
 
     protected $table = 'pitch_templates';
-
     protected $fillable = [
         'title',
         'challenge_id',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function challenge_pitch()
+    {
+        return $this->hasMany(ChallengePitch::class, 'template_id', 'id');
+    }
+
+    public function challenge_task()
+    {
+        return $this->hasMany(ChallengeTask::class, 'template_id', 'id');
+    }
 }

@@ -25,4 +25,5 @@ Route::middleware(['language'])->group(function () {
     Route::get('/social-connect', [MasterController::class, 'getSocialConnect']);
     Route::get('/durations', [MasterController::class, 'getDurations']);
     Route::get('/levels', [MasterController::class, 'getLevels']);
+    Route::get('/check-pitch-task', [MasterController::class, 'getChallengePitchTask']);
 });

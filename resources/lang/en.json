@@ -411,5 +411,10 @@
     "responses.favourite_challenge_successfully":"You have successfully added this challenge as favourite!",
     "responses.un_favourite_challenge_successfully":"The challenge have been successfully removed from favourites!",
     "responses.already_favourite_challenge":"The challenge is already being added to favourites!",
-    "responses.already_un_favourite_challenge":"The challenge is already being removed from favourites!"
+    "responses.already_un_favourite_challenge":"The challenge is already being removed from favourites!",
+    "responses.challenge_template_not_available":"Sorry! This template is not available.",
+    "responses.challenge_template_available":"Success! Template data found.",
+    "responses.challenge_pitch_task_available":"Success! Template's pitch and task data found.",
+    "responses.challenge_pitch_task_not_available":"Sorry! Template's pitch and task data not found."
+
 }
