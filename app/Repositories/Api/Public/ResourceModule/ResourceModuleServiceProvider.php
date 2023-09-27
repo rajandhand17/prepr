@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Api\Manage\ResourceModule;
+namespace App\Repositories\Api\Public\ResourceModule;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +22,6 @@ class ResourceModuleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Manage\ResourceModule\ResourceModuleInterface', 'App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository');
+        $this->app->bind('App\Repositories\Api\Public\ResourceModule\ResourceModuleInterface', 'App\Repositories\Api\Public\ResourceModule\ResourceModuleRepository');
     }
 }

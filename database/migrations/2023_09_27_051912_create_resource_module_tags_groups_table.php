@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('resource_module_skills_groups_stacks', function (Blueprint $table) {
-            $table->id();
+        Schema::create('resource_module_tags_groups', function (Blueprint $table) {
+            $table->id();$table->id();
             $table->unsignedBigInteger('resource_module_id');
             $table->integer('foreign_id');
-            $table->enum('type', ['0', '1', '2', '3'])->comment('0->skills, 1->group,2->stack');
+            $table->enum('type', ['0', '1'])->comment('0->tag, 1-> groups');
+            $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
-
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('resource_module_skills_groups_stacks');
+        Schema::dropIfExists('resource_module_tags_groups');
     }
 };

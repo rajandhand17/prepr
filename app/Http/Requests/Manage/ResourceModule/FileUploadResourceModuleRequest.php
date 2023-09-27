@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Manage\ResourceModuleDetail;
+namespace App\Http\Requests\Manage\ResourceModule;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -21,6 +21,13 @@ class FileUploadResourceModuleRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
+    public function rules(): array
+    {
+        $base_rules = [
+            'file_upload'                  => 'required|array|max:1024',
+        ];
+        return $base_rules;
+    }
 
     public function failedValidation(Validator $validator)
     {
@@ -29,13 +36,6 @@ class FileUploadResourceModuleRequest extends FormRequest
             'message'   => 'Validation errors',
             'data'      => $validator->errors(),
         ], 422));
-    }
-    public function rules(): array
-    {
-        $base_rules = [
-            'file_upload'                  => 'required|array|max:1024',
-        ];
-        return $base_rules;
     }
 
     public function messages(){

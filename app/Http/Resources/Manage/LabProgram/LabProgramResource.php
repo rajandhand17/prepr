@@ -122,7 +122,6 @@ class LabProgramResource extends JsonResource
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
             'liked'                         => $this->liked(),
             'member_count'                  => '0', //Static for temporary basis
-            'updated_at'                    => date ("d-m-Y, h:i:s", strtotime ($this->updated_at)),
         ];
     }
 }
