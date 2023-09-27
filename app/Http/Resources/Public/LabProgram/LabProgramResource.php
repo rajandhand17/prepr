@@ -104,7 +104,7 @@ class LabProgramResource extends JsonResource
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'lab_ids'                        => $componentAssociation,
+            'labs'                          => $componentAssociation,
             'user_id'                       => $this->user_id,
             'media'                         => $this->media,
             'organization'                  => $organization,
