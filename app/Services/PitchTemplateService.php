@@ -38,6 +38,7 @@ class PitchTemplateService
             if ($pitch_temple) {
                 return $pitch_temple;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

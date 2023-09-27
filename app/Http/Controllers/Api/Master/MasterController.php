@@ -1240,9 +1240,11 @@ class MasterController extends AppBaseController
             if ($templatePitchTaskData) {
                 return $this->sendResponse(ChallengePitchTasksResource::collection($templatePitchTaskData), __('responses.challenge_pitch_task_available'));
             }
+
             return $this->sendResponse(null, __('responses.challenge_pitch_task_not_available'));
         } catch (Exception $th) {
             dd($th);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
