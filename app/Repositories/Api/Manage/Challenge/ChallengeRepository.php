@@ -53,6 +53,7 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
     public function uploadChallengeCoverImage($image)
     {
         try {
