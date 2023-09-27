@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Manage\ResourceModule;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceModuleResource extends JsonResource
@@ -14,26 +13,27 @@ class ResourceModuleResource extends JsonResource
      */
     public function toArray($request)
     {
-            $links=[];
-            $files=[];
-            $documents=[];
-            $video=[];
-            $audio=[];
-            if($this->url){
-                $links=$this->url;
-            }
-            if($this->image){
-                $files=$this->image;
-            }
-            if($this->documents){
-                $documents=$this->documents;
-            }
-            if($this->video){
-                $video=$this->video;
-            }
-            if($this->audio){
-                $audio=$this->audio;
-            }
+        $links = [];
+        $files = [];
+        $documents = [];
+        $video = [];
+        $audio = [];
+        if ($this->url) {
+            $links = $this->url;
+        }
+        if ($this->image) {
+            $files = $this->image;
+        }
+        if ($this->documents) {
+            $documents = $this->documents;
+        }
+        if ($this->video) {
+            $video = $this->video;
+        }
+        if ($this->audio) {
+            $audio = $this->audio;
+        }
+
         return [
             'id'                                      => $this->uuid,
             'language'                                => $this->language,

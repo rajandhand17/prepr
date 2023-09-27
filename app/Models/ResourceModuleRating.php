@@ -11,7 +11,7 @@ class ResourceModuleRating extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="resource_module_ratings";
+    protected $table = 'resource_module_ratings';
     protected $fillable = [
         'resource_module_id',
         'user_id',

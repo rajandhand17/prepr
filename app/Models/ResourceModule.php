@@ -32,34 +32,48 @@ class ResourceModule extends Model
         return config('site-settings.aws_url').$value;
     }
 
-    public function documents(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','0');
-    }
-    public function video(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','1');
-    }
-    public function audio(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','2');
+    public function documents()
+    {
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('title', 'path')->where('type', '=', '0');
     }
 
-    public function embedded(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','3');
-    }
-    public function embedded_audio(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','4');
-    }
-    public function url(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path','social_link_id')->where('type', '=','5');
+    public function video()
+    {
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('title', 'path')->where('type', '=', '1');
     }
 
-    public function image(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->select('title','path')->where('type', '=','6');
+    public function audio()
+    {
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('title', 'path')->where('type', '=', '2');
     }
 
-    public function embedded_cover_video(){
-        return $this->hasMany(ResourceModuleDetail::class,'resource_module_id','id')->where('type', '=','7');
+    public function embedded()
+    {
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('title', 'path')->where('type', '=', '3');
     }
-    public function users(){
-        return $this->belongsTo(User::class,'user_id','id');
+
+    public function embedded_audio()
+    {
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('title', 'path')->where('type', '=', '4');
+    }
+
+    public function url()
+    {
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('title', 'path', 'social_link_id')->where('type', '=', '5');
+    }
+
+    public function image()
+    {
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('title', 'path')->where('type', '=', '6');
+    }
+
+    public function embedded_cover_video()
+    {
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->where('type', '=', '7');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

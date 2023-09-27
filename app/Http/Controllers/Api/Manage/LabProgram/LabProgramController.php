@@ -122,6 +122,7 @@ class LabProgramController extends AppBaseController
             if ($updateLabProgram) {
                 return $this->sendResponse($updateLabProgram, __('responses.lab_program_update_successfully'), 200);
             }
+
             return $this->sendError(__('responses.lab_program_not_update'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
