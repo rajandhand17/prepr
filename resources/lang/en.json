@@ -416,5 +416,4 @@
     "responses.challenge_template_available":"Success! Template data found.",
     "responses.challenge_pitch_task_available":"Success! Template's pitch and task data found.",
     "responses.challenge_pitch_task_not_available":"Sorry! Template's pitch and task data not found."
-
 }
