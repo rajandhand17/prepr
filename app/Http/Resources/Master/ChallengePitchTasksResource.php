@@ -21,7 +21,7 @@ class ChallengePitchTasksResource extends JsonResource
                 return [
                     'id'            => $pitch->id,
                     'title'         => $pitch->title,
-                    'description'   => $pitch->description
+                    'description'   => $pitch->description,
                 ];
             });
         }
@@ -31,7 +31,7 @@ class ChallengePitchTasksResource extends JsonResource
                 return [
                     'id'            => $task->id,
                     'title'         => $task->title,
-                    'description'   => $task->description
+                    'description'   => $task->description,
                 ];
             });
         }
