@@ -8,12 +8,12 @@ use App\Models\ResourceModuleSkillsGroupsStack;
 
 class ResourceModuleRatingService
 {
-    public static function delete($resource_module_id)
+    public static function deleteResourceModuleRating($resource_module_id)
     {
         try {
             $resourceModuleRating=ResourceModuleRating::where('resource_module_id', $resource_module_id)->first();
             if($resourceModuleRating!==null){
-                return $resourceModuleRating->delete();
+                return ResourceModuleRating::where('resource_module_id', $resource_module_id)->delete();
             }
             return true;
         } catch(\Exception $e) {

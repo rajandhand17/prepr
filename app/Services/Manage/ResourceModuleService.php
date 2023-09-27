@@ -112,7 +112,7 @@ class ResourceModuleService
         }
     }
 
-    public static function delete($slug)
+    public static function deleteResourceModule($slug)
     {
         try {
             return ResourceModule::where('slug', $slug)->delete();

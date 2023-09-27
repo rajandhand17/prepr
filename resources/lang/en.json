@@ -397,5 +397,8 @@
     "responses.social_id_not_exists": "The selected social link id is invalid.",
 
     "responses.cover_image_type": "The cover image field must be a file of type: jpeg, jpg, png, webp.",
-    "responses.cover_image_max": "The cover image field must not be greater than 1024 kilobytes."
+    "responses.cover_image_max": "The cover image field must not be greater than 1024 kilobytes.",
+
+    "responses.tags_array": "The tags field must be an array.",
+    "responses.skills_array": "The skill stacks field must be an array."
 }

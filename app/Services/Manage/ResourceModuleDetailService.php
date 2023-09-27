@@ -56,7 +56,7 @@ class ResourceModuleDetailService
         }
     }
 
-    public static function delete($resource_module_id)
+    public static function deleteResourceModuleDetail($resource_module_id)
     {
         try {
             $resourceModuleDetail=ResourceModuleDetail::where('resource_module_id', $resource_module_id)->first();

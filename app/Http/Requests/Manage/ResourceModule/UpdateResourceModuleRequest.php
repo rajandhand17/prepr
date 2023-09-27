@@ -37,7 +37,12 @@ class UpdateResourceModuleRequest extends FormRequest
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,published,archive',
-            'is_global'              => 'required|in:yes,no'
+            'is_global'              => 'required|in:yes,no',
+            'skills'                 => 'array',
+            'tags'                   => 'array',
+            'tag_groups'             => 'array',
+            'skill_groups'           => 'array',
+            'skill_stacks'           => 'array',
 
         ];
         return $base_rules;
@@ -66,6 +71,11 @@ class UpdateResourceModuleRequest extends FormRequest
             'is_global.required'             => __('responses.choose_yes_no'),
             'cover_image.mimes'              => __('responses.cover_image_type'),
             'cover_image.max'                => __('responses.cover_image_max'),
+            'skills.array'                   => __('responses.skills_array'),
+            'tags.array'                     => __('responses.tags_array'),
+            'tag_groups.array'               => __('responses.tag_groups_array'),
+            'skill_groups.array'             => __('responses.skill_groups_array'),
+            'skill_stacks.array'             => __('responses.skill_stacks_array'),
 
         ];
     }

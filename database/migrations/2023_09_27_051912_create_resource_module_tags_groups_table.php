@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('resource_module_tags_groups', function (Blueprint $table) {
-            $table->id();$table->id();
+            $table->id();
             $table->unsignedBigInteger('resource_module_id');
             $table->integer('foreign_id');
             $table->enum('type', ['0', '1'])->comment('0->tag, 1-> groups');

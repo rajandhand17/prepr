@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('resource_module_id');
             $table->integer('foreign_id');
-            $table->enum('type', ['0', '1', '2', '3'])->comment('0->skills, 1->group,2->stack');
+            $table->enum('type', ['0', '1', '2'])->comment('0->skills, 1->group,2->stack');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
