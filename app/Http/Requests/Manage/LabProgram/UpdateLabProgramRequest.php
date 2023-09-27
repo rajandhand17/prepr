@@ -37,7 +37,7 @@ class UpdateLabProgramRequest extends FormRequest
             'category_id'            => 'required|exists:categories,id',
             'level_id'               => 'required|exists:levels,id',
             'duration_id'            => 'required|exists:durations,id',
-            'lab_id'                 => 'required|exists:labs,uuid|array',
+            'lab_ids'                 => 'required|exists:labs,uuid|array',
             'is_sequential'          => 'in:yes,no',
             'privacy'                => 'in:yes,no',
             'is_achievement_enabled' => 'in:yes,no',
