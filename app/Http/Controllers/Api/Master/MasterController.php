@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Master\AcheivementConditionListResource;
 use App\Http\Resources\Master\CategoryResource;
+use App\Http\Resources\Master\ChallengePitchTasksResource;
 use App\Http\Resources\Master\DurationsResource;
 use App\Http\Resources\Master\FlexibleDateDurationResource;
 use App\Http\Resources\Master\HostResource;
@@ -24,6 +25,7 @@ use App\Http\Resources\Master\SocialConnect;
 use App\Http\Resources\Master\SocialLinkResource;
 use App\Http\Resources\Master\TagResource;
 use App\Repositories\Api\Master\MasterRepository;
+use Exception;
 use Illuminate\Http\Request;
 
 class MasterController extends AppBaseController
@@ -1227,6 +1229,20 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_levels'));
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getChallengePitchTask(Request $request)
+    {
+        try {
+            $templatePitchTaskData = $this->masterRepository->getPitchTaskData($request);
+            if ($templatePitchTaskData) {
+                return $this->sendResponse(ChallengePitchTasksResource::collection($templatePitchTaskData), __('responses.challenge_pitch_task_available'));
+            }
+
+            return $this->sendResponse(null, __('responses.challenge_pitch_task_not_available'));
+        } catch (Exception $th) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

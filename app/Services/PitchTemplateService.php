@@ -30,4 +30,18 @@ class PitchTemplateService
             return false;
         }
     }
+
+    public function getPitchTemplatesBasedOnId($id)
+    {
+        try {
+            $pitch_temple = PitchTemplate::select('id', 'title')->where('id', $id)->get();
+            if ($pitch_temple) {
+                return $pitch_temple;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

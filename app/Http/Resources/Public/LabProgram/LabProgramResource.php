@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Public\LabProgram;
 
 use App\Helpers\UtilityHelper;
-use App\Models\MemberManagement;
 use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -43,7 +42,7 @@ class LabProgramResource extends JsonResource
                 $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
                 $componentAssociation[$association->lab_id]['liked'] = LabService::getLabBasedOnId($association->lab_id)->liked();
                 $componentAssociation[$association->lab_id]['favourite'] = LabService::getLabBasedOnId($association->lab_id)->favourite();
-                $componentAssociation[$association->lab_id]['member_count'] =  LabService::getLabBasedOnId($association->lab_id)->members()->count();
+                $componentAssociation[$association->lab_id]['member_count'] = LabService::getLabBasedOnId($association->lab_id)->members()->count();
             }
         }
         if ($this->getOrganization) {

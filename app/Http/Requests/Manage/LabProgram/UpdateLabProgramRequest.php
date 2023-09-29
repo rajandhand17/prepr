@@ -31,16 +31,16 @@ class UpdateLabProgramRequest extends FormRequest
         }
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
         $base_rules = [
-            'title'                  => 'required|max:255|unique:lab_programs,title,'.$labProgram->id,
-            'description'            => 'required',
-            'organization_id'        => 'required|exists:organizations,uuid',
-            'category_id'            => 'required|exists:categories,id',
-            'level_id'               => 'required|exists:levels,id',
-            'duration_id'            => 'required|exists:durations,id',
+            'title'                   => 'required|max:255|unique:lab_programs,title,'.$labProgram->id,
+            'description'             => 'required',
+            'organization_id'         => 'required|exists:organizations,uuid',
+            'category_id'             => 'required|exists:categories,id',
+            'level_id'                => 'required|exists:levels,id',
+            'duration_id'             => 'required|exists:durations,id',
             'lab_ids'                 => 'required|exists:labs,uuid|array',
-            'is_sequential'          => 'in:yes,no',
-            'privacy'                => 'in:yes,no',
-            'is_achievement_enabled' => 'in:yes,no',
+            'is_sequential'           => 'in:yes,no',
+            'privacy'                 => 'in:yes,no',
+            'is_achievement_enabled'  => 'in:yes,no',
 
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
