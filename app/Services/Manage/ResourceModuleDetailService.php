@@ -64,13 +64,49 @@ class ResourceModuleDetailService
     public static function deleteResourceModuleDetail($resource_module_id)
     {
         try {
-            $resourceModuleDetail = ResourceModuleDetail::where('resource_module_id', $resource_module_id)->first();
-            if ($resourceModuleDetail !== null) {
-                $resourceModuleDetail = ResourceModuleDetail::where('resource_module_id', $resource_module_id)->delete();
-            }
-
+            ResourceModuleDetail::where('resource_module_id', $resource_module_id)->delete();
             return true;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteMedia($request,$resource_module_id,$type){
+        try {
+            ResourceModuleDetail::where([
+                'id' => $request->media_id,
+                'resource_module_id' => $resource_module_id,
+                'type'=>$type,
+            ])->delete();
+            return true;
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addEmbedMedia($request,$resource_module_id)
+    {
+        try {
+            foreach($request->type as $key => $value) {
+                switch ($value) {
+                    case 'embedded_video' || 'video':
+                        $type = config('constants.resource_module_type.embedded_video');
+                        $title=$value;
+                        break;
+                    case 'embedded_audio' || 'audio':
+                        $type = config('constants.resource_module_type.embedded_audio');
+                        $title=$value;
+                        break;
+                    default:
+                        $type = "";
+                }
+                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $request->path[$key], null);
+                if (!$resourceModuleDetailed) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (\Exception $e) {
             return false;
         }
     }

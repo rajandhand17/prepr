@@ -41,11 +41,15 @@ class CreateResourceModuleRequest extends FormRequest
             'status'                 => 'required|in:draft,published,archive',
             'is_global'              => 'required|in:yes,no',
             'skills'                 => 'array',
+            'skills.*'               => 'numeric|exists:tags,id',
             'tags'                   => 'array',
+            'tags.*'                 => 'numeric|exists:tags,id',
             'tag_groups'             => 'array',
+            'tag_groups.*'           => 'numeric|exists:tag_groups,id',
             'skill_groups'           => 'array',
+            'skill_groups.*'         => 'numeric|exists:skill_groups,id',
             'skill_stacks'           => 'array',
-
+            'skill_stacks.*'         => 'numeric|exists:skill_stacks,id',
         ];
 
         return $base_rules;

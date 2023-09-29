@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AddLinksResourceModuleRequest extends FormRequest
+class DeleteMediaResourceModuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,9 @@ class AddLinksResourceModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $base_rules = [
-            'title'                  => 'required|max:255|array',
-            'path'                   => 'required|array',
-            'social_link_id'         => 'required|exists:social_links,id|array',
-
+        return [
+            'media_id' => 'required|exists:resource_modules,id',
         ];
-
-        return $base_rules;
     }
 
     public function failedValidation(Validator $validator)
@@ -41,15 +36,11 @@ class AddLinksResourceModuleRequest extends FormRequest
             'data'      => $validator->errors(),
         ], 422));
     }
-
     public function messages()
     {
         return [
-            'title.required'                 => __('responses.title_required'),
-            'title.unique'                   => __('responses.lab_program_title_unique'),
-            'path.unique'                    => __('responses.lab_program_title_unique'),
-            'social_link_id.unique'          => __('responses.lab_program_title_unique'),
-            'social_link_id.exists'          => __('responses.social_id_not_exists'),
+            'media_id.required'                 => __('responses.media_id_required'),
+            'media_id.exists'                 => __('responses.media_id_not_exists'),
         ];
     }
 }

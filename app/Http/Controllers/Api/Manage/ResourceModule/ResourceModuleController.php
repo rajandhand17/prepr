@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\ResourceModule\AddEmbedMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
+use App\Http\Requests\Manage\ResourceModule\DeleteMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
@@ -190,6 +192,42 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.resource_module_stored_failed'), 403);
         } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function deleteMedia(DeleteMediaResourceModuleRequest $request,$slug)
+    {
+        try {
+            $type = config('constants.resource_module_type.image');
+            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+            if ($checkResourceModuleSlugExistsOrNot == false){
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+            }
+            $deleteResourceModule = $this->resourceModuleRepository->deleteMedia($request,$checkResourceModuleSlugExistsOrNot->id,$type);
+            if ($deleteResourceModule) {
+                return $this->sendResponse(null, __('responses.resource_module_media_delete'));
+            }
+            return $this->sendError(__('responses.resource_module_media_not_delete'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addEmbedMedia(AddEmbedMediaResourceModuleRequest $request, $slug){
+        try {
+            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+            if ($checkResourceModuleSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+            }
+            $addLinks = $this->resourceModuleRepository->addEmbedMedia($request, $checkResourceModuleSlugExistsOrNot->id);
+            if ($addLinks) {
+                return $this->sendResponse(__('responses.add_links_success'), 200);
+            }
+
+            return $this->sendError(__('responses.add_links_failed'), 403);
+        } catch(\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

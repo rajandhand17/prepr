@@ -131,7 +131,7 @@ return [
         'document'             => '0',
         'video'                => '1',
         'audio'                => '2',
-        'embedded'             => '3',
+        'embedded_video'       => '3',
         'embedded_audio'       => '4',
         'url'                  => '5',
         'image'                => '6',

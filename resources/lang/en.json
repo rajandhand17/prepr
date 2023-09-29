@@ -400,5 +400,17 @@
     "responses.cover_image_max": "The cover image field must not be greater than 1024 kilobytes.",
 
     "responses.tags_array": "The tags field must be an array.",
-    "responses.skills_array": "The skill stacks field must be an array."
+    "responses.skills_array": "The skill stacks field must be an array.",
+    "responses.resource_module_media_delete":"The resource module media has been deleted successfully!",
+    "responses.resource_module_media_not_delete":"The resource module media has been not deleted!",
+
+    "responses.media_id_required":"This media id field is required.",
+    "responses.media_id_not_exists":"This media id is not exists in our systems",
+
+    "responses.path_required":"This path field is required",
+    "responses.path_array":"The path field must be an array",
+    "responses.embedded_type_in":"The Type should be between embedded_audio, audio, embedded_video, and video.",
+    "responses.max":"The type field must be an array",
+    "responses.type_array":"The type field must be an array",
+    "responses.type_content_255":"The type character limit is 255."
 }

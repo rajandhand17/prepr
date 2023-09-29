@@ -102,10 +102,7 @@ class ResourceModuleTagsGroupsService{
 
     public function deleteResourceModuleTagsGroups($resource_module_id){
         try {
-            $resourceModuleSkillsGroupsStack=ResourceModuleTagsGroups::where('resource_module_id', $resource_module_id)->first();
-            if($resourceModuleSkillsGroupsStack!==null){
-                return ResourceModuleTagsGroups::where('resource_module_id', $resource_module_id)->delete();
-            }
+            ResourceModuleTagsGroups::where('resource_module_id', $resource_module_id)->delete();
             return true;
         } catch(\Exception $e) {
             return false;

@@ -116,7 +116,6 @@ class ResourceModuleRepository implements ResourceModuleInterface
             //check all tables responses
             if ($deleteResourceModule["resourceModule"] && $deleteResourceModule["resourceModuleDetails"] && $deleteResourceModule["resourceModuleSkillsGroupStack"] && $deleteResourceModule['resourceModuleRating'] && $deleteResourceModule['deleteResourceModuleTagsGroups']){
                 DB::commit();
-
                 return true;
             }
             DB::rollback();
@@ -176,6 +175,23 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleDetailsService->addLinks($resource_module_id, $request->title, $type, $request->path, $request->social_link_id);
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteMedia($request,$resource_module_id,$type){
+        try {
+            return $this->resourceModuleDetailsService->deleteMedia($request,$resource_module_id,$type);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
+    public function addEmbedMedia($request, $resource_module_id){
+        try {
+
+            return $this->resourceModuleDetailsService->addEmbedMedia($request,$resource_module_id);
+        }catch(\Exception $e){
             return false;
         }
     }

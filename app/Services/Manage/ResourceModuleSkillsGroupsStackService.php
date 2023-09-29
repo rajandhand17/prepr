@@ -119,11 +119,7 @@ class ResourceModuleSkillsGroupsStackService
     public static function deleteResourceModuleSkillsGroupsStack($resource_module_id)
     {
         try {
-            $resourceModuleSkillsGroupsStack=ResourceModuleSkillsGroupsStack::where('resource_module_id', $resource_module_id)->first();
-            if($resourceModuleSkillsGroupsStack!==null){
-                return ResourceModuleSkillsGroupsStack::where('resource_module_id', $resource_module_id)->delete();
-            }
-
+            ResourceModuleSkillsGroupsStack::where('resource_module_id', $resource_module_id)->delete();
             return true;
         } catch(\Exception $e) {
             return false;

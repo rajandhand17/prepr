@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AddLinksResourceModuleRequest extends FormRequest
+class AddEmbedMediaResourceModuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class AddLinksResourceModuleRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'title'                  => 'required|max:255|array',
-            'path'                   => 'required|array',
-            'social_link_id'         => 'required|exists:social_links,id|array',
+            'type'                  => 'required|array',
+            'type.*'                => 'max:255|in:embedded_audio,audio,embedded_video,video',
+            'path'                  => 'required|array',
 
         ];
 
@@ -45,11 +45,12 @@ class AddLinksResourceModuleRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required'                 => __('responses.title_required'),
-            'title.unique'                   => __('responses.lab_program_title_unique'),
-            'path.unique'                    => __('responses.lab_program_title_unique'),
-            'social_link_id.unique'          => __('responses.lab_program_title_unique'),
-            'social_link_id.exists'          => __('responses.social_id_not_exists'),
+            'type.required'                   => __('responses.type_required'),
+            'type.array'                      => __('responses.type_array'),
+            'type.*.max'                        => __('responses.type_content_255'),
+            'type.*.in'                         => __('responses.embedded_type_in'),
+            'path.required'                   => __('responses.path_required'),
+            'path.array'                      => __('responses.path_array'),
         ];
     }
 }
