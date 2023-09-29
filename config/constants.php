@@ -127,6 +127,12 @@ return [
         'archive' => '2',
     ],
 
+    'challenge_status' => [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
+    ],
+
     'resource_module_type'=> [
         'document'             => '0',
         'video'                => '1',
@@ -145,5 +151,46 @@ return [
     'resource_module_is_global'=> [
         'no'  => '0',
         'yes' => '1',
+    ],
+    'challenge_privacy' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'project_privacy' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_notification_enabled' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_open_close' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_auto_created' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_assessment_type' => [
+        'null'  => '0',
+        'open'  => '1',
+        'close' => '2',
+    ],
+
+    'challenge_visibility_type' => [
+        'null'    => '0',
+        'users'   => '1',
+        'hidden'  => '2',
+    ],
+
+    'challenge_timeline_type' => [
+        'flexible'   => '0',
+        'restricted' => '1',
     ],
 ];
