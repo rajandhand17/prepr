@@ -100,7 +100,7 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function update($slug, UpdateChallengeRequest $request)
+    public function update($slug, Request $request)
     {
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
