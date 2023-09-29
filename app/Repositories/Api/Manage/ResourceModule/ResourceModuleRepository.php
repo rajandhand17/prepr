@@ -92,35 +92,14 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function delete($slug, $resource_module_id)
     {
         try {
-            // Start a database transaction
-            $deleteResourceModule = DB::transaction(function () use ($slug, $resource_module_id) {
-                // Delete the resource module itself
-                $deleteResourceModule = $this->resourceModuleService->deleteResourceModule($slug);
-                // Delete resource module details
-                $deleteResourceModuleDetailsService = $this->resourceModuleDetailsService->deleteResourceModuleDetail($resource_module_id);
-                // Delete resource module skills group stack
-                $deleteResourceModuleSkillsGroupStack = $this->resouceModuleSkillsGroupStackService->deleteResourceModuleSkillsGroupsStack($resource_module_id);
-
-                $deleteResourceModuleTagsGroups=$this->resourceModuleTagsGroupsService->deleteResourceModuleTagsGroups($resource_module_id);
-                // Delete resource module rating
-                $deleteResourceModuleRating = $this->resourceModuleRatingService->deleteResourceModuleRating($resource_module_id);
-                // Return the results of each deletion
-                return [
-                    "resourceModule"                 => $deleteResourceModule,
-                    "resourceModuleDetails"          => $deleteResourceModuleDetailsService,
-                    "resourceModuleSkillsGroupStack" => $deleteResourceModuleSkillsGroupStack,
-                    "resourceModuleRating"           => $deleteResourceModuleRating,
-                    "deleteResourceModuleTagsGroups" =>$deleteResourceModuleTagsGroups,
-                ];
-            });
-            //check all tables responses
-            if ($deleteResourceModule["resourceModule"] && $deleteResourceModule["resourceModuleDetails"] && $deleteResourceModule["resourceModuleSkillsGroupStack"] && $deleteResourceModule['resourceModuleRating'] && $deleteResourceModule['deleteResourceModuleTagsGroups']){
-                DB::commit();
-                return true;
+            DB::beginTransaction();
+            $deleteResourceModule = $this->resourceModuleService->deleteResourceModule($resource_module_id);
+            if ($deleteResourceModule == false) {
+                DB::rollBack();
+                return false;
             }
-            DB::rollback();
-
-            return false;
+            DB::commit();
+            return true;
         } catch (\Exception $e) {
             return false;
         }

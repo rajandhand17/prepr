@@ -270,7 +270,6 @@ class LabService
             $lab = Lab::find($lab_id)->delete();
             if (!$lab) {
                 $associatedLabs = event(new DeleteLabAssociatedData($lab_id));
-
                 return false;
             }
 

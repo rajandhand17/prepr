@@ -100,7 +100,7 @@ class ResourceModuleTagsGroupsService{
         }
     }
 
-    public function deleteResourceModuleTagsGroups($resource_module_id){
+    public static function deleteResourceModuleTagsGroups($resource_module_id){
         try {
             ResourceModuleTagsGroups::where('resource_module_id', $resource_module_id)->delete();
             return true;

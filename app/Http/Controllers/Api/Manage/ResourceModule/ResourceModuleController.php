@@ -75,7 +75,6 @@ class ResourceModuleController extends AppBaseController
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_delete'));
             }
-
             return $this->sendError(__('responses.resource_module_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
