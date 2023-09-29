@@ -415,5 +415,7 @@
     "responses.challenge_template_not_available":"Sorry! This template is not available.",
     "responses.challenge_template_available":"Success! Template data found.",
     "responses.challenge_pitch_task_available":"Success! Template's pitch and task data found.",
-    "responses.challenge_pitch_task_not_available":"Sorry! Template's pitch and task data not found."
+    "responses.challenge_pitch_task_not_available":"Sorry! Template's pitch and task data not found.",
+    "responses.challenge_update_successfully":"The Challenge has been updated successfully",
+    "responses.challenge_not_update":"There were some issues being encountered while updating the Challenge!"
 }

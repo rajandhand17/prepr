@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
+use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
@@ -42,7 +43,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
-        } catch (\Exception $e) {
+        } catch (Exception $th) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -94,7 +95,46 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.found_not_challenge_detail'), 404);
-        } catch (\Exception $e) {
+        } catch (Exception $th) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function update($slug, Request $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
+            $update_participation_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->participation_achievement->achievement_image);
+            if ($request->cover_image !== null) {
+                $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
+                if ($uploaded_cover_image == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $update_cover_image = $uploaded_cover_image;
+            }
+
+            if ($request->achievement_image !== null) {
+                $updated_challenge_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
+                if ($updated_challenge_achievement_image == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $update_participation_achievement_image = $updated_challenge_achievement_image;
+            }
+
+            $updateChallenge = $this->challengeRepository->updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image);
+            dd($updateChallenge);
+            if ($updateChallenge != false) {
+                return $this->sendResponse(ChallengeResource::make($updateChallenge), __('responses.challenge_update_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_not_update'));
+
+        } catch (Exception $th) {
+            dd($th);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -129,7 +169,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.already_exists'), 400);
-        } catch (\Exception $e) {
+        } catch (Exception $th) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -143,7 +183,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.challenge_name_available'), 400);
-        } catch (\Exception $e) {
+        } catch (Exception $th) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

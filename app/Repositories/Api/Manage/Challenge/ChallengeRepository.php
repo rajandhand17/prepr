@@ -191,6 +191,22 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
+    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image)
+    {
+        try {
+                $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image);
+                $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
+
+                $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
+                $updateChallengeTagsGroups = $this->challengeTagsGroupsService->updateChallengeTagsGroups($request, $updateChallenge->id);
+                $updateChallengeProjectTemplate = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
+
+                dd($updateChallengeAchievement);
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
     public function getChallengeBasedOnSlug($slug)
     {
         try {
