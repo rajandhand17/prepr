@@ -118,6 +118,7 @@ class ChallengeTimelinesService
                     $challengeFlexibleTimeLine->save();
                 }
             }
+
             return true;
         } catch (Exception $th) {
             return false;

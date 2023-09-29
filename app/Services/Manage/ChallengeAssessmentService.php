@@ -123,6 +123,7 @@ class ChallengeAssessmentService
                     $challengeAssessment->save();
                 }
             }
+
             return true;
         } catch (Exception $th) {
             return false;

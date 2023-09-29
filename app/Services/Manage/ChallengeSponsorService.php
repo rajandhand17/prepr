@@ -44,9 +44,9 @@ class ChallengeSponsorService
                         $challengeHostSponsor->host_id = $hostSponsor;
                         $challengeHostSponsor->save();
                     }
-
                 }
             }
+
             return true;
         } catch (Exception $th) {
             return false;
