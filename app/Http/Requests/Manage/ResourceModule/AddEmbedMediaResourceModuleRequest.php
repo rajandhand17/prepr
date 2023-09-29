@@ -45,12 +45,12 @@ class AddEmbedMediaResourceModuleRequest extends FormRequest
     public function messages()
     {
         return [
-            'type.required'                   => __('responses.type_required'),
-            'type.array'                      => __('responses.type_array'),
+            'type.required'                     => __('responses.type_required'),
+            'type.array'                        => __('responses.type_array'),
             'type.*.max'                        => __('responses.type_content_255'),
             'type.*.in'                         => __('responses.embedded_type_in'),
-            'path.required'                   => __('responses.path_required'),
-            'path.array'                      => __('responses.path_array'),
+            'path.required'                     => __('responses.path_required'),
+            'path.array'                        => __('responses.path_array'),
         ];
     }
 }

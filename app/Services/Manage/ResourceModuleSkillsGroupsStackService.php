@@ -6,8 +6,8 @@ use App\Models\ResourceModuleSkillsGroupsStack;
 
 class ResourceModuleSkillsGroupsStackService
 {
-
-    public function createResourceModuleSkillsGroupsStack($request,$resource_module_id){
+    public function createResourceModuleSkillsGroupsStack($request, $resource_module_id)
+    {
         if ($request->has('skills')) {
             if (count($request->skills) > 0) {
                 foreach ($request->skills as $skill) {
@@ -41,9 +41,9 @@ class ResourceModuleSkillsGroupsStackService
                 }
             }
         }
+
         return true;
     }
-
 
     public function updateResourceModuleSkillsGroupsStack($request, $resource_module_id)
     {
@@ -111,15 +111,18 @@ class ResourceModuleSkillsGroupsStackService
                     }
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function deleteResourceModuleSkillsGroupsStack($resource_module_id)
     {
         try {
             ResourceModuleSkillsGroupsStack::where('resource_module_id', $resource_module_id)->delete();
+
             return true;
         } catch(\Exception $e) {
             return false;

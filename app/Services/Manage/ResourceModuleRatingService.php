@@ -10,6 +10,7 @@ class ResourceModuleRatingService
     {
         try {
             ResourceModuleRating::where('resource_module_id', $resource_module_id)->delete();
+
             return true;
         } catch(\Exception $e) {
             return false;

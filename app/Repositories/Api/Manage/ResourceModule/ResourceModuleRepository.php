@@ -20,13 +20,13 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
     protected $resourceModuleTagsGroupsService;
 
-    public function __construct(ResourceModuleService $resourceModuleService,ResourceModuleDetailService $resourceModuleDetailsService,ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService,ResourceModuleRatingService $resourceModuleRatingService,ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService)
+    public function __construct(ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService)
     {
         $this->resourceModuleService = $resourceModuleService;
         $this->resourceModuleDetailsService = $resourceModuleDetailsService;
-        $this->resouceModuleSkillsGroupStackService=$resouceModuleSkillsGroupStackService;
-        $this->resourceModuleTagsGroupsService=$resourceModuleTagsGroupsService;
-        $this->resourceModuleRatingService=$resourceModuleRatingService;
+        $this->resouceModuleSkillsGroupStackService = $resouceModuleSkillsGroupStackService;
+        $this->resourceModuleTagsGroupsService = $resourceModuleTagsGroupsService;
+        $this->resourceModuleRatingService = $resourceModuleRatingService;
     }
 
     public function getResourceModuleList($request, $organization)
@@ -41,21 +41,24 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function createResourceModule($request, $upload_cover_image)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($request,$upload_cover_image) {
-               $createResourceModule=$this->resourceModuleService->createResourceModule($request,$upload_cover_image);
-               $resourceModuleSkillsGroupStackService=$this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request,$createResourceModule->id);
-               $resourceModuleTagsGroupsService=$this->resourceModuleTagsGroupsService->createResourceModuleTagsGroups($request,$createResourceModule->id);
+            $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image) {
+                $createResourceModule = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModule->id);
+                $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->createResourceModuleTagsGroups($request, $createResourceModule->id);
+
                 return [
-                    'createResourceModule'           => $createResourceModule,
+                    'createResourceModule'                 => $createResourceModule,
                     'resourceModuleSkillsGroupStackService'=> $resourceModuleSkillsGroupStackService,
-                    'resourceModuleTagsGroupsService'=> $resourceModuleTagsGroupsService,
+                    'resourceModuleTagsGroupsService'      => $resourceModuleTagsGroupsService,
                 ];
             });
-            if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']){
-               DB::commit();
+            if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
+                DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch(\Exception $e) {
             return false;
@@ -96,9 +99,11 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $deleteResourceModule = $this->resourceModuleService->deleteResourceModule($resource_module_id);
             if ($deleteResourceModule == false) {
                 DB::rollBack();
+
                 return false;
             }
             DB::commit();
+
             return true;
         } catch (\Exception $e) {
             return false;
@@ -119,8 +124,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             $createResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image) {
                 $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image);
-                $resourceModuleSkillsGroupStackService=$this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request,$updateResourceModule->id);
-                $resourceModuleTagsGroupsService=$this->resourceModuleTagsGroupsService->updateResourceModuleTagsGroups($request,$updateResourceModule->id);
+                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request, $updateResourceModule->id);
+                $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->updateResourceModuleTagsGroups($request, $updateResourceModule->id);
 
                 return [
                     'updateResourceModule'           => $updateResourceModule,
@@ -130,12 +135,13 @@ class ResourceModuleRepository implements ResourceModuleInterface
             });
             if ($createResourceModule['updateResourceModule'] && $createResourceModule['resourceModuleSkillsGroupsStack'] && $createResourceModule['resourceModuleTagsGroupsService']) {
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
 
             return false;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -158,19 +164,20 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function deleteMedia($request,$resource_module_id,$type){
+    public function deleteMedia($request, $resource_module_id, $type)
+    {
         try {
-            return $this->resourceModuleDetailsService->deleteMedia($request,$resource_module_id,$type);
-        }catch(\Exception $e){
+            return $this->resourceModuleDetailsService->deleteMedia($request, $resource_module_id, $type);
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function addEmbedMedia($request, $resource_module_id){
+    public function addEmbedMedia($request, $resource_module_id)
+    {
         try {
-
-            return $this->resourceModuleDetailsService->addEmbedMedia($request,$resource_module_id);
-        }catch(\Exception $e){
+            return $this->resourceModuleDetailsService->addEmbedMedia($request, $resource_module_id);
+        } catch(\Exception $e) {
             return false;
         }
     }

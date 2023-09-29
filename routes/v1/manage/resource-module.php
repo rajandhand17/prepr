@@ -13,6 +13,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/add-links', [ResourceModuleController::class, 'addLinks'])->middleware('permission:add_links_resource_modules');
     Route::post('/{slug}/add-embed-media', [ResourceModuleController::class, 'addEmbedMedia'])->middleware('permission:add_embed_media_resource_modules');
     Route::post('/{slug}/file-upload', [ResourceModuleController::class, 'fileUpload'])->middleware('permission:file_upload_resource_modules');
-    Route::delete('/{slug}/delete', [ResourceModuleController::class, 'delete']);//->middleware('permission:delete_resource_modules');
-    Route::delete('/{slug}/delete-media', [ResourceModuleController::class,'deleteMedia'])->middleware('permission:delete_media_resource_modules');
+    Route::delete('/{slug}/delete', [ResourceModuleController::class, 'delete']); //->middleware('permission:delete_resource_modules');
+    Route::delete('/{slug}/delete-media', [ResourceModuleController::class, 'deleteMedia'])->middleware('permission:delete_media_resource_modules');
 });

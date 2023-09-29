@@ -22,12 +22,12 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function getResourceModuleBasedOnSlug($slug){
+    public function getResourceModuleBasedOnSlug($slug)
+    {
         try {
             return  $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
-
 }
