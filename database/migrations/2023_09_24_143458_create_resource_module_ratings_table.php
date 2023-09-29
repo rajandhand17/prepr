@@ -14,7 +14,7 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('resource_module_id');
             $table->bigInteger('user_id');
-            $table->enum('rating', ['0', '1', '2', '3', '4', '5'])->comment("1->one star, 2->two star, 3->three star, 4->four star, 5->five star")->default('0');
+            $table->enum('rating', ['0', '1', '2', '3', '4', '5'])->comment('1->one star, 2->two star, 3->three star, 4->four star, 5->five star')->default('0');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');

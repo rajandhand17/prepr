@@ -7,8 +7,6 @@ use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\Manage\ResourceModuleRatingService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleTagsGroupsService;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class HandleDeleteResourceModuleAssociatedData
 {
@@ -27,24 +25,25 @@ class HandleDeleteResourceModuleAssociatedData
     {
         try {
             $resourceModuleId = $event->resourceModuleId;
-            $deleteResourceModuleDetail=ResourceModuleDetailService::deleteResourceModuleDetail($resourceModuleId);
-            if(!$deleteResourceModuleDetail){
+            $deleteResourceModuleDetail = ResourceModuleDetailService::deleteResourceModuleDetail($resourceModuleId);
+            if (!$deleteResourceModuleDetail) {
                 return false;
             }
-            $deleteResourceModuleSkillsGroupsStack=ResourceModuleSkillsGroupsStackService::deleteResourceModuleSkillsGroupsStack($resourceModuleId);
-            if(!$deleteResourceModuleSkillsGroupsStack){
+            $deleteResourceModuleSkillsGroupsStack = ResourceModuleSkillsGroupsStackService::deleteResourceModuleSkillsGroupsStack($resourceModuleId);
+            if (!$deleteResourceModuleSkillsGroupsStack) {
                 return false;
             }
-            $deleteResourceModuleTagsGroups=ResourceModuleTagsGroupsService::deleteResourceModuleTagsGroups($resourceModuleId);
-            if(!$deleteResourceModuleTagsGroups){
+            $deleteResourceModuleTagsGroups = ResourceModuleTagsGroupsService::deleteResourceModuleTagsGroups($resourceModuleId);
+            if (!$deleteResourceModuleTagsGroups) {
                 return false;
             }
-            $deleteResourceModuleRating=ResourceModuleRatingService::deleteResourceModuleRating($resourceModuleId);
-            if(!$deleteResourceModuleRating){
+            $deleteResourceModuleRating = ResourceModuleRatingService::deleteResourceModuleRating($resourceModuleId);
+            if (!$deleteResourceModuleRating) {
                 return false;
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

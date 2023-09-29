@@ -36,11 +36,12 @@ class DeleteMediaResourceModuleRequest extends FormRequest
             'data'      => $validator->errors(),
         ], 422));
     }
+
     public function messages()
     {
         return [
             'media_id.required'                 => __('responses.media_id_required'),
-            'media_id.exists'                 => __('responses.media_id_not_exists'),
+            'media_id.exists'                   => __('responses.media_id_not_exists'),
         ];
     }
 }
