@@ -191,6 +191,62 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
+    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image)
+    {
+        try {
+            $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image) {
+                $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image);
+                $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
+                $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
+                $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
+                $updateChallengeTagsGroups = $this->challengeTagsGroupsService->updateChallengeTagsGroups($request, $updateChallenge->id);
+                $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
+                $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id);
+                $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id);
+                $updateChallengeProjectTemplate = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
+                $updateChallengeTimelines = $this->challengeTimelinesService->updateChallengeTimelines($request, $updateChallenge->id);
+                $updateChallengeCustomTimelines = $this->challengeCustomTimelinesService->updateChallengeCustomTimelines($request, $updateChallenge->id);
+
+                return [
+                    'updateChallenge'                   => $updateChallenge,
+                    'updateChallengeAchievement'        => $updateChallengeAchievement,
+                    'updateChallengeSponsor'            => $updateChallengeSponsor,
+                    'updateChallengeSkillsGroupsStack'  => $updateChallengeSkillsGroupsStack,
+                    'updateChallengeTagsGroups'         => $updateChallengeTagsGroups,
+                    'updateChallengeRequirement'        => $updateChallengeRequirement,
+                    'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,
+                    'updateChallengeAssessment'         => $updateChallengeAssessment,
+                    'updateChallengeProjectTemplate'    => $updateChallengeProjectTemplate,
+                    'updateChallengeTimelines'          => $updateChallengeTimelines,
+                    'updateChallengeCustomTimelines'    => $updateChallengeCustomTimelines,
+                ];
+            });
+
+            if (
+                $updateChallenge['updateChallenge'] &&
+                $updateChallenge['updateChallengeAchievement'] &&
+                $updateChallenge['updateChallengeSponsor'] &&
+                $updateChallenge['updateChallengeSkillsGroupsStack'] &&
+                $updateChallenge['updateChallengeTagsGroups'] &&
+                $updateChallenge['updateChallengeRequirement'] &&
+                $updateChallenge['updateChallengeAssessmentCriteria'] &&
+                $updateChallenge['updateChallengeAssessment'] &&
+                $updateChallenge['updateChallengeProjectTemplate'] &&
+                $updateChallenge['updateChallengeTimelines'] &&
+                $updateChallenge['updateChallengeCustomTimelines']
+            ) {
+                DB::commit();
+
+                return $updateChallenge['updateChallenge'];
+            }
+            DB::rollback();
+
+            return false;
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
     public function getChallengeBasedOnSlug($slug)
     {
         try {

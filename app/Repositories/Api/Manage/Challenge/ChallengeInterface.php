@@ -30,6 +30,8 @@ interface ChallengeInterface
 
     public function createChallengeProjectTemplate($request, $challenge);
 
+    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image);
+
     public function getChallengeBasedOnSlug($slug);
 
     public function deleteChallenge($lab_id, $request);
