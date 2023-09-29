@@ -27,6 +27,32 @@ class ChallengeSponsorService
         }
     }
 
+    public function updateChallengeSponsor($challenge_id, $request)
+    {
+        try {
+            if ($request->has('host_id')) {
+                if (count($request->host_id) > 0) {
+                    $getExistsChallengeHostSponsor = ChallengeSponsor::where('challenge_id', $challenge_id)->get(['host_id']);
+                    $existingHostSponsor = $getExistsChallengeHostSponsor->pluck('host_id')->all();
+                    $nonExistingIds = array_diff($existingHostSponsor, $request->host_id);
+
+                    ChallengeSponsor::where('challenge_id', $challenge_id)->whereIn('host_id', $nonExistingIds)->delete();
+                    $newHostSponsor = array_diff($request->host_id, $existingHostSponsor);
+                    foreach ($newHostSponsor as $hostSponsor) {
+                        $challengeHostSponsor = new ChallengeSponsor();
+                        $challengeHostSponsor->challenge_id = $challenge_id;
+                        $challengeHostSponsor->host_id = $hostSponsor;
+                        $challengeHostSponsor->save();
+                    }
+
+                }
+            }
+            return true;
+        } catch (Exception $th) {
+            return false;
+        }
+    }
+
     public static function getHostBasedOnIds($host_ids)
     {
         try {

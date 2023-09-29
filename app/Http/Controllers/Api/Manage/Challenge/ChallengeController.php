@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
+use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
@@ -99,7 +100,7 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function update($slug, Request $request)
+    public function update($slug, UpdateChallengeRequest $request)
     {
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
@@ -125,15 +126,12 @@ class ChallengeController extends AppBaseController
             }
 
             $updateChallenge = $this->challengeRepository->updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image);
-            dd($updateChallenge);
             if ($updateChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($updateChallenge), __('responses.challenge_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.challenge_not_update'));
         } catch (Exception $th) {
-            dd($th);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
