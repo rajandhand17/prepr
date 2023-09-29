@@ -227,7 +227,6 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.add_links_failed'), 403);
         } catch(\Exception $e) {
-            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
