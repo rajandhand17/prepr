@@ -54,7 +54,8 @@ class ChallengeAchievementService
         }
     }
 
-    public static function uploadChallengeIncentiveAchievementImage($image){
+    public static function uploadChallengeIncentiveAchievementImage($image)
+    {
         try {
             $upload_incentive_image = FileUploadHelper::uploadImageToS3($image, 'achievement');
             if ($upload_incentive_image == false) {
@@ -80,7 +81,7 @@ class ChallengeAchievementService
 
             $challengeIncentiveData = !empty($request->winner_achievement_image) ? array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image, $request->winner_achievement_image) : array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image);
             if (!empty($challengeIncentiveData)) {
-                $challengeIncentiveArrayData = array();
+                $challengeIncentiveArrayData = [];
                 foreach ($challengeIncentiveData as $key => $value) {
                     if (!empty($value[0]) && !empty($value[1]) && !empty($value[2]) && !empty($value[3])) {
                         $upload_incentive_achievement_image = config('site-settings.default_challenge_cover_image');
@@ -107,6 +108,7 @@ class ChallengeAchievementService
                     ChallengeAchievement::insert($challengeIncentiveArrayData);
                 }
             }
+
             return true;
         } catch (Exception $th) {
             return false;

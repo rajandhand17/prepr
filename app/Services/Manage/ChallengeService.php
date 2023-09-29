@@ -335,7 +335,6 @@ class ChallengeService
 
                 return $challenge;
             }
-
         } catch (Exception $th) {
             return false;
         }
