@@ -121,12 +121,37 @@ return [
         'organization'   => 'organization',
     ],
 
+    'resource_module_status'=> [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
+    ],
+
     'challenge_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
     ],
 
+    'resource_module_type'=> [
+        'document'             => '0',
+        'video'                => '1',
+        'audio'                => '2',
+        'embedded_video'       => '3',
+        'embedded_audio'       => '4',
+        'url'                  => '5',
+        'image'                => '6',
+        'Embedded_Cover_Video' => '7',
+    ],
+
+    'resource_module_privacy'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+    'resource_module_is_global'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
     'challenge_privacy' => [
         'no'  => '0',
         'yes' => '1',

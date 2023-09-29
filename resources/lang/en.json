@@ -293,7 +293,7 @@
     "responses.already_un_favourite_lab":"The Lab is already being removed from favourites!",
 
     "responses.join_type_in":"Sorry! we are not supporting this type which you have requested for!",
-    "responses.join_invite_type_in":"Sorry! we are not supporting this invite type which you have requested for!",
+    "responses.join_invite_type_in":"Sorry! we are not supporting this invite type whic.h you have requested for!",
 
     "responses.join_request_accept_successfully": "You have accepted the join request successfully!",
     "responses.join_request_accept_failed": "You have failed to accept the join request",
@@ -415,5 +415,56 @@
     "responses.challenge_template_not_available":"Sorry! This template is not available.",
     "responses.challenge_template_available":"Success! Template data found.",
     "responses.challenge_pitch_task_available":"Success! Template's pitch and task data found.",
-    "responses.challenge_pitch_task_not_available":"Sorry! Template's pitch and task data not found."
+    "responses.challenge_pitch_task_not_available":"Sorry! Template's pitch and task data not found.",
+
+     "responses.resource_module_not_found": "The Resource Module which you are looking doesn't exist in our system.",
+    "responses.found_resource_module_list":"The Resource Module list has been successfully retrieved",
+    "responses.not_found_resource_module_list":"The list of resource module has not been retrieved with success.",
+
+
+    "responses.resource_module_name_not_available":"This resource module name is not available!",
+    "responses.resource_module_name_available":"This resource module name is available!",
+    "responses.resource_module_slug_not_available":"This resource module slug is not available!",
+    "responses.resource_module_slug_available":"This resource module slug is available!",
+    "responses.resource_module_delete":"The resource module has been deleted successfully!",
+    "responses.resource_module_not_delete":"The resource module has been not deleted!",
+    "responses.resource_module_slug_not_found": "The resource module which you are looking doesn't exist in our system.",
+    "responses.not_found_resource_module_view":"The resource module has not been retrieved with success.",
+
+    "responses.resource_module_stored_success":"Congratulations! You have successfully created a resource module.",
+    "responses.resource_module_stored_failed":"Oops! The Creation resource module has failed.",
+
+    "responses.add_links_success":"Congratulations! You have successfully added links in resource module.",
+    "responses.add_links_failed":"Oops! The Add Links of resource module has failed..",
+
+    "responses.file_upload_success":"Congratulations! You have successfully upload Image.",
+    "responses.file_upload_failed":"Oops! The upload Image of resource module has failed.",
+
+    "responses.resource_module_update_success":"Congratulations! You have successfully update resource module.",
+    "responses.resource_module_update_failed":"Oops! The Updation of resource module has failed.",
+
+    "responses.file_upload_required": "The file upload field is required.",
+    "responses.file_upload_array": "The file upload field must be an array",
+    "responses.file_upload_type": "The file upload field must be a file of type: jpeg, jpg, png, webp",
+    "responses.file_upload_max": "The file upload field must not have more than 1024 items.",
+
+    "responses.social_id_not_exists": "The selected social link id is invalid.",
+
+    "responses.cover_image_type": "The cover image field must be a file of type: jpeg, jpg, png, webp.",
+    "responses.cover_image_max": "The cover image field must not be greater than 1024 kilobytes.",
+
+    "responses.tags_array": "The tags field must be an array.",
+    "responses.skills_array": "The skill stacks field must be an array.",
+    "responses.resource_module_media_delete":"The resource module media has been deleted successfully!",
+    "responses.resource_module_media_not_delete":"The resource module media has been not deleted!",
+
+    "responses.media_id_required":"This media id field is required.",
+    "responses.media_id_not_exists":"This media id is not exists in our systems",
+
+    "responses.path_required":"This path field is required",
+    "responses.path_array":"The path field must be an array",
+    "responses.embedded_type_in":"The Type should be between embedded_audio, audio, embedded_video, and video.",
+    "responses.max":"The type field must be an array",
+    "responses.type_array":"The type field must be an array",
+    "responses.type_content_255":"The type character limit is 255."
 }
