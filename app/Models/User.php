@@ -80,7 +80,6 @@ class User extends Authenticatable
         try {
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
-
             if ($user->verified_user == 0) {
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
 

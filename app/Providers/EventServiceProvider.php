@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\Labs\DeleteLabAssociatedData;
+use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Listeners\Lab\HandleDeleteLabAssociatedData;
+use App\Listeners\ResourceModule\HandleDeleteResourceModuleAssociatedData;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -21,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         DeleteLabAssociatedData::class => [
             HandleDeleteLabAssociatedData::class,
+        ],
+        DeleteResourceModuleAssociatedData::class=> [
+            HandleDeleteResourceModuleAssociatedData::class,
         ],
     ];
 
