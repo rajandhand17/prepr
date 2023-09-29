@@ -46,12 +46,12 @@ class ChallengeRequirementService
                 return true;
             }
 
-            $challengeRequirement->min_rank = $request->has('min_rank') ? $request->min_rank : $challengeRequirement->min_rank ;
-            $challengeRequirement->min_points = $request->has('min_points') ? $request->min_points : $challengeRequirement->min_points ;
-            $challengeRequirement->max_project_submission = $request->has('max_project_submission') ? $request->max_project_submission : $challengeRequirement->max_project_submission ;
-            $challengeRequirement->min_experience = $request->has('min_experience') ? $request->min_experience : $challengeRequirement->min_experience ;
-            $challengeRequirement->min_imported_badges = $request->has('min_imported_badges') ? $request->min_imported_badges : $challengeRequirement->min_imported_badges ;
-            $challengeRequirement->min_achievement_counts = $request->has('min_achievement_counts') ? $request->min_achievement_counts : $challengeRequirement->min_achievement_counts ;
+            $challengeRequirement->min_rank = $request->has('min_rank') ? $request->min_rank : $challengeRequirement->min_rank;
+            $challengeRequirement->min_points = $request->has('min_points') ? $request->min_points : $challengeRequirement->min_points;
+            $challengeRequirement->max_project_submission = $request->has('max_project_submission') ? $request->max_project_submission : $challengeRequirement->max_project_submission;
+            $challengeRequirement->min_experience = $request->has('min_experience') ? $request->min_experience : $challengeRequirement->min_experience;
+            $challengeRequirement->min_imported_badges = $request->has('min_imported_badges') ? $request->min_imported_badges : $challengeRequirement->min_imported_badges;
+            $challengeRequirement->min_achievement_counts = $request->has('min_achievement_counts') ? $request->min_achievement_counts : $challengeRequirement->min_achievement_counts;
             $challengeRequirement->project_submission_requirement_ids = $request->has('project_submission_requirement_ids') ? $request->project_submission_requirement_ids : $challengeRequirement->project_submission_requirement_ids;
             $challengeRequirement->save();
 
