@@ -4,6 +4,8 @@ namespace App\Repositories\Api\Manage\Challenge;
 
 interface ChallengeInterface
 {
+    public function getChallengeList($request, $organization);
+
     public function uploadChallengeCoverImage($image);
 
     public function uploadChallengeParticipationAchievementImage($image);

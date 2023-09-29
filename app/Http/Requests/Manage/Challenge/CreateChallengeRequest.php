@@ -28,10 +28,10 @@ class CreateChallengeRequest extends FormRequest
             'category_id'                           => 'required|exists:categories,id',
             'duration_id'                           => 'required|exists:durations,id',
             'level_id'                              => 'required|exists:levels,id',
-            'title'                                 => 'required|unique:challenges,title',
-            'description'                           => 'required',
+            'title'                                 => 'required_if:request_type,publish|unique:challenges,title',
+            'description'                           => 'required_if:request_type,publish',
             'request_type'                          => 'required|in:draft,publish,archive',
-            'privacy'                               => 'required|in:yes,no',
+            'privacy'                               => 'required_if:request_type,publish|in:yes,no',
             'cover_image'                           => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'source_link'                           => 'nullable|url',
             'agreement'                             => 'required',
@@ -101,28 +101,28 @@ class CreateChallengeRequest extends FormRequest
         if ($this->request->has('assessment_type') !== null) {
             $base_rules['assessment_type'] = 'required|in:open,close';
             $base_rules['visibility'] = 'required|in:users,hidden';
-            $base_rules['guidelines'] = 'required';
-            $base_rules['attachments'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['guidelines'] = 'required_if:request_type,publish';
+            $base_rules['attachments'] = 'required_if:request_type,publish||mimes:jpeg,jpg,png,webp|max:1024';
             if ($this->assessment_type == 'close' && $this->members_email !== null) {
                 $base_rules['members_email'] = 'array';
-                $base_rules['members_email.*'] = 'required|email';
+                $base_rules['members_email.*'] = 'required_if:request_type,publish||email';
             }
         }
 
         if ($this->has('timeline_type') == 'restricted') {
-            $base_rules['open_call_date'] = 'required';
-            $base_rules['open_call_date_description'] = 'required';
-            $base_rules['last_call_date'] = 'required';
-            $base_rules['last_call_date_description'] = 'required';
-            $base_rules['application_deadline_date'] = 'required';
-            $base_rules['application_deadline_date_description'] = 'required';
-            $base_rules['submission_deadline_date'] = 'required';
-            $base_rules['submission_deadline_date_description'] = 'required';
+            $base_rules['open_call_date'] = 'required_if:request_type,publish';
+            $base_rules['open_call_date_description'] = 'required_if:request_type,publish';
+            $base_rules['last_call_date'] = 'required_if:request_type,publish';
+            $base_rules['last_call_date_description'] = 'required_if:request_type,publish';
+            $base_rules['application_deadline_date'] = 'required_if:request_type,publish';
+            $base_rules['application_deadline_date_description'] = 'required_if:request_type,publish';
+            $base_rules['submission_deadline_date'] = 'required_if:request_type,publish';
+            $base_rules['submission_deadline_date_description'] = 'required_if:request_type,publish';
         }
 
         if ($this->has('timeline_type') == 'flexible') {
-            $base_rules['flexible_date_number'] = 'required';
-            $base_rules['flexible_date_duration'] = 'required';
+            $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
         }
 
         return $base_rules;
@@ -148,12 +148,12 @@ class CreateChallengeRequest extends FormRequest
             'duration_id.exists'                          => __('responses.duration_id_exists'),
             'level_id.required'                           => __('responses.level_id_required'),
             'level_id.exists'                             => __('responses.level_id_exists'),
-            'title.required'                              => __('responses.title_required'),
+            'title.required_if'                           => __('responses.title_required'),
             'title.unique'                                => __('responses.challenge_title_unique'),
-            'description.required'                        => __('responses.description_required'),
+            'description.required_if'                     => __('responses.description_required'),
             'request_type.required'                       => __('responses.request_type_required'),
             'privacy.in'                                  => __('responses.choose_yes_no'),
-            'privacy.required'                            => __('responses.privacy_required'),
+            'privacy.required_if'                         => __('responses.privacy_required'),
             'source_link'                                 => __('responses.challenge_source_link'),
             'is_notification_enabled.in'                  => __('responses.choose_yes_no'),
             'project_privacy.in'                          => __('responses.choose_yes_no'),
@@ -182,8 +182,8 @@ class CreateChallengeRequest extends FormRequest
             'winner_achievement_name.array'               => __('responses.winner_achievement_name_array'),
             'winner_achievement_prize.required'           => __('responses.winner_achievement_prize_required'),
             'winner_achievement_prize.array'              => __('responses.winner_achievement_prize_array'),
-            'winner_achievement_prize.required'           => __('responses.winner_achievement_points_required'),
-            'winner_achievement_prize.array'              => __('responses.winner_achievement_points_array'),
+            'winner_achievement_points.required'          => __('responses.winner_achievement_points_required'),
+            'winner_achievement_points.array'             => __('responses.winner_achievement_points_array'),
             'achievement_conditions.required'             => __('responses.achievement_conditions_required'),
             'achievement_conditions.array'                => __('responses.achievement_conditions_array'),
             'host_id.required'                            => __('responses.host_id_required'),

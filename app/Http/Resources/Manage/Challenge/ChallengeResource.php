@@ -23,12 +23,24 @@ class ChallengeResource extends JsonResource
      */
     public function toArray($request)
     {
-        $achievement = [];
-        $incentive_achievement = [];
-        $hosts = [];
-        $incentive_achievement = [];
-        $challenge_timelines = [];
-        $challenge_custom_timelines = [];
+        $category_id = null;
+        $category = null;
+        $duration = null;
+        $duration_id = null;
+        $level = null;
+        $level_id = null;
+        $skills = null;
+        $skill_groups = null;
+        $skill_stacks = null;
+        $tags = null;
+        $tag_groups = null;
+        $achievement = null;
+        $incentive_achievement = null;
+        $challenge_requirements = null;
+        $hosts = null;
+        $challenge_assessment_criteria = null;
+        $challenge_timelines = null;
+        $challenge_custom_timelines = null;
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -200,6 +212,7 @@ class ChallengeResource extends JsonResource
             'challenge_assessment_criteria' => $challenge_assessment_criteria,
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
+            'challenge_template'            => $this->challenge_project_template,
         ];
     }
 }

@@ -129,4 +129,9 @@ class Challenge extends Model
     {
         return $this->hasMany(ChallengeCustomTimelines::class, 'challenge_id', 'id');
     }
+
+    public function challenge_project_template()
+    {
+        return $this->hasMany(ChallengeProjectTemplate::class, 'challenge_id', 'id');
+    }
 }
