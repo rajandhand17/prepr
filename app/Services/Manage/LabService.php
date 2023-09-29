@@ -268,12 +268,11 @@ class LabService
     {
         try {
             $lab = Lab::find($lab_id)->delete();
-            if (!$lab) {
+            if ($lab) {
                 $associatedLabs = event(new DeleteLabAssociatedData($lab_id));
-                return false;
+                return true;
             }
-
-            return true;
+            return false;
         } catch (\Exception $e) {
             return false;
         }
