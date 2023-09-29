@@ -214,5 +214,4 @@ class ChallengeResource extends JsonResource
             'challenge_template'            => $this->challenge_project_template,
         ];
     }
-
 }
