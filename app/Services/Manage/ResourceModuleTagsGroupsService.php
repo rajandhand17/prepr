@@ -2,13 +2,10 @@
 
 namespace App\Services\Manage;
 
-
-use App\Models\LabProgramsTagsGroups;
-use App\Models\LabTagsGroups;
-use App\Models\ResourceModuleSkillsGroupsStack;
 use App\Models\ResourceModuleTagsGroups;
 
-class ResourceModuleTagsGroupsService{
+class ResourceModuleTagsGroupsService
+{
     public function createResourceModuleTagsGroups($request, $resource_module_id)
     {
         if ($request->has('tags')) {
@@ -33,16 +30,18 @@ class ResourceModuleTagsGroupsService{
                 }
             }
         }
+
         return true;
     }
 
     public static function delete($resource_module_id)
     {
         try {
-            $resourceModuleSkillsGroupsStack=ResourceModuleTagsGroups::where('resource_module_id', $resource_module_id)->first();
-            if($resourceModuleSkillsGroupsStack!==null){
+            $resourceModuleSkillsGroupsStack = ResourceModuleTagsGroups::where('resource_module_id', $resource_module_id)->first();
+            if ($resourceModuleSkillsGroupsStack !== null) {
                 return $resourceModuleSkillsGroupsStack->delete();
             }
+
             return true;
         } catch(\Exception $e) {
             return false;
@@ -94,15 +93,18 @@ class ResourceModuleTagsGroupsService{
                     }
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function deleteResourceModuleTagsGroups($resource_module_id){
+    public static function deleteResourceModuleTagsGroups($resource_module_id)
+    {
         try {
             ResourceModuleTagsGroups::where('resource_module_id', $resource_module_id)->delete();
+
             return true;
         } catch(\Exception $e) {
             return false;

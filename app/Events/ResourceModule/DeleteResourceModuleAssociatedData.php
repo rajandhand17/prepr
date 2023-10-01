@@ -9,8 +9,11 @@ use Illuminate\Queue\SerializesModels;
 
 class DeleteResourceModuleAssociatedData
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
     public $resourceModuleId;
+
     /**
      * Create a new event instance.
      */

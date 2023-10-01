@@ -2,11 +2,9 @@
 
 namespace App\Services\Manage;
 
-use App\Events\Labs\DeleteLabAssociatedData;
 use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Lab;
 use App\Models\ResourceModule;
 use HiFolks\RandoPhp\Randomize;
 
@@ -118,11 +116,13 @@ class ResourceModuleService
     public static function deleteResourceModule($resource_module_id)
     {
         try {
-           $resourceModule= ResourceModule::find($resource_module_id)->delete();
-            if($resourceModule){
-                $associatedResourceModule=event(new DeleteResourceModuleAssociatedData($resource_module_id));
+            $resourceModule = ResourceModule::find($resource_module_id)->delete();
+            if ($resourceModule) {
+                $associatedResourceModule = event(new DeleteResourceModuleAssociatedData($resource_module_id));
+
                 return true;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;

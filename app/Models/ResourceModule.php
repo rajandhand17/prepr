@@ -34,37 +34,37 @@ class ResourceModule extends Model
 
     public function document()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id','title', 'path')->where('type', '=', '0');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '0');
     }
 
     public function video()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id','title', 'path')->where('type', '=', '1');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '1');
     }
 
     public function audio()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id','title', 'path')->where('type', '=', '2');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '2');
     }
 
     public function embedded()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id','title', 'path')->where('type', '=', '3');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '3');
     }
 
     public function embedded_audio()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id','title', 'path')->where('type', '=', '4');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '4');
     }
 
     public function url()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id','title', 'path', 'social_link_id')->where('type', '=', '5');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path', 'social_link_id')->where('type', '=', '5');
     }
 
     public function image()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id','title', 'path')->where('type', '=', '6');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '6');
     }
 
     public function embedded_cover_video()

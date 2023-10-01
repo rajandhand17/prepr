@@ -24,7 +24,7 @@ class EventServiceProvider extends ServiceProvider
         DeleteLabAssociatedData::class => [
             HandleDeleteLabAssociatedData::class,
         ],
-        DeleteResourceModuleAssociatedData::class=>[
+        DeleteResourceModuleAssociatedData::class=> [
             HandleDeleteResourceModuleAssociatedData::class,
         ],
     ];

@@ -11,7 +11,7 @@ class ResourceModuleTagsGroups extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $tableName="resource_module_tags_groups";
+    protected $tableName = 'resource_module_tags_groups';
 
     protected $fillable = [
         'resource_module_id',

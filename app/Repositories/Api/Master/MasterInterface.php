@@ -45,4 +45,6 @@ interface MasterInterface
     public function getDurations($request);
 
     public function getLevels($request);
+
+    public function getPitchTaskData($request);
 }

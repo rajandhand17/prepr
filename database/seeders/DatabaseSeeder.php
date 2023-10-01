@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             FlexibleDateDurationSeeder::class,
             LevelsSeeder::class,
             DurationsSeeder::class,
+            ProjectSubmissionRequirementTableSeeder::class,
         ]);
     }
 }

@@ -75,6 +75,7 @@ class ResourceModuleController extends AppBaseController
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_delete'));
             }
+
             return $this->sendError(__('responses.resource_module_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -193,18 +194,19 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function deleteMedia(DeleteMediaResourceModuleRequest $request,$slug)
+    public function deleteMedia(DeleteMediaResourceModuleRequest $request, $slug)
     {
         try {
             $type = config('constants.resource_module_type.image');
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
-            if ($checkResourceModuleSlugExistsOrNot == false){
+            if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $deleteResourceModule = $this->resourceModuleRepository->deleteMedia($request,$checkResourceModuleSlugExistsOrNot->id,$type);
+            $deleteResourceModule = $this->resourceModuleRepository->deleteMedia($request, $checkResourceModuleSlugExistsOrNot->id, $type);
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_media_delete'));
             }
+
             return $this->sendError(__('responses.resource_module_media_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
