@@ -400,7 +400,7 @@
     "responses.cover_image_max": "The cover image field must not be greater than 1024 kilobytes.",
 
     "responses.tags_array": "The tags field must be an array.",
-    "responses.skills_array": "The skill stacks field must be an array.",
+    "responses.skills_array": "The skill field must be an array.",
     "responses.resource_module_media_delete":"The resource module media has been deleted successfully!",
     "responses.resource_module_media_not_delete":"The resource module media has been not deleted!",
 
@@ -412,5 +412,14 @@
     "responses.embedded_type_in":"The Type should be between embedded_audio, audio, embedded_video, and video.",
     "responses.max":"The type field must be an array",
     "responses.type_array":"The type field must be an array",
-    "responses.type_content_255":"The type character limit is 255."
+    "responses.type_content_255":"The type character limit is 255.",
+    "responses.skills_numeric":"The phone number should be in numeric!",
+    "responses.skill_not_exists":"Sorry, this skill is not available",
+    "responses.tag_not_exists":"Sorry, this tag is not available",
+    "responses.tag_group_not_exists":"Sorry, this tag group is not available",
+    "responses.skill_groups_numeric":"This skill groups should be in numeric!",
+    "responses.skill_stacks_numeric":"This skill stacks should be in numeric!",
+    "responses.skill_stacks_not_exists":"Sorry, this skill stacks is not available",
+
+    "responses.request_type_in":"The Type should be between add-links and embedded_media."
 }

@@ -149,10 +149,19 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function addLinks($request, $resource_module_id, $type)
+    public function addLinks($request, $resource_module_id)
     {
         try {
-            return $this->resourceModuleDetailsService->addLinks($resource_module_id, $request->title, $type, $request->path, $request->social_link_id);
+            switch ($request->request_type){
+                case 'add_links':
+                    return $this->resourceModuleDetailsService->addLinks($request,$resource_module_id);
+                    break;
+                case 'embedded_media':
+                    return $this->resourceModuleDetailsService->addEmbedMedia($request,$resource_module_id);
+                    break;
+                default:
+                    return false;
+            }
         } catch(\Exception $e) {
             return false;
         }
@@ -161,15 +170,6 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function deleteMedia($request,$resource_module_id,$type){
         try {
             return $this->resourceModuleDetailsService->deleteMedia($request,$resource_module_id,$type);
-        }catch(\Exception $e){
-            return false;
-        }
-    }
-
-    public function addEmbedMedia($request, $resource_module_id){
-        try {
-
-            return $this->resourceModuleDetailsService->addEmbedMedia($request,$resource_module_id);
         }catch(\Exception $e){
             return false;
         }

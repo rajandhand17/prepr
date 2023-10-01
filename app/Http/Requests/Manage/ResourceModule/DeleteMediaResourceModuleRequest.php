@@ -24,7 +24,7 @@ class DeleteMediaResourceModuleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'media_id' => 'required|exists:resource_modules,id',
+            'media_id' => 'required|exists:resource_module_details,id',
         ];
     }
 

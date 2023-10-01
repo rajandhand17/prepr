@@ -17,7 +17,6 @@ class DeleteResourceModuleAssociatedData
     public function __construct($resourceModuleId)
     {
         $this->resourceModuleId = $resourceModuleId;
-
     }
 
     /**

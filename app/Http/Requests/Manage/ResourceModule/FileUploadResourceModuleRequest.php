@@ -24,7 +24,7 @@ class FileUploadResourceModuleRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'file_upload'                  => 'required|array|max:1024',
+            'file_upload'            => 'required|array|mimes:jpeg,jpg,png,webp|max:1024',
         ];
 
         return $base_rules;
@@ -45,6 +45,7 @@ class FileUploadResourceModuleRequest extends FormRequest
             'file_upload.required'              => __('responses.file_upload_required'),
             'file_upload.array'                 => __('responses.file_upload_array'),
             'file_upload.max'                   => __('responses.file_upload_max'),
+            'file_upload.mimes'                 => __('responses.mimes_image'),
         ];
     }
 }
