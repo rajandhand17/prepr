@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Manage\Challenge;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Services\Manage\ChallengeService;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -32,7 +32,7 @@ class UpdateChallengeRequest extends FormRequest
 
         $base_rules = [
             'cover_image'                           => 'image|mimes:jpeg,jpg,png,webp|max:1024',
-            'title'                                 => 'required_if:request_type,publish|max:255|unique:challenges,title,' . $challenge->id,
+            'title'                                 => 'required_if:request_type,publish|max:255|unique:challenges,title,'.$challenge->id,
             'request_type'                          => 'required|in:draft,publish,archive',
             'description'                           => 'required_if:request_type,publish|nullable',
             'organization_id'                       => 'required|exists:organizations,uuid',
