@@ -43,7 +43,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -78,7 +78,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_stored_failed'), 400);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -95,7 +95,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.found_not_challenge_detail'), 404);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -131,7 +131,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_not_update'));
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -152,7 +152,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_not_delete'), 400);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -166,7 +166,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.already_exists'), 400);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -180,7 +180,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.challenge_name_available'), 400);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

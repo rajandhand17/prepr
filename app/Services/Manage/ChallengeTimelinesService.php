@@ -60,7 +60,7 @@ class ChallengeTimelinesService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -120,7 +120,7 @@ class ChallengeTimelinesService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

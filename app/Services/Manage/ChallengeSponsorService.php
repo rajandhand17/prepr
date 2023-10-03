@@ -22,7 +22,7 @@ class ChallengeSponsorService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -48,7 +48,7 @@ class ChallengeSponsorService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

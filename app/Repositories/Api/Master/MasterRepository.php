@@ -267,7 +267,7 @@ class MasterRepository implements MasterInterface
     {
         try {
             return $this->pitchTemplateService->getPitchTemplatesBasedOnId($request->template_id);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

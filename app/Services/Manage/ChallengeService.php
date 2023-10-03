@@ -206,7 +206,7 @@ class ChallengeService
             $challenge->save();
 
             return $challenge;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -335,7 +335,7 @@ class ChallengeService
 
                 return $challenge;
             }
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

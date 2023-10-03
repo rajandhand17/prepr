@@ -22,7 +22,7 @@ class ChallengeRequirementService
             $challengeRequirement->save();
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -56,7 +56,7 @@ class ChallengeRequirementService
             $challengeRequirement->save();
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

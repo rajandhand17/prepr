@@ -34,7 +34,7 @@ class ChallengeTagsGroupsService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

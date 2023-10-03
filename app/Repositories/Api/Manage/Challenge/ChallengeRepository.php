@@ -114,7 +114,7 @@ class ChallengeRepository implements ChallengeInterface
             DB::rollback();
 
             return false;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -123,7 +123,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeAchievementService->uploadChallengeParticipationAchievementImage($image);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -132,7 +132,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeSponsorService->createChallengeSponsor($request, $challenge);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -141,7 +141,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $challenge);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -150,7 +150,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $challenge);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -159,7 +159,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeRequirementService->createChallengeRequirement($request, $challenge);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -168,7 +168,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $challenge);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -177,7 +177,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeAssessmentService->createChallengeAssessment($request, $challenge);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -186,7 +186,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $challenge);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -242,7 +242,7 @@ class ChallengeRepository implements ChallengeInterface
             DB::rollback();
 
             return false;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -251,7 +251,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->getChallengeBasedOnSlug($slug);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -270,7 +270,7 @@ class ChallengeRepository implements ChallengeInterface
             DB::commit();
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             DB::rollBack();
 
             return false;

@@ -16,7 +16,7 @@ class ChallengeProjectTemplateService
             $challengeProjectTemplate->save();
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -29,7 +29,7 @@ class ChallengeProjectTemplateService
             $challengeProjectTemplate->save();
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

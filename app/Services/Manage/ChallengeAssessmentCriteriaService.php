@@ -22,7 +22,7 @@ class ChallengeAssessmentCriteriaService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -43,7 +43,7 @@ class ChallengeAssessmentCriteriaService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

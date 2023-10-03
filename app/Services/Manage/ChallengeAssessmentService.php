@@ -63,7 +63,7 @@ class ChallengeAssessmentService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -125,7 +125,7 @@ class ChallengeAssessmentService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

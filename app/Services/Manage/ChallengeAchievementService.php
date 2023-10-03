@@ -17,7 +17,7 @@ class ChallengeAchievementService
             }
 
             return $upload_achievement_image;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -49,7 +49,7 @@ class ChallengeAchievementService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -63,7 +63,7 @@ class ChallengeAchievementService
             }
 
             return $upload_incentive_image;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -110,7 +110,7 @@ class ChallengeAchievementService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }

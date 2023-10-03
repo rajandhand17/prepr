@@ -27,7 +27,7 @@ class ChallengeCustomTimelinesService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -55,7 +55,7 @@ class ChallengeCustomTimelinesService
             }
 
             return true;
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return false;
         }
     }
