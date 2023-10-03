@@ -9,7 +9,7 @@ class ChallengeService
     public function getList($request)
     {
         try {
-            $challenge_list = Challenge::select()->where('labs.status', '1');
+            $challenge_list = Challenge::select()->where('challenges.status', '1');
             $challenge_list = self::filterChallengeList($request, $challenge_list);
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
