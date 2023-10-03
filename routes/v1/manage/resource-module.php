@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\Manage\ResourceModule\ResourceModuleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::get('/', [ResourceModuleController::class, 'index']);//->middleware('permission:view_resource_modules');
+    Route::get('/', [ResourceModuleController::class, 'index'])->middleware('permission:view_resource_modules');
     Route::get('/{slug}', [ResourceModuleController::class, 'show'])->middleware('permission:view_resource_modules');
     Route::post('/create', [ResourceModuleController::class, 'create'])->middleware('permission:create_resource_modules');
     Route::put('/{slug}/update', [ResourceModuleController::class, 'update'])->middleware('permission:update_resource_modules');
