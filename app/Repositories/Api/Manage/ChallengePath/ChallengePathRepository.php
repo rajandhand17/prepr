@@ -96,4 +96,13 @@ class ChallengePathRepository implements ChallengePathInterface
             return false;
         }
     }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            return $this->challengePathService->checkNameExistsOrNot($title);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -62,4 +62,18 @@ class ChallengePathController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function checkName($title)
+    {
+        try {
+            $checkNameChallengePath = $this->challengePathRepository->checkNameExistsOrNot($title);
+            if ($checkNameChallengePath == false) {
+                return $this->sendResponse([], __('responses.challenge_path_name_available'));
+            }
+
+            return $this->sendError(__('responses.challenge_path_name_not_available'), 403);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

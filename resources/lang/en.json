@@ -462,5 +462,7 @@
     "responses.challenge_path_stored_failed":"Oops! The Creation of Challenge Path has failed.",
     "responses.challenge_path_slug_available":"Success! This Challenge Path slug is available",
     "responses.challenge_path_title_unique":"Sorry,this title already registered with us, Please choose another one",
-    "responses.challenge_path_already_exists":"Sorry, this Challenge Path slug is not available"
+    "responses.challenge_path_already_exists":"Sorry, this Challenge Path slug is not available",
+    "responses.challenge_path_name_not_available":"This Challenge Path name is not available!",
+    "responses.challenge_path_name_available":"This Challenge Path name is available!"
 }
