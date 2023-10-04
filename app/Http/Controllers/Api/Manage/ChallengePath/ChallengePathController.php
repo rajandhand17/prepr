@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ChallengePath;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\ChallengePath\CreateChallengePathRequest;
 use App\Repositories\Api\Manage\ChallengePath\ChallengePathRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class ChallengePathController extends AppBaseController
         $this->challengePathRepository = $challengePathRepository;
     }
 
-    public function create(Request $request)
+    public function create(CreateChallengePathRequest $request)
     {
         try {
             $upload_cover_image = config('site-settings.default_challenge_path_cover_image');
@@ -43,6 +44,20 @@ class ChallengePathController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_path_stored_failed'), 403);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkSlug($slug, Request $request)
+    {
+        try {
+            $checkChallengePathSlugExistsOrNot = $this->challengePathRepository->checkSlug($slug);
+            if ($checkChallengePathSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.challenge_path_slug_available'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_path_already_exists'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
