@@ -18,7 +18,7 @@ class ChallengeService
             $challenge_list = self::filterChallengeList($challenge_list, $request);
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -89,7 +89,7 @@ class ChallengeService
             }
 
             return $upload_challenge_cover_image;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -344,7 +344,7 @@ class ChallengeService
     {
         try {
             return Challenge::where('slug', $slug)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -358,7 +358,7 @@ class ChallengeService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -369,7 +369,21 @@ class ChallengeService
             Challenge::find($challenge_id)->delete();
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnUUIDArray($challengeUUIDArray)
+    {
+        try {
+            $challengeIds = Challenge::whereIn('uuid', $challengeUUIDArray)->pluck('id')->all();
+            if ($challengeIds != null) {
+                return $challengeIds;
+            }
+
+            return false;
+        } catch (Exception $e) {
             return false;
         }
     }
