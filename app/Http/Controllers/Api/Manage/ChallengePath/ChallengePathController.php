@@ -58,7 +58,7 @@ class ChallengePathController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_path_already_exists'), 400);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

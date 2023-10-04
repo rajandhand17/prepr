@@ -129,7 +129,7 @@ class ChallengePathService
     {
         try {
             return ChallengePath::where('slug', $slug)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

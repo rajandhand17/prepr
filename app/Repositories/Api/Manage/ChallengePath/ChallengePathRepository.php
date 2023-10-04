@@ -92,7 +92,7 @@ class ChallengePathRepository implements ChallengePathInterface
             $checkChallengePathSlug = $this->challengePathService->checkSlug($slug);
 
             return $checkChallengePathSlug;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
