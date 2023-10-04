@@ -361,6 +361,7 @@ class ComponentAssociationService
                     }
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;

@@ -95,7 +95,6 @@ class ChallengePathService
                     break;
             }
 
-
             $model = new ChallengePath();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
