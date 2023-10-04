@@ -124,4 +124,13 @@ class ChallengePathService
             return false;
         }
     }
+
+    public static function checkSlug($slug)
+    {
+        try {
+            return ChallengePath::where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

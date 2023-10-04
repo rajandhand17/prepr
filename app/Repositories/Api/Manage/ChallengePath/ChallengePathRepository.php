@@ -85,4 +85,15 @@ class ChallengePathRepository implements ChallengePathInterface
             return false;
         }
     }
+
+    public function checkSlug($slug)
+    {
+        try {
+            $checkChallengePathSlug = $this->challengePathService->checkSlug($slug);
+
+            return $checkChallengePathSlug;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }
