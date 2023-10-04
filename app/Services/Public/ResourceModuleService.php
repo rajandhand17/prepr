@@ -3,6 +3,7 @@
 namespace App\Services\Public;
 
 use App\Models\ResourceModule;
+use App\Models\ResourceModuleRating;
 
 class ResourceModuleService
 {
@@ -95,6 +96,14 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::select()->where('slug', $slug)->first();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+    public function checkSlug($slug)
+    {
+        try {
+            return ResourceModule::where('slug', $slug)->first();
         } catch(\Exception $e) {
             return false;
         }
