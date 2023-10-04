@@ -133,4 +133,18 @@ class ChallengePathService
             return false;
         }
     }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $checkChallengePathName = ChallengePath::where('title', $title)->first();
+            if ($checkChallengePathName) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
