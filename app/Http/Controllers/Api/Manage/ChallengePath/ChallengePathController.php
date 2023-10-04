@@ -41,6 +41,7 @@ class ChallengePathController extends AppBaseController
             if ($createChallengePath) {
                 return $this->sendResponse($createChallengePath, __('responses.challenge_path_stored_success'), 200);
             }
+
             return $this->sendError(__('responses.challenge_path_stored_failed'), 403);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

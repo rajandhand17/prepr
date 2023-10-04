@@ -18,7 +18,7 @@ class ChallengePathRepository implements ChallengePathInterface
     private $challengePathTagsGroupsService;
     private $componentAssociationService;
 
-    public function __construct(ChallengePathService $challengePathService, ChallengePathAchievementsService $challengePathAchievementsService ,ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ChallengePathTagsGroupsService $challengePathTagsGroupsService, ComponentAssociationService $componentAssociationService)
+    public function __construct(ChallengePathService $challengePathService, ChallengePathAchievementsService $challengePathAchievementsService, ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ChallengePathTagsGroupsService $challengePathTagsGroupsService, ComponentAssociationService $componentAssociationService)
     {
         $this->challengePathService = $challengePathService;
         $this->challengePathSkillsGroupsStackService = $challengePathSkillsGroupsStackService;
@@ -73,12 +73,13 @@ class ChallengePathRepository implements ChallengePathInterface
                 $createChallengePath['challengePathSkillsGroupsStack'] &&
                 $createChallengePath['challengePathTagsGroupsService'] &&
                 $createChallengePath['componentAssociation']
-                )
-                {
-                    DB::commit();
-                    return $createChallengePath['createdChallengePath'];
-                }
-                DB::rollback();
+            ) {
+                DB::commit();
+
+                return $createChallengePath['createdChallengePath'];
+            }
+            DB::rollback();
+
             return false;
         } catch (Exception $e) {
             return false;
