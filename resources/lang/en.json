@@ -456,5 +456,8 @@
     "responses.embedded_type_in":"The Type should be between embedded_audio, audio, embedded_video, and video.",
     "responses.max":"The type field must be an array",
     "responses.type_array":"The type field must be an array",
-    "responses.type_content_255":"The type character limit is 255."
+    "responses.type_content_255":"The type character limit is 255.",
+
+    "responses.challenge_path_stored_success":"Congratulations! You have successfully created a Challenge Path.",
+    "responses.challenge_path_stored_failed":"Oops! The Creation of Challenge Path has failed."
 }
