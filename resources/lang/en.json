@@ -456,5 +456,10 @@
     "responses.embedded_type_in":"The Type should be between embedded_audio, audio, embedded_video, and video.",
     "responses.max":"The type field must be an array",
     "responses.type_array":"The type field must be an array",
-    "responses.type_content_255":"The type character limit is 255."
+    "responses.type_content_255":"The type character limit is 255.",
+
+    "responses.resource_module_rating_successfully":"Congratulations! You have successfully rated the resource module",
+    "responses.review_field_required": "The review field is required",
+    "responses.review_in": "The review should be between 1 to 5 only",
+    "responses.already_reviewed": "You have already give review on this resource module"
 }

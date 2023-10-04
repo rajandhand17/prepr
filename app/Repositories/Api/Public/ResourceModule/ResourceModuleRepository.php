@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Api\Public\ResourceModule;
 
-use App\Services\Manage\ResourceModuleRatingService;
+use App\Services\Public\ResourceModuleRatingService;
 use App\Services\Public\ResourceModuleService;
 
 class ResourceModuleRepository implements ResourceModuleInterface
@@ -40,9 +40,17 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
-    public function addRating($resource_module_id,$request){
+
+    public function checkReview($resource_module_id,$request){
         try {
-           return $this->resourceModuleRatingService->addRating($resource_module_id,$request);
+            return $this->resourceModuleService->checkReview($resource_module_id,$request);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function addReview($resource_module_id,$request){
+        try {
+           return $this->resourceModuleRatingService->addReview($resource_module_id,$request);
         }catch(\exception $e) {
             return false;
         }

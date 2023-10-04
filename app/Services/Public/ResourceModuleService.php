@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Models\OrganizationSocialActivities;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleRating;
 
@@ -104,6 +105,23 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::where('slug', $slug)->first();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkReview($resource_module_id,$request){
+        try {
+            $checkReview = ResourceModuleRating::where(
+                [
+                    'resource_module_id'=>$resource_module_id,
+                    'user_id'=>auth()->user()->id,
+                ]
+            )->first();
+            if ($checkReview != null) {
+                return true;
+            }
+            return false;
         } catch(\Exception $e) {
             return false;
         }

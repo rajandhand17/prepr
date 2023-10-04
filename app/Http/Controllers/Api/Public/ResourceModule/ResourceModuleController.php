@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public\ResourceModule;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Public\ResourceModule\AddRatingRequest;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Public\ResourceModule\ResourceModuleRepository;
 use Illuminate\Http\Request;
@@ -50,18 +51,21 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function addRating($slug,$request){
+    public function addReview($slug,AddRatingRequest $request){
         try {
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
-            if ($checkResourceModuleSlugExistsOrNot == false) {
+            if ($checkResourceModuleSlugExistsOrNot == false){
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $addRating = $this->resourceModuleRepository->addRating($checkResourceModuleSlugExistsOrNot->id,$request);
+            $checkExistsOrNot=$this->resourceModuleRepository->checkReview($checkResourceModuleSlugExistsOrNot->id,$request);
+            if($checkExistsOrNot==true){
+                return $this->sendError(__('responses.already_reviewed'), 400);
+            }
+            $addRating = $this->resourceModuleRepository->addReview($checkResourceModuleSlugExistsOrNot->id,$request);
             if($addRating){
-               // return $this->sendResponse();
+                return $this->sendResponse(null,__('responses.resource_module_rating_successfully'));
             }
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
-
         }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
