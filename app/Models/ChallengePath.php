@@ -34,6 +34,6 @@ class ChallengePath extends Model
 
     public function getMediaAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 }
