@@ -15,7 +15,7 @@ class ResourceModuleResource extends JsonResource
     {
         $links = [];
         $files = [];
-        $documents = [];
+        $document = [];
         $video = [];
         $audio = [];
         if ($this->url) {
@@ -24,8 +24,8 @@ class ResourceModuleResource extends JsonResource
         if ($this->image) {
             $files = $this->image;
         }
-        if ($this->documents) {
-            $documents = $this->documents;
+        if ($this->document) {
+            $document = $this->document;
         }
         if ($this->video) {
             $video = $this->video;
@@ -49,7 +49,7 @@ class ResourceModuleResource extends JsonResource
             'is_global'                               => ($this->is_global == '1') ? 'yes' : 'no',
             'links'                                   => $links,
             'files'                                   => $files,
-            'documents'                               => $documents,
+            'documents'                               => $document,
             'video'                                   => $video,
             'audio'                                   => $audio,
 

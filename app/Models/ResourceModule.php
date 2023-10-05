@@ -32,7 +32,7 @@ class ResourceModule extends Model
         return config('site-settings.aws_url').$value;
     }
 
-    public function documents()
+    public function document()
     {
         return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '0');
     }

@@ -134,16 +134,14 @@ class ResourceModuleController extends AppBaseController
     public function addLinks(AddLinksResourceModuleRequest $request, $slug)
     {
         try {
-            $type = config('constants.resource_module_type.url');
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleSlugExistsOrNot->id, $type);
-            if ($addLinks) {
+            $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleSlugExistsOrNot->id);
+            if($addLinks) {
                 return $this->sendResponse(__('responses.add_links_success'), 200);
             }
-
             return $this->sendError(__('responses.add_links_failed'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -209,24 +207,6 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.resource_module_media_not_delete'), 400);
-        } catch(\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function addEmbedMedia(AddEmbedMediaResourceModuleRequest $request, $slug)
-    {
-        try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
-            if ($checkResourceModuleSlugExistsOrNot == false) {
-                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
-            }
-            $addLinks = $this->resourceModuleRepository->addEmbedMedia($request, $checkResourceModuleSlugExistsOrNot->id);
-            if ($addLinks) {
-                return $this->sendResponse(__('responses.add_links_success'), 200);
-            }
-
-            return $this->sendError(__('responses.add_links_failed'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

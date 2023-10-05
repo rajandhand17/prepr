@@ -23,12 +23,25 @@ class AddLinksResourceModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $base_rules = [
-            'title'                  => 'required|max:255|array',
-            'path'                   => 'required|array',
-            'social_link_id'         => 'required|exists:social_links,id|array',
+        $request_type = $this->request->get('request_type');
+        if($request_type=='add_links'){
+            $base_rules = [
+                'title'                  => 'required|array',
+                'title.*'                => 'max:255',
+                'path'                   => 'required|array',
+                'social_link_id'         => 'required|array',
+                'social_link_id.*'       => 'exists:social_links,id',
+            ];
+        }
+        if($request_type=='embedded_media'){
+            $base_rules = [
+                'type'                  => 'required|array',
+                'type.*'                => 'max:255|in:embedded_audio,audio,embedded_video,video',
+                'path'                  => 'required|array',
 
-        ];
+            ];
+        }
+        $base_rules['request_type']='required|in:add_links,embedded_media';
 
         return $base_rules;
     }
@@ -47,9 +60,18 @@ class AddLinksResourceModuleRequest extends FormRequest
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.lab_program_title_unique'),
+            'title.*.max'                    => __('responses.mimes_image_max'),
             'path.unique'                    => __('responses.lab_program_title_unique'),
             'social_link_id.unique'          => __('responses.lab_program_title_unique'),
             'social_link_id.exists'          => __('responses.social_id_not_exists'),
+            'request_type.in'                => __('responses.request_type_in'),
+            'request_type.required'          => __('responses.request_type_required'),
+            'type.required'                   => __('responses.type_required'),
+            'type.array'                      => __('responses.type_array'),
+            'type.*.max'                      => __('responses.type_content_255'),
+            'type.*.in'                       => __('responses.embedded_type_in'),
+            'path.required'                   => __('responses.path_required'),
+            'path.array'                      => __('responses.path_array'),
         ];
     }
 }
