@@ -84,7 +84,7 @@ class ChallengePathController extends AppBaseController
             if ($checkChallengePathSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.challenge_path_not_found'), 404);
             }
-            $deleteChallengePath = $this->challengePathRepository->delete($slug);
+            $deleteChallengePath = $this->challengePathRepository->delete($checkChallengePathSlugExistsOrNot->id);
             if ($deleteChallengePath) {
                 return $this->sendResponse(null, __('responses.challenge_path_delete'));
             }

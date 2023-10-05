@@ -37,4 +37,21 @@ class ChallengePathAchievementsService
             return false;
         }
     }
+
+    public static function deleteChallengePathAchievement($challengePathId)
+    {
+        try {
+            $challengePathAchievementCheck = ChallengePathAchievement::where('challenge_path_id', $challengePathId)->first();
+            if ($challengePathAchievementCheck) {
+                $challengePathAchievement = ChallengePathAchievement::where('challenge_path_id', $challengePathId)->delete();
+                if (!$challengePathAchievement) {
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

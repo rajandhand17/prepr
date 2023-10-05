@@ -367,4 +367,21 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public static function deleteChallengePathAssociation($challenge_path_id)
+    {
+        try {
+            $getComponentAssociation = ComponentAssociation::where('challenge_path_id', $challenge_path_id)->pluck('id');
+            if ($getComponentAssociation->isNotEmpty()) {
+                $deleteComponentAssociation = ComponentAssociation::whereIn('id', $getComponentAssociation)->delete();
+                if (!$deleteComponentAssociation) {
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

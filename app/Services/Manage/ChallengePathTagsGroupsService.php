@@ -38,4 +38,21 @@ class ChallengePathTagsGroupsService
             return false;
         }
     }
+
+    public static function deleteChallengePathTagGroup($challengePathId)
+    {
+        try {
+            $challengePathIds = ChallengePathTagGroup::where('challenge_path_id', $challengePathId)->pluck('id');
+            if ($challengePathIds->isNotEmpty()) {
+                $challengePathTagGroup = ChallengePathTagGroup::whereIn('id', $challengePathIds)->delete();
+                if (!$challengePathTagGroup) {
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
