@@ -76,4 +76,22 @@ class ChallengePathController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function delete($slug)
+    {
+        try {
+            $checkChallengePathSlugExistsOrNot = $this->challengePathRepository->checkSlug($slug);
+            if ($checkChallengePathSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.challenge_path_not_found'), 404);
+            }
+            $deleteChallengePath = $this->challengePathRepository->delete($slug);
+            if ($deleteChallengePath) {
+                return $this->sendResponse(null, __('responses.challenge_path_delete'));
+            }
+
+            return $this->sendError(__('responses.challenge_path_not_delete'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

@@ -147,4 +147,13 @@ class ChallengePathService
             return false;
         }
     }
+
+    public function delete($slug)
+    {
+        try {
+            return ChallengePath::where('slug', $slug)->delete();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
