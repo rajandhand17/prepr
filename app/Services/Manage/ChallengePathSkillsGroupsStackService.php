@@ -59,8 +59,10 @@ class ChallengePathSkillsGroupsStackService
                 if (!$challengePathSkillGroupStack) {
                     return false;
                 }
+
                 return true;
             }
+
             return true;
         } catch (Exception $e) {
             return false;
