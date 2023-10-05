@@ -24,7 +24,7 @@ class AddRatingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'review' =>'required|in:1,2,3,4,5'
+            'review' => 'required|in:1,2,3,4,5',
         ];
     }
 
@@ -40,8 +40,8 @@ class AddRatingRequest extends FormRequest
     public function messages()
     {
         return [
-            "review.required" =>__('responses.review_field_required'),
-            "review.in" =>__('responses.review_in'),
+            'review.required' => __('responses.review_field_required'),
+            'review.in'       => __('responses.review_in'),
         ];
     }
 }

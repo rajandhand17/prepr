@@ -9,10 +9,11 @@ class ResourceModuleRepository implements ResourceModuleInterface
 {
     protected $resourceModuleService;
     protected $resourceModuleRatingService;
+
     public function __construct(ResourceModuleService $resourceModuleService, ResourceModuleRatingService $resourceModuleRatingService)
     {
         $this->resourceModuleService = $resourceModuleService;
-        $this->resourceModuleRatingService=$resourceModuleRatingService;
+        $this->resourceModuleRatingService = $resourceModuleRatingService;
     }
 
     public function getResourceModuleList($request)
@@ -33,27 +34,30 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function checkslug($slug){
+    public function checkslug($slug)
+    {
         try {
             return $this->resourceModuleService->checkslug($slug);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkReview($resource_module_id,$request){
+    public function checkReview($resource_module_id, $request)
+    {
         try {
-            return $this->resourceModuleService->checkReview($resource_module_id,$request);
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
-    public function addReview($resource_module_id,$request){
-        try {
-           return $this->resourceModuleRatingService->addReview($resource_module_id,$request);
-        }catch(\exception $e) {
+            return $this->resourceModuleService->checkReview($resource_module_id, $request);
+        } catch (\Exception $e) {
             return false;
         }
     }
 
+    public function addReview($resource_module_id, $request)
+    {
+        try {
+            return $this->resourceModuleRatingService->addReview($resource_module_id, $request);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

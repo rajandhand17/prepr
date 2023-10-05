@@ -89,12 +89,12 @@ class MemberManagementRepository implements MemberManagementInterface
                 if ($checkStatus) {
                     return $checkStatus;
                 }
+
                 return false;
             }
 
             return false;
         } catch (\Exception $e) {
-
             return false;
         }
     }

@@ -411,6 +411,7 @@ class MemberManagementService
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Manage\ResourceModule\AddEmbedMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\DeleteMediaResourceModuleRequest;
@@ -40,6 +39,7 @@ class ResourceModuleController extends AppBaseController
                     'total_pages'  => $responseModuleList->lastPage(),
                     'list'         => ResourceModuleResource::collection($responseModuleList),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_resource_module_list'));
             }
 
@@ -139,9 +139,10 @@ class ResourceModuleController extends AppBaseController
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
             $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleSlugExistsOrNot->id);
-            if($addLinks) {
+            if ($addLinks) {
                 return $this->sendResponse(__('responses.add_links_success'), 200);
             }
+
             return $this->sendError(__('responses.add_links_failed'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

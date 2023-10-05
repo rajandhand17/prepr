@@ -24,16 +24,17 @@ class ResourceModuleDetailService
         }
     }
 
-    public function addLinks($request,$resource_module_id)
+    public function addLinks($request, $resource_module_id)
     {
         try {
             foreach ($request->title as $key => $value) {
                 $type = config('constants.resource_module_type.url');
-               $resourceModuleDetailed = self::insertRecords($resource_module_id, $value,$type,$request->path[$key], $request->social_link_id[$key]);
+                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value, $type, $request->path[$key], $request->social_link_id[$key]);
                 if (!$resourceModuleDetailed) {
                     return false;
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

@@ -23,14 +23,12 @@ class AddEmbedMediaResourceModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-
         $base_rules = [
             'type'                  => 'required|array',
             'type.*'                => 'max:255|in:embedded_audio,audio,embedded_video,video',
             'path'                  => 'required|array',
 
         ];
-
 
         return $base_rules;
     }

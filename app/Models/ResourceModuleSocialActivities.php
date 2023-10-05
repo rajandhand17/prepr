@@ -13,13 +13,12 @@ class ResourceModuleSocialActivities extends Model
 
     protected $tableName = 'resource_module_social_activities';
 
-    protected $fillable=[
-        "user_id",
-        "resource_module_id",
-        "like_dislike",
-        "share",
-        "favourite",
+    protected $fillable = [
+        'user_id',
+        'resource_module_id',
+        'like_dislike',
+        'share',
+        'favourite',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-
 }
