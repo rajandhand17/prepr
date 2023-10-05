@@ -464,5 +464,10 @@
     "responses.challenge_path_title_unique":"Sorry,this title already registered with us, Please choose another one",
     "responses.challenge_path_already_exists":"Sorry, this Challenge Path slug is not available",
     "responses.challenge_path_name_not_available":"This Challenge Path name is not available!",
-    "responses.challenge_path_name_available":"This Challenge Path name is available!"
+    "responses.challenge_path_name_available":"This Challenge Path name is available!",
+    "responses.challenge_path_not_found": "The Challenge Path(s) which you are looking doesn't exist in our system.",
+    "responses.challenge_path_delete":"The Challenge Path has been deleted successfully!",
+    "responses.challenge_path_not_delete":"The Challenge Path was not deleted!"
+
+
 }

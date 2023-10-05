@@ -105,4 +105,13 @@ class ChallengePathRepository implements ChallengePathInterface
             return false;
         }
     }
+
+    public function delete($challengePathId)
+    {
+        try {
+            return $this->challengePathService->delete($challengePathId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

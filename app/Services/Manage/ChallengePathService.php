@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
@@ -139,6 +140,22 @@ class ChallengePathService
         try {
             $checkChallengePathName = ChallengePath::where('title', $title)->first();
             if ($checkChallengePathName) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function delete($challengePathId)
+    {
+        try {
+            $challengePath = ChallengePath::find($challengePathId)->delete();
+            if ($challengePath) {
+                $deleteAssociatedData = event(new DeleteChallengePathAssociatedData($challengePathId));
+
                 return true;
             }
 

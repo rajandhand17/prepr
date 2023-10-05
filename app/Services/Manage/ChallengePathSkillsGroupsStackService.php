@@ -49,4 +49,23 @@ class ChallengePathSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function deleteChallengePathSkillGroupStack($challengePathId)
+    {
+        try {
+            $challengePathIds = ChallengePathSkillGroupStack::where('challenge_path_id', $challengePathId)->pluck('id');
+            if ($challengePathIds->isNotEmpty()) {
+                $challengePathSkillGroupStack = ChallengePathSkillGroupStack::whereIn('id', $challengePathIds)->delete();
+                if (!$challengePathSkillGroupStack) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
