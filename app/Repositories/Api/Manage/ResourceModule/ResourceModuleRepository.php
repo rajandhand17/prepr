@@ -158,12 +158,12 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function addLinks($request, $resource_module_id)
     {
         try {
-            switch ($request->request_type){
+            switch ($request->request_type) {
                 case 'add_links':
-                    return $this->resourceModuleDetailsService->addLinks($request,$resource_module_id);
+                    return $this->resourceModuleDetailsService->addLinks($request, $resource_module_id);
                     break;
                 case 'embedded_media':
-                    return $this->resourceModuleDetailsService->addEmbedMedia($request,$resource_module_id);
+                    return $this->resourceModuleDetailsService->addEmbedMedia($request, $resource_module_id);
                     break;
                 default:
                     return false;

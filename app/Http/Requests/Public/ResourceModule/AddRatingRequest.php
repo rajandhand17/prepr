@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Manage\ResourceModule;
+namespace App\Http\Requests\Public\ResourceModule;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AddEmbedMediaResourceModuleRequest extends FormRequest
+class AddRatingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,9 @@ class AddEmbedMediaResourceModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $base_rules = [
-            'type'                  => 'required|array',
-            'type.*'                => 'max:255|in:embedded_audio,audio,embedded_video,video',
-            'path'                  => 'required|array',
-
+        return [
+            'review' => 'required|in:1,2,3,4,5',
         ];
-
-        return $base_rules;
     }
 
     public function failedValidation(Validator $validator)
@@ -45,12 +40,8 @@ class AddEmbedMediaResourceModuleRequest extends FormRequest
     public function messages()
     {
         return [
-            'type.required'                     => __('responses.type_required'),
-            'type.array'                        => __('responses.type_array'),
-            'type.*.max'                        => __('responses.type_content_255'),
-            'type.*.in'                         => __('responses.embedded_type_in'),
-            'path.required'                     => __('responses.path_required'),
-            'path.array'                        => __('responses.path_array'),
+            'review.required' => __('responses.review_field_required'),
+            'review.in'       => __('responses.review_in'),
         ];
     }
 }

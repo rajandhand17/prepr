@@ -219,7 +219,7 @@ return [
         App\Repositories\Api\Public\Lab\LabServiceProvider::class,
         App\Repositories\Api\Public\LabProgram\LabProgramServiceProvider::class,
         App\Repositories\Api\Public\InvitationManagement\InvitationManagementServiceProvider::class,
-
+        App\Repositories\Api\Public\ResourceModule\ResourceModuleServiceProvider::class,
     ],
 
     /*
