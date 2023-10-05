@@ -34,6 +34,13 @@ class MemberManagementService
                         'module_type' => $module_type,
                     ]);
                     break;
+                case 'challenge':
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    $memberListCollection = $memberListCollection->where([
+                        'module_id'   => $componentCollectionObject->id,
+                        'module_type' => $module_type,
+                    ]);
+                    break;
                 default:
                     $module_type = null;
                     $memberListCollection = null;
@@ -156,6 +163,9 @@ class MemberManagementService
                     break;
                 case 'lab':
                     $module_type = config('constants.email_template_module_type.lab');
+                    break;
+                case 'challenge':
+                    $module_type = config('constants.email_template_module_type.challenge');
                     break;
                 default:
                     $module_type = null;

@@ -213,6 +213,12 @@ class ChallengeResource extends JsonResource
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
             'challenge_template'            => $this->challenge_project_template,
+            'likes'                         => $this->likes()->count(),
+            'shares'                        => $this->shares()->count(),
+            'member_count'                  => $this->members()->count(),
+            'liked'                         => $this->liked(),
+            'favourite'                     => $this->favourite(),
+            'project_submitted_count'       => '0', // Till project api's are not done statically sending this
         ];
     }
 }

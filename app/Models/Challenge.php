@@ -134,4 +134,37 @@ class Challenge extends Model
     {
         return $this->hasMany(ChallengeProjectTemplate::class, 'challenge_id', 'id');
     }
+
+    public function likes()
+    {
+        return $this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('like_dislike', '1');
+    }
+
+    public function shares()
+    {
+        return $this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('share', '1');
+    }
+
+    public function members()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1']);
+    }
+
+    public function liked()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
+    }
+
+    public function favourite()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
+    }
 }

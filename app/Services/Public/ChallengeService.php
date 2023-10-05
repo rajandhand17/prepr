@@ -25,6 +25,13 @@ class ChallengeService
                 $challenge_list = $challenge_list->where('challenges.title', 'like', '%'.$request->search.'%');
             }
 
+            if ($request->has('status') && !empty($request->status)) {
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $challenge_list = $challenge_list->where('challenges.status', $status);
+            } else {
+                $challenge_list = $challenge_list->where('challenges.status', '1');
+            }
+
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $challenge_list = $challenge_list->whereIn('challenges.category_id', $request->category);
             }
@@ -33,8 +40,8 @@ class ChallengeService
             }
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
-                $labIds = ChallengeSocialActivitiesService::getChallengeBasedOnActivity($activityType)->pluck('lab_id');
-                $challenge_list->whereIn('labs.id', $labIds);
+                $challengeIds = ChallengeSocialActivitiesService::getChallengeBasedOnActivity($activityType)->pluck('challenge_id');
+                $challenge_list->whereIn('challenges.id', $challengeIds);
             }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
