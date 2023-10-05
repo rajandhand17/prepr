@@ -21,16 +21,17 @@ class ResourceModuleControllerTest extends TestCase
             'wrong_language'  => 'hindi',
             'slug'            => 'prepr',
             'wrong_slug'      => 'wrong_slug',
-            'email'           => 'rajan@amazon.com',
-            'password'        => 'Prepr@123',
+            'email'           => 'salar.chagparprepr@prepr.org',
+            'password'        => 'Test@1234',
+            'review'=>4,
         ];
-//        Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
-//        $user = Auth::user();
-//        $this->token = $user->createToken(env('APP_NAME'))->accessToken;
-//        $this->headers = [
-//            'Accept'        => 'application/json',
-//            'AUTHORIZATION' => 'Bearer '.$this->token,
-//        ];
+        Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
+        $user = Auth::user();
+        $this->token = $user->createToken(env('APP_NAME'))->accessToken;
+        $this->headers = [
+            'Accept'        => 'application/json',
+            'AUTHORIZATION' => 'Bearer '.$this->token,
+        ];
     }
 
     public function test_resource_module_positive_test(): void
@@ -85,4 +86,17 @@ class ResourceModuleControllerTest extends TestCase
         $response = $this->get('/api/v1/public/resource-module/resource-moduless/?language=en');
         $this->assertEquals(404, $response->getStatusCode());
     }
+
+    public function test_resource_module_add_review_positive_test(): void
+    {
+        $response = $this->post('/api/v1/public/resource-module/resource-module/add-review?language='.$this->parameters['language'], $this->parameters, $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function test_resource_module_add_review_negative_test(): void
+    {
+        $response = $this->post('/api/v1/public/resource-module/resource-module/add-review?language='.$this->parameters['language'], $this->parameters, $this->headers);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
 }

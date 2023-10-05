@@ -19,4 +19,5 @@ class ResourceModuleRatingService
             return false;
         }
     }
+
 }

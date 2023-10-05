@@ -55,4 +55,5 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
+
 }
