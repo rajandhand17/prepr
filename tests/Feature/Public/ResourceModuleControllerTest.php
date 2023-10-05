@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Public;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -12,7 +10,6 @@ class ResourceModuleControllerTest extends TestCase
     /**
      * A basic feature test example.
      */
-
     public function setUp(): void
     {
         parent::setUp();
@@ -23,7 +20,7 @@ class ResourceModuleControllerTest extends TestCase
             'wrong_slug'      => 'wrong_slug',
             'email'           => 'salar.chagparprepr@prepr.org',
             'password'        => 'Test@1234',
-            'review'=>4,
+            'review'          => 4,
         ];
         Auth::attempt(['email' =>$this->parameters['email'], 'password' =>$this->parameters['password']]);
         $user = Auth::user();
@@ -77,7 +74,6 @@ class ResourceModuleControllerTest extends TestCase
             $this->assertArrayHasKey('cover_image', $data['data']);
             $this->assertArrayHasKey('privacy', $data['data']);
             $this->assertArrayHasKey('status', $data['data']);
-
         }
     }
 
@@ -98,5 +94,4 @@ class ResourceModuleControllerTest extends TestCase
         $response = $this->post('/api/v1/public/resource-module/resource-module/add-review?language='.$this->parameters['language'], $this->parameters, $this->headers);
         $this->assertEquals(200, $response->getStatusCode());
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace App\Services\Public;
 
-use App\Models\OrganizationSocialActivities;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleRating;
 
@@ -101,6 +100,7 @@ class ResourceModuleService
             return false;
         }
     }
+
     public function checkSlug($slug)
     {
         try {
@@ -110,17 +110,19 @@ class ResourceModuleService
         }
     }
 
-    public function checkReview($resource_module_id,$request){
+    public function checkReview($resource_module_id, $request)
+    {
         try {
             $checkReview = ResourceModuleRating::where(
                 [
-                    'resource_module_id'=>$resource_module_id,
-                    'user_id'=>auth()->user()->id,
+                    'resource_module_id'=> $resource_module_id,
+                    'user_id'           => auth()->user()->id,
                 ]
             )->first();
             if ($checkReview != null) {
                 return true;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
