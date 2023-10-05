@@ -377,8 +377,10 @@ class ComponentAssociationService
                 if (!$deleteComponentAssociation) {
                     return false;
                 }
+
                 return true;
             }
+
             return true;
         } catch (Exception $e) {
             return false;

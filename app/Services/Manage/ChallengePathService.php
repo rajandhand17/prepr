@@ -155,8 +155,10 @@ class ChallengePathService
             $challengePath = ChallengePath::find($challengePathId)->delete();
             if ($challengePath) {
                 $deleteAssociatedData = event(new DeleteChallengePathAssociatedData($challengePathId));
+
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
