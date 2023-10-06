@@ -6,6 +6,7 @@ use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
+use App\Services\Public\ChallengePathSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -28,11 +29,11 @@ class ChallengePathService
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.category_id', $request->category);
             }
-            // if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
-            //     $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
-            //     $labIds = LabProgramSocialActivitiesService::getLabProgramsBasedOnActivity($activityType)->pluck('lab_program_id');
-            //     $getChallengePathList->whereIn('challenge_paths.id', $labIds);
-            // }
+            if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
+                $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
+                $challengeIds = ChallengePathSocialActivitiesService::getChallengePathsBasedOnActivity($activityType)->pluck('challenge_path_id');
+                $getChallengePathList->whereIn('challenge_paths.id', $challengeIds);
+            }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
@@ -63,21 +64,21 @@ class ChallengePathService
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
-                    $query->select('lab_programs_skills_groups_stack.lab_program_id')
-                    ->from('lab_programs_skills_groups_stack')
-                    ->whereIn('lab_programs_skills_groups_stack.foreign_id', $request->skills)
-                        ->where('lab_programs_skills_groups_stack.type', '0')
-                        ->whereNull('lab_programs_skills_groups_stack.deleted_at')
+                    $query->select('challenge_path_skill_group_stacks.challenge_path_id')
+                    ->from('challenge_path_skill_group_stacks')
+                    ->whereIn('challenge_path_skill_group_stacks.foreign_id', $request->skills)
+                        ->where('challenge_path_skill_group_stacks.type', '0')
+                        ->whereNull('challenge_path_skill_group_stacks.deleted_at')
                         ->distinct();
                 })->distinct('challenge_paths.uuid');
             }
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
-                    $query->select('lab_programs_tags_groups.lab_program_id')
-                    ->from('lab_programs_tags_groups')
-                    ->whereIn('lab_programs_tags_groups.foreign_id', $request->tags)
-                        ->where('lab_programs_tags_groups.type', '0')
-                        ->whereNull('lab_programs_tags_groups.deleted_at')
+                    $query->select('challenge_path_tag_groups.challenge_path_id')
+                    ->from('challenge_path_tag_groups')
+                    ->whereIn('challenge_path_tag_groups.foreign_id', $request->tags)
+                        ->where('challenge_path_tag_groups.type', '0')
+                        ->whereNull('challenge_path_tag_groups.deleted_at')
                         ->distinct();
                 })->distinct('challenge_paths.uuid');
             }
@@ -89,7 +90,7 @@ class ChallengePathService
             }
 
             return $getChallengePathList;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
