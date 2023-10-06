@@ -349,6 +349,15 @@ class ChallengeService
         }
     }
 
+    public static function getChallengeBasedOnId($Id)
+    {
+        try {
+            return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function checkNameExistsOrNot($title)
     {
         try {

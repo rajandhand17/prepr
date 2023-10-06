@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ChallengePath;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ChallengePath\CreateChallengePathRequest;
+use App\Http\Resources\Manage\ChallengePath\ChallengePathResource;
 use App\Repositories\Api\Manage\ChallengePath\ChallengePathRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -90,6 +91,20 @@ class ChallengePathController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_path_not_delete'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function show($slug)
+    {
+        try {
+            $challengePath = $this->challengePathRepository->checkSlug($slug);
+            if ($challengePath) {
+                return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));
+            }
+
+            return $this->sendError(__('responses.not_found_challenge_path_view'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
