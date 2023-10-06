@@ -467,7 +467,9 @@
     "responses.challenge_path_name_available":"This Challenge Path name is available!",
     "responses.challenge_path_not_found": "The Challenge Path(s) which you are looking doesn't exist in our system.",
     "responses.challenge_path_delete":"The Challenge Path has been deleted successfully!",
-    "responses.challenge_path_not_delete":"The Challenge Path was not deleted!"
+    "responses.challenge_path_not_delete":"The Challenge Path was not deleted!",
+    "responses.found_challenge_path_view":"The Challenge Path has been successfully retrieved",
+    "responses.not_found_challenge_path_view":"The Challenge Path has not been retrieved with success."
 
 
 }
