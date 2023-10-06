@@ -131,14 +131,14 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function addLinks(AddLinksResourceModuleRequest $request, $slug)
+    public function addLinksAndEmbedMedia(AddLinksResourceModuleRequest $request, $slug)
     {
         try {
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleSlugExistsOrNot->id);
+            $addLinks = $this->resourceModuleRepository->addLinksAndEmbedMedia($request, $checkResourceModuleSlugExistsOrNot->id);
             if ($addLinks) {
                 return $this->sendResponse(__('responses.add_links_success'), 200);
             }

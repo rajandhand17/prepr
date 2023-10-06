@@ -24,23 +24,6 @@ class ResourceModuleDetailService
         }
     }
 
-    public function addLinks($request, $resource_module_id)
-    {
-        try {
-            foreach ($request->title as $key => $value) {
-                $type = config('constants.resource_module_type.url');
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value, $type, $request->path[$key], $request->social_link_id[$key]);
-                if (!$resourceModuleDetailed) {
-                    return false;
-                }
-            }
-
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function fileUpload($request, $resource_module_id, $type)
     {
         try {
@@ -87,31 +70,33 @@ class ResourceModuleDetailService
             return false;
         }
     }
-
-    public function addEmbedMedia($request, $resource_module_id)
+    public function addLinksAndEmbedMedia($request, $resource_module_id)
     {
         try {
-            foreach ($request->type as $key => $value) {
+            foreach($request->type as $key=>$value) {
                 switch ($value) {
-                    case 'embedded_video' || 'video':
+                    case 'embedded_video':
                         $type = config('constants.resource_module_type.embedded_video');
                         $title = $value;
+                        $social_link_id=null;
                         break;
-                    case 'embedded_audio' || 'audio':
+                    case 'embedded_audio':
                         $type = config('constants.resource_module_type.embedded_audio');
                         $title = $value;
+                        $social_link_id=null;
                         break;
                     default:
-                        $type = '';
+                        $type = config('constants.resource_module_type.url');
+                        $title=$request->title[$key];
+                        $social_link_id=$request->social_link_id[$key];
                 }
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $request->path[$key], null);
-                if (!$resourceModuleDetailed) {
+                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $request->path[$key], $social_link_id);
+                if (empty($resourceModuleDetailed)) {
                     return false;
                 }
             }
-
             return true;
-        } catch (\Exception $e) {
+        }catch (\Exception $e){
             return false;
         }
     }
