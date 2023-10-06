@@ -23,7 +23,7 @@ class ChallengePathService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $getChallengePathList = $getChallengePathList->where('challenge_paths.title', 'like', '%' . $request->search . '%');
+                $getChallengePathList = $getChallengePathList->where('challenge_paths.title', 'like', '%'.$request->search.'%');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.category_id', $request->category);
