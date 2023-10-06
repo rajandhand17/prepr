@@ -14,8 +14,8 @@ class ChallengePathSocialActivitiesService
             $checkActivity = ChallengePathSocialActivity::where(
                 [
                     'challenge_path_id'  => $challengePath,
-                    'user_id'         => auth()->user()->id,
-                    $column           => $action,
+                    'user_id'            => auth()->user()->id,
+                    $column              => $action,
                 ]
             )->first();
             if ($checkActivity != null) {
@@ -32,7 +32,7 @@ class ChallengePathSocialActivitiesService
     {
         try {
             ChallengePathSocialActivity::updateOrInsert([
-                'user_id'         => Auth::user()->id,
+                'user_id'            => Auth::user()->id,
                 'challenge_path_id'  => $challengePath,
             ], [
                 $column => $action,
