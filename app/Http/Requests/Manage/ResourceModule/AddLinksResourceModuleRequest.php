@@ -23,26 +23,16 @@ class AddLinksResourceModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $request_type = $this->request->get('request_type');
-        if ($request_type == 'add_links') {
-            $base_rules = [
+        $base_rules = [
                 'title'                  => 'required|array',
                 'title.*'                => 'max:255',
-                'path'                   => 'required|array',
                 'social_link_id'         => 'required|array',
                 'social_link_id.*'       => 'exists:social_links,id',
-            ];
-        }
-        if ($request_type == 'embedded_media') {
-            $base_rules = [
-                'type'                  => 'required|array',
-                'type.*'                => 'max:255|in:embedded_audio,audio,embedded_video,video',
-                'path'                  => 'required|array',
+                'type'                   => 'required|array',
+                'type.*'                 => 'max:255|in:embedded_audio,audio,embedded_video,video,url',
+                'path'                   => 'required|array',
 
             ];
-        }
-        $base_rules['request_type'] = 'required|in:add_links,embedded_media';
-
         return $base_rules;
     }
 

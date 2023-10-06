@@ -470,5 +470,23 @@
     "responses.skill_stacks_numeric":"This skill stacks should be in numeric!",
     "responses.skill_stacks_not_exists":"Sorry, this skill stacks is not available",
 
-    "responses.request_type_in":"The Type should be between add-links and embedded_media."
+    "responses.request_type_in":"The Type should be between add-links and embedded_media.",
+
+    "responses.already_like_resource_module":"The Resource Module is already liked by you!",
+    "responses.like_resource_module_successfully":"The Resource Module have been liked successfully by you!",
+    "responses.already_un_like_resource_module":"The Resource Module is already being dis-liked by you!",
+    "responses.un_like_resource_module_successfully":"The Resource Module have been dis-liked successfully by you!",
+    "responses.already_follow_resource_module":"The Resource Module is already being followed by you!",
+    "responses.share_resource_module_successfully":"The Resource Module have been shared successfully by you!",
+    "responses.already_share_resource_module":"The Resource Module is already being shared by you!",
+    "responses.already_un_follow_resource_module":"The Resource Module is already being un-followed by you!",
+    "responses.follow_resource_module_successfully":"The Resource Module have been followed successfully by you",
+    "responses.un_follow_resource_module_successfully":"The Resource Module have been un-followed successfully by you!",
+    "responses.un_follow_resource_module_failed":"You have failed to unfollowed this resource module!",
+    "responses.share_resource_module_failed":"You have failed to share this resource module!",
+    "responses.follow_resource_module_failed":"You have failed to followed this resource module!",
+    "responses.favourite_resource_module_successfully":"You have successfully saved this resource module!",
+    "responses.un_favourite_resource_module_successfully":"You have successfully un-saved this resource module!",
+    "responses.already_favourite_resource_module":"The Resource Module is already being added to favourites!",
+    "responses.already_un_favourite_resource_module":"The Resource Module is already being removed from favourites!"
 }

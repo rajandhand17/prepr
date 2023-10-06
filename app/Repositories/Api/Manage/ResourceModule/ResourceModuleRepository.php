@@ -155,19 +155,10 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function addLinks($request, $resource_module_id)
+    public function addLinksAndEmbedMedia($request, $resource_module_id)
     {
         try {
-            switch ($request->request_type) {
-                case 'add_links':
-                    return $this->resourceModuleDetailsService->addLinks($request, $resource_module_id);
-                    break;
-                case 'embedded_media':
-                    return $this->resourceModuleDetailsService->addEmbedMedia($request, $resource_module_id);
-                    break;
-                default:
-                    return false;
-            }
+            return $this->resourceModuleDetailsService->addLinksAndEmbedMedia($request, $resource_module_id);
         } catch(\Exception $e) {
             return false;
         }

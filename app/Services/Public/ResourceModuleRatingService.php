@@ -6,7 +6,7 @@ use App\Models\ResourceModuleRating;
 
 class ResourceModuleRatingService
 {
-    public static function addReview($resource_module_id, $request)
+    public static function addRating($resource_module_id, $request)
     {
         try {
             $resourceModuleRating = new ResourceModuleRating();

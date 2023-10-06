@@ -9,5 +9,6 @@ Route::middleware(['language'])->group(function () {
 });
 
 Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::post('/{slug}/add-review', [ResourceModuleController::class, 'addReview']);
+    Route::post('/{slug}/add-rating', [ResourceModuleController::class, 'addRating']);
+    Route::post('/{slug}/{activity}', [ResourceModuleController::class, 'socialActivity']);
 });
