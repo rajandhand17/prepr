@@ -24,15 +24,16 @@ class AddLinksResourceModuleRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-                'title'                  => 'required|array',
-                'title.*'                => 'max:255',
-                'social_link_id'         => 'required|array',
-                'social_link_id.*'       => 'exists:social_links,id',
-                'type'                   => 'required|array',
-                'type.*'                 => 'max:255|in:embedded_audio,audio,embedded_video,video,url',
-                'path'                   => 'required|array',
+            'title'                  => 'required|array',
+            'title.*'                => 'max:255',
+            'social_link_id'         => 'required|array',
+            'social_link_id.*'       => 'exists:social_links,id',
+            'type'                   => 'required|array',
+            'type.*'                 => 'max:255|in:embedded_audio,audio,embedded_video,video,url',
+            'path'                   => 'required|array',
 
-            ];
+        ];
+
         return $base_rules;
     }
 

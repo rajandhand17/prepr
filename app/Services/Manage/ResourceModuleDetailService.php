@@ -70,33 +70,35 @@ class ResourceModuleDetailService
             return false;
         }
     }
+
     public function addLinksAndEmbedMedia($request, $resource_module_id)
     {
         try {
-            foreach($request->type as $key=>$value) {
+            foreach ($request->type as $key=>$value) {
                 switch ($value) {
                     case 'embedded_video':
                         $type = config('constants.resource_module_type.embedded_video');
                         $title = $value;
-                        $social_link_id=null;
+                        $social_link_id = null;
                         break;
                     case 'embedded_audio':
                         $type = config('constants.resource_module_type.embedded_audio');
                         $title = $value;
-                        $social_link_id=null;
+                        $social_link_id = null;
                         break;
                     default:
                         $type = config('constants.resource_module_type.url');
-                        $title=$request->title[$key];
-                        $social_link_id=$request->social_link_id[$key];
+                        $title = $request->title[$key];
+                        $social_link_id = $request->social_link_id[$key];
                 }
                 $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $request->path[$key], $social_link_id);
                 if (empty($resourceModuleDetailed)) {
                     return false;
                 }
             }
+
             return true;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
