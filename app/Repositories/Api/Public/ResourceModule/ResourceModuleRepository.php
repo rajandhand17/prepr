@@ -17,7 +17,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         $this->resourceModuleService = $resourceModuleService;
         $this->resourceModuleRatingService = $resourceModuleRatingService;
-        $this->resourceModuleSocialActivitiesService=$resourceModuleSocialActivitiesService;
+        $this->resourceModuleSocialActivitiesService = $resourceModuleSocialActivitiesService;
     }
 
     public function getResourceModuleList($request)
@@ -65,35 +65,38 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function socialActivity($resource_module_id,$request){
-        try{
-            return $this->resourceModuleSocialActivitiesService->socialActivity($resource_module_id,$request);
-        }catch(\Exception $e){
+    public function socialActivity($resource_module_id, $request)
+    {
+        try {
+            return $this->resourceModuleSocialActivitiesService->socialActivity($resource_module_id, $request);
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function getColumnNameValue($action){
-        try{
+    public function getColumnNameValue($action)
+    {
+        try {
             return $this->resourceModuleSocialActivitiesService->getColumnNameValue($action);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function checkSocialActivity($resource_module_id,$column, $action){
-        try{
-            return $this->resourceModuleSocialActivitiesService->checkSocialActivity($resource_module_id,$column, $action);
-        }catch(\Exception $e){
+    public function checkSocialActivity($resource_module_id, $column, $action)
+    {
+        try {
+            return $this->resourceModuleSocialActivitiesService->checkSocialActivity($resource_module_id, $column, $action);
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function captureSocialActivity($resource_module_id, $column, $action){
-        try{
-            return $this->resourceModuleSocialActivitiesService->captureSocialActivity($resource_module_id,$column, $action);
-
-        }catch(\Exception $e){
+    public function captureSocialActivity($resource_module_id, $column, $action)
+    {
+        try {
+            return $this->resourceModuleSocialActivitiesService->captureSocialActivity($resource_module_id, $column, $action);
+        } catch(\Exception $e) {
             return false;
         }
     }

@@ -69,18 +69,20 @@ class ResourceModuleController extends AppBaseController
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_module_rating_successfully'));
             }
+
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function socialActivity($slug, $action){
-        try{
+    public function socialActivity($slug, $action)
+    {
+        try {
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot !== null) {
                 $getColumnNameValue = $this->resourceModuleRepository->getColumnNameValue($action);
-                if (!$getColumnNameValue){
+                if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
                 $checkActivity = $this->resourceModuleRepository->checkSocialActivity($checkResourceModuleSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
@@ -93,9 +95,9 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_resource_module_successfully'));
                 }
             }
-            return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
 
-        }catch(\Exception $e){
+            return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

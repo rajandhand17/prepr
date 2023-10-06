@@ -13,32 +13,36 @@ class ResourceModuleSocialActivitiesService
             $checkActivity = ResourceModuleSocialActivities::where(
                 [
                     'resource_module_id'  => $resource_module_id,
-                    'user_id'         => auth()->user()->id,
-                    $column           => $action,
+                    'user_id'             => auth()->user()->id,
+                    $column               => $action,
                 ]
             )->first();
             if ($checkActivity != null) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public function captureSocialActivity($resource_module_id, $column, $action): bool
     {
         try {
             ResourceModuleSocialActivities::updateOrInsert([
-                'user_id'         => Auth::user()->id,
+                'user_id'           => Auth::user()->id,
                 'resource_module_id'=> $resource_module_id,
             ], [
                 $column => $action,
             ]);
+
             return true;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function getColumnNameValue($action)
     {
         try {
@@ -73,6 +77,7 @@ class ResourceModuleSocialActivitiesService
             if ($column != null && $value != null) {
                 return ['column' => $column, 'action' => $value];
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -94,8 +99,10 @@ class ResourceModuleSocialActivitiesService
 
                     return $resource_module_ids;
                 }
+
                 return false;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
