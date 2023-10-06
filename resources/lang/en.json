@@ -469,7 +469,9 @@
     "responses.challenge_path_delete":"The Challenge Path has been deleted successfully!",
     "responses.challenge_path_not_delete":"The Challenge Path was not deleted!",
     "responses.found_challenge_path_view":"The Challenge Path has been successfully retrieved",
-    "responses.not_found_challenge_path_view":"The Challenge Path has not been retrieved with success."
+    "responses.not_found_challenge_path_view":"The Challenge Path has not been retrieved with success.",
+    "responses.found_challenge_path_list":"The Challenge Path list has been successfully retrieved",
+    "responses.not_found_challenge_path_list":"The Challenge Path list has not been retrieved with success."
 
 
 }

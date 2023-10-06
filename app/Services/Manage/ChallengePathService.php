@@ -11,6 +11,89 @@ use HiFolks\RandoPhp\Randomize;
 
 class ChallengePathService
 {
+    public function getChallengePathList($request, $organization)
+    {
+        $getChallengePathList = ChallengePath::select()->where('organization_id', '=', $organization->id);
+        $getChallengePathList = self::filterChallengePathList($getChallengePathList, $request);
+
+        return $getChallengePathList->paginate(config('site-settings.pagination_per_page'));
+    }
+
+    public function filterChallengePathList($getChallengePathList, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $getChallengePathList = $getChallengePathList->where('challenge_paths.title', 'like', '%' . $request->search . '%');
+            }
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.category_id', $request->category);
+            }
+            // if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
+            //     $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
+            //     $labIds = LabProgramSocialActivitiesService::getLabProgramsBasedOnActivity($activityType)->pluck('lab_program_id');
+            //     $getChallengePathList->whereIn('challenge_paths.id', $labIds);
+            // }
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $getChallengePathList->orderBy('challenge_paths.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $getChallengePathList->orderBy('challenge_paths.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $getChallengePathList->orderBy('challenge_paths.created_at', 'ASC');
+                        break;
+                    default:
+                        $getChallengePathList->orderBy('challenge_paths.id', 'ASC');
+                }
+            }
+
+            if ($request->has('privacy') && !empty($request->privacy)) {
+                switch ($request->privacy) {
+                    case 'public':
+                        $getChallengePathList = $getChallengePathList->where('challenge_paths.privacy', '0');
+                        break;
+                    case 'private':
+                        $getChallengePathList = $getChallengePathList->where('challenge_paths.privacy', '1');
+                        break;
+                    default:
+                        $getChallengePathList = $getChallengePathList;
+                }
+            }
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
+                $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
+                    $query->select('lab_programs_skills_groups_stack.lab_program_id')
+                    ->from('lab_programs_skills_groups_stack')
+                    ->whereIn('lab_programs_skills_groups_stack.foreign_id', $request->skills)
+                        ->where('lab_programs_skills_groups_stack.type', '0')
+                        ->whereNull('lab_programs_skills_groups_stack.deleted_at')
+                        ->distinct();
+                })->distinct('challenge_paths.uuid');
+            }
+            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
+                $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
+                    $query->select('lab_programs_tags_groups.lab_program_id')
+                    ->from('lab_programs_tags_groups')
+                    ->whereIn('lab_programs_tags_groups.foreign_id', $request->tags)
+                        ->where('lab_programs_tags_groups.type', '0')
+                        ->whereNull('lab_programs_tags_groups.deleted_at')
+                        ->distinct();
+                })->distinct('challenge_paths.uuid');
+            }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $getChallengePathList = $getChallengePathList->whereIn('duration_id', $request->duration_id);
+            }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $getChallengePathList = $getChallengePathList->whereIn('level_id', $request->level_id);
+            }
+
+            return $getChallengePathList;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function uploadChallengePathMedia($image)
     {
         try {
