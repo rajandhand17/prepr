@@ -12,5 +12,5 @@ interface ResourceModuleInterface
 
     public function checkReview($resource_module_id, $request);
 
-    public function addReview($resource_module_id, $request);
+    public function addRating($resource_module_id, $request);
 }
