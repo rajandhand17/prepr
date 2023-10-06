@@ -353,7 +353,7 @@ class ChallengeService
     {
         try {
             return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

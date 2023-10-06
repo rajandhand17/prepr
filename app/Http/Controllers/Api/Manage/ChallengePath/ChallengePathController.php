@@ -105,7 +105,7 @@ class ChallengePathController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_challenge_path_view'), 404);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
