@@ -55,7 +55,7 @@ class ChallengeTimelinesService
                 $challengeFlexibleTimeLine->flexible_date_number = $request->flexible_date_number;
                 $challengeFlexibleTimeLine->flexible_date_duration = $request->flexible_date_duration;
                 $challengeFlexibleTimeLine->automatic_alert = $request->automatic_alert;
-                $challengeFlexibleTimeLine->flexible_expire_deadline = $request->$flexibleDeadlineDate;
+                $challengeFlexibleTimeLine->flexible_expire_deadline = $flexibleDeadlineDate;
                 $challengeFlexibleTimeLine->save();
             }
 
