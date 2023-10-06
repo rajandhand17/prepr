@@ -465,6 +465,19 @@
     "responses.already_like_challenge":"The Challenge is already liked by you!",
     "responses.like_challenge_successfully":"The Challenge have been liked successfully by you!",
     "responses.already_un_like_challenge":"The Challenge is already being dis-liked by you!",
-    "responses.un_like_challenge_successfully":"The Challenge have been dis-liked successfully by you!"
-
+    "responses.un_like_challenge_successfully":"The Challenge have been dis-liked successfully by you!",
+    "responses.challenge_path_stored_success":"Congratulations! You have successfully created a Challenge Path.",
+    "responses.challenge_path_stored_failed":"Oops! The Creation of Challenge Path has failed.",
+    "responses.challenge_path_slug_available":"Success! This Challenge Path slug is available",
+    "responses.challenge_path_title_unique":"Sorry,this title already registered with us, Please choose another one",
+    "responses.challenge_path_already_exists":"Sorry, this Challenge Path slug is not available",
+    "responses.challenge_path_name_not_available":"This Challenge Path name is not available!",
+    "responses.challenge_path_name_available":"This Challenge Path name is available!",
+    "responses.challenge_path_not_found": "The Challenge Path(s) which you are looking doesn't exist in our system.",
+    "responses.challenge_path_delete":"The Challenge Path has been deleted successfully!",
+    "responses.challenge_path_not_delete":"The Challenge Path was not deleted!",
+    "responses.found_challenge_path_view":"The Challenge Path has been successfully retrieved",
+    "responses.not_found_challenge_path_view":"The Challenge Path has not been retrieved with success.",
+    "responses.found_challenge_path_list":"The Challenge Path list has been successfully retrieved",
+    "responses.not_found_challenge_path_list":"The Challenge Path list has not been retrieved with success."
 }
