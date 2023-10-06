@@ -6,11 +6,95 @@ use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
+use App\Services\Public\ChallengePathSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class ChallengePathService
 {
+    public function getChallengePathList($request, $organization)
+    {
+        $getChallengePathList = ChallengePath::select()->where('organization_id', '=', $organization->id);
+        $getChallengePathList = self::filterChallengePathList($getChallengePathList, $request);
+
+        return $getChallengePathList->paginate(config('site-settings.pagination_per_page'));
+    }
+
+    public function filterChallengePathList($getChallengePathList, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $getChallengePathList = $getChallengePathList->where('challenge_paths.title', 'like', '%'.$request->search.'%');
+            }
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.category_id', $request->category);
+            }
+            if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
+                $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
+                $challengeIds = ChallengePathSocialActivitiesService::getChallengePathsBasedOnActivity($activityType)->pluck('challenge_path_id');
+                $getChallengePathList->whereIn('challenge_paths.id', $challengeIds);
+            }
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $getChallengePathList->orderBy('challenge_paths.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $getChallengePathList->orderBy('challenge_paths.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $getChallengePathList->orderBy('challenge_paths.created_at', 'ASC');
+                        break;
+                    default:
+                        $getChallengePathList->orderBy('challenge_paths.id', 'ASC');
+                }
+            }
+
+            if ($request->has('privacy') && !empty($request->privacy)) {
+                switch ($request->privacy) {
+                    case 'public':
+                        $getChallengePathList = $getChallengePathList->where('challenge_paths.privacy', '0');
+                        break;
+                    case 'private':
+                        $getChallengePathList = $getChallengePathList->where('challenge_paths.privacy', '1');
+                        break;
+                    default:
+                        $getChallengePathList = $getChallengePathList;
+                }
+            }
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
+                $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
+                    $query->select('challenge_path_skill_group_stacks.challenge_path_id')
+                    ->from('challenge_path_skill_group_stacks')
+                    ->whereIn('challenge_path_skill_group_stacks.foreign_id', $request->skills)
+                        ->where('challenge_path_skill_group_stacks.type', '0')
+                        ->whereNull('challenge_path_skill_group_stacks.deleted_at')
+                        ->distinct();
+                })->distinct('challenge_paths.uuid');
+            }
+            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
+                $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
+                    $query->select('challenge_path_tag_groups.challenge_path_id')
+                    ->from('challenge_path_tag_groups')
+                    ->whereIn('challenge_path_tag_groups.foreign_id', $request->tags)
+                        ->where('challenge_path_tag_groups.type', '0')
+                        ->whereNull('challenge_path_tag_groups.deleted_at')
+                        ->distinct();
+                })->distinct('challenge_paths.uuid');
+            }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $getChallengePathList = $getChallengePathList->whereIn('duration_id', $request->duration_id);
+            }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $getChallengePathList = $getChallengePathList->whereIn('level_id', $request->level_id);
+            }
+
+            return $getChallengePathList;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function uploadChallengePathMedia($image)
     {
         try {

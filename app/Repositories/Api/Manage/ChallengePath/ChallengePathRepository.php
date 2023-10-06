@@ -27,6 +27,15 @@ class ChallengePathRepository implements ChallengePathInterface
         $this->componentAssociationService = $componentAssociationService;
     }
 
+    public function getChallengePathList($request, $organization)
+    {
+        try {
+            return $this->challengePathService->getChallengePathList($request, $organization);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function uploadChallengePathMedia($image)
     {
         try {
