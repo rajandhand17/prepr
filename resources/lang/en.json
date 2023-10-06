@@ -408,10 +408,10 @@
     "responses.un_follow_challenge_failed":"You have failed to unfollowed this challenge!",
     "responses.share_challenge_failed":"You have failed to share this challenge!",
     "responses.follow_challenge_failed":"You have failed to followed this challenge!",
-    "responses.favourite_challenge_successfully":"You have successfully added this challenge as favourite!",
-    "responses.un_favourite_challenge_successfully":"The challenge have been successfully removed from favourites!",
-    "responses.already_favourite_challenge":"The challenge is already being added to favourites!",
-    "responses.already_un_favourite_challenge":"The challenge is already being removed from favourites!",
+    "responses.favourite_challenge_successfully":"You have successfully saved this Challenge!",
+    "responses.un_favourite_challenge_successfully":"You have successfully un-saved this Challenge!",
+    "responses.already_favourite_challenge":"The challenge has already been saved to your list!",
+    "responses.already_un_favourite_challenge":"The challenge has already been removed from your list",
     "responses.challenge_template_not_available":"Sorry! This template is not available.",
     "responses.challenge_template_available":"Success! Template data found.",
     "responses.challenge_pitch_task_available":"Success! Template's pitch and task data found.",
@@ -457,7 +457,15 @@
     "responses.max":"The type field must be an array",
     "responses.type_array":"The type field must be an array",
     "responses.type_content_255":"The type character limit is 255.",
-
+    "responses.join_challenge_successfully":"You have successfully joined Challenge!",
+    "responses.join_challenge_failed":"You have failed to join Challenge!",
+    "responses.already_join_challenge":"You have already joined this Challenge!",
+    "responses.un_join_challenge_successfully":"You have successfully un-joined Challenge!",
+    "responses.already_un_join_challenge":"You have already un-join this Challenge!",
+    "responses.already_like_challenge":"The Challenge is already liked by you!",
+    "responses.like_challenge_successfully":"The Challenge have been liked successfully by you!",
+    "responses.already_un_like_challenge":"The Challenge is already being dis-liked by you!",
+    "responses.un_like_challenge_successfully":"The Challenge have been dis-liked successfully by you!",
     "responses.challenge_path_stored_success":"Congratulations! You have successfully created a Challenge Path.",
     "responses.challenge_path_stored_failed":"Oops! The Creation of Challenge Path has failed.",
     "responses.challenge_path_slug_available":"Success! This Challenge Path slug is available",
@@ -472,6 +480,4 @@
     "responses.not_found_challenge_path_view":"The Challenge Path has not been retrieved with success.",
     "responses.found_challenge_path_list":"The Challenge Path list has been successfully retrieved",
     "responses.not_found_challenge_path_list":"The Challenge Path list has not been retrieved with success."
-
-
 }

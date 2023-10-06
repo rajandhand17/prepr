@@ -31,6 +31,14 @@ class EmailTemplateSeeder extends Seeder
                 'body_content'       => 'You have been invited to the lab component_title by user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the organization once you log in.',
                 'fr_CA_body_content' => 'Vous avez été invité au laboratoire component_title par user_name. Utilisez le lien ci-dessous pour vous inscrire et vous connecter à PreprLabs avec cette adresse e-mail. Vous serez ajouté à l\'organisation une fois connecté.',
             ],
+            [
+                'template_type'      => '0',
+                'module_type'        => '3',
+                'subject'            => 'Invitation to join Challenge',
+                'fr_CA_subject'      => 'Invitation à rejoindre le Défi',
+                'body_content'       => 'You have been invited to the lab component_title by user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the organization once you log in.',
+                'fr_CA_body_content' => 'Vous avez été invité au Défi component_title par user_name. Utilisez le lien ci-dessous pour vous inscrire et vous connecter à PreprLabs avec cette adresse e-mail. Vous serez ajouté à l\'organisation une fois connecté.',
+            ],
         ];
 
         foreach ($emailTemplates as $emailTemplate) {
