@@ -17,7 +17,6 @@ class ResourceModuleDetailService
             $resourceModuleDetailed->path = $path;
             $resourceModuleDetailed->social_link_id = $social_link_id;
             $resourceModuleDetailed->save();
-
             return $resourceModuleDetailed;
         } catch (\Exception $e) {
             return false;
@@ -70,33 +69,44 @@ class ResourceModuleDetailService
             return false;
         }
     }
-
-    public function addLinksAndEmbedMedia($request, $resource_module_id)
+    public function addLinks($request,$resource_module_id)
     {
         try {
-            foreach ($request->type as $key=>$value) {
-                switch ($value) {
-                    case 'embedded_video':
-                        $type = config('constants.resource_module_type.embedded_video');
-                        $title = $value;
-                        $social_link_id = null;
-                        break;
-                    case 'embedded_audio':
-                        $type = config('constants.resource_module_type.embedded_audio');
-                        $title = $value;
-                        $social_link_id = null;
-                        break;
-                    default:
-                        $type = config('constants.resource_module_type.url');
-                        $title = $request->title[$key];
-                        $social_link_id = $request->social_link_id[$key];
-                }
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $request->path[$key], $social_link_id);
-                if (empty($resourceModuleDetailed)) {
+            foreach ($request->add_links as  $value) {
+                $type = config('constants.resource_module_type.url');
+                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'],$type,$value['path'], $value['social_link_id']);
+                if (!$resourceModuleDetailed) {
                     return false;
                 }
             }
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
+
+    public function addEmbeddedMedia($request, $resource_module_id)
+    {
+        try {
+            foreach ($request->add_embedded_media as $key => $value) {
+                switch ($value['type']) {
+                    case 'embedded_video' || 'video':
+                        $type = config('constants.resource_module_type.embedded_video');
+                        $title = $value['type'];
+                        break;
+                    case 'embedded_audio' || 'audio':
+                        $type = config('constants.resource_module_type.embedded_audio');
+                        $title = $value['type'];
+                        break;
+                    default:
+                        $type = '';
+                }
+                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $value['path'], null);
+                if (!$resourceModuleDetailed) {
+                    return false;
+                }
+            }
             return true;
         } catch (\Exception $e) {
             return false;

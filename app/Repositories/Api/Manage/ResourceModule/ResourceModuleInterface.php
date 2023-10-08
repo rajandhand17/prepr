@@ -15,4 +15,8 @@ interface ResourceModuleInterface
     public function checkName($title);
 
     public function delete($slug, $resource_module_id);
+
+    public function addLinks($request, $resource_module_id);
+
+    public function addEmbeddedMedia($request, $resource_module_id);
 }

@@ -154,20 +154,28 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
-
-    public function addLinksAndEmbedMedia($request, $resource_module_id)
+    public function deleteMedia($request, $resource_module_id, $type)
     {
         try {
-            return $this->resourceModuleDetailsService->addLinksAndEmbedMedia($request, $resource_module_id);
+            return $this->resourceModuleDetailsService->deleteMedia($request, $resource_module_id, $type);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function deleteMedia($request, $resource_module_id, $type)
+    public function addLinks($request, $resource_module_id)
     {
         try {
-            return $this->resourceModuleDetailsService->deleteMedia($request, $resource_module_id, $type);
+            return $this->resourceModuleDetailsService->addLinks($request, $resource_module_id);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addEmbeddedMedia($request, $resource_module_id)
+    {
+        try {
+            return $this->resourceModuleDetailsService->addEmbeddedMedia($request, $resource_module_id);
         } catch(\Exception $e) {
             return false;
         }

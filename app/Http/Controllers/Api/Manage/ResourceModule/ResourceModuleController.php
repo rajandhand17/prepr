@@ -138,12 +138,20 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $addLinks = $this->resourceModuleRepository->addLinksAndEmbedMedia($request, $checkResourceModuleSlugExistsOrNot->id);
-            if ($addLinks) {
-                return $this->sendResponse(__('responses.add_links_success'), 200);
-            }
+            if ($request->has('add_links') && !empty($request->add_links)){
 
-            return $this->sendError(__('responses.add_links_failed'), 403);
+                $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleSlugExistsOrNot->id);
+                if(!$addLinks){
+                    return $this->sendError(__('responses.add_links_failed'), 403);
+                }
+            }
+            if($request->has('add_embedded_media') && !empty($request->add_embedded_media)){
+                $addEmbeddedMedia = $this->resourceModuleRepository->addEmbeddedMedia($request, $checkResourceModuleSlugExistsOrNot->id);
+                if(!$addEmbeddedMedia){
+                    return $this->sendError(__('responses.add_embedded_media_failed'), 403);
+                }
+            }
+            return $this->sendResponse(__('responses.add_links_success'), 200);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
