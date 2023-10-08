@@ -53,17 +53,6 @@ class AddLinksResourceModuleRequest extends FormRequest
             'add_embedded_media.*.type.in'      => __('responses.embedded_type_in'),
             'add_embedded_media.*.path.required'=> __('responses.path_required'),
             'add_embedded_media.*.path.max'=> __('responses.max_content_255'),
-
-            'social_link_id.unique'           => __('responses.lab_program_title_unique'),
-            'social_link_id.exists'           => __('responses.social_id_not_exists'),
-            'request_type.in'                 => __('responses.request_type_in'),
-            'request_type.required'           => __('responses.request_type_required'),
-            'type.required'                   => __('responses.type_required'),
-            'type.array'                      => __('responses.type_array'),
-            'type.*.max'                      => __('responses.type_content_255'),
-            'type.*.in'                       => __('responses.embedded_type_in'),
-            'path.required'                   => __('responses.path_required'),
-            'path.array'                      => __('responses.path_array'),
         ];
     }
 
