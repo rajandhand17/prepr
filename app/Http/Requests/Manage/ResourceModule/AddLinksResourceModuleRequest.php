@@ -40,19 +40,19 @@ class AddLinksResourceModuleRequest extends FormRequest
     public function messages()
     {
         return [
-            'add_links.array'                 =>__('responses.add_links_array'),
-            'add_links.*.title.required'      => __('responses.title_required'),
-            'add_links.*.title.max'           => __('responses.title_content_255'),
-            'add_links.*.title.string'        => __('responses.string_data_allowed'),
-            'add_links.*.social_link_id.required' => __('responses.social_links_required'),
-            'add_links.*.social_link_id.exists' => __('responses.social_id_not_exists'),
-            'add_links.*.path.required'       =>__('responses.path_required'),
-            'add_links.*.path.max'            =>__('responses.path_content_255'),
-            'add_embedded_media'              =>__('responses.add_embedded_media_array'),
-            'add_embedded_media.*.type.required'=>__('responses.type_required'),
-            'add_embedded_media.*.type.in'      => __('responses.embedded_type_in'),
-            'add_embedded_media.*.path.required'=> __('responses.path_required'),
-            'add_embedded_media.*.path.max'=> __('responses.max_content_255'),
+            'add_links.array'                       =>__('responses.add_links_array'),
+            'add_links.*.title.required'            => __('responses.title_required'),
+            'add_links.*.title.max'                 => __('responses.title_content_255'),
+            'add_links.*.title.string'              => __('responses.string_data_allowed'),
+            'add_links.*.social_link_id.required'   => __('responses.social_links_required'),
+            'add_links.*.social_link_id.exists'     => __('responses.social_id_not_exists'),
+            'add_links.*.path.required'             =>__('responses.path_required'),
+            'add_links.*.path.max'                  =>__('responses.path_content_255'),
+            'add_embedded_media'                    =>__('responses.add_embedded_media_array'),
+            'add_embedded_media.*.type.required'    =>__('responses.type_required'),
+            'add_embedded_media.*.type.in'          => __('responses.embedded_type_in'),
+            'add_embedded_media.*.path.required'    => __('responses.path_required'),
+            'add_embedded_media.*.path.max'         => __('responses.max_content_255'),
         ];
     }
 
