@@ -98,7 +98,6 @@ class ChallengePathRepository implements ChallengePathInterface
     public function updateChallengePath($slug, $request, $upload_cover_image, $upload_achievement_image)
     {
         try {
-
             $updateChallengePath = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
                 $updateChallengePath = $this->challengePathService->updateChallengePath($slug, $request, $upload_cover_image);
                 $updateChallengePathAchievement = true;
@@ -126,9 +125,11 @@ class ChallengePathRepository implements ChallengePathInterface
                 $updateChallengePath['updateComponentAssociation']
             ) {
                 DB::commit();
+
                 return $updateChallengePath['updateChallengePath'];
             }
             DB::rollback();
+
             return false;
         } catch (Exception $e) {
             return false;
