@@ -331,7 +331,7 @@ class ComponentAssociationService
         }
     }
 
-    public function challengePathAssociation($request, $challengePathId)
+    public function createChallengePathAssociation($request, $challengePathId)
     {
         try {
             if ($request->has('challenge_ids')) {
@@ -358,6 +358,42 @@ class ComponentAssociationService
                         $challengeAssociation->challenge_id = $challenge_id;
                         $challengeAssociation->sequence = $sequence;
                         $challengeAssociation->save();
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateChallengePathAssociation($request, $challengePathId)
+    {
+        try {
+            if ($request->has('challenge_ids')) {
+                $sequence = 1;
+                $getChallengeIds = ChallengeService::getChallengeBasedOnUUIDArray($request->challenge_ids);
+                $request->merge(['challenge_ids' => $getChallengeIds]);
+                if (count($request->challenge_ids) > 0) {
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['challenge_path_id', '=', $challengePathId],
+                        ['challenge_id', '!=', null],
+                    ])->pluck('challenge_id')->all();
+                    $nonExistingIds = array_diff($existComponentAssociation, $request->challenge_ids);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('challenge_path_id', $challengePathId)->whereIn('challenge_id', $nonExistingIds)->delete();
+                    $newComponentAssociation = array_diff($request->challenge_ids, $existComponentAssociation);
+                    $sequence = ComponentAssociation::where([
+                        ['challenge_path_id', '=', $challengePathId],
+                        ['challenge_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    foreach ($newComponentAssociation as $challenge_id) {
+                        $sequence++;
+                        $LabSkillsGroupsStack = new ComponentAssociation();
+                        $LabSkillsGroupsStack->challenge_path_id = $challengePathId;
+                        $LabSkillsGroupsStack->challenge_id = $challenge_id;
+                        $LabSkillsGroupsStack->sequence = $sequence;
+                        $LabSkillsGroupsStack->save();
                     }
                 }
             }
