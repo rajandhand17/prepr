@@ -12,9 +12,8 @@ class ResourceModuleRatingService
             $resourceModuleRating = new ResourceModuleRating();
             $resourceModuleRating->resource_module_id = $resource_module_id;
             $resourceModuleRating->user_id = auth()->user()->id;
-            $resourceModuleRating->rating = $request->review;
+            $resourceModuleRating->rating = $request->rating;
             $resourceModuleRating->save();
-
             return true;
         } catch(\Exception $e) {
             return false;

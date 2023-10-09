@@ -38,7 +38,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function checkslug($slug)
+    public function checkSlug($slug)
     {
         try {
             return $this->resourceModuleService->checkslug($slug);
@@ -47,10 +47,10 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function checkReview($resource_module_id, $request)
+    public function checkRating($resource_module_id, $request)
     {
         try {
-            return $this->resourceModuleService->checkReview($resource_module_id, $request);
+            return $this->resourceModuleService->checkRating($resource_module_id, $request);
         } catch (\Exception $e) {
             return false;
         }

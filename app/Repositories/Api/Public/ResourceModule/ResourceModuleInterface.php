@@ -8,9 +8,11 @@ interface ResourceModuleInterface
 
     public function getResourceModuleBasedOnSlug($slug);
 
-    public function checkslug($slug);
+    public function checkSlug($slug);
 
-    public function checkReview($resource_module_id, $request);
+    public function checkRating($resource_module_id, $request);
 
     public function addRating($resource_module_id, $request);
+
+    public function checkSocialActivity($resource_module_id, $column, $action);
 }

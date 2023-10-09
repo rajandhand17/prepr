@@ -110,7 +110,7 @@ class ResourceModuleService
         }
     }
 
-    public function checkReview($resource_module_id, $request)
+    public function checkRating($resource_module_id, $request)
     {
         try {
             $checkReview = ResourceModuleRating::where(
@@ -122,7 +122,6 @@ class ResourceModuleService
             if ($checkReview != null) {
                 return true;
             }
-
             return false;
         } catch(\Exception $e) {
             return false;
