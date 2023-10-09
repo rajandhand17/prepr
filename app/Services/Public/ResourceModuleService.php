@@ -122,6 +122,7 @@ class ResourceModuleService
             if ($checkReview != null) {
                 return true;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;

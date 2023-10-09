@@ -17,6 +17,7 @@ class ResourceModuleDetailService
             $resourceModuleDetailed->path = $path;
             $resourceModuleDetailed->social_link_id = $social_link_id;
             $resourceModuleDetailed->save();
+
             return $resourceModuleDetailed;
         } catch (\Exception $e) {
             return false;
@@ -69,22 +70,23 @@ class ResourceModuleDetailService
             return false;
         }
     }
-    public function addLinks($request,$resource_module_id)
+
+    public function addLinks($request, $resource_module_id)
     {
         try {
             foreach ($request->add_links as  $value) {
                 $type = config('constants.resource_module_type.url');
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'],$type,$value['path'], $value['social_link_id']);
+                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
                 if (!$resourceModuleDetailed) {
                     return false;
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
         }
     }
-
 
     public function addEmbeddedMedia($request, $resource_module_id)
     {
@@ -107,6 +109,7 @@ class ResourceModuleDetailService
                     return false;
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

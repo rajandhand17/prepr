@@ -154,6 +154,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
+
     public function deleteMedia($request, $resource_module_id, $type)
     {
         try {
