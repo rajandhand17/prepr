@@ -41,7 +41,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function checkSlug($slug)
     {
         try {
-            return $this->resourceModuleService->checkslug($slug);
+            return $this->resourceModuleService->checkSlug($slug);
         } catch (\Exception $e) {
             return false;
         }
@@ -64,16 +64,6 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
-
-    public function socialActivity($resource_module_id, $request)
-    {
-        try {
-            return $this->resourceModuleSocialActivitiesService->socialActivity($resource_module_id, $request);
-        } catch(\Exception $e) {
-            return false;
-        }
-    }
-
     public function getColumnNameValue($action)
     {
         try {
