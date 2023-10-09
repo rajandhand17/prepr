@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ChallengePath;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ChallengePath\CreateChallengePathRequest;
+use App\Http\Requests\Manage\ChallengePath\UpdateChallengePathRequest;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathResource;
 use App\Repositories\Api\Manage\ChallengePath\ChallengePathRepository;
 use App\Services\Manage\OrganizationService;
@@ -74,6 +75,40 @@ class ChallengePathController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_path_stored_failed'), 403);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function update($slug, UpdateChallengePathRequest $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengePathRepository->checkSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.slug_not_exists'), 403);
+            }
+            $upload_cover_image = config('site-settings.default_challenge_path_cover_image');
+            if ($request->media !== null) {
+                $uploaded_cover_image = $this->challengePathRepository->uploadChallengePathMedia($request->media);
+                if (!$uploaded_cover_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_cover_image = $uploaded_cover_image;
+            }
+            $upload_achievement_image = config('site-settings.default_challenge_path_profile_image');
+            if ($request->achievement_image !== null) {
+                $uploaded_achievement_image = $this->challengePathRepository->uploadAchievementImage($request->achievement_image);
+                if (!$uploaded_achievement_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_achievement_image = $uploaded_achievement_image;
+            }
+            $updateChallengePath = $this->challengePathRepository->updateChallengePath($slug, $request, $upload_cover_image, $upload_achievement_image);
+            if ($updateChallengePath) {
+                return $this->sendResponse($updateChallengePath, __('responses.challenge_path_update_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_path_not_update'), 403);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
