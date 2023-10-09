@@ -53,7 +53,6 @@ class UpdateChallengePathRequest extends FormRequest
             'tag_groups'              => 'nullable|array',
             'tag_groups.*'            => 'numeric|exists:tag_groups,id',
 
-
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
