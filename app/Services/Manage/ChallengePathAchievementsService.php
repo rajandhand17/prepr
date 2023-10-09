@@ -38,6 +38,31 @@ class ChallengePathAchievementsService
         }
     }
 
+    public function updateChallengePathAchievement($request, $challengePathId, $upload_achievement_image)
+    {
+        try {
+            $checkExistsChallengePathAchievement = ChallengePathAchievement::where('challenge_path_id', $challengePathId)->first();
+            if (!$checkExistsChallengePathAchievement) {
+                $challengePathAchievement = new ChallengePathAchievement();
+                $challengePathAchievement->challenge_path_id = $challengePathId;
+                $challengePathAchievement->achievement_name = $request->achievement_name;
+                $challengePathAchievement->achievement_points = $request->achievement_points;
+                $challengePathAchievement->achievement_image = $upload_achievement_image;
+                $challengePathAchievement->save();
+
+                return true;
+            }
+            $checkExistsChallengePathAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsChallengePathAchievement->achievement_name;
+            $checkExistsChallengePathAchievement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : $checkExistsChallengePathAchievement->achievement_points;
+            $checkExistsChallengePathAchievement->achievement_image = ($upload_achievement_image) ? $upload_achievement_image : $checkExistsChallengePathAchievement->achievement_image;
+            $checkExistsChallengePathAchievement->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function deleteChallengePathAchievement($challengePathId)
     {
         try {

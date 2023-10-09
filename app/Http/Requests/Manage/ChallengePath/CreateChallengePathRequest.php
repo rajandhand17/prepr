@@ -31,10 +31,21 @@ class CreateChallengePathRequest extends FormRequest
             'category_id'             => 'required|exists:categories,id',
             'level_id'                => 'required|exists:levels,id',
             'duration_id'             => 'required|exists:durations,id',
-            'challenge_ids'           => 'required|exists:challenges,uuid|array',
+            'challenge_ids'           => 'required|array',
+            'challenge_ids.*'         => 'exists:challenges,uuid',
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',
+            'skills'                  => 'required|array',
+            'skills.*'                => 'numeric|exists:skills,id',
+            'skill_groups'            => 'nullable|array',
+            'skill_groups.*'          => 'numeric|exists:skill_groups,id',
+            'skill_stacks'            => 'nullable|array',
+            'skill_stacks.*'          => 'numeric|exists:skill_stacks,id',
+            'tags'                    => 'required|array',
+            'tags.*'                  => 'numeric|exists:tags,id',
+            'tag_groups'              => 'nullable|array',
+            'tag_groups.*'            => 'numeric|exists:tag_groups,id',
 
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
@@ -80,6 +91,17 @@ class CreateChallengePathRequest extends FormRequest
             'achievement_image.required'     => __('responses.achievement_image_required'),
             'achievement_image.mimes'        => __('responses.mimes_image'),
             'achievement_image.max'          => __('responses.mimes_image_max'),
+            'skills.required'                => __('responses.skills_required'),
+            'skills.required_if'             => __('responses.skill_not_found'),
+            'skill_groups.*.exists'          => __('responses.skill_groups_not_exists'),
+            'skill_groups.*.array'           => __('responses.skill_groups_array'),
+            'skill_stacks.*.array'           => __('responses.skill_stacks_array'),
+            'skill_stacks.*.exists'          => __('responses.skill_stack_not_found'),
+            'tags.required'                  => __('responses.tags_required'),
+            'tags.numeric'                   => __('responses.tags_numeric'),
+            'tag_groups.*.exists'            => __('responses.tag_groups_not_found'),
+            'tag_groups.*.array'             => __('responses.tag_groups_array'),
+            'tag_groups.*.numeric'           => __('responses.tag_groups_numeric'),
         ];
     }
 }
