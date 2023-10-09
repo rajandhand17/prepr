@@ -139,7 +139,6 @@ class ResourceModuleController extends AppBaseController
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
             if ($request->has('add_links') && !empty($request->add_links)){
-
                 $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleSlugExistsOrNot->id);
                 if(!$addLinks){
                     return $this->sendError(__('responses.add_links_failed'), 403);

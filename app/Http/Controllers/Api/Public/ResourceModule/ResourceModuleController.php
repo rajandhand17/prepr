@@ -61,7 +61,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $checkExistsOrNot = $this->resourceModuleRepository->checkReview($checkResourceModuleSlugExistsOrNot->id, $request);
+            $checkExistsOrNot = $this->resourceModuleRepository->checkRating($checkResourceModuleSlugExistsOrNot->id, $request);
             if ($checkExistsOrNot == true) {
                 return $this->sendError(__('responses.already_reviewed'), 400);
             }

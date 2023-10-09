@@ -38,19 +38,19 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function checkslug($slug)
+    public function checkSlug($slug)
     {
         try {
-            return $this->resourceModuleService->checkslug($slug);
+            return $this->resourceModuleService->checkSlug($slug);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkReview($resource_module_id, $request)
+    public function checkRating($resource_module_id, $request)
     {
         try {
-            return $this->resourceModuleService->checkReview($resource_module_id, $request);
+            return $this->resourceModuleService->checkRating($resource_module_id, $request);
         } catch (\Exception $e) {
             return false;
         }
@@ -64,16 +64,6 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
-
-    public function socialActivity($resource_module_id, $request)
-    {
-        try {
-            return $this->resourceModuleSocialActivitiesService->socialActivity($resource_module_id, $request);
-        } catch(\Exception $e) {
-            return false;
-        }
-    }
-
     public function getColumnNameValue($action)
     {
         try {
