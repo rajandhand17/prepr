@@ -210,6 +210,104 @@ class ChallengePathService
         }
     }
 
+    public function updateChallengePath($slug, $request, $upload_cover_image)
+    {
+        try {
+            $challengePath = ChallengePath::where('slug', $slug)->first();
+            $privacy = $challengePath->privacy;
+            switch ($request->privacy) {
+                case 'yes':
+                    $privacy = config('constants.challenge_privacy.yes');
+                    break;
+                case 'no':
+                    $privacy = config('constants.challenge_privacy.no');
+                    break;
+                default:
+                    $privacy = config('constants.challenge_privacy.yes');
+                    break;
+            }
+
+            $status = $challengePath->status;
+            switch ($request->status) {
+                case 'draft':
+                    $status = config('constants.challenge_status.draft');
+                    break;
+                case 'publish':
+                    $status = config('constants.challenge_status.publish');
+                    break;
+                case 'archive':
+                    $status = config('constants.challenge_status.archive');
+                    break;
+                default:
+                    $status = config('constants.challenge_status.draft');
+                    break;
+            }
+
+            $is_achievement_enabled = $challengePath->is_achievement_enabled;
+            switch ($request->is_achievement_enabled) {
+                case 'yes':
+                    $is_achievement_enabled = config('constants.challenge_achievement_enable.yes');
+                    break;
+                case 'no':
+                    $is_achievement_enabled = config('constants.challenge_achievement_enable.no');
+                    break;
+                default:
+                    $is_achievement_enabled = config('constants.challenge_achievement_enable.yes');
+                    break;
+            }
+
+            $is_auto_created = $challengePath->is_auto_created;
+            switch ($request->is_auto_created) {
+                case 'yes':
+                    $is_auto_created = config('constants.challenge_auto_created.yes');
+                    break;
+                case 'no':
+                    $is_auto_created = config('constants.challenge_auto_created.no');
+                    break;
+                default:
+                    $is_auto_created = config('constants.challenge_auto_created.yes');
+                    break;
+            }
+
+            $is_sequential = $challengePath->is_sequential;
+            switch ($request->is_sequential) {
+                case 'yes':
+                    $is_sequential = config('constants.challenge_sequential.yes');
+                    break;
+                case 'no':
+                    $is_sequential = config('constants.challenge_sequential.no');
+                    break;
+                default:
+                    $is_sequential = config('constants.challenge_sequential.yes');
+                    break;
+            }
+            if ($request->has('organization_id')) {
+                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id)->id;
+            } else {
+                $organization = $challengePath->organization_id;
+            }
+
+            $challengePath->language = ($request->has('language')) ? $request->language : $challengePath->language;
+            $challengePath->title = ($request->has('title')) ? $request->title : $challengePath->title;
+            $challengePath->description = ($request->has('description')) ? $request->description : $challengePath->description;
+            $challengePath->organization_id = $organization;
+            $challengePath->category_id = ($request->has('category_id')) ? $request->category_id : $challengePath->category_id;
+            $challengePath->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challengePath->duration_id;
+            $challengePath->level_id = ($request->has('level_id')) ? $request->level_id : $challengePath->level_id;
+            $challengePath->media = ($upload_cover_image) ? $upload_cover_image : $challengePath->media;
+            $challengePath->privacy = $privacy;
+            $challengePath->status = $status;
+            $challengePath->is_auto_created = $is_auto_created;
+            $challengePath->is_sequential = $is_sequential;
+            $challengePath->is_achievement_enabled = $is_achievement_enabled;
+            $challengePath->save();
+
+            return $challengePath;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function checkSlug($slug)
     {
         try {
