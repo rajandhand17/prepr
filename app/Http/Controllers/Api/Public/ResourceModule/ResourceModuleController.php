@@ -47,7 +47,6 @@ class ResourceModuleController extends AppBaseController
             if ($responseView) {
                 return $this->sendResponse(ResourceModuleResource::make($responseView), __('responses.found_resource_module_list'));
             }
-
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -61,7 +60,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleSlugExistsOrNot == false) {
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            
+
             $addRating = $this->resourceModuleRepository->addRating($checkResourceModuleSlugExistsOrNot->id, $request);
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_module_rating_successfully'));

@@ -47,7 +47,7 @@ class ResourceModule extends Model
         return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '2');
     }
 
-    public function embedded()
+    public function embedded_video()
     {
         return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '3');
     }

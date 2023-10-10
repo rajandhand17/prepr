@@ -3,7 +3,6 @@
 namespace App\Services\Public;
 
 use App\Models\ResourceModuleSocialActivities;
-use Illuminate\Support\Facades\Auth;
 
 class ResourceModuleSocialActivitiesService
 {

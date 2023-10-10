@@ -18,7 +18,10 @@ class ResourceModuleResource extends JsonResource
         $document = [];
         $video = [];
         $audio = [];
-        if ($this->url) {
+        $privacy="";
+        $status="";
+        $is_global="";
+        if ($this->url){
             $links = $this->url;
         }
         if ($this->image) {
@@ -33,8 +36,8 @@ class ResourceModuleResource extends JsonResource
         if ($this->audio) {
             $audio = $this->audio;
         }
-        if($this->embedded){
-            $embedded_video = $this->embedded;
+        if($this->embedded_video){
+            $embedded_video = $this->embedded_video;
         }
         if($this->embedded_audio){
             $embedded_audio = $this->embedded_audio;
@@ -97,7 +100,6 @@ class ResourceModuleResource extends JsonResource
             'audio'                                   => $audio,
             'embedded_video'                          => $embedded_video,
             'embedded_audio'                          => $embedded_audio,
-
         ];
     }
 }

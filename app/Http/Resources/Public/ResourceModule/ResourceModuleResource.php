@@ -18,6 +18,9 @@ class ResourceModuleResource extends JsonResource
         $document = [];
         $video = [];
         $audio = [];
+        $privacy="";
+        $status="";
+        $is_global="";
         if ($this->url) {
             $links = $this->url;
         }
@@ -33,13 +36,13 @@ class ResourceModuleResource extends JsonResource
         if ($this->audio) {
             $audio = $this->audio;
         }
-        if($this->embedded){
-            $embedded_video = $this->embedded;
+        if($this->embedded_video){
+            $embedded_video = $this->embedded_video;
         }
         if($this->embedded_audio){
             $embedded_audio = $this->embedded_audio;
         }
-        switch($this->privacy) {
+        switch($this->privacy){
             case '0':
                 $privacy = 'yes';
                 break;

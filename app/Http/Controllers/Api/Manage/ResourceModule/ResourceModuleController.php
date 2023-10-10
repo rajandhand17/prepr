@@ -25,9 +25,9 @@ class ResourceModuleController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if (!auth()->user()->isAbleTo('view_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
-            }
+//            if (!auth()->user()->isAbleTo('view_resource_module')) {
+//                return $this->sendError(__('responses.permission_forbidden'), 403);
+//            }
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
@@ -55,14 +55,13 @@ class ResourceModuleController extends AppBaseController
     public function show($slug)
     {
         try {
-            if (!auth()->user()->isAbleTo('view_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
-            }
+//            if (!auth()->user()->isAbleTo('view_resource_module')) {
+//                return $this->sendError(__('responses.permission_forbidden'), 403);
+//            }
             $responseView = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($responseView) {
                 return $this->sendResponse(ResourceModuleResource::make($responseView), __('responses.found_resource_module_list'));
             }
-
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -130,7 +129,7 @@ class ResourceModuleController extends AppBaseController
             if (!auth()->user()->isAbleTo('create_resource_module')) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
-            $upload_media = config('site-settings.default_resource_module_cover_image');
+            $uploaded_cover_image = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleMedia($request->cover_image);
                 if (!$uploaded_cover_image) {
