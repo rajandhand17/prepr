@@ -31,6 +31,7 @@ class Challenge extends Command
             $this->info('Migrating of old data for challenges table started.');
             $challenges = DB::connection('mysql2')->table('challanges')->limit(3)->get();
             if ($challenges->count() > 0) {
+                dd($challenges);
                 foreach ($challenges as $key => $challenge) {
                     dd($challenge);
                 }
