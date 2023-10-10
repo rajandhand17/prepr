@@ -413,10 +413,23 @@ class MemberManagementService
                     }
                 }
                 DB::commit();
+
+                $addedMemberMessage = __('responses.create_member_manger_success');
+                if (count($invalid_emails) > 0 || count($already_members) > 0) {
+                    if (count($invited_emails) < 1) {
+                        $addedMemberMessage = "Failed to add member";
+                    } else {
+                        $addedMemberMessage = "Failed to add some member";
+                    }
+                } elseif (count($invited_emails) > 0) {
+                    $addedMemberMessage = __('responses.create_member_manger_success');
+                }
+
                 $data = [
-                    'invalid_emails'  => $invalid_emails,
-                    'invited_emails'  => $invited_emails,
-                    'already_members' => $already_members,
+                    'invalid_emails'        => $invalid_emails,
+                    'invited_emails'        => $invited_emails,
+                    'already_members'       => $already_members,
+                    'add_member_message'    => $addedMemberMessage,
                 ];
 
                 return $data;
