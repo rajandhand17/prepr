@@ -25,6 +25,9 @@ class ResourceModuleController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            if (!auth()->user()->isAbleTo('view_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
@@ -52,6 +55,9 @@ class ResourceModuleController extends AppBaseController
     public function show($slug)
     {
         try {
+            if (!auth()->user()->isAbleTo('view_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $responseView = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($responseView) {
                 return $this->sendResponse(ResourceModuleResource::make($responseView), __('responses.found_resource_module_list'));
@@ -66,6 +72,9 @@ class ResourceModuleController extends AppBaseController
     public function delete($slug)
     {
         try {
+            if (!auth()->user()->isAbleTo('delete_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
@@ -84,6 +93,9 @@ class ResourceModuleController extends AppBaseController
     public function checkName($title)
     {
         try {
+            if (!auth()->user()->isAbleTo('create_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $checkResourceModuleNameExistsOrNot = $this->resourceModuleRepository->checkName($title);
             if ($checkResourceModuleNameExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_name_not_available'));
@@ -98,6 +110,9 @@ class ResourceModuleController extends AppBaseController
     public function checkSlug($slug)
     {
         try {
+            if (!auth()->user()->isAbleTo('create_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $checkResourceModuleNameExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
             if ($checkResourceModuleNameExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_available'));
@@ -112,6 +127,9 @@ class ResourceModuleController extends AppBaseController
     public function create(CreateResourceModuleRequest $request)
     {
         try {
+            if (!auth()->user()->isAbleTo('create_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $upload_media = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleMedia($request->cover_image);

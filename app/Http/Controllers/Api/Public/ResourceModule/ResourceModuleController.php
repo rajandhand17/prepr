@@ -59,12 +59,9 @@ class ResourceModuleController extends AppBaseController
         try {
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot == false) {
-                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+            return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            $checkExistsOrNot = $this->resourceModuleRepository->checkRating($checkResourceModuleSlugExistsOrNot->id, $request);
-            if ($checkExistsOrNot == true) {
-                return $this->sendError(__('responses.already_reviewed'), 400);
-            }
+            
             $addRating = $this->resourceModuleRepository->addRating($checkResourceModuleSlugExistsOrNot->id, $request);
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_module_rating_successfully'));

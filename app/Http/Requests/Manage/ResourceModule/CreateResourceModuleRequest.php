@@ -40,9 +40,9 @@ class CreateResourceModuleRequest extends FormRequest
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,published,archive',
             'is_global'              => 'required|in:yes,no',
-            'skills'                 => 'array',
+            'skills'                 => 'required|array',
             'skills.*'               => 'numeric|exists:skills,id',
-            'tags'                   => 'array',
+            'tags'                   => 'required|array',
             'tags.*'                 => 'numeric|exists:tags,id',
             'tag_groups'             => 'array',
             'tag_groups.*'           => 'numeric|exists:tag_groups,id',
@@ -85,6 +85,8 @@ class CreateResourceModuleRequest extends FormRequest
             'skill_stacks.array'             => __('responses.skill_stacks_array'),
             'skill_stacks.*.numeric'         => __('responses.skill_stacks_numeric'),
             'skill_stacks.*.exists'          => __('responses.skill_stacks_not_exists'),
+            'tags.required'                  => __('responses.tags_required'),
+            'skills.required'                => __('responses.skills_required'),
         ];
     }
 }

@@ -46,16 +46,6 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
-
-    public function checkRating($resource_module_id, $request)
-    {
-        try {
-            return $this->resourceModuleService->checkRating($resource_module_id, $request);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function addRating($resource_module_id, $request)
     {
         try {
