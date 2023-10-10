@@ -417,9 +417,9 @@ class MemberManagementService
                 $addedMemberMessage = __('responses.create_member_manger_success');
                 if (count($invalid_emails) > 0 || count($already_members) > 0) {
                     if (count($invited_emails) < 1) {
-                        $addedMemberMessage = "Failed to add member";
+                        $addedMemberMessage = 'Failed to add member';
                     } else {
-                        $addedMemberMessage = "Failed to add some member";
+                        $addedMemberMessage = 'Failed to add some member';
                     }
                 } elseif (count($invited_emails) > 0) {
                     $addedMemberMessage = __('responses.create_member_manger_success');
