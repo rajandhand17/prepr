@@ -54,6 +54,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
+
     public function getColumnNameValue($action)
     {
         try {

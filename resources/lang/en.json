@@ -521,7 +521,5 @@
 
     "responses.path_content_255":"The path character limit is 255.",
     "responses.max_content_255":"Maximum character limit for this is 255.",
-
-
     "responses.title_unique":"Sorry,this title already registered with us, Please choose another one"
 }
