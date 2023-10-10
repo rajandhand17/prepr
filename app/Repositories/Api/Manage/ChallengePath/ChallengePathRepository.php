@@ -63,29 +63,70 @@ class ChallengePathRepository implements ChallengePathInterface
                 if ($request->is_achievement_enabled == 'yes') {
                     $createdChallengePathAchievement = $this->challengePathAchievementsService->createChallengePathAchievement($request, $createdChallengePath->id, $upload_achievement_image);
                 }
-                $challengePathSkillsGroupsStack = $this->challengePathSkillsGroupsStackService->createChallengePathSkillsGroupsStack($request, $createdChallengePath->id);
-                $challengePathTagsGroupsService = $this->challengePathTagsGroupsService->createChallengePathTagsGroupsService($request, $createdChallengePath->id);
-                $componentAssociation = $this->componentAssociationService->challengePathAssociation($request, $createdChallengePath->id);
+                $createdChallengePathSkillsGroupsStack = $this->challengePathSkillsGroupsStackService->createChallengePathSkillsGroupsStack($request, $createdChallengePath->id);
+                $createdChallengePathTagsGroupsService = $this->challengePathTagsGroupsService->createChallengePathTagsGroupsService($request, $createdChallengePath->id);
+                $createdComponentAssociation = $this->componentAssociationService->createChallengePathAssociation($request, $createdChallengePath->id);
 
                 return [
-                    'createdChallengePath'              => $createdChallengePath,
-                    'createdChallengePathAchievement'   => $createdChallengePathAchievement,
-                    'challengePathSkillsGroupsStack'    => $challengePathSkillsGroupsStack,
-                    'challengePathTagsGroupsService'    => $challengePathTagsGroupsService,
-                    'componentAssociation'              => $componentAssociation,
+                    'createdChallengePath'                     => $createdChallengePath,
+                    'createdChallengePathAchievement'          => $createdChallengePathAchievement,
+                    'createdChallengePathSkillsGroupsStack'    => $createdChallengePathSkillsGroupsStack,
+                    'createdChallengePathTagsGroupsService'    => $createdChallengePathTagsGroupsService,
+                    'createdComponentAssociation'              => $createdComponentAssociation,
                 ];
             });
 
             if (
                 $createChallengePath['createdChallengePath'] &&
                 $createChallengePath['createdChallengePathAchievement'] &&
-                $createChallengePath['challengePathSkillsGroupsStack'] &&
-                $createChallengePath['challengePathTagsGroupsService'] &&
-                $createChallengePath['componentAssociation']
+                $createChallengePath['createdChallengePathSkillsGroupsStack'] &&
+                $createChallengePath['createdChallengePathTagsGroupsService'] &&
+                $createChallengePath['createdComponentAssociation']
             ) {
                 DB::commit();
 
                 return $createChallengePath['createdChallengePath'];
+            }
+            DB::rollback();
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateChallengePath($slug, $request, $upload_cover_image, $upload_achievement_image)
+    {
+        try {
+            $updateChallengePath = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
+                $updateChallengePath = $this->challengePathService->updateChallengePath($slug, $request, $upload_cover_image);
+                $updateChallengePathAchievement = true;
+                if ($request->is_achievement_enabled == 'yes') {
+                    $updateChallengePathAchievement = $this->challengePathAchievementsService->updateChallengePathAchievement($request, $updateChallengePath->id, $upload_achievement_image);
+                }
+                $updateChallengePathSkillsGroupsStack = $this->challengePathSkillsGroupsStackService->updateChallengePathSkillsGroupsStack($request, $updateChallengePath->id);
+                $updateChallengePathTagsGroupsService = $this->challengePathTagsGroupsService->updateChallengePathTagsGroupsService($request, $updateChallengePath->id);
+                $updateComponentAssociation = $this->componentAssociationService->updateChallengePathAssociation($request, $updateChallengePath->id);
+
+                return [
+                    'updateChallengePath'                     => $updateChallengePath,
+                    'updateChallengePathAchievement'          => $updateChallengePathAchievement,
+                    'updateChallengePathSkillsGroupsStack'    => $updateChallengePathSkillsGroupsStack,
+                    'updateChallengePathTagsGroupsService'    => $updateChallengePathTagsGroupsService,
+                    'updateComponentAssociation'              => $updateComponentAssociation,
+                ];
+            });
+
+            if (
+                $updateChallengePath['updateChallengePath'] &&
+                $updateChallengePath['updateChallengePathAchievement'] &&
+                $updateChallengePath['updateChallengePathSkillsGroupsStack'] &&
+                $updateChallengePath['updateChallengePathTagsGroupsService'] &&
+                $updateChallengePath['updateComponentAssociation']
+            ) {
+                DB::commit();
+
+                return $updateChallengePath['updateChallengePath'];
             }
             DB::rollback();
 
