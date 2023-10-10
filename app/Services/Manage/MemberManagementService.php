@@ -67,8 +67,8 @@ class MemberManagementService
                 $componentCollectionObject = $componentCollectionObject->orWhere('email', 'like', '%'.$request->search.'%');
             }
 
-            if ($request->has('roles') && is_array($request->roles) && !empty($request->roles)) {
-                $componentCollectionObject = $componentCollectionObject->whereIn('role', $request->roles);
+            if ($request->has('role') && !empty($request->role)) {
+                $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
             }
             if ($request->has('invite_status') && !empty($request->invite_status)) {
                 $invite_status = null;
