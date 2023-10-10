@@ -33,6 +33,49 @@ class ResourceModuleResource extends JsonResource
         if ($this->audio) {
             $audio = $this->audio;
         }
+        if($this->embedded){
+            $embedded_video = $this->embedded;
+        }
+        if($this->embedded_audio){
+            $embedded_audio = $this->embedded_audio;
+        }
+        switch($this->privacy) {
+            case '0':
+                $privacy = 'yes';
+                break;
+            case '1':
+                $privacy = 'no';
+                break;
+            default:
+                $privacy = 'no';
+                break;
+        }
+
+        switch($this->status) {
+            case '0':
+                $status = 'draft';
+                break;
+            case '1':
+                $status = 'published';
+                break;
+            case '2':
+                $status = 'archive';
+                break;
+            default:
+                $status = 'draft';
+                break;
+        }
+        switch($this->is_global) {
+            case '0':
+                $is_global = 'yes';
+                break;
+            case '1':
+                $is_global = 'no';
+                break;
+            default:
+                $is_global = 'no';
+                break;
+        }
 
         return [
             'id'                                      => $this->uuid,
@@ -44,14 +87,16 @@ class ResourceModuleResource extends JsonResource
             'description'                             => $this->description,
             'media_type'                              => $this->media_type,
             'cover_image'                             => $this->media,
-            'privacy'                                 => ($this->privacy == '1') ? 'yes' : 'no',
-            'status'                                  => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
-            'is_global'                               => ($this->is_global == '1') ? 'yes' : 'no',
+            'privacy'                                 => $privacy,
+            'status'                                  => $status,
+            'is_global'                               => $is_global,
             'links'                                   => $links,
             'files'                                   => $files,
             'documents'                               => $document,
             'video'                                   => $video,
             'audio'                                   => $audio,
+            'embedded_video'                          => $embedded_video,
+            'embedded_audio'                          => $embedded_audio,
 
         ];
     }

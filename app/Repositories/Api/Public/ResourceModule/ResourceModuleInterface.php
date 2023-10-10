@@ -9,9 +9,6 @@ interface ResourceModuleInterface
     public function getResourceModuleBasedOnSlug($slug);
 
     public function checkSlug($slug);
-
-    public function checkRating($resource_module_id, $request);
-
     public function addRating($resource_module_id, $request);
 
     public function getColumnNameValue($action);
