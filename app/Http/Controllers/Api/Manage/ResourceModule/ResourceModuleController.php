@@ -25,9 +25,9 @@ class ResourceModuleController extends AppBaseController
     public function index(Request $request)
     {
         try {
-//            if (!auth()->user()->isAbleTo('view_resource_module')) {
-//                return $this->sendError(__('responses.permission_forbidden'), 403);
-//            }
+            if (!auth()->user()->isAbleTo('view_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
@@ -55,9 +55,9 @@ class ResourceModuleController extends AppBaseController
     public function show($slug)
     {
         try {
-//            if (!auth()->user()->isAbleTo('view_resource_module')) {
-//                return $this->sendError(__('responses.permission_forbidden'), 403);
-//            }
+            if (!auth()->user()->isAbleTo('view_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $responseView = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($responseView) {
                 return $this->sendResponse(ResourceModuleResource::make($responseView), __('responses.found_resource_module_list'));
