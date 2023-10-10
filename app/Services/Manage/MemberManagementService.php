@@ -63,9 +63,9 @@ class MemberManagementService
         try {
             if ($request->has('search') && !empty($request->search)) {
                 $componentCollectionObject = $componentCollectionObject->where(function ($query) use ($request) {
-                    $query->where('invitee_name', 'like', '%' . $request->search . '%')
-                    ->orWhere('role', 'like', '%' . $request->search . '%')
-                    ->orWhere('email', 'like', '%' . $request->search . '%');
+                    $query->where('invitee_name', 'like', '%'.$request->search.'%')
+                    ->orWhere('role', 'like', '%'.$request->search.'%')
+                    ->orWhere('email', 'like', '%'.$request->search.'%');
                 });
             }
 
