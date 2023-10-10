@@ -481,5 +481,7 @@
     "responses.found_challenge_path_list":"The Challenge Path list has been successfully retrieved",
     "responses.not_found_challenge_path_list":"The Challenge Path list has not been retrieved with success.",
     "responses.challenge_path_update_successfully":"The Challenge Path has been updated successfully",
-    "responses.challenge_path_not_update":"There were some issues being encountered while updating the Challenge Path!"
+    "responses.challenge_path_not_update":"There were some issues being encountered while updating the Challenge Path!",
+    "responses.create_member_manger_error": "Oops! The attempt to add the member was unsuccessful. Please check and try again",
+    "responses.create_member_manger_error_certain": "Oops! Unable to add certain members. Please check and try again."
 }
