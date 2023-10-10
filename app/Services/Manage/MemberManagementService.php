@@ -62,9 +62,11 @@ class MemberManagementService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $componentCollectionObject = $componentCollectionObject->where('invitee_name', 'like', '%'.$request->search.'%');
-                $componentCollectionObject = $componentCollectionObject->orWhere('role', 'like', '%'.$request->search.'%');
-                $componentCollectionObject = $componentCollectionObject->orWhere('email', 'like', '%'.$request->search.'%');
+                $componentCollectionObject = $componentCollectionObject->where(function ($query) use ($request) {
+                    $query->where('invitee_name', 'like', '%' . $request->search . '%')
+                    ->orWhere('role', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+                });
             }
 
             if ($request->has('role') && !empty($request->role)) {
