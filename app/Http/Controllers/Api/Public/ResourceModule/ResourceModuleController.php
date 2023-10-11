@@ -62,7 +62,6 @@ class ResourceModuleController extends AppBaseController
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_module_rating_successfully'));
             }
-
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -88,7 +87,6 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_resource_module_successfully'));
                 }
             }
-
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
