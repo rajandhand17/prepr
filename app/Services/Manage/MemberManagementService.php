@@ -292,15 +292,19 @@ class MemberManagementService
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
+                    $addedMemberMessage = __('responses.create_member_manger_success_organization');
                     break;
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
+                    $addedMemberMessage = __('responses.create_member_manger_success_lab');
                     break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
+                    $addedMemberMessage = __('responses.create_member_manger_success_challenge');
                     break;
                 default:
                     $module_type = null;
+                    $addedMemberMessage = null;
                     break;
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
@@ -414,17 +418,15 @@ class MemberManagementService
                 }
                 DB::commit();
 
-                $addedMemberMessage = __('responses.create_member_manger_success');
                 if (count($invalid_emails) > 0 || count($already_members) > 0) {
                     if (count($invited_emails) < 1) {
-                        $addedMemberMessage = __('response.create_member_manger_error');
+                        $addedMemberMessage = __('responses.create_member_manger_error');
                     } else {
-                        $addedMemberMessage = __('response.create_member_manger_error_certain');
+                        $addedMemberMessage = __('responses.create_member_manger_error_certain');
                     }
                 } elseif (count($invited_emails) > 0) {
-                    $addedMemberMessage = __('responses.create_member_manger_success');
+                    $addedMemberMessage = $addedMemberMessage;
                 }
-
                 $data = [
                     'invalid_emails'        => $invalid_emails,
                     'invited_emails'        => $invited_emails,
