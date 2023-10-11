@@ -18,9 +18,11 @@ class ChallengeRequirement extends Model
         'min_points',
         'project_submission_requirement_ids',
         'max_project_submission',
+        'max_project_associate',
         'min_experience',
         'min_imported_badges',
         'min_achievement_counts',
+        'additional_requirements',
     ];
 
     /**
