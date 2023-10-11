@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Models\Organization;
+use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -31,9 +33,14 @@ class Challenge extends Command
             $this->info('Migrating of old data for challenges table started.');
             $challenges = DB::connection('mysql2')->table('challanges')->limit(3)->get();
             if ($challenges->count() > 0) {
-                dd($challenges);
                 foreach ($challenges as $key => $challenge) {
-                    dd($challenge);
+                    $checkUser = User::find($challenge->user_id);
+                    if (!$checkUser) {
+                        continue;
+                    }
+
+                    $checkOrganization = Organization::find($challenge->organisation);
+                    dd($checkUser, $checkOrganization);
                 }
             }
         } catch (Exception $e) {
