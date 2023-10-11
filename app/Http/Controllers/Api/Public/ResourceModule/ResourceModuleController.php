@@ -54,7 +54,7 @@ class ResourceModuleController extends AppBaseController
     public function addRating($slug, AddRatingRequest $request)
     {
         try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot == false) {
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
@@ -72,7 +72,7 @@ class ResourceModuleController extends AppBaseController
     public function socialActivity($slug, $action)
     {
         try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot !== null) {
                 $getColumnNameValue = $this->resourceModuleRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
