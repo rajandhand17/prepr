@@ -86,7 +86,7 @@ class MemberManagementController extends AppBaseController
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
             if ($memberLists) {
-                return $this->sendResponse($memberLists, $memberLists['add_member_message']);
+                return $this->sendResponse($memberLists, $memberLists['add_member_response']);
             }
 
             return $this->sendError(__('responses.create_member_manger_failed'), 403);

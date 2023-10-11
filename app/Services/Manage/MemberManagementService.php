@@ -64,7 +64,6 @@ class MemberManagementService
             if ($request->has('search') && !empty($request->search)) {
                 $componentCollectionObject = $componentCollectionObject->where(function ($query) use ($request) {
                     $query->where('invitee_name', 'like', '%'.$request->search.'%')
-                    ->orWhere('role', 'like', '%'.$request->search.'%')
                     ->orWhere('email', 'like', '%'.$request->search.'%');
                 });
             }
@@ -292,19 +291,19 @@ class MemberManagementService
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
-                    $addedMemberMessage = __('responses.create_member_manger_success_organization');
+                    $addedMemberResponse = __('responses.create_member_manger_success_organization');
                     break;
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
-                    $addedMemberMessage = __('responses.create_member_manger_success_lab');
+                    $addedMemberResponse = __('responses.create_member_manger_success_lab');
                     break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
-                    $addedMemberMessage = __('responses.create_member_manger_success_challenge');
+                    $addedMemberResponse = __('responses.create_member_manger_success_challenge');
                     break;
                 default:
                     $module_type = null;
-                    $addedMemberMessage = null;
+                    $addedMemberResponse = null;
                     break;
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
@@ -420,18 +419,18 @@ class MemberManagementService
 
                 if (count($invalid_emails) > 0 || count($already_members) > 0) {
                     if (count($invited_emails) < 1) {
-                        $addedMemberMessage = __('responses.create_member_manger_error');
+                        $addedMemberResponse = __('responses.create_member_manger_error');
                     } else {
-                        $addedMemberMessage = __('responses.create_member_manger_error_certain');
+                        $addedMemberResponse = __('responses.create_member_manger_error_certain');
                     }
                 } elseif (count($invited_emails) > 0) {
-                    $addedMemberMessage = $addedMemberMessage;
+                    $addedMemberResponse = $addedMemberResponse;
                 }
                 $data = [
                     'invalid_emails'        => $invalid_emails,
                     'invited_emails'        => $invited_emails,
                     'already_members'       => $already_members,
-                    'add_member_message'    => $addedMemberMessage,
+                    'add_member_response'   => $addedMemberResponse,
                 ];
 
                 return $data;
