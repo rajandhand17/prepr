@@ -30,7 +30,7 @@ class UpdateResourceModuleRequest extends FormRequest
             throw new NotFoundException();
         }
         $base_rules = [
-            'title'                  => 'required|max:255|unique:lab_programs,title,'.$resourceModuleService->id,
+            'title'                  => 'required|max:255|unique:resource_modules,title,'.$resourceModuleService->id,
             'organization_id'        => 'required|exists:organizations,uuid',
             'description'            => 'required',
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',

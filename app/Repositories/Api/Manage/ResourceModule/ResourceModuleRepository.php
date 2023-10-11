@@ -65,10 +65,10 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function uploadResourceModuleMedia($cover_image)
+    public function uploadResourceModuleCoverImage($cover_image)
     {
         try {
-            return $this->resourceModuleService->uploadResourceModuleMedia($cover_image);
+            return $this->resourceModuleService->uploadResourceModuleCoverImage($cover_image);
         } catch(\Exception $e) {
             return false;
         }
@@ -83,16 +83,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function checkSlug($slug)
-    {
-        try {
-            return $this->resourceModuleService->checkSlug($slug);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function delete($slug, $resource_module_id)
+    public function deleteResourceModule($slug, $resource_module_id)
     {
         try {
             DB::beginTransaction();
@@ -155,10 +146,10 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function deleteMedia($request, $resource_module_id, $type)
+    public function deleteResourceModuleMedia($request, $resource_module_id, $type)
     {
         try {
-            return $this->resourceModuleDetailsService->deleteMedia($request, $resource_module_id, $type);
+            return $this->resourceModuleDetailsService->deleteResourceModuleMedia($request, $resource_module_id, $type);
         } catch(\Exception $e) {
             return false;
         }

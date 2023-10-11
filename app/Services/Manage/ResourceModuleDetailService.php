@@ -56,7 +56,7 @@ class ResourceModuleDetailService
         }
     }
 
-    public function deleteMedia($request, $resource_module_id, $type)
+    public function deleteResourceModuleMedia($request, $resource_module_id, $type)
     {
         try {
             ResourceModuleDetail::where([
@@ -81,7 +81,6 @@ class ResourceModuleDetailService
                     return false;
                 }
             }
-
             return true;
         } catch (\Exception $e) {
             return false;
@@ -93,11 +92,11 @@ class ResourceModuleDetailService
         try {
             foreach ($request->add_embedded_media as $key => $value) {
                 switch ($value['type']) {
-                    case 'embedded_video' || 'video':
+                    case 'embedded_video':
                         $type = config('constants.resource_module_type.embedded_video');
                         $title = $value['type'];
                         break;
-                    case 'embedded_audio' || 'audio':
+                    case 'embedded_audio':
                         $type = config('constants.resource_module_type.embedded_audio');
                         $title = $value['type'];
                         break;
