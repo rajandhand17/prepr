@@ -23,7 +23,7 @@ return new class() extends Migration {
     {
         Schema::table('challenge_requirements', function (Blueprint $table) {
             $table->dropColumn('max_project_associate');
-            $table->dropColumn('additional_requirements')
+            $table->dropColumn('additional_requirements');
         });
     }
 };
