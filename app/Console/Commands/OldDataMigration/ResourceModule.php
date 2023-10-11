@@ -4,7 +4,9 @@ namespace App\Console\Commands\OldDataMigration;
 
 use App\Models\ResourceModule as ResourceModules;
 use App\Models\ResourceModuleSkillsGroupsStack;
+use App\Models\ResourceModuleTagsGroups;
 use DB;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 
 class ResourceModule extends Command
@@ -48,7 +50,6 @@ class ResourceModule extends Command
             if ($resources->count() > 0) {
                 foreach ($resources as $key => $single_resource) {
                     $check_resource_module = ResourceModules::where('title', $single_resource->res_title)->first();
-                  dd($single_resource->resource_skills);
                     if ($check_resource_module) {
                         $newResourceModule = $check_resource_module;
                     } else {
@@ -56,16 +57,16 @@ class ResourceModule extends Command
                     }
                     $newResourceModule->id = $single_resource->id;
                     $newResourceModule->language = $single_resource->language;
-                    $newResourceModule->uuid = $single_resource->uuid;
+                    $newResourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newResourceModule->user_id  = $single_resource->user_id;
                     $newResourceModule->organization_id= $single_resource->org_id;
                     $newResourceModule->title= $single_resource->res_title;
                     $newResourceModule->slug= $single_resource->res_title_slug;
                     $newResourceModule->description= $single_resource->res_desc;
-                    $newResourceModule->media_type= $single_resource->res_type;
-                    $newResourceModule->media= $single_resource->media_type;
-                    $newResourceModule->privacy= $single_resource->media_type;
-                    $newResourceModule->status= $single_resource->status;
+//                    $newResourceModule->media_type= $single_resource->res_type;
+//                    $newResourceModule->media= $single_resource->media_type;
+//                    $newResourceModule->privacy= $single_resource->media_type;
+//                    $newResourceModule->status= $single_resource->status;
                     $newResourceModule->is_auto_created= $single_resource->is_auto_created;
                     $newResourceModule->is_global= $single_resource->resourceGlobal;
                     $newResourceModule->save();
@@ -99,7 +100,11 @@ class ResourceModule extends Command
 
                     if($single_resource->resource_tags){
                         foreach($single_resource->resource_tags as $resource_tags) {
-                            $newResourceTags=new ResourceModuleT
+                            $newResourceModuleTags=new ResourceModuleTagsGroups();
+                            $newResourceModuleTags->resource_module_id=$newResourceModule->id;
+                            $newResourceModuleTags->foreign_id=$resource_tags;
+                            $newResourceModuleTags->type=0;
+                            $newResourceModuleTags->save();
                         }
                     }
                 }
