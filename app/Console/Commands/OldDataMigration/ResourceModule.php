@@ -48,6 +48,7 @@ class ResourceModule extends Command
             if ($resources->count() > 0) {
                 foreach ($resources as $key => $single_resource) {
                     $check_resource_module = ResourceModules::where('title', $single_resource->res_title)->first();
+                  dd($single_resource->resource_skills);
                     if ($check_resource_module) {
                         $newResourceModule = $check_resource_module;
                     } else {
@@ -68,17 +69,42 @@ class ResourceModule extends Command
                     $newResourceModule->is_auto_created= $single_resource->is_auto_created;
                     $newResourceModule->is_global= $single_resource->resourceGlobal;
                     $newResourceModule->save();
-                    foreach ($single_resource->resource_skills as $skill){
-                        $newResourceSkills=new ResourceModuleSkillsGroupsStack();
-                        $newResourceSkills->resource_module_id=$newResourceModule->id;
-                        $newResourceSkills->foreign_id=$skill;
-                        $newResourceSkills->type=0;
-                        $newResourceSkills->save();
+                    if($single_resource->resource_skills){
+                        foreach ($single_resource->resource_skills as $skill){
+                            $newResourceSkills=new ResourceModuleSkillsGroupsStack();
+                            $newResourceSkills->resource_module_id=$newResourceModule->id;
+                            $newResourceSkills->foreign_id=$skill;
+                            $newResourceSkills->type=0;
+                            $newResourceSkills->save();
+                        }
+                    }
+                    if($single_resource->skill_groups){
+                        foreach($single_resource->skill_groups as $skill_group){
+                            $newResourceSkillsGroups=new ResourceModuleSkillsGroupsStack();
+                            $newResourceSkillsGroups->resource_module_id=$newResourceModule->id;
+                            $newResourceSkillsGroups->foreign_id=$skill_group;
+                            $newResourceSkillsGroups->type=1;
+                            $newResourceSkillsGroups->save();
+                        }
+                    }
+                    if($single_resource->skill_stacks){
+                        foreach($single_resource->skill_stacks as $skill_stacks){
+                            $newResourceSkillsStacks=new ResourceModuleSkillsGroupsStack();
+                            $newResourceSkillsStacks->resource_module_id=$newResourceModule->id;
+                            $newResourceSkillsStacks->foreign_id=$skill_stacks;
+                            $newResourceSkillsStacks->type=2;
+                            $newResourceSkillsStacks->save();
+                        }
+                    }
+
+                    if($single_resource->resource_tags){
+                        foreach($single_resource->resource_tags as $resource_tags) {
+                            $newResourceTags=new ResourceModuleT
+                        }
                     }
                 }
                 DB::commit();
                 $this->info('Migrating of old data for resource module table completed.');
-
                 return;
             }
             DB::rollback();
