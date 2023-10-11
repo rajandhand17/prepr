@@ -12,8 +12,6 @@ class ResourceModuleRatingService
                 'resource_module_id'=> $resource_module_id,
                 'user_id'           => auth()->user()->id,
             ], [
-                'resource_module_id' => $resource_module_id,
-                'user_id' => auth()->user()->id,
                 'rating' => $request->rating,
             ]);
             return true;
