@@ -30,7 +30,7 @@ class ResourceModuleSocialActivitiesService
     {
         try {
             ResourceModuleSocialActivities::updateOrInsert([
-                'user_id'           => Auth::user()->id,
+                'user_id'           => auth()->user()->id,
                 'resource_module_id'=> $resource_module_id,
             ], [
                 $column => $action,

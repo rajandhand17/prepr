@@ -56,7 +56,7 @@ class ResourceModuleDetailService
         }
     }
 
-    public function deleteMedia($request, $resource_module_id, $type)
+    public function deleteResourceModuleMedia($request, $resource_module_id, $type)
     {
         try {
             ResourceModuleDetail::where([

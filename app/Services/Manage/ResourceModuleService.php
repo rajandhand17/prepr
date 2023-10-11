@@ -103,16 +103,6 @@ class ResourceModuleService
             return false;
         }
     }
-
-    public function checkSlug($slug)
-    {
-        try {
-            return ResourceModule::where('slug', $slug)->first();
-        } catch(\Exception $e) {
-            return false;
-        }
-    }
-
     public static function deleteResourceModule($resource_module_id)
     {
         try {
@@ -176,7 +166,7 @@ class ResourceModuleService
         }
     }
 
-    public function uploadResourceModuleMedia($cover_image)
+    public function uploadResourceModuleCoverImage($cover_image)
     {
         try {
             $upload_resource_module_cover_image = FileUploadHelper::uploadImageToS3($cover_image, 'resource_module');
