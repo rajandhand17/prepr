@@ -241,25 +241,13 @@ class Challenge extends Command
                             break;
                     }
 
-                    $projectSubmissionRequirementIds = [];
-                    $jsonRequirements = json_decode($challenge->projectSubmissionRequirements);
-                    $requirements = ProjectSubmissionRequirement::get();
-                    
-                    if (!empty($jsonRequirements)) {
-                        foreach ($jsonRequirements as $key) {
-                            $matchFound = false;
-                            foreach ($requirements as $requirement) {
-                                $newKey = str_replace(' ', '', $requirement->title);
-                                if (strtolower($newKey) == strtolower($key)) {
-                                    $projectSubmissionRequirementIds[] = json_encode($requirement->id);
-                                    $matchFound = true;
-                                    break;
-                                }
-                            }
-                            if (!$matchFound) {
-                                $projectSubmissionRequirementIds[] = '3';
-                            }
-                        }
+                    $newRequirements = ProjectSubmissionRequirement::pluck('title', 'id')->map(function ($title) {
+                        return strtolower(str_replace(' ', '', $title));
+                    })->toArray();
+                    $oldRequirements = json_decode($challenge->projectSubmissionRequirements);
+
+                    foreach ($oldRequirements as $requirements) {
+                        $projectSubmissionRequirementIds[] = json_encode(array_search(strtolower($requirements), $newRequirements));
                     }
 
                     $challengeRequirements->challenge_id = $challenge->id;
@@ -276,11 +264,10 @@ class Challenge extends Command
                     $challengeRequirements->complete_education_program = $completeEducationProgram;
                     $challengeRequirements->complete_experience = $completeExperience;
                     $challengeRequirements->additional_requirements = $challenge->additional_info;
-
-                    dd($challengeRequirements);
                     // $challengeRequirements->save();
 
                     // For Challenge Timelines
+
                 }
             }
         } catch (Exception $e) {
