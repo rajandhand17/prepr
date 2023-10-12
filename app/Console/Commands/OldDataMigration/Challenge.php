@@ -5,6 +5,7 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Models\Category;
 use App\Models\Challenge as ModelChallenge;
 use App\Models\ChallengeAchievement;
+use App\Models\ChallengeAssessmentCriteria;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
@@ -275,12 +276,6 @@ class Challenge extends Command
                     $challengePrices = DB::connection('mysql2')->table('challange_prices')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($challengePrices->isNotEmpty()) {
                         foreach ($challengePrices as $challengePrice) {
-                            $checkChallengeAchievement = ChallengeAchievement::where('challenge_id', $challengePrice->challenge_id)->first();
-                            if ($checkChallengeAchievement) {
-                                $challengeAchievement = $checkChallengeAchievement;
-                            } else {
-                                $challengeAchievement = new ChallengeAchievement();
-                            }
                             switch ($challengePrice->type) {
                                 case 'incentive':
                                     $challengeAchievementType = '1';
@@ -293,6 +288,7 @@ class Challenge extends Command
                                     break;
                             }
 
+                            $challengeAchievement = new ChallengeAchievement();
                             $challengeAchievement->challenge_id = $challengePrice->challenge_id;
                             $challengeAchievement->achievement_type = $challengeAchievementType;
                             $challengeAchievement->achievement_name = $challengePrice->name;
@@ -300,6 +296,19 @@ class Challenge extends Command
                             $challengeAchievement->achievement_points = $challengePrice->points;
                             $challengeAchievement->achievement_image = $challengePrice->trophy;
                             $challengeAchievement->save();
+                        }
+                    }
+
+                    // For Challenge Assessment Criteria
+                    $challengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $challenge->id)->whereNull('deleted_at')->get();
+                    if ($challengeAssessmentCriterias->isNotEmpty()) {
+                        foreach ($challengeAssessmentCriterias as $challengeAssessmentCriteria) {
+                            $challengeAssessment = new ChallengeAssessmentCriteria();
+                            $challengeAssessment->challenge_id = $challengeAssessmentCriteria->challenge_assessment_id;
+                            $challengeAssessment->title = $challengeAssessmentCriteria->title;
+                            $challengeAssessment->score = $challengeAssessmentCriteria->score;
+                            $challengeAssessment->weight = $challengeAssessmentCriteria->weight;
+                            $challengeAssessment->save();
                         }
                     }
 
