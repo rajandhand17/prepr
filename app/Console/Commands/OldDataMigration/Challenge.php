@@ -9,6 +9,7 @@ use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTagsGroups;
 use App\Models\Organization;
+use App\Models\ProjectSubmissionRequirement;
 use App\Models\User;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -213,19 +214,73 @@ class Challenge extends Command
                         $challengeRequirements = new ChallengeRequirement();
                     }
 
+                    switch ($challenge->submitProject) {
+                        case 'on':
+                            $allowSubmitProject = '1';
+                            break;
+                        default:
+                            $allowSubmitProject = '0';
+                            break;
+                    }
+
+                    switch ($challenge->completeEducationProgram) {
+                        case 'on':
+                            $completeEducationProgram = '1';
+                            break;
+                        default:
+                            $completeEducationProgram = '0';
+                            break;
+                    }
+
+                    switch ($challenge->completeExperience) {
+                        case 'on':
+                            $completeExperience = '1';
+                            break;
+                        default:
+                            $completeExperience = '0';
+                            break;
+                    }
+
+                    $projectSubmissionRequirementIds = [];
+                    $jsonRequirements = json_decode($challenge->projectSubmissionRequirements);
+                    $requirements = ProjectSubmissionRequirement::get();
+                    
+                    if (!empty($jsonRequirements)) {
+                        foreach ($jsonRequirements as $key) {
+                            $matchFound = false;
+                            foreach ($requirements as $requirement) {
+                                $newKey = str_replace(' ', '', $requirement->title);
+                                if (strtolower($newKey) == strtolower($key)) {
+                                    $projectSubmissionRequirementIds[] = json_encode($requirement->id);
+                                    $matchFound = true;
+                                    break;
+                                }
+                            }
+                            if (!$matchFound) {
+                                $projectSubmissionRequirementIds[] = '3';
+                            }
+                        }
+                    }
+
                     $challengeRequirements->challenge_id = $challenge->id;
                     $challengeRequirements->min_rank = $challenge->min_ranks;
                     $challengeRequirements->min_points = $challenge->min_points;
-
-                    $challengeRequirements->project_submission_requirement_ids = $challenge->;
-
+                    $challengeRequirements->project_submission_requirement_ids = $projectSubmissionRequirementIds;
                     $challengeRequirements->max_project_submission = $challenge->maxProjectSubmission;
                     $challengeRequirements->max_project_associate = $challenge->maxAssociatedProjects;
                     $challengeRequirements->min_experience = $challenge->minExperience;
                     $challengeRequirements->min_imported_badges = $challenge->minImportedBadges;
                     $challengeRequirements->min_achievement_counts = $challenge->minAchievementTrophies;
+                    $challengeRequirements->allow_submit_project = $allowSubmitProject;
+                    $challengeRequirements->requirement_program = '0';
+                    $challengeRequirements->complete_education_program = $completeEducationProgram;
+                    $challengeRequirements->complete_experience = $completeExperience;
                     $challengeRequirements->additional_requirements = $challenge->additional_info;
+
+                    dd($challengeRequirements);
                     // $challengeRequirements->save();
+
+                    // For Challenge Timelines
                 }
             }
         } catch (Exception $e) {
