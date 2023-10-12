@@ -2,9 +2,16 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Models\Category;
+use App\Models\Challenge as ModelChallenge;
+use App\Models\ChallengeRequirement;
+use App\Models\ChallengeSkillsGroupsStack;
+use App\Models\ChallengeSponsor;
+use App\Models\ChallengeTagsGroups;
 use App\Models\Organization;
 use App\Models\User;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -40,7 +47,185 @@ class Challenge extends Command
                     }
 
                     $checkOrganization = Organization::find($challenge->organisation);
-                    dd($checkUser, $checkOrganization);
+                    if (!$checkOrganization) {
+                        continue;
+                    }
+                    
+                    $category = null;
+                    if ($challenge->category != '0' && $challenge->category != null) {
+                        $checkOldCategory = DB::connection('mysql2')->table('categories')->find($challenge->category);
+                        $checkCategory = Category::where('title', $checkOldCategory->name)->first();
+                        if ($checkCategory) {
+                            $category = $checkCategory->id;
+                        }
+                    }
+
+                    $checkChallenge = ModelChallenge::find($challenge->id);
+                    if ($checkChallenge) {
+                        $newChallenge = $checkChallenge;
+                    } else {
+                        $newChallenge = new ModelChallenge();
+                    }
+
+                    switch ($challenge->status) {
+                        case 'open':
+                            $challengeStatus = '0';
+                            break;
+
+                        case 'closed':
+                            $challengeStatus = '1';
+                            break;
+
+                        case 'completed':
+                            $challengeStatus = '2';
+                            break;
+                        
+                        default:
+                            $challengeStatus = '2';
+                            break;
+                    }
+
+                    switch ($challenge->privacy) {
+                        case 'public':
+                            $challengePrivacy = '0';
+                            break;
+                        case 'private':
+                            $challengePrivacy = '1';
+                            break;
+                        default:
+                            $challengePrivacy = '0';
+                            break;
+                    }
+                    switch ($challenge->project_privacy) {
+                        case 'public':
+                            $challengeProjectPrivacy = '0';
+                            break;
+                        case 'private':
+                            $challengeProjectPrivacy = '1';
+                            break;
+                        default:
+                            $challengeProjectPrivacy = '1';
+                            break;
+                    }
+
+                    switch ($challenge->published) {
+                        case 'published':
+                            $challengePublishedStatus = '1';
+                            break;
+                        case 'draft':
+                            $challengePublishedStatus = '0';
+                            break;
+                        case 'archive':
+                            $challengePublishedStatus = '2';
+                            break;
+                        default:
+                            $challengePublishedStatus = '0';
+                            break;
+                    }
+
+                    switch ($challenge->is_auto_created) {
+                        case '0':
+                            $challengeAutoCreated = '0';
+                            break;
+                        case '1':
+                            $challengeAutoCreated = '1';
+                            break;                        
+                        default:
+                            $challengeAutoCreated = '0';
+                            break;
+                    }
+
+                    switch ($challenge->notify_participants) {
+                        case 'send':
+                            $challengeNotifyParticipants = '1';
+                            break;
+                        default:
+                            $challengeNotifyParticipants = '0';
+                            break;
+                    }
+
+                    $newChallenge->id = $challenge->id;
+                    $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+                    $newChallenge->language = $challenge->language;
+                    $newChallenge->user_id = $challenge->user_id;
+                    $newChallenge->organization_id = $challenge->organisation;
+                    $newChallenge->category_id = $category;
+                    $newChallenge->duration_id = null;
+                    $newChallenge->level_id = null;
+                    $newChallenge->slug = $challenge->slug;
+                    $newChallenge->title = $challenge->title;
+                    $newChallenge->description = $challenge->description;
+                    $newChallenge->privacy = $challengePrivacy;
+                    $newChallenge->media_type = $challenge->mediaType;
+                    $newChallenge->media = $challenge->cover_image;
+                    $newChallenge->status = $challengePublishedStatus;
+                    $newChallenge->source_link = $challenge->sourcelink;
+                    $newChallenge->agreement = $challenge->agreement;
+                    $newChallenge->is_notification_enabled = $challengeNotifyParticipants;
+                    $newChallenge->project_privacy = $challengeProjectPrivacy;
+                    $newChallenge->is_open = $challengeStatus;
+                    $newChallenge->is_auto_created = $challengeAutoCreated;
+                    // $newChallenge->save();
+
+                    // For Challenge Host/Sponser
+                    $arrayHost = json_decode($challenge->host_id, true);
+                    if (!empty(array_filter($arrayHost))) {
+                        foreach ($arrayHost as $host) {
+                            $checkChallengeSponsor = ChallengeSponsor::where(['challenge_id' => $challenge->id, 'host_id' => $host])->first();
+                            if (!$checkChallengeSponsor) {
+                                $challengeSponsor = new ChallengeSponsor();
+                                $challengeSponsor->challenge_id = $challenge->id;
+                                $challengeSponsor->host_id = $host;
+                                // $challengeSponsor->save();
+                            }
+                        }
+                    }
+
+                    // For Challenge Skill
+                    $arraySkills = json_decode($challenge->challange_skill, true);
+                    if (!empty(array_filter($arraySkills))) {
+                        foreach ($arraySkills as $skill) {
+                            $challengeSkill = new ChallengeSkillsGroupsStack();
+                            $challengeSkill->challenge_id = $challenge->id;
+                            $challengeSkill->foreign_id = $skill;
+                            $challengeSkill->type = '0';
+                            // $challengeSkill->save();
+                        }
+                    }
+
+                    // For Challenge Tag
+                    $arrayTags = json_decode($challenge->challange_tag, true);
+                    if (!empty(array_filter($arrayTags))) {
+                        foreach ($arrayTags as $tag) {
+                            $challengeTag = new ChallengeTagsGroups();
+                            $challengeTag->challenge_id = $challenge->id;
+                            $challengeTag->foreign_id = $tag;
+                            $challengeTag->type = '0';
+                            // $challengeTag->save();
+                        }
+                    }
+
+                    // For Challenge Requirements
+                    $checkChallengeRequirements = ChallengeRequirement::where('challenge_id', $challenge->id)->first();
+                    if ($checkChallengeRequirements) {
+                        $challengeRequirements = $checkChallengeRequirements;
+                    } else {
+                        $challengeRequirements = new ChallengeRequirement();
+                    }
+
+                    $challengeRequirements->challenge_id = $challenge->id;
+                    $challengeRequirements->min_rank = $challenge->min_ranks;
+                    $challengeRequirements->min_points = $challenge->min_points;
+
+                    $challengeRequirements->project_submission_requirement_ids = $challenge->;
+
+                    $challengeRequirements->max_project_submission = $challenge->maxProjectSubmission;
+                    $challengeRequirements->max_project_associate = $challenge->maxAssociatedProjects;
+                    $challengeRequirements->min_experience = $challenge->minExperience;
+                    $challengeRequirements->min_imported_badges = $challenge->minImportedBadges;
+                    $challengeRequirements->min_achievement_counts = $challenge->minAchievementTrophies;
+                    $challengeRequirements->additional_requirements = $challenge->additional_info;
+                    // $challengeRequirements->save();
                 }
             }
         } catch (Exception $e) {
