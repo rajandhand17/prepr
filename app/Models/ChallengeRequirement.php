@@ -22,6 +22,10 @@ class ChallengeRequirement extends Model
         'min_experience',
         'min_imported_badges',
         'min_achievement_counts',
+        'allow_submit_project',
+        'requirement_program',
+        'complete_education_program',
+        'complete_experience',
         'additional_requirements',
     ];
 

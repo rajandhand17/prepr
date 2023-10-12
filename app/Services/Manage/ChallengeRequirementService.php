@@ -10,6 +10,58 @@ class ChallengeRequirementService
     public function createChallengeRequirement($request, $challenge)
     {
         try {
+            $allowSubmitProject = config('constants.challenge_requirement_common.no');
+            switch ($request->allow_submit_project) {
+                case 'yes':
+                    $allowSubmitProject = config('constants.challenge_requirement_common.yes');
+                    break;
+                case 'no':
+                    $allowSubmitProject = config('constants.challenge_requirement_common.no');
+                    break;
+                default:
+                    $allowSubmitProject = config('constants.challenge_requirement_common.yes');
+                    break;
+            }
+
+            $requirementProgram = config('constants.challenge_requirement_common.no');
+            switch ($request->requirement_program) {
+                case 'yes':
+                    $requirementProgram = config('constants.challenge_requirement_common.yes');
+                    break;
+                case 'no':
+                    $requirementProgram = config('constants.challenge_requirement_common.no');
+                    break;
+                default:
+                    $requirementProgram = config('constants.challenge_requirement_common.yes');
+                    break;
+            }
+
+            $completeEducationProgram = config('constants.challenge_requirement_common.no');
+            switch ($request->complete_education_program) {
+                case 'yes':
+                    $completeEducationProgram = config('constants.challenge_requirement_common.yes');
+                    break;
+                case 'no':
+                    $completeEducationProgram = config('constants.challenge_requirement_common.no');
+                    break;
+                default:
+                    $completeEducationProgram = config('constants.challenge_requirement_common.yes');
+                    break;
+            }
+
+            $completeExperience = config('constants.challenge_requirement_common.no');
+            switch ($request->complete_experience) {
+                case 'yes':
+                    $completeExperience = config('constants.challenge_requirement_common.yes');
+                    break;
+                case 'no':
+                    $completeExperience = config('constants.challenge_requirement_common.no');
+                    break;
+                default:
+                    $completeExperience = config('constants.challenge_requirement_common.yes');
+                    break;
+            }
+
             $challengeRequirement = new ChallengeRequirement();
             $challengeRequirement->challenge_id = $challenge;
             $challengeRequirement->min_rank = $request->min_rank;
@@ -20,6 +72,10 @@ class ChallengeRequirementService
             $challengeRequirement->min_experience = $request->min_experience;
             $challengeRequirement->min_imported_badges = $request->min_imported_badges;
             $challengeRequirement->min_achievement_counts = $request->min_achievement_counts;
+            $challengeRequirement->allow_submit_project = $allowSubmitProject;
+            $challengeRequirement->requirement_program = $requirementProgram;
+            $challengeRequirement->complete_education_program = $completeEducationProgram;
+            $challengeRequirement->complete_experience = $completeExperience;
             $challengeRequirement->additional_requirements = $request->additional_requirements;
             $challengeRequirement->save();
 
@@ -33,6 +89,58 @@ class ChallengeRequirementService
     {
         try {
             $challengeRequirement = ChallengeRequirement::where('challenge_id', $challenge_id)->first();
+            $allowSubmitProject = config('constants.challenge_requirement_common.no');
+            switch ($request->allow_submit_project) {
+                case 'yes':
+                    $allowSubmitProject = config('constants.challenge_requirement_common.yes');
+                    break;
+                case 'no':
+                    $allowSubmitProject = config('constants.challenge_requirement_common.no');
+                    break;
+                default:
+                    $allowSubmitProject = config('constants.challenge_requirement_common.yes');
+                    break;
+            }
+
+            $requirementProgram = config('constants.challenge_requirement_common.no');
+            switch ($request->requirement_program) {
+                case 'yes':
+                    $requirementProgram = config('constants.challenge_requirement_common.yes');
+                    break;
+                case 'no':
+                    $requirementProgram = config('constants.challenge_requirement_common.no');
+                    break;
+                default:
+                    $requirementProgram = config('constants.challenge_requirement_common.yes');
+                    break;
+            }
+
+            $completeEducationProgram = config('constants.challenge_requirement_common.no');
+            switch ($request->complete_education_program) {
+                case 'yes':
+                    $completeEducationProgram = config('constants.challenge_requirement_common.yes');
+                    break;
+                case 'no':
+                    $completeEducationProgram = config('constants.challenge_requirement_common.no');
+                    break;
+                default:
+                    $completeEducationProgram = config('constants.challenge_requirement_common.yes');
+                    break;
+            }
+
+            $completeExperience = config('constants.challenge_requirement_common.no');
+            switch ($request->complete_experience) {
+                case 'yes':
+                    $completeExperience = config('constants.challenge_requirement_common.yes');
+                    break;
+                case 'no':
+                    $completeExperience = config('constants.challenge_requirement_common.no');
+                    break;
+                default:
+                    $completeExperience = config('constants.challenge_requirement_common.yes');
+                    break;
+            }
+
             if (!$challengeRequirement) {
                 $challengeRequirement = new ChallengeRequirement();
                 $challengeRequirement->challenge_id = $challenge_id;
@@ -44,6 +152,10 @@ class ChallengeRequirementService
                 $challengeRequirement->min_experience = $request->min_experience;
                 $challengeRequirement->min_imported_badges = $request->min_imported_badges;
                 $challengeRequirement->min_achievement_counts = $request->min_achievement_counts;
+                $challengeRequirement->allow_submit_project = $allowSubmitProject;
+                $challengeRequirement->requirement_program = $requirementProgram;
+                $challengeRequirement->complete_education_program = $completeEducationProgram;
+                $challengeRequirement->complete_experience = $completeExperience;
                 $challengeRequirement->additional_requirements = $request->additional_requirements;
                 $challengeRequirement->save();
 
@@ -57,6 +169,10 @@ class ChallengeRequirementService
             $challengeRequirement->min_experience = $request->has('min_experience') ? $request->min_experience : $challengeRequirement->min_experience;
             $challengeRequirement->min_imported_badges = $request->has('min_imported_badges') ? $request->min_imported_badges : $challengeRequirement->min_imported_badges;
             $challengeRequirement->min_achievement_counts = $request->has('min_achievement_counts') ? $request->min_achievement_counts : $challengeRequirement->min_achievement_counts;
+            $challengeRequirement->allow_submit_project = $request->has('allow_submit_project') ? $allowSubmitProject : $challengeRequirement->allow_submit_project;
+            $challengeRequirement->requirement_program = $request->has('requirement_program') ? $requirementProgram : $challengeRequirement->requirement_program;
+            $challengeRequirement->complete_education_program = $request->has('complete_education_program') ? $completeEducationProgram : $challengeRequirement->complete_education_program;
+            $challengeRequirement->complete_experience = $request->has('complete_experience') ? $completeExperience : $challengeRequirement->complete_experience;
             $challengeRequirement->project_submission_requirement_ids = $request->has('project_submission_requirement_ids') ? $request->project_submission_requirement_ids : $challengeRequirement->project_submission_requirement_ids;
             $challengeRequirement->additional_requirements = $request->has('additional_requirements') ? $request->additional_requirements : $challengeRequirement->additional_requirements;
             $challengeRequirement->save();

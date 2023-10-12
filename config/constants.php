@@ -204,4 +204,8 @@ return [
         'yes' => '1',
     ],
 
+    'challenge_requirement_common' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
 ];
