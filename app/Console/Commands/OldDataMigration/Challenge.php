@@ -51,7 +51,7 @@ class Challenge extends Command
                     if (!$checkOrganization) {
                         continue;
                     }
-                    
+
                     $category = null;
                     if ($challenge->category != '0' && $challenge->category != null) {
                         $checkOldCategory = DB::connection('mysql2')->table('categories')->find($challenge->category);
@@ -80,7 +80,7 @@ class Challenge extends Command
                         case 'completed':
                             $challengeStatus = '2';
                             break;
-                        
+
                         default:
                             $challengeStatus = '2';
                             break;
@@ -130,7 +130,7 @@ class Challenge extends Command
                             break;
                         case '1':
                             $challengeAutoCreated = '1';
-                            break;                        
+                            break;
                         default:
                             $challengeAutoCreated = '0';
                             break;
@@ -267,11 +267,11 @@ class Challenge extends Command
                     // $challengeRequirements->save();
 
                     // For Challenge Timelines
-
                 }
             }
         } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }
