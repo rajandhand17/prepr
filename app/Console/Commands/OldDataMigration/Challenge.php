@@ -8,7 +8,6 @@ use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTagsGroups;
-use App\Models\ChallengeTimelines;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\User;
@@ -272,6 +271,7 @@ class Challenge extends Command
                     $challengeRequirements->save();
                 }
             }
+
             return;
         } catch (Exception $e) {
             dd($e);
