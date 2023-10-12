@@ -8,6 +8,7 @@ use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTagsGroups;
+use App\Models\ChallengeTimelines;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\User;
@@ -39,7 +40,7 @@ class Challenge extends Command
     {
         try {
             $this->info('Migrating of old data for challenges table started.');
-            $challenges = DB::connection('mysql2')->table('challanges')->limit(3)->get();
+            $challenges = DB::connection('mysql2')->table('challanges')->get();
             if ($challenges->count() > 0) {
                 foreach ($challenges as $key => $challenge) {
                     $checkUser = User::find($challenge->user_id);
@@ -52,7 +53,7 @@ class Challenge extends Command
                         continue;
                     }
 
-                    $category = null;
+                    $category = '1';
                     if ($challenge->category != '0' && $challenge->category != null) {
                         $checkOldCategory = DB::connection('mysql2')->table('categories')->find($challenge->category);
                         $checkCategory = Category::where('title', $checkOldCategory->name)->first();
@@ -151,8 +152,8 @@ class Challenge extends Command
                     $newChallenge->user_id = $challenge->user_id;
                     $newChallenge->organization_id = $challenge->organisation;
                     $newChallenge->category_id = $category;
-                    $newChallenge->duration_id = null;
-                    $newChallenge->level_id = null;
+                    $newChallenge->duration_id = '1';
+                    $newChallenge->level_id = '1';
                     $newChallenge->slug = $challenge->slug;
                     $newChallenge->title = $challenge->title;
                     $newChallenge->description = $challenge->description;
@@ -166,43 +167,46 @@ class Challenge extends Command
                     $newChallenge->project_privacy = $challengeProjectPrivacy;
                     $newChallenge->is_open = $challengeStatus;
                     $newChallenge->is_auto_created = $challengeAutoCreated;
-                    // $newChallenge->save();
+                    $newChallenge->save();
 
                     // For Challenge Host/Sponser
                     $arrayHost = json_decode($challenge->host_id, true);
-                    if (!empty(array_filter($arrayHost))) {
-                        foreach ($arrayHost as $host) {
-                            $checkChallengeSponsor = ChallengeSponsor::where(['challenge_id' => $challenge->id, 'host_id' => $host])->first();
-                            if (!$checkChallengeSponsor) {
-                                $challengeSponsor = new ChallengeSponsor();
-                                $challengeSponsor->challenge_id = $challenge->id;
-                                $challengeSponsor->host_id = $host;
-                                // $challengeSponsor->save();
+                    if (!empty($arrayHost)) {
+                        foreach (array_filter($arrayHost) as $host) {
+                            $checkHost = ChallengeSponsor::find($host);
+                            if ($checkHost) {
+                                $checkChallengeSponsor = ChallengeSponsor::where(['challenge_id' => $challenge->id, 'host_id' => $host])->first();
+                                if (!$checkChallengeSponsor) {
+                                    $challengeSponsor = new ChallengeSponsor();
+                                    $challengeSponsor->challenge_id = $challenge->id;
+                                    $challengeSponsor->host_id = $host;
+                                    $challengeSponsor->save();
+                                }
                             }
                         }
                     }
 
                     // For Challenge Skill
                     $arraySkills = json_decode($challenge->challange_skill, true);
-                    if (!empty(array_filter($arraySkills))) {
-                        foreach ($arraySkills as $skill) {
+                    if (!empty($arraySkills)) {
+                        foreach (array_filter($arraySkills) as $skill) {
                             $challengeSkill = new ChallengeSkillsGroupsStack();
                             $challengeSkill->challenge_id = $challenge->id;
                             $challengeSkill->foreign_id = $skill;
                             $challengeSkill->type = '0';
-                            // $challengeSkill->save();
+                            $challengeSkill->save();
                         }
                     }
 
                     // For Challenge Tag
                     $arrayTags = json_decode($challenge->challange_tag, true);
-                    if (!empty(array_filter($arrayTags))) {
-                        foreach ($arrayTags as $tag) {
+                    if (!empty($arrayTags)) {
+                        foreach (array_filter($arrayTags) as $tag) {
                             $challengeTag = new ChallengeTagsGroups();
                             $challengeTag->challenge_id = $challenge->id;
                             $challengeTag->foreign_id = $tag;
                             $challengeTag->type = '0';
-                            // $challengeTag->save();
+                            $challengeTag->save();
                         }
                     }
 
@@ -241,6 +245,7 @@ class Challenge extends Command
                             break;
                     }
 
+                    $projectSubmissionRequirementIds = [];
                     $newRequirements = ProjectSubmissionRequirement::pluck('title', 'id')->map(function ($title) {
                         return strtolower(str_replace(' ', '', $title));
                     })->toArray();
@@ -264,11 +269,10 @@ class Challenge extends Command
                     $challengeRequirements->complete_education_program = $completeEducationProgram;
                     $challengeRequirements->complete_experience = $completeExperience;
                     $challengeRequirements->additional_requirements = $challenge->additional_info;
-                    // $challengeRequirements->save();
-
-                    // For Challenge Timelines
+                    $challengeRequirements->save();
                 }
             }
+            return;
         } catch (Exception $e) {
             dd($e);
 
