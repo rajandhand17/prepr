@@ -4,6 +4,7 @@ namespace App\Console\Commands\OldDataMigration;
 
 use App\Models\Category;
 use App\Models\Challenge as ModelChallenge;
+use App\Models\ChallengeAchievement;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
@@ -269,6 +270,39 @@ class Challenge extends Command
                     $challengeRequirements->complete_experience = $completeExperience;
                     $challengeRequirements->additional_requirements = $challenge->additional_info;
                     $challengeRequirements->save();
+
+                    // For Challenge Achievements
+                    $challengePrices = DB::connection('mysql2')->table('challange_prices')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
+                    if ($challengePrices->isNotEmpty()) {
+                        foreach ($challengePrices as $challengePrice) {
+                            $checkChallengeAchievement = ChallengeAchievement::where('challenge_id', $challengePrice->challenge_id)->first();
+                            if ($checkChallengeAchievement) {
+                                $challengeAchievement = $checkChallengeAchievement;
+                            } else {
+                                $challengeAchievement = new ChallengeAchievement();
+                            }
+                            switch ($challengePrice->type) {
+                                case 'incentive':
+                                    $challengeAchievementType = '1';
+                                    break;
+                                case 'participation':
+                                    $challengeAchievementType = '0';
+                                    break;
+                                default:
+                                    $challengeAchievementType = '1';
+                                    break;
+                            }
+
+                            $challengeAchievement->challenge_id = $challengePrice->challenge_id;
+                            $challengeAchievement->achievement_type = $challengeAchievementType;
+                            $challengeAchievement->achievement_name = $challengePrice->name;
+                            $challengeAchievement->achievement_prize = $challengePrice->prize;
+                            $challengeAchievement->achievement_points = $challengePrice->points;
+                            $challengeAchievement->achievement_image = $challengePrice->trophy;
+                            $challengeAchievement->save();
+                        }
+                    }
+
                 }
             }
 
