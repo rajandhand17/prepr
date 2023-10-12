@@ -63,6 +63,7 @@ class ProjectPitch extends Command
         } catch (Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
