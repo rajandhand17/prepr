@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Console\Commands\OldDataMigration;
 
-use App\Console\Commands\OldDataMigration\Challenge;
 use Tests\TestCase;
 
 /**
