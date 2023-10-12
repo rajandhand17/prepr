@@ -2,15 +2,8 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use App\Models\Organization;
+use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
-use App\Models\Skill;
-use App\Models\User;
-use App\Models\Tag;
-use App\Models\SkillStack;
-use App\Models\ResourceModule as ResourceModules;
-use App\Models\ResourceModuleSkillsGroupsStack;
-use App\Models\ResourceModuleTagsGroups;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
@@ -50,25 +43,65 @@ class ResourceModuleDetails extends Command
     public function handle()
     {
         try {
-            $this->info('Migrating old data for resource module table.');
+            $this->info('Migrating old data for resource module details table.');
             DB::beginTransaction();
-            $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->first();
-
+            $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->get();
             if ($resourceDetails->count() > 0) {
                 foreach ($resourceDetails as  $single_resource_module_details){
-
-                    $check_resource_module = ResourceModules::where('title', $single_resource->res_title)->first();
-
-                    if ($check_resource_module) {
-                        $newResourceModule = $check_resource_module;
-                    } else {
-                        $newResourceModule = new ResourceModuleDetail();
+                    $resourceModule=ResourceModule::where("id",$single_resource_module_details->resource_id)->first();
+                    if($resourceModule==null){
+                        continue;
                     }
-
+                    switch($single_resource_module_details->type){
+                        case 'header':
+                            $type='header';
+                            break;
+                        case 'document':
+                            $type =config('constants.resource_module_type.document');
+                            break;
+                        case 'video':
+                            $type =config('constants.resource_module_type.video');
+                            break;
+                        case 'audio':
+                            $type =config('constants.resource_module_type.audio');
+                            break;
+                        case 'embedded':
+                            $type =config('constants.resource_module_type.embedded_video');
+                            break;
+                        case 'embedded_audio':
+                            $type =config('constants.resource_module_type.embedded_audio');
+                            break;
+                        case 'url':
+                            $type =config('constants.resource_module_type.url');
+                            break;
+                        case 'image':
+                            $type =config('constants.resource_module_type.image');
+                            break;
+                        case 'Embedded_Cover_Video':
+                            $type =config('constants.resource_module_type.Embedded_Cover_Video');
+                            break;
+                        default:
+                            $type=null;
+                            break;
+                    }
+                    dd($type);
+                    if($type=="header"){
+                        continue;
+                    }else{
+                        $this->info('start data inserting');
+                    }
+                    $this->info('start data inserting');
+                    $newResourceModule=new ResourceModuleDetail();
+                    $newResourceModule->resource_module_id=$single_resource_module_details->resource_id;
+                    $newResourceModule->title=$single_resource_module_details->title;
+                    $newResourceModule->type=$type;
+                    $newResourceModule->path=$single_resource_module_details->path;
+                    $newResourceModule->social_link_id=$single_resource_module_details->social_link_id;
+                    $newResourceModule->save();
 
                 }
                 DB::commit();
-                $this->info('Migrating of old data for resource module table completed.');
+                $this->info('Migrating of old data for resource module details table completed.');
                 return;
             }
             DB::rollback();
