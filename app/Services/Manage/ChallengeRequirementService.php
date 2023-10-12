@@ -10,7 +10,6 @@ class ChallengeRequirementService
     public function createChallengeRequirement($request, $challenge)
     {
         try {
-
             $allowSubmitProject = config('constants.challenge_requirement_common.no');
             switch ($request->allow_submit_project) {
                 case 'yes':
