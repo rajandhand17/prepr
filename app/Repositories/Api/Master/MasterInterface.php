@@ -49,6 +49,6 @@ interface MasterInterface
     public function getPitchTaskData($request);
 
     public function checkSponsor($request);
-    
+
     public function createSponsor($request);
 }

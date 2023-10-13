@@ -49,6 +49,7 @@ class HostService
 
                 return $newSponsor;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
