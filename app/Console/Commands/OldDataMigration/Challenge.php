@@ -7,6 +7,7 @@ use App\Models\Challenge as ModelChallenge;
 use App\Models\ChallengeAchievement;
 use App\Models\ChallengeAssessment;
 use App\Models\ChallengeAssessmentCriteria;
+use App\Models\ChallengeCustomTimelines;
 use App\Models\ChallengeProjectTemplate;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
@@ -396,6 +397,53 @@ class Challenge extends Command
                             $challengeProjectTemplate->save();
                         }
                     }
+
+                    // For Challenge Custom Timelines
+                    $checkChallengeCustomTimelines = DB::connection('mysql2')->table('challenge_custom_time')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
+                    if ($checkChallengeCustomTimelines->isNotEmpty()) {
+                        foreach ($checkChallengeCustomTimelines as $checkChallengeCustomTimeline) {
+                            $custom_date = null;
+                            if ($checkChallengeCustomTimeline->date != null) {
+                                $custom_date = date('Y-m-d H:i:s', strtotime($checkChallengeCustomTimeline->date));
+                            }
+
+                            switch ($checkChallengeCustomTimeline->scheduleAnnouncement) {
+                                case 'yes':
+                                    $challengeScheduleNotify = '1';
+                                    break;
+                                case 'no':
+                                    $challengeScheduleNotify = '0';
+                                    break;
+                                default:
+                                    $challengeScheduleNotify = '0';
+                                    break;
+                            }
+
+                            switch ($checkChallengeCustomTimeline->customDateDuration) {
+                                case 'days':
+                                    $challengeDateDuration = 'days';
+                                    break;
+                                case 'weeks':
+                                    $challengeDateDuration = 'weeks';
+                                    break;
+                                case 'months':
+                                    $challengeDateDuration = 'months';
+                                    break;
+                                default:
+                                    $challengeDateDuration = 'days';
+                                    break;
+                            }
+                            $challengeCustomTimeline = new ChallengeCustomTimelines();
+                            $challengeCustomTimeline->challenge_id = $checkChallengeCustomTimeline->challenge_id;
+                            $challengeCustomTimeline->custom_timelines_title = $checkChallengeCustomTimeline->title;
+                            $challengeCustomTimeline->custom_timelines_date = $custom_date;
+                            $challengeCustomTimeline->custom_timelines_description = $checkChallengeCustomTimeline->description;
+                            $challengeCustomTimeline->custom_timelines_duration = $challengeDateDuration;
+                            $challengeCustomTimeline->schedule_custom_notify = $challengeScheduleNotify;
+                            $challengeCustomTimeline->save();
+                        }
+                    }
+
                 }
             }
 
