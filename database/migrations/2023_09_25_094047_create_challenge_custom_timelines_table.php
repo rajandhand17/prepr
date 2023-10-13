@@ -13,9 +13,9 @@ return new class() extends Migration {
         Schema::create('challenge_custom_timelines', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('challenge_id');
-            $table->string('custom_timelines_title');
-            $table->timestamp('custom_timelines_date');
-            $table->longText('custom_timelines_description');
+            $table->string('custom_timelines_title')->nullable();
+            $table->string('custom_timelines_date', 255)->nullable();
+            $table->longText('custom_timelines_description')->nullable();
             $table->enum('custom_timelines_duration', ['days', 'weeks', 'months'])->comment('Number of days, week or month, from start to end')->default('days');
             $table->enum('schedule_custom_notify', ['0', '1'])->comment('0 -> Day before submission deadline reminder, 1 -> Week before submission deadline reminder')->default('0');
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
