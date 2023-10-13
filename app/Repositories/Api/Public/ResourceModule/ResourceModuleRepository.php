@@ -37,6 +37,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
+
     public function addRating($resource_module_id, $request)
     {
         try {

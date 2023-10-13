@@ -81,6 +81,7 @@ class ResourceModuleDetailService
                     return false;
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Public;
+
 use App\Models\ResourceModuleRating;
 
 class ResourceModuleRatingService
@@ -14,6 +15,7 @@ class ResourceModuleRatingService
             ], [
                 'rating' => $request->rating,
             ]);
+
             return true;
         } catch(\Exception $e) {
             return false;

@@ -62,6 +62,7 @@ class ResourceModuleController extends AppBaseController
             if ($responseView) {
                 return $this->sendResponse(ResourceModuleResource::make($responseView), __('responses.found_resource_module_list'));
             }
+
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -155,6 +156,7 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function addLinksAndEmbedMedia(AddLinksResourceModuleRequest $request, $slug)
     {
         try {
@@ -205,11 +207,12 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function delete($slug)
     {
         try {
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if ($checkResourceModuleSlugExistsOrNot == false){
+            if ($checkResourceModuleSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
             if (!auth()->user()->isAbleTo('delete_resource_module')) {
@@ -225,6 +228,7 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function deleteMedia(DeleteMediaResourceModuleRequest $request, $slug)
     {
         try {
@@ -240,6 +244,7 @@ class ResourceModuleController extends AppBaseController
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_media_delete'));
             }
+
             return $this->sendError(__('responses.resource_module_media_not_delete'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
