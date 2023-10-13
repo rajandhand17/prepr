@@ -448,8 +448,7 @@ class Challenge extends Command
                         }
                     }
 
-
-                    // For Challenge Timelines 
+                    // For Challenge Timelines
                     $checkchallengeTimelines = ChallengeTimelines::where('challenge_id', $challenge->id)->first();
                     if ($checkchallengeTimelines) {
                         $challengeTimelines = $checkchallengeTimelines;
@@ -495,20 +494,19 @@ class Challenge extends Command
                     $challengeTimelines->challenge_id = $challenge->id;
                     $challengeTimelines->timeline_type = $challengeTimelineType;
                     $challengeTimelines->open_call_date = date('Y-m-d H:i:s', strtotime($challenge->call_date));
-                    $challengeTimelines->open_call_date_description = $challenge->call_date_desc ?? "Start of Challenge";
+                    $challengeTimelines->open_call_date_description = $challenge->call_date_desc ?? 'Start of Challenge';
                     $challengeTimelines->last_call_date = date('Y-m-d H:i:s', strtotime($challenge->last_registration_date));
-                    $challengeTimelines->last_call_date_description = $challenge->last_registration_date_desc ?? "Last day of registration";
+                    $challengeTimelines->last_call_date_description = $challenge->last_registration_date_desc ?? 'Last day of registration';
                     $challengeTimelines->application_deadline_date = date('Y-m-d H:i:s', strtotime($challenge->application_deadline));
-                    $challengeTimelines->application_deadline_date_description = $challenge->application_dateline_desc ?? "Last day of application deadline";
+                    $challengeTimelines->application_deadline_date_description = $challenge->application_dateline_desc ?? 'Last day of application deadline';
                     $challengeTimelines->submission_deadline_date = date('Y-m-d H:i:s', strtotime($challenge->deadline));
-                    $challengeTimelines->submission_deadline_date_description = $challenge->submission_deadline_date_desc ?? "Last date of Challenge Submissioon";
+                    $challengeTimelines->submission_deadline_date_description = $challenge->submission_deadline_date_desc ?? 'Last date of Challenge Submissioon';
                     $challengeTimelines->challenge_duration = ($challenge->length != null) ? $challenge->length : $challenge_duration;
                     $challengeTimelines->flexible_date_number = $challenge->flexibleDateNumber;
                     $challengeTimelines->flexible_date_duration = $challenge->flexibleExpireDateDuration;
                     $challengeTimelines->automatic_alert = $challengeAutoAlert;
                     $challengeTimelines->flexible_expire_deadline = date('Y-m-d H:i:s', strtotime($challenge->flexibleExpireDate));
                     $challengeTimelines->save();
-
                 }
                 DB::commit();
                 $this->info('Migrating of old data for Challanges table completed.');
@@ -521,6 +519,7 @@ class Challenge extends Command
         } catch (Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
