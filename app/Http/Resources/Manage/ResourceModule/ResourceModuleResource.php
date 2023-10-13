@@ -18,26 +18,48 @@ class ResourceModuleResource extends JsonResource
         $document = [];
         $video = [];
         $audio = [];
-        if ($this->url) {
-            $links = $this->url;
+        $privacy="";
+        $status="";
+        $is_global="";
+        if ($this->urls){
+            $links = $this->urls->map(function ($index) {
+                return [
+                    'id' => $index->id,
+                    'title' => $index->title,
+                    'path' => $index->getRawOriginal('path'),
+                    'social_link_id'=>$index->social_link_id,
+                ];
+            })->all();
         }
-        if ($this->image) {
-            $files = $this->image;
+        if ($this->images) {
+            $files = $this->images;
         }
-        if ($this->document) {
-            $document = $this->document;
+        if ($this->documents) {
+            $document = $this->documents;
         }
-        if ($this->video) {
-            $video = $this->video;
+        if ($this->videos) {
+            $video = $this->videos;
         }
-        if ($this->audio) {
-            $audio = $this->audio;
+        if ($this->audios) {
+            $audio = $this->audios;
         }
-        if($this->embedded){
-            $embedded_video = $this->embedded;
+        if($this->embedded_videos){
+            $embedded_video = $this->embedded_videos->map(function ($index) {
+                return [
+                    'id' => $index->id,
+                    'title' => $index->title,
+                    'path' => $index->getRawOriginal('path'),
+                ];
+            })->all();
         }
-        if($this->embedded_audio){
-            $embedded_audio = $this->embedded_audio;
+        if($this->embedded_audios){
+            $embedded_audio = $this->embedded_audios->map(function ($index) {
+                return [
+                    'id' => $index->id,
+                    'title' => $index->title,
+                    'path' => $index->getRawOriginal('path'),
+                ];
+            })->all();
         }
         switch($this->privacy) {
             case '0':
@@ -97,7 +119,6 @@ class ResourceModuleResource extends JsonResource
             'audio'                                   => $audio,
             'embedded_video'                          => $embedded_video,
             'embedded_audio'                          => $embedded_audio,
-
         ];
     }
 }

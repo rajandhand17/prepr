@@ -100,13 +100,4 @@ class ResourceModuleService
             return false;
         }
     }
-
-    public function checkSlug($slug)
-    {
-        try {
-            return ResourceModule::where('slug', $slug)->first();
-        } catch(\Exception $e) {
-            return false;
-        }
-    }
 }

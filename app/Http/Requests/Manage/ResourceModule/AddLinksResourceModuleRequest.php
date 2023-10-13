@@ -31,7 +31,7 @@ class AddLinksResourceModuleRequest extends FormRequest
         }
         if ($this->request->has('add_embedded_media')) {
             $base_rules['add_embedded_media'] = 'array';
-            $base_rules['add_embedded_media.*.type'] = 'required|in:embedded_audio,embedded_video,url';
+            $base_rules['add_embedded_media.*.type'] = 'required|in:embedded_audio,embedded_video';
             $base_rules['add_embedded_media.*.path'] = 'required|max:255';
         }
 
