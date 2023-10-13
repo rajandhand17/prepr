@@ -311,7 +311,6 @@ class Challenge extends Command
                             $challengeAssessmentCriteria->save();
                         }
                     }
-
                 }
             }
 
