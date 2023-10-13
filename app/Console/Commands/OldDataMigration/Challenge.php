@@ -300,15 +300,15 @@ class Challenge extends Command
                     }
 
                     // For Challenge Assessment Criteria
-                    $challengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $challenge->id)->whereNull('deleted_at')->get();
-                    if ($challengeAssessmentCriterias->isNotEmpty()) {
-                        foreach ($challengeAssessmentCriterias as $challengeAssessmentCriteria) {
-                            $challengeAssessment = new ChallengeAssessmentCriteria();
-                            $challengeAssessment->challenge_id = $challengeAssessmentCriteria->challenge_assessment_id;
-                            $challengeAssessment->title = $challengeAssessmentCriteria->title;
-                            $challengeAssessment->score = $challengeAssessmentCriteria->score;
-                            $challengeAssessment->weight = $challengeAssessmentCriteria->weight;
-                            $challengeAssessment->save();
+                    $checkChallengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $challenge->id)->whereNull('deleted_at')->get();
+                    if ($checkChallengeAssessmentCriterias->isNotEmpty()) {
+                        foreach ($checkChallengeAssessmentCriterias as $challengeAssessmentCriteriaOld) {
+                            $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
+                            $challengeAssessmentCriteria->challenge_id = $challengeAssessmentCriteriaOld->challenge_assessment_id;
+                            $challengeAssessmentCriteria->title = $challengeAssessmentCriteriaOld->title;
+                            $challengeAssessmentCriteria->score = $challengeAssessmentCriteriaOld->score;
+                            $challengeAssessmentCriteria->weight = $challengeAssessmentCriteriaOld->weight;
+                            $challengeAssessmentCriteria->save();
                         }
                     }
 
