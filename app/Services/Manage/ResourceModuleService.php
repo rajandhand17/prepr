@@ -68,7 +68,7 @@ class ResourceModuleService
                         $is_global = config('constants.resource_module_is_global.yes');
                         break;
                     default:
-                        $privacy = null;
+                        $is_global = null;
                 }
 
                 $resourceModule = $resourceModule->where('resource_modules.is_global', $is_global);
@@ -144,6 +144,26 @@ class ResourceModuleService
                     $status = config('constants.resource_module_status.draft');
                     break;
             }
+            switch ($request->is_global) {
+                case 'no':
+                    $is_global = config('constants.resource_module_is_global.no');
+                    break;
+                case 'yes':
+                    $is_global = config('constants.resource_module_is_global.yes');
+                    break;
+                default:
+                    $is_global = null;
+            }
+            switch ($request->privacy) {
+                case 'no':
+                    $privacy = config('constants.resource_module_privacy.no');
+                    break;
+                case 'yes':
+                    $privacy = config('constants.resource_module_privacy.yes');
+                    break;
+                default:
+                    $privacy = null;
+            }
             $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $resourceModule = new ResourceModule();
@@ -155,9 +175,9 @@ class ResourceModuleService
             $resourceModule->slug = $slug;
             $resourceModule->description = $request->description;
             $resourceModule->media = $upload_cover_image;
-            $resourceModule->privacy = ($request->privacy == 'yes') ? '1' : '0';
+            $resourceModule->privacy =$privacy;
             $resourceModule->status = $status;
-            $resourceModule->is_global = ($request->is_global == 'yes') ? '1' : '0';
+            $resourceModule->is_global = $is_global;
             $resourceModule->save();
 
             return $resourceModule;
@@ -196,15 +216,35 @@ class ResourceModuleService
                     $status = config('constants.resource_module_status.draft');
                     break;
             }
+            switch ($request->is_global) {
+                case 'no':
+                    $is_global = config('constants.resource_module_is_global.no');
+                    break;
+                case 'yes':
+                    $is_global = config('constants.resource_module_is_global.yes');
+                    break;
+                default:
+                    $is_global = null;
+            }
+            switch ($request->privacy) {
+                case 'no':
+                    $privacy = config('constants.resource_module_privacy.no');
+                    break;
+                case 'yes':
+                    $privacy = config('constants.resource_module_privacy.yes');
+                    break;
+                default:
+                    $privacy = null;
+            }
             $resourceModule = ResourceModule::where('slug', $slug)->first();
             $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
             $resourceModule->title = $request->title;
             $resourceModule->description = $request->description;
             $resourceModule->media = $cover_image;
-            $resourceModule->privacy = ($request->privacy == 'yes') ? '1' : '0';
+            $resourceModule->privacy =$privacy;
             $resourceModule->status = $status;
-            $resourceModule->is_global = ($request->is_global == 'yes') ? '1' : '0';
+            $resourceModule->is_global = $is_global;
             $resourceModule->save();
 
             return $resourceModule;
