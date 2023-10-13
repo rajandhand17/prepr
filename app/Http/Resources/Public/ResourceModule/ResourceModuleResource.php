@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Public\ResourceModule;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceModuleResource extends JsonResource
@@ -12,27 +11,92 @@ class ResourceModuleResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
         $links = [];
         $files = [];
-        $documents = [];
+        $document = [];
         $video = [];
         $audio = [];
-        if ($this->url) {
-            $links = $this->url;
+        $privacy = '';
+        $status = '';
+        $is_global = '';
+        if ($this->urls) {
+            $links = $this->urls->map(function ($index) {
+                return [
+                    'id'            => $index->id,
+                    'title'         => $index->title,
+                    'path'          => $index->getRawOriginal('path'),
+                    'social_link_id'=> $index->social_link_id,
+                ];
+            })->all();
         }
-        if ($this->image) {
-            $files = $this->image;
+        if ($this->images) {
+            $files = $this->images;
         }
         if ($this->documents) {
-            $documents = $this->documents;
+            $document = $this->documents;
         }
-        if ($this->video) {
-            $video = $this->video;
+        if ($this->videos) {
+            $video = $this->videos;
         }
-        if ($this->audio) {
-            $audio = $this->audio;
+        if ($this->audios) {
+            $audio = $this->audios;
+        }
+        if ($this->embedded_videos) {
+            $embedded_video = $this->embedded_videos->map(function ($index) {
+                return [
+                    'id'    => $index->id,
+                    'title' => $index->title,
+                    'path'  => $index->getRawOriginal('path'),
+                ];
+            })->all();
+        }
+        if ($this->embedded_audios) {
+            $embedded_audio = $this->embedded_audios->map(function ($index) {
+                return [
+                    'id'    => $index->id,
+                    'title' => $index->title,
+                    'path'  => $index->getRawOriginal('path'),
+                ];
+            })->all();
+        }
+        switch($this->privacy) {
+            case '0':
+                $privacy = 'yes';
+                break;
+            case '1':
+                $privacy = 'no';
+                break;
+            default:
+                $privacy = 'no';
+                break;
+        }
+
+        switch($this->status) {
+            case '0':
+                $status = 'draft';
+                break;
+            case '1':
+                $status = 'published';
+                break;
+            case '2':
+                $status = 'archive';
+                break;
+            default:
+                $status = 'draft';
+                break;
+        }
+        switch($this->is_global) {
+            case '0':
+                $is_global = 'yes';
+                break;
+            case '1':
+                $is_global = 'no';
+                break;
+            default:
+                $is_global = 'no';
+                break;
         }
 
         return [
@@ -45,15 +109,20 @@ class ResourceModuleResource extends JsonResource
             'description'                             => $this->description,
             'media_type'                              => $this->media_type,
             'cover_image'                             => $this->media,
-            'privacy'                                 => ($this->privacy == '1') ? 'yes' : 'no',
-            'status'                                  => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
-            'is_global'                               => ($this->is_global == '1') ? 'yes' : 'no',
+            'privacy'                                 => $privacy,
+            'status'                                  => $status,
+            'is_global'                               => $is_global,
             'links'                                   => $links,
             'files'                                   => $files,
-            'documents'                               => $documents,
+            'documents'                               => $document,
             'video'                                   => $video,
             'audio'                                   => $audio,
-
+            'embedded_video'                          => $embedded_video,
+            'embedded_audio'                          => $embedded_audio,
+            'likes'                                   => $this->likes()->count(),
+            'shares'                                  => $this->shares()->count(),
+            'liked'                                   => $this->liked(),
+            'favourite'                               => $this->favorites(),
         ];
     }
 }
