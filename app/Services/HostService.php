@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Host;
+use Exception;
 
 class HostService
 {
@@ -21,6 +22,35 @@ class HostService
 
             return false;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkSponsor($request)
+    {
+        try {
+            return Host::where(['title' => $request->title, 'link' => $request->link])->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createSponsor($request)
+    {
+        try {
+            $checkSponsor = Host::where(['title' => $request->title, 'link' => $request->link])->first();
+            if (!$checkSponsor) {
+                $newSponsor = new Host();
+                $newSponsor->title = $request->title;
+                $newSponsor->link = $request->link;
+                $newSponsor->image = $request->image;
+                $newSponsor->status = '1';
+                $newSponsor->save();
+
+                return $newSponsor;
+            }
+            return false;
+        } catch (Exception $e) {
             return false;
         }
     }

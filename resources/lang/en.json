@@ -485,5 +485,12 @@
     "responses.create_member_manger_error_certain": "Oops! Unable to add certain members. Please check and try again.",
     "responses.create_member_manger_success_organization": "Congratulations! You have successfully added member(s) to an Organization.",
     "responses.create_member_manger_success_lab": "Congratulations! You have successfully added member(s) to an Lab.",
-    "responses.create_member_manger_success_challenge": "Congratulations! You have successfully added member(s) to an Challenge."
+    "responses.create_member_manger_success_challenge": "Congratulations! You have successfully added member(s) to an Challenge.",
+    "responses.sponsor_host_not_available": "Oops! This Sponsor Host is available",
+    "responses.sponsor_host_stored_failed": "Oops! The Creation of new Sponsor has failed.",
+    "responses.sponsor_host_added": "Congratulations! You have successfully added new Sponsor.",
+    "responses.sponsor_host_title_required": "Sponsor title field is required",
+    "responses.sponsor_host_title_unique": "Sponsor title is already taken",
+    "responses.sponsor_host_link_required": "Sponsor link field is required",
+    "responses.sponsor_host_link_unique": "Sponsor link is already taken"
 }
