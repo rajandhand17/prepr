@@ -16,7 +16,7 @@ return new class() extends Migration {
             $table->enum('achievement_type', ['0', '1'])->comment('0->participation, 1->incentive')->default('0');
             $table->string('achievement_name', 255)->nullable();
             $table->string('achievement_prize', 255)->nullable();
-            $table->integer('achievement_points')->nullable();
+            $table->string('achievement_points', 255)->nullable();
             $table->text('achievement_image')->nullable();
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
             $table->timestamps();

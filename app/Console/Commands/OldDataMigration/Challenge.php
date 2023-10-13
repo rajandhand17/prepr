@@ -7,6 +7,7 @@ use App\Models\Challenge as ModelChallenge;
 use App\Models\ChallengeAchievement;
 use App\Models\ChallengeAssessment;
 use App\Models\ChallengeAssessmentCriteria;
+use App\Models\ChallengeProjectTemplate;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
@@ -384,6 +385,17 @@ class Challenge extends Command
                             }
                         }
                     }
+
+                    // For Challenge Project Template
+                    $checkChallengeProjectTemplates = DB::connection('mysql2')->table('challenge_pitches')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
+                    if ($checkChallengeProjectTemplates->isNotEmpty()) {
+                        foreach ($checkChallengeProjectTemplates as $checkChallengeProjectTemplate) {
+                            $challengeProjectTemplate = new ChallengeProjectTemplate();
+                            $challengeProjectTemplate->challenge_id = $checkChallengeProjectTemplate->challenge_id;
+                            $challengeProjectTemplate->template_id = $checkChallengeProjectTemplate->pitch_template_id;
+                            $challengeProjectTemplate->save();
+                        }
+                    }                    
                 }
             }
 
