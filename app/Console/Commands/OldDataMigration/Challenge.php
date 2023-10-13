@@ -22,6 +22,7 @@ use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use parallel\Future\Error\Foreign;
 
 class Challenge extends Command
 {
@@ -198,7 +199,7 @@ class Challenge extends Command
                     // For Challenge Skill
                     $arraySkills = json_decode($challenge->challange_skill, true);
                     if (!empty($arraySkills)) {
-                        ChallengeSkillsGroupsStack::where('challenge_id', $challenge->id)->delete();
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '0'])->delete();
                         foreach (array_filter($arraySkills) as $skill) {
                             $challengeSkill = new ChallengeSkillsGroupsStack();
                             $challengeSkill->challenge_id = $challenge->id;
@@ -208,10 +209,36 @@ class Challenge extends Command
                         }
                     }
 
+                    // For Challenge Skill Stack
+                    $skillStacks = $challenge->skill_stacks;
+                    if (!empty($skillStacks)) {
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '2'])->delete();
+                        foreach (explode(',', $skillStacks) as $skillStack) {
+                            $challengeSkillStack = new ChallengeSkillsGroupsStack();
+                            $challengeSkillStack->challenge_id = $challenge->id;
+                            $challengeSkillStack->foreign_id = $skillStack;
+                            $challengeSkillStack->type = '2';
+                            $challengeSkillStack->save();
+                        }
+                    }
+
+                    // For Challenge Skill Group
+                    $skillGroups = $challenge->skill_groups;
+                    if (!empty($skillGroups)) {
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '1'])->delete();
+                        foreach (explode(',', $skillGroups) as $skillGroup) {
+                            $challengeSkillGroup = new ChallengeSkillsGroupsStack();
+                            $challengeSkillGroup->challenge_id = $challenge->id;
+                            $challengeSkillGroup->foreign_id = $skillGroup;
+                            $challengeSkillGroup->type = '1';
+                            $challengeSkillGroup->save();
+                        }
+                    }
+
                     // For Challenge Tag
                     $arrayTags = json_decode($challenge->challange_tag, true);
                     if (!empty($arrayTags)) {
-                        ChallengeTagsGroups::where('challenge_id', $challenge->id)->delete();
+                        ChallengeTagsGroups::where(['challenge_id' => $challenge->id, 'Foreign_id' => '0'])->delete();
                         foreach (array_filter($arrayTags) as $tag) {
                             $challengeTag = new ChallengeTagsGroups();
                             $challengeTag->challenge_id = $challenge->id;
