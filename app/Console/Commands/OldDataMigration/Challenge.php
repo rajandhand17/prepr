@@ -395,7 +395,7 @@ class Challenge extends Command
                             $challengeProjectTemplate->template_id = $checkChallengeProjectTemplate->pitch_template_id;
                             $challengeProjectTemplate->save();
                         }
-                    }                    
+                    }
                 }
             }
 
