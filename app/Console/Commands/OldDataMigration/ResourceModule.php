@@ -102,19 +102,6 @@ class ResourceModule extends Command
                     $newResourceModule->is_global= $single_resource->resourceGlobal;
                     $newResourceModule->save();
 
-                    /*if($single_resource->resource_skills){
-                        foreach (json_decode($single_resource->resource_skills) as $skill){
-                            $skills=Skill::where(['id' => $skill])->first();
-                            if($skills==null){
-                                continue;
-                            }
-                            $newResourceSkills=new ResourceModuleSkillsGroupsStack();
-                            $newResourceSkills->resource_module_id=$newResourceModule->id;
-                            $newResourceSkills->foreign_id=$skill;
-                            $newResourceSkills->type='0';
-                            $newResourceSkills->save();
-                        }
-                    }*/
                     if ($single_resource->resource_skills) {
                         $skillIds = json_decode($single_resource->resource_skills);
 
@@ -130,25 +117,10 @@ class ResourceModule extends Command
                             }
                         }
                     }
-//                    if($single_resource->skill_groups){
-//                        foreach(json_decode($single_resource->skill_groups) as $skill_group){
-//                            $skillGroup=SkillGroup::where('id',$skill_group)->first();
-//
-//                            if($skillGroup==null){
-//                                continue;
-//                            }
-//                            $newResourceSkillsGroups=new ResourceModuleSkillsGroupsStack();
-//                            $newResourceSkillsGroups->resource_module_id=$newResourceModule->id;
-//                            $newResourceSkillsGroups->foreign_id=$skill_group;
-//                            $newResourceSkillsGroups->type='1';
-//                            $newResourceSkillsGroups->save();
-//                            dd($newResourceSkillsGroups->id);
-//                        }
-//                    }
                     if ($single_resource->skill_groups) {
                         $skillGroupsIds = json_decode($single_resource->skill_groups);
 
-                        if (!empty($skillGroupsIds)) {
+                        if (!empty($skillGroupsIds) && is_array($skillGroupsIds)){
                             $existingSkillGroups = SkillGroup::whereIn('id', $skillGroupsIds)->get();
 
                             foreach ($existingSkillGroups as $skillGroup) {
@@ -161,80 +133,38 @@ class ResourceModule extends Command
                         }
                     }
 
-//                    if($single_resource->skill_stacks){
-//                        foreach(json_decode($single_resource->skill_stacks) as $skill_stacks){
-//                            $skillStacks=SkillStack::where('id',$skill_stacks)->first();
-//                            if($skillStacks==null){
-//                                continue;
-//                            }
-//                            $newResourceSkillsStacks=new ResourceModuleSkillsGroupsStack();
-//                            $newResourceSkillsStacks->resource_module_id=$newResourceModule->id;
-//                            $newResourceSkillsStacks->foreign_id=$skill_stacks;
-//                            $newResourceSkillsStacks->type='2';
-//                            $newResourceSkillsStacks->save();
-//                        }
-//                    }
-//                    if ($single_resource->skill_stacks) {
-//                        $skillStacksIds = json_decode($single_resource->skill_stacks);
-//
-//                        if (!empty($skillStacksIds)) {
-//                            $existingSkillStacks = SkillStack::whereIn('id', $skillStacksIds)->get();
-//
-//                            foreach ($existingSkillStacks as $skillStack) {
-//                                $newResourceSkillsStacks = new ResourceModuleSkillsGroupsStack();
-//                                $newResourceSkillsStacks->resource_module_id = $newResourceModule->id;
-//                                $newResourceSkillsStacks->foreign_id = $skillStack->id;
-//                                $newResourceSkillsStacks->type = '2'; // Assuming "type" is an integer in the database.
-//                                $newResourceSkillsStacks->save();
-//                            }
-//                        }
-//                    }
                     if ($single_resource->skill_stacks) {
                         $skillStacksIds = json_decode($single_resource->skill_stacks);
+                        if(!empty($skillStacksIds) && is_array($skillStacksIds)){
+                            foreach ($skillStacksIds as $skillStackId) {
+                                $skillStack = SkillStack::find($skillStackId);
 
-                        foreach ($skillStacksIds as $skillStackId) {
-                            $skillStack = SkillStack::find($skillStackId);
-
-                            if ($skillStack) {
-                                $newResourceSkillsStacks = new ResourceModuleSkillsGroupsStack([
-                                    'resource_module_id' => $newResourceModule->id,
-                                    'foreign_id' => $skillStack->id,
-                                    'type' => '2', // Assuming "type" is an integer in the database.
-                                ]);
-                                $newResourceSkillsStacks->save();
+                                if ($skillStack) {
+                                    $newResourceSkillsStacks = new ResourceModuleSkillsGroupsStack([
+                                        'resource_module_id' => $newResourceModule->id,
+                                        'foreign_id' => $skillStack->id,
+                                        'type' => '2', // Assuming "type" is an integer in the database.
+                                    ]);
+                                    $newResourceSkillsStacks->save();
+                                }
                             }
                         }
                     }
 
-//                    if ($single_resource->resource_tags) {
-//                        $tagIds = json_decode($single_resource->resource_tags);
-//
-//                        foreach ($tagIds as $tagId) {
-//                            $tag = Tag::find($tagId);
-//
-//                            if ($tag) {
-//                                $newResourceModuleTags = new ResourceModuleTagsGroups();
-//                                $newResourceModuleTags->fill([
-//                                    'resource_module_id' => $newResourceModule->id,
-//                                    'foreign_id' => $tag->id,
-//                                    'type' => '0', // Assuming "type" is an integer in the database.
-//                                ]);
-//                                $newResourceModuleTags->save();
-//                            }
-//                        }
-//                    }
                     if ($single_resource->resource_tags) {
                         $tagIds = json_decode($single_resource->resource_tags);
-
-                        foreach ($tagIds as $tagId) {
-                            if ($tag = Tag::find($tagId)) {
-                                ResourceModuleTagsGroups::create([
-                                    'resource_module_id' => $newResourceModule->id,
-                                    'foreign_id' => $tag->id,
-                                    'type' => '0', // Assuming "type" is an integer in the database.
-                                ]);
+                        if(!empty($tagIds) && is_array($tagIds)){
+                            foreach ($tagIds as $tagId) {
+                                if ($tag = Tag::find($tagId)) {
+                                    ResourceModuleTagsGroups::create([
+                                        'resource_module_id' => $newResourceModule->id,
+                                        'foreign_id' => $tag->id,
+                                        'type' => '0', // Assuming "type" is an integer in the database.
+                                    ]);
+                                }
                             }
                         }
+
                     }
                 }
                 DB::commit();

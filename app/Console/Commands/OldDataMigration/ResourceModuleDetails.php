@@ -84,13 +84,9 @@ class ResourceModuleDetails extends Command
                             $type=null;
                             break;
                     }
-                    dd($type);
                     if($type=="header"){
                         continue;
-                    }else{
-                        $this->info('start data inserting');
                     }
-                    $this->info('start data inserting');
                     $newResourceModule=new ResourceModuleDetail();
                     $newResourceModule->resource_module_id=$single_resource_module_details->resource_id;
                     $newResourceModule->title=$single_resource_module_details->title;
