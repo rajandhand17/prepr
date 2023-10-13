@@ -30,6 +30,7 @@ class CreateSponsorRequest extends FormRequest
             'link'      => 'required|url|unique:hosts,link',
             'image'     => 'required|mimes:jpeg,jpg,png,webp|max:1024',
         ];
+
         return $base_rules;
     }
 

@@ -1260,6 +1260,7 @@ class MasterController extends AppBaseController
             if ($createSponsorHost) {
                 return $this->sendResponse($createSponsorHost, __('responses.sponsor_host_added'), 200);
             }
+
             return $this->sendError(__('responses.sponsor_host_stored_failed'), 403);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
