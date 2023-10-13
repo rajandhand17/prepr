@@ -5,6 +5,7 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Models\Category;
 use App\Models\Challenge as ModelChallenge;
 use App\Models\ChallengeAchievement;
+use App\Models\ChallengeAssessment;
 use App\Models\ChallengeAssessmentCriteria;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
@@ -309,6 +310,78 @@ class Challenge extends Command
                             $challengeAssessmentCriteria->score = $challengeAssessmentCriteriaOld->score;
                             $challengeAssessmentCriteria->weight = $challengeAssessmentCriteriaOld->weight;
                             $challengeAssessmentCriteria->save();
+                        }
+                    }
+
+                    // For Challenge Assessment
+                    $checkChallengeAssessments = DB::connection('mysql2')->table('challange_assessments')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
+                    if ($checkChallengeAssessments->isNotEmpty()) {
+                        foreach ($checkChallengeAssessments as $checkChallengeAssessment) {
+                            switch ($checkChallengeAssessment->assessment_type) {
+                                case 'closed':
+                                    $challengeAssessmentType = '2';
+                                    break;
+                                case 'open':
+                                    $challengeAssessmentType = '1';
+                                    break;
+                                case 'none':
+                                    $challengeAssessmentType = '0';
+                                    break;
+                                default:
+                                    $challengeAssessmentType = '0';
+                                    break;
+                            }
+
+                            switch ($checkChallengeAssessment->visibility) {
+                                case 'none':
+                                    $challengeAssessmentVisibility = '0';
+                                    break;
+                                case 'hidden':
+                                    $challengeAssessmentVisibility = '2';
+                                    break;
+                                case 'users':
+                                    $challengeAssessmentVisibility = '1';
+                                    break;
+                                default:
+                                    $challengeAssessmentVisibility = '0';
+                                    break;
+                            }
+
+                            if ($challengeAssessmentType == '1') {
+                                $challengeAssessment = new ChallengeAssessment();
+                                $challengeAssessment->challenge_id = $checkChallengeAssessment->challenge_id;
+                                $challengeAssessment->assessment_type = $challengeAssessmentType;
+                                $challengeAssessment->visibility = $challengeAssessmentVisibility;
+                                $challengeAssessment->members_email = null;
+                                $challengeAssessment->guidelines = $checkChallengeAssessment->guidline;
+                                $challengeAssessment->attachments = $checkChallengeAssessment->attachment;
+                                $challengeAssessment->save();
+                            } elseif ($challengeAssessmentType == '2') {
+                                if ($checkChallengeAssessment->members != null || $checkChallengeAssessment->members != 'null' || $checkChallengeAssessment->members != '[null]') {
+                                    $memberEmailArray = json_decode($checkChallengeAssessment->members);
+                                    if (!empty($memberEmailArray)) {
+                                        foreach (array_filter($memberEmailArray) as $memberEmail) {
+                                            $challengeAssessment = new ChallengeAssessment();
+                                            $challengeAssessment->challenge_id = $checkChallengeAssessment->challenge_id;
+                                            $challengeAssessment->assessment_type = $challengeAssessmentType;
+                                            $challengeAssessment->visibility = $challengeAssessmentVisibility;
+                                            $challengeAssessment->members_email = $memberEmail;
+                                            $challengeAssessment->guidelines = $checkChallengeAssessment->guidline;
+                                            $challengeAssessment->attachments = $checkChallengeAssessment->attachment;
+                                            $challengeAssessment->save();
+                                        }
+                                    }
+                                }
+                            } elseif ($challengeAssessmentType == '0') {
+                                $challengeAssessment = new ChallengeAssessment();
+                                $challengeAssessment->challenge_id = $checkChallengeAssessment->challenge_id;
+                                $challengeAssessment->assessment_type = $challengeAssessmentType;
+                                $challengeAssessment->visibility = '0';
+                                $challengeAssessment->members_email = null;
+                                $challengeAssessment->guidelines = null;
+                                $challengeAssessment->attachments = null;
+                                $challengeAssessment->save();
+                            }
                         }
                     }
                 }
