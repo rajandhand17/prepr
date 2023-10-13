@@ -3,7 +3,6 @@
 namespace App\Services\Public;
 
 use App\Models\ResourceModule;
-use App\Models\ResourceModuleRating;
 
 class ResourceModuleService
 {

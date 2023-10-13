@@ -49,12 +49,12 @@ class ResourceModule extends Model
 
     public function embedded_videos()
     {
-      return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '3');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '3');
     }
+
     public function embedded_audios()
     {
         return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '4');
-
     }
 
     public function urls()
@@ -77,24 +77,31 @@ class ResourceModule extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function likes(){
-        return $this->hasMany(ResourceModuleSocialActivities::class,'resource_module_id','id')->where('like_dislike','1');
-    }
-    public function shares(){
-        return $this->hasMany(ResourceModuleSocialActivities::class,'resource_module_id','id')->where('share','1');
+    public function likes()
+    {
+        return $this->hasMany(ResourceModuleSocialActivities::class, 'resource_module_id', 'id')->where('like_dislike', '1');
     }
 
-    public function liked(){
-        if(auth('api')->check()){
-            return ($this->hasMany(ResourceModuleSocialActivities::class,'resource_module_id','id')->where('user_id',auth('api')->user()->id)->where('like_dislike','1')->count() > 0) ? 'Yes' : 'No';
+    public function shares()
+    {
+        return $this->hasMany(ResourceModuleSocialActivities::class, 'resource_module_id', 'id')->where('share', '1');
+    }
+
+    public function liked()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ResourceModuleSocialActivities::class, 'resource_module_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'N/A';
     }
 
-    public function favorites(){
-        if(auth('api')->check()){
-            return ($this->hasMany(ResourceModuleSocialActivities::class,'resource_module_id','id')->where('user_id',auth('api')->user()->id)->where('favourite','1')->count()>0) ? 'Yes' : 'No';
+    public function favorites()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ResourceModuleSocialActivities::class, 'resource_module_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'N/A';
     }
 }

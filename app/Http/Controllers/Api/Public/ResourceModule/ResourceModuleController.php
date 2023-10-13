@@ -30,8 +30,10 @@ class ResourceModuleController extends AppBaseController
                     'total_pages'  => $responseModuleList->lastPage(),
                     'list'         => ResourceModuleResource::collection($responseModuleList),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_resource_module_list'));
             }
+
             return $this->sendError(__('responses.not_found_resource_module_list'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -45,6 +47,7 @@ class ResourceModuleController extends AppBaseController
             if ($responseView) {
                 return $this->sendResponse(ResourceModuleResource::make($responseView), __('responses.found_resource_module_list'));
             }
+
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -56,12 +59,13 @@ class ResourceModuleController extends AppBaseController
         try {
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot == false) {
-            return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
             $addRating = $this->resourceModuleRepository->addRating($checkResourceModuleSlugExistsOrNot->id, $request);
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_module_rating_successfully'));
             }
+
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -87,6 +91,7 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_resource_module_successfully'));
                 }
             }
+
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

@@ -18,16 +18,16 @@ class ResourceModuleResource extends JsonResource
         $document = [];
         $video = [];
         $audio = [];
-        $privacy="";
-        $status="";
-        $is_global="";
+        $privacy = '';
+        $status = '';
+        $is_global = '';
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {
                 return [
-                    'id' => $index->id,
-                    'title' => $index->title,
-                    'path' => $index->getRawOriginal('path'),
-                    'social_link_id'=>$index->social_link_id,
+                    'id'            => $index->id,
+                    'title'         => $index->title,
+                    'path'          => $index->getRawOriginal('path'),
+                    'social_link_id'=> $index->social_link_id,
                 ];
             })->all();
         }
@@ -42,27 +42,26 @@ class ResourceModuleResource extends JsonResource
         }
         if ($this->audios) {
             $audio = $this->audios;
-
         }
-        if($this->embedded_videos){
+        if ($this->embedded_videos) {
             $embedded_video = $this->embedded_videos->map(function ($index) {
                 return [
-                    'id' => $index->id,
+                    'id'    => $index->id,
                     'title' => $index->title,
-                    'path' => $index->getRawOriginal('path'),
+                    'path'  => $index->getRawOriginal('path'),
                 ];
             })->all();
         }
-        if($this->embedded_audios){
+        if ($this->embedded_audios) {
             $embedded_audio = $this->embedded_audios->map(function ($index) {
                 return [
-                    'id' => $index->id,
+                    'id'    => $index->id,
                     'title' => $index->title,
-                    'path' => $index->getRawOriginal('path'),
+                    'path'  => $index->getRawOriginal('path'),
                 ];
             })->all();
         }
-        switch($this->privacy){
+        switch($this->privacy) {
             case '0':
                 $privacy = 'yes';
                 break;
@@ -99,6 +98,7 @@ class ResourceModuleResource extends JsonResource
                 $is_global = 'no';
                 break;
         }
+
         return [
             'id'                                      => $this->uuid,
             'language'                                => $this->language,
