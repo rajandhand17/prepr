@@ -54,7 +54,7 @@ class ResourceModuleController extends AppBaseController
     public function addRating($slug, AddRatingRequest $request)
     {
         try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot == false) {
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
@@ -62,7 +62,6 @@ class ResourceModuleController extends AppBaseController
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_module_rating_successfully'));
             }
-
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -72,7 +71,7 @@ class ResourceModuleController extends AppBaseController
     public function socialActivity($slug, $action)
     {
         try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->checkSlug($slug);
+            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleSlugExistsOrNot !== null) {
                 $getColumnNameValue = $this->resourceModuleRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
@@ -83,12 +82,11 @@ class ResourceModuleController extends AppBaseController
                 if ($checkActivity === true) {
                     return $this->sendError(__('responses.already_'.$action.'_resource_module'), 400);
                 }
-                $labProgram = $this->resourceModuleRepository->captureSocialActivity($checkResourceModuleSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
-                if ($labProgram) {
+                $resourceModule = $this->resourceModuleRepository->captureSocialActivity($checkResourceModuleSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                if ($resourceModule) {
                     return $this->sendResponse([], __('responses.'.$action.'_resource_module_successfully'));
                 }
             }
-
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

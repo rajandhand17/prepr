@@ -113,7 +113,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function updateResourceModule($slug, $request, $upload_cover_image)
     {
         try {
-            $createResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image) {
+            $updateResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image) {
                 $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request, $updateResourceModule->id);
                 $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->updateResourceModuleTagsGroups($request, $updateResourceModule->id);
@@ -124,7 +124,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                     'resourceModuleTagsGroupsService'=> $resourceModuleTagsGroupsService,
                 ];
             });
-            if ($createResourceModule['updateResourceModule'] && $createResourceModule['resourceModuleSkillsGroupsStack'] && $createResourceModule['resourceModuleTagsGroupsService']) {
+            if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
                 DB::commit();
 
                 return true;
