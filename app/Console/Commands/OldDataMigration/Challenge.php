@@ -13,9 +13,11 @@ use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTagsGroups;
+use App\Models\ChallengeTimelines;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
@@ -44,6 +46,8 @@ class Challenge extends Command
     {
         try {
             $this->info('Migrating of old data for challenges table started.');
+            DB::beginTransaction();
+
             $challenges = DB::connection('mysql2')->table('challanges')->get();
             if ($challenges->count() > 0) {
                 foreach ($challenges as $key => $challenge) {
@@ -444,14 +448,80 @@ class Challenge extends Command
                         }
                     }
 
+
+                    // For Challenge Timelines 
+                    $checkchallengeTimelines = ChallengeTimelines::where('challenge_id', $challenge->id)->first();
+                    if ($checkchallengeTimelines) {
+                        $challengeTimelines = $checkchallengeTimelines;
+                    } else {
+                        $challengeTimelines = new ChallengeTimelines();
+                    }
+
+                    switch ($challenge->dates) {
+                        case 'flexible':
+                            $challengeTimelineType = '0';
+                            break;
+                        case 'restricted':
+                            $challengeTimelineType = '1';
+                            break;
+                        default:
+                            $challengeTimelineType = null;
+                            break;
+                    }
+
+                    if ($challenge->length == null) {
+                        $openDate = $challenge->call_date;
+                        $submissionDate = $challenge->deadline;
+                        $open_date = Carbon::parse($openDate);
+                        $close_date = Carbon::parse($submissionDate);
+                        $challenge_duration = $open_date->diffInDays($close_date);
+                    }
+
+                    $challengeAutoAlert = '0';
+                    if ($challenge->automaticAlert != null) {
+                        switch (implode(json_decode($challenge->automaticAlert))) {
+                            case 'beforeDay':
+                                $challengeAutoAlert = '0';
+                                break;
+                            case 'beforeWeek':
+                                $challengeAutoAlert = '1';
+                                break;
+                            default:
+                                $challengeAutoAlert = '0';
+                                break;
+                        }
+                    }
+
+                    $challengeTimelines->challenge_id = $challenge->id;
+                    $challengeTimelines->timeline_type = $challengeTimelineType;
+                    $challengeTimelines->open_call_date = date('Y-m-d H:i:s', strtotime($challenge->call_date));
+                    $challengeTimelines->open_call_date_description = $challenge->call_date_desc ?? "Start of Challenge";
+                    $challengeTimelines->last_call_date = date('Y-m-d H:i:s', strtotime($challenge->last_registration_date));
+                    $challengeTimelines->last_call_date_description = $challenge->last_registration_date_desc ?? "Last day of registration";
+                    $challengeTimelines->application_deadline_date = date('Y-m-d H:i:s', strtotime($challenge->application_deadline));
+                    $challengeTimelines->application_deadline_date_description = $challenge->application_dateline_desc ?? "Last day of application deadline";
+                    $challengeTimelines->submission_deadline_date = date('Y-m-d H:i:s', strtotime($challenge->deadline));
+                    $challengeTimelines->submission_deadline_date_description = $challenge->submission_deadline_date_desc ?? "Last date of Challenge Submissioon";
+                    $challengeTimelines->challenge_duration = ($challenge->length != null) ? $challenge->length : $challenge_duration;
+                    $challengeTimelines->flexible_date_number = $challenge->flexibleDateNumber;
+                    $challengeTimelines->flexible_date_duration = $challenge->flexibleExpireDateDuration;
+                    $challengeTimelines->automatic_alert = $challengeAutoAlert;
+                    $challengeTimelines->flexible_expire_deadline = date('Y-m-d H:i:s', strtotime($challenge->flexibleExpireDate));
+                    $challengeTimelines->save();
+
                 }
+                DB::commit();
+                $this->info('Migrating of old data for Challanges table completed.');
+
+                return;
             }
 
-            return;
+            DB::rollback();
+            $this->error('No Challenges found.');
         } catch (Exception $e) {
-            dd($e);
-
-            return false;
+            DB::rollback();
+            $this->error($e->getMessage());
+            return;
         }
     }
 }
