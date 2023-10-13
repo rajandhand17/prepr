@@ -180,6 +180,7 @@ class Challenge extends Command
                     // For Challenge Host/Sponser
                     $arrayHost = json_decode($challenge->host_id, true);
                     if (!empty($arrayHost)) {
+                        ChallengeSponsor::where('challenge_id', $challenge->id)->delete();
                         foreach (array_filter($arrayHost) as $host) {
                             $checkHost = ChallengeSponsor::find($host);
                             if ($checkHost) {
@@ -197,6 +198,7 @@ class Challenge extends Command
                     // For Challenge Skill
                     $arraySkills = json_decode($challenge->challange_skill, true);
                     if (!empty($arraySkills)) {
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '0'])->delete();
                         foreach (array_filter($arraySkills) as $skill) {
                             $challengeSkill = new ChallengeSkillsGroupsStack();
                             $challengeSkill->challenge_id = $challenge->id;
@@ -206,9 +208,36 @@ class Challenge extends Command
                         }
                     }
 
+                    // For Challenge Skill Stack
+                    $skillStacks = $challenge->skill_stacks;
+                    if (!empty($skillStacks)) {
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '2'])->delete();
+                        foreach (explode(',', $skillStacks) as $skillStack) {
+                            $challengeSkillStack = new ChallengeSkillsGroupsStack();
+                            $challengeSkillStack->challenge_id = $challenge->id;
+                            $challengeSkillStack->foreign_id = $skillStack;
+                            $challengeSkillStack->type = '2';
+                            $challengeSkillStack->save();
+                        }
+                    }
+
+                    // For Challenge Skill Group
+                    $skillGroups = $challenge->skill_groups;
+                    if (!empty($skillGroups)) {
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '1'])->delete();
+                        foreach (explode(',', $skillGroups) as $skillGroup) {
+                            $challengeSkillGroup = new ChallengeSkillsGroupsStack();
+                            $challengeSkillGroup->challenge_id = $challenge->id;
+                            $challengeSkillGroup->foreign_id = $skillGroup;
+                            $challengeSkillGroup->type = '1';
+                            $challengeSkillGroup->save();
+                        }
+                    }
+
                     // For Challenge Tag
                     $arrayTags = json_decode($challenge->challange_tag, true);
                     if (!empty($arrayTags)) {
+                        ChallengeTagsGroups::where(['challenge_id' => $challenge->id, 'Foreign_id' => '0'])->delete();
                         foreach (array_filter($arrayTags) as $tag) {
                             $challengeTag = new ChallengeTagsGroups();
                             $challengeTag->challenge_id = $challenge->id;
@@ -282,6 +311,7 @@ class Challenge extends Command
                     // For Challenge Achievements
                     $challengePrices = DB::connection('mysql2')->table('challange_prices')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($challengePrices->isNotEmpty()) {
+                        ChallengeAchievement::where('challenge_id', $challenge->id)->delete();
                         foreach ($challengePrices as $challengePrice) {
                             switch ($challengePrice->type) {
                                 case 'incentive':
@@ -309,6 +339,7 @@ class Challenge extends Command
                     // For Challenge Assessment Criteria
                     $checkChallengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeAssessmentCriterias->isNotEmpty()) {
+                        ChallengeAssessmentCriteria::where('challenge_id', $challenge->id)->delete();
                         foreach ($checkChallengeAssessmentCriterias as $challengeAssessmentCriteriaOld) {
                             $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
                             $challengeAssessmentCriteria->challenge_id = $challengeAssessmentCriteriaOld->challenge_assessment_id;
@@ -322,6 +353,7 @@ class Challenge extends Command
                     // For Challenge Assessment
                     $checkChallengeAssessments = DB::connection('mysql2')->table('challange_assessments')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeAssessments->isNotEmpty()) {
+                        ChallengeAssessment::where('challenge_id', $challenge->id)->delete();
                         foreach ($checkChallengeAssessments as $checkChallengeAssessment) {
                             switch ($checkChallengeAssessment->assessment_type) {
                                 case 'closed':
@@ -394,6 +426,7 @@ class Challenge extends Command
                     // For Challenge Project Template
                     $checkChallengeProjectTemplates = DB::connection('mysql2')->table('challenge_pitches')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeProjectTemplates->isNotEmpty()) {
+                        ChallengeProjectTemplate::where('challenge_id', $challenge->id)->delete();
                         foreach ($checkChallengeProjectTemplates as $checkChallengeProjectTemplate) {
                             $challengeProjectTemplate = new ChallengeProjectTemplate();
                             $challengeProjectTemplate->challenge_id = $checkChallengeProjectTemplate->challenge_id;
@@ -405,6 +438,7 @@ class Challenge extends Command
                     // For Challenge Custom Timelines
                     $checkChallengeCustomTimelines = DB::connection('mysql2')->table('challenge_custom_time')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeCustomTimelines->isNotEmpty()) {
+                        ChallengeCustomTimelines::where('challenge_id', $challenge->id)->delete();
                         foreach ($checkChallengeCustomTimelines as $checkChallengeCustomTimeline) {
                             $custom_date = null;
                             if ($checkChallengeCustomTimeline->date != null) {

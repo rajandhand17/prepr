@@ -335,7 +335,7 @@ class MemberManagementService
                     $email_status = config('constants.member_management_email_status.na');
                     break;
                 default:
-                    $email_status = config('constants.member_management_auto_invite.scheduled');
+                    $email_status = config('constants.member_management_email_status.scheduled');
             }
             if ($module_type !== null) {
                 DB::beginTransaction();

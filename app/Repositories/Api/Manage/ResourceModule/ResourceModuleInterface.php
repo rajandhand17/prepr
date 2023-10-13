@@ -8,11 +8,21 @@ interface ResourceModuleInterface
 
     public function createResourceModule($request, $upload_media);
 
-    public function getResourceModuleBasedOnSlug($slug);
+    public function uploadResourceModuleCoverImage($cover_image);
 
-    public function checkSlug($slug);
+    public function getResourceModuleBasedOnSlug($slug);
 
     public function checkName($title);
 
-    public function delete($slug, $resource_module_id);
+    public function deleteResourceModule($slug, $resource_module_id);
+
+    public function addLinks($request, $resource_module_id);
+
+    public function addEmbeddedMedia($request, $resource_module_id);
+
+    public function updateResourceModule($slug, $request, $upload_cover_image);
+
+    public function fileUpload($request, $resource_module_id, $type);
+
+    public function deleteResourceModuleMedia($request, $resource_module_id, $type);
 }
