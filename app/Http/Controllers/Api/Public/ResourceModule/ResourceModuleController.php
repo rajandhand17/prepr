@@ -82,8 +82,8 @@ class ResourceModuleController extends AppBaseController
                 if ($checkActivity === true) {
                     return $this->sendError(__('responses.already_'.$action.'_resource_module'), 400);
                 }
-                $labProgram = $this->resourceModuleRepository->captureSocialActivity($checkResourceModuleSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
-                if ($labProgram) {
+                $resourceModule = $this->resourceModuleRepository->captureSocialActivity($checkResourceModuleSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                if ($resourceModule) {
                     return $this->sendResponse([], __('responses.'.$action.'_resource_module_successfully'));
                 }
             }
