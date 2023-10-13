@@ -22,7 +22,6 @@ use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use parallel\Future\Error\Foreign;
 
 class Challenge extends Command
 {
