@@ -73,7 +73,7 @@ class ChallengeController extends AppBaseController
                 $checkActivity = $this->challengeRepository->checkSocialActivity($challenge->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
                 if ($checkActivity === true) {
-                    return $this->sendError(__('responses.already_'.$action.'_lab'), 400);
+                    return $this->sendError(__('responses.already_'.$action.'_challenge'), 400);
                 }
                 $challenge = $this->challengeRepository->captureSocialActivity($challenge->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 if ($challenge) {

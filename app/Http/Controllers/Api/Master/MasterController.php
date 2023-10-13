@@ -1242,7 +1242,7 @@ class MasterController extends AppBaseController
             }
 
             return $this->sendResponse(null, __('responses.challenge_pitch_task_not_available'));
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

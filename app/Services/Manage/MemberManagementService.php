@@ -34,6 +34,13 @@ class MemberManagementService
                         'module_type' => $module_type,
                     ]);
                     break;
+                case 'challenge':
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    $memberListCollection = $memberListCollection->where([
+                        'module_id'   => $componentCollectionObject->id,
+                        'module_type' => $module_type,
+                    ]);
+                    break;
                 default:
                     $module_type = null;
                     $memberListCollection = null;
@@ -55,13 +62,14 @@ class MemberManagementService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $componentCollectionObject = $componentCollectionObject->where('invitee_name', 'like', '%'.$request->search.'%');
-                $componentCollectionObject = $componentCollectionObject->orWhere('role', 'like', '%'.$request->search.'%');
-                $componentCollectionObject = $componentCollectionObject->orWhere('email', 'like', '%'.$request->search.'%');
+                $componentCollectionObject = $componentCollectionObject->where(function ($query) use ($request) {
+                    $query->where('invitee_name', 'like', '%'.$request->search.'%')
+                    ->orWhere('email', 'like', '%'.$request->search.'%');
+                });
             }
 
-            if ($request->has('roles') && is_array($request->roles) && !empty($request->roles)) {
-                $componentCollectionObject = $componentCollectionObject->whereIn('role', $request->roles);
+            if ($request->has('role') && !empty($request->role)) {
+                $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
             }
             if ($request->has('invite_status') && !empty($request->invite_status)) {
                 $invite_status = null;
@@ -156,6 +164,9 @@ class MemberManagementService
                     break;
                 case 'lab':
                     $module_type = config('constants.email_template_module_type.lab');
+                    break;
+                case 'challenge':
+                    $module_type = config('constants.email_template_module_type.challenge');
                     break;
                 default:
                     $module_type = null;
@@ -280,12 +291,19 @@ class MemberManagementService
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
+                    $addedMemberResponse = __('responses.create_member_manger_success_organization');
                     break;
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
+                    $addedMemberResponse = __('responses.create_member_manger_success_lab');
+                    break;
+                case 'challenge':
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    $addedMemberResponse = __('responses.create_member_manger_success_challenge');
                     break;
                 default:
                     $module_type = null;
+                    $addedMemberResponse = null;
                     break;
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
@@ -317,7 +335,7 @@ class MemberManagementService
                     $email_status = config('constants.member_management_email_status.na');
                     break;
                 default:
-                    $email_status = config('constants.member_management_auto_invite.scheduled');
+                    $email_status = config('constants.member_management_email_status.scheduled');
             }
             if ($module_type !== null) {
                 DB::beginTransaction();
@@ -398,10 +416,21 @@ class MemberManagementService
                     }
                 }
                 DB::commit();
+
+                if (count($invalid_emails) > 0 || count($already_members) > 0) {
+                    if (count($invited_emails) < 1) {
+                        $addedMemberResponse = __('responses.create_member_manger_error');
+                    } else {
+                        $addedMemberResponse = __('responses.create_member_manger_error_certain');
+                    }
+                } elseif (count($invited_emails) > 0) {
+                    $addedMemberResponse = $addedMemberResponse;
+                }
                 $data = [
-                    'invalid_emails'  => $invalid_emails,
-                    'invited_emails'  => $invited_emails,
-                    'already_members' => $already_members,
+                    'invalid_emails'        => $invalid_emails,
+                    'invited_emails'        => $invited_emails,
+                    'already_members'       => $already_members,
+                    'add_member_response'   => $addedMemberResponse,
                 ];
 
                 return $data;
@@ -441,6 +470,9 @@ class MemberManagementService
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
                     break;
+                case 'challenge':
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    break;
                 default:
                     $module_type = null;
                     break;
@@ -459,7 +491,20 @@ class MemberManagementService
     public static function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
     {
         try {
-            $module_type = config('constants.member_management_component_type.lab');
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.member_management_component_type.organization');
+                    break;
+                case 'lab':
+                    $module_type = config('constants.member_management_component_type.lab');
+                    break;
+                case 'challenge':
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
+            }
 
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->get();
             if ($member_manger) {
@@ -475,7 +520,20 @@ class MemberManagementService
     public static function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
     {
         try {
-            $module_type = config('constants.member_management_component_type.lab');
+            switch ($component) {
+                case 'organization':
+                    $module_type = config('constants.member_management_component_type.organization');
+                    break;
+                case 'lab':
+                    $module_type = config('constants.member_management_component_type.lab');
+                    break;
+                case 'challenge':
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    break;
+                default:
+                    $module_type = null;
+                    break;
+            }
             switch($action) {
                 case 'accept':
                     $invite_status = config('constants.member_management_invite_status.accepted');

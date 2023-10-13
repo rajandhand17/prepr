@@ -18,4 +18,6 @@ class ResourceModuleTagsGroups extends Model
         'foreign_id',
         'type',
     ];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

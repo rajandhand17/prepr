@@ -193,4 +193,19 @@ return [
         'flexible'   => '0',
         'restricted' => '1',
     ],
+
+    'challenge_achievement_enable' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_sequential' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_requirement_common' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
 ];
