@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Manage\ResourceModule;
+namespace App\Http\Requests\Public\ResourceModule;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class DeleteMediaResourceModuleRequest extends FormRequest
+class AddRatingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class DeleteMediaResourceModuleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'media_id' => 'required|exists:resource_module_details,id',
+            'rating' => 'required|in:1,2,3,4,5',
         ];
     }
 
@@ -40,8 +40,8 @@ class DeleteMediaResourceModuleRequest extends FormRequest
     public function messages()
     {
         return [
-            'media_id.required'                 => __('responses.media_id_required'),
-            'media_id.exists'                   => __('responses.media_id_not_exists'),
+            'rating.required' => __('responses.review_field_required'),
+            'rating.in'       => __('responses.review_in'),
         ];
     }
 }

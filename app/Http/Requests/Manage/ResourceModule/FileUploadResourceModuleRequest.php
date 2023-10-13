@@ -24,7 +24,8 @@ class FileUploadResourceModuleRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'file_upload'                  => 'required|array|max:1024',
+            'file_upload'            => 'required|array',
+            'file_upload.*'          => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:1024',
         ];
 
         return $base_rules;
@@ -42,9 +43,10 @@ class FileUploadResourceModuleRequest extends FormRequest
     public function messages()
     {
         return [
-            'file_upload.required'              => __('responses.file_upload_required'),
-            'file_upload.array'                 => __('responses.file_upload_array'),
-            'file_upload.max'                   => __('responses.file_upload_max'),
+            'file_upload.required'                => __('responses.file_upload_required'),
+            'file_upload.array'                   => __('responses.file_upload_array'),
+            'file_upload.*.max'                   => __('responses.file_upload_max'),
+            'file_upload.*.mimes'                 => __('responses.resource_file_upload_mimes_image'),
         ];
     }
 }

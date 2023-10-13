@@ -24,22 +24,6 @@ class ResourceModuleDetailService
         }
     }
 
-    public function addLinks($resource_module_id, $title, $type, $path, $social_link_id)
-    {
-        try {
-            foreach ($title as $key => $value) {
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value, $type[$key], $path[$key], $social_link_id[$key]);
-                if (!$resourceModuleDetailed) {
-                    return false;
-                }
-            }
-
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function fileUpload($request, $resource_module_id, $type)
     {
         try {
@@ -72,7 +56,7 @@ class ResourceModuleDetailService
         }
     }
 
-    public function deleteMedia($request, $resource_module_id, $type)
+    public function deleteResourceModuleMedia($request, $resource_module_id, $type)
     {
         try {
             ResourceModuleDetail::where([
@@ -87,23 +71,40 @@ class ResourceModuleDetailService
         }
     }
 
-    public function addEmbedMedia($request, $resource_module_id)
+    public function addLinks($request, $resource_module_id)
     {
         try {
-            foreach ($request->type as $key => $value) {
-                switch ($value) {
-                    case 'embedded_video' || 'video':
+            foreach ($request->add_links as  $value) {
+                $type = config('constants.resource_module_type.url');
+                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
+                if (!$resourceModuleDetailed) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addEmbeddedMedia($request, $resource_module_id)
+    {
+        try {
+            foreach ($request->add_embedded_media as $key => $value) {
+                switch ($value['type']) {
+                    case 'embedded_video':
                         $type = config('constants.resource_module_type.embedded_video');
-                        $title = $value;
+                        $title = $value['type'];
                         break;
-                    case 'embedded_audio' || 'audio':
+                    case 'embedded_audio':
                         $type = config('constants.resource_module_type.embedded_audio');
-                        $title = $value;
+                        $title = $value['type'];
                         break;
                     default:
                         $type = '';
                 }
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $request->path[$key], null);
+                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $value['path'], null);
                 if (!$resourceModuleDetailed) {
                     return false;
                 }
