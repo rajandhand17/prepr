@@ -64,7 +64,7 @@ class ResourceModuleRating extends Command
                 return;
             }
             DB::rollback();
-            $this->error('No resource module found.');
+            $this->error('No resource module rating found.');
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());

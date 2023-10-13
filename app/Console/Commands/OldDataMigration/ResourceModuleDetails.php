@@ -23,7 +23,7 @@ class ResourceModuleDetails extends Command
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old resource module table data to new db structure.';
+    protected $description = 'This command is use to migrate old resource module details table data to new db structure.';
 
     /**
      * Create a new command instance.
@@ -101,7 +101,7 @@ class ResourceModuleDetails extends Command
                 return;
             }
             DB::rollback();
-            $this->error('No resource module found.');
+            $this->error('No resource module details found.');
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
