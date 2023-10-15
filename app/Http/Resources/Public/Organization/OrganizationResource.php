@@ -19,6 +19,7 @@ class OrganizationResource extends JsonResource
         $category = $this->getCategory;
 
         if ($category) {
+            $category_id = $this->getCategory->id;
             $category = $this->getCategory->title;
         } else {
             $category = null;
@@ -35,6 +36,7 @@ class OrganizationResource extends JsonResource
             'website'                      => $this->website,
             'about'                        => $this->about,
             'total_employees'              => $this->total_employees,
+            'category_id'                  => $category_id,
             'category'                     => $category,
             'lab_count'                    => $this->members->count(),
             'challenge_count'              => 0,

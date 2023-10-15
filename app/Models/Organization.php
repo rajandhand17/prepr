@@ -44,7 +44,7 @@ class Organization extends LaratrustTeam
 
     public function getCategory()
     {
-        return $this->hasOne(Category::class, 'id');
+        return $this->belongsTo(Category::class, 'category', 'id');
     }
 
     public function user()
