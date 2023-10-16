@@ -167,7 +167,6 @@ class Lab extends Command
                     $newLab->is_verified = $lab_verfied;
                     $newLab->save();
 
-
                     // For Lab Address
                     $checkLabAddress = LabAddress::where('lab_id', $lab->id)->first();
                     if ($checkLabAddress) {
@@ -184,7 +183,6 @@ class Lab extends Command
                     $newLabAddress->country = $lab->country;
                     $newLabAddress->save();
 
-
                     // For Lab Skill
                     $arraySkills = json_decode($lab->lab_skills, true);
                     if (!empty($arraySkills)) {
@@ -197,7 +195,6 @@ class Lab extends Command
                             $labSkill->save();
                         }
                     }
-
 
                     // For Lab Skill Stack
                     $skillStacks = $lab->skill_stacks;
@@ -212,7 +209,6 @@ class Lab extends Command
                         }
                     }
 
-                    
                     // For Lab Skill Group
                     $skillGroups = $lab->skill_groups;
                     if (!empty($skillGroups)) {
@@ -226,7 +222,6 @@ class Lab extends Command
                         }
                     }
 
-                    
                     // For Lab Tag
                     $arrayTags = json_decode($lab->tags, true);
                     if (!empty($arrayTags)) {
@@ -239,7 +234,6 @@ class Lab extends Command
                             $labTag->save();
                         }
                     }
-
 
                     // For Lab Social Links
                     $labSocialLinks = DB::connection('mysql2')->table('lab_sociallink')->where('lab_id', $lab->id)->whereNull('deleted_at')->whereNotNull('social_link_id')->whereNotNull('link_url')->get();
@@ -257,7 +251,6 @@ class Lab extends Command
                         }
                     }
 
-                    
                     // For Lab Achievements
                     $labAchevements = DB::connection('mysql2')->table('lab_achievements')->where('lab_id', $lab->id)->whereNull('deleted_at')->first();
                     if ($labAchevements) {
