@@ -13,13 +13,13 @@ return new class() extends Migration {
         Schema::create('challenge_requirements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('challenge_id');
-            $table->integer('min_rank')->comment('minimum rank needed to start challenge');
-            $table->integer('min_points')->comment('minimum points needed to start challenge');
+            $table->integer('min_rank')->comment('minimum rank needed to start challenge')->nullable();
+            $table->integer('min_points')->comment('minimum points needed to start challenge')->nullable();
             $table->json('project_submission_requirement_ids')->comment('requirements needed to complete challenge');
-            $table->integer('max_project_submission')->comment('maximum limit to project submissions');
-            $table->integer('min_experience')->comment('minimum experience needed to start challenge');
-            $table->integer('min_imported_badges')->comment('minimum imported achievement needed to start challenge');
-            $table->integer('min_achievement_counts')->comment('minimum achievements needed to start challenge');
+            $table->integer('max_project_submission')->comment('maximum limit to project submissions')->nullable();
+            $table->integer('min_experience')->comment('minimum experience needed to start challenge')->nullable();
+            $table->integer('min_imported_badges')->comment('minimum imported achievement needed to start challenge')->nullable();
+            $table->integer('min_achievement_counts')->comment('minimum achievements needed to start challenge')->nullable();
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
