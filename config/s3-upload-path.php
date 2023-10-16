@@ -9,5 +9,5 @@ return [
     'assessment'      => 'assessment/upload/',
     'resource_module' => 'resource_modules/upload/',
     'challenge_path'  => 'challenge_path/upload/',
-    'sponsor_host'    => 'sponsor_host/upload/'
+    'sponsor_host'    => 'uploads/hosts/'
 ];
