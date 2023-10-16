@@ -38,6 +38,8 @@ class LabProgram extends Command
     {
         try {
             $this->info('Migrating of old data for Lab Program table started.');
+            DB::beginTransaction();
+            
             $labPrograms = DB::connection('mysql2')->table('groups')->where('type', 'lab')->get();
             if ($labPrograms->isNotEmpty()) {
                 foreach ($labPrograms as $labProgram) {
@@ -155,12 +157,19 @@ class LabProgram extends Command
                         }
                     }
                 }
-                $this->info('Migrating of old data for Lab Program table completed.');
+                DB::commit();
+                $this->info('Migrating of old data for Lab Programs table completed.');
 
                 return;
             }
+
+            DB::rollback();
+            $this->error('No Lab Programs found.');
         } catch (Exception $e) {
-            dd($e);
+            DB::rollback();
+            $this->error($e->getMessage());
+
+            return;
         }
     }
 }
