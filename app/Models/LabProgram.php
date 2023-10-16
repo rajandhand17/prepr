@@ -19,7 +19,6 @@ class LabProgram extends Model
         'title',
         'slug',
         'description',
-        'lab_id',
         'user_id',
         'organization_id',
         'category_id',
