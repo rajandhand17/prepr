@@ -525,5 +525,13 @@
 
     "responses.path_content_255":"The path character limit is 255.",
     "responses.max_content_255":"Maximum character limit for this is 255.",
-    "responses.title_unique":"Sorry,this title already registered with us, Please choose another one"
+    "responses.title_unique":"Sorry,this title already registered with us, Please choose another one",
+
+    "responses.sponsor_host_not_available": "Oops! This Sponsor Host is available",
+    "responses.sponsor_host_stored_failed": "Oops! The Creation of new Sponsor has failed.",
+    "responses.sponsor_host_added": "Congratulations! You have successfully added new Sponsor.",
+    "responses.sponsor_host_title_required": "Sponsor title field is required",
+    "responses.sponsor_host_title_unique": "Sponsor title is already taken",
+    "responses.sponsor_host_link_required": "Sponsor link field is required",
+    "responses.sponsor_host_link_unique": "Sponsor link is already taken"
 }
