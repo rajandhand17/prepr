@@ -55,7 +55,7 @@ class Lab extends Command
                             $category = $checkCategory->id;
                         }
                     }
-                    
+
                     $checkLab = ModelsLab::find($lab->id);
                     if ($checkLab) {
                         $newLab = $checkLab;
@@ -82,7 +82,7 @@ class Lab extends Command
                             break;
                         case '1':
                             $res_sequencial = '1';
-                            break;                        
+                            break;
                         default:
                             $res_sequencial = '0';
                             break;
@@ -148,11 +148,8 @@ class Lab extends Command
                     $newLab->is_notification_enabled = '0';
                     $newLab->is_verified = $lab_verfied;
                     // $newLab->save();
-
-
                 }
             }
-
         } catch (Exception $e) {
             return;
         }
