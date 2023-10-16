@@ -2,9 +2,14 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use App\Models\Lab as Labs;
-use DB;
+use App\Models\Category;
+use App\Models\Lab as ModelsLab;
+use App\Models\Organization;
+use App\Models\User;
+use Exception;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class Lab extends Command
 {
@@ -13,95 +18,142 @@ class Lab extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:lab';
+    protected $signature = 'migrate-old-data:labs';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old host table data to new db structure.';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'This command is use to migrate old lab table data to new db structure.';
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle()
     {
         try {
-            $this->info('Migrating old data for lab table.');
-            DB::beginTransaction();
-
+            $this->info('Migrating old data for labs table.');
             $labs = DB::connection('mysql2')->table('labs')->get();
             if ($labs->count() > 0) {
-                foreach ($labs as $key => $single_lab) {
-                    $lab_details = [
-                        'id'                => $single_lab->id,
-                        'language'          => $single_lab->language,
-                        'slug'              => $single_lab->slug,
-                        'user_id'           => $single_lab->user_id,
-                        'organisation'      => $single_lab->organisation,
-                        'title'             => $single_lab->title,
-                        'verification'      => $single_lab->verification,
-                        'description'       => $single_lab->description,
-                        'category'          => $single_lab->category,
-                        'privacy'           => $single_lab->privacy,
-                        'mediaType'         => $single_lab->mediaType,
-                        'image'             => $single_lab->image,
-                        'member'            => $single_lab->member,
-                        'member_type'       => $single_lab->member_type,
-                        'latitude'          => $single_lab->latitute,
-                        'longitude'         => $single_lab->longitude,
-                        'address'           => $single_lab->address,
-                        'city'              => $single_lab->city,
-                        'country'           => $single_lab->country,
-                        'challnges'         => $single_lab->challnges,
-                        'lab_skills'        => $single_lab->lab_skills,
-                        'tag'               => $single_lab->tag,
-                        'status'            => $single_lab->status,
-                        'phone'             => $single_lab->phone,
-                        'company'           => $single_lab->company,
-                        'email'             => $single_lab->email,
-                        'website'           => $single_lab->website,
-                        'facebook'          => $single_lab->facebook,
-                        'linked'            => $single_lab->linked,
-                        'twitter'           => $single_lab->twitter,
-                        'total_share'       => $single_lab->total_share,
-                        'user_count'        => $single_lab->user_count,
-                        'is_auto_created'   => $single_lab->is_auto_created,
-                        'res_sequence'      => $single_lab->res_sequence,
-                        'cha_sequence'      => $single_lab->cha_sequence,
-                        'enable_achievement'=> $single_lab->enable_achievement,
-                        'skill_groups'      => $single_lab->skill_groups,
-                        'skill_stacks'      => $single_lab->skill_stacks,
-                    ];
-                    $check_labs = Labs::where($lab_details)->first();
-                    if (!$check_labs) {
-                        $records = Labs::create($lab_details);
+                foreach ($labs as $lab) {
+                    $checkUser = User::find($lab->user_id);
+                    if (!$checkUser) {
+                        continue;
                     }
+
+                    $checkOrganizatioon = Organization::find($lab->organisation);
+                    if (!$checkOrganizatioon) {
+                        continue;
+                    }
+
+                    $category = '1';
+                    if ($lab->category) {
+                        $checkOldCategory = DB::connection('mysql2')->table('categories')->find($lab->category);
+                        $checkCategory = Category::where('title', $checkOldCategory->name)->first();
+                        if ($checkCategory) {
+                            $category = $checkCategory->id;
+                        }
+                    }
+                    
+                    $checkLab = ModelsLab::find($lab->id);
+                    if ($checkLab) {
+                        $newLab = $checkLab;
+                    } else {
+                        $newLab = new Lab();
+                    }
+
+                    $privacy = config('constants.lab_privacy.no');
+                    switch ($lab->privacy) {
+                        case 'yes':
+                            $privacy = config('constants.lab_privacy.yes');
+                            break;
+                        case 'no':
+                            $privacy = config('constants.lab_privacy.no');
+                            break;
+                        default:
+                            $privacy = config('constants.lab_privacy.yes');
+                            break;
+                    }
+
+                    switch ($lab->res_sequence) {
+                        case '0':
+                            $res_sequencial = '0';
+                            break;
+                        case '1':
+                            $res_sequencial = '1';
+                            break;                        
+                        default:
+                            $res_sequencial = '0';
+                            break;
+                    }
+
+                    switch ($lab->cha_sequence) {
+                        case '0':
+                            $cha_sequencial = '0';
+                            break;
+                        case '1':
+                            $cha_sequencial = '1';
+                            break;
+                        default:
+                            $cha_sequencial = '0';
+                            break;
+                    }
+
+                    switch ($lab->enable_achievement) {
+                        case '0':
+                            $enable_achievement = '0';
+                            break;
+                        case '1':
+                            $enable_achievement = '1';
+                            break;
+                        default:
+                            $enable_achievement = '0';
+                            break;
+                    }
+
+                    switch ($lab->verification) {
+                        case '0':
+                            $lab_verfied = '0';
+                            break;
+                        case '1':
+                            $lab_verfied = '1';
+                            break;
+                        default:
+                            $lab_verfied = '0';
+                            break;
+                    }
+
+                    $newLab = $lab->id;
+                    $newLab->type = '4';
+                    $newLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+                    $newLab->language = $lab->language;
+                    $newLab->user_id = $lab->user_id;
+                    $newLab->organization_id = $lab->organisation;
+                    $newLab->category_id = $category;
+                    $newLab->duration_id = '1';
+                    $newLab->level_id = '1';
+                    $newLab->slug = $lab->slug;
+                    $newLab->title = $lab->slug;
+                    $newLab->description = $lab->description;
+                    $newLab->privacy = $privacy;
+                    $newLab->media_type = $lab->privacy;
+                    $newLab->media = $lab->image;
+                    $newLab->status = '1';
+                    $newLab->total_share = $lab->total_share;
+                    $newLab->is_auto_created = $lab->total_share;
+                    $newLab->is_resource_sequential = $res_sequencial;
+                    $newLab->is_sequential = $cha_sequencial;
+                    $newLab->is_achievement_enabled = $enable_achievement;
+                    $newLab->is_notification_enabled = '0';
+                    $newLab->is_verified = $lab_verfied;
+                    // $newLab->save();
+
+
                 }
-                DB::commit();
-                $this->info('Migrating of old data for labs table completed.');
-
-                return;
             }
-            DB::rollback();
-            $this->error('No Labs found.');
-        } catch (\Exception $e) {
-            DB::rollback();
-            $this->error($e->getMessage());
 
+        } catch (Exception $e) {
             return;
         }
     }
