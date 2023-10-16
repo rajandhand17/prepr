@@ -25,6 +25,7 @@ class OrganizationAddressResource extends JsonResource
             'city'            => $this->city,
             'state'           => $this->state,
             'country'         => $this->country,
+            'zip_code'        => $this->zip_code,
         ];
     }
 }
