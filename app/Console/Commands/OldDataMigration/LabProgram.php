@@ -39,7 +39,7 @@ class LabProgram extends Command
         try {
             $this->info('Migrating of old data for Lab Program table started.');
             DB::beginTransaction();
-            
+
             $labPrograms = DB::connection('mysql2')->table('groups')->where('type', 'lab')->get();
             if ($labPrograms->isNotEmpty()) {
                 foreach ($labPrograms as $labProgram) {
@@ -108,13 +108,12 @@ class LabProgram extends Command
                     $newLabProgram->level_id = '1';
                     $newLabProgram->media_type = 'image';
                     $newLabProgram->media = $labProgram->group_image;
-                    $newLabProgram->privacy = $labProgramPrivacy; 
+                    $newLabProgram->privacy = $labProgramPrivacy;
                     $newLabProgram->status = '1';
                     $newLabProgram->is_auto_created = $is_auto_created_labProgram;
                     $newLabProgram->is_achievement_enabled = '1';
                     $newLabProgram->is_sequential = '0';
                     $newLabProgram->save();
-
 
                     // For Lab Program Achievement
                     $checkLabProgramAchievement = LabProgramsAchievement::where('lab_program_id', $labProgram->id)->first();
@@ -128,7 +127,6 @@ class LabProgram extends Command
                     $newLabProgramAchievement->achievement_points = $labProgram->points;
                     $newLabProgramAchievement->achievement_image = $labProgram->trophy;
                     $newLabProgramAchievement->save();
-
 
                     // For Lab Program Association
                     if (!empty($labProgram->lab_id)) {
