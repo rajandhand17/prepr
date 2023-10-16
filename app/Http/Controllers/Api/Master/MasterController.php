@@ -1256,7 +1256,16 @@ class MasterController extends AppBaseController
                 return $this->sendResponse([], __('responses.sponsor_host_not_available'), 403);
             }
 
-            $createSponsorHost = $this->masterRepository->createSponsor($request);
+            $upload_sponsor_image = config('site-settings.default_user_profile_image');
+            if ($request->image !== null) {
+                $uploaded_sponsor_image = $this->masterRepository->uploadSponsorMedia($request->image);
+                if (!$uploaded_sponsor_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_sponsor_image = $uploaded_sponsor_image;
+            }
+
+            $createSponsorHost = $this->masterRepository->createSponsor($request, $upload_sponsor_image);
             if ($createSponsorHost) {
                 return $this->sendResponse($createSponsorHost, __('responses.sponsor_host_added'), 200);
             }

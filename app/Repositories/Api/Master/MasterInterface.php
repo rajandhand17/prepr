@@ -50,5 +50,5 @@ interface MasterInterface
 
     public function checkSponsor($request);
 
-    public function createSponsor($request);
+    public function createSponsor($request, $upload_sponsor_image);
 }

@@ -281,10 +281,19 @@ class MasterRepository implements MasterInterface
         }
     }
 
-    public function createSponsor($request)
+    public function uploadSponsorMedia($image)
     {
         try {
-            return $this->hostService->createSponsor($request);
+            return $this->hostService->uploadSponsorMedia($image);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createSponsor($request, $upload_sponsor_image)
+    {
+        try {
+            return $this->hostService->createSponsor($request, $upload_sponsor_image);
         } catch (Exception $e) {
             return false;
         }
