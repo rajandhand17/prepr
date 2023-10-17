@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Services\Public;use App\Models\ChallengePathSocialActivity;
+namespace App\Services\Public;
 use App\Models\ResourceModuleRating;
-use Illuminate\Support\Facades\Auth;
 
 class ResourceModuleRatingService
 {
@@ -13,8 +12,6 @@ class ResourceModuleRatingService
                 'resource_module_id'=> $resource_module_id,
                 'user_id'           => auth()->user()->id,
             ], [
-                'resource_module_id' => $resource_module_id,
-                'user_id' => auth()->user()->id,
                 'rating' => $request->rating,
             ]);
             return true;

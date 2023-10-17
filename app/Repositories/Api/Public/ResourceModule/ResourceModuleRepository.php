@@ -37,15 +37,6 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
-
-    public function checkSlug($slug)
-    {
-        try {
-            return $this->resourceModuleService->checkSlug($slug);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
     public function addRating($resource_module_id, $request)
     {
         try {

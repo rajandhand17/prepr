@@ -59,7 +59,7 @@ class CreateResourceModuleRequest extends FormRequest
     {
         return [
             'title.required'                 => __('responses.title_required'),
-            'title.unique'                   => __('responses.lab_program_title_unique'),
+            'title.unique'                   => __('responses.title_unique'),
             'description.required'           => __('responses.description_required'),
             'organization_id.required'       => __('responses.organization_id_required'),
             'organization_id.exists'         => __('responses.organization_not_exists'),

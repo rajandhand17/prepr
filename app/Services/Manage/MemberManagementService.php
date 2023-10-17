@@ -62,13 +62,14 @@ class MemberManagementService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $componentCollectionObject = $componentCollectionObject->where('invitee_name', 'like', '%'.$request->search.'%');
-                $componentCollectionObject = $componentCollectionObject->orWhere('role', 'like', '%'.$request->search.'%');
-                $componentCollectionObject = $componentCollectionObject->orWhere('email', 'like', '%'.$request->search.'%');
+                $componentCollectionObject = $componentCollectionObject->where(function ($query) use ($request) {
+                    $query->where('invitee_name', 'like', '%'.$request->search.'%')
+                    ->orWhere('email', 'like', '%'.$request->search.'%');
+                });
             }
 
-            if ($request->has('roles') && is_array($request->roles) && !empty($request->roles)) {
-                $componentCollectionObject = $componentCollectionObject->whereIn('role', $request->roles);
+            if ($request->has('role') && !empty($request->role)) {
+                $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
             }
             if ($request->has('invite_status') && !empty($request->invite_status)) {
                 $invite_status = null;
@@ -290,15 +291,19 @@ class MemberManagementService
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
+                    $addedMemberResponse = __('responses.create_member_manger_success_organization');
                     break;
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
+                    $addedMemberResponse = __('responses.create_member_manger_success_lab');
                     break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
+                    $addedMemberResponse = __('responses.create_member_manger_success_challenge');
                     break;
                 default:
                     $module_type = null;
+                    $addedMemberResponse = null;
                     break;
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
@@ -411,10 +416,21 @@ class MemberManagementService
                     }
                 }
                 DB::commit();
+
+                if (count($invalid_emails) > 0 || count($already_members) > 0) {
+                    if (count($invited_emails) < 1) {
+                        $addedMemberResponse = __('responses.create_member_manger_error');
+                    } else {
+                        $addedMemberResponse = __('responses.create_member_manger_error_certain');
+                    }
+                } elseif (count($invited_emails) > 0) {
+                    $addedMemberResponse = $addedMemberResponse;
+                }
                 $data = [
-                    'invalid_emails'  => $invalid_emails,
-                    'invited_emails'  => $invited_emails,
-                    'already_members' => $already_members,
+                    'invalid_emails'        => $invalid_emails,
+                    'invited_emails'        => $invited_emails,
+                    'already_members'       => $already_members,
+                    'add_member_response'   => $addedMemberResponse,
                 ];
 
                 return $data;
