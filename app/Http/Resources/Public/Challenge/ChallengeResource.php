@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Public\Challenge;
 
-use App\Http\Resources\Public\Challenge\ChallengeExternalLinkResource;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
