@@ -17,4 +17,7 @@ php artisan migrate-old-data:skill-stacks
 php artisan migrate-old-data:skill-groups
 php artisan migrate-old-data:users
 php artisan migrate-old-data:organizations
+php artisan migrate-old-data:project-pitchs
+php artisan migrate-old-data:project-tasks
 php artisan migrate-old-data:challenge
+php artisan migrate-old-data:labs
