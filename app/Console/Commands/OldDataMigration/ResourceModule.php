@@ -3,6 +3,8 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Models\Organization;
+use App\Models\ResourceModuleDetail;
+use App\Models\ResourceModuleRating as ResourceModuleRatings;
 use App\Models\Skill;
 use App\Models\User;
 use App\Models\Tag;
@@ -165,6 +167,61 @@ class ResourceModule extends Command
                             }
                         }
 
+                    }
+                    $resourceModuleDetails = DB::connection('mysql2')
+                        ->table('resource_module_details')
+                        ->where('type', '!=', 'header')
+                        ->where('resource_id', $single_resource->id)
+                        ->get();
+                    if($resourceModuleDetails){
+                        foreach($resourceModuleDetails as $resourceModuleDetail){
+                            switch($resourceModuleDetail->type){
+                                case 'document':
+                                    $type =config('constants.resource_module_type.document');
+                                    break;
+                                case 'video':
+                                    $type =config('constants.resource_module_type.video');
+                                    break;
+                                case 'audio':
+                                    $type =config('constants.resource_module_type.audio');
+                                    break;
+                                case 'embedded':
+                                    $type =config('constants.resource_module_type.embedded_video');
+                                    break;
+                                case 'embedded_audio':
+                                    $type =config('constants.resource_module_type.embedded_audio');
+                                    break;
+                                case 'url':
+                                    $type =config('constants.resource_module_type.url');
+                                    break;
+                                case 'image':
+                                    $type =config('constants.resource_module_type.image');
+                                    break;
+                                case 'Embedded_Cover_Video':
+                                    $type =config('constants.resource_module_type.Embedded_Cover_Video');
+                                    break;
+                                default:
+                                    $type=null;
+                                    break;
+                            }
+                            $newResourceModule=new ResourceModuleDetail();
+                            $newResourceModule->resource_module_id=$single_resource->id;
+                            $newResourceModule->title=$resourceModuleDetail->title;
+                            $newResourceModule->type=$type;
+                            $newResourceModule->path=$resourceModuleDetail->path;
+                            $newResourceModule->social_link_id=$resourceModuleDetail->social_link_id;
+                            $newResourceModule->save();
+                        }
+                    }
+                    $resourceRating = DB::connection('mysql2')->table('user_resource_ratings')->where('resource_module_id',$single_resource->id)->get();
+                    if ($resourceRating->count() > 0) {
+                        foreach ($resourceRating as  $single_resource_module_rating){
+                            $newResourceModuleRating=new ResourceModuleRatings();
+                            $newResourceModuleRating->resource_module_id =$single_resource_module_rating->res_id;
+                            $newResourceModuleRating->user_id =$single_resource_module_rating->user_id;
+                            $newResourceModuleRating->rating =$single_resource_module_rating->ratting;
+                            $newResourceModuleRating->save();
+                        }
                     }
                 }
                 DB::commit();
