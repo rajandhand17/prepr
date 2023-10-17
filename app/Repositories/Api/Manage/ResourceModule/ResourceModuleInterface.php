@@ -11,6 +11,7 @@ interface ResourceModuleInterface
     public function uploadResourceModuleCoverImage($cover_image);
 
     public function getResourceModuleBasedOnSlug($slug);
+
     public function checkName($title);
 
     public function deleteResourceModule($slug, $resource_module_id);

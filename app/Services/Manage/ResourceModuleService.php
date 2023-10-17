@@ -103,6 +103,7 @@ class ResourceModuleService
             return false;
         }
     }
+
     public static function deleteResourceModule($resource_module_id)
     {
         try {
@@ -175,7 +176,7 @@ class ResourceModuleService
             $resourceModule->slug = $slug;
             $resourceModule->description = $request->description;
             $resourceModule->media = $upload_cover_image;
-            $resourceModule->privacy =$privacy;
+            $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;
             $resourceModule->save();
@@ -242,7 +243,7 @@ class ResourceModuleService
             $resourceModule->title = $request->title;
             $resourceModule->description = $request->description;
             $resourceModule->media = $cover_image;
-            $resourceModule->privacy =$privacy;
+            $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;
             $resourceModule->save();
