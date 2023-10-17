@@ -167,4 +167,9 @@ class Challenge extends Model
 
         return 'NA';
     }
+
+    public function external_links()
+    {
+        return $this->hasMany(ChallengeExternalLink::class, 'challenge_id', 'id');
+    }
 }

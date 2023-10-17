@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\Challenge;
 
+use App\Http\Resources\Public\Challenge\ChallengeExternalLinkResource;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
@@ -220,6 +221,7 @@ class ChallengeResource extends JsonResource
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
             'project_submitted_count'       => '0', // Till project api's are not done statically sending this
+            'external_links'                => ChallengeExternalLinkResource::collection($this->external_links),
         ];
     }
 }
