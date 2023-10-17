@@ -3,19 +3,19 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Models\Organization;
+use App\Models\ResourceModule as ResourceModules;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleRating as ResourceModuleRatings;
-use App\Models\Skill;
-use App\Models\User;
-use App\Models\Tag;
-use App\Models\SkillStack;
-use App\Models\ResourceModule as ResourceModules;
 use App\Models\ResourceModuleSkillsGroupsStack;
 use App\Models\ResourceModuleTagsGroups;
+use App\Models\Skill;
+use App\Models\SkillGroup;
+use App\Models\SkillStack;
+use App\Models\Tag;
+use App\Models\User;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
-use App\Models\SkillGroup;
 
 class ResourceModule extends Command
 {
@@ -60,25 +60,25 @@ class ResourceModule extends Command
                     if (!$checkUser) {
                         continue;
                     }
-                    $organization=Organization::find($single_resource->org_id);
-                    if(!$organization){
+                    $organization = Organization::find($single_resource->org_id);
+                    if (!$organization) {
                         continue;
                     }
                     $check_resource_module = ResourceModules::where('title', $single_resource->res_title)->first();
 
-                    $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->where(['type'=>'header','resource_id'=>$single_resource->id])->first();
-                    if($resourceDetails!==null){
-                       $media=$resourceDetails->path;
-                    }else{
+                    $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->where(['type'=>'header', 'resource_id'=>$single_resource->id])->first();
+                    if ($resourceDetails !== null) {
+                        $media = $resourceDetails->path;
+                    } else {
                         $media = config('site-settings.default_resource_module_cover_image');
                     }
 
-                    switch($single_resource->status){
+                    switch($single_resource->status) {
                         case 'open':
-                            $privacy =config('constants.resource_module_privacy.no');
+                            $privacy = config('constants.resource_module_privacy.no');
                             break;
                         case 'closed':
-                            $privacy =config('constants.resource_module_privacy.yes');
+                            $privacy = config('constants.resource_module_privacy.yes');
                             break;
                         default:
                             $privacy = config('constants.resource_module_privacy.yes');
@@ -93,15 +93,15 @@ class ResourceModule extends Command
                     $newResourceModule->id = $single_resource->id;
                     $newResourceModule->language = $single_resource->language;
                     $newResourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-                    $newResourceModule->user_id  = $single_resource->user_id;
-                    $newResourceModule->organization_id= $single_resource->org_id;
-                    $newResourceModule->title= $single_resource->res_title;
-                    $newResourceModule->slug= $single_resource->res_title_slug;
-                    $newResourceModule->description= $single_resource->res_desc;
-                    $newResourceModule->media= $media;
-                    $newResourceModule->privacy= $privacy;
-                    $newResourceModule->status=$status;
-                    $newResourceModule->is_global= $single_resource->resourceGlobal;
+                    $newResourceModule->user_id = $single_resource->user_id;
+                    $newResourceModule->organization_id = $single_resource->org_id;
+                    $newResourceModule->title = $single_resource->res_title;
+                    $newResourceModule->slug = $single_resource->res_title_slug;
+                    $newResourceModule->description = $single_resource->res_desc;
+                    $newResourceModule->media = $media;
+                    $newResourceModule->privacy = $privacy;
+                    $newResourceModule->status = $status;
+                    $newResourceModule->is_global = $single_resource->resourceGlobal;
                     $newResourceModule->save();
 
                     if ($single_resource->resource_skills) {
@@ -114,7 +114,7 @@ class ResourceModule extends Command
                                 $newResourceSkills = new ResourceModuleSkillsGroupsStack();
                                 $newResourceSkills->resource_module_id = $newResourceModule->id;
                                 $newResourceSkills->foreign_id = $skill->id;
-                                $newResourceSkills->type ='0';
+                                $newResourceSkills->type = '0';
                                 $newResourceSkills->save();
                             }
                         }
@@ -122,7 +122,7 @@ class ResourceModule extends Command
                     if ($single_resource->skill_groups) {
                         $skillGroupsIds = json_decode($single_resource->skill_groups);
 
-                        if (!empty($skillGroupsIds) && is_array($skillGroupsIds)){
+                        if (!empty($skillGroupsIds) && is_array($skillGroupsIds)) {
                             $existingSkillGroups = SkillGroup::whereIn('id', $skillGroupsIds)->get();
 
                             foreach ($existingSkillGroups as $skillGroup) {
@@ -137,15 +137,15 @@ class ResourceModule extends Command
 
                     if ($single_resource->skill_stacks) {
                         $skillStacksIds = json_decode($single_resource->skill_stacks);
-                        if(!empty($skillStacksIds) && is_array($skillStacksIds)){
+                        if (!empty($skillStacksIds) && is_array($skillStacksIds)) {
                             foreach ($skillStacksIds as $skillStackId) {
                                 $skillStack = SkillStack::find($skillStackId);
 
                                 if ($skillStack) {
                                     $newResourceSkillsStacks = new ResourceModuleSkillsGroupsStack([
                                         'resource_module_id' => $newResourceModule->id,
-                                        'foreign_id' => $skillStack->id,
-                                        'type' => '2', // Assuming "type" is an integer in the database.
+                                        'foreign_id'         => $skillStack->id,
+                                        'type'               => '2', // Assuming "type" is an integer in the database.
                                     ]);
                                     $newResourceSkillsStacks->save();
                                 }
@@ -155,77 +155,77 @@ class ResourceModule extends Command
 
                     if ($single_resource->resource_tags) {
                         $tagIds = json_decode($single_resource->resource_tags);
-                        if(!empty($tagIds) && is_array($tagIds)){
+                        if (!empty($tagIds) && is_array($tagIds)) {
                             foreach ($tagIds as $tagId) {
                                 if ($tag = Tag::find($tagId)) {
                                     ResourceModuleTagsGroups::create([
                                         'resource_module_id' => $newResourceModule->id,
-                                        'foreign_id' => $tag->id,
-                                        'type' => '0', // Assuming "type" is an integer in the database.
+                                        'foreign_id'         => $tag->id,
+                                        'type'               => '0', // Assuming "type" is an integer in the database.
                                     ]);
                                 }
                             }
                         }
-
                     }
                     $resourceModuleDetails = DB::connection('mysql2')
                         ->table('resource_module_details')
                         ->where('type', '!=', 'header')
                         ->where('resource_id', $single_resource->id)
                         ->get();
-                    if($resourceModuleDetails){
-                        foreach($resourceModuleDetails as $resourceModuleDetail){
-                            switch($resourceModuleDetail->type){
+                    if ($resourceModuleDetails) {
+                        foreach ($resourceModuleDetails as $resourceModuleDetail) {
+                            switch($resourceModuleDetail->type) {
                                 case 'document':
-                                    $type =config('constants.resource_module_type.document');
+                                    $type = config('constants.resource_module_type.document');
                                     break;
                                 case 'video':
-                                    $type =config('constants.resource_module_type.video');
+                                    $type = config('constants.resource_module_type.video');
                                     break;
                                 case 'audio':
-                                    $type =config('constants.resource_module_type.audio');
+                                    $type = config('constants.resource_module_type.audio');
                                     break;
                                 case 'embedded':
-                                    $type =config('constants.resource_module_type.embedded_video');
+                                    $type = config('constants.resource_module_type.embedded_video');
                                     break;
                                 case 'embedded_audio':
-                                    $type =config('constants.resource_module_type.embedded_audio');
+                                    $type = config('constants.resource_module_type.embedded_audio');
                                     break;
                                 case 'url':
-                                    $type =config('constants.resource_module_type.url');
+                                    $type = config('constants.resource_module_type.url');
                                     break;
                                 case 'image':
-                                    $type =config('constants.resource_module_type.image');
+                                    $type = config('constants.resource_module_type.image');
                                     break;
                                 case 'Embedded_Cover_Video':
-                                    $type =config('constants.resource_module_type.Embedded_Cover_Video');
+                                    $type = config('constants.resource_module_type.Embedded_Cover_Video');
                                     break;
                                 default:
-                                    $type=null;
+                                    $type = null;
                                     break;
                             }
-                            $newResourceModule=new ResourceModuleDetail();
-                            $newResourceModule->resource_module_id=$single_resource->id;
-                            $newResourceModule->title=$resourceModuleDetail->title;
-                            $newResourceModule->type=$type;
-                            $newResourceModule->path=$resourceModuleDetail->path;
-                            $newResourceModule->social_link_id=$resourceModuleDetail->social_link_id;
+                            $newResourceModule = new ResourceModuleDetail();
+                            $newResourceModule->resource_module_id = $single_resource->id;
+                            $newResourceModule->title = $resourceModuleDetail->title;
+                            $newResourceModule->type = $type;
+                            $newResourceModule->path = $resourceModuleDetail->path;
+                            $newResourceModule->social_link_id = $resourceModuleDetail->social_link_id;
                             $newResourceModule->save();
                         }
                     }
-                    $resourceRating = DB::connection('mysql2')->table('user_resource_ratings')->where('resource_module_id',$single_resource->id)->get();
+                    $resourceRating = DB::connection('mysql2')->table('user_resource_ratings')->where('resource_module_id', $single_resource->id)->get();
                     if ($resourceRating->count() > 0) {
-                        foreach ($resourceRating as  $single_resource_module_rating){
-                            $newResourceModuleRating=new ResourceModuleRatings();
-                            $newResourceModuleRating->resource_module_id =$single_resource_module_rating->res_id;
-                            $newResourceModuleRating->user_id =$single_resource_module_rating->user_id;
-                            $newResourceModuleRating->rating =$single_resource_module_rating->ratting;
+                        foreach ($resourceRating as  $single_resource_module_rating) {
+                            $newResourceModuleRating = new ResourceModuleRatings();
+                            $newResourceModuleRating->resource_module_id = $single_resource_module_rating->res_id;
+                            $newResourceModuleRating->user_id = $single_resource_module_rating->user_id;
+                            $newResourceModuleRating->rating = $single_resource_module_rating->ratting;
                             $newResourceModuleRating->save();
                         }
                     }
                 }
                 DB::commit();
                 $this->info('Migrating of old data for resource module table completed.');
+
                 return;
             }
             DB::rollback();
@@ -233,6 +233,7 @@ class ResourceModule extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
