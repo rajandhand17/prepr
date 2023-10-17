@@ -71,7 +71,7 @@ class ChallengeAchievementService
     public static function updateChallengeAchievement($challenge_id, $request, $update_participation_achievement_image)
     {
         try {
-            $challengeAchievement = ChallengeAchievement::where('id', $challenge_id)->first();
+            $challengeAchievement = ChallengeAchievement::where(['challenge_id' => $challenge_id, 'achievement_type' => '0'])->first();
             $challengeAchievement->achievement_type = '0';
             $challengeAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $challengeAchievement->achievement_name;
             $challengeAchievement->achievement_prize = ($request->has('achievement_prize')) ? $request->achievement_prize : $challengeAchievement->achievement_prize;

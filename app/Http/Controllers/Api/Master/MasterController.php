@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Master;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Master\CreateSponsorRequest;
 use App\Http\Resources\Master\AcheivementConditionListResource;
 use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ChallengePitchTasksResource;
@@ -1242,6 +1243,34 @@ class MasterController extends AppBaseController
             }
 
             return $this->sendResponse(null, __('responses.challenge_pitch_task_not_available'));
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function createSponsor(CreateSponsorRequest $request)
+    {
+        try {
+            $checkSponsor = $this->masterRepository->checkSponsor($request);
+            if ($checkSponsor) {
+                return $this->sendResponse([], __('responses.sponsor_host_not_available'), 403);
+            }
+
+            $upload_sponsor_image = config('site-settings.default_user_profile_image');
+            if ($request->image !== null) {
+                $uploaded_sponsor_image = $this->masterRepository->uploadSponsorMedia($request->image);
+                if (!$uploaded_sponsor_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_sponsor_image = $uploaded_sponsor_image;
+            }
+
+            $createSponsorHost = $this->masterRepository->createSponsor($request, $upload_sponsor_image);
+            if ($createSponsorHost) {
+                return $this->sendResponse($createSponsorHost, __('responses.sponsor_host_added'), 200);
+            }
+
+            return $this->sendError(__('responses.sponsor_host_stored_failed'), 403);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

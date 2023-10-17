@@ -10,11 +10,13 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('challenge_project_templates', function (Blueprint $table) {
+        Schema::create('challenge_external_links', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('challenge_id');
-            $table->integer('template_id')->nullable();
+            $table->string('social_media_link');
+            $table->unsignedBigInteger('social_link_id');
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
+            $table->foreign('social_link_id')->references('id')->on('social_links')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +27,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('challenge_project_templates');
+        Schema::dropIfExists('challenge_external_links');
     }
 };

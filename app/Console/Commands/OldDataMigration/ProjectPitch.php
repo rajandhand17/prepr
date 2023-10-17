@@ -38,7 +38,7 @@ class ProjectPitch extends Command
             DB::connection('mysql2')->table('project_pitchs')->chunkById(1000, function ($project_pitchs) use ($insertArr) {
                 foreach ($project_pitchs as $project_pitch) {
                     $pitchTemplateCheck = PitchTemplate::where('id', $project_pitch->pitch_template_id)->first();
-                    if ($pitchTemplateCheck) {
+                    if ($pitchTemplateCheck && $project_pitch->status == '1') {
                         $projectPitch = [
                             'template_id'           => $project_pitch->pitch_template_id,
                             'title'                 => $project_pitch->name,
