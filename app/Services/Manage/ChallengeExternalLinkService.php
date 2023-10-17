@@ -23,6 +23,7 @@ class ChallengeExternalLinkService
                     }
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;
