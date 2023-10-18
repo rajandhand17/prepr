@@ -248,7 +248,6 @@ class ResourceModule extends Command
 
             return;
         } catch (Exception $e) {
-            dd($e);
             DB::rollback();
             $this->error($e);
 
