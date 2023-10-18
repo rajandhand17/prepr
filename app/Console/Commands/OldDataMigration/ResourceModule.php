@@ -11,9 +11,11 @@ use App\Models\ResourceModuleTagsGroups;
 use App\Models\Skill;
 use App\Models\SkillGroup;
 use App\Models\SkillStack;
+use App\Models\SocialLink;
 use App\Models\Tag;
 use App\Models\User;
-use DB;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 
@@ -64,13 +66,11 @@ class ResourceModule extends Command
                     if (!$organization) {
                         continue;
                     }
-                    $check_resource_module = ResourceModules::where('title', $single_resource->res_title)->first();
-
+                    
                     $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->where(['type'=>'header', 'resource_id'=>$single_resource->id])->first();
-                    if ($resourceDetails !== null) {
+                    $media = config('site-settings.default_resource_module_cover_image');
+                    if ($resourceDetails) {
                         $media = $resourceDetails->path;
-                    } else {
-                        $media = config('site-settings.default_resource_module_cover_image');
                     }
 
                     switch($single_resource->status) {
@@ -84,6 +84,20 @@ class ResourceModule extends Command
                             $privacy = config('constants.resource_module_privacy.yes');
                             break;
                     }
+
+                    switch ($single_resource->resourceGlobal) {
+                        case '0':
+                            $is_global = '0';
+                            break;
+                        case '1':
+                            $is_global = '1';
+                            break;
+                        default:
+                            $is_global = '0';
+                            break;
+                    }
+
+                    $check_resource_module = ResourceModules::where('id', $single_resource->id)->first();
                     $status = config('constants.resource_module_status.publish');
                     if ($check_resource_module) {
                         $newResourceModule = $check_resource_module;
@@ -101,80 +115,77 @@ class ResourceModule extends Command
                     $newResourceModule->media = $media;
                     $newResourceModule->privacy = $privacy;
                     $newResourceModule->status = $status;
-                    $newResourceModule->is_global = $single_resource->resourceGlobal;
+                    $newResourceModule->is_global = $is_global;
                     $newResourceModule->save();
 
-                    if ($single_resource->resource_skills) {
-                        $skillIds = json_decode($single_resource->resource_skills);
 
-                        if (!empty($skillIds)) {
-                            $existingSkills = Skill::whereIn('id', $skillIds)->get();
-
-                            foreach ($existingSkills as $skill) {
-                                $newResourceSkills = new ResourceModuleSkillsGroupsStack();
-                                $newResourceSkills->resource_module_id = $newResourceModule->id;
-                                $newResourceSkills->foreign_id = $skill->id;
-                                $newResourceSkills->type = '0';
-                                $newResourceSkills->save();
-                            }
-                        }
-                    }
-                    if ($single_resource->skill_groups) {
-                        $skillGroupsIds = json_decode($single_resource->skill_groups);
-
-                        if (!empty($skillGroupsIds) && is_array($skillGroupsIds)) {
-                            $existingSkillGroups = SkillGroup::whereIn('id', $skillGroupsIds)->get();
-
-                            foreach ($existingSkillGroups as $skillGroup) {
-                                $newResourceSkillsGroups = new ResourceModuleSkillsGroupsStack();
-                                $newResourceSkillsGroups->resource_module_id = $newResourceModule->id;
-                                $newResourceSkillsGroups->foreign_id = $skillGroup->id;
-                                $newResourceSkillsGroups->type = '1'; // Assuming "type" is an integer in the database.
-                                $newResourceSkillsGroups->save();
+                    // For Resource Module Skills
+                    $resourceSkillIdArray = json_decode($single_resource->resource_skills, true);
+                    if (!empty($resourceSkillIdArray)) {
+                        ResourceModuleSkillsGroupsStack::where(['id' => $single_resource->id, 'type' => '0'])->delete();
+                        foreach ($resourceSkillIdArray as $resourceSkillId) {
+                            $checkSkill = Skill::find($resourceSkillId);
+                            if ($checkSkill) {
+                                $newModuleSkill = new ResourceModuleSkillsGroupsStack();
+                                $newModuleSkill->resource_module_id = $single_resource->id;
+                                $newModuleSkill->foreign_id = $resourceSkillId;
+                                $newModuleSkill->type = '0';
+                                $newModuleSkill->save();
                             }
                         }
                     }
 
-                    if ($single_resource->skill_stacks) {
-                        $skillStacksIds = json_decode($single_resource->skill_stacks);
-                        if (!empty($skillStacksIds) && is_array($skillStacksIds)) {
-                            foreach ($skillStacksIds as $skillStackId) {
-                                $skillStack = SkillStack::find($skillStackId);
 
-                                if ($skillStack) {
-                                    $newResourceSkillsStacks = new ResourceModuleSkillsGroupsStack([
-                                        'resource_module_id' => $newResourceModule->id,
-                                        'foreign_id'         => $skillStack->id,
-                                        'type'               => '2', // Assuming "type" is an integer in the database.
-                                    ]);
-                                    $newResourceSkillsStacks->save();
-                                }
+                    // For Resource Module Skill Stacks
+                    $resourceSkillStacks = $single_resource->skill_stacks;
+                    if (!empty($resourceSkillStacks)) {
+                        ResourceModuleSkillsGroupsStack::where(['id' => $single_resource->id, 'type' => '1'])->delete();
+                        foreach (explode(',', $resourceSkillStacks) as $resourceSkillStackId) {
+                            $newModuleSkillStack = new ResourceModuleSkillsGroupsStack();
+                            $newModuleSkillStack->resource_module_id = $single_resource->id;
+                            $newModuleSkillStack->foreign_id = $resourceSkillStackId;
+                            $newModuleSkillStack->type = '1';
+                            $newModuleSkillStack->save();
+                        }
+                    }
+
+
+                    // For Resource Module Skill Groups
+                    $resourceSkillGroups = $single_resource->skill_groups;
+                    if (!empty($resourceSkillGroups)) {
+                        ResourceModuleSkillsGroupsStack::where(['id' => $single_resource->id, 'type' => '2'])->delete();
+                        foreach (explode(',', $resourceSkillGroups) as $resourceSkillGroupId) {
+                            $newModuleSkillGroup = new ResourceModuleSkillsGroupsStack();
+                            $newModuleSkillGroup->resource_module_id = $single_resource->id;
+                            $newModuleSkillGroup->foreign_id = $resourceSkillGroupId;
+                            $newModuleSkillGroup->type = '2';
+                            $newModuleSkillGroup->save();
+                        }
+                    }
+
+
+                    // For Resource Module Tags
+                    $resourceTagIdArray = json_decode($single_resource->resource_tags, true);
+                    if (!empty($resourceTagIdArray)) {
+                        ResourceModuleTagsGroups::where(['id' => $single_resource->id, 'type' => '0'])->delete();
+                        foreach ($resourceTagIdArray as $resourceTagId) {
+                            $checkTag = Tag::find($resourceTagId);
+                            if ($checkTag) {
+                                $newModuleTag = new ResourceModuleSkillsGroupsStack();
+                                $newModuleTag->resource_module_id = $single_resource->id;
+                                $newModuleTag->foreign_id = $resourceTagId;
+                                $newModuleTag->type = '0';
+                                $newModuleTag->save();
                             }
                         }
                     }
 
-                    if ($single_resource->resource_tags) {
-                        $tagIds = json_decode($single_resource->resource_tags);
-                        if (!empty($tagIds) && is_array($tagIds)) {
-                            foreach ($tagIds as $tagId) {
-                                if ($tag = Tag::find($tagId)) {
-                                    ResourceModuleTagsGroups::create([
-                                        'resource_module_id' => $newResourceModule->id,
-                                        'foreign_id'         => $tag->id,
-                                        'type'               => '0', // Assuming "type" is an integer in the database.
-                                    ]);
-                                }
-                            }
-                        }
-                    }
-                    $resourceModuleDetails = DB::connection('mysql2')
-                        ->table('resource_module_details')
-                        ->where('type', '!=', 'header')
-                        ->where('resource_id', $single_resource->id)
-                        ->get();
-                    if ($resourceModuleDetails) {
-                        foreach ($resourceModuleDetails as $resourceModuleDetail) {
-                            switch($resourceModuleDetail->type) {
+
+                    // For Resource Module Attachments
+                    $resourceModuleDetails = DB::connection('mysql2')->table('resource_module_details')->where('type', '!=', 'header')->where('resource_id', $single_resource->id)->get();
+                    if ($resourceModuleDetails->isNotEmpty()) {
+                        foreach ($resourceModuleDetails as $moduleData) {
+                            switch ($moduleData->type) {
                                 case 'document':
                                     $type = config('constants.resource_module_type.document');
                                     break;
@@ -202,23 +213,40 @@ class ResourceModule extends Command
                                 default:
                                     $type = null;
                                     break;
+
+                                $linkId = $moduleData->social_link_id;
+                                if ($type === 'url') {
+                                    $checkSocialLink = SocialLink::find($moduleData->social_link_id);
+                                    if(!$checkSocialLink){
+                                        $linkId = "15";
+                                    }
+                                }
+                                $newModuleAttachment = new ResourceModuleDetail();
+                                $newModuleAttachment->id = $moduleData->id;
+                                $newModuleAttachment->resource_module_id = $single_resource->id;
+                                $newModuleAttachment->title = $moduleData->title;
+                                $newModuleAttachment->type = $type;
+                                $newModuleAttachment->path = $moduleData->path;
+                                $newModuleAttachment->social_link_id = $linkId;
+                                $newModuleAttachment->save();
                             }
-                            $newResourceModule = new ResourceModuleDetail();
-                            $newResourceModule->resource_module_id = $single_resource->id;
-                            $newResourceModule->title = $resourceModuleDetail->title;
-                            $newResourceModule->type = $type;
-                            $newResourceModule->path = $resourceModuleDetail->path;
-                            $newResourceModule->social_link_id = $resourceModuleDetail->social_link_id;
-                            $newResourceModule->save();
                         }
                     }
-                    $resourceRating = DB::connection('mysql2')->table('user_resource_ratings')->where('resource_module_id', $single_resource->id)->get();
-                    if ($resourceRating->count() > 0) {
-                        foreach ($resourceRating as  $single_resource_module_rating) {
-                            $newResourceModuleRating = new ResourceModuleRatings();
-                            $newResourceModuleRating->resource_module_id = $single_resource_module_rating->res_id;
-                            $newResourceModuleRating->user_id = $single_resource_module_rating->user_id;
-                            $newResourceModuleRating->rating = $single_resource_module_rating->ratting;
+
+
+                    // For Resource Module Rating
+                    $resourceRatings = DB::connection('mysql2')->table('user_resource_ratings')->where('res_id', $single_resource->id)->get();
+                    if ($resourceRatings->isNotEmpty()) {
+                        foreach ($resourceRatings as $resourceRating) {
+                            $checkRating = ResourceModuleRatings::where('resource_module_id', $single_resource->id)->first();
+                            if ($checkRating) {
+                                $newResourceModuleRating = $checkRating;
+                            } else {
+                                $newResourceModuleRating = new ResourceModuleRatings();
+                            }
+                            $newResourceModuleRating->resource_module_id = $single_resource->id;
+                            $newResourceModuleRating->user_id = $resourceRating->user_id;
+                            $newResourceModuleRating->rating = $resourceRating->ratting;
                             $newResourceModuleRating->save();
                         }
                     }
@@ -230,9 +258,10 @@ class ResourceModule extends Command
             }
             DB::rollback();
             $this->error('No resource module found.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            dd($e);
             DB::rollback();
-            $this->error($e->getMessage());
+            $this->error($e);
 
             return;
         }
