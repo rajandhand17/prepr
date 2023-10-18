@@ -37,7 +37,7 @@ class Challenge extends Command
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old challanges table data to new db structure.';
+    protected $description = 'This command is use to migrate old Challanges table data to new db structure.';
 
     /**
      * Execute the console command.
@@ -45,7 +45,7 @@ class Challenge extends Command
     public function handle()
     {
         try {
-            $this->info('Migrating of old data for challenges table started.');
+            $this->info('Migrating of old data for Challenges table started.');
             DB::beginTransaction();
 
             $challenges = DB::connection('mysql2')->table('challanges')->get();
@@ -198,7 +198,7 @@ class Challenge extends Command
                     // For Challenge Skill
                     $arraySkills = json_decode($challenge->challange_skill, true);
                     if (!empty($arraySkills)) {
-                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '0'])->delete();
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '0'])->delete();
                         foreach (array_filter($arraySkills) as $skill) {
                             $challengeSkill = new ChallengeSkillsGroupsStack();
                             $challengeSkill->challenge_id = $challenge->id;
@@ -211,7 +211,7 @@ class Challenge extends Command
                     // For Challenge Skill Stack
                     $skillStacks = $challenge->skill_stacks;
                     if (!empty($skillStacks)) {
-                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '2'])->delete();
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '2'])->delete();
                         foreach (explode(',', $skillStacks) as $skillStack) {
                             $challengeSkillStack = new ChallengeSkillsGroupsStack();
                             $challengeSkillStack->challenge_id = $challenge->id;
@@ -224,7 +224,7 @@ class Challenge extends Command
                     // For Challenge Skill Group
                     $skillGroups = $challenge->skill_groups;
                     if (!empty($skillGroups)) {
-                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '1'])->delete();
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '1'])->delete();
                         foreach (explode(',', $skillGroups) as $skillGroup) {
                             $challengeSkillGroup = new ChallengeSkillsGroupsStack();
                             $challengeSkillGroup->challenge_id = $challenge->id;
@@ -237,7 +237,7 @@ class Challenge extends Command
                     // For Challenge Tag
                     $arrayTags = json_decode($challenge->challange_tag, true);
                     if (!empty($arrayTags)) {
-                        ChallengeTagsGroups::where(['challenge_id' => $challenge->id, 'Foreign_id' => '0'])->delete();
+                        ChallengeTagsGroups::where(['challenge_id' => $challenge->id, 'foreign_id' => '0'])->delete();
                         foreach (array_filter($arrayTags) as $tag) {
                             $challengeTag = new ChallengeTagsGroups();
                             $challengeTag->challenge_id = $challenge->id;
