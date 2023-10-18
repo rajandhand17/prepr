@@ -14,6 +14,7 @@ use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTagsGroups;
 use App\Models\ChallengeTimelines;
+use App\Models\Host;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\User;
@@ -181,7 +182,7 @@ class Challenge extends Command
                     if (!empty($arrayHost)) {
                         ChallengeSponsor::where('challenge_id', $challenge->id)->delete();
                         foreach (array_filter($arrayHost) as $host) {
-                            $checkHost = ChallengeSponsor::find($host);
+                            $checkHost = Host::find($host);
                             if ($checkHost) {
                                 $checkChallengeSponsor = ChallengeSponsor::where(['challenge_id' => $challenge->id, 'host_id' => $host])->first();
                                 if (!$checkChallengeSponsor) {
