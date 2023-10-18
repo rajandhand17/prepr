@@ -9,15 +9,13 @@ use App\Models\ResourceModuleRating as ResourceModuleRatings;
 use App\Models\ResourceModuleSkillsGroupsStack;
 use App\Models\ResourceModuleTagsGroups;
 use App\Models\Skill;
-use App\Models\SkillGroup;
-use App\Models\SkillStack;
 use App\Models\SocialLink;
 use App\Models\Tag;
 use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ResourceModule extends Command
 {
@@ -66,7 +64,7 @@ class ResourceModule extends Command
                     if (!$organization) {
                         continue;
                     }
-                    
+
                     $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->where(['type'=>'header', 'resource_id'=>$single_resource->id])->first();
                     $media = config('site-settings.default_resource_module_cover_image');
                     if ($resourceDetails) {
@@ -118,7 +116,6 @@ class ResourceModule extends Command
                     $newResourceModule->is_global = $is_global;
                     $newResourceModule->save();
 
-
                     // For Resource Module Skills
                     $resourceSkillIdArray = json_decode($single_resource->resource_skills, true);
                     if (!empty($resourceSkillIdArray)) {
@@ -135,7 +132,6 @@ class ResourceModule extends Command
                         }
                     }
 
-
                     // For Resource Module Skill Stacks
                     $resourceSkillStacks = $single_resource->skill_stacks;
                     if (!empty($resourceSkillStacks)) {
@@ -149,7 +145,6 @@ class ResourceModule extends Command
                         }
                     }
 
-
                     // For Resource Module Skill Groups
                     $resourceSkillGroups = $single_resource->skill_groups;
                     if (!empty($resourceSkillGroups)) {
@@ -162,7 +157,6 @@ class ResourceModule extends Command
                             $newModuleSkillGroup->save();
                         }
                     }
-
 
                     // For Resource Module Tags
                     $resourceTagIdArray = json_decode($single_resource->resource_tags, true);
@@ -179,7 +173,6 @@ class ResourceModule extends Command
                             }
                         }
                     }
-
 
                     // For Resource Module Attachments
                     $resourceModuleDetails = DB::connection('mysql2')->table('resource_module_details')->where('type', '!=', 'header')->where('resource_id', $single_resource->id)->get();
@@ -214,25 +207,24 @@ class ResourceModule extends Command
                                     $type = null;
                                     break;
 
-                                $linkId = $moduleData->social_link_id;
-                                if ($type === 'url') {
-                                    $checkSocialLink = SocialLink::find($moduleData->social_link_id);
-                                    if(!$checkSocialLink){
-                                        $linkId = "15";
+                                    $linkId = $moduleData->social_link_id;
+                                    if ($type === 'url') {
+                                        $checkSocialLink = SocialLink::find($moduleData->social_link_id);
+                                        if (!$checkSocialLink) {
+                                            $linkId = '15';
+                                        }
                                     }
-                                }
-                                $newModuleAttachment = new ResourceModuleDetail();
-                                $newModuleAttachment->id = $moduleData->id;
-                                $newModuleAttachment->resource_module_id = $single_resource->id;
-                                $newModuleAttachment->title = $moduleData->title;
-                                $newModuleAttachment->type = $type;
-                                $newModuleAttachment->path = $moduleData->path;
-                                $newModuleAttachment->social_link_id = $linkId;
-                                $newModuleAttachment->save();
+                                    $newModuleAttachment = new ResourceModuleDetail();
+                                    $newModuleAttachment->id = $moduleData->id;
+                                    $newModuleAttachment->resource_module_id = $single_resource->id;
+                                    $newModuleAttachment->title = $moduleData->title;
+                                    $newModuleAttachment->type = $type;
+                                    $newModuleAttachment->path = $moduleData->path;
+                                    $newModuleAttachment->social_link_id = $linkId;
+                                    $newModuleAttachment->save();
                             }
                         }
                     }
-
 
                     // For Resource Module Rating
                     $resourceRatings = DB::connection('mysql2')->table('user_resource_ratings')->where('res_id', $single_resource->id)->get();
