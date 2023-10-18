@@ -48,8 +48,7 @@ class Challenge extends Command
             $this->info('Migrating of old data for Challenges table started.');
             DB::beginTransaction();
 
-            $challenges = DB::connection('mysql2')->table('challanges')->get();
-            if ($challenges->count() > 0) {
+            DB::connection('mysql2')->table('challanges')->chunkById(1000, function ($challenges) {
                 foreach ($challenges as $key => $challenge) {
                     $checkUser = User::find($challenge->user_id);
                     if (!$checkUser) {
@@ -542,14 +541,12 @@ class Challenge extends Command
                     $challengeTimelines->flexible_expire_deadline = date('Y-m-d H:i:s', strtotime($challenge->flexibleExpireDate));
                     $challengeTimelines->save();
                 }
-                DB::commit();
-                $this->info('Migrating of old data for Challanges table completed.');
+            });
 
-                return;
-            }
+            DB::commit();
+            $this->info('Migrating of old data for Challanges table completed.');
 
-            DB::rollback();
-            $this->error('No Challenges found.');
+            return;
         } catch (Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());

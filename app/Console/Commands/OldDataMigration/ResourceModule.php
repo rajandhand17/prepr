@@ -53,8 +53,7 @@ class ResourceModule extends Command
         try {
             $this->info('Migrating old data for resource module table.');
             DB::beginTransaction();
-            $resources = DB::connection('mysql2')->table('resources')->get();
-            if ($resources->count() > 0) {
+            DB::connection('mysql2')->table('resources')->chunkById(1000, function ($resources) {
                 foreach ($resources as  $single_resource) {
                     $checkUser = User::find($single_resource->user_id);
                     if (!$checkUser) {
@@ -65,13 +64,13 @@ class ResourceModule extends Command
                         continue;
                     }
 
-                    $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->where(['type'=>'header', 'resource_id'=>$single_resource->id])->first();
+                    $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->where(['type' => 'header', 'resource_id' => $single_resource->id])->first();
                     $media = config('site-settings.default_resource_module_cover_image');
                     if ($resourceDetails) {
                         $media = $resourceDetails->path;
                     }
 
-                    switch($single_resource->status) {
+                    switch ($single_resource->status) {
                         case 'open':
                             $privacy = config('constants.resource_module_privacy.no');
                             break;
@@ -206,23 +205,23 @@ class ResourceModule extends Command
                                 default:
                                     $type = null;
                                     break;
-
-                                    $linkId = $moduleData->social_link_id;
-                                    if ($type === 'url') {
-                                        $checkSocialLink = SocialLink::find($moduleData->social_link_id);
-                                        if (!$checkSocialLink) {
-                                            $linkId = '15';
-                                        }
-                                    }
-                                    $newModuleAttachment = new ResourceModuleDetail();
-                                    $newModuleAttachment->id = $moduleData->id;
-                                    $newModuleAttachment->resource_module_id = $single_resource->id;
-                                    $newModuleAttachment->title = $moduleData->title;
-                                    $newModuleAttachment->type = $type;
-                                    $newModuleAttachment->path = $moduleData->path;
-                                    $newModuleAttachment->social_link_id = $linkId;
-                                    $newModuleAttachment->save();
                             }
+
+                            $linkId = $moduleData->social_link_id;
+                            if ($type === 'url') {
+                                $checkSocialLink = SocialLink::find($moduleData->social_link_id);
+                                if (!$checkSocialLink) {
+                                    $linkId = '15';
+                                }
+                            }
+                            $newModuleAttachment = new ResourceModuleDetail();
+                            $newModuleAttachment->id = $moduleData->id;
+                            $newModuleAttachment->resource_module_id = $single_resource->id;
+                            $newModuleAttachment->title = $moduleData->title;
+                            $newModuleAttachment->type = $type;
+                            $newModuleAttachment->path = $moduleData->path;
+                            $newModuleAttachment->social_link_id = $linkId;
+                            $newModuleAttachment->save();
                         }
                     }
 
@@ -243,13 +242,11 @@ class ResourceModule extends Command
                         }
                     }
                 }
-                DB::commit();
-                $this->info('Migrating of old data for resource module table completed.');
+            });
+            DB::commit();
+            $this->info('Migrating of old data for resource module table completed.');
 
-                return;
-            }
-            DB::rollback();
-            $this->error('No resource module found.');
+            return;
         } catch (Exception $e) {
             dd($e);
             DB::rollback();

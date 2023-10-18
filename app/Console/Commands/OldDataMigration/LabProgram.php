@@ -40,8 +40,7 @@ class LabProgram extends Command
             $this->info('Migrating of old data for Lab Program table started.');
             DB::beginTransaction();
 
-            $labPrograms = DB::connection('mysql2')->table('groups')->where('type', 'lab')->get();
-            if ($labPrograms->isNotEmpty()) {
+            DB::connection('mysql2')->table('groups')->where('type', 'lab')->chunkById(1000, function ($labPrograms) {
                 foreach ($labPrograms as $labProgram) {
                     $checkUser = User::find($labProgram->user_id);
                     if (!$checkUser) {
@@ -155,14 +154,11 @@ class LabProgram extends Command
                         }
                     }
                 }
-                DB::commit();
-                $this->info('Migrating of old data for Lab Programs table completed.');
+            });
+            DB::commit();
+            $this->info('Migrating of old data for Lab Programs table completed.');
 
-                return;
-            }
-
-            DB::rollback();
-            $this->error('No Lab Programs found.');
+            return;
         } catch (Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());

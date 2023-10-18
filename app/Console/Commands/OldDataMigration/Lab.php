@@ -41,8 +41,7 @@ class Lab extends Command
         try {
             $this->info('Migrating of old data for Labs table started.');
             DB::beginTransaction();
-            $labs = DB::connection('mysql2')->table('labs')->get();
-            if ($labs->count() > 0) {
+            DB::connection('mysql2')->table('labs')->chunkById(1000, function ($labs) {
                 foreach ($labs as $lab) {
                     $checkUser = User::find($lab->user_id);
                     if (!$checkUser) {
@@ -269,14 +268,11 @@ class Lab extends Command
                         $newLabAchievement->save();
                     }
                 }
-                DB::commit();
-                $this->info('Migrating of old data for Labs table completed.');
+            });
+            DB::commit();
+            $this->info('Migrating of old data for Labs table completed.');
 
-                return;
-            }
-
-            DB::rollback();
-            $this->error('No Labs found.');
+            return;
         } catch (Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
