@@ -115,52 +115,52 @@ class ChallengeResource extends JsonResource
             }
             switch ($this->challenge_requirements->allow_submit_project) {
                 case '0':
-                    $allow_submit_project = "no";
+                    $allow_submit_project = 'no';
                     break;
                 case '1':
-                    $allow_submit_project = "yes";
+                    $allow_submit_project = 'yes';
                     break;
                 default:
-                    $allow_submit_project = "no";
+                    $allow_submit_project = 'no';
                     break;
             }
 
             switch ($this->challenge_requirements->requirement_program) {
                 case '0':
-                    $requirement_program = "no";
+                    $requirement_program = 'no';
                     break;
                 case '1':
-                    $requirement_program = "yes";
+                    $requirement_program = 'yes';
                     break;
                 default:
-                    $requirement_program = "no";
+                    $requirement_program = 'no';
                     break;
             }
 
             switch ($this->challenge_requirements->complete_education_program) {
                 case '0':
-                    $complete_education_program = "no";
+                    $complete_education_program = 'no';
                     break;
                 case '1':
-                    $complete_education_program = "yes";
+                    $complete_education_program = 'yes';
                     break;
                 default:
-                    $complete_education_program = "no";
+                    $complete_education_program = 'no';
                     break;
             }
 
             switch ($this->challenge_requirements->complete_experience) {
                 case '0':
-                    $complete_experience = "no";
+                    $complete_experience = 'no';
                     break;
                 case '1':
-                    $complete_experience = "yes";
+                    $complete_experience = 'yes';
                     break;
                 default:
-                    $complete_experience = "no";
+                    $complete_experience = 'no';
                     break;
             }
-            
+
             $challenge_requirements = [
                 'min_rank'                              => $this->challenge_requirements->min_rank,
                 'min_points'                            => $this->challenge_requirements->min_points,
