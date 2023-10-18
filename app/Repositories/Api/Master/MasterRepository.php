@@ -271,4 +271,31 @@ class MasterRepository implements MasterInterface
             return false;
         }
     }
+
+    public function checkSponsor($request)
+    {
+        try {
+            return $this->hostService->checkSponsor($request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function uploadSponsorMedia($image)
+    {
+        try {
+            return $this->hostService->uploadSponsorMedia($image);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createSponsor($request, $upload_sponsor_image)
+    {
+        try {
+            return $this->hostService->createSponsor($request, $upload_sponsor_image);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

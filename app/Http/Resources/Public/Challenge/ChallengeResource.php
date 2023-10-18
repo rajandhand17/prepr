@@ -115,9 +115,11 @@ class ChallengeResource extends JsonResource
                 'minimum_rank'                     => $this->challenge_requirements->min_rank,
                 'minimum_points'                   => $this->challenge_requirements->min_points,
                 'maximum_submission'               => $this->challenge_requirements->max_project_submission,
+                'maximum_project_associated'       => $this->challenge_requirements->max_project_associate,
                 'minimum_experience'               => $this->challenge_requirements->min_experience,
                 'minimum_import_badges'            => $this->challenge_requirements->min_imported_badges,
                 'minimum_achievement_count'        => $this->challenge_requirements->min_achievement_counts,
+                'additional_requirements'          => $this->challenge_requirements->additional_requirements,
                 'challenge_completion_requirement' => json_decode(json_encode($challenge_conditions)),
             ];
         }
@@ -218,6 +220,7 @@ class ChallengeResource extends JsonResource
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
             'project_submitted_count'       => '0', // Till project api's are not done statically sending this
+            'external_links'                => ChallengeExternalLinkResource::collection($this->external_links),
         ];
     }
 }
