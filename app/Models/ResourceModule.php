@@ -21,6 +21,10 @@ class ResourceModule extends Model
         'title',
         'slug',
         'description',
+        'media_type',
+        'media',
+        'privacy',
+        'is_auto_created',
         'status',
         'is_global',
     ];

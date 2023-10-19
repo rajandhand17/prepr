@@ -64,10 +64,30 @@ class ResourceModule extends Command
                         continue;
                     }
 
-                    $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->where(['type' => 'header', 'resource_id' => $single_resource->id])->first();
+                    $resourceDetails = DB::connection('mysql2')->table('resource_module_details')->where(function ($query) {
+                        $query->where('type', 'header')
+                        ->orWhere('type', 'Embedded_Cover_Video');
+                    })
+                    ->where('resource_id', $single_resource->id)->first();
+
+
+                    $mediaType = 'image';
                     $media = config('site-settings.default_resource_module_cover_image');
                     if ($resourceDetails) {
-                        $media = $resourceDetails->path;
+                        switch ($resourceDetails->type) {
+                            case 'header':
+                                $mediaType = 'image';
+                                $media = $resourceDetails->path;
+                                break;
+                            case 'Embedded_Cover_Video':
+                                $mediaType = 'embedded';
+                                $media = $resourceDetails->path;
+                                break;
+                            default:
+                                $mediaType = 'image';
+                                $media = config('site-settings.default_resource_module_cover_image');
+                                break;
+                        }
                     }
 
                     switch ($single_resource->status) {
@@ -94,6 +114,18 @@ class ResourceModule extends Command
                             break;
                     }
 
+                    switch ($single_resource->is_auto_created) {
+                        case '0':
+                            $is_auto_created_module = '0';
+                            break;
+                        case '1':
+                            $is_auto_created_module = '1';
+                            break;
+                        default:
+                            $is_auto_created_module = '0';
+                            break;
+                    }
+
                     $check_resource_module = ResourceModules::where('id', $single_resource->id)->first();
                     $status = config('constants.resource_module_status.publish');
                     if ($check_resource_module) {
@@ -109,10 +141,12 @@ class ResourceModule extends Command
                     $newResourceModule->title = $single_resource->res_title;
                     $newResourceModule->slug = $single_resource->res_title_slug;
                     $newResourceModule->description = $single_resource->res_desc;
+                    $newResourceModule->media_type = $mediaType;
                     $newResourceModule->media = $media;
                     $newResourceModule->privacy = $privacy;
                     $newResourceModule->status = $status;
                     $newResourceModule->is_global = $is_global;
+                    $newResourceModule->is_auto_created = $is_auto_created_module;
                     $newResourceModule->save();
 
                     // For Resource Module Skills
