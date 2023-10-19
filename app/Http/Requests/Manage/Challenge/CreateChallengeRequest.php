@@ -62,6 +62,10 @@ class CreateChallengeRequest extends FormRequest
             'min_imported_badges'                   => 'required|numeric',
             'min_achievement_counts'                => 'required|numeric',
             'template_id'                           => 'required|numeric',
+            'allow_submit_project'                  => 'in:yes,no',
+            'requirement_program'                   => 'in:yes,no',
+            'complete_education_program'            => 'in:yes,no',
+            'complete_experience'                   => 'in:yes,no',
         ];
 
         if ($this->request->has('winner_achievement_participation')) {
