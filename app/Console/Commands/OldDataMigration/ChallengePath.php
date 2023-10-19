@@ -4,9 +4,9 @@ namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
 use App\Models\Category;
-use App\Models\ComponentAssociation;
 use App\Models\ChallengePath as ModelsChallengePath;
 use App\Models\ChallengePathAchievement;
+use App\Models\ComponentAssociation;
 use App\Models\Organization;
 use App\Models\User;
 use App\Services\Manage\ChallengeService;
