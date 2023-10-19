@@ -70,7 +70,6 @@ class ResourceModule extends Command
                     })
                     ->where('resource_id', $single_resource->id)->first();
 
-
                     $mediaType = 'image';
                     $media = config('site-settings.default_resource_module_cover_image');
                     if ($resourceDetails) {
