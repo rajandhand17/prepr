@@ -9,7 +9,7 @@ use App\Http\Requests\Manage\ResourceModule\DeleteMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
-use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Repositories\Api\Manage\ResourceModule\ResourceCollectionRepository;
 use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class ResourceModuleController extends AppBaseController
 {
     private $resourceModuleRepository;
 
-    public function __construct(ResourceModuleRepository $resourceModuleRepository)
+    public function __construct(ResourceCollectionRepository $resourceModuleRepository)
     {
         $this->resourceModuleRepository = $resourceModuleRepository;
     }
@@ -87,7 +87,6 @@ class ResourceModuleController extends AppBaseController
             if ($createResourceModule) {
                 return $this->sendResponse(__('responses.resource_module_stored_success'), 200);
             }
-
             return $this->sendError(__('responses.resource_module_stored_failed'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

@@ -487,7 +487,7 @@
     "responses.create_member_manger_success_organization": "Congratulations! You have successfully added member(s) to an Organization.",
     "responses.create_member_manger_success_lab": "Congratulations! You have successfully added member(s) to an Lab.",
     "responses.create_member_manger_success_challenge": "Congratulations! You have successfully added member(s) to an Challenge.",
-    
+
     "responses.resource_module_rating_successfully":"Congratulations! You have successfully rated the resource module",
     "responses.review_field_required": "The review field is required",
     "responses.review_in": "The review should be between 1 to 5 only",
@@ -533,5 +533,9 @@
     "responses.sponsor_host_title_required": "Sponsor title field is required",
     "responses.sponsor_host_title_unique": "Sponsor title is already taken",
     "responses.sponsor_host_link_required": "Sponsor link field is required",
-    "responses.sponsor_host_link_unique": "Sponsor link is already taken"
+    "responses.sponsor_host_link_unique": "Sponsor link is already taken",
+
+    "responses.resource_collection_stored_success":"Congratulations! You have successfully created a resource collection.",
+
+    "responses.resource_collection_stored_failed":"Oops! The Creation resource collection has failed."
 }
