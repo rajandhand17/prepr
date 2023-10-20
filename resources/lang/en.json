@@ -537,5 +537,12 @@
 
     "responses.resource_collection_stored_success":"Congratulations! You have successfully created a resource collection.",
 
-    "responses.resource_collection_stored_failed":"Oops! The Creation resource collection has failed."
+    "responses.resource_collection_stored_failed":"Oops! The Creation resource collection has failed.",
+
+    "responses.lab_field_required": "The lab field is required",
+    "responses.lab_field_array": "The lab field must be an array",
+    "responses.lab_field_invalid_id": "The selected lab id is invalid.",
+    "responses.challenge_field_required": "The challenge field is required",
+    "responses.challenge_field_array": "The challenge field must be an array",
+    "responses.challenge_field_invalid_id": "The selected challenge id is invalid."
 }

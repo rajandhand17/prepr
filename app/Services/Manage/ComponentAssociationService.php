@@ -422,4 +422,43 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public static function createResourceCollectionAssociation($request,$createResourceCollectionId){
+        try{
+            if($request->has('lab_ids') && count($request->lab_ids)>0){
+                $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_ids);
+                $sequence = ComponentAssociation::where([
+                    ['resource_collection_id', '=', $createResourceCollectionId],
+                    ['lab_id', '!=', null],
+                ])->select('sequence')->orderBy('id', 'desc')->first();
+                foreach ($getLabId as $labId) {
+                    $sequence++;
+                    $ResourceCollectionLab = new ComponentAssociation();
+                    $ResourceCollectionLab->resource_collection_id = $createResourceCollectionId;
+                    $ResourceCollectionLab->lab_id = $labId;
+                    $ResourceCollectionLab->sequence = $sequence;
+                    $ResourceCollectionLab->save();
+                }
+            }
+
+            if($request->has('challenge_ids') && count($request->challenge_ids)>0){
+                $getChallengeId=ChallengeService::getChallengeBasedOnUUIDArray($request->challenge_ids);
+                $sequence = ComponentAssociation::where([
+                    ['resource_collection_id', '=', $createResourceCollectionId],
+                    ['challenge_id', '!=', null],
+                ])->select('sequence')->orderBy('id', 'desc')->first();
+                foreach($getChallengeId as $challengeId){
+                    $sequence++;
+                    $ResourceCollectionChallenge = new ComponentAssociation();
+                    $ResourceCollectionChallenge->resource_collection_id = $createResourceCollectionId;
+                    $ResourceCollectionChallenge->challenge_id = $challengeId;
+                    $ResourceCollectionChallenge->sequence = $sequence;
+                    $ResourceCollectionChallenge->save();
+                }
+            }
+            return true;
+        }catch (Exception $e){
+            return false;
+        }
+    }
 }

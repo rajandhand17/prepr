@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('media_type')->default('image')->nullable();
             $table->string('media')->nullable();
             $table->integer('level');
-            $table->integer('durations');
+            $table->integer('duration');
             $table->enum('privacy', ['0', '1'])->default('0')->comment('0->no,1->yes')->nullable();
             $table->enum('status', ['0', '1', '2'])->default('0')->comment('0-> draft, 1-> published, 2-> archive')->nullable();
             $table->enum('is_accessible', ['0', '1'])->comment('0-> no, 1-> yes')->default('1');

@@ -10,4 +10,5 @@ return [
     'resource_module' => 'resource_modules/upload/',
     'challenge_path'  => 'challenge_path/upload/',
     'sponsor_host'    => 'uploads/hosts/',
+    'resource_collection'=>'resource_collection/upload/',
 ];

@@ -30,6 +30,10 @@ class CreateResourceCollectionRequest extends FormRequest
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,published,archive',
+            "lab_ids"                => "required|array",
+            "lab_ids.*"              => "exists:labs,uuid",
+            "challenge_ids"          => "required|array",
+            "challenge_ids.*"        => "exists:challenges,uuid",
             'skills'                 => 'required|array',
             'skills.*'               => 'numeric|exists:skills,id',
             'tags'                   => 'required|array',
@@ -86,6 +90,12 @@ class CreateResourceCollectionRequest extends FormRequest
             'skill_stacks.*.exists'          => __('responses.skill_stacks_not_exists'),
             'tags.required'                  => __('responses.tags_required'),
             'skills.required'                => __('responses.skills_required'),
+            'lab_ids.required'               => __('responses.lab_field_required'),
+            'lab_ids.array'                  => __('responses.lab_field_array'),
+            'lab_ids.*.exists'               => __('responses.lab_field_invalid_id'),
+            'challenge_ids.required'         => __('responses.challenge_field_required'),
+            'challenge_ids.array'            => __('responses.challenge_field_array'),
+            'challenge_ids.*.exists'         => __('responses.challenge_field_invalid_id'),
         ];
     }
 }

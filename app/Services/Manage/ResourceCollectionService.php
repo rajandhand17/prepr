@@ -34,15 +34,15 @@ class ResourceCollectionService
                 default:
                     $privacy = null;
             }
-            switch ($request->is_accessable) {
+            switch ($request->is_accessible) {
                 case 'no':
-                    $is_accessable = config('constants.resource_module_is_accessable.no');
+                    $is_accessible = config('constants.resource_collection_is_accessible.no');
                     break;
                 case 'yes':
-                    $is_accessable = config('constants.resource_module_is_accessable.yes');
+                    $is_accessible = config('constants.resource_collection_is_accessible.yes');
                     break;
                 default:
-                    $is_accessable = null;
+                    $is_accessible = config('constants.resource_collection_is_accessible.no');
             }
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $resourceCollection=new ResourceCollection();
@@ -60,8 +60,9 @@ class ResourceCollectionService
             $resourceCollection->duration =$request->duration;
             $resourceCollection->privacy=$privacy;
             $resourceCollection->status=$status;
-            $resourceCollection->is_accessable=$is_accessable;
+            $resourceCollection->is_accessible=$is_accessible;
             $resourceCollection->save();
+            return $resourceCollection;
         }catch (\Exception $e){
             return false;
         }
@@ -78,4 +79,5 @@ class ResourceCollectionService
             return false;
         }
     }
+
 }
