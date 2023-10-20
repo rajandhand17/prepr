@@ -425,6 +425,7 @@ class ComponentAssociationService
 
     public static function createResourceCollectionAssociation($request,$createResourceCollectionId){
         try{
+            $sequence = 1;
             if($request->has('lab_ids') && count($request->lab_ids)>0){
                 $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_ids);
                 $sequence = ComponentAssociation::where([
