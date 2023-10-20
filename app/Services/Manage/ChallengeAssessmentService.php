@@ -51,7 +51,7 @@ class ChallengeAssessmentService
                         $challenge_visibility_type = config('constants.challenge_visibility_type.users');
                         break;
                 }
-                
+
                 if ($request->assessment_type == 'close' && $request->members_email !== null) {
                     foreach ($request->members_email as $key => $value) {
                         $challengeAssessment = new ChallengeAssessment();
@@ -112,7 +112,7 @@ class ChallengeAssessmentService
                         $challenge_visibility_type = config('constants.challenge_visibility_type.users');
                         break;
                 }
-                
+
                 if ($request->assessment_type == 'close' && $request->members_email !== null) {
                     foreach ($request->members_email as $key => $value) {
                         $challengeAssessment = new ChallengeAssessment();

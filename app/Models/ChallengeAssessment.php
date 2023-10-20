@@ -23,6 +23,6 @@ class ChallengeAssessment extends Model
 
     public function getAttachmentsAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 }
