@@ -17,7 +17,7 @@ class ResourceCollectionController extends AppBaseController
 
     public function create(CreateResourceCollectionRequest $request){
         try {
-            $upload_cover_image = config('site-settings.default_resource_module_cover_image');
+            $upload_cover_image = config('site-settings.default_resource_collection_cover_image');
             if ($request->cover_image !== null){
                 $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
                 if (!$uploaded_cover_image) {
