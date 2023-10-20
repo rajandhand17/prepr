@@ -423,10 +423,11 @@ class ComponentAssociationService
         }
     }
 
-    public static function createResourceCollectionAssociation($request,$createResourceCollectionId){
-        try{
+    public static function createResourceCollectionAssociation($request, $createResourceCollectionId)
+    {
+        try {
             $sequence = 1;
-            if($request->has('lab_ids') && count($request->lab_ids)>0){
+            if ($request->has('lab_ids') && count($request->lab_ids) > 0) {
                 $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_ids);
                 $sequence = ComponentAssociation::where([
                     ['resource_collection_id', '=', $createResourceCollectionId],
@@ -442,13 +443,13 @@ class ComponentAssociationService
                 }
             }
 
-            if($request->has('challenge_ids') && count($request->challenge_ids)>0){
-                $getChallengeId=ChallengeService::getChallengeBasedOnUUIDArray($request->challenge_ids);
+            if ($request->has('challenge_ids') && count($request->challenge_ids) > 0) {
+                $getChallengeId = ChallengeService::getChallengeBasedOnUUIDArray($request->challenge_ids);
                 $sequence = ComponentAssociation::where([
                     ['resource_collection_id', '=', $createResourceCollectionId],
                     ['challenge_id', '!=', null],
                 ])->select('sequence')->orderBy('id', 'desc')->first();
-                foreach($getChallengeId as $challengeId){
+                foreach ($getChallengeId as $challengeId) {
                     $sequence++;
                     $ResourceCollectionChallenge = new ComponentAssociation();
                     $ResourceCollectionChallenge->resource_collection_id = $createResourceCollectionId;
@@ -457,8 +458,9 @@ class ComponentAssociationService
                     $ResourceCollectionChallenge->save();
                 }
             }
+
             return true;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }

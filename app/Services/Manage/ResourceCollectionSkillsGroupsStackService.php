@@ -2,18 +2,17 @@
 
 namespace App\Services\Manage;
 
-
 use App\Models\ResourceCollectionSkillsGroupsStack;
 
 class ResourceCollectionSkillsGroupsStackService
 {
     public function createResourceCollectionSkillsGroupsStack($request, $resource_collection_id)
     {
-        try{
+        try {
             if ($request->has('skills')) {
                 if (count($request->skills) > 0) {
                     foreach ($request->skills as $skill) {
-                        $resourceCollectionSkill=new ResourceCollectionSkillsGroupsStack();
+                        $resourceCollectionSkill = new ResourceCollectionSkillsGroupsStack();
                         $resourceCollectionSkill->resource_collection_id = $resource_collection_id;
                         $resourceCollectionSkill->foreign_id = $skill;
                         $resourceCollectionSkill->type = '0';
@@ -43,10 +42,10 @@ class ResourceCollectionSkillsGroupsStackService
                     }
                 }
             }
+
             return true;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
-
     }
 }
