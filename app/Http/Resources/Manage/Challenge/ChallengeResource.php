@@ -272,6 +272,18 @@ class ChallengeResource extends JsonResource
             });
         }
 
+        switch ($this->media_type) {
+            case 'image':
+                $media = $this->media;
+                break;
+            case 'embedded':
+                $media = $this->getRawOriginal('media');
+                break;
+            default:
+                $media = $this->media;
+                break;
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -289,7 +301,7 @@ class ChallengeResource extends JsonResource
             'description'                   => $this->description,
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
-            'media'                         => $this->media,
+            'media'                         => $media,
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'source_link'                   => $this->source_link,
             'agreement'                     => $this->agreement,
