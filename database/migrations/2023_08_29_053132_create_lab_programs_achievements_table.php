@@ -13,8 +13,8 @@ return new class() extends Migration {
         Schema::create('lab_programs_achievements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('lab_program_id');
-            $table->string('achievement_name')->nullable();
-            $table->integer('achievement_points')->nullable();
+            $table->string('achievement_name', 255)->nullable();
+            $table->string('achievement_points', 255)->nullable();
             $table->text('achievement_image')->nullable();
             $table->timestamps();
             $table->softDeletes();
