@@ -125,6 +125,18 @@ class LabResource extends JsonResource
                 break;
         }
 
+        switch ($this->media_type) {
+            case 'image':
+                $media = $this->media;
+                break;
+            case 'embedded':
+                $media = $this->getRawOriginal('media');
+                break;
+            default:
+                $media = $this->media;
+                break;
+        }
+
         return [
             'id'                            => $this->uuid,
             'type'                          => $type,
@@ -143,7 +155,7 @@ class LabResource extends JsonResource
             'description'                   => $this->description,
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
-            'media'                         => $this->media,
+            'media'                         => $media,
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                  => $this->members()->count(),
             'total_share'                   => $this->total_share,

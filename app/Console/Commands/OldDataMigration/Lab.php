@@ -141,6 +141,20 @@ class Lab extends Command
                             $is_auto_created_lab = '0';
                             break;
                     }
+
+                    $mediaType = 'image';
+                    switch ($lab->mediaType) {
+                        case 'image':
+                            $mediaType = 'image';
+                            break;
+                        case 'embeddedCode':
+                            $mediaType = 'embedded';
+                            break;
+                        default:
+                            $mediaType = 'image';
+                            break;
+                    }
+
                     $newLab->id = $lab->id;
                     $newLab->type = '4';
                     $newLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -154,7 +168,7 @@ class Lab extends Command
                     $newLab->title = $lab->slug;
                     $newLab->description = $lab->description;
                     $newLab->privacy = $privacy;
-                    $newLab->media_type = $lab->privacy;
+                    $newLab->media_type = $mediaType;
                     $newLab->media = $lab->image;
                     $newLab->status = '1';
                     $newLab->total_share = $lab->total_share;
