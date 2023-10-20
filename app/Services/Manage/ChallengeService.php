@@ -447,4 +447,18 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengeIdBasedOnId($id)
+    {
+        try {
+            $challenge = Challenge::whereIn('id', $id)->pluck('id')->all();
+            if ($challenge != null) {
+                return $challenge;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

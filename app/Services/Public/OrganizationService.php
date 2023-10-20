@@ -3,6 +3,7 @@
 namespace App\Services\Public;
 
 use App\Models\Organization;
+use Exception;
 
 class OrganizationService
 {
@@ -76,6 +77,20 @@ class OrganizationService
         try {
             return Organization::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationExistBasedOnUuidArray($uuid)
+    {
+        try {
+            $organization = Organization::select('id')->whereIn('uuid', $uuid)->get();
+            if ($organization != null) {
+                return $organization;
+            }
+
+            return false;
+        } catch (Exception $e) {
             return false;
         }
     }

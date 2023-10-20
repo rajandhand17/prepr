@@ -154,6 +154,19 @@ class Challenge extends Command
                             break;
                     }
 
+                    $mediaType = 'image';
+                    switch ($challenge->mediaType) {
+                        case 'image':
+                            $mediaType = 'image';
+                            break;
+                        case 'embeddedCode':
+                            $mediaType = 'embedded';
+                            break;
+                        default:
+                            $mediaType = 'image';
+                            break;
+                    }
+
                     $newChallenge->id = $challenge->id;
                     $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newChallenge->language = $challenge->language;
@@ -166,7 +179,7 @@ class Challenge extends Command
                     $newChallenge->title = $challenge->title;
                     $newChallenge->description = $challenge->description;
                     $newChallenge->privacy = $challengePrivacy;
-                    $newChallenge->media_type = $challenge->mediaType;
+                    $newChallenge->media_type = $mediaType;
                     $newChallenge->media = $challenge->cover_image;
                     $newChallenge->status = $challengePublishedStatus;
                     $newChallenge->source_link = $challenge->sourcelink;
