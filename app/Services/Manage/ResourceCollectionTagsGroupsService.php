@@ -8,29 +8,33 @@ class ResourceCollectionTagsGroupsService
 {
     public function createCollectionModuleTagsGroups($request, $resource_collection_id)
     {
-        if ($request->has('tags')) {
-            if (count($request->tags) > 0) {
-                foreach ($request->tags as $tag) {
-                    $resourceCollectionSkillGroupTag=new ResourceCollectionTagsGroups();
-                    $resourceCollectionSkillGroupTag->resource_collection_id=$resource_collection_id;
-                    $resourceCollectionSkillGroupTag->foreign_id = $tag;
-                    $resourceCollectionSkillGroupTag->type = '0';
-                    $resourceCollectionSkillGroupTag->save();
+        try{
+            if ($request->has('tags')) {
+                if (count($request->tags) > 0) {
+                    foreach ($request->tags as $tag) {
+                        $resourceCollectionTag=new ResourceCollectionTagsGroups();
+                        $resourceCollectionTag->resource_collection_id=$resource_collection_id;
+                        $resourceCollectionTag->foreign_id = $tag;
+                        $resourceCollectionTag->type = '0';
+                        $resourceCollectionTag->save();
+                    }
                 }
             }
-        }
-        if ($request->has('tag_groups')) {
-            if (count($request->tag_groups) > 0) {
-                foreach ($request->tag_groups as $tag_group) {
-                    $resourceCollectionSkillGroupTag=new ResourceCollectionTagsGroups();
-                    $resourceCollectionSkillGroupTag->resource_collection_id = $resource_collection_id;
-                    $resourceCollectionSkillGroupTag->foreign_id = $tag_group;
-                    $resourceCollectionSkillGroupTag->type = '1';
-                    $resourceCollectionSkillGroupTag->save();
+            if ($request->has('tag_groups')) {
+                if (count($request->tag_groups) > 0) {
+                    foreach ($request->tag_groups as $tag_group) {
+                        $resourceCollectionTagGroups=new ResourceCollectionTagsGroups();
+                        $resourceCollectionTagGroups->resource_collection_id = $resource_collection_id;
+                        $resourceCollectionTagGroups->foreign_id = $tag_group;
+                        $resourceCollectionTagGroups->type = '1';
+                        $resourceCollectionTagGroups->save();
+                    }
                 }
             }
+            return true;
+        }catch(Exception $e){
+            return false;
         }
-        return true;
     }
 
 
