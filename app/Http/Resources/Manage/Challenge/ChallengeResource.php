@@ -161,18 +161,6 @@ class ChallengeResource extends JsonResource
                     break;
             }
 
-            switch ($this->media_type) {
-                case 'image':
-                    $media = $this->media;
-                    break;
-                case 'embedded':
-                    $media = $this->getRawOriginal('media');
-                    break;
-                default:
-                    $media = $this->media;
-                    break;
-            }
-
             $challenge_requirements = [
                 'min_rank'                              => $this->challenge_requirements->min_rank,
                 'min_points'                            => $this->challenge_requirements->min_points,
@@ -301,7 +289,7 @@ class ChallengeResource extends JsonResource
             'description'                   => $this->description,
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
-            'media'                         => $media,
+            'media'                         => $this->media,
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'source_link'                   => $this->source_link,
             'agreement'                     => $this->agreement,

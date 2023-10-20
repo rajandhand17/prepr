@@ -20,4 +20,9 @@ class ChallengeAssessment extends Model
         'guidelines',
         'attachments',
     ];
+
+    public function getAttachmentsAttribute($value)
+    {
+        return config('site-settings.aws_url') . $value;
+    }
 }
