@@ -98,7 +98,7 @@ class ChallengePath extends Command
                             break;
                         case 'draft':
                             $challengePathPublished = '0';
-                            break;                        
+                            break;
                         default:
                             $challengePathPublished = '1';
                             break;
