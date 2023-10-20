@@ -92,6 +92,18 @@ class ChallengePath extends Command
                             break;
                     }
 
+                    switch ($challengePath->published) {
+                        case 'published':
+                            $challengePathPublished = '1';
+                            break;
+                        case 'draft':
+                            $challengePathPublished = '0';
+                            break;                        
+                        default:
+                            $challengePathPublished = '1';
+                            break;
+                    }
+
                     $challengePathModel = new ModelsChallengePath();
 
                     $newChallengePath->id = $challengePath->id;
@@ -108,7 +120,7 @@ class ChallengePath extends Command
                     $newChallengePath->media_type = 'image';
                     $newChallengePath->media = $challengePath->group_image;
                     $newChallengePath->privacy = $challengePathPrivacy;
-                    $newChallengePath->status = '1';
+                    $newChallengePath->status = $challengePathPublished;
                     $newChallengePath->is_auto_created = $is_auto_created_challengePath;
                     $newChallengePath->is_achievement_enabled = '1';
                     $newChallengePath->is_sequential = '0';
