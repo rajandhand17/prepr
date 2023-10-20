@@ -71,7 +71,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/resource-module/')->middleware('api')->group(base_path('routes/v1/manage/resource-module.php'));
         Route::prefix('api/v1/manage/challenge/')->middleware('api')->group(base_path('routes/v1/manage/challenge.php'));
         Route::prefix('api/v1/manage/challenge-path/')->middleware('api')->group(base_path('routes/v1/manage/challenge-path.php'));
-        Route::prefix('api/v1/manage/resource-collection/')->middleware('api')->group(base_path('routes/v1/manage/resource-collection.php'));
     }
 
     protected function mapPublicRoutes()
