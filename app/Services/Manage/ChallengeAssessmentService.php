@@ -8,7 +8,21 @@ use Exception;
 
 class ChallengeAssessmentService
 {
-    public function createChallengeAssessment($request, $challenge)
+    public static function uploadChallengeAssessment($attachment)
+    {
+        try {
+            $upload_assessment_image = FileUploadHelper::uploadImageToS3($attachment, 'assessment');
+            if ($upload_assessment_image == false) {
+                return false;
+            }
+
+            return $upload_assessment_image;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createChallengeAssessment($request, $challenge, $upload_assessment_attachment)
     {
         try {
             if ($request->assessment_type !== null) {
@@ -38,7 +52,6 @@ class ChallengeAssessmentService
                         break;
                 }
 
-                $upload_assessment_image = FileUploadHelper::uploadImageToS3($request->attachments, 'assessment');
                 if ($request->assessment_type == 'close' && $request->members_email !== null) {
                     foreach ($request->members_email as $key => $value) {
                         $challengeAssessment = new ChallengeAssessment();
@@ -47,7 +60,7 @@ class ChallengeAssessmentService
                         $challengeAssessment->visibility = $challenge_visibility_type;
                         $challengeAssessment->members_email = $request->members_email[$key];
                         $challengeAssessment->guidelines = $request->guidelines;
-                        $challengeAssessment->attachments = $upload_assessment_image;
+                        $challengeAssessment->attachments = $upload_assessment_attachment;
                         $challengeAssessment->save();
                     }
                 } else {
@@ -57,7 +70,7 @@ class ChallengeAssessmentService
                     $challengeAssessment->visibility = $challenge_visibility_type;
                     $challengeAssessment->members_email = null;
                     $challengeAssessment->guidelines = $request->guidelines;
-                    $challengeAssessment->attachments = $upload_assessment_image;
+                    $challengeAssessment->attachments = $upload_assessment_attachment;
                     $challengeAssessment->save();
                 }
             }
@@ -68,7 +81,7 @@ class ChallengeAssessmentService
         }
     }
 
-    public function updateChallengeAssessment($request, $challenge_id)
+    public function updateChallengeAssessment($request, $challenge_id, $update_assessment_attachment)
     {
         try {
             $challengeAssessment = ChallengeAssessment::where('challenge_id', $challenge_id)->get();
@@ -100,7 +113,6 @@ class ChallengeAssessmentService
                         break;
                 }
 
-                $upload_assessment_image = FileUploadHelper::uploadImageToS3($request->attachments, 'assessment');
                 if ($request->assessment_type == 'close' && $request->members_email !== null) {
                     foreach ($request->members_email as $key => $value) {
                         $challengeAssessment = new ChallengeAssessment();
@@ -109,7 +121,7 @@ class ChallengeAssessmentService
                         $challengeAssessment->visibility = $challenge_visibility_type;
                         $challengeAssessment->members_email = $request->members_email[$key];
                         $challengeAssessment->guidelines = $request->guidelines;
-                        $challengeAssessment->attachments = $upload_assessment_image;
+                        $challengeAssessment->attachments = $update_assessment_attachment;
                         $challengeAssessment->save();
                     }
                 } else {
@@ -119,7 +131,7 @@ class ChallengeAssessmentService
                     $challengeAssessment->visibility = $challenge_visibility_type;
                     $challengeAssessment->members_email = null;
                     $challengeAssessment->guidelines = $request->guidelines;
-                    $challengeAssessment->attachments = $upload_assessment_image;
+                    $challengeAssessment->attachments = $update_assessment_attachment;
                     $challengeAssessment->save();
                 }
             }

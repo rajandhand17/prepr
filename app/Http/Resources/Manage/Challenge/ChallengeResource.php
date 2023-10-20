@@ -161,18 +161,6 @@ class ChallengeResource extends JsonResource
                     break;
             }
 
-            switch ($this->media_type) {
-                case 'image':
-                    $media = $this->media;
-                    break;
-                case 'embedded':
-                    $media = $this->getRawOriginal('media');
-                    break;
-                default:
-                    $media = $this->media;
-                    break;
-            }
-
             $challenge_requirements = [
                 'min_rank'                              => $this->challenge_requirements->min_rank,
                 'min_points'                            => $this->challenge_requirements->min_points,
@@ -282,6 +270,18 @@ class ChallengeResource extends JsonResource
                     'schedule_custom_notify'       => $item->schedule_custom_notify,
                 ];
             });
+        }
+
+        switch ($this->media_type) {
+            case 'image':
+                $media = $this->media;
+                break;
+            case 'embedded':
+                $media = $this->getRawOriginal('media');
+                break;
+            default:
+                $media = $this->media;
+                break;
         }
 
         return [
