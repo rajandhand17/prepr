@@ -29,11 +29,12 @@ class ResourceCollectionController extends AppBaseController
             }
             $createResourceCollection = $this->resourceCollectionRepository->createResourceCollection($request, $upload_cover_image);
             if ($createResourceCollection) {
-                return $this->sendResponse(ResourceCollectionResource::collection($createResourceCollection),__('responses.resource_collection_stored_success'), 200);
+                return $this->sendResponse(ResourceCollectionResource::make($createResourceCollection),__('responses.resource_collection_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_collection_stored_failed'), 403);
         } catch(\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

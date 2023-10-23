@@ -12,14 +12,14 @@ class ResourceCollectionResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
-        $privacy = 'no';
-        $status = 'draft';
-        $level = 'Beginner Level';
-        $duration = 'Less than 2 hours';
-        $is_accessible = 'no';
-        switch ($request->level) {
+        $privacy ='';
+        $status = '';
+        $level = '';
+        $duration = '';
+        $is_accessible = '';
+        switch ($this->level) {
             case '1':
                 $level="Beginner Level";
                 break;
@@ -60,18 +60,16 @@ class ResourceCollectionResource extends JsonResource
             default:
                 $duration="Less than 2 hours";
         }
-        if (property_exists($this, 'privacy')) {
-            switch ($this->privacy) {
+        switch ($this->privacy) {
                 case "0":
                     $privacy = 'no';
                     break;
                 case "1":
                     $privacy = 'yes';
                     break;
+                default:
+                    $privacy = 'yes';
             }
-        }
-
-        if (property_exists($this, 'status')) {
             switch ($this->status) {
                 case '0':
                     $status = 'draft';
@@ -82,9 +80,9 @@ class ResourceCollectionResource extends JsonResource
                 case '2':
                     $status = 'archive';
                     break;
+                default:
+                    $status = 'draft';
             }
-        }
-        if (property_exists($this, 'is_accessible')) {
             switch ($this->is_accessible) {
                 case '0':
                     $is_accessible = 'no';
@@ -92,13 +90,14 @@ class ResourceCollectionResource extends JsonResource
                 case '1':
                     $is_accessible = 'yes';
                     break;
+                default:
+                    $is_accessible = 'no';
             }
-        }
+
         return [
-            'id'                                      => $this->uuid,
+             'id'                                     => $this->uuid,
             'language'                                => $this->language,
             'title'                                   => $this->title,
-            'organization_id'                         => $this->organization_id,
             'slug'                                    => $this->slug,
             'description'                             => $this->description,
             'media_type'                              => $this->media_type,
