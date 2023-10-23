@@ -77,7 +77,7 @@ class UpdateChallengeRequest extends FormRequest
 
         if ($this->request->has('winner_achievement_participation')) {
             $base_rules['winner_achievement_image'] = 'array';
-            $base_rules['winner_achievement_image.*'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['winner_achievement_image.*'] = 'mimes:jpeg,jpg,png,webp|max:1024';
             $base_rules['winner_achievement_participation'] = 'array';
             $base_rules['winner_achievement_participation.*'] = 'in:incentive';
             $base_rules['winner_achievement_name'] = 'array';
