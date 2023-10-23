@@ -49,4 +49,17 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function checkName($title){
+        try{
+
+            $checkResourceCollectionNameExistsOrNot = $this->resourceCollectionRepository->checkName($title);
+            if ($checkResourceCollectionNameExistsOrNot) {
+                return $this->sendError(__('responses.resource_collection_name_not_available'));
+            }
+            return $this->sendResponse([], __('responses.resource_collection_name_available'), 400);
+        }catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
