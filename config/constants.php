@@ -219,8 +219,10 @@ return [
         'no'  => '0',
         'yes' => '1',
     ],
-    'resource_module_is_accessable'=> [
+
+    'resource_collection_is_accessible'=> [
         'no'  => '0',
         'yes' => '1',
     ],
+
 ];

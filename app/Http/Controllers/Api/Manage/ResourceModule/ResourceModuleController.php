@@ -87,6 +87,7 @@ class ResourceModuleController extends AppBaseController
             if ($createResourceModule) {
                 return $this->sendResponse(__('responses.resource_module_stored_success'), 200);
             }
+
             return $this->sendError(__('responses.resource_module_stored_failed'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

@@ -11,7 +11,7 @@ class ResourceCollection extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="resource_collections";
+    protected $table = 'resource_collections';
     protected $fillable = [
         'uuid',
         'language',
@@ -31,4 +31,64 @@ class ResourceCollection extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function resource_modules(){
+        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("resource_module_id",'!=',null);
+    }
+    public function labs(){
+        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("lab_id",'!=',null);
+    }
+    public function challenges(){
+        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("challenge_id",'!=',null);
+    }
+
+    public function getDuration()
+    {
+        return $this->belongsTo(Duration::class, 'duration', 'id');
+    }
+
+    public function getLevel()
+    {
+        return $this->belongsTo(Levels::class, 'level', 'id');
+    }
+
+    public function getOrganization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack ::class, 'resource_collection_id', 'id')->where('type', '0');
+    }
+
+    public function skill_groups()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '1');
+    }
+
+    public function skill_stacks()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '2');
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '0');
+    }
+
+    public function tag_groups()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '1');
+    }
 }
