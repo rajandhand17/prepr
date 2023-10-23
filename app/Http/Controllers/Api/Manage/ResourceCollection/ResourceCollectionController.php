@@ -29,7 +29,7 @@ class ResourceCollectionController extends AppBaseController
             }
             $createResourceCollection = $this->resourceCollectionRepository->createResourceCollection($request, $upload_cover_image);
             if ($createResourceCollection) {
-                return $this->sendResponse(ResourceCollectionResource::make($createResourceCollection),__('responses.resource_collection_stored_success'), 200);
+                return $this->sendResponse(ResourceCollectionResource::make($createResourceCollection), __('responses.resource_collection_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_collection_stored_failed'), 403);
@@ -38,27 +38,30 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
-    public function checkSlug($slug){
+    public function checkSlug($slug)
+    {
         try {
-            $checkResourceCollectionNameExistsOrNot=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if($checkResourceCollectionNameExistsOrNot){
+            $checkResourceCollectionNameExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionNameExistsOrNot) {
                 return $this->sendError(__('responses.resource_collection_slug_not_available'));
             }
+
             return $this->sendResponse([], __('responses.resource_collection_slug_available'), 400);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function checkName($title){
-        try{
-
+    public function checkName($title)
+    {
+        try {
             $checkResourceCollectionNameExistsOrNot = $this->resourceCollectionRepository->checkName($title);
             if ($checkResourceCollectionNameExistsOrNot) {
                 return $this->sendError(__('responses.resource_collection_name_not_available'));
             }
+
             return $this->sendResponse([], __('responses.resource_collection_name_available'), 400);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -433,9 +433,9 @@ class ComponentAssociationService
                     ['resource_collection_id', '=', $resourceCollectionId],
                     ['lab_id', '!=', null],
                 ])->select('sequence')->orderBy('id', 'desc')->first();
-              if(isset($sequence->sequence) && !empty($sequence->sequence)){
-                  $sequence=$sequence->sequence;
-              }
+                if (isset($sequence->sequence) && !empty($sequence->sequence)) {
+                    $sequence = $sequence->sequence;
+                }
                 foreach ($getLabId as $labId) {
                     $sequence++;
                     $ResourceCollectionLab = new ComponentAssociation();
@@ -452,8 +452,8 @@ class ComponentAssociationService
                     ['resource_collection_id', '=', $resourceCollectionId],
                     ['challenge_id', '!=', null],
                 ])->select('sequence')->orderBy('id', 'desc')->first();
-                if(isset($sequence->sequence) && !empty($sequence->sequence)){
-                    $sequence=$sequence->sequence;
+                if (isset($sequence->sequence) && !empty($sequence->sequence)) {
+                    $sequence = $sequence->sequence;
                 }
                 foreach ($getChallengeId as $challengeId) {
                     $sequence++;
@@ -466,13 +466,13 @@ class ComponentAssociationService
             }
 
             if ($request->has('resource_ids') && count($request->resource_ids) > 0) {
-                $getResourceModuleIds=ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_ids);
+                $getResourceModuleIds = ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_ids);
                 $sequence = ComponentAssociation::where([
                     ['resource_collection_id', '=', $resourceCollectionId],
                     ['resource_module_id', '!=', null],
                 ])->select('sequence')->orderBy('id', 'desc')->first();
-                if(isset($sequence->sequence) && !empty($sequence->sequence)){
-                    $sequence=$sequence->sequence;
+                if (isset($sequence->sequence) && !empty($sequence->sequence)) {
+                    $sequence = $sequence->sequence;
                 }
                 foreach ($getResourceModuleIds as $resourceModuleId) {
                     $sequence++;

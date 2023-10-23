@@ -2,20 +2,15 @@
 
 namespace App\Http\Resources\Manage\ResourceCollection;
 
-use App\Models\Challenge;
-use App\Models\ResourceCollection;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
-use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use function Illuminate\Events\queueable;
 
 class ResourceCollectionResource extends JsonResource
 {
@@ -26,11 +21,10 @@ class ResourceCollectionResource extends JsonResource
      */
     public function toArray($request)
     {
-
         $componentAssociation = [];
         $resourceModules = [];
-        $labs=[];
-        $challenges=[];
+        $labs = [];
+        $challenges = [];
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
@@ -44,23 +38,24 @@ class ResourceCollectionResource extends JsonResource
         $organization_id = null;
         $is_accessible = '';
 
-        if($this->resource_modules){
-            foreach($this->resource_modules as $resource_module)
-               $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
-                $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
-                $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
-                $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
+        if ($this->resource_modules) {
+            foreach ($this->resource_modules as $resource_module) {
+                $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
+            }
+            $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
+            $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
+            $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
         }
-        if($this->challenges){
-            foreach($this->challenges as $challenge_records){
+        if ($this->challenges) {
+            foreach ($this->challenges as $challenge_records) {
                 $challenges[$challenge_records->challenge_id]['uuid'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->uuid;
                 $challenges[$challenge_records->challenge_id]['title'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->title;
                 $challenges[$challenge_records->challenge_id]['image'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->image;
                 $challenges[$challenge_records->challenge_id]['description'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->description;
             }
         }
-        if($this->labs){
-            foreach($this->labs as $lab_records){
+        if ($this->labs) {
+            foreach ($this->labs as $lab_records) {
                 $labs[$lab_records->lab_id]['uuid'] = LabService::getLabBasedOnId($lab_records->lab_id)->uuid;
                 $labs[$lab_records->lab_id]['title'] = LabService::getLabBasedOnId($lab_records->lab_id)->title;
                 $labs[$lab_records->lab_id]['image'] = LabService::getLabBasedOnId($lab_records->lab_id)->media;
@@ -106,7 +101,6 @@ class ResourceCollectionResource extends JsonResource
             $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-
         switch($this->privacy) {
             case '0':
                 $privacy = 'yes';
@@ -133,31 +127,32 @@ class ResourceCollectionResource extends JsonResource
                 $status = 'draft';
                 break;
         }
+
         return [
-             'id'                                     => $this->uuid,
-            'language'                                => $this->language,
-            'title'                                   => $this->title,
-            'slug'                                    => $this->slug,
-            'description'                             => $this->description,
-            'media_type'                              => $this->media_type,
-            'cover_image'                             => $this->media,
-            'privacy'                                 => $privacy,
-            'status'                                  => $status,
-            'is_accessible'                           => $is_accessible,
-            'duration_id'                             => $duration_id,
-            'duration'                                => $duration,
-            'level_id'                                => $level_id,
-            'level'                                   => $level,
+            'id'                                       => $this->uuid,
+            'language'                                 => $this->language,
+            'title'                                    => $this->title,
+            'slug'                                     => $this->slug,
+            'description'                              => $this->description,
+            'media_type'                               => $this->media_type,
+            'cover_image'                              => $this->media,
+            'privacy'                                  => $privacy,
+            'status'                                   => $status,
+            'is_accessible'                            => $is_accessible,
+            'duration_id'                              => $duration_id,
+            'duration'                                 => $duration,
+            'level_id'                                 => $level_id,
+            'level'                                    => $level,
             'resource_modules'                         => $resourceModules,
             'labs'                                     => $labs,
             'challenges'                               => $challenges,
-            'organization'                            => $organization,
-            'organization_id'                         => $organization_id,
-            'skills'                                  => $skills,
-            'skill_groups'                            => $skill_groups,
-            'skill_stacks'                            => $skill_stacks,
-            'tags'                                    => $tags,
-            'tag_groups'                              => $tag_groups,
+            'organization'                             => $organization,
+            'organization_id'                          => $organization_id,
+            'skills'                                   => $skills,
+            'skill_groups'                             => $skill_groups,
+            'skill_stacks'                             => $skill_stacks,
+            'tags'                                     => $tags,
+            'tag_groups'                               => $tag_groups,
 
         ];
     }
