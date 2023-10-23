@@ -93,7 +93,6 @@ class ResourceCollectionResource extends JsonResource
                 default:
                     $is_accessible = 'no';
             }
-
         return [
              'id'                                     => $this->uuid,
             'language'                                => $this->language,
@@ -102,6 +101,7 @@ class ResourceCollectionResource extends JsonResource
             'description'                             => $this->description,
             'media_type'                              => $this->media_type,
             'cover_image'                             => $this->media,
+            'resource_modules'                        => $this->resource_modules,
             'privacy'                                 => $privacy,
             'status'                                  => $status,
             'level'                                   => $level,
