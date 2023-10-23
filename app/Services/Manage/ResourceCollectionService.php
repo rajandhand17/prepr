@@ -15,7 +15,7 @@ class ResourceCollectionService
         try {
             $status = config('constants.resource_collection_status.draft');
             switch($request->status) {
-                case 'publish':
+                case 'published':
                     $status = config('constants.resource_collection_status.publish');
                     break;
                 case 'archive':
