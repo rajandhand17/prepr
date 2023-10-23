@@ -37,4 +37,16 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function checkSlug($slug){
+        try {
+            $checkResourceCollectionNameExistsOrNot=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if($checkResourceCollectionNameExistsOrNot){
+                return $this->sendError(__('responses.resource_collection_slug_not_available'));
+            }
+            return $this->sendResponse([], __('responses.resource_collection_slug_available'), 400);
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

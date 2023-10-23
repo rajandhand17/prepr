@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ResourceCollection;
+use App\Models\ResourceModule;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceCollectionService
@@ -80,6 +81,14 @@ class ResourceCollectionService
 
             return $upload_resource_collection_cover_image;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionBasedOnSlug($slug){
+        try {
+            return ResourceCollection::select()->where('slug', $slug)->first();
+        }catch (\Exception $e){
             return false;
         }
     }
