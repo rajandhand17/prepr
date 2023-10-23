@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Manage\LabExternalLink;
 
 use Illuminate\Support\ServiceProvider;
 
-class MasterServiceProvider extends ServiceProvider
+class LabExternalLinkServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
