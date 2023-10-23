@@ -52,12 +52,12 @@ class ResourceCollection extends Model
         return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("challenge_id",'!=',null);
     }
 
-    public function duration()
+    public function getDuration()
     {
         return $this->belongsTo(Duration::class, 'duration', 'id');
     }
 
-    public function level()
+    public function getLevel()
     {
         return $this->belongsTo(Levels::class, 'level', 'id');
     }

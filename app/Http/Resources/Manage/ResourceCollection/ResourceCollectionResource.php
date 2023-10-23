@@ -65,13 +65,13 @@ class ResourceCollectionResource extends JsonResource
 
             }
         }
-        if ($this->duration) {
-            $duration = $this->duration->title;
-            $duration_id = $this->duration->id;
+        if ($this->getDuration) {
+            $duration = $this->getDuration->title;
+            $duration_id = $this->getDuration->id;
         }
-        if ($this->level) {
-            $level = $this->level->title;
-            $level_id = $this->level->id;
+        if ($this->getLevel) {
+            $level = $this->getLevel->title;
+            $level_id = $this->getLevel->id;
         }
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
