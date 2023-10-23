@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Api\LabTagsGroups;
+namespace App\Repositories\Api\Manage\LabTagsGroups;
 
 interface LabTagsGroupsInterface
 {
