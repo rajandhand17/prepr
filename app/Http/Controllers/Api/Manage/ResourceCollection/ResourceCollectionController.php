@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
+use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
 
 class ResourceCollectionController extends AppBaseController
@@ -62,6 +63,18 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_collection_name_available'), 400);
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function show($slug){
+        try {
+            $responseView=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($responseView) {
+                return $this->sendResponse(ResourceCollectionResource::make($responseView), __('responses.found_resource_collection_list'));
+            }
+            return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
