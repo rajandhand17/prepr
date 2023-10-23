@@ -14,15 +14,15 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
     private $componentAssociationService;
 
-    private $resouceCollectionSkillsGroupStackService;
+    private $resourceCollectionSkillsGroupStackService;
 
     private $resourceCollectionTagsGroupsService;
 
-    public function __construct(ResourceCollectionService $resourceCollectionService, ComponentAssociationService $componentAssociationService, ResourceCollectionSkillsGroupsStackService $resouceCollectionSkillsGroupStackService, ResourceCollectionTagsGroupsService $resourceCollectionTagsGroupsService)
+    public function __construct(ResourceCollectionService $resourceCollectionService, ComponentAssociationService $componentAssociationService, ResourceCollectionSkillsGroupsStackService $resourceCollectionSkillsGroupStackService, ResourceCollectionTagsGroupsService $resourceCollectionTagsGroupsService)
     {
         $this->resourceCollectionService = $resourceCollectionService;
         $this->componentAssociationService = $componentAssociationService;
-        $this->resouceCollectionSkillsGroupStackService = $resouceCollectionSkillsGroupStackService;
+        $this->resourceCollectionSkillsGroupStackService = $resourceCollectionSkillsGroupStackService;
         $this->resourceCollectionTagsGroupsService = $resourceCollectionTagsGroupsService;
     }
 
@@ -32,7 +32,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             $createResourceCollection = DB::transaction(function () use ($request, $upload_cover_image) {
                 $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image);
                 $componentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
-                $createResourceCollectionSkillsGroupStack = $this->resouceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
+                $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
                 $createResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->createCollectionModuleTagsGroups($request, $createResourceCollection->id);
 
                 return[

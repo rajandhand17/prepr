@@ -42,7 +42,47 @@ class ResourceCollection extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function resource_modules(){
-        return $this->hasMany(ComponentAssociation::class,'id','resource_collection_id')->where('resource_module_id','!=',null);
+    public function component_association(){
+        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("resource_module_id",'!=',null);
+    }
+
+    public function durations()
+    {
+        return $this->belongsTo(Duration::class, 'duration', 'id');
+    }
+
+    public function levels()
+    {
+        return $this->belongsTo(Levels::class, 'level', 'id');
+    }
+
+    public function getOrganization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack ::class, 'resource_collection_id', 'id')->where('type', '0');
+    }
+
+    public function skill_groups()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '1');
+    }
+
+    public function skill_stacks()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '2');
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '0');
+    }
+
+    public function tag_groups()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '1');
     }
 }

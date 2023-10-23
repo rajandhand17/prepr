@@ -2,8 +2,18 @@
 
 namespace App\Http\Resources\Manage\ResourceCollection;
 
+use App\Models\ResourceCollection;
+use App\Services\Manage\LabService;
+use App\Services\Manage\ResourceCollectionService;
+use App\Services\Manage\ResourceModuleService;
+use App\Services\SkillGroupService;
+use App\Services\SkillService;
+use App\Services\SkillStackService;
+use App\Services\TagGroupService;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use function Illuminate\Events\queueable;
 
 class ResourceCollectionResource extends JsonResource
 {
@@ -14,85 +24,94 @@ class ResourceCollectionResource extends JsonResource
      */
     public function toArray($request)
     {
-        $privacy ='';
-        $status = '';
-        $level = '';
-        $duration = '';
+
+        $componentAssociation = [];
+        $skills = [];
+        $skill_groups = [];
+        $skill_stacks = [];
+        $tags = [];
+        $tag_groups = [];
+        $duration = null;
+        $duration_id = null;
+        $level = null;
+        $level_id = null;
+        $organization = null;
+        $organization_id = null;
         $is_accessible = '';
-        switch ($this->level) {
+        if ($this->component_association) {
+            foreach ($this->component_association as $association) {
+                $componentAssociation[$association->resource_module_id] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id);
+                $componentAssociation[$association->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id)->title;
+                $componentAssociation[$association->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id)->description;
+            }
+        }
+
+        if ($this->durations) {
+            $duration = $this->durations->title;
+            $duration_id = $this->durations->id;
+        }
+        if ($this->levels) {
+            $level = $this->levels->title;
+            $level_id = $this->levels->id;
+        }
+        if ($this->getOrganization) {
+            $organization = $this->getOrganization->title;
+            $organization_id = $this->getOrganization->uuid;
+        }
+        if ($this->skills) {
+            $associatedSkills = $this->skills->pluck('foreign_id');
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        }
+        if ($this->skill_groups) {
+            $associatedSkillGroups = $this->skill_groups->pluck('foreign_id');
+            $skill_groups = SkillGroupService::getSkillGroupsBasedOnIds($associatedSkillGroups)->pluck('title', 'id');
+
+            if ($skill_groups->isEmpty()) {
+                $skill_groups = $this->skill_groups->pluck('foreign_id');
+            }
+        }
+
+        if ($this->skill_stacks) {
+            $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
+            $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
+        }
+        if ($this->tags) {
+            $associatedSkillStacks = $this->tags->pluck('foreign_id');
+            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
+        }
+
+        if ($this->tag_groups) {
+            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
+            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
+        }
+
+
+        switch($this->privacy) {
+            case '0':
+                $privacy = 'yes';
+                break;
             case '1':
-                $level="Beginner Level";
-                break;
-            case '2':
-                $level="Intermediate Level";
-                break;
-            case '3':
-                $level="Senior Level";
-                break;
-            case '4':
-                $level="Advanced Level";
-                break;
-            case '5':
-                $level="Junior Level";
+                $privacy = 'no';
                 break;
             default:
-                $level="Beginner Level";
+                $privacy = 'no';
+                break;
         }
-        switch ($request->duration) {
+
+        switch($this->status) {
+            case '0':
+                $status = 'draft';
+                break;
             case '1':
-                $duration="Less than 2 hours";
+                $status = 'published';
                 break;
             case '2':
-                $duration="2 -4 hours";
-                break;
-            case '3':
-                $duration="4 -8 hours";
-                break;
-            case '4':
-                $duration="1 -2 Days";
-                break;
-            case '5':
-                $duration="3 -5 Days";
-                break;
-            case '6':
-                $duration="5+ Days";
+                $status = 'archive';
                 break;
             default:
-                $duration="Less than 2 hours";
+                $status = 'draft';
+                break;
         }
-        switch ($this->privacy) {
-                case "0":
-                    $privacy = 'no';
-                    break;
-                case "1":
-                    $privacy = 'yes';
-                    break;
-                default:
-                    $privacy = 'yes';
-            }
-            switch ($this->status) {
-                case '0':
-                    $status = 'draft';
-                    break;
-                case '1':
-                    $status = 'published';
-                    break;
-                case '2':
-                    $status = 'archive';
-                    break;
-                default:
-                    $status = 'draft';
-            }
-            switch ($this->is_accessible) {
-                case '0':
-                    $is_accessible = 'no';
-                    break;
-                case '1':
-                    $is_accessible = 'yes';
-                    break;
-                default:
-                    $is_accessible = 'no';
-            }
         return [
              'id'                                     => $this->uuid,
             'language'                                => $this->language,
@@ -101,12 +120,22 @@ class ResourceCollectionResource extends JsonResource
             'description'                             => $this->description,
             'media_type'                              => $this->media_type,
             'cover_image'                             => $this->media,
-            'resource_modules'                        => $this->resource_modules,
             'privacy'                                 => $privacy,
             'status'                                  => $status,
-            'level'                                   => $level,
-            'duration'                                => $duration,
             'is_accessible'                           => $is_accessible,
+            'duration_id'                             => $duration_id,
+            'resource_module'                         =>$componentAssociation,
+            'duration'                                => $duration,
+            'level_id'                                => $level_id,
+            'level'                                   => $level,
+            'organization'                            => $organization,
+            'organization_id'                         => $organization_id,
+            'skills'                                  => $skills,
+            'skill_groups'                            => $skill_groups,
+            'skill_stacks'                            => $skill_stacks,
+            'tags'                                    => $tags,
+            'tag_groups'                              => $tag_groups,
+
         ];
     }
 }
