@@ -198,7 +198,6 @@ class ChallengeResource extends JsonResource
             $challenge_assessment = ChallengeAssessmentService::getChallengeAssessmentData($this->challenge_assessment);
         }
 
-
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
                 $challenge_timelines = [

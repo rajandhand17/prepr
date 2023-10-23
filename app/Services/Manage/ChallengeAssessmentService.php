@@ -178,10 +178,10 @@ class ChallengeAssessmentService
             }
 
             $challenge_assessment = [
-                'assessment_type' => $assessmentType,
-                'visibility'      => $visibility,
-                'guidelines'      => $challengeId[0]->guidelines,
-                'attachments'     => $challengeId[0]->attachments,
+                'assessment_type'  => $assessmentType,
+                'visibility'       => $visibility,
+                'guidelines'       => $challengeId[0]->guidelines,
+                'attachments'      => $challengeId[0]->attachments,
                 'members'          => $members,
             ];
 
