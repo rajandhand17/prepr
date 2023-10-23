@@ -34,6 +34,7 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_stored_failed'), 403);
         } catch(\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

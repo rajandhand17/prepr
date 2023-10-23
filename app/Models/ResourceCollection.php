@@ -42,16 +42,22 @@ class ResourceCollection extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function component_association(){
-        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id');
+    public function resource_modules(){
+        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("resource_module_id",'!=',null);
+    }
+    public function labs(){
+        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("lab_id",'!=',null);
+    }
+    public function challenges(){
+        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("challenge_id",'!=',null);
     }
 
-    public function durations()
+    public function duration()
     {
         return $this->belongsTo(Duration::class, 'duration', 'id');
     }
 
-    public function levels()
+    public function level()
     {
         return $this->belongsTo(Levels::class, 'level', 'id');
     }
