@@ -568,5 +568,9 @@
 
     "responses.resource_collection_name_not_available":"This resource collection name is not available!",
 
-    "responses.resource_collection_name_available":"This resource collection name is available!"
+    "responses.resource_collection_name_available":"This resource collection name is available!",
+
+    "responses.found_resource_collection_list":"The resource collection list has been successfully retrieved",
+
+    "responses.not_found_resource_collection_view":"The resource collection has not been retrieved with success."
 }
