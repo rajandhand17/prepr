@@ -7,4 +7,7 @@ interface ResourceCollectionInterface
     public function createResourceCollection($request, $upload_media);
 
     public function uploadResourceCollectionCoverImage($cover_image);
+
+    public function getResourceCollectionBasedOnSlug($slug);
+    public function checkName($title);
 }

@@ -92,4 +92,12 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function checkName($title){
+        try {
+            return ResourceCollection::select()->where('title', $title)->first();
+        }catch (\Exception $e){
+            return false;
+        }
+    }
 }

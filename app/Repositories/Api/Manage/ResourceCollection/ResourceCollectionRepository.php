@@ -71,4 +71,12 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             return false;
         }
     }
+
+    public function checkName($title){
+        try {
+            return $this->resourceCollectionService->checkName($title);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }
