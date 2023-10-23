@@ -558,5 +558,7 @@
     "responses.lab_field_invalid_id": "The selected lab id is invalid.",
     "responses.challenge_field_required": "The challenge field is required",
     "responses.challenge_field_array": "The challenge field must be an array",
-    "responses.challenge_field_invalid_id": "The selected challenge id is invalid."
+    "responses.challenge_field_invalid_id": "The selected challenge id is invalid.",
+    "responses.level_required": "The Level is required",
+    "responses.duration_required": "The Duration is required"
 }
