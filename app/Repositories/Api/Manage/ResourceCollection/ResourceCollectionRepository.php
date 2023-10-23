@@ -32,17 +32,17 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             $createResourceCollection = DB::transaction(function () use ($request, $upload_cover_image) {
                 $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image);
                 $componentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
-                $createResourceCollectionSkillsGroupStackService = $this->resouceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
-                $createResourceCollectionTagsGroupsService = $this->resourceCollectionTagsGroupsService->createCollectionModuleTagsGroups($request, $createResourceCollection->id);
+                $createResourceCollectionSkillsGroupStack = $this->resouceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
+                $createResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->createCollectionModuleTagsGroups($request, $createResourceCollection->id);
 
                 return[
                     'createResourceCollection'                       => $createResourceCollection,
                     'componentAssociation'                           => $componentAssociation,
-                    'createResourceCollectionSkillsGroupStackService'=> $createResourceCollectionSkillsGroupStackService,
-                    'createResourceCollectionTagsGroupsService'      => $createResourceCollectionTagsGroupsService,
+                    'createResourceCollectionSkillsGroupStack'       => $createResourceCollectionSkillsGroupStack,
+                    'createResourceCollectionTagsGroups'             => $createResourceCollectionTagsGroups,
                 ];
             });
-            if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['componentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStackService'] && $createResourceCollection['createResourceCollectionTagsGroupsService']) {
+            if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['componentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack'] && $createResourceCollection['createResourceCollectionTagsGroups']) {
                 DB::commit();
 
                 return true;

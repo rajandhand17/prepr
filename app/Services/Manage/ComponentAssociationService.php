@@ -423,20 +423,20 @@ class ComponentAssociationService
         }
     }
 
-    public static function createResourceCollectionAssociation($request, $createResourceCollectionId)
+    public static function createResourceCollectionAssociation($request, $resourceCollectionId)
     {
         try {
             $sequence = 1;
             if ($request->has('lab_ids') && count($request->lab_ids) > 0) {
                 $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_ids);
                 $sequence = ComponentAssociation::where([
-                    ['resource_collection_id', '=', $createResourceCollectionId],
+                    ['resource_collection_id', '=', $resourceCollectionId],
                     ['lab_id', '!=', null],
                 ])->select('sequence')->orderBy('id', 'desc')->first();
                 foreach ($getLabId as $labId) {
                     $sequence++;
                     $ResourceCollectionLab = new ComponentAssociation();
-                    $ResourceCollectionLab->resource_collection_id = $createResourceCollectionId;
+                    $ResourceCollectionLab->resource_collection_id = $resourceCollectionId;
                     $ResourceCollectionLab->lab_id = $labId;
                     $ResourceCollectionLab->sequence = $sequence;
                     $ResourceCollectionLab->save();
@@ -456,6 +456,22 @@ class ComponentAssociationService
                     $ResourceCollectionChallenge->challenge_id = $challengeId;
                     $ResourceCollectionChallenge->sequence = $sequence;
                     $ResourceCollectionChallenge->save();
+                }
+            }
+
+            if ($request->has('resource_ids') && count($request->resource_ids) > 0) {
+                $getResourceModuleIds=ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_ids);
+                $sequence = ComponentAssociation::where([
+                    ['resource_collection_id', '=', $createResourceCollectionId],
+                    ['resource_module_id', '!=', null],
+                ])->select('sequence')->orderBy('id', 'desc')->first();
+                foreach ($getResourceModuleIds as $resourceModuleId) {
+                    $sequence++;
+                    $ResourceCollectionResourceModule = new ComponentAssociation();
+                    $ResourceCollectionResourceModule->resource_collection_id = $createResourceCollectionId;
+                    $ResourceCollectionResourceModule->resource_module_id = $resourceModuleId;
+                    $ResourceCollectionResourceModule->sequence = $sequence;
+                    $ResourceCollectionResourceModule->save();
                 }
             }
 

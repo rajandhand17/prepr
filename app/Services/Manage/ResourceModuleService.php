@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\ResourceCollection;
 use App\Models\ResourceModule;
 use HiFolks\RandoPhp\Randomize;
 
@@ -253,4 +254,19 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public static function getResourceModuleBasedOnUUIDArray($resourceModuleUUIDArray)
+    {
+        try {
+            $resourceModuleIds = ResourceModule::whereIn('uuid', $resourceModuleUUIDArray)->pluck('id')->all();
+            if ($resourceModuleIds != null) {
+                return $resourceModuleIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 }

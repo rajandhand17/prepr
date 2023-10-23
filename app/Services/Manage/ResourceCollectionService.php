@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\Challenge;
 use App\Models\ResourceCollection;
 use HiFolks\RandoPhp\Randomize;
 

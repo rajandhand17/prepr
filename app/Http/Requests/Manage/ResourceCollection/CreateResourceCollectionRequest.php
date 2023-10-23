@@ -34,6 +34,8 @@ class CreateResourceCollectionRequest extends FormRequest
             'lab_ids.*'              => 'exists:labs,uuid',
             'challenge_ids'          => 'required|array',
             'challenge_ids.*'        => 'exists:challenges,uuid',
+            'resource_ids'          => 'required|array',
+            'resource_ids.*'        => 'exists:resource_modules,uuid',
             'skills'                 => 'required|array',
             'skills.*'               => 'numeric|exists:skills,id',
             'tags'                   => 'required|array',
