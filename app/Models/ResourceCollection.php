@@ -42,14 +42,19 @@ class ResourceCollection extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function resource_modules(){
-        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("resource_module_id",'!=',null);
+    public function resource_modules()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('resource_module_id', '!=', null);
     }
-    public function labs(){
-        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("lab_id",'!=',null);
+
+    public function labs()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('lab_id', '!=', null);
     }
-    public function challenges(){
-        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("challenge_id",'!=',null);
+
+    public function challenges()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('challenge_id', '!=', null);
     }
 
     public function getDuration()
@@ -69,7 +74,7 @@ class ResourceCollection extends Model
 
     public function skills()
     {
-        return $this->hasMany(ResourceCollectionSkillsGroupsStack ::class, 'resource_collection_id', 'id')->where('type', '0');
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '0');
     }
 
     public function skill_groups()
