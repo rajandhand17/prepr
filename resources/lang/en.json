@@ -560,5 +560,9 @@
     "responses.challenge_field_array": "The challenge field must be an array",
     "responses.challenge_field_invalid_id": "The selected challenge id is invalid.",
     "responses.level_required": "The Level is required",
-    "responses.duration_required": "The Duration is required"
+    "responses.duration_required": "The Duration is required",
+
+    "responses.resource_collection_slug_not_available":"This resource collection slug is not available!",
+
+    "responses.resource_collection_slug_available":"This resource collection slug is available!"
 }
