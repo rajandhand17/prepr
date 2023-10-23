@@ -946,6 +946,7 @@ class AuthController extends AppBaseController
             if ($checkMagnetSSOUser['status'] == 'error') {
                 return $this->sendError($checkMagnetSSOUser['message'], 402);
             }
+            dd($checkMagnetSSOUser);
             $ssorequest = $this->authRepository->magnetSsoLogin($checkMagnetSSOUser);
 
             if ($ssorequest['success'] == true) {

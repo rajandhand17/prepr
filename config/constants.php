@@ -225,8 +225,4 @@ return [
         'yes' => '1',
     ],
 
-    'duration'=> [
-        'Less than 2 hours'  => '0',
-        'yes' => '1',
-    ],
 ];

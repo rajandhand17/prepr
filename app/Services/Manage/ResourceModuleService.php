@@ -271,7 +271,7 @@ class ResourceModuleService
 
     public static function getResourceModuleBasedOnId($id){
         try {
-            return ResourceModule::select('uuid', 'title', 'media','description')->where('id',$id)->first();
+            return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id',$id)->first();
         }catch (\Exception $e){
             return false;
         }
