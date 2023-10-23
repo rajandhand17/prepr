@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\ChallengeAssessment;
+use App\Services\UserService;
 use Exception;
 
 class ChallengeAssessmentService
@@ -137,6 +138,54 @@ class ChallengeAssessmentService
             }
 
             return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeAssessmentData($challengeId)
+    {
+        try {
+            $challenge_assessment = [];
+            $assessmentTypeMapping = [
+                '0' => 'none',
+                '1' => 'open',
+                '2' => 'close',
+            ];
+
+            $visibilityMapping = [
+                '0' => 'null',
+                '1' => 'users',
+                '2' => 'hidden',
+            ];
+
+            $assessmentType = $assessmentTypeMapping[$challengeId[0]->assessment_type] ?? 'none';
+            $visibility = $visibilityMapping[$challengeId[0]->visibility] ?? 'null';
+
+            $members = [];
+            if ($challengeId->isNotEmpty()) {
+                $memberEmails = $challengeId->pluck('members_email');
+
+                foreach ($memberEmails as $memberEmail) {
+                    $getUser = UserService::getUserByEmail($memberEmail);
+                    $getMemberDetail = [
+                        'id'    => $getUser->id ?? null,
+                        'email' => $getUser->email ?? $memberEmail,
+                        'name'  => $getUser->full_name ?? null,
+                    ];
+                    $members[] = $getMemberDetail;
+                }
+            }
+
+            $challenge_assessment = [
+                'assessment_type' => $assessmentType,
+                'visibility'      => $visibility,
+                'guidelines'      => $challengeId[0]->guidelines,
+                'attachments'     => $challengeId[0]->attachments,
+                'members'          => $members,
+            ];
+
+            return $challenge_assessment;
         } catch (Exception $e) {
             return false;
         }

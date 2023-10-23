@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\Challenge;
 
+use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
@@ -192,59 +193,8 @@ class ChallengeResource extends JsonResource
             });
         }
 
-        if ($this->challenge_assessment) {
-            $challenge_assessment = $this->challenge_assessment->map(function ($item) {
-                switch ($item->assessment_type) {
-                    case '0':
-                        $assessment_type = 'none';
-                        break;
-                    case '1':
-                        $assessment_type = 'open';
-                        break;
-                    case '2':
-                        $assessment_type = 'close';
-                        break;
-                    default:
-                        $assessment_type = 'none';
-                        break;
-                }
-
-                switch ($item->visibility) {
-                    case '0':
-                        $visibility = 'null';
-                        break;
-                    case '1':
-                        $visibility = 'users';
-                        break;
-                    case '2':
-                        $visibility = 'hidden';
-                        break;
-                    default:
-                        $visibility = 'null';
-                        break;
-                }
-
-                $getMemberDetail = [];
-                if ($item->members_email != null) {
-                    $getUser = UserService::getUserByEmail($item->members_email);
-                    if ($getUser) {
-                        $getMemberDetail = [
-                            'id'        => $getUser->id,
-                            'email'     => $getUser->email,
-                            'fullname'  => $getUser->full_name,
-                        ];
-                    }
-                }
-
-                return [
-                    'assessment_type'       => $assessment_type,
-                    'visibility'            => $visibility,
-                    'guidelines'            => $item->guidelines,
-                    'attachments'           => $item->attachments,
-                    'member_email'          => $item->members_email,
-                    'member_detail'         => $getMemberDetail,
-                ];
-            });
+        if ($this->challenge_assessment->isNotEmpty()) {
+            $challenge_assessment = ChallengeAssessmentService::getChallengeAssessmentData($this->challenge_assessment);
         }
 
         if ($this->challenge_timelines) {
