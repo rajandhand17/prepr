@@ -9,5 +9,6 @@ interface ResourceCollectionInterface
     public function uploadResourceCollectionCoverImage($cover_image);
 
     public function getResourceCollectionBasedOnSlug($slug);
+
     public function checkName($title);
 }

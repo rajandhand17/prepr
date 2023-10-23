@@ -44,9 +44,11 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             });
             if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['componentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack'] && $createResourceCollection['createResourceCollectionTagsGroups']) {
                 DB::commit();
+
                 return $createResourceCollection['createResourceCollection'];
             }
             DB::rollback();
+
             return false;
         } catch(\Exception $e) {
             DB::rollback();
@@ -64,18 +66,20 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         }
     }
 
-    public function getResourceCollectionBasedOnSlug($slug){
+    public function getResourceCollectionBasedOnSlug($slug)
+    {
         try {
             return $this->resourceCollectionService->getResourceCollectionBasedOnSlug($slug);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function checkName($title){
+    public function checkName($title)
+    {
         try {
             return $this->resourceCollectionService->checkName($title);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
