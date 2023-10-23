@@ -66,7 +66,6 @@ class ResourceCollectionService
             $resourceCollection->save();
             return $resourceCollection;
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
