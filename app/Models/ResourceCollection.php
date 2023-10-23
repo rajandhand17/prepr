@@ -11,7 +11,7 @@ class ResourceCollection extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="resource_collections";
+    protected $table = 'resource_collections';
     protected $fillable = [
         'uuid',
         'language',
