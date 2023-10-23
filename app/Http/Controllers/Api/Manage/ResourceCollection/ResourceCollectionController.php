@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
-use Illuminate\Http\Request;
+
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
 
 class ResourceCollectionController extends AppBaseController
