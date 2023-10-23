@@ -219,8 +219,14 @@ return [
         'no'  => '0',
         'yes' => '1',
     ],
+
     'resource_collection_is_accessible'=> [
         'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'duration'=> [
+        'Less than 2 hours'  => '0',
         'yes' => '1',
     ],
 ];

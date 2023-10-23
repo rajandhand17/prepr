@@ -64,9 +64,9 @@ class ResourceCollectionService
             $resourceCollection->status = $status;
             $resourceCollection->is_accessible = $is_accessible;
             $resourceCollection->save();
-
             return $resourceCollection;
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }

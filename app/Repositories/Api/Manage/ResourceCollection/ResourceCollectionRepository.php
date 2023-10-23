@@ -44,11 +44,9 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             });
             if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['componentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack'] && $createResourceCollection['createResourceCollectionTagsGroups']) {
                 DB::commit();
-
-                return true;
+                return $createResourceCollection;
             }
             DB::rollback();
-
             return false;
         } catch(\Exception $e) {
             DB::rollback();
