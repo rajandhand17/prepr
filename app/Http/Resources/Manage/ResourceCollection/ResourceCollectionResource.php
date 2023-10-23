@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources\Manage\ResourceCollection;
 
+use App\Models\Challenge;
 use App\Models\ResourceCollection;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceModuleService;
@@ -26,6 +28,9 @@ class ResourceCollectionResource extends JsonResource
     {
 
         $componentAssociation = [];
+        $resourceModule = [];
+        $lab=[];
+        $challenge=[];
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
@@ -40,9 +45,21 @@ class ResourceCollectionResource extends JsonResource
         $is_accessible = '';
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
-                $componentAssociation[$association->resource_module_id] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id);
-                $componentAssociation[$association->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id)->title;
-                $componentAssociation[$association->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id)->description;
+                if(!empty($association->resource_module_id)){
+                    $resourceModule[$association->resource_module_id] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id);
+                    $resourceModule[$association->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id)->title;
+                    $resourceModule[$association->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($association->resource_module_id)->description;
+                }
+                if(!empty($association->lab_id)){
+                    $lab[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
+                    $lab[$association->lab_id]['title'] = LabService::getLabBasedOnId($association->lab_id)->title;
+                    $lab[$association->lab_id]['description'] = LabService::getLabBasedOnId($association->lab_id)->description;
+                }
+                if(!empty($association->challenge_id)){
+                    $challenge[$association->challenge_id] =ChallengeService::getChallengeBasedOnId($association->challenge_id);
+                    $challenge[$association->challenge_id]['title'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->title;
+                    $challenge[$association->challenge_id]['description'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->description;
+                }
             }
         }
 
@@ -124,9 +141,11 @@ class ResourceCollectionResource extends JsonResource
             'status'                                  => $status,
             'is_accessible'                           => $is_accessible,
             'duration_id'                             => $duration_id,
-            'resource_module'                         =>$componentAssociation,
+            'resource_module'                         => $resourceModule,
             'duration'                                => $duration,
             'level_id'                                => $level_id,
+            'lab'                                     => $lab,
+            'challenge'                               => $challenge,
             'level'                                   => $level,
             'organization'                            => $organization,
             'organization_id'                         => $organization_id,

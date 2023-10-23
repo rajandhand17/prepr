@@ -43,7 +43,7 @@ class ResourceCollection extends Model
     }
 
     public function component_association(){
-        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id')->where("resource_module_id",'!=',null);
+        return $this->hasMany(ComponentAssociation::class,'resource_collection_id','id');
     }
 
     public function durations()
