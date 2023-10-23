@@ -224,12 +224,25 @@ class ChallengeResource extends JsonResource
                         break;
                 }
 
+                $getMemberDetail = [];
+                if ($item->members_email != null) {
+                    $getUser = UserService::getUserByEmail($item->members_email);
+                    if ($getUser) {
+                        $getMemberDetail = [
+                            'id'        => $getUser->id,
+                            'email'     => $getUser->email,
+                            'fullname'  => $getUser->full_name,
+                        ];
+                    }
+                }
+
                 return [
                     'assessment_type'       => $assessment_type,
                     'visibility'            => $visibility,
-                    'members_email'         => $item->members_email,
                     'guidelines'            => $item->guidelines,
                     'attachments'           => $item->attachments,
+                    'member_email'          => $item->members_email,
+                    'member_detail'         => $getMemberDetail,
                 ];
             });
         }
