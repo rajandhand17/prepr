@@ -88,7 +88,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnSlug($slug)
     {
         try {
-            return ResourceCollection::select()->where('slug', $slug)->first();
+            return ResourceCollection::where('slug', $slug)->first();
         } catch (\Exception $e) {
             return false;
         }
