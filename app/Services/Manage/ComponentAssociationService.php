@@ -490,14 +490,15 @@ class ComponentAssociationService
         }
     }
 
-    public static function updateResourceCollectionAssociation($request, $resourceCollectionId){
+    public static function updateResourceCollectionAssociation($request, $resourceCollectionId)
+    {
         try {
             $sequence = 1;
             if ($request->has('lab_ids') && count($request->lab_ids) > 0) {
                 $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_ids);
                 $request->merge(['lab_ids' => $getLabId]);
-                if(count($request->lab_ids)>0){
-                    $existComponentAssociation=ComponentAssociation::where([
+                if (count($request->lab_ids) > 0) {
+                    $existComponentAssociation = ComponentAssociation::where([
                         ['resource_collection_id', '=', $resourceCollectionId],
                         ['lab_id', '!=', null],
                     ])->pluck('lab_id')->all();
@@ -579,6 +580,7 @@ class ComponentAssociationService
                     }
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;

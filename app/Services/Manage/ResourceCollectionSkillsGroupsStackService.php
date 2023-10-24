@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ResourceCollectionSkillsGroupsStack;
 
 class ResourceCollectionSkillsGroupsStackService
@@ -54,7 +53,6 @@ class ResourceCollectionSkillsGroupsStackService
     {
         try {
             if ($request->has('skills')) {
-
                 if (count($request->skills) > 0) {
                     $getExistsSkills = ResourceCollectionSkillsGroupsStack::where([
                         ['resource_collection_id', '=', $resource_collection_id],

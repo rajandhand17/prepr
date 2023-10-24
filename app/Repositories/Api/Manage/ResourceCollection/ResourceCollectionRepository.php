@@ -36,14 +36,15 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $createResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->createCollectionModuleTagsGroups($request, $createResourceCollection->id);
 
                 return[
-                    'createResourceCollection'                       => $createResourceCollection,
+                    'createResourceCollection'                             => $createResourceCollection,
                     'createComponentAssociation'                           => $createComponentAssociation,
-                    'createResourceCollectionSkillsGroupStack'       => $createResourceCollectionSkillsGroupStack,
-                    'createResourceCollectionTagsGroups'             => $createResourceCollectionTagsGroups,
+                    'createResourceCollectionSkillsGroupStack'             => $createResourceCollectionSkillsGroupStack,
+                    'createResourceCollectionTagsGroups'                   => $createResourceCollectionTagsGroups,
                 ];
             });
             if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['createComponentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack'] && $createResourceCollection['createResourceCollectionTagsGroups']) {
                 DB::commit();
+
                 return $createResourceCollection['createResourceCollection'];
             }
             DB::rollback();
@@ -83,10 +84,11 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         }
     }
 
-    public function updateResourceCollection($slug, $request, $upload_cover_image){
+    public function updateResourceCollection($slug, $request, $upload_cover_image)
+    {
         try {
-            $updateResourceCollection = DB::transaction(function () use ($slug,$request, $upload_cover_image) {
-                $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug,$request, $upload_cover_image);
+            $updateResourceCollection = DB::transaction(function () use ($slug, $request, $upload_cover_image) {
+                $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image);
                 $updateComponentAssociation = $this->componentAssociationService->updateResourceCollectionAssociation($request, $updateResourceCollection->id);
                 $updateResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->updateResourceCollectionSkillsGroupsStack($request, $updateResourceCollection->id);
                 $updateResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->updateCollectionModuleTagsGroups($request, $updateResourceCollection->id);
@@ -100,12 +102,13 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             });
             if ($updateResourceCollection['updateResourceCollection'] && $updateResourceCollection['updateComponentAssociation'] && $updateResourceCollection['updateResourceCollectionSkillsGroupStack'] && $updateResourceCollection['updateResourceCollectionTagsGroups']) {
                 DB::commit();
+
                 return $updateResourceCollection['updateResourceCollection'];
             }
             DB::rollback();
 
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
