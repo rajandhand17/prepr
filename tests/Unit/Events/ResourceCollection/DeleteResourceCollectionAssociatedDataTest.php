@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Events\ResourceCollection;
 
-use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use Tests\TestCase;
 
 /**

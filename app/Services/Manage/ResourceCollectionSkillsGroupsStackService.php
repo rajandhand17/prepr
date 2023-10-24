@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\LabSkillsGroupsStack;
 use App\Models\ResourceCollectionSkillsGroupsStack;
 
 class ResourceCollectionSkillsGroupsStackService
@@ -50,7 +49,8 @@ class ResourceCollectionSkillsGroupsStackService
         }
     }
 
-    public static function deleteResourceCollectionSkillsGroupsStack($resource_collection_id){
+    public static function deleteResourceCollectionSkillsGroupsStack($resource_collection_id)
+    {
         try {
             $checkExistsResourceCollectionSkillsGroupsStack = ResourceCollectionSkillsGroupsStack::select('id')->where('resource_collection_id', $resource_collection_id)->get()->toArray();
             if ($checkExistsResourceCollectionSkillsGroupsStack) {
@@ -59,8 +59,9 @@ class ResourceCollectionSkillsGroupsStackService
                     return false;
                 }
             }
+
             return true;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
