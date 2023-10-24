@@ -25,8 +25,8 @@ class UpdateResourceCollectionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $resourceCollection=ResourceCollectionService::getResourceCollectionBasedOnSlug(request()->route('slug'));
-        if(!$resourceCollection){
+        $resourceCollection = ResourceCollectionService::getResourceCollectionBasedOnSlug(request()->route('slug'));
+        if (!$resourceCollection) {
             throw new NotFoundException();
         }
         $base_rules = [
@@ -67,6 +67,7 @@ class UpdateResourceCollectionRequest extends FormRequest
             'data'      => $validator->errors(),
         ], 422));
     }
+
     public function messages()
     {
         return [

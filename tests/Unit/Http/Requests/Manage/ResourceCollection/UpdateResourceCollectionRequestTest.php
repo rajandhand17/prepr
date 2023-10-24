@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Manage\ResourceCollection;
 
-use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use Tests\TestCase;
 
 /**
