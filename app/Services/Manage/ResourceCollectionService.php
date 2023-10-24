@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\Lab;
 use App\Models\ResourceCollection;
 use HiFolks\RandoPhp\Randomize;
 
@@ -98,6 +99,69 @@ class ResourceCollectionService
         try {
             return ResourceCollection::select()->where('title', $title)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getResourceCollectionList($request,$organization){
+        try {
+            $resourceCollectionList=ResourceCollection::select()->where('organization_id','=',$organization->id);
+            $resourceCollectionList=self::filterResourceCollectionList($resourceCollectionList,$request);
+
+            return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function filterResourceCollectionList($resourceCollectionList,$request){
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
+            }
+
+            if ($request->has('status') && !empty($request->status)) {
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', $status);
+            } else {
+                $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', '1');
+            }
+
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $resourceCollectionList = $resourceCollectionList->orderBy('resource_collections.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $resourceCollectionList = $resourceCollectionList->orderBy('resource_collections.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $resourceCollectionList = $resourceCollectionList->orderBy('resource_collections.created_at', 'ASC');
+                        break;
+                    default:
+                        $resourceCollectionList = $resourceCollectionList->orderBy('resource_collections.id', 'ASC');
+                }
+            }
+
+            if ($request->has('privacy')) {
+                $privacy = null;
+                switch ($request->privacy) {
+                    case 'yes':
+                        $privacy = config('constants.resource_collection_privacy.yes');
+                        break;
+                    case 'no':
+                        $privacy = config('constants.resource_collection_privacy.no');
+                        break;
+                    default:
+                        $privacy = null;
+                }
+                if ($privacy != null) {
+                    $resourceCollectionList = $resourceCollectionList->where('privacy', $privacy);
+                }
+            }
+
+            return $resourceCollectionList;
+        }catch (\Exception $e) {
             return false;
         }
     }
