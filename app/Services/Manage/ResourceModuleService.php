@@ -110,7 +110,6 @@ class ResourceModuleService
             $resourceModule = ResourceModule::find($resource_module_id)->delete();
             if ($resourceModule) {
                 $associatedResourceModule = event(new DeleteResourceModuleAssociatedData($resource_module_id));
-
                 return true;
             }
 

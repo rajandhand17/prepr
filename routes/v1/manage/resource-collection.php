@@ -8,4 +8,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/create', [ResourceCollectionController::class, 'create']);
     Route::get('/check-slug/{slug}', [ResourceCollectionController::class, 'checkSlug']);
     Route::get('/check-title/{title}', [ResourceCollectionController::class, 'checkName']);
+    Route::get('/{slug}/delete', [ResourceCollectionController::class, 'delete']);
+
 });

@@ -572,5 +572,11 @@
 
     "responses.found_resource_collection_list":"The resource collection list has been successfully retrieved",
 
-    "responses.not_found_resource_collection_view":"The resource collection has not been retrieved with success."
+    "responses.not_found_resource_collection_view":"The resource collection has not been retrieved with success.",
+
+
+    "responses.resource_collection_slug_not_found": "The resource collection which you are looking doesn't exist in our system.",
+
+    "responses.resource_collection_delete":"The resource module has been deleted successfully!",
+    "responses.resource_collection_not_delete":"The resource module has been not deleted!"
 }

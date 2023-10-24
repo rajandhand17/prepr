@@ -489,4 +489,21 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public static function deleteResourceCollectionAssociation($resourceCollectionId)
+    {
+        try {
+            $getComponentAssociation = ComponentAssociation::select('id')->where('resource_collection_id', $resourceCollectionId)->get()->all();
+            if ($getComponentAssociation) {
+                $deleteComponentAssociation = ComponentAssociation::whereIn('id', $getComponentAssociation)->delete();
+                if (!$deleteComponentAssociation) {
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
