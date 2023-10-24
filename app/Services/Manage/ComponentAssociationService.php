@@ -493,7 +493,7 @@ class ComponentAssociationService
     public static function deleteResourceCollectionAssociation($resource_collection_id)
     {
         try {
-            $checkExistsComponentAssociation = ComponentAssociation::select('id')->where('resource_collection_id', $resource_collection_id)->get()->toArray();
+            $checkExistsComponentAssociation = ComponentAssociation::select('id')->where('resource_collection_id', $resource_collection_id)->pluck('id');
             if ($checkExistsComponentAssociation) {
                 $deleteComponentAssociation = ComponentAssociation::whereIn('id', $checkExistsComponentAssociation)->delete();
                 if (!$deleteComponentAssociation) {

@@ -52,7 +52,7 @@ class ResourceCollectionSkillsGroupsStackService
     public static function deleteResourceCollectionSkillsGroupsStack($resource_collection_id)
     {
         try {
-            $checkExistsResourceCollectionSkillsGroupsStack = ResourceCollectionSkillsGroupsStack::select('id')->where('resource_collection_id', $resource_collection_id)->get()->toArray();
+            $checkExistsResourceCollectionSkillsGroupsStack = ResourceCollectionSkillsGroupsStack::select('id')->where('resource_collection_id', $resource_collection_id)->pluck('id');
             if ($checkExistsResourceCollectionSkillsGroupsStack) {
                 $deleteResourceCollectionSkillsGroupsStack = ResourceCollectionSkillsGroupsStack::whereIn('id', $checkExistsResourceCollectionSkillsGroupsStack)->delete();
                 if (!$deleteResourceCollectionSkillsGroupsStack) {
