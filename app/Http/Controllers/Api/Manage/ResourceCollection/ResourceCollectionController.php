@@ -70,7 +70,7 @@ class ResourceCollectionController extends AppBaseController
     public function show($slug)
     {
         try {
-            $responseCollection=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            $responseCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($responseCollection) {
                 return $this->sendResponse(ResourceCollectionResource::make($responseCollection), __('responses.found_resource_collection_list'));
             }
@@ -84,7 +84,7 @@ class ResourceCollectionController extends AppBaseController
     public function update($slug, UpdateResourceCollectionRequest $request)
     {
         try {
-            $checkResourceCollectionSlugExistsOrNot=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
@@ -100,9 +100,9 @@ class ResourceCollectionController extends AppBaseController
             if ($updateResourceCollection) {
                 return $this->sendResponse(ResourceCollectionResource::make($updateResourceCollection), __('responses.resource_collection_update_success'), 200);
             }
-            return $this->sendError(__('responses.resource_collection_update_failed'), 403);
 
-        }catch (\Exception $e) {
+            return $this->sendError(__('responses.resource_collection_update_failed'), 403);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

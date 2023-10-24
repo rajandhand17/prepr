@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ChallengeTagsGroups;
 use App\Models\ResourceCollectionTagsGroups;
 
 class ResourceCollectionTagsGroupsService
@@ -38,7 +37,6 @@ class ResourceCollectionTagsGroupsService
             return false;
         }
     }
-
 
     public function updateCollectionModuleTagsGroups($request, $resource_collection_id)
     {

@@ -102,11 +102,12 @@ class ResourceCollectionService
         }
     }
 
-    public function updateResourceCollection($slug, $request, $upload_cover_image){
+    public function updateResourceCollection($slug, $request, $upload_cover_image)
+    {
         try {
-            $resourceCollection=ResourceCollection::where('slug', $slug)->first();
+            $resourceCollection = ResourceCollection::where('slug', $slug)->first();
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-            if($resourceCollection!==null ){
+            if ($resourceCollection !== null) {
                 $status = $resourceCollection->status;
                 $privacy = $resourceCollection->privacy;
                 $is_accessible = $resourceCollection->is_accessible;
@@ -142,9 +143,9 @@ class ResourceCollectionService
                     default:
                         $is_accessible = config('constants.resource_collection_is_accessible.no');
                 }
-                $resourceCollection->language = ($request->has('language')) ? $request->language :$resourceCollection->language;
+                $resourceCollection->language = ($request->has('language')) ? $request->language : $resourceCollection->language;
                 $resourceCollection->organization_id = $organization->id;
-                $resourceCollection->title =($request->has('title')) ? $request->title : $resourceCollection->title;
+                $resourceCollection->title = ($request->has('title')) ? $request->title : $resourceCollection->title;
                 $resourceCollection->description = ($request->has('description')) ? $request->description : $resourceCollection->description;
                 $resourceCollection->media = ($upload_cover_image != null) ? $upload_cover_image : $resourceCollection->cover_image;
                 $resourceCollection->level = ($request->has('level')) ? $request->level : $resourceCollection->level;
@@ -153,10 +154,12 @@ class ResourceCollectionService
                 $resourceCollection->status = $status;
                 $resourceCollection->is_accessible = $is_accessible;
                 $resourceCollection->save();
+
                 return $resourceCollection;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
