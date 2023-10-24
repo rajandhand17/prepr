@@ -557,10 +557,10 @@ class ComponentAssociationService
                 if (count($request->resource_ids) > 0) {
                     $existComponentAssociation = ComponentAssociation::where([
                         ['resource_collection_id', '=', $resourceCollectionId],
-                        ['resource_id', '!=', null],
-                    ])->pluck('resource_id')->all();
+                        ['resource_module_id', '!=', null],
+                    ])->pluck('resource_module_id')->all();
                     $nonExistingIds = array_diff($existComponentAssociation, $request->challenge_ids);
-                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('resource_collection_id', $resourceCollectionId)->whereIn('resource_id', $nonExistingIds)->delete();
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('resource_collection_id', $resourceCollectionId)->whereIn('resource_module_id', $nonExistingIds)->delete();
                     $newComponentAssociation = array_diff($request->challenge_ids, $existComponentAssociation);
                     $sequence = ComponentAssociation::where([
                         ['resource_collection_id', '=', $resourceCollectionId],
