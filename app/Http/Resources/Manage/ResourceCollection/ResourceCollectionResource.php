@@ -38,6 +38,7 @@ class ResourceCollectionResource extends JsonResource
         $is_accessible = '';
 
         if ($this->resource_modules) {
+
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
                 $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
@@ -126,7 +127,6 @@ class ResourceCollectionResource extends JsonResource
                 $status = 'draft';
                 break;
         }
-
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,
