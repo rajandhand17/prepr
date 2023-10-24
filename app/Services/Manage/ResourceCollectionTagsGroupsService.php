@@ -43,11 +43,12 @@ class ResourceCollectionTagsGroupsService
         try {
             $checkExistsResourceCollectionTagsGroups = ResourceCollectionTagsGroups::select('id')->where('resource_collection_id', $resource_collection_id)->get()->toArray();
             if ($checkExistsResourceCollectionTagsGroups) {
-                $deleteResourceCollectionTagsGroups = ResourceCollectionSkillsGroupsStack::whereIn('id', $checkExistsResourceCollectionTagsGroups)->delete();
+                $deleteResourceCollectionTagsGroups = ResourceCollectionTagsGroups::whereIn('id', $checkExistsResourceCollectionTagsGroups)->delete();
                 if (!$deleteResourceCollectionTagsGroups){
                     return false;
                 }
             }
+            return true;
         }catch(\Exception $e){
             return false;
         }

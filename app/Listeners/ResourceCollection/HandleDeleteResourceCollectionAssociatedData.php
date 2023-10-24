@@ -27,18 +27,16 @@ class HandleDeleteResourceCollectionAssociatedData
     {
         try {
             $resourceCollectionId = $event->resourceCollectionId;
-            $componentAssociation = ComponentAssociationService::deleteResourceCollectionAssociation($resourceCollectionId);
-            return $componentAssociation;
-
-            if (!$componentAssociation) {
+            $resourceCollectionTagsGroups=ResourceCollectionTagsGroupsService::deleteResourceCollectionTagsGroups($resourceCollectionId);
+            if(!$resourceCollectionTagsGroups){
                 return false;
             }
             $resourceCollectionSkillsGroupStack=ResourceCollectionSkillsGroupsStackService::deleteResourceCollectionSkillsGroupsStack($resourceCollectionId);
             if(!$resourceCollectionSkillsGroupStack){
                 return false;
             }
-            $resourceCollectionTagsGroups=ResourceCollectionTagsGroupsService::deleteResourceCollectionTagsGroups($resourceCollectionId);
-            if(!$resourceCollectionTagsGroups){
+            $componentAssociation = ComponentAssociationService::deleteResourceCollectionAssociation($resourceCollectionId);
+            if (!$componentAssociation) {
                 return false;
             }
             return true;

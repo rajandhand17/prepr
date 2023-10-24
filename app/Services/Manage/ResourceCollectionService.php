@@ -107,10 +107,10 @@ class ResourceCollectionService
         try {
             $resourceCollection=ResourceCollection::find($resource_collection_id)->delete();
             if($resourceCollection){
-              event(new DeleteResourceCollectionAssociatedData($resource_collection_id));
-              return true;
-
+                event(new DeleteResourceCollectionAssociatedData($resource_collection_id));
+                return true;
             }
+            return false;
         }catch (\Exception $e) {
             return false;
         }
