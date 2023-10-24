@@ -82,4 +82,31 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             return false;
         }
     }
+
+    public function updateResourceCollection($slug, $request, $upload_cover_image){
+        try {
+            $updateResourceCollection = DB::transaction(function () use ($slug,$request, $upload_cover_image) {
+                $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug,$request, $upload_cover_image);
+                $updateComponentAssociation = $this->componentAssociationService->updateResourceCollectionAssociation($request, $updateResourceCollection->id);
+                $updateResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->updateResourceCollectionSkillsGroupsStack($request, $updateResourceCollection->id);
+                $updateResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->updateCollectionModuleTagsGroups($request, $updateResourceCollection->id);
+
+                return[
+                    'updateResourceCollection'                       => $updateResourceCollection,
+                    'updateComponentAssociation'                     => $updateComponentAssociation,
+                    'updateResourceCollectionSkillsGroupStack'       => $updateResourceCollectionSkillsGroupStack,
+                    'updateResourceCollectionTagsGroups'             => $updateResourceCollectionTagsGroups,
+                ];
+            });
+            if ($updateResourceCollection['updateResourceCollection'] && $updateResourceCollection['updateComponentAssociation'] && $updateResourceCollection['updateResourceCollectionSkillsGroupStack'] && $updateResourceCollection['updateResourceCollectionTagsGroups']) {
+                DB::commit();
+                return $updateResourceCollection['updateResourceCollection'];
+            }
+            DB::rollback();
+
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

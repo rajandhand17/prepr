@@ -86,8 +86,21 @@ class ResourceCollectionController extends AppBaseController
         try {
             $checkResourceCollectionSlugExistsOrNot=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionSlugExistsOrNot == false) {
-                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+                return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceCollectionSlugExistsOrNot->media);
+            if ($request->cover_image !== null) {
+                $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
+                if (!$uploaded_cover_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_cover_image = $uploaded_cover_image;
+            }
+            $updateResourceCollection = $this->resourceCollectionRepository->updateResourceCollection($slug, $request, $upload_cover_image);
+            if ($updateResourceCollection) {
+                return $this->sendResponse(ResourceCollectionResource::make($updateResourceCollection), __('responses.resource_collection_update_success'), 200);
+            }
+            return $this->sendError(__('responses.resource_collection_update_failed'), 403);
 
         }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
