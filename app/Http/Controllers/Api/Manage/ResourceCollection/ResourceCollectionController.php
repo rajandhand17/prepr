@@ -70,9 +70,9 @@ class ResourceCollectionController extends AppBaseController
 
     public function show($slug){
         try {
-            $responseView=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($responseView) {
-                return $this->sendResponse(ResourceCollectionResource::make($responseView), __('responses.found_resource_collection_list'));
+            $responseCollection=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($responseCollection) {
+                return $this->sendResponse(ResourceCollectionResource::make($responseCollection), __('responses.found_resource_collection_list'));
             }
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         }catch (\Exception $e) {
@@ -82,6 +82,10 @@ class ResourceCollectionController extends AppBaseController
 
     public function update($slug,UpdateResourceCollectionRequest $request){
         try {
+            $checkResourceCollectionSlugExistsOrNot=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+            }
 
         }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

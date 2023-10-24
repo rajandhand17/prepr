@@ -87,7 +87,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnSlug($slug)
     {
         try {
-            return ResourceCollection::select()->where('slug', $slug)->first();
+            return ResourceCollection::select('id')->where('slug', $slug)->first();
         } catch (\Exception $e) {
             return false;
         }
@@ -96,7 +96,7 @@ class ResourceCollectionService
     public static function checkName($title)
     {
         try {
-            return ResourceCollection::select()->where('title', $title)->first();
+            return ResourceCollection::select('id')->where('title', $title)->first();
         } catch (\Exception $e) {
             return false;
         }

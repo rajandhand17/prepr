@@ -21,7 +21,6 @@ class ResourceCollectionResource extends JsonResource
      */
     public function toArray($request)
     {
-        $componentAssociation = [];
         $resourceModules = [];
         $labs = [];
         $challenges = [];
@@ -41,10 +40,10 @@ class ResourceCollectionResource extends JsonResource
         if ($this->resource_modules) {
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
+                $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
+                $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
+                $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
             }
-            $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
-            $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
-            $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
         }
         if ($this->challenges) {
             foreach ($this->challenges as $challenge_records) {

@@ -31,20 +31,19 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             $createResourceCollection = DB::transaction(function () use ($request, $upload_cover_image) {
                 $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image);
-                $componentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
+                $createComponentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
                 $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
                 $createResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->createCollectionModuleTagsGroups($request, $createResourceCollection->id);
 
                 return[
                     'createResourceCollection'                       => $createResourceCollection,
-                    'componentAssociation'                           => $componentAssociation,
+                    'createComponentAssociation'                           => $createComponentAssociation,
                     'createResourceCollectionSkillsGroupStack'       => $createResourceCollectionSkillsGroupStack,
                     'createResourceCollectionTagsGroups'             => $createResourceCollectionTagsGroups,
                 ];
             });
-            if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['componentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack'] && $createResourceCollection['createResourceCollectionTagsGroups']) {
+            if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['createComponentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack'] && $createResourceCollection['createResourceCollectionTagsGroups']) {
                 DB::commit();
-
                 return $createResourceCollection['createResourceCollection'];
             }
             DB::rollback();
