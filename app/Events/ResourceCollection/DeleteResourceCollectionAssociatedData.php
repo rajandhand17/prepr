@@ -2,17 +2,16 @@
 
 namespace App\Events\ResourceCollection;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class DeleteResourceCollectionAssociatedData
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public $resourceCollectionId;
 
@@ -21,8 +20,7 @@ class DeleteResourceCollectionAssociatedData
      */
     public function __construct($resourceCollectionId)
     {
-        $this->resourceCollectionId=$resourceCollectionId;
-
+        $this->resourceCollectionId = $resourceCollectionId;
     }
 
     /**

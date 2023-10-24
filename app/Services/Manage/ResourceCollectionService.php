@@ -103,15 +103,18 @@ class ResourceCollectionService
         }
     }
 
-    public static function deleteResourceCollection($resource_collection_id){
+    public static function deleteResourceCollection($resource_collection_id)
+    {
         try {
-            $resourceCollection=ResourceCollection::find($resource_collection_id)->delete();
-            if($resourceCollection){
+            $resourceCollection = ResourceCollection::find($resource_collection_id)->delete();
+            if ($resourceCollection) {
                 event(new DeleteResourceCollectionAssociatedData($resource_collection_id));
+
                 return true;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

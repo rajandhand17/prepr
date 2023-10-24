@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ResourceCollectionSkillsGroupsStack;
 use App\Models\ResourceCollectionTagsGroups;
 
 class ResourceCollectionTagsGroupsService
@@ -39,17 +38,19 @@ class ResourceCollectionTagsGroupsService
         }
     }
 
-    public static function deleteResourceCollectionTagsGroups($resource_collection_id){
+    public static function deleteResourceCollectionTagsGroups($resource_collection_id)
+    {
         try {
             $checkExistsResourceCollectionTagsGroups = ResourceCollectionTagsGroups::select('id')->where('resource_collection_id', $resource_collection_id)->get()->toArray();
             if ($checkExistsResourceCollectionTagsGroups) {
                 $deleteResourceCollectionTagsGroups = ResourceCollectionTagsGroups::whereIn('id', $checkExistsResourceCollectionTagsGroups)->delete();
-                if (!$deleteResourceCollectionTagsGroups){
+                if (!$deleteResourceCollectionTagsGroups) {
                     return false;
                 }
             }
+
             return true;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Listeners\ResourceCollection;
 
-use App\Listeners\ResourceCollection\HandleDeleteResourceCollectionAssociatedData;
 use Tests\TestCase;
 
 /**

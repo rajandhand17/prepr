@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
 
 class ResourceCollectionController extends AppBaseController
@@ -67,30 +66,34 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
-    public function show($slug){
+    public function show($slug)
+    {
         try {
-            $responseView=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            $responseView = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($responseView) {
                 return $this->sendResponse(ResourceCollectionResource::make($responseView), __('responses.found_resource_collection_list'));
             }
+
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function delete($slug){
+    public function delete($slug)
+    {
         try {
             $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            $responseCollectionDelete=$this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionSlugExistsOrNot->id);
+            $responseCollectionDelete = $this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionSlugExistsOrNot->id);
             if ($responseCollectionDelete) {
                 return $this->sendResponse(null, __('responses.resource_collection_delete'));
             }
+
             return $this->sendError(__('responses.resource_collection_not_delete'), 404);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
