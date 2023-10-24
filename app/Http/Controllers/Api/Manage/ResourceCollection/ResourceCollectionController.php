@@ -97,9 +97,8 @@ class ResourceCollectionController extends AppBaseController
                 'total_pages'  => $resourceCollection->lastPage(),
                 'list'         => ResourceCollectionResource::collection($resourceCollection),
             ];
-
             return $this->sendResponse($response, __('responses.found_resource_collection_list'));
-
         }
+        return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
     }
 }
