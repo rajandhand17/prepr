@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\ComponentAssociation;
 use App\Models\Lab;
-use App\Models\ResourceCollectionTagsGroups;
 use Exception;
 
 class ComponentAssociationService
@@ -497,10 +496,11 @@ class ComponentAssociationService
             $checkExistsComponentAssociation = ComponentAssociation::select('id')->where('resource_collection_id', $resource_collection_id)->get()->toArray();
             if ($checkExistsComponentAssociation) {
                 $deleteComponentAssociation = ComponentAssociation::whereIn('id', $checkExistsComponentAssociation)->delete();
-                if (!$deleteComponentAssociation){
+                if (!$deleteComponentAssociation) {
                     return false;
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
