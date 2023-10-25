@@ -88,9 +88,9 @@ class ResourceCollectionController extends AppBaseController
         if (!$organization) {
             return $this->sendError(__('responses.organization_not_found'), 404);
         }
-        $resourceCollection=$this->resourceCollectionRepository->getResourceCollectionList($request,$organization);
+        $resourceCollection = $this->resourceCollectionRepository->getResourceCollectionList($request, $organization);
 
-        if($resourceCollection){
+        if ($resourceCollection) {
             $response = [
                 'total_count'  => $resourceCollection->total(),
                 'per_page'     => $resourceCollection->perPage(),
