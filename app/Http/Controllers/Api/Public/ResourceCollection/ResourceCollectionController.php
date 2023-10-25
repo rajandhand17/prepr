@@ -38,4 +38,18 @@ class ResourceCollectionController extends AppBaseController
             return false;
         }
     }
+
+    public function show($slug)
+    {
+        try {
+            $responseCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($responseCollection) {
+                return $this->sendResponse(ResourceCollectionResource::make($responseCollection), __('responses.found_resource_collection_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
