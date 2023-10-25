@@ -165,7 +165,7 @@ class ChallengeResource extends JsonResource
                 'min_rank'                              => $this->challenge_requirements->min_rank,
                 'min_points'                            => $this->challenge_requirements->min_points,
                 'max_project_submission'                => $this->challenge_requirements->max_project_submission,
-                'max_project_associated'                => $this->challenge_requirements->max_project_associated,
+                'max_project_associated'                => $this->challenge_requirements->max_project_associate,
                 'min_experience'                        => $this->challenge_requirements->min_experience,
                 'min_imported_badges'                   => $this->challenge_requirements->min_imported_badges,
                 'min_achievement_counts'                => $this->challenge_requirements->min_achievement_counts,
