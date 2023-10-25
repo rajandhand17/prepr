@@ -11,6 +11,7 @@ class ResourceCollectionController extends AppBaseController
 {
     private $resourceCollectionRepository;
 
+
     public function __construct(ResourceCollectionRepository $resourceCollectionRepository)
     {
         $this->resourceCollectionRepository = $resourceCollectionRepository;
@@ -39,6 +40,20 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
+    public function show($slug)
+    {
+        try {
+            $responseCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($responseCollection) {
+                return $this->sendResponse(ResourceCollectionResource::make($responseCollection), __('responses.found_resource_collection_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function socialActivity($slug, $action)
     {
         try {
@@ -58,7 +73,6 @@ class ResourceCollectionController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_resource_collection_successfully'));
                 }
             }
-
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
