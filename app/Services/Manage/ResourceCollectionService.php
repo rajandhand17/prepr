@@ -246,17 +246,18 @@ class ResourceCollectionService
                 })->distinct('resource_collections.uuid');
             }
             if ($request->has('level') && !empty($request->level)) {
-                $level=Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
-                if($level){
-                    $resourceCollectionList=$resourceCollectionList->whereIn("resource_collections.level",$level);
+                $level = Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
+                if ($level) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.level', $level);
                 }
             }
-            if($request->has('duration') && $request->duration){
-                $duration=Duration::whereIn("durations.title", 'like', '%'.$request->duration.'%')->pluck('id');
-                if($duration){
-                    $resourceCollectionList=$resourceCollectionList->whereIn("resource_collections.duration",$duration);
+            if ($request->has('duration') && $request->duration) {
+                $duration = Duration::whereIn('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
+                if ($duration) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.duration', $duration);
                 }
             }
+
             return $resourceCollectionList;
         } catch (\Exception $e) {
             return false;
