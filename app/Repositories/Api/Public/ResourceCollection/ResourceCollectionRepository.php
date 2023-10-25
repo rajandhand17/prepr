@@ -3,7 +3,6 @@
 namespace App\Repositories\Api\Public\ResourceCollection;
 
 use App\Services\Public\ResourceCollectionService;
-use DB;
 
 class ResourceCollectionRepository implements ResourceCollectionInterface
 {
@@ -22,5 +21,4 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             return false;
         }
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Public\ResourceCollection;
 
-use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
 use Tests\TestCase;
 
 /**
