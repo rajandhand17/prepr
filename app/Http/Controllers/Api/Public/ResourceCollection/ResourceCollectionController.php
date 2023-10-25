@@ -11,7 +11,6 @@ class ResourceCollectionController extends AppBaseController
 {
     private $resourceCollectionRepository;
 
-
     public function __construct(ResourceCollectionRepository $resourceCollectionRepository)
     {
         $this->resourceCollectionRepository = $resourceCollectionRepository;
@@ -73,6 +72,7 @@ class ResourceCollectionController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_resource_collection_successfully'));
                 }
             }
+
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

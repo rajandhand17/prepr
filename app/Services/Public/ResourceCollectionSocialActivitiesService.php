@@ -9,16 +9,17 @@ class ResourceCollectionSocialActivitiesService
     public function checkSocialActivity($resource_collection_id, $column, $action)
     {
         try {
-            $checkActivity = ResourceCollectionSocialActivity ::where(
+            $checkActivity = ResourceCollectionSocialActivity::where(
                 [
                     'resource_collection_id'  => $resource_collection_id,
-                    'user_id'             => auth()->user()->id,
-                    $column               => $action,
+                    'user_id'                 => auth()->user()->id,
+                    $column                   => $action,
                 ]
             )->first();
             if ($checkActivity != null) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -29,7 +30,7 @@ class ResourceCollectionSocialActivitiesService
     {
         try {
             ResourceCollectionSocialActivity::updateOrInsert([
-                'user_id'           => auth()->user()->id,
+                'user_id'               => auth()->user()->id,
                 'resource_collection_id'=> $resource_collection_id,
             ], [
                 $column => $action,
@@ -94,14 +95,16 @@ class ResourceCollectionSocialActivitiesService
                             $columnValue['column'] => $columnValue['action'],
                         ]
                     )->get();
+
                     return $resource_collection_ids;
                 }
+
                 return false;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
         }
     }
-
 }

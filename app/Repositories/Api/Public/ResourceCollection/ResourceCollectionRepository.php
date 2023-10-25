@@ -14,7 +14,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
     public function __construct(ResourceCollectionService $resourceCollectionService, ResourceCollectionSocialActivitiesService $resourceCollectionSocialActivity)
     {
         $this->resourceCollectionService = $resourceCollectionService;
-        $this->resourceCollectionSocialActivity=$resourceCollectionSocialActivity;
+        $this->resourceCollectionSocialActivity = $resourceCollectionSocialActivity;
     }
 
     public function getResourceCollectionList($request)
@@ -35,27 +35,29 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         }
     }
 
-    public function getColumnNameValue($action){
+    public function getColumnNameValue($action)
+    {
         try {
             return $this->resourceCollectionSocialActivity->getColumnNameValue($action);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkSocialActivity($resource_collection_id, $column, $action){
-        try{
+    public function checkSocialActivity($resource_collection_id, $column, $action)
+    {
+        try {
             return $this->resourceCollectionSocialActivity->checkSocialActivity($resource_collection_id, $column, $action);
-
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function captureSocialActivity($resource_collection_id, $column, $action){
-        try{
-        return $this->resourceCollectionSocialActivity->captureSocialActivity($resource_collection_id, $column, $action);
-        }catch(\Exception $e){
+    public function captureSocialActivity($resource_collection_id, $column, $action)
+    {
+        try {
+            return $this->resourceCollectionSocialActivity->captureSocialActivity($resource_collection_id, $column, $action);
+        } catch(\Exception $e) {
             return false;
         }
     }
