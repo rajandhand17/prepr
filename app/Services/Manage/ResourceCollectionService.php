@@ -4,7 +4,9 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\Duration;
 use App\Models\Lab;
+use App\Models\Levels;
 use App\Models\ResourceCollection;
 use HiFolks\RandoPhp\Randomize;
 
@@ -160,6 +162,38 @@ class ResourceCollectionService
                 }
             }
 
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.id', function ($query) use ($request) {
+                    $query->select('resource_collection_skills_groups_stacks.resource_collection_id')
+                        ->from('resource_collection_skills_groups_stacks')
+                        ->whereIn('resource_collection_skills_groups_stacks.foreign_id', $request->skills)
+                        ->where('resource_collection_skills_groups_stacks.type', '0')
+                        ->whereNull('resource_collection_skills_groups_stacks.deleted_at')
+                        ->distinct();
+                })->distinct('resource_collections.uuid');
+            }
+            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.id', function ($query) use ($request) {
+                    $query->select('resource_collection_tags_groups.challenge_id')
+                        ->from('resource_collection_tags_groups')
+                        ->whereIn('resource_collection_tags_groups.foreign_id', $request->tags)
+                        ->where('resource_collection_tags_groups.type', '0')
+                        ->whereNull('resource_collection_tags_groups.deleted_at')
+                        ->distinct();
+                })->distinct('resource_collections.uuid');
+            }
+            if ($request->has('level') && !empty($request->level)) {
+                $level=Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
+                if($level){
+                    $resourceCollectionList=$resourceCollectionList->whereIn("resource_collections.level",$level);
+                }
+            }
+            if($request->has('duration') && $request->duration){
+                $duration=Duration::whereIn("durations.title", 'like', '%'.$request->duration.'%')->pluck('id');
+                if($duration){
+                    $resourceCollectionList=$resourceCollectionList->whereIn("resource_collections.duration",$duration);
+                }
+            }
             return $resourceCollectionList;
         }catch (\Exception $e) {
             return false;
