@@ -201,6 +201,4 @@ class ResourceCollectionService
             return false;
         }
     }
-
-
 }
