@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers\Api\Public\ChallengePath;
+
+use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
+use App\Repositories\Api\Public\ChallengePath\ChallengePathRepository;
+use App\Services\Public\OrganizationService;
+use Exception;
+use Illuminate\Http\Request;
+
+class ChallengePathController extends AppBaseController
+{
+    protected $challengePathRepository;
+
+    public function __construct(ChallengePathRepository $challengePathRepository)
+    {
+        $this->challengePathRepository = $challengePathRepository;
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            if ($request->organization_id && is_array($request->organization_id)) {
+                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                if (!$organization) {
+                    return $this->sendError(__('responses.organization_not_found'), 404);
+                }
+                $request->merge(['organization_id' => $organization]);
+            }
+            $challengePath = $this->challengePathRepository->getList($request);
+            if ($challengePath !== false) {
+                $response = [
+                    'total_count'  => $challengePath->total(),
+                    'per_page'     => $challengePath->perPage(),
+                    'count'        => $challengePath->count(),
+                    'current_page' => $challengePath->currentPage(),
+                    'total_pages'  => $challengePath->lastPage(),
+                    'list'         => ChallengePathResource::collection($challengePath),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_challenge_path_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_challenge_path_list'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function show(Request $request, $slug)
+    {
+        try {
+            $challengePath = $this->challengePathRepository->getChallengePathBasedOnSlug($slug);
+            if ($challengePath) {
+                return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_lab_program_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_lab_program_list'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function socialActivity($slug, $action)
+    {
+        try {
+            $challengePath = $this->challengePathRepository->getChallengePathBasedOnSlug($slug);
+            if ($challengePath !== null) {
+                $getColumnNameValue = $this->challengePathRepository->getColumnNameValue($action);
+                if (!$getColumnNameValue) {
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
+                }
+                $checkActivity = $this->challengePathRepository->checkSocialActivity($challengePath->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $action = str_replace('-', '_', $action);
+                if ($checkActivity === true) {
+                    return $this->sendError(__('responses.already_'.$action.'_challenge_path'), 400);
+                }
+                $challengePath = $this->challengePathRepository->captureSocialActivity($challengePath->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                if ($challengePath) {
+                    return $this->sendResponse([], __('responses.'.$action.'_challenge_path_successfully'));
+                }
+            }
+
+            return $this->sendError(__('responses.challenge_path_slug_not_found'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+}

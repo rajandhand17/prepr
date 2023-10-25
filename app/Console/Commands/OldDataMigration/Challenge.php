@@ -14,6 +14,7 @@ use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTagsGroups;
 use App\Models\ChallengeTimelines;
+use App\Models\Host;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\User;
@@ -37,7 +38,7 @@ class Challenge extends Command
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old challanges table data to new db structure.';
+    protected $description = 'This command is use to migrate old Challanges table data to new db structure.';
 
     /**
      * Execute the console command.
@@ -45,11 +46,10 @@ class Challenge extends Command
     public function handle()
     {
         try {
-            $this->info('Migrating of old data for challenges table started.');
+            $this->info('Migrating of old data for Challenges table started.');
             DB::beginTransaction();
 
-            $challenges = DB::connection('mysql2')->table('challanges')->get();
-            if ($challenges->count() > 0) {
+            DB::connection('mysql2')->table('challanges')->chunkById(1000, function ($challenges) {
                 foreach ($challenges as $key => $challenge) {
                     $checkUser = User::find($challenge->user_id);
                     if (!$checkUser) {
@@ -154,6 +154,19 @@ class Challenge extends Command
                             break;
                     }
 
+                    $mediaType = 'image';
+                    switch ($challenge->mediaType) {
+                        case 'image':
+                            $mediaType = 'image';
+                            break;
+                        case 'embeddedCode':
+                            $mediaType = 'embedded';
+                            break;
+                        default:
+                            $mediaType = 'image';
+                            break;
+                    }
+
                     $newChallenge->id = $challenge->id;
                     $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newChallenge->language = $challenge->language;
@@ -166,7 +179,7 @@ class Challenge extends Command
                     $newChallenge->title = $challenge->title;
                     $newChallenge->description = $challenge->description;
                     $newChallenge->privacy = $challengePrivacy;
-                    $newChallenge->media_type = $challenge->mediaType;
+                    $newChallenge->media_type = $mediaType;
                     $newChallenge->media = $challenge->cover_image;
                     $newChallenge->status = $challengePublishedStatus;
                     $newChallenge->source_link = $challenge->sourcelink;
@@ -182,7 +195,7 @@ class Challenge extends Command
                     if (!empty($arrayHost)) {
                         ChallengeSponsor::where('challenge_id', $challenge->id)->delete();
                         foreach (array_filter($arrayHost) as $host) {
-                            $checkHost = ChallengeSponsor::find($host);
+                            $checkHost = Host::find($host);
                             if ($checkHost) {
                                 $checkChallengeSponsor = ChallengeSponsor::where(['challenge_id' => $challenge->id, 'host_id' => $host])->first();
                                 if (!$checkChallengeSponsor) {
@@ -198,7 +211,7 @@ class Challenge extends Command
                     // For Challenge Skill
                     $arraySkills = json_decode($challenge->challange_skill, true);
                     if (!empty($arraySkills)) {
-                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '0'])->delete();
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '0'])->delete();
                         foreach (array_filter($arraySkills) as $skill) {
                             $challengeSkill = new ChallengeSkillsGroupsStack();
                             $challengeSkill->challenge_id = $challenge->id;
@@ -211,7 +224,7 @@ class Challenge extends Command
                     // For Challenge Skill Stack
                     $skillStacks = $challenge->skill_stacks;
                     if (!empty($skillStacks)) {
-                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '2'])->delete();
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '2'])->delete();
                         foreach (explode(',', $skillStacks) as $skillStack) {
                             $challengeSkillStack = new ChallengeSkillsGroupsStack();
                             $challengeSkillStack->challenge_id = $challenge->id;
@@ -224,7 +237,7 @@ class Challenge extends Command
                     // For Challenge Skill Group
                     $skillGroups = $challenge->skill_groups;
                     if (!empty($skillGroups)) {
-                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'Foreign_id' => '1'])->delete();
+                        ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '1'])->delete();
                         foreach (explode(',', $skillGroups) as $skillGroup) {
                             $challengeSkillGroup = new ChallengeSkillsGroupsStack();
                             $challengeSkillGroup->challenge_id = $challenge->id;
@@ -237,7 +250,7 @@ class Challenge extends Command
                     // For Challenge Tag
                     $arrayTags = json_decode($challenge->challange_tag, true);
                     if (!empty($arrayTags)) {
-                        ChallengeTagsGroups::where(['challenge_id' => $challenge->id, 'Foreign_id' => '0'])->delete();
+                        ChallengeTagsGroups::where(['challenge_id' => $challenge->id, 'foreign_id' => '0'])->delete();
                         foreach (array_filter($arrayTags) as $tag) {
                             $challengeTag = new ChallengeTagsGroups();
                             $challengeTag->challenge_id = $challenge->id;
@@ -542,14 +555,12 @@ class Challenge extends Command
                     $challengeTimelines->flexible_expire_deadline = date('Y-m-d H:i:s', strtotime($challenge->flexibleExpireDate));
                     $challengeTimelines->save();
                 }
-                DB::commit();
-                $this->info('Migrating of old data for Challanges table completed.');
+            });
 
-                return;
-            }
+            DB::commit();
+            $this->info('Migrating of old data for Challanges table completed.');
 
-            DB::rollback();
-            $this->error('No Challenges found.');
+            return;
         } catch (Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());

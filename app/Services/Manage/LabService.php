@@ -334,4 +334,18 @@ class LabService
             return false;
         }
     }
+
+    public static function getLabIdBasedOnId($id)
+    {
+        try {
+            $lab = Lab::whereIn('id', $id)->pluck('id')->all();
+            if ($lab != null) {
+                return $lab;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

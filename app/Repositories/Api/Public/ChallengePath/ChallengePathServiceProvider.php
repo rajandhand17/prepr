@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Api\Manage\LabExternalLink;
+namespace App\Repositories\Api\Public\ChallengePath;
 
 use Illuminate\Support\ServiceProvider;
 
-class LabExternalLinkServiceProvider extends ServiceProvider
+class ChallengePathServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -22,6 +22,6 @@ class LabExternalLinkServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Master\MasterInterface', 'App\Repositories\Api\Master\MasterRepository');
+        $this->app->bind('App\Repositories\Api\Public\ChallengePath\ChallengePathInterface', 'App\Repositories\Api\Public\ChallengePath\ChallengePathRepository');
     }
 }

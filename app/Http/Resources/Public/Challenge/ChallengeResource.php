@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\Challenge;
 
+use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
@@ -38,6 +39,7 @@ class ChallengeResource extends JsonResource
         $challenge_requirements = null;
         $hosts = null;
         $challenge_assessment_criteria = null;
+        $challenge_assessment = null;
         $challenge_timelines = null;
         $challenge_custom_timelines = null;
 
@@ -111,22 +113,74 @@ class ChallengeResource extends JsonResource
                 $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
                 $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
             }
+            switch ($this->challenge_requirements->allow_submit_project) {
+                case '0':
+                    $allow_submit_project = 'no';
+                    break;
+                case '1':
+                    $allow_submit_project = 'yes';
+                    break;
+                default:
+                    $allow_submit_project = 'no';
+                    break;
+            }
+
+            switch ($this->challenge_requirements->requirement_program) {
+                case '0':
+                    $requirement_program = 'no';
+                    break;
+                case '1':
+                    $requirement_program = 'yes';
+                    break;
+                default:
+                    $requirement_program = 'no';
+                    break;
+            }
+
+            switch ($this->challenge_requirements->complete_education_program) {
+                case '0':
+                    $complete_education_program = 'no';
+                    break;
+                case '1':
+                    $complete_education_program = 'yes';
+                    break;
+                default:
+                    $complete_education_program = 'no';
+                    break;
+            }
+
+            switch ($this->challenge_requirements->complete_experience) {
+                case '0':
+                    $complete_experience = 'no';
+                    break;
+                case '1':
+                    $complete_experience = 'yes';
+                    break;
+                default:
+                    $complete_experience = 'no';
+                    break;
+            }
+
             $challenge_requirements = [
-                'minimum_rank'                     => $this->challenge_requirements->min_rank,
-                'minimum_points'                   => $this->challenge_requirements->min_points,
-                'maximum_submission'               => $this->challenge_requirements->max_project_submission,
-                'maximum_project_associated'       => $this->challenge_requirements->max_project_associate,
-                'minimum_experience'               => $this->challenge_requirements->min_experience,
-                'minimum_import_badges'            => $this->challenge_requirements->min_imported_badges,
-                'minimum_achievement_count'        => $this->challenge_requirements->min_achievement_counts,
-                'additional_requirements'          => $this->challenge_requirements->additional_requirements,
-                'challenge_completion_requirement' => json_decode(json_encode($challenge_conditions)),
+                'min_rank'                              => $this->challenge_requirements->min_rank,
+                'min_points'                            => $this->challenge_requirements->min_points,
+                'max_project_submission'                => $this->challenge_requirements->max_project_submission,
+                'max_project_associated'                => $this->challenge_requirements->max_project_associate,
+                'min_experience'                        => $this->challenge_requirements->min_experience,
+                'min_imported_badges'                   => $this->challenge_requirements->min_imported_badges,
+                'min_achievement_counts'                => $this->challenge_requirements->min_achievement_counts,
+                'additional_requirements'               => $this->challenge_requirements->additional_requirements,
+                'allow_submit_project'                  => $allow_submit_project,
+                'requirement_program'                   => $requirement_program,
+                'complete_education_program'            => $complete_education_program,
+                'complete_experience'                   => $complete_experience,
+                'project_submission_requirement_ids'    => json_decode(json_encode($challenge_conditions)),
             ];
         }
 
         if ($this->hosts) {
             $associatedHosts = $this->hosts->pluck('host_id');
-            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('title', 'id');
+            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('id');
         }
 
         if ($this->challenge_assessment_criteria) {
@@ -139,10 +193,14 @@ class ChallengeResource extends JsonResource
             });
         }
 
+        if ($this->challenge_assessment->isNotEmpty()) {
+            $challenge_assessment = ChallengeAssessmentService::getChallengeAssessmentData($this->challenge_assessment);
+        }
+
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
                 $challenge_timelines = [
-                    'timeline_type'                 => 'Flexible',
+                    'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
                     'flexible_date_duration'        => $this->challenge_timelines->flexible_date_duration,
                     'automatic_alert'               => $this->challenge_timelines->automatic_alert,
@@ -150,7 +208,7 @@ class ChallengeResource extends JsonResource
                 ];
             } elseif ($this->challenge_timelines->timeline_type == '1') {
                 $challenge_timelines = [
-                    'timeline_type'                         => 'Restricted',
+                    'timeline_type'                         => 'restricted',
                     'open_call_date'                        => $this->challenge_timelines->open_call_date,
                     'open_call_date_description'            => $this->challenge_timelines->open_call_date_description,
                     'last_call_date'                        => $this->challenge_timelines->last_call_date,
@@ -176,6 +234,18 @@ class ChallengeResource extends JsonResource
             });
         }
 
+        switch ($this->media_type) {
+            case 'image':
+                $media = $this->media;
+                break;
+            case 'embedded':
+                $media = $this->getRawOriginal('media');
+                break;
+            default:
+                $media = $this->media;
+                break;
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -193,7 +263,7 @@ class ChallengeResource extends JsonResource
             'description'                   => $this->description,
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
-            'media'                         => $this->media,
+            'media'                         => $media,
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'source_link'                   => $this->source_link,
             'agreement'                     => $this->agreement,
@@ -209,8 +279,9 @@ class ChallengeResource extends JsonResource
             'participation_achievement'     => $achievement,
             'incentive_achievement'         => $incentive_achievement,
             'challenge_requirements'        => $challenge_requirements,
-            'Sponsors'                      => $hosts,
+            'host_id'                       => $hosts,
             'challenge_assessment_criteria' => $challenge_assessment_criteria,
+            'challenge_assessment'          => $challenge_assessment,
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
             'challenge_template'            => $this->challenge_project_template,
