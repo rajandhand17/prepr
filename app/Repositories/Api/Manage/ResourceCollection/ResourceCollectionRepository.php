@@ -106,6 +106,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 return $updateResourceCollection['updateResourceCollection'];
             }
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             return false;
