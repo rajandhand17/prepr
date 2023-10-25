@@ -7,6 +7,8 @@ use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
+use App\Services\Manage\OrganizationService;
+use Illuminate\Http\Request;
 
 class ResourceCollectionController extends AppBaseController
 {
@@ -105,5 +107,29 @@ class ResourceCollectionController extends AppBaseController
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
+    }
+
+    public function index(Request $request)
+    {
+        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+        if (!$organization) {
+            return $this->sendError(__('responses.organization_not_found'), 404);
+        }
+        $resourceCollection=$this->resourceCollectionRepository->getResourceCollectionList($request,$organization);
+
+        if($resourceCollection){
+            $response = [
+                'total_count'  => $resourceCollection->total(),
+                'per_page'     => $resourceCollection->perPage(),
+                'count'        => $resourceCollection->count(),
+                'current_page' => $resourceCollection->currentPage(),
+                'total_pages'  => $resourceCollection->lastPage(),
+                'list'         => ResourceCollectionResource::collection($resourceCollection),
+            ];
+
+            return $this->sendResponse($response, __('responses.found_resource_collection_list'));
+        }
+
+        return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
     }
 }

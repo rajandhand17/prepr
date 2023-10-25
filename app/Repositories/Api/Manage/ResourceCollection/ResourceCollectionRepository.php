@@ -106,8 +106,16 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 return $updateResourceCollection['updateResourceCollection'];
             }
             DB::rollback();
-
             return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getResourceCollectionList($request, $organization)
+    {
+        try {
+            return $this->resourceCollectionService->getResourceCollectionList($request, $organization);
         } catch (\Exception $e) {
             return false;
         }
