@@ -11,4 +11,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/check-slug/{slug}', [ChallengeController::class, 'checkSlug']);
     Route::get('/check-title/{title}', [ChallengeController::class, 'checkName']);
     Route::delete('/{slug}/delete', [ChallengeController::class, 'delete'])->middleware('permission:delete_challenge');
+    Route::get('/fetch-assessment/{slug}', [ChallengeController::class, 'fetchAssessment']);
 });
