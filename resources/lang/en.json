@@ -572,5 +572,23 @@
 
     "responses.found_resource_collection_list":"The resource collection list has been successfully retrieved",
 
-    "responses.not_found_resource_collection_view":"The resource collection has not been retrieved with success."
+    "responses.not_found_resource_collection_view":"The resource collection has not been retrieved with success.",
+
+    "responses.already_like_resource_collection":"The Resource Collection is already liked by you!",
+    "responses.like_resource_collection_successfully":"The Resource Collection have been liked successfully by you!",
+    "responses.already_un_like_resource_collection":"The Resource Collection is already being dis-liked by you!",
+    "responses.un_like_resource_collection_successfully":"The Resource Collection have been dis-liked successfully by you!",
+    "responses.already_follow_resource_collection":"The Resource Collection is already being followed by you!",
+    "responses.share_resource_collection_successfully":"The Resource Collection have been shared successfully by you!",
+    "responses.already_share_resource_collection":"The Resource Collection is already being shared by you!",
+    "responses.already_un_follow_resource_collection":"The Resource Collection is already being un-followed by you!",
+    "responses.follow_resource_collection_successfully":"The Resource Collection have been followed successfully by you",
+    "responses.un_follow_resource_collection_successfully":"The Resource Collection have been un-followed successfully by you!",
+    "responses.un_follow_resource_collection_failed":"You have failed to unfollowed this resource collection!",
+    "responses.share_resource_collection_failed":"You have failed to share this resource collection!",
+    "responses.follow_resource_collection_failed":"You have failed to followed this resource collection!",
+    "responses.favourite_resource_collection_successfully":"You have successfully saved as favourite this resource collection!",
+    "responses.un_favourite_resource_collection_successfully":"You have successfully un-saved as favourite this resource collection!",
+    "responses.already_favourite_resource_collection":"The Resource Collection is already being added to favourites!",
+    "responses.already_un_favourite_resource_collection":"The Resource Collection is already being removed from favourites!"
 }

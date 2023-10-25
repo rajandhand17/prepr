@@ -3,14 +3,18 @@
 namespace App\Repositories\Api\Public\ResourceCollection;
 
 use App\Services\Public\ResourceCollectionService;
+use App\Services\Public\ResourceCollectionSocialActivitiesService;
 
 class ResourceCollectionRepository implements ResourceCollectionInterface
 {
     private $resourceCollectionService;
 
-    public function __construct(ResourceCollectionService $resourceCollectionService)
+    private $resourceCollectionSocialActivity;
+
+    public function __construct(ResourceCollectionService $resourceCollectionService, ResourceCollectionSocialActivitiesService $resourceCollectionSocialActivity)
     {
         $this->resourceCollectionService = $resourceCollectionService;
+        $this->resourceCollectionSocialActivity = $resourceCollectionSocialActivity;
     }
 
     public function getResourceCollectionList($request)
@@ -26,6 +30,33 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
     {
         try {
             return $this->resourceCollectionService->getResourceCollectionBasedOnSlug($slug);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getColumnNameValue($action)
+    {
+        try {
+            return $this->resourceCollectionSocialActivity->getColumnNameValue($action);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkSocialActivity($resource_collection_id, $column, $action)
+    {
+        try {
+            return $this->resourceCollectionSocialActivity->checkSocialActivity($resource_collection_id, $column, $action);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function captureSocialActivity($resource_collection_id, $column, $action)
+    {
+        try {
+            return $this->resourceCollectionSocialActivity->captureSocialActivity($resource_collection_id, $column, $action);
         } catch(\Exception $e) {
             return false;
         }
