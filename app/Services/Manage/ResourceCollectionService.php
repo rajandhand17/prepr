@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Duration;
-use App\Models\Lab;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
 use HiFolks\RandoPhp\Randomize;
@@ -105,18 +104,20 @@ class ResourceCollectionService
         }
     }
 
-    public function getResourceCollectionList($request,$organization){
+    public function getResourceCollectionList($request, $organization)
+    {
         try {
-            $resourceCollectionList=ResourceCollection::select()->where('organization_id','=',$organization->id);
-            $resourceCollectionList=self::filterResourceCollectionList($resourceCollectionList,$request);
+            $resourceCollectionList = ResourceCollection::select()->where('organization_id', '=', $organization->id);
+            $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function filterResourceCollectionList($resourceCollectionList,$request){
+    public function filterResourceCollectionList($resourceCollectionList, $request)
+    {
         try {
             if ($request->has('search') && !empty($request->search)) {
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
@@ -195,7 +196,7 @@ class ResourceCollectionService
                 }
             }
             return $resourceCollectionList;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
