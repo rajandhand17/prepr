@@ -105,4 +105,13 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function getResourceCollectionBasedOnSlug($slug)
+    {
+        try {
+            return ResourceCollection::where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
