@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
-use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
@@ -217,7 +216,7 @@ class ChallengeController extends AppBaseController
                 $getChallengeAssessment = $this->challengeRepository->getChallengeAssessmentData($checkChallengeSlugExistsOrNot->challenge_assessment);
             }
             if (!empty($getChallengeAssessment)) {
-                return $this->sendResponse(ChallengeAssessmentResource::make($getChallengeAssessment), __('responses.found_challenge_assessment_detail'), 200);
+                return $this->sendResponse($getChallengeAssessment, 200);
             }
 
             return $this->sendResponse([], __('responses.found_not_challenge_assessment_detail'));
