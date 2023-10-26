@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
-use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
-use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
 {
@@ -19,7 +16,8 @@ class ResourceGroupController extends AppBaseController
         $this->resourceGroupRepository = $resourceGroupRepository;
     }
 
-    public function create(CreateResourceGroupRequest $request){
+    public function create(CreateResourceGroupRequest $request)
+    {
         try {
             $upload_cover_image = config('site-settings.default_resource_group_cover_image');
             if ($request->cover_image !== null) {
@@ -37,10 +35,11 @@ class ResourceGroupController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $createResourceGroup = $this->resourceGroupRepository->createResourceGroup($request, $upload_cover_image,$upload_achievement_image);
+            $createResourceGroup = $this->resourceGroupRepository->createResourceGroup($request, $upload_cover_image, $upload_achievement_image);
             if ($createResourceGroup) {
-                return $this->sendResponse(ResourceGroupResource::make($createResourceGroup),__('responses.resource_group_stored_success'),200);
+                return $this->sendResponse(ResourceGroupResource::make($createResourceGroup), __('responses.resource_group_stored_success'), 200);
             }
+
             return $this->sendError(__('responses.resource_group_stored_failed'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

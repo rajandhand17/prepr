@@ -2,10 +2,6 @@
 
 namespace App\Http\Resources\Manage\ResourceGroup;
 
-use App\Models\ResourceCollection;
-use App\Services\AchievementConditionListService;
-use App\Services\Manage\ChallengeService;
-use App\Services\Manage\LabService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
@@ -26,8 +22,8 @@ class ResourceGroupResource extends JsonResource
     public function toArray(Request $request): array
     {
         $resourceModules = [];
-        $achievements=[];
-        $resource_collection=[];
+        $achievements = [];
+        $resource_collection = [];
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
@@ -116,18 +112,17 @@ class ResourceGroupResource extends JsonResource
         }
 
         if ($this->achievement) {
-
             $achievements = [
                 'achievement_name'      => $this->achievement->achievement_name,
                 'achievement_points'    => $this->achievement->achievement_points,
                 'achievement_image'     => $this->achievement->achievement_image,
             ];
         }
-        if($this->resource_collection){
+        if ($this->resource_collection) {
             $resource_collection_id = $this->resource_collection->pluck('resource_collection_id');
-            $resource_collection=ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection_id);
-
+            $resource_collection = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection_id);
         }
+
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,
@@ -152,7 +147,7 @@ class ResourceGroupResource extends JsonResource
             'skill_stacks'                             => $skill_stacks,
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
-            'resource_collection'                      =>$resource_collection,
+            'resource_collection'                      => $resource_collection,
 
         ];
     }
