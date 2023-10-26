@@ -214,6 +214,7 @@ return [
         App\Repositories\Api\Manage\ResourceModule\ResourceModuleServiceProvider::class,
         App\Repositories\Api\Manage\Challenge\ChallengeServiceProvider::class,
         App\Repositories\Api\Manage\ChallengePath\ChallengePathServiceProvider::class,
+        App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
@@ -223,6 +224,7 @@ return [
         App\Repositories\Api\Public\ResourceModule\ResourceModuleServiceProvider::class,
         App\Repositories\Api\Public\Challenge\ChallengeServiceProvider::class,
         App\Repositories\Api\Public\ChallengePath\ChallengePathServiceProvider::class,
+        App\Repositories\Api\Public\ResourceCollection\ResourceCollectionServiceProvider::class,
     ],
 
     /*
