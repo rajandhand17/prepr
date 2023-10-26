@@ -46,6 +46,7 @@ class ResourceGroup extends Model
     {
         return $this->belongsTo(Duration::class, 'duration', 'id');
     }
+
     public function getLevel()
     {
         return $this->belongsTo(Levels::class, 'level', 'id');
@@ -58,12 +59,12 @@ class ResourceGroup extends Model
 
     public function skills()
     {
-        return $this->hasMany( ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id')->where('type', '0');
+        return $this->hasMany(ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id')->where('type', '0');
     }
 
     public function skill_groups()
     {
-        return $this->hasMany( ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id')->where('type', '1');
+        return $this->hasMany(ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id')->where('type', '1');
     }
 
     public function skill_stacks()
@@ -83,7 +84,7 @@ class ResourceGroup extends Model
 
     public function achievement()
     {
-        return $this->hasOne( ResourceGroupAchievement::class, 'resource_group_id', 'id');
+        return $this->hasOne(ResourceGroupAchievement::class, 'resource_group_id', 'id');
     }
 
     public function resource_collection()

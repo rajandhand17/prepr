@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ResourceCollectionTagsGroups;
 use App\Models\ResourceGroupTagGroups;
 
 class ResourceGroupTagsGroupsService
@@ -38,5 +37,4 @@ class ResourceGroupTagsGroupsService
             return false;
         }
     }
-
 }

@@ -11,11 +11,11 @@ class ResourceGroupAchievement extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="resource_group_achievements";
-    protected $fillable=[
-        "resource_group_id",
-        "achievement_name",
-        "achievement_points",
-        "achievement_image",
+    protected $table = 'resource_group_achievements';
+    protected $fillable = [
+        'resource_group_id',
+        'achievement_name',
+        'achievement_points',
+        'achievement_image',
     ];
 }

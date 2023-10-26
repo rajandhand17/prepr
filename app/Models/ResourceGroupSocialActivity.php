@@ -11,13 +11,13 @@ class ResourceGroupSocialActivity extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="resource_groups_social_activities";
+    protected $table = 'resource_groups_social_activities';
 
-    protected $fillable=[
-        "user_id",
-        "resource_group_id",
-        "like_dislike",
-        "share",
-        "favourite",
+    protected $fillable = [
+        'user_id',
+        'resource_group_id',
+        'like_dislike',
+        'share',
+        'favourite',
     ];
 }

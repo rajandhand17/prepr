@@ -182,5 +182,4 @@ class ResourceCollectionSkillsGroupsStackService
             return false;
         }
     }
-
 }

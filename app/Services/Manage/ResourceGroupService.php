@@ -2,10 +2,8 @@
 
 namespace App\Services\Manage;
 
-
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceCollection;
 use App\Models\ResourceGroup;
 use HiFolks\RandoPhp\Randomize;
 
@@ -25,7 +23,8 @@ class ResourceGroupService
         }
     }
 
-    public static function createResourceGroup($request, $upload_cover_image){
+    public static function createResourceGroup($request, $upload_cover_image)
+    {
         try {
             $status = config('constants.resource_group_status.draft');
             switch($request->status) {
@@ -80,7 +79,7 @@ class ResourceGroupService
             $resourceGroup->save();
 
             return $resourceGroup;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

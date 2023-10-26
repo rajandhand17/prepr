@@ -10,11 +10,11 @@ class ResourceGroupTagGroups extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table="resource_group_tags_groups";
+    protected $table = 'resource_group_tags_groups';
 
-    protected $fillable=[
-        "resource_group_id",
-        "foreign_id",
-        "type"
+    protected $fillable = [
+        'resource_group_id',
+        'foreign_id',
+        'type',
     ];
 }

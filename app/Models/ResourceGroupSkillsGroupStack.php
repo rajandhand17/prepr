@@ -11,11 +11,11 @@ class ResourceGroupSkillsGroupStack extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="resource_groups_skills_groups_stacks";
+    protected $table = 'resource_groups_skills_groups_stacks';
 
-    protected $fillable=[
-        "resource_group_id",
-        "foreign_id",
-        "type",
+    protected $fillable = [
+        'resource_group_id',
+        'foreign_id',
+        'type',
     ];
 }

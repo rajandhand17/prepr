@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ResourceCollectionSkillsGroupsStack;
 use App\Models\ResourceGroupSkillsGroupStack;
 
 class ResourceGroupSkillsGroupsStackService
@@ -49,5 +48,4 @@ class ResourceGroupSkillsGroupsStackService
             return false;
         }
     }
-
 }

@@ -602,8 +602,9 @@ class ComponentAssociationService
         }
     }
 
-    public static function createResourceGroupComponentAssociation($request, $resourceGroupId){
-        try{
+    public static function createResourceGroupComponentAssociation($request, $resourceGroupId)
+    {
+        try {
             if ($request->has('resource_ids') && count($request->resource_ids) > 0) {
                 $getResourceModuleIds = ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_ids);
                 $sequence = ComponentAssociation::where([
@@ -623,7 +624,7 @@ class ComponentAssociationService
                 }
             }
             if ($request->has('resource_collection_ids') && count($request->resource_collection_ids) > 0) {
-                $getResourceCollection=ResourceCollectionService::getResourceCollectionBasedOnUUIDArray($request->resource_collection_ids);
+                $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnUUIDArray($request->resource_collection_ids);
                 $sequence = ComponentAssociation::where([
                     ['resource_group_id', '=', $resourceGroupId],
                     ['resource_collection_id', '!=', null],
@@ -639,8 +640,8 @@ class ComponentAssociationService
                     $ResourceCollectionResourceModule->sequence = $sequence;
                     $ResourceCollectionResourceModule->save();
                 }
-
             }
+
             return true;
         } catch (Exception $e) {
             return false;
