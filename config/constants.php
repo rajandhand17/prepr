@@ -208,4 +208,21 @@ return [
         'no'  => '0',
         'yes' => '1',
     ],
+
+    'resource_collection_status'=> [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
+    ],
+
+    'resource_collection_privacy'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'resource_collection_is_accessible'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
 ];

@@ -253,4 +253,27 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public static function getResourceModuleBasedOnUUIDArray($resourceModuleUUIDArray)
+    {
+        try {
+            $resourceModuleIds = ResourceModule::whereIn('uuid', $resourceModuleUUIDArray)->pluck('id')->all();
+            if ($resourceModuleIds != null) {
+                return $resourceModuleIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceModuleBasedOnId($id)
+    {
+        try {
+            return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $id)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
