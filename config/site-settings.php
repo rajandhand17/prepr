@@ -33,7 +33,7 @@ return [
     'default_resource_collection_profile_image'     => 'default_images/resource-collection.webp',
     'default_resource_collection_cover_image'       => 'default_images/resource-collection.webp',
 
-    'default_resource_group_profile_image'          => 'default_images/resource-group.webp',
+    'default_resource_group_achievement_image'          => 'default_images/resource-group.webp',
     'default_resource_group_cover_image'            => 'default_images/resource-group.webp',
 
 ];

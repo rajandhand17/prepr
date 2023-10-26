@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class ResourceGroup extends Model
+{
+    use HasFactory;
+    use SoftDeletes;
+
+    protected $table = 'resource_groups';
+    protected $fillable = [
+        'uuid',
+        'language',
+        'user_id',
+        'organization_id',
+        'title',
+        'slug',
+        'description',
+        'status',
+        'media_type',
+        'media',
+        'level',
+        'duration',
+        'privacy',
+        'status',
+        'is_accessible',
+    ];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function getDuration()
+    {
+        return $this->belongsTo(Duration::class, 'duration', 'id');
+    }
+    public function getLevel()
+    {
+        return $this->belongsTo(Levels::class, 'level', 'id');
+    }
+
+    public function getOrganization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany( ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id')->where('type', '0');
+    }
+
+    public function skill_groups()
+    {
+        return $this->hasMany( ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id')->where('type', '1');
+    }
+
+    public function skill_stacks()
+    {
+        return $this->hasMany(ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id')->where('type', '2');
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(ResourceGroupTagGroups::class, 'resource_group_id', 'id')->where('type', '0');
+    }
+
+    public function tag_groups()
+    {
+        return $this->hasMany(ResourceGroupTagGroups::class, 'resource_group_id', 'id')->where('type', '1');
+    }
+
+    public function achievement()
+    {
+        return $this->hasOne( ResourceGroupAchievement::class, 'resource_group_id', 'id');
+    }
+
+    public function resource_collection()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'resource_group_id', 'id')->where('resource_collection_id', '!=', null);
+    }
+}

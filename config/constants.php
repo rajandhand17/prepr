@@ -225,4 +225,20 @@ return [
         'yes' => '1',
     ],
 
+    'resource_group_status'=> [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
+    ],
+
+    'resource_group_privacy'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'resource_group_is_accessible'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
 ];

@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
+use App\Models\ResourceModule;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceCollectionService
@@ -276,6 +277,28 @@ class ResourceCollectionService
             }
 
             return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionBasedOnUUIDArray($resourceCollectionUUIDArray)
+    {
+        try {
+            $resourceCollectionIds = ResourceCollection::whereIn('uuid', $resourceCollectionUUIDArray)->pluck('id')->all();
+            if ($resourceCollectionIds != null) {
+                return $resourceCollectionIds;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionBasedOnId($id)
+    {
+        try {
+            return ResourceCollection::whereIN('id', $id)->pluck('title','uuid');
         } catch (\Exception $e) {
             return false;
         }
