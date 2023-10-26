@@ -121,4 +121,20 @@ class ResourceCollectionSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function deleteResourceCollectionSkillsGroupsStack($resource_collection_id)
+    {
+        try {
+            $checkExistsResourceCollectionSkillsGroupsStack = ResourceCollectionSkillsGroupsStack::select('id')->where('resource_collection_id', $resource_collection_id)->pluck('id');
+            if ($checkExistsResourceCollectionSkillsGroupsStack) {
+                $deleteResourceCollectionSkillsGroupsStack = ResourceCollectionSkillsGroupsStack::whereIn('id', $checkExistsResourceCollectionSkillsGroupsStack)->delete();
+                if (!$deleteResourceCollectionSkillsGroupsStack) {
+                    return false;
+                }
+            }
+            return true;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

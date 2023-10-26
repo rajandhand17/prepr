@@ -224,6 +224,7 @@ return [
         App\Repositories\Api\Public\ResourceModule\ResourceModuleServiceProvider::class,
         App\Repositories\Api\Public\Challenge\ChallengeServiceProvider::class,
         App\Repositories\Api\Public\ChallengePath\ChallengePathServiceProvider::class,
+        App\Repositories\Api\Public\ResourceCollection\ResourceCollectionServiceProvider::class,
     ],
 
     /*
