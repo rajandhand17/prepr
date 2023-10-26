@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Api\LabTagsGroups;
+namespace App\Repositories\Api\Manage\LabTagsGroups;
 
 use App\Services\Manage\LabTagsGroupsService;
 
-class LabSkillsGroupsStackRepository implements LabTagsGroupsInterface
+class LabTagsGroupsRepository implements LabTagsGroupsInterface
 {
     protected $labTagsGroupsService;
 

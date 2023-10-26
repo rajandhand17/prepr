@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Manage\ResourceCollection;
+namespace App\Http\Resources\Public\ResourceCollection;
 
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
@@ -10,6 +10,7 @@ use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceCollectionResource extends JsonResource
@@ -19,9 +20,8 @@ class ResourceCollectionResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
-        $componentAssociation = [];
         $resourceModules = [];
         $labs = [];
         $challenges = [];

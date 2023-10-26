@@ -84,6 +84,15 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         }
     }
 
+    public function getResourceCollectionList($request, $organization)
+    {
+        try {
+            return $this->resourceCollectionService->getResourceCollectionList($request, $organization);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function deleteResourceCollection($resource_collection_id)
     {
         try {

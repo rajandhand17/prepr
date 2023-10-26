@@ -11,4 +11,6 @@ interface ResourceCollectionInterface
     public function getResourceCollectionBasedOnSlug($slug);
 
     public function checkName($title);
+
+    public function getResourceCollectionList($request, $organization);
 }
