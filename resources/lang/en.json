@@ -592,7 +592,8 @@
     "responses.already_favourite_resource_collection":"The Resource Collection is already being added to favourites!",
     "responses.already_un_favourite_resource_collection":"The Resource Collection is already being removed from favourites!",
     "responses.resource_collection_slug_not_found": "The resource collection which you are looking doesn't exist in our system.",
-
     "responses.resource_collection_delete":"The resource module has been deleted successfully!",
-    "responses.resource_collection_not_delete":"The resource module has been not deleted!"
+    "responses.resource_collection_not_delete":"The resource module has been not deleted!",
+    "responses.resource_collection_update_success":"Congratulations! You have successfully update resource module.",
+    "responses.resource_collection_update_failed":"Oops! The Updating of resource module has failed."
 }
