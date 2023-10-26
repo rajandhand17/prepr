@@ -179,8 +179,8 @@ class ChallengeController extends AppBaseController
     public function checkSlug($slug)
     {
         try {
-            $checkLabSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
-            if ($checkLabSlugExistsOrNot == false) {
+            $checkChallengeSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
+            if ($checkChallengeSlugExistsOrNot == false) {
                 return $this->sendResponse([], __('responses.challenge_slug_available'), 200);
             }
 
@@ -193,12 +193,33 @@ class ChallengeController extends AppBaseController
     public function checkName($title)
     {
         try {
-            $checkLabNameExistsOrNot = $this->challengeRepository->checkNameExistsOrNot($title);
-            if ($checkLabNameExistsOrNot) {
+            $checkChallengeNameExistsOrNot = $this->challengeRepository->checkNameExistsOrNot($title);
+            if ($checkChallengeNameExistsOrNot) {
                 return $this->sendError(__('responses.challenge_name_not_available'));
             }
 
             return $this->sendResponse([], __('responses.challenge_name_available'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function fetchAssessment($slug)
+    {
+        try {
+            $checkChallengeSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
+            if ($checkChallengeSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.challenge_slug_available'), 200);
+            }
+            $getChallengeAssessment = [];
+            if ($checkChallengeSlugExistsOrNot->challenge_assessment->isNotEmpty()) {
+                $getChallengeAssessment = $this->challengeRepository->getChallengeAssessmentData($checkChallengeSlugExistsOrNot->challenge_assessment);
+            }
+            if (!empty($getChallengeAssessment)) {
+                return $this->sendResponse($getChallengeAssessment, 200);
+            }
+
+            return $this->sendResponse([], __('responses.found_not_challenge_assessment_detail'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

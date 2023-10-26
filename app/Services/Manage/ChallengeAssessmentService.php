@@ -143,7 +143,7 @@ class ChallengeAssessmentService
         }
     }
 
-    public static function getChallengeAssessmentData($challengeId)
+    public static function getChallengeAssessmentData($challengeAssessment)
     {
         try {
             $challenge_assessment = [];
@@ -159,12 +159,12 @@ class ChallengeAssessmentService
                 '2' => 'hidden',
             ];
 
-            $assessmentType = $assessmentTypeMapping[$challengeId[0]->assessment_type] ?? 'none';
-            $visibility = $visibilityMapping[$challengeId[0]->visibility] ?? 'null';
+            $assessmentType = $assessmentTypeMapping[$challengeAssessment[0]->assessment_type] ?? 'none';
+            $visibility = $visibilityMapping[$challengeAssessment[0]->visibility] ?? 'null';
 
             $members = [];
-            if ($challengeId->isNotEmpty()) {
-                $memberEmails = $challengeId->pluck('members_email');
+            if ($challengeAssessment->isNotEmpty()) {
+                $memberEmails = $challengeAssessment->pluck('members_email');
 
                 foreach ($memberEmails as $memberEmail) {
                     $getUser = UserService::getUserByEmail($memberEmail);
@@ -180,8 +180,8 @@ class ChallengeAssessmentService
             $challenge_assessment = [
                 'assessment_type'  => $assessmentType,
                 'visibility'       => $visibility,
-                'guidelines'       => $challengeId[0]->guidelines,
-                'attachments'      => $challengeId[0]->attachments,
+                'guidelines'       => $challengeAssessment[0]->guidelines,
+                'attachments'      => $challengeAssessment[0]->attachments,
                 'members'          => $members,
             ];
 

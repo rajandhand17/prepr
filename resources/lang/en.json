@@ -551,5 +551,7 @@
     "responses.favourite_challenge_path_successfully": "You have successfully saved this Challenge Path!",
     "responses.un_favourite_challenge_path_successfully": "You have successfully un-saved this Challenge Path!",
     "responses.already_favourite_challenge_path": "The Challenge Path is already being added to favourites!",
-    "responses.already_un_favourite_challenge_path": "The Challenge Path is already being removed from favourites!"
+    "responses.already_un_favourite_challenge_path": "The Challenge Path is already being removed from favourites!",
+    "responses.found_challenge_assessment_detail": "The Challenge Assessment has been successfully retrieved",
+    "responses.found_not_challenge_assessment_detail": "The Challenge Assessment has been set to none"
 }
