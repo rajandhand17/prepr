@@ -230,8 +230,9 @@ class ChallengeController extends AppBaseController
             if (!empty($getChallengeAssessment) && !empty($challenge_assessment_criteria)) {
                 $challengeAssessmentData = [
                     'challengeAssessment'           => $getChallengeAssessment,
-                    'challengeAssessmentCriteria'   => $challenge_assessment_criteria->all()
+                    'challengeAssessmentCriteria'   => $challenge_assessment_criteria->all(),
                 ];
+
                 return $this->sendResponse($challengeAssessmentData, __('responses.found_challenge_assessment_detail'), 200);
             }
 
@@ -252,7 +253,7 @@ class ChallengeController extends AppBaseController
             if ($checkChallengeSlugExistsOrNot->challenge_assessment->isNotEmpty()) {
                 $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkChallengeSlugExistsOrNot->challenge_assessment[0]->attachments);
             }
-            
+
             if ($request->attachments !== null) {
                 $updated_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
                 if ($updated_assessment_attachment == false) {
@@ -265,6 +266,7 @@ class ChallengeController extends AppBaseController
             if ($updateChallengeAssessment['updateChallengeAssessmentCriteria'] && $updateChallengeAssessment['updateChallengeAssessment']) {
                 return self::fetchAssessment($slug);
             }
+
             return $this->sendError(__('responses.challenge_assessment_not_update'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

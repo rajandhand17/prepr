@@ -330,7 +330,7 @@ class ChallengeRepository implements ChallengeInterface
             $updatedChallengeAssessment = DB::transaction(function () use ($challengeId, $update_assessment_attachment, $request) {
                 $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $challengeId);
                 $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $challengeId, $update_assessment_attachment);
-                
+
                 return [
                     'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,
                     'updateChallengeAssessment'         => $updateChallengeAssessment,
