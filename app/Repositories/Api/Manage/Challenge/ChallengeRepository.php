@@ -314,4 +314,13 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
+    public function getChallengeAssessmentData($challengeAssessment)
+    {
+        try {
+            return $this->challengeAssessmentService->getChallengeAssessmentData($challengeAssessment);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
