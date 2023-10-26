@@ -92,4 +92,22 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             return false;
         }
     }
+
+    public function deleteResourceCollection($resource_collection_id)
+    {
+        try {
+            DB::beginTransaction();
+            $deleteResourceCollection = $this->resourceCollectionService->deleteResourceCollection($resource_collection_id);
+            if ($deleteResourceCollection == false) {
+                DB::rollBack();
+
+                return false;
+            }
+            DB::commit();
+
+            return true;
+        } catch (\Exception $e) {
+            return  false;
+        }
+    }
 }

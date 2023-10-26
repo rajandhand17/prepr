@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Duration;
@@ -89,7 +90,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnSlug($slug)
     {
         try {
-            return ResourceCollection::select()->where('slug', $slug)->first();
+            return ResourceCollection::where('slug', $slug)->first();
         } catch (\Exception $e) {
             return false;
         }
@@ -197,6 +198,22 @@ class ResourceCollectionService
             }
 
             return $resourceCollectionList;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteResourceCollection($resource_collection_id)
+    {
+        try {
+            $resourceCollection = ResourceCollection::find($resource_collection_id)->delete();
+            if ($resourceCollection) {
+                event(new DeleteResourceCollectionAssociatedData($resource_collection_id));
+
+                return true;
+            }
+
+            return false;
         } catch (\Exception $e) {
             return false;
         }

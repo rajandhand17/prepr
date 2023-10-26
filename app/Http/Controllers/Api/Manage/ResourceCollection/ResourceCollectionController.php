@@ -82,6 +82,24 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
+    public function delete($slug)
+    {
+        try {
+            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
+            }
+            $responseCollectionDelete = $this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionSlugExistsOrNot->id);
+            if ($responseCollectionDelete) {
+                return $this->sendResponse(null, __('responses.resource_collection_delete'));
+            }
+
+            return $this->sendError(__('responses.resource_collection_not_delete'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function index(Request $request)
     {
         $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
