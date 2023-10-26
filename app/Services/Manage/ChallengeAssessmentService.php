@@ -87,7 +87,7 @@ class ChallengeAssessmentService
         try {
             $challengeAssessment = ChallengeAssessment::where('challenge_id', $challenge_id)->get();
             ChallengeAssessment::where('challenge_id', $challenge_id)->delete();
-            if ($request->assessment_type !== null && $request->assessment_type !== "null") {
+            if ($request->assessment_type !== null && $request->assessment_type !== 'null') {
                 $challenge_assessment_type = config('constants.challenge_assessment_type.null');
                 switch ($request->assessment_type) {
                     case 'close':
