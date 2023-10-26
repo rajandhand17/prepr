@@ -56,7 +56,7 @@ class UpdateChallengeRequest extends FormRequest
             'project_privacy'                       => 'in:yes,no',
             'is_open'                               => 'in:yes,no',
             'is_auto_created'                       => 'in:yes,no',
-            'achievement_image'                     => 'required|mimes:jpeg,jpg,png,webp|max:1024',
+            'achievement_image'                     => 'mimes:jpeg,jpg,png,webp|max:1024',
             'achievement_participation'             => 'required',
             'achievement_name'                      => 'required',
             'achievement_prize'                     => 'required|numeric',
@@ -77,7 +77,7 @@ class UpdateChallengeRequest extends FormRequest
 
         if ($this->request->has('winner_achievement_participation')) {
             $base_rules['winner_achievement_image'] = 'array';
-            $base_rules['winner_achievement_image.*'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['winner_achievement_image.*'] = 'mimes:jpeg,jpg,png,webp|max:1024';
             $base_rules['winner_achievement_participation'] = 'array';
             $base_rules['winner_achievement_participation.*'] = 'in:incentive';
             $base_rules['winner_achievement_name'] = 'array';
@@ -113,7 +113,7 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['assessment_type'] = 'required|in:open,close';
             $base_rules['visibility'] = 'required|in:users,hidden';
             $base_rules['guidelines'] = 'required_if:request_type,publish';
-            $base_rules['attachments'] = 'required_if:request_type,publish||mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['attachments'] = 'mimes:jpeg,jpg,png,webp|max:1024';
             if ($this->assessment_type == 'close' && $this->members_email !== null) {
                 $base_rules['members_email'] = 'array';
                 $base_rules['members_email.*'] = 'required_if:request_type,publish||email';

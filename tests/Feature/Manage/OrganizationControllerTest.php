@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\manage;
+namespace Tests\Feature\Manage;
 
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;

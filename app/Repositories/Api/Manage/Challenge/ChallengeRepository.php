@@ -52,7 +52,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->getChallengeList($request, $organization);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -61,15 +61,24 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->uploadChallengeCoverImage($image);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
 
-    public function createChallenge($request, $upload_cover_image, $upload_achievement_image)
+    public function uploadChallengeAssessment($attachment)
     {
         try {
-            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image) {
+            return $this->challengeAssessmentService->uploadChallengeAssessment($attachment);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment)
+    {
+        try {
+            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
                 $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
@@ -77,7 +86,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
                 $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
                 $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id);
-                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id);
+                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $upload_assessment_attachment);
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
                 $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
                 $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
@@ -197,10 +206,10 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image)
+    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment)
     {
         try {
-            $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image) {
+            $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment) {
                 $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image);
                 $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
                 $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
@@ -208,7 +217,7 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallengeTagsGroups = $this->challengeTagsGroupsService->updateChallengeTagsGroups($request, $updateChallenge->id);
                 $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
                 $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id);
-                $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id);
+                $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
                 $updateChallengeProjectTemplate = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
                 $updateChallengeTimelines = $this->challengeTimelinesService->updateChallengeTimelines($request, $updateChallenge->id);
                 $updateChallengeCustomTimelines = $this->challengeCustomTimelinesService->updateChallengeCustomTimelines($request, $updateChallenge->id);
@@ -290,7 +299,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->getChallengeBasedOnSlug($slug);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -301,7 +310,7 @@ class ChallengeRepository implements ChallengeInterface
             $labSlug = $this->challengeService->checkNameExistsOrNot($title);
 
             return $labSlug;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
