@@ -45,7 +45,7 @@ class ChallengeService
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
-                $challenge_list = $challenge_list->whereIn('challenges.category', $request->category);
+                $challenge_list = $challenge_list->whereIn('challenges.category_id', $request->category);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
