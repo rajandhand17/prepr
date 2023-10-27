@@ -597,6 +597,8 @@
     "responses.found_not_challenge_assessment_detail": "The Challenge Assessment has been set to none",
     "responses.resource_group_stored_success":"Congratulations! You have successfully created a resource group.",
     "responses.resource_group_stored_failed":"Oops! The Creation resource group has failed.",
+    "responses.found_resource_group_list":"The Resource Group list has been successfully retrieved",
+    "responses.not_found_resource_group_list":"The list of resource group has not been retrieved with success.",
     "responses.resource_group_name_not_available":"This resource group name is not available!",
     "responses.resource_group_name_available":"This resource group name is available!",
     "responses.resource_group_slug_not_available":"This resource group slug is not available!",
