@@ -66,6 +66,7 @@ class ResourceGroupService
             $resourceGroup->privacy = $privacy;
             $resourceGroup->status = $status;
             $resourceGroup->save();
+
             return $resourceGroup;
         } catch (\Exception $e) {
             return false;
