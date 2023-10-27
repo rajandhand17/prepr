@@ -37,4 +37,8 @@ interface ChallengeInterface
     public function getChallengeBasedOnSlug($slug);
 
     public function deleteChallenge($lab_id, $request);
+
+    public function getChallengeAssessmentData($challengeAssessment);
+
+    public function updateChallengeAssessment($challengeId, $update_assessment_attachment, $request);
 }

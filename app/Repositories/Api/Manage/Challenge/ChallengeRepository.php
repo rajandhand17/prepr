@@ -314,4 +314,42 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
+    public function getChallengeAssessmentData($challengeAssessment)
+    {
+        try {
+            return $this->challengeAssessmentService->getChallengeAssessmentData($challengeAssessment);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateChallengeAssessment($challengeId, $update_assessment_attachment, $request)
+    {
+        try {
+            $updatedChallengeAssessment = DB::transaction(function () use ($challengeId, $update_assessment_attachment, $request) {
+                $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $challengeId);
+                $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $challengeId, $update_assessment_attachment);
+
+                return [
+                    'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,
+                    'updateChallengeAssessment'         => $updateChallengeAssessment,
+                ];
+            });
+
+            if (
+                $updatedChallengeAssessment['updateChallengeAssessmentCriteria'] &&
+                $updatedChallengeAssessment['updateChallengeAssessment']
+            ) {
+                DB::commit();
+
+                return $updatedChallengeAssessment;
+            }
+            DB::rollback();
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
