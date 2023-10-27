@@ -596,5 +596,9 @@
     "responses.challenge_assessment_not_update": "There were some issues being encountered while updating the Challenge Assessment!",
     "responses.found_not_challenge_assessment_detail": "The Challenge Assessment has been set to none",
     "responses.resource_group_stored_success":"Congratulations! You have successfully created a resource group.",
-    "responses.resource_group_stored_failed":"Oops! The Creation resource group has failed."
+    "responses.resource_group_stored_failed":"Oops! The Creation resource group has failed.",
+    "responses.resource_group_name_not_available":"This resource group name is not available!",
+    "responses.resource_group_name_available":"This resource group name is available!",
+    "responses.resource_group_slug_not_available":"This resource group slug is not available!",
+    "responses.resource_group_slug_available":"This resource group slug is available!"
 }
