@@ -125,6 +125,7 @@ class ResourceGroupResource extends JsonResource
                 $resourceCollection[$resource_collection->resource_collection]['description'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->description;
             }
         }
+
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,

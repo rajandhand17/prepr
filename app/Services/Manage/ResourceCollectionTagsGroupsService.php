@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\ResourceCollectionTagsGroups;
-use App\Models\ResourceGroupTagGroups;
 
 class ResourceCollectionTagsGroupsService
 {
