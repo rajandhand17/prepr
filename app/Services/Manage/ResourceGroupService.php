@@ -75,9 +75,7 @@ class ResourceGroupService
             $resourceGroup->duration = $request->duration;
             $resourceGroup->privacy = $privacy;
             $resourceGroup->status = $status;
-            $resourceGroup->is_accessible = $is_accessible;
             $resourceGroup->save();
-
             return $resourceGroup;
         } catch (\Exception $e) {
             return false;
