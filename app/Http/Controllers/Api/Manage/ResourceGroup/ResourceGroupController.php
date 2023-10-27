@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
 
 class ResourceGroupController extends AppBaseController
@@ -47,14 +46,16 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
-    public function show($slug){
+    public function show($slug)
+    {
         try {
             $responseGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if ($responseGroup) {
                 return $this->sendResponse(ResourceGroupResource::make($responseGroup), __('responses.found_resource_group_list'));
             }
+
             return $this->sendError(__('responses.not_found_resource_group_list'), 404);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
