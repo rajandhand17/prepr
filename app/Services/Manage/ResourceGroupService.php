@@ -49,16 +49,6 @@ class ResourceGroupService
                 default:
                     $privacy = null;
             }
-            switch ($request->is_accessible) {
-                case 'no':
-                    $is_accessible = config('constants.resource_group_is_accessible.no');
-                    break;
-                case 'yes':
-                    $is_accessible = config('constants.resource_group_is_accessible.yes');
-                    break;
-                default:
-                    $is_accessible = config('constants.resource_group_is_accessible.no');
-            }
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $resourceGroup = new ResourceGroup();
             $slug = UtilityHelper::generateSlug($request->title, $resourceGroup);

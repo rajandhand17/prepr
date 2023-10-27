@@ -236,9 +236,4 @@ return [
         'yes' => '1',
     ],
 
-    'resource_group_is_accessible'=> [
-        'no'  => '0',
-        'yes' => '1',
-    ],
-
 ];

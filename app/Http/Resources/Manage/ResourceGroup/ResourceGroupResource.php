@@ -35,7 +35,6 @@ class ResourceGroupResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-        $is_accessible = '';
 
         if ($this->resource_modules) {
             foreach ($this->resource_modules as $resource_module) {
@@ -133,7 +132,6 @@ class ResourceGroupResource extends JsonResource
             'cover_image'                              => $this->media,
             'privacy'                                  => $privacy,
             'status'                                   => $status,
-            'is_accessible'                            => $is_accessible,
             'duration_id'                              => $duration_id,
             'duration'                                 => $duration,
             'level_id'                                 => $level_id,
