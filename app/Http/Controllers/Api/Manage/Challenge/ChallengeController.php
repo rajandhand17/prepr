@@ -272,4 +272,13 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function cloneChallenge($slug)
+    {
+        try {
+            dd($slug);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
