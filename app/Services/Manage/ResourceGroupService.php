@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\ResourceCollection;
 use App\Models\ResourceGroup;
 use HiFolks\RandoPhp\Randomize;
 
@@ -69,6 +70,14 @@ class ResourceGroupService
 
             return $resourceGroup;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getResourceGroupBasedOnSlug($slug){
+        try {
+            return ResourceGroup::where('slug',$slug)->first();
+        }catch (\Exception $e) {
             return false;
         }
     }
