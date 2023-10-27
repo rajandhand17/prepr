@@ -60,14 +60,16 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
-    public function checkSlug($slug){
-        try{
+    public function checkSlug($slug)
+    {
+        try {
             $checkResourceGroupNameExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if ($checkResourceGroupNameExistsOrNot) {
                 return $this->sendError(__('responses.resource_group_slug_not_available'));
             }
+
             return $this->sendResponse([], __('responses.resource_group_slug_available'), 400);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
