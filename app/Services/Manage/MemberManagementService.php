@@ -419,7 +419,20 @@ class MemberManagementService
 
                 if (count($invalid_emails) > 0 || count($already_members) > 0) {
                     if (count($invited_emails) < 1) {
-                        $addedMemberResponse = __('responses.create_member_manger_error');
+                        switch ($component) {
+                            case 'organization':
+                                $addedMemberResponse = __('responses.create_member_manger_error_org');
+                                break;
+                            case 'lab':
+                                $addedMemberResponse = __('responses.create_member_manger_error_lab');
+                                break;
+                            case 'challenge':
+                                $addedMemberResponse = __('responses.create_member_manger_error_cha');
+                                break;
+                            default:
+                                $addedMemberResponse = __('responses.create_member_manger_error');
+                                break;
+                        }
                     } else {
                         $addedMemberResponse = __('responses.create_member_manger_error_certain');
                     }

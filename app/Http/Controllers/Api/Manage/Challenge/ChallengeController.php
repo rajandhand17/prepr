@@ -179,8 +179,8 @@ class ChallengeController extends AppBaseController
     public function checkSlug($slug)
     {
         try {
-            $checkLabSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
-            if ($checkLabSlugExistsOrNot == false) {
+            $checkChallengeSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
+            if ($checkChallengeSlugExistsOrNot == false) {
                 return $this->sendResponse([], __('responses.challenge_slug_available'), 200);
             }
 
@@ -193,12 +193,81 @@ class ChallengeController extends AppBaseController
     public function checkName($title)
     {
         try {
-            $checkLabNameExistsOrNot = $this->challengeRepository->checkNameExistsOrNot($title);
-            if ($checkLabNameExistsOrNot) {
+            $checkChallengeNameExistsOrNot = $this->challengeRepository->checkNameExistsOrNot($title);
+            if ($checkChallengeNameExistsOrNot) {
                 return $this->sendError(__('responses.challenge_name_not_available'));
             }
 
             return $this->sendResponse([], __('responses.challenge_name_available'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function fetchAssessment($slug)
+    {
+        try {
+            $checkChallengeSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
+            if ($checkChallengeSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.challenge_slug_available'), 200);
+            }
+            $getChallengeAssessment = [];
+            $challenge_assessment_criteria = [];
+            if ($checkChallengeSlugExistsOrNot->challenge_assessment->isNotEmpty()) {
+                $getChallengeAssessment = $this->challengeRepository->getChallengeAssessmentData($checkChallengeSlugExistsOrNot->challenge_assessment);
+            }
+
+            if ($checkChallengeSlugExistsOrNot->challenge_assessment_criteria) {
+                $challenge_assessment_criteria = $checkChallengeSlugExistsOrNot->challenge_assessment_criteria->map(function ($item) {
+                    return [
+                        'assessment_title'   => $item->title,
+                        'assessment_score'   => $item->score,
+                        'assessment_weight'  => $item->weight,
+                    ];
+                });
+            }
+
+            if (!empty($getChallengeAssessment) && !empty($challenge_assessment_criteria)) {
+                $challengeAssessmentData = [
+                    'challengeAssessment'           => $getChallengeAssessment,
+                    'challengeAssessmentCriteria'   => $challenge_assessment_criteria->all(),
+                ];
+
+                return $this->sendResponse($challengeAssessmentData, __('responses.found_challenge_assessment_detail'), 200);
+            }
+
+            return $this->sendResponse([], __('responses.found_not_challenge_assessment_detail'));
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function updateAssessment($slug, Request $request)
+    {
+        try {
+            $checkChallengeSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
+            if ($checkChallengeSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.challenge_slug_available'), 200);
+            }
+
+            if ($checkChallengeSlugExistsOrNot->challenge_assessment->isNotEmpty()) {
+                $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkChallengeSlugExistsOrNot->challenge_assessment[0]->attachments);
+            }
+
+            if ($request->attachments !== null) {
+                $updated_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
+                if ($updated_assessment_attachment == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $update_assessment_attachment = $updated_assessment_attachment;
+            }
+
+            $updateChallengeAssessment = $this->challengeRepository->updateChallengeAssessment($checkChallengeSlugExistsOrNot->id, $update_assessment_attachment, $request);
+            if ($updateChallengeAssessment['updateChallengeAssessmentCriteria'] && $updateChallengeAssessment['updateChallengeAssessment']) {
+                return self::fetchAssessment($slug);
+            }
+
+            return $this->sendError(__('responses.challenge_assessment_not_update'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
