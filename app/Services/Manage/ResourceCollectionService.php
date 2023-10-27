@@ -298,7 +298,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnId($id)
     {
         try {
-            return ResourceCollection::whereIN('id', $id)->pluck('title', 'uuid');
+            return ResourceCollection::where('id', $id)->select('title', 'uuid','media','description')->first();
         } catch (\Exception $e) {
             return false;
         }

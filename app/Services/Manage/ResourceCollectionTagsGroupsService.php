@@ -107,36 +107,4 @@ class ResourceCollectionTagsGroupsService
             return false;
         }
     }
-
-    public function createCollectionGroupTagsGroups($request, $resource_group_id)
-    {
-        try {
-            if ($request->has('tags')) {
-                if (count($request->tags) > 0) {
-                    foreach ($request->tags as $tag) {
-                        $resourceGroupTag = new ResourceGroupTagGroups();
-                        $resourceGroupTag->resource_group_id = $resource_group_id;
-                        $resourceGroupTag->foreign_id = $tag;
-                        $resourceGroupTag->type = '0';
-                        $resourceGroupTag->save();
-                    }
-                }
-            }
-            if ($request->has('tag_groups')) {
-                if (count($request->tag_groups) > 0) {
-                    foreach ($request->tag_groups as $tag_group) {
-                        $resourceGroupTagGroups = new ResourceGroupTagGroups();
-                        $resourceGroupTagGroups->resource_group_id = $resource_group_id;
-                        $resourceGroupTagGroups->foreign_id = $tag_group;
-                        $resourceGroupTagGroups->type = '1';
-                        $resourceGroupTagGroups->save();
-                    }
-                }
-            }
-
-            return true;
-        } catch(\Exception $e) {
-            return false;
-        }
-    }
 }

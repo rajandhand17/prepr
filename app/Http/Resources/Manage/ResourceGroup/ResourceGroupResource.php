@@ -23,7 +23,7 @@ class ResourceGroupResource extends JsonResource
     {
         $resourceModules = [];
         $achievements = [];
-        $resource_collection = [];
+        $resourceCollection = [];
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
@@ -118,10 +118,13 @@ class ResourceGroupResource extends JsonResource
             ];
         }
         if ($this->resource_collection) {
-            $resource_collection_id = $this->resource_collection->pluck('resource_collection_id');
-            $resource_collection = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection_id);
+            foreach ($this->resource_collection as $resource_collection) {
+                $resourceCollection[$resource_collection->resource_collection]['uuid'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->uuid;
+                $resourceCollection[$resource_collection->resource_collection]['title'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->title;
+                $resourceCollection[$resource_collection->resource_collection]['image'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->media;
+                $resourceCollection[$resource_collection->resource_collection]['description'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->description;
+            }
         }
-
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,
@@ -145,7 +148,7 @@ class ResourceGroupResource extends JsonResource
             'skill_stacks'                             => $skill_stacks,
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
-            'resource_collection'                      => $resource_collection,
+            'resource_collection'                      => $resourceCollection,
 
         ];
     }

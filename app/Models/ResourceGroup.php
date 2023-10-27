@@ -90,4 +90,9 @@ class ResourceGroup extends Model
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_group_id', 'id')->where('resource_collection_id', '!=', null);
     }
+
+    public function resource_modules()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'resource_group_id', 'id')->where('resource_module_id', '!=', null);
+    }
 }

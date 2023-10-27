@@ -21,7 +21,7 @@ return new class() extends Migration {
                 ->references('id')
                 ->on('resource_groups')
                 ->onDelete('cascade')
-                ->name('rgtg_resource_collection_id_foreign');
+                ->name('rgtg_resource_group_id_foreign');
         });
     }
 
