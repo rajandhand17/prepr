@@ -80,11 +80,11 @@ class ResourceGroupRepository implements ResourceGroupInterface
         }
     }
 
-    public function getResourceGroupBasedOnSlug($slug){
+    public function getResourceGroupBasedOnSlug($slug)
+    {
         try {
             return  $this->resourceGroupService->getResourceGroupBasedOnSlug($slug);
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

@@ -9,5 +9,6 @@ interface ResourceGroupInterface
     public function uploadResourceGroupCoverImage($cover_image);
 
     public function uploadAchievementImage($achievement_image);
+
     public function show($slug);
 }
