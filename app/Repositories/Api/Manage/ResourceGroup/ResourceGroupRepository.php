@@ -89,7 +89,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         }
     }
 
-    public function deleteGroupModule($checkResourceGroupId){
+    public function deleteGroupModule($checkResourceGroupId)
+    {
         try {
             DB::beginTransaction();
             $deleteResourceGroup = $this->resourceGroupService->deleteGroupModule($checkResourceGroupId);
@@ -106,10 +107,11 @@ class ResourceGroupRepository implements ResourceGroupInterface
         }
     }
 
-    public function checkName($slug){
+    public function checkName($slug)
+    {
         try {
             return  $this->resourceGroupService->checkName($slug);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
