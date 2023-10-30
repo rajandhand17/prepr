@@ -10,5 +10,5 @@ interface ResourceGroupInterface
 
     public function uploadAchievementImage($achievement_image);
 
-    public function show($slug);
+    public function getResourceGroupBasedOnSlug($slug);
 }
