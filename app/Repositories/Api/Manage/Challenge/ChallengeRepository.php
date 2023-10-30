@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\Challenge;
 
+use App\Models\Challenge;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentCriteriaService;
 use App\Services\Manage\ChallengeAssessmentService;
@@ -349,6 +350,38 @@ class ChallengeRepository implements ChallengeInterface
 
             return false;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function cloneChallenge($challengeId, $organization)
+    {
+        try {
+            $cloneChallenge = $this->challengeService->cloneChallenge($challengeId, $organization);
+            if ($cloneChallenge) {
+                $originalChallenge = Challenge::with(['skills', 'skill_groups', 'skill_stacks', 'tags', 'tag_groups', 'participation_achievement', 'incentive_achievement', 'challenge_requirements', 'hosts', 'challenge_assessment_criteria', 'challenge_assessment', 'challenge_timelines', 'challenge_custom_timelines', 'challenge_project_template', 'external_links'])->find($challengeId);
+
+                $cloneChallengeParticipationAchievement = $this->challengeAchievementService->cloneChallengeParticipationAchievement($originalChallenge->participation_achievement, $cloneChallenge->id);
+                $cloneChallengeIncentiveAchievement = $this->challengeAchievementService->cloneChallengeIncentiveAchievement($originalChallenge->incentive_achievement, $cloneChallenge->id);
+                $cloneChallengeSkills = $this->challengeSkillsGroupsStackService->cloneChallengeSkills($originalChallenge->skills, $cloneChallenge->id);
+                $cloneChallengeGroups = $this->challengeSkillsGroupsStackService->cloneChallengeGroups($originalChallenge->skill_groups, $cloneChallenge->id);
+                $cloneChallengeStack = $this->challengeSkillsGroupsStackService->cloneChallengeStack($originalChallenge->skill_stacks, $cloneChallenge->id);
+                $cloneChallengeSponsor = $this->challengeSponsorService->cloneChallengeSponsor($originalChallenge->hosts, $cloneChallenge->id);
+                $cloneChallengeTags = $this->challengeTagsGroupsService->cloneChallengeTags($originalChallenge->tags, $cloneChallenge->id);
+                $cloneChallengeTagsGroups = $this->challengeTagsGroupsService->cloneChallengeTagsGroups($originalChallenge->tag_groups, $cloneChallenge->id);
+                $cloneChallengeRequirement = $this->challengeRequirementService->cloneChallengeRequirement($originalChallenge->challenge_requirements, $cloneChallenge->id);
+                $cloneChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->cloneChallengeAssessmentCriteria($originalChallenge->challenge_assessment_criteria, $cloneChallenge->id);
+                $cloneChallengeAssessment = $this->challengeAssessmentService->cloneChallengeAssessment($originalChallenge->challenge_assessment, $cloneChallenge->id);
+            }
+            dd("in");
+
+            return [
+                'cloneChallenge'                   => $cloneChallenge,
+            ];
+            dd($cloneChallenge, $challengeId);
+            return false;
+        } catch (Exception $e) {
+            dd($e); 
             return false;
         }
     }

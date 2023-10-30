@@ -461,4 +461,24 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function cloneChallenge($challengeId, $organization)
+    {
+        try {
+            $originalChallenge = Challenge::find($challengeId);
+            $model = new Challenge();
+            $slug = UtilityHelper::generateSlug($organization->title . " " . $originalChallenge->title, $model);
+
+            $clonedChallenge = $originalChallenge->replicate();
+            $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $clonedChallenge->title = $organization->title." ".$originalChallenge->title;
+            $clonedChallenge->slug = $slug;
+            $clonedChallenge->user_id = auth()->user()->id;
+            $clonedChallenge->organization_id = $organization->id;
+            $clonedChallenge->save();
+            return $clonedChallenge;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
