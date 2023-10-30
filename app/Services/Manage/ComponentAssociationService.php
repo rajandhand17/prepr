@@ -14,11 +14,11 @@ class ComponentAssociationService
             $sequence = 1;
             if (count($request->lab_programs) > 0) {
                 foreach ($request->lab_programs as $lab_program) {
-                    $LabSkillsGroupsStack = new ComponentAssociation();
-                    $LabSkillsGroupsStack->lab_id = $lab->id;
-                    $LabSkillsGroupsStack->lab_program_id = $lab_program;
-                    $LabSkillsGroupsStack->sequence = $sequence;
-                    $LabSkillsGroupsStack->save();
+                    $labSkillsGroupsStack = new ComponentAssociation();
+                    $labSkillsGroupsStack->lab_id = $lab->id;
+                    $labSkillsGroupsStack->lab_program_id = $lab_program;
+                    $labSkillsGroupsStack->sequence = $sequence;
+                    $labSkillsGroupsStack->save();
                     $sequence++;
                 }
             }
@@ -28,11 +28,11 @@ class ComponentAssociationService
             $sequence = 1;
             if (count($request->challenges) > 0) {
                 foreach ($request->challenges as $challenge) {
-                    $LabSkillsGroupsStack = new ComponentAssociation();
-                    $LabSkillsGroupsStack->lab_id = $lab->id;
-                    $LabSkillsGroupsStack->challenge_id = $challenge;
-                    $LabSkillsGroupsStack->sequence = $sequence;
-                    $LabSkillsGroupsStack->save();
+                    $labSkillsGroupsStack = new ComponentAssociation();
+                    $labSkillsGroupsStack->lab_id = $lab->id;
+                    $labSkillsGroupsStack->challenge_id = $challenge;
+                    $labSkillsGroupsStack->sequence = $sequence;
+                    $labSkillsGroupsStack->save();
                     $sequence++;
                 }
             }
@@ -42,11 +42,11 @@ class ComponentAssociationService
             $sequence = 1;
             if (count($request->challenge_paths) > 0) {
                 foreach ($request->challenge_paths as $challenge_path) {
-                    $LabSkillsGroupsStack = new ComponentAssociation();
-                    $LabSkillsGroupsStack->lab_id = $lab->id;
-                    $LabSkillsGroupsStack->challenge_path_id = $challenge_path;
-                    $LabSkillsGroupsStack->sequence = $sequence;
-                    $LabSkillsGroupsStack->save();
+                    $labSkillsGroupsStack = new ComponentAssociation();
+                    $labSkillsGroupsStack->lab_id = $lab->id;
+                    $labSkillsGroupsStack->challenge_path_id = $challenge_path;
+                    $labSkillsGroupsStack->sequence = $sequence;
+                    $labSkillsGroupsStack->save();
                     $sequence++;
                 }
             }
@@ -56,11 +56,11 @@ class ComponentAssociationService
             $sequence = 1;
             if (count($request->resource_modules) > 0) {
                 foreach ($request->resource_modules as $resource_module) {
-                    $LabSkillsGroupsStack = new ComponentAssociation();
-                    $LabSkillsGroupsStack->lab_id = $lab->id;
-                    $LabSkillsGroupsStack->resource_module_id = $resource_module;
-                    $LabSkillsGroupsStack->sequence = $sequence;
-                    $LabSkillsGroupsStack->save();
+                    $labSkillsGroupsStack = new ComponentAssociation();
+                    $labSkillsGroupsStack->lab_id = $lab->id;
+                    $labSkillsGroupsStack->resource_module_id = $resource_module;
+                    $labSkillsGroupsStack->sequence = $sequence;
+                    $labSkillsGroupsStack->save();
                     $sequence++;
                 }
             }
@@ -70,11 +70,11 @@ class ComponentAssociationService
             $sequence = 1;
             if (count($request->resource_groups) > 0) {
                 foreach ($request->resource_groups as $resource_group) {
-                    $LabSkillsGroupsStack = new ComponentAssociation();
-                    $LabSkillsGroupsStack->lab_id = $lab->id;
-                    $LabSkillsGroupsStack->resource_group_id = $resource_group;
-                    $LabSkillsGroupsStack->sequence = $sequence;
-                    $LabSkillsGroupsStack->save();
+                    $labSkillsGroupsStack = new ComponentAssociation();
+                    $labSkillsGroupsStack->lab_id = $lab->id;
+                    $labSkillsGroupsStack->resource_group_id = $resource_group;
+                    $labSkillsGroupsStack->sequence = $sequence;
+                    $labSkillsGroupsStack->save();
                     $sequence++;
                 }
             }
@@ -84,11 +84,11 @@ class ComponentAssociationService
             $sequence = 1;
             if (count($request->resource_collections) > 0) {
                 foreach ($request->resource_collections as $resource_collection) {
-                    $LabSkillsGroupsStack = new ComponentAssociation();
-                    $LabSkillsGroupsStack->lab_id = $lab->id;
-                    $LabSkillsGroupsStack->resource_collection_id = $resource_collection;
-                    $LabSkillsGroupsStack->sequence = $sequence;
-                    $LabSkillsGroupsStack->save();
+                    $labSkillsGroupsStack = new ComponentAssociation();
+                    $labSkillsGroupsStack->lab_id = $lab->id;
+                    $labSkillsGroupsStack->resource_collection_id = $resource_collection;
+                    $labSkillsGroupsStack->sequence = $sequence;
+                    $labSkillsGroupsStack->save();
                     $sequence++;
                 }
             }
@@ -116,11 +116,11 @@ class ComponentAssociationService
                     ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
                     foreach ($newComponentAssociation as $lab_program) {
                         $sequence++;
-                        $LabSkillsGroupsStack = new ComponentAssociation();
-                        $LabSkillsGroupsStack->lab_id = $lab_id;
-                        $LabSkillsGroupsStack->lab_program_id = $lab_program;
-                        $LabSkillsGroupsStack->sequence = $sequence;
-                        $LabSkillsGroupsStack->save();
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->lab_id = $lab_id;
+                        $labSkillsGroupsStack->lab_program_id = $lab_program;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
                     }
                 }
             }
@@ -140,11 +140,11 @@ class ComponentAssociationService
                     ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
                     foreach ($newComponentAssociationChallenge as $challenge) {
                         $sequence++;
-                        $LabSkillsGroupsStack = new ComponentAssociation();
-                        $LabSkillsGroupsStack->lab_id = $lab_id;
-                        $LabSkillsGroupsStack->challenge_id = $challenge;
-                        $LabSkillsGroupsStack->sequence = $sequence;
-                        $LabSkillsGroupsStack->save();
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->lab_id = $lab_id;
+                        $labSkillsGroupsStack->challenge_id = $challenge;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
                     }
                 }
             }
@@ -165,11 +165,11 @@ class ComponentAssociationService
                     ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
                     foreach ($newComponentAssociationChallengePathId as $challenge_path) {
                         $sequence++;
-                        $LabSkillsGroupsStack = new ComponentAssociation();
-                        $LabSkillsGroupsStack->lab_id = $lab_id;
-                        $LabSkillsGroupsStack->challenge_path_id = $challenge_path;
-                        $LabSkillsGroupsStack->sequence = $sequence;
-                        $LabSkillsGroupsStack->save();
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->lab_id = $lab_id;
+                        $labSkillsGroupsStack->challenge_path_id = $challenge_path;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
                     }
                 }
             }
@@ -190,11 +190,11 @@ class ComponentAssociationService
                     ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
                     foreach ($newComponentAssociationResourceModuleId as $resource_module) {
                         $sequence++;
-                        $LabSkillsGroupsStack = new ComponentAssociation();
-                        $LabSkillsGroupsStack->lab_id = $lab_id;
-                        $LabSkillsGroupsStack->resource_module_id = $resource_module;
-                        $LabSkillsGroupsStack->sequence = $sequence;
-                        $LabSkillsGroupsStack->save();
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->lab_id = $lab_id;
+                        $labSkillsGroupsStack->resource_module_id = $resource_module;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
                     }
                 }
             }
@@ -215,11 +215,11 @@ class ComponentAssociationService
                     ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
                     foreach ($newComponentAssociationResourceGroupId as $resource_group) {
                         $sequence++;
-                        $LabSkillsGroupsStack = new ComponentAssociation();
-                        $LabSkillsGroupsStack->lab_id = $lab_id;
-                        $LabSkillsGroupsStack->resource_group_id = $resource_group;
-                        $LabSkillsGroupsStack->sequence = $sequence;
-                        $LabSkillsGroupsStack->save();
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->lab_id = $lab_id;
+                        $labSkillsGroupsStack->resource_group_id = $resource_group;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
                     }
                 }
             }
@@ -241,11 +241,11 @@ class ComponentAssociationService
                     ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
                     foreach ($newComponentAssociationResourceGroupId as $resource_collection) {
                         $sequence++;
-                        $LabSkillsGroupsStack = new ComponentAssociation();
-                        $LabSkillsGroupsStack->lab_id = $lab_id;
-                        $LabSkillsGroupsStack->resource_collection_id = $resource_collection;
-                        $LabSkillsGroupsStack->sequence = $sequence;
-                        $LabSkillsGroupsStack->save();
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->lab_id = $lab_id;
+                        $labSkillsGroupsStack->resource_collection_id = $resource_collection;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
                     }
                 }
             }
@@ -280,11 +280,11 @@ class ComponentAssociationService
             if (count($request->lab_id) > 0) {
                 foreach ($request->lab_id as $lab) {
                     $lab_id = Lab::where('uuid', $lab)->select('id')->first()->id;
-                    $LabSkillsGroupsStack = new ComponentAssociation();
-                    $LabSkillsGroupsStack->lab_id = $lab_id;
-                    $LabSkillsGroupsStack->lab_program_id = $labProgram->id;
-                    $LabSkillsGroupsStack->sequence = $sequence;
-                    $LabSkillsGroupsStack->save();
+                    $labSkillsGroupsStack = new ComponentAssociation();
+                    $labSkillsGroupsStack->lab_id = $lab_id;
+                    $labSkillsGroupsStack->lab_program_id = $labProgram->id;
+                    $labSkillsGroupsStack->sequence = $sequence;
+                    $labSkillsGroupsStack->save();
                     $sequence++;
                 }
             }
@@ -314,11 +314,11 @@ class ComponentAssociationService
                     ])->select('sequence')->orderBy('id', 'desc')->first();
                     foreach ($newComponentAssociation as $lab_id) {
                         $sequence++;
-                        $LabSkillsGroupsStack = new ComponentAssociation();
-                        $LabSkillsGroupsStack->lab_program_id = $lab_programs;
-                        $LabSkillsGroupsStack->lab_id = $lab_id;
-                        $LabSkillsGroupsStack->sequence = $sequence;
-                        $LabSkillsGroupsStack->save();
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->lab_program_id = $lab_programs;
+                        $labSkillsGroupsStack->lab_id = $lab_id;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
                     }
                 }
             }
@@ -387,11 +387,11 @@ class ComponentAssociationService
                     ])->select('sequence')->orderBy('id', 'desc')->first();
                     foreach ($newComponentAssociation as $challenge_id) {
                         $sequence++;
-                        $LabSkillsGroupsStack = new ComponentAssociation();
-                        $LabSkillsGroupsStack->challenge_path_id = $challengePathId;
-                        $LabSkillsGroupsStack->challenge_id = $challenge_id;
-                        $LabSkillsGroupsStack->sequence = $sequence;
-                        $LabSkillsGroupsStack->save();
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->challenge_path_id = $challengePathId;
+                        $labSkillsGroupsStack->challenge_id = $challenge_id;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
                     }
                 }
             }
@@ -436,11 +436,11 @@ class ComponentAssociationService
                 }
                 foreach ($getLabId as $labId) {
                     $sequence++;
-                    $ResourceCollectionLab = new ComponentAssociation();
-                    $ResourceCollectionLab->resource_collection_id = $resourceCollectionId;
-                    $ResourceCollectionLab->lab_id = $labId;
-                    $ResourceCollectionLab->sequence = $sequence;
-                    $ResourceCollectionLab->save();
+                    $resourceCollectionLab = new ComponentAssociation();
+                    $resourceCollectionLab->resource_collection_id = $resourceCollectionId;
+                    $resourceCollectionLab->lab_id = $labId;
+                    $resourceCollectionLab->sequence = $sequence;
+                    $resourceCollectionLab->save();
                 }
             }
 
@@ -455,11 +455,11 @@ class ComponentAssociationService
                 }
                 foreach ($getChallengeId as $challengeId) {
                     $sequence++;
-                    $ResourceCollectionChallenge = new ComponentAssociation();
-                    $ResourceCollectionChallenge->resource_collection_id = $resourceCollectionId;
-                    $ResourceCollectionChallenge->challenge_id = $challengeId;
-                    $ResourceCollectionChallenge->sequence = $sequence;
-                    $ResourceCollectionChallenge->save();
+                    $resourceCollectionChallenge = new ComponentAssociation();
+                    $resourceCollectionChallenge->resource_collection_id = $resourceCollectionId;
+                    $resourceCollectionChallenge->challenge_id = $challengeId;
+                    $resourceCollectionChallenge->sequence = $sequence;
+                    $resourceCollectionChallenge->save();
                 }
             }
 
@@ -474,11 +474,11 @@ class ComponentAssociationService
                 }
                 foreach ($getResourceModuleIds as $resourceModuleId) {
                     $sequence++;
-                    $ResourceCollectionResourceModule = new ComponentAssociation();
-                    $ResourceCollectionResourceModule->resource_collection_id = $resourceCollectionId;
-                    $ResourceCollectionResourceModule->resource_module_id = $resourceModuleId;
-                    $ResourceCollectionResourceModule->sequence = $sequence;
-                    $ResourceCollectionResourceModule->save();
+                    $resourceCollectionResourceModule = new ComponentAssociation();
+                    $resourceCollectionResourceModule->resource_collection_id = $resourceCollectionId;
+                    $resourceCollectionResourceModule->resource_module_id = $resourceModuleId;
+                    $resourceCollectionResourceModule->sequence = $sequence;
+                    $resourceCollectionResourceModule->save();
                 }
             }
 
@@ -512,11 +512,11 @@ class ComponentAssociationService
                     }
                     foreach ($newComponentAssociation as $labId) {
                         $sequence++;
-                        $ResourceCollectionLab = new ComponentAssociation();
-                        $ResourceCollectionLab->resource_collection_id = $resourceCollectionId;
-                        $ResourceCollectionLab->lab_id = $labId;
-                        $ResourceCollectionLab->sequence = $sequence;
-                        $ResourceCollectionLab->save();
+                        $resourceCollectionLab = new ComponentAssociation();
+                        $resourceCollectionLab->resource_collection_id = $resourceCollectionId;
+                        $resourceCollectionLab->lab_id = $labId;
+                        $resourceCollectionLab->sequence = $sequence;
+                        $resourceCollectionLab->save();
                     }
                 }
             }
@@ -541,11 +541,11 @@ class ComponentAssociationService
                     }
                     foreach ($newComponentAssociation as $challengeId) {
                         $sequence++;
-                        $ResourceCollectionChallenge = new ComponentAssociation();
-                        $ResourceCollectionChallenge->resource_collection_id = $resourceCollectionId;
-                        $ResourceCollectionChallenge->challenge_id = $challengeId;
-                        $ResourceCollectionChallenge->sequence = $sequence;
-                        $ResourceCollectionChallenge->save();
+                        $resourceCollectionChallenge = new ComponentAssociation();
+                        $resourceCollectionChallenge->resource_collection_id = $resourceCollectionId;
+                        $resourceCollectionChallenge->challenge_id = $challengeId;
+                        $resourceCollectionChallenge->sequence = $sequence;
+                        $resourceCollectionChallenge->save();
                     }
                 }
             }
@@ -570,11 +570,11 @@ class ComponentAssociationService
                     }
                     foreach ($newComponentAssociation as $resourceModuleId) {
                         $sequence++;
-                        $ResourceCollectionResourceModule = new ComponentAssociation();
-                        $ResourceCollectionResourceModule->resource_collection_id = $resourceCollectionId;
-                        $ResourceCollectionResourceModule->resource_module_id = $resourceModuleId;
-                        $ResourceCollectionResourceModule->sequence = $sequence;
-                        $ResourceCollectionResourceModule->save();
+                        $resourceCollectionResourceModule = new ComponentAssociation();
+                        $resourceCollectionResourceModule->resource_collection_id = $resourceCollectionId;
+                        $resourceCollectionResourceModule->resource_module_id = $resourceModuleId;
+                        $resourceCollectionResourceModule->sequence = $sequence;
+                        $resourceCollectionResourceModule->save();
                     }
                 }
             }
@@ -616,11 +616,11 @@ class ComponentAssociationService
                 }
                 foreach ($getResourceModuleIds as $resourceModuleId) {
                     $sequence++;
-                    $ResourceCollectionResourceModule = new ComponentAssociation();
-                    $ResourceCollectionResourceModule->resource_group_id = $resourceGroupId;
-                    $ResourceCollectionResourceModule->resource_module_id = $resourceModuleId;
-                    $ResourceCollectionResourceModule->sequence = $sequence;
-                    $ResourceCollectionResourceModule->save();
+                    $resourceCollectionResourceModule = new ComponentAssociation();
+                    $resourceCollectionResourceModule->resource_group_id = $resourceGroupId;
+                    $resourceCollectionResourceModule->resource_module_id = $resourceModuleId;
+                    $resourceCollectionResourceModule->sequence = $sequence;
+                    $resourceCollectionResourceModule->save();
                 }
             }
             if ($request->has('resource_collection_ids') && count($request->resource_collection_ids) > 0) {
@@ -634,11 +634,11 @@ class ComponentAssociationService
                 }
                 foreach ($getResourceCollection as $resourceCollectionId) {
                     $sequence++;
-                    $ResourceCollectionResourceModule = new ComponentAssociation();
-                    $ResourceCollectionResourceModule->resource_group_id = $resourceGroupId;
-                    $ResourceCollectionResourceModule->resource_collection_id = $resourceCollectionId;
-                    $ResourceCollectionResourceModule->sequence = $sequence;
-                    $ResourceCollectionResourceModule->save();
+                    $resourceCollectionResourceModule = new ComponentAssociation();
+                    $resourceCollectionResourceModule->resource_group_id = $resourceGroupId;
+                    $resourceCollectionResourceModule->resource_collection_id = $resourceCollectionId;
+                    $resourceCollectionResourceModule->sequence = $sequence;
+                    $resourceCollectionResourceModule->save();
                 }
             }
 
@@ -688,11 +688,11 @@ class ComponentAssociationService
                     }
                     foreach ($newComponentAssociation as $resourceModuleId) {
                         $sequence++;
-                        $ResourceCollectionResourceModule = new ComponentAssociation();
-                        $ResourceCollectionResourceModule->resource_group_id = $resourceGroupId;
-                        $ResourceCollectionResourceModule->resource_module_id = $resourceModuleId;
-                        $ResourceCollectionResourceModule->sequence = $sequence;
-                        $ResourceCollectionResourceModule->save();
+                        $resourceGroupResourceModule = new ComponentAssociation();
+                        $resourceGroupResourceModule->resource_group_id = $resourceGroupId;
+                        $resourceGroupResourceModule->resource_module_id = $resourceModuleId;
+                        $resourceGroupResourceModule->sequence = $sequence;
+                        $resourceGroupResourceModule->save();
                     }
                 }
             }
@@ -716,11 +716,11 @@ class ComponentAssociationService
                     }
                     foreach ($newComponentAssociation as $resourceCollectionId) {
                         $sequence++;
-                        $ResourceCollectionResourceModule = new ComponentAssociation();
-                        $ResourceCollectionResourceModule->resource_group_id = $resourceGroupId;
-                        $ResourceCollectionResourceModule->resource_collection_id = $resourceCollectionId;
-                        $ResourceCollectionResourceModule->sequence = $sequence;
-                        $ResourceCollectionResourceModule->save();
+                        $resourceGroupResourceModule = new ComponentAssociation();
+                        $resourceGroupResourceModule->resource_group_id = $resourceGroupId;
+                        $resourceGroupResourceModule->resource_collection_id = $resourceCollectionId;
+                        $resourceGroupResourceModule->sequence = $sequence;
+                        $resourceGroupResourceModule->save();
                     }
                 }
             }

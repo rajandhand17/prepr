@@ -56,12 +56,12 @@ class ResourceGroupAchievementService
         try {
             $checkExistsResourceGroupAchievement = ResourceGroupAchievement::where('resource_group_id', $updateResourceGroupId)->first();
             if (!$checkExistsResourceGroupAchievement) {
-                $labAchievement = new ResourceGroupAchievement();
-                $labAchievement->resource_group_id = $updateResourceGroupId;
-                $labAchievement->achievement_name = $request->achievement_name;
-                $labAchievement->achievement_points = $request->achievement_points;
-                $labAchievement->achievement_image = $upload_achievement_image;
-                $labAchievement->save();
+                $resourceGroupAchievement = new ResourceGroupAchievement();
+                $resourceGroupAchievement->resource_group_id = $updateResourceGroupId;
+                $resourceGroupAchievement->achievement_name = $request->achievement_name;
+                $resourceGroupAchievement->achievement_points = $request->achievement_points;
+                $resourceGroupAchievement->achievement_image = $upload_achievement_image;
+                $resourceGroupAchievement->save();
                 return true;
             }
             $checkExistsResourceGroupAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsResourceGroupAchievement->achievement_name;

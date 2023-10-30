@@ -24,12 +24,16 @@ class CreateResourceCollectionRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'title'                  => 'required|unique:resource_groups,title',
+            'title'                  => 'required|unique:resource_collections,title',
             'organization_id'        => 'required|exists:organizations,uuid',
             'description'            => 'required',
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,published,archive',
+            'lab_ids'                => 'required|array',
+            'lab_ids.*'              => 'exists:labs,uuid',
+            'challenge_ids'          => 'required|array',
+            'challenge_ids.*'        => 'exists:challenges,uuid',
             'resource_ids'           => 'required|array',
             'resource_ids.*'         => 'exists:resource_modules,uuid',
             'skills'                 => 'required|array',
