@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceCollection;
 use App\Models\ResourceGroup;
 use HiFolks\RandoPhp\Randomize;
 
@@ -100,10 +99,11 @@ class ResourceGroupService
         }
     }
 
-    public function checkName($title){
+    public function checkName($title)
+    {
         try {
             return ResourceGroup::select('id')->where('title', $title)->first();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
