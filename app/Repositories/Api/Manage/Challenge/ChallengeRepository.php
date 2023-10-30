@@ -394,7 +394,6 @@ class ChallengeRepository implements ChallengeInterface
                     'cloneChallengeCustomTimelines'              => $cloneChallengeCustomTimelines,
                     'cloneChallengeExternalLink'                 => $cloneChallengeExternalLink,
                 ];
-                
             });
 
             if (
@@ -416,6 +415,7 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallenge['cloneChallengeExternalLink']
             ) {
                 DB::commit();
+
                 return $cloneChallenge['cloneChallenge'];
             }
 
