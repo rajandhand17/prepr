@@ -88,4 +88,21 @@ class ResourceGroupRepository implements ResourceGroupInterface
             return false;
         }
     }
+
+    public function deleteGroupModule($checkResourceGroupId){
+        try {
+            DB::beginTransaction();
+            $deleteResourceGroup = $this->resourceGroupService->deleteGroupModule($checkResourceGroupId);
+            if ($deleteResourceGroup == false) {
+                DB::rollBack();
+
+                return false;
+            }
+            DB::commit();
+
+            return true;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

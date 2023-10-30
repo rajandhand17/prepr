@@ -48,4 +48,21 @@ class ResourceGroupSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function deleteResourceGroupSkillsGroupsStack($resource_group_id)
+    {
+        try {
+            $checkExistsResourceGroupSkillsGroupsStack = ResourceGroupSkillsGroupStack::select('id')->where('resource_group_id', $resource_group_id)->pluck('id');
+            if ($checkExistsResourceGroupSkillsGroupsStack) {
+                $deleteResourceGroupSkillsGroupsStack = ResourceGroupSkillsGroupStack::whereIn('id', $checkExistsResourceGroupSkillsGroupsStack)->delete();
+                if (!$deleteResourceGroupSkillsGroupsStack) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

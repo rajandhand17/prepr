@@ -602,5 +602,7 @@
     "responses.resource_group_name_not_available":"This resource group name is not available!",
     "responses.resource_group_name_available":"This resource group name is available!",
     "responses.resource_group_slug_not_available":"This resource group slug is not available!",
-    "responses.resource_group_slug_available":"This resource group slug is available!"
+    "responses.resource_group_slug_available":"This resource group slug is available!",
+    "responses.resource_group_delete":"The resource module has been deleted successfully!",
+    "responses.resource_group_not_delete":"The resource module has been not deleted!"
 }

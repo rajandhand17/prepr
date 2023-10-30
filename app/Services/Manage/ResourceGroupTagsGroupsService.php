@@ -37,4 +37,20 @@ class ResourceGroupTagsGroupsService
             return false;
         }
     }
+
+    public static function deleteResourceGroupTagsGroups($resource_group_id)
+    {
+        try {
+            $checkExistsResourceGroupTagsGroups = ResourceGroupTagGroups::select('id')->where('resource_group_id', $resource_group_id)->pluck('id');
+            if ($checkExistsResourceGroupTagsGroups) {
+                $deleteResourceGroupTagsGroups = ResourceGroupTagGroups::whereIn('id', $checkExistsResourceGroupTagsGroups)->delete();
+                if (!$deleteResourceGroupTagsGroups) {
+                    return false;
+                }
+            }
+            return true;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

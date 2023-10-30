@@ -73,4 +73,22 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function delete($slug)
+    {
+        try {
+            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
+            }
+            $deleteResourceGroup = $this->resourceGroupRepository->deleteGroupModule($checkResourceGroupSlugExistsOrNot->id);
+            if ($deleteResourceGroup) {
+                return $this->sendResponse(null, __('responses.resource_group_delete'));
+            }
+
+            return $this->sendError(__('responses.resource_group_not_delete'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
