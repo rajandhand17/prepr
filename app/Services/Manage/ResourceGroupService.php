@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceCollection;
 use App\Models\ResourceGroup;
 use HiFolks\RandoPhp\Randomize;
 
@@ -109,10 +108,10 @@ class ResourceGroupService
         }
     }
 
-    public function updateResourceGroup($slug,$request, $upload_cover_image){
+    public function updateResourceGroup($slug, $request, $upload_cover_image)
+    {
         try {
-
-            $resourceGroup= ResourceGroup::where('slug', $slug)->first();
+            $resourceGroup = ResourceGroup::where('slug', $slug)->first();
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
 
             $status = $resourceGroup->status;
@@ -142,12 +141,12 @@ class ResourceGroupService
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $resourceGroup->language = ($request->has('language')) ? $request->language : $resourceGroup->language;
             $resourceGroup->organization_id = $organization->id;
-            $resourceGroup->title =($request->has('title')) ? $request->title : $resourceGroup->title;
+            $resourceGroup->title = ($request->has('title')) ? $request->title : $resourceGroup->title;
             $resourceGroup->description = ($request->has('description')) ? $request->description : $resourceGroup->description;
             $resourceGroup->media_type = ($request->has('media_type')) ? $request->media_type : $resourceGroup->media_type;
-            $resourceGroup->media =($upload_cover_image != null) ? $upload_cover_image : $resourceGroup->cover_image;
+            $resourceGroup->media = ($upload_cover_image != null) ? $upload_cover_image : $resourceGroup->cover_image;
             $resourceGroup->level = ($request->has('level')) ? $request->level : $resourceGroup->level;
-            $resourceGroup->duration =($request->has('duration')) ? $request->duration : $resourceGroup->duration;
+            $resourceGroup->duration = ($request->has('duration')) ? $request->duration : $resourceGroup->duration;
             $resourceGroup->privacy = $privacy;
             $resourceGroup->status = $status;
             $resourceGroup->save();

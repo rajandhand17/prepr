@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Manage\ResourceGroup;
 
 use App\Services\Manage\ResourceGroupService;
-use App\Services\Manage\ResourceModuleService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;

@@ -51,8 +51,6 @@ class CreateResourceGroupRequest extends FormRequest
         return $base_rules;
     }
 
-
-
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
@@ -98,9 +96,9 @@ class CreateResourceGroupRequest extends FormRequest
             'level.exists'                   => __('responses.level_id_exists'),
             'duration.required'              => __('responses.duration_id_required'),
             'duration.exists'                => __('responses.duration_id_exists'),
-            'resource_ids.required'          =>__('responses.resource_ids_required'),
-            'resource_ids.array'             =>__('responses.resource_ids_array'),
-            'resource_ids.exists'            =>__('responses.resource_ids_array_not_exists'),
+            'resource_ids.required'          => __('responses.resource_ids_required'),
+            'resource_ids.array'             => __('responses.resource_ids_array'),
+            'resource_ids.exists'            => __('responses.resource_ids_array_not_exists'),
         ];
     }
 }
