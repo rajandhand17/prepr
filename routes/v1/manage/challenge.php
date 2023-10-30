@@ -11,7 +11,12 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/check-slug/{slug}', [ChallengeController::class, 'checkSlug']);
     Route::get('/check-title/{title}', [ChallengeController::class, 'checkName']);
     Route::delete('/{slug}/delete', [ChallengeController::class, 'delete'])->middleware('permission:delete_challenge');
+<<<<<<< HEAD
     Route::get('/fetch-assessment/{slug}', [ChallengeController::class, 'fetchAssessment']);
     Route::post('/{slug}/update-assessment', [ChallengeController::class, 'updateAssessment']);
     Route::post('/{slug}/clone-challenge', [ChallengeController::class, 'cloneChallenge']);
+=======
+    Route::get('/assessment/{slug}/', [ChallengeController::class, 'fetchAssessment']);
+    Route::post('/{slug}/assessment/update/', [ChallengeController::class, 'updateAssessment']);
+>>>>>>> BetaDevelopment
 });

@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
+use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Models\Challenge;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
+use stdClass;
 
 class ChallengeController extends AppBaseController
 {
@@ -218,7 +220,7 @@ class ChallengeController extends AppBaseController
                 $getChallengeAssessment = $this->challengeRepository->getChallengeAssessmentData($checkComponentBasedOnSlug->challenge_assessment);
             }
 
-            if ($checkComponentBasedOnSlug->challenge_assessment_criteria) {
+            if ($checkComponentBasedOnSlug->challenge_assessment_criteria->isNotEmpty()) {
                 $challenge_assessment_criteria = $checkComponentBasedOnSlug->challenge_assessment_criteria->map(function ($item) {
                     return [
                         'assessment_title'   => $item->title,
@@ -228,16 +230,13 @@ class ChallengeController extends AppBaseController
                 });
             }
 
-            if (!empty($getChallengeAssessment) && !empty($challenge_assessment_criteria)) {
-                $challengeAssessmentData = [
-                    'challengeAssessment'           => $getChallengeAssessment,
-                    'challengeAssessmentCriteria'   => $challenge_assessment_criteria->all(),
-                ];
-
-                return $this->sendResponse($challengeAssessmentData, __('responses.found_challenge_assessment_detail'), 200);
+            if (!empty($getChallengeAssessment) || !empty($challenge_assessment_criteria)) {
+                return $this->sendResponse(ChallengeAssessmentResource::make($checkComponentBasedOnSlug), __('responses.found_challenge_assessment_detail'), 200);
             }
 
-            return $this->sendResponse([], __('responses.found_not_challenge_assessment_detail'));
+            $emptyResponse = new stdClass();
+
+            return $this->sendResponse($emptyResponse, __('responses.found_not_challenge_assessment_detail'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
