@@ -88,4 +88,12 @@ class ResourceGroupRepository implements ResourceGroupInterface
             return false;
         }
     }
+
+    public function checkName($slug){
+        try {
+            return  $this->resourceGroupService->checkName($slug);
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
 }

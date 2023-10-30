@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\ResourceCollection;
 use App\Models\ResourceGroup;
 use HiFolks\RandoPhp\Randomize;
 
@@ -78,6 +79,14 @@ class ResourceGroupService
         try {
             return ResourceGroup::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkName($title){
+        try {
+            return ResourceGroup::select('id')->where('title', $title)->first();
+        }catch (\Exception $e) {
             return false;
         }
     }
