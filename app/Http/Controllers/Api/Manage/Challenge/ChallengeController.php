@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
+use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
+use stdClass;
 
 class ChallengeController extends AppBaseController
 {
@@ -207,18 +209,18 @@ class ChallengeController extends AppBaseController
     public function fetchAssessment($slug)
     {
         try {
-            $checkChallengeSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
-            if ($checkChallengeSlugExistsOrNot == false) {
-                return $this->sendResponse([], __('responses.challenge_slug_available'), 200);
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
             }
             $getChallengeAssessment = [];
             $challenge_assessment_criteria = [];
-            if ($checkChallengeSlugExistsOrNot->challenge_assessment->isNotEmpty()) {
-                $getChallengeAssessment = $this->challengeRepository->getChallengeAssessmentData($checkChallengeSlugExistsOrNot->challenge_assessment);
+            if ($checkComponentBasedOnSlug->challenge_assessment->isNotEmpty()) {
+                $getChallengeAssessment = $this->challengeRepository->getChallengeAssessmentData($checkComponentBasedOnSlug->challenge_assessment);
             }
 
-            if ($checkChallengeSlugExistsOrNot->challenge_assessment_criteria) {
-                $challenge_assessment_criteria = $checkChallengeSlugExistsOrNot->challenge_assessment_criteria->map(function ($item) {
+            if ($checkComponentBasedOnSlug->challenge_assessment_criteria->isNotEmpty()) {
+                $challenge_assessment_criteria = $checkComponentBasedOnSlug->challenge_assessment_criteria->map(function ($item) {
                     return [
                         'assessment_title'   => $item->title,
                         'assessment_score'   => $item->score,
@@ -227,16 +229,12 @@ class ChallengeController extends AppBaseController
                 });
             }
 
-            if (!empty($getChallengeAssessment) && !empty($challenge_assessment_criteria)) {
-                $challengeAssessmentData = [
-                    'challengeAssessment'           => $getChallengeAssessment,
-                    'challengeAssessmentCriteria'   => $challenge_assessment_criteria->all(),
-                ];
-
-                return $this->sendResponse($challengeAssessmentData, __('responses.found_challenge_assessment_detail'), 200);
+            if (!empty($getChallengeAssessment) || !empty($challenge_assessment_criteria)) {
+                return $this->sendResponse(ChallengeAssessmentResource::make($checkComponentBasedOnSlug), __('responses.found_challenge_assessment_detail'), 200);
             }
 
-            return $this->sendResponse([], __('responses.found_not_challenge_assessment_detail'));
+            $emptyResponse = new stdClass();
+            return $this->sendResponse($emptyResponse, __('responses.found_not_challenge_assessment_detail'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -245,13 +243,13 @@ class ChallengeController extends AppBaseController
     public function updateAssessment($slug, Request $request)
     {
         try {
-            $checkChallengeSlugExistsOrNot = $this->challengeRepository->checkSlug($slug);
-            if ($checkChallengeSlugExistsOrNot == false) {
-                return $this->sendResponse([], __('responses.challenge_slug_available'), 200);
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
             }
 
-            if ($checkChallengeSlugExistsOrNot->challenge_assessment->isNotEmpty()) {
-                $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkChallengeSlugExistsOrNot->challenge_assessment[0]->attachments);
+            if ($checkComponentBasedOnSlug->challenge_assessment->isNotEmpty()) {
+                $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments);
             }
 
             if ($request->attachments !== null) {
@@ -262,7 +260,7 @@ class ChallengeController extends AppBaseController
                 $update_assessment_attachment = $updated_assessment_attachment;
             }
 
-            $updateChallengeAssessment = $this->challengeRepository->updateChallengeAssessment($checkChallengeSlugExistsOrNot->id, $update_assessment_attachment, $request);
+            $updateChallengeAssessment = $this->challengeRepository->updateChallengeAssessment($checkComponentBasedOnSlug->id, $update_assessment_attachment, $request);
             if ($updateChallengeAssessment['updateChallengeAssessmentCriteria'] && $updateChallengeAssessment['updateChallengeAssessment']) {
                 return self::fetchAssessment($slug);
             }
