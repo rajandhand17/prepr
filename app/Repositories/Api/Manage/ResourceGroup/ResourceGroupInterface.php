@@ -11,4 +11,6 @@ interface ResourceGroupInterface
     public function uploadAchievementImage($achievement_image);
 
     public function getResourceGroupBasedOnSlug($slug);
+
+    public function deleteGroupModule($checkResourceGroupId);
 }

@@ -80,7 +80,7 @@ class ResourceGroupController extends AppBaseController
             if ($checkResourceGroupSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
             }
-            $deleteResourceGroup = $this->resourceGroupRepository->deleteGroupModule($slug, $checkResourceGroupSlugExistsOrNot->id);
+            $deleteResourceGroup = $this->resourceGroupRepository->deleteGroupModule($checkResourceGroupSlugExistsOrNot->id);
             if ($deleteResourceGroup) {
                 return $this->sendResponse(null, __('responses.resource_group_delete'));
             }
