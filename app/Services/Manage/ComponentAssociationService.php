@@ -647,4 +647,21 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public static function deleteResourceGroupAssociation($resource_group_id)
+    {
+        try {
+            $checkExistsComponentAssociation = ComponentAssociation::select('id')->where('resource_group_id', $resource_group_id)->pluck('id');
+            if ($checkExistsComponentAssociation) {
+                $deleteComponentAssociation = ComponentAssociation::whereIn('id', $checkExistsComponentAssociation)->delete();
+                if (!$deleteComponentAssociation) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
