@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
-use App\Models\LabProgramsAchievement;
 use App\Models\ResourceGroupAchievement;
 
 class ResourceGroupAchievementService
@@ -52,7 +51,8 @@ class ResourceGroupAchievementService
         }
     }
 
-    public function updateResourceGroupsAchievements($request, $upload_achievement_image, $updateResourceGroupId){
+    public function updateResourceGroupsAchievements($request, $upload_achievement_image, $updateResourceGroupId)
+    {
         try {
             $checkExistsResourceGroupAchievement = ResourceGroupAchievement::where('resource_group_id', $updateResourceGroupId)->first();
             if (!$checkExistsResourceGroupAchievement) {
@@ -62,14 +62,16 @@ class ResourceGroupAchievementService
                 $labAchievement->achievement_points = $request->achievement_points;
                 $labAchievement->achievement_image = $upload_achievement_image;
                 $labAchievement->save();
+
                 return true;
             }
             $checkExistsResourceGroupAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsResourceGroupAchievement->achievement_name;
             $checkExistsResourceGroupAchievement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : $checkExistsResourceGroupAchievement->achievement_points;
             $checkExistsResourceGroupAchievement->achievement_image = ($upload_achievement_image) ? $upload_achievement_image : $checkExistsResourceGroupAchievement->achievement_image;
             $checkExistsResourceGroupAchievement->save();
+
             return true;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }

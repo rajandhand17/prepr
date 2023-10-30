@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\ResourceGroupSkillsGroupStack;
-use App\Models\ResourceModuleSkillsGroupsStack;
 
 class ResourceGroupSkillsGroupsStackService
 {
@@ -67,7 +66,8 @@ class ResourceGroupSkillsGroupsStackService
         }
     }
 
-    public function updateResourceGroupSkillsGroupsStack($request, $updateResourceGroupId){
+    public function updateResourceGroupSkillsGroupsStack($request, $updateResourceGroupId)
+    {
         try {
             if ($request->has('skills')) {
                 if (count($request->skills) > 0) {
@@ -81,7 +81,7 @@ class ResourceGroupSkillsGroupsStackService
                         ['type', '=', '0'],
                     ])->whereIn('foreign_id', $nonExistingIds)->delete();
                     $newSkills = array_diff($request->skills, $getExistsSkills);
-                    foreach ($newSkills as $skill){
+                    foreach ($newSkills as $skill) {
                         $ResourceGroupSkillsGroupsStack = new ResourceGroupSkillsGroupStack();
                         $ResourceGroupSkillsGroupsStack->resource_group_id = $updateResourceGroupId;
                         $ResourceGroupSkillsGroupsStack->foreign_id = $skill;
@@ -132,7 +132,7 @@ class ResourceGroupSkillsGroupsStackService
                     }
                 }
             }
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }

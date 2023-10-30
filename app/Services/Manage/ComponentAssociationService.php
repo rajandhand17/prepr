@@ -711,7 +711,7 @@ class ComponentAssociationService
                         ['resource_group_id', '=', $resourceGroupId],
                         ['resource_collection_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first();
-                    if (isset($sequence->sequence) && !empty($sequence->sequence)){
+                    if (isset($sequence->sequence) && !empty($sequence->sequence)) {
                         $sequence = $sequence->sequence;
                     }
                     foreach ($newComponentAssociation as $resourceCollectionId) {
@@ -724,7 +724,7 @@ class ComponentAssociationService
                     }
                 }
             }
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

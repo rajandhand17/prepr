@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ResourceCollectionTagsGroups;
 use App\Models\ResourceGroupTagGroups;
 
 class ResourceGroupTagsGroupsService
@@ -56,7 +55,8 @@ class ResourceGroupTagsGroupsService
         }
     }
 
-    public function updateResourceGroupTagsGroups($request, $updateResourceGroupId){
+    public function updateResourceGroupTagsGroups($request, $updateResourceGroupId)
+    {
         try {
             if ($request->has('tags')) {
                 if (count($request->tags) > 0) {
@@ -102,7 +102,7 @@ class ResourceGroupTagsGroupsService
             }
 
             return true;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }

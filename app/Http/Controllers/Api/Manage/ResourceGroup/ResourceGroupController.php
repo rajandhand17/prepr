@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
@@ -109,7 +108,8 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
-    public function update($slug, UpdateResourceGroupRequest $request){
+    public function update($slug, UpdateResourceGroupRequest $request)
+    {
         try {
             $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if ($checkResourceGroupSlugExistsOrNot == false) {
@@ -131,10 +131,11 @@ class ResourceGroupController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug,$request, $upload_cover_image, $upload_achievement_image);
+            $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image);
             if ($updateResourceGroup) {
                 return $this->sendResponse(ResourceCollectionResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
             }
+
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

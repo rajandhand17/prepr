@@ -116,16 +116,17 @@ class ResourceGroupRepository implements ResourceGroupInterface
         }
     }
 
-    public function updateResourceGroup($slug,$request, $upload_cover_image, $upload_achievement_image){
+    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image)
+    {
         try {
-            $updateResourceGroup = DB::transaction(function () use ($slug,$request, $upload_cover_image, $upload_achievement_image) {
-                $updateResourceGroup = $this->resourceGroupService->updateResourceGroup($slug,$request, $upload_cover_image);
+            $updateResourceGroup = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
+                $updateResourceGroup = $this->resourceGroupService->updateResourceGroup($slug, $request, $upload_cover_image);
                 $updateResourceGroupComponentAssociation = $this->componentAssociationService->updateResourceGroupComponentAssociation($request, $updateResourceGroup->id);
                 $updateResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->updateResourceGroupSkillsGroupsStack($request, $updateResourceGroup->id);
                 $updateResourceGroupTagsGroups = $this->resourceGroupTagsGroupService->updateResourceGroupTagsGroups($request, $updateResourceGroup->id);
                 $updateResourceGroupsAchievements = $this->resourceGroupAchievementsService->updateResourceGroupsAchievements($request, $upload_achievement_image, $updateResourceGroup->id);
 
-            return[
+                return[
                     'updateResourceGroup'                             => $updateResourceGroup,
                     'updateResourceGroupComponentAssociation'         => $updateResourceGroupComponentAssociation,
                     'updateResourceGroupSkillsGroupStack'             => $updateResourceGroupSkillsGroupStack,
