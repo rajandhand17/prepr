@@ -8,4 +8,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{slug}', [ResourceGroupController::class, 'show']);
     Route::get('/check-slug/{slug}', [ResourceGroupController::class, 'checkSlug']);
     Route::post('/{slug}/delete', [ResourceGroupController::class, 'delete']);
+    Route::get('/check-title/{title}', [ResourceGroupController::class, 'checkName']);
 });

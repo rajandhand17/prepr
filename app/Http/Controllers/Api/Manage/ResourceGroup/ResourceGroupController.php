@@ -91,4 +91,18 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function checkName($title)
+    {
+        try {
+            $checkResourceGroupNameExistsOrNot = $this->resourceGroupRepository->checkName($title);
+            if ($checkResourceGroupNameExistsOrNot) {
+                return $this->sendError(__('responses.resource_group_name_not_available'));
+            }
+
+            return $this->sendResponse([], __('responses.resource_group_name_available'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

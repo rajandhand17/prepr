@@ -98,4 +98,13 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public function checkName($title)
+    {
+        try {
+            return ResourceGroup::select('id')->where('title', $title)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
