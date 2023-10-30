@@ -8,7 +8,6 @@ use App\Services\Manage\ResourceGroupAchievementService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
 use App\Services\Manage\ResourceGroupTagsGroupsService;
 
-
 class HandleDeleteResourceGroupAssociatedData
 {
     /**
@@ -38,10 +37,11 @@ class HandleDeleteResourceGroupAssociatedData
             if (!$deleteResourceModuleTagsGroups) {
                 return false;
             }
-            $deleteAchievementsGroups = ResourceGroupAchievementService ::deleteResourceGroupAchievements($resourceGroupId);
+            $deleteAchievementsGroups = ResourceGroupAchievementService::deleteResourceGroupAchievements($resourceGroupId);
             if (!$deleteAchievementsGroups) {
                 return false;
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

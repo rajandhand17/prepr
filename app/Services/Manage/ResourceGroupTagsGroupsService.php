@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ResourceCollectionTagsGroups;
 use App\Models\ResourceGroupTagGroups;
 
 class ResourceGroupTagsGroupsService
@@ -39,7 +38,8 @@ class ResourceGroupTagsGroupsService
         }
     }
 
-    public static function deleteResourceGroupTagsGroups($resource_group_id){
+    public static function deleteResourceGroupTagsGroups($resource_group_id)
+    {
         try {
             $checkExistsResourceGroupTagsGroups = ResourceGroupTagGroups::select('id')->where('resource_group_id', $resource_group_id)->pluck('id');
             if ($checkExistsResourceGroupTagsGroups) {
@@ -48,8 +48,9 @@ class ResourceGroupTagsGroupsService
                     return false;
                 }
             }
+
             return true;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
