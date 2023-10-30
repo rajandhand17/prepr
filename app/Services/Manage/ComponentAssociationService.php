@@ -664,4 +664,68 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public static function updateResourceGroupComponentAssociation($request, $resourceGroupId)
+    {
+        try {
+            if ($request->has('resource_ids') && count($request->resource_ids) > 0) {
+                $getResourceGroupIds = ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_ids);
+                $request->merge(['resource_ids' => $getResourceGroupIds]);
+                if (count($request->resource_ids) > 0) {
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['resource_group_id', '=', $resourceGroupId],
+                        ['resource_module_id', '!=', null],
+                    ])->pluck('resource_module_id')->all();
+                    $nonExistingIds = array_diff($existComponentAssociation, $request->resource_ids);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('resource_group_id', $resourceGroupId)->whereIn('resource_module_id', $nonExistingIds)->delete();
+                    $newComponentAssociation = array_diff($request->resource_ids, $existComponentAssociation);
+                    $sequence = ComponentAssociation::where([
+                        ['resource_group_id', '=', $resourceGroupId],
+                        ['resource_module_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if (isset($sequence->sequence) && !empty($sequence->sequence)) {
+                        $sequence = $sequence->sequence;
+                    }
+                    foreach ($newComponentAssociation as $resourceModuleId) {
+                        $sequence++;
+                        $ResourceCollectionResourceModule = new ComponentAssociation();
+                        $ResourceCollectionResourceModule->resource_group_id = $resourceGroupId;
+                        $ResourceCollectionResourceModule->resource_module_id = $resourceModuleId;
+                        $ResourceCollectionResourceModule->sequence = $sequence;
+                        $ResourceCollectionResourceModule->save();
+                    }
+                }
+            }
+            if ($request->has('resource_collection_ids') && count($request->resource_collection_ids) > 0) {
+                $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnUUIDArray($request->resource_collection_ids);
+                $request->merge(['resource_collection_ids' => $getResourceCollection]);
+                if (count($request->resource_collection_ids) > 0) {
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['resource_group_id', '=', $resourceGroupId],
+                        ['resource_collection_id', '!=', null],
+                    ])->pluck('resource_collection_id')->all();
+                    $nonExistingIds = array_diff($existComponentAssociation, $request->resource_collection_ids);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('resource_group_id', $resourceGroupId)->whereIn('resource_collection_id', $nonExistingIds)->delete();
+                    $newComponentAssociation = array_diff($request->resource_ids, $existComponentAssociation);
+                    $sequence = ComponentAssociation::where([
+                        ['resource_group_id', '=', $resourceGroupId],
+                        ['resource_collection_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if (isset($sequence->sequence) && !empty($sequence->sequence)){
+                        $sequence = $sequence->sequence;
+                    }
+                    foreach ($newComponentAssociation as $resourceCollectionId) {
+                        $sequence++;
+                        $ResourceCollectionResourceModule = new ComponentAssociation();
+                        $ResourceCollectionResourceModule->resource_group_id = $resourceGroupId;
+                        $ResourceCollectionResourceModule->resource_collection_id = $resourceCollectionId;
+                        $ResourceCollectionResourceModule->sequence = $sequence;
+                        $ResourceCollectionResourceModule->save();
+                    }
+                }
+            }
+        }catch (Exception $e) {
+            return false;
+        }
+    }
 }
