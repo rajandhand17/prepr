@@ -18,7 +18,7 @@ class ChallengeAssessmentResource extends JsonResource
     {
         $challenge_assessment_criteria = null;
         $challenge_assessment = null;
-        
+
         if ($this->challenge_assessment_criteria) {
             $challenge_assessment_criteria = $this->challenge_assessment_criteria->map(function ($item) {
                 return [

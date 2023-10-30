@@ -234,6 +234,7 @@ class ChallengeController extends AppBaseController
             }
 
             $emptyResponse = new stdClass();
+
             return $this->sendResponse($emptyResponse, __('responses.found_not_challenge_assessment_detail'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
