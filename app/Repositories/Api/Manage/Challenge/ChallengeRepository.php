@@ -373,15 +373,17 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->cloneChallengeAssessmentCriteria($originalChallenge->challenge_assessment_criteria, $cloneChallenge->id);
                 $cloneChallengeAssessment = $this->challengeAssessmentService->cloneChallengeAssessment($originalChallenge->challenge_assessment, $cloneChallenge->id);
             }
-            dd("in");
+            dd('in');
 
             return [
                 'cloneChallenge'                   => $cloneChallenge,
             ];
             dd($cloneChallenge, $challengeId);
+
             return false;
         } catch (Exception $e) {
-            dd($e); 
+            dd($e);
+
             return false;
         }
     }

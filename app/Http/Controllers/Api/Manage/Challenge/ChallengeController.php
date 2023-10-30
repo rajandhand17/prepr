@@ -10,7 +10,6 @@ use App\Models\Challenge;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
-use HiFolks\RandoPhp\Randomize;
 use Illuminate\Http\Request;
 
 class ChallengeController extends AppBaseController
