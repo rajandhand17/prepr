@@ -2,9 +2,12 @@
 
 namespace App\Services\Manage;
 
+use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
+use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceGroup;
+use App\Models\ResourceModule;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceGroupService
@@ -78,6 +81,19 @@ class ResourceGroupService
         try {
             return ResourceGroup::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteGroupModule($resource_group_id){
+        try {
+            $resourceModule = ResourceGroup::find($resource_group_id)->delete();
+            if ($resourceModule) {
+                $associatedResourceModule = event(new DeleteResourceGroupAssociatedData($resource_group_id));
+                return true;
+            }
+            return false;
+        }catch (\Exception $e) {
             return false;
         }
     }

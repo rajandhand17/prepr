@@ -144,7 +144,6 @@ class ResourceCollectionController extends AppBaseController
             if ($responseCollectionDelete) {
                 return $this->sendResponse(null, __('responses.resource_collection_delete'));
             }
-
             return $this->sendError(__('responses.resource_collection_not_delete'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

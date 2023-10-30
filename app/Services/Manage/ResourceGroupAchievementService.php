@@ -36,4 +36,16 @@ class ResourceGroupAchievementService
             return false;
         }
     }
+
+    public static function deleteResourceGroupAchievements($resourceGroupId){
+        try {
+            $resourceGroupAchievements =ResourceGroupAchievement::where("resource_group_id",$resourceGroupId)->delete();
+            if($resourceGroupAchievements){
+                return true;
+            }
+            return false;
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
 }
