@@ -159,11 +159,12 @@ class ResourceGroupService
         }
     }
 
-    public static function getResourceGroupList($request,$organization)
+    public static function getResourceGroupList($request, $organization)
     {
         try {
             $resourceGroupList = ResourceGroup::select()->where('organization_id', '=', $organization->id);
             $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
+
             return $resourceGroupList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;

@@ -14,5 +14,5 @@ interface ResourceGroupInterface
 
     public function deleteGroupModule($checkResourceGroupId);
 
-    public function getResourceGroupList($request,$organization);
+    public function getResourceGroupList($request, $organization);
 }
