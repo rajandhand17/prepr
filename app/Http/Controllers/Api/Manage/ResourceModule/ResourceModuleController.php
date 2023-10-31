@@ -42,8 +42,8 @@ class ResourceModuleController extends AppBaseController
                     'total_pages'  => $responseModuleList->lastPage(),
                     'list'         => ResourceModuleResource::collection($responseModuleList),
                 ];
-                return $this->sendResponse($response, __('responses.found_resource_module_list'));
 
+                return $this->sendResponse($response, __('responses.found_resource_module_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_module_list'), 400);

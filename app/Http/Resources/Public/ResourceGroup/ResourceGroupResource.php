@@ -114,7 +114,7 @@ class ResourceGroupResource extends JsonResource
                 'achievement_points'    => $this->achievement->achievement_points,
                 'achievement_image'     => $this->achievement->achievement_image,
             ];
-        };
+        }
         if ($this->resource_collection) {
             foreach ($this->resource_collection as $key=>$resource_collection) {
                 $resourceCollection[$resource_collection->resource_collection_id]['uuid'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->uuid;
@@ -123,6 +123,7 @@ class ResourceGroupResource extends JsonResource
                 $resourceCollection[$resource_collection->resource_collection_id]['description'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->description;
             }
         }
+
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,
