@@ -161,10 +161,8 @@ class ResourceGroupController extends AppBaseController
                     'total_pages'  => $responseGroupList->lastPage(),
                     'list'         => ResourceGroupResource::collection($responseGroupList),
                 ];
-
                 return $this->sendResponse($response, __('responses.found_resource_group_list'));
             }
-
             return $this->sendError(__('responses.not_found_resource_group_list'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
