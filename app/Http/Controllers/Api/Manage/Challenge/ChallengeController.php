@@ -7,6 +7,7 @@ use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
+use App\Models\Challenge;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
@@ -248,7 +249,6 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
-
             if ($checkComponentBasedOnSlug->challenge_assessment->isNotEmpty()) {
                 $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments);
             }
@@ -267,6 +267,29 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_assessment_not_update'));
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function cloneChallenge($slug, Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $cloneChallenge = $this->challengeRepository->cloneChallenge($checkComponentBasedOnSlug->id, $organization);
+
+            if ($cloneChallenge != false) {
+                return $this->sendResponse(ChallengeResource::make($cloneChallenge), __('responses.challenge_clone_success'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

@@ -604,5 +604,7 @@
     "responses.resource_group_slug_not_available":"This resource group slug is not available!",
     "responses.resource_group_slug_available":"This resource group slug is available!",
     "responses.resource_group_delete":"The resource module has been deleted successfully!",
-    "responses.resource_group_not_delete":"The resource module has been not deleted!"
+    "responses.resource_group_not_delete":"The resource module has been not deleted!",
+    "responses.challenge_clone_success": "Congratulations! You have successfully cloned a Challenge.",
+    "responses.challenge_clone_failed": "Oops! The clonning Challenge has failed."
 }

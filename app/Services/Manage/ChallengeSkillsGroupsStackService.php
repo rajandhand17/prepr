@@ -122,4 +122,55 @@ class ChallengeSkillsGroupsStackService
             return false;
         }
     }
+
+    public function cloneChallengeSkills($originalChallengeSkills, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeSkills->each(function ($skills) use ($clonedChallengeId) {
+                if ($skills) {
+                    $cloneSkill = $skills->replicate();
+                    $cloneSkill->challenge_id = $clonedChallengeId;
+                    $cloneSkill->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function cloneChallengeGroups($originalChallengeGroups, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeGroups->each(function ($skill_groups) use ($clonedChallengeId) {
+                if ($skill_groups) {
+                    $cloneSkillGroup = $skill_groups->replicate();
+                    $cloneSkillGroup->challenge_id = $clonedChallengeId;
+                    $cloneSkillGroup->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function cloneChallengeStack($originalChallengeStacks, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeStacks->each(function ($skill_stacks) use ($clonedChallengeId) {
+                if ($skill_stacks) {
+                    $cloneSkillSTack = $skill_stacks->replicate();
+                    $cloneSkillSTack->challenge_id = $clonedChallengeId;
+                    $cloneSkillSTack->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -49,4 +49,21 @@ class ChallengeAssessmentCriteriaService
             return false;
         }
     }
+
+    public function cloneChallengeAssessmentCriteria($originalChallengeAssessmentCriteria, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeAssessmentCriteria->each(function ($challenge_assessment_criteria) use ($clonedChallengeId) {
+                if ($challenge_assessment_criteria) {
+                    $cloneAssessmentCriteria = $challenge_assessment_criteria->replicate();
+                    $cloneAssessmentCriteria->challenge_id = $clonedChallengeId;
+                    $cloneAssessmentCriteria->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
