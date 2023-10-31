@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\Manage\ResourceGroup;
 
+use App\Services\Manage\ResourceGroupService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use League\Container\Exception\NotFoundException;
 
-class CreateResourceGroupRequest extends FormRequest
+class UpdateResourceGroupRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,29 +25,31 @@ class CreateResourceGroupRequest extends FormRequest
      */
     public function rules(): array
     {
+        $resourceGroupService = ResourceGroupService::getResourceGroupBasedOnSlug(request()->route('slug'));
+        if (!$resourceGroupService) {
+            throw new NotFoundException();
+        }
         $base_rules = [
-            'title'                    => 'required|unique:resource_groups,title',
-            'organization_id'          => 'required|exists:organizations,uuid',
-            'description'              => 'required',
-            'cover_image'              => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
-            'privacy'                  => 'required|in:yes,no',
-            'status'                   => 'required|in:draft,published,archive',
-            'resource_ids'             => 'required|array',
-            'resource_ids.*'           => 'exists:resource_modules,uuid',
-            'resource_collection_ids'  => 'required|array',
-            'resource_collection_ids.*'=> 'exists:resource_collections,uuid',
-            'skills'                   => 'required|array',
-            'skills.*'                 => 'numeric|exists:skills,id',
-            'tags'                     => 'required|array',
-            'tags.*'                   => 'numeric|exists:tags,id',
-            'tag_groups'               => 'array',
-            'level'                    => 'required|exists:levels,id',
-            'duration'                 => 'required|exists:durations,id',
-            'tag_groups.*'             => 'numeric|exists:tag_groups,id',
-            'skill_groups'             => 'array',
-            'skill_groups.*'           => 'numeric|exists:skill_groups,id',
-            'skill_stacks'             => 'array',
-            'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
+            'title'                  => 'required|max:255|unique:resource_groups,title,'.$resourceGroupService->id,
+            'organization_id'        => 'required|exists:organizations,uuid',
+            'description'            => 'required',
+            'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
+            'privacy'                => 'required|in:yes,no',
+            'status'                 => 'required|in:draft,published,archive',
+            'resource_ids'           => 'required|array',
+            'resource_ids.*'         => 'exists:resource_modules,uuid',
+            'skills'                 => 'required|array',
+            'skills.*'               => 'numeric|exists:skills,id',
+            'tags'                   => 'required|array',
+            'tags.*'                 => 'numeric|exists:tags,id',
+            'tag_groups'             => 'array',
+            'level'                  => 'required|exists:levels,id',
+            'duration'               => 'required|exists:durations,id',
+            'tag_groups.*'           => 'numeric|exists:tag_groups,id',
+            'skill_groups'           => 'array',
+            'skill_groups.*'         => 'numeric|exists:skill_groups,id',
+            'skill_stacks'           => 'array',
+            'skill_stacks.*'         => 'numeric|exists:skill_stacks,id',
         ];
 
         return $base_rules;
@@ -96,9 +100,6 @@ class CreateResourceGroupRequest extends FormRequest
             'level.exists'                   => __('responses.level_id_exists'),
             'duration.required'              => __('responses.duration_id_required'),
             'duration.exists'                => __('responses.duration_id_exists'),
-            'resource_ids.required'          => __('responses.resource_ids_required'),
-            'resource_ids.array'             => __('responses.resource_ids_array'),
-            'resource_ids.exists'            => __('responses.resource_ids_array_not_exists'),
         ];
     }
 }

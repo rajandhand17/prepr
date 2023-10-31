@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
+use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
 
@@ -101,6 +103,40 @@ class ResourceGroupController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.resource_group_name_available'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function update($slug, UpdateResourceGroupRequest $request)
+    {
+        try {
+            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
+            }
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupSlugExistsOrNot->media);
+            if ($request->cover_image !== null) {
+                $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
+                if (!$uploaded_cover_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_cover_image = $uploaded_cover_image;
+            }
+            $upload_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupSlugExistsOrNot->achievement_image);
+            if ($request->achievement_image !== null) {
+                $uploaded_achievement_image = $this->resourceGroupRepository->uploadAchievementImage($request->achievement_image);
+                if (!$uploaded_achievement_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_achievement_image = $uploaded_achievement_image;
+            }
+            $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image);
+            if ($updateResourceGroup) {
+                return $this->sendResponse(ResourceCollectionResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
+            }
+
+            return $this->sendError(__('responses.resource_collection_update_failed'), 403);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
