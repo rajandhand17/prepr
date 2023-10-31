@@ -606,5 +606,7 @@
     "responses.resource_group_delete":"The resource module has been deleted successfully!",
     "responses.resource_group_not_delete":"The resource module has been not deleted!",
     "responses.challenge_clone_success": "Congratulations! You have successfully cloned a Challenge.",
-    "responses.challenge_clone_failed": "Oops! The clonning Challenge has failed."
+    "responses.challenge_clone_failed": "Oops! The clonning Challenge has failed.",
+    "responses.found_challenge_announcement_recipient": "The Challenge announcement recipient list has been successfully retrieved",
+    "responses.not_found_challenge_announcement_recipient": "The list of Challenge announcement recipient has not been retrieved with success."
 }

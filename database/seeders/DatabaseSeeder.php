@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             LevelsSeeder::class,
             DurationsSeeder::class,
             ProjectSubmissionRequirementTableSeeder::class,
+            ChallengeAnnouncementRecipientSeeder::class,
         ]);
     }
 }
