@@ -35,8 +35,6 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 400);
         } catch (\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
