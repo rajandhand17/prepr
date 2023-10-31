@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Resources\Manage\ResourceGroup;
+namespace App\Http\Resources\Public\ResourceGroup;
 
-use App\Services\Manage\ResourceCollectionService;
-use App\Services\Manage\ResourceModuleService;
+use App\Services\Public\ResourceCollectionService;
+use App\Services\Public\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceGroupResource extends JsonResource
@@ -19,7 +18,7 @@ class ResourceGroupResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
         $resourceModules = [];
         $achievements = [];
@@ -115,16 +114,15 @@ class ResourceGroupResource extends JsonResource
                 'achievement_points'    => $this->achievement->achievement_points,
                 'achievement_image'     => $this->achievement->achievement_image,
             ];
-        }
+        };
         if ($this->resource_collection) {
-            foreach ($this->resource_collection as $resource_collection) {
-                $resourceCollection[$resource_collection->resource_collection]['uuid'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->uuid;
-                $resourceCollection[$resource_collection->resource_collection]['title'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->title;
-                $resourceCollection[$resource_collection->resource_collection]['image'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->media;
-                $resourceCollection[$resource_collection->resource_collection]['description'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->description;
+            foreach ($this->resource_collection as $key=>$resource_collection) {
+                $resourceCollection[$resource_collection->resource_collection_id]['uuid'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->uuid;
+                $resourceCollection[$resource_collection->resource_collection_id]['title'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->title;
+                $resourceCollection[$resource_collection->resource_collection_id]['image'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->media;
+                $resourceCollection[$resource_collection->resource_collection_id]['description'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->description;
             }
         }
-
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,
