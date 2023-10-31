@@ -8,6 +8,7 @@ use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
+use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
@@ -146,7 +147,11 @@ class ResourceGroupController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $responseGroupList = $this->resourceGroupRepository->getResourceGroupList($request);
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $responseGroupList = $this->resourceGroupRepository->getResourceGroupList($request,$organization);
             if ($responseGroupList) {
                 $response = [
                     'total_count'  => $responseGroupList->total(),
