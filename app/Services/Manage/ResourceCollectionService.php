@@ -280,4 +280,27 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function getResourceCollectionBasedOnUUIDArray($resourceCollectionUUIDArray)
+    {
+        try {
+            $resourceCollectionIds = ResourceCollection::whereIn('uuid', $resourceCollectionUUIDArray)->pluck('id')->all();
+            if ($resourceCollectionIds != null) {
+                return $resourceCollectionIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionBasedOnId($id)
+    {
+        try {
+            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description')->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

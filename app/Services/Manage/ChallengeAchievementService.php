@@ -114,4 +114,36 @@ class ChallengeAchievementService
             return false;
         }
     }
+
+    public function cloneChallengeParticipationAchievement($originalChallengeParticipationAchievement, $clonedChallengeId)
+    {
+        try {
+            if ($originalChallengeParticipationAchievement) {
+                $cloneParticipationAchievement = $originalChallengeParticipationAchievement->replicate();
+                $cloneParticipationAchievement->challenge_id = $clonedChallengeId;
+                $cloneParticipationAchievement->save();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function cloneChallengeIncentiveAchievement($originalChallengeIncentiveAchievement, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeIncentiveAchievement->each(function ($incentive_achievement) use ($clonedChallengeId) {
+                if ($incentive_achievement) {
+                    $cloneIncentiveAchievement = $incentive_achievement->replicate();
+                    $cloneIncentiveAchievement->challenge_id = $clonedChallengeId;
+                    $cloneIncentiveAchievement->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -38,7 +38,7 @@ class LabService
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
-                $lab_list = $lab_list->whereIn('labs.category', $request->category);
+                $lab_list = $lab_list->whereIn('labs.category_id', $request->category);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {

@@ -90,4 +90,38 @@ class ChallengeTagsGroupsService
             return false;
         }
     }
+
+    public function cloneChallengeTags($originalChallengeTags, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeTags->each(function ($tags) use ($clonedChallengeId) {
+                if ($tags) {
+                    $cloneTag = $tags->replicate();
+                    $cloneTag->challenge_id = $clonedChallengeId;
+                    $cloneTag->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function cloneChallengeTagsGroups($originalChallengeTagGroups, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeTagGroups->each(function ($tag_groups) use ($clonedChallengeId) {
+                if ($tag_groups) {
+                    $cloneTagGroups = $tag_groups->replicate();
+                    $cloneTagGroups->challenge_id = $clonedChallengeId;
+                    $cloneTagGroups->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
