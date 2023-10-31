@@ -204,10 +204,10 @@ class ResourceGroupService
                 $privacy = null;
                 switch ($request->privacy) {
                     case 'yes':
-                        $privacy = config('constants.resource_collection_privacy.yes');
+                        $privacy = config('constants.resource_group_privacy.yes');
                         break;
                     case 'no':
-                        $privacy = config('constants.resource_collection_privacy.no');
+                        $privacy = config('constants.resource_group_privacy.no');
                         break;
                     default:
                         $privacy = null;
