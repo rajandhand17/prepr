@@ -156,4 +156,12 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public function getResourceGroupList(){
+        try {
+
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }
