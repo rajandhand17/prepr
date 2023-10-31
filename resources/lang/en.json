@@ -604,5 +604,10 @@
     "responses.resource_group_slug_not_available":"This resource group slug is not available!",
     "responses.resource_group_slug_available":"This resource group slug is available!",
     "responses.resource_group_delete":"The resource module has been deleted successfully!",
-    "responses.resource_group_not_delete":"The resource module has been not deleted!"
+    "responses.resource_group_not_delete":"The resource module has been not deleted!",
+    "responses.resource_ids_required": "The Resource ids is required!",
+    "responses.resource_ids_array": "The Resource ids should be array!",
+    "responses.resource_ids_array_not_exists": "This resource id is not exists",
+    "responses.resource_group_update_success":"Congratulations! You have successfully update resource group.",
+    "responses.resource_group_update_failed":"Oops! The Updating of resource group has failed."
 }
