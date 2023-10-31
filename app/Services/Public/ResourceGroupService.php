@@ -13,6 +13,7 @@ class ResourceGroupService
         try {
             $resourceGroupList = ResourceGroup::select();
             $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
+
             return $resourceGroupList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;
@@ -104,5 +105,4 @@ class ResourceGroupService
             return false;
         }
     }
-
 }
