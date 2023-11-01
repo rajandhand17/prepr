@@ -14,7 +14,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
     public function __construct(ResourceGroupService $resourceGroupService, ResourceGroupSocialActivitiesService $resourceGroupSocialActivitiesService)
     {
         $this->resourceGroupService = $resourceGroupService;
-        $this->resourceGroupSocialActivitiesService=$resourceGroupSocialActivitiesService;
+        $this->resourceGroupSocialActivitiesService = $resourceGroupSocialActivitiesService;
     }
 
     public function getResourceGroupList($request)
