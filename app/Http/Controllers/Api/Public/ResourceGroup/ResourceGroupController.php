@@ -39,7 +39,8 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
-    public function show($slug){
+    public function show($slug)
+    {
         try {
             $resourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if ($resourceGroup) {
