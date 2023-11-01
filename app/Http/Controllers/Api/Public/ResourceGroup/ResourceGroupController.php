@@ -19,15 +19,15 @@ class ResourceGroupController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $responseGroup = $this->resourceGroupRepository->getResourceGroupList($request);
-            if ($responseGroup) {
+            $resourceGroup = $this->resourceGroupRepository->getResourceGroupList($request);
+            if ($resourceGroup) {
                 $response = [
-                    'total_count'  => $responseGroup->total(),
-                    'per_page'     => $responseGroup->perPage(),
-                    'count'        => $responseGroup->count(),
-                    'current_page' => $responseGroup->currentPage(),
-                    'total_pages'  => $responseGroup->lastPage(),
-                    'list'         => ResourceGroupResource::collection($responseGroup),
+                    'total_count'  => $resourceGroup->total(),
+                    'per_page'     => $resourceGroup->perPage(),
+                    'count'        => $resourceGroup->count(),
+                    'current_page' => $resourceGroup->currentPage(),
+                    'total_pages'  => $resourceGroup->lastPage(),
+                    'list'         => ResourceGroupResource::collection($resourceGroup),
                 ];
 
                 return $this->sendResponse($response, __('responses.found_resource_group_list'));
