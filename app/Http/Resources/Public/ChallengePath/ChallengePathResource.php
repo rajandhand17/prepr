@@ -39,10 +39,12 @@ class ChallengePathResource extends JsonResource
 
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
-                $componentAssociation[$association->challenge_id] = ChallengeService::getChallengeBasedOnId($association->challenge_id);
-                $componentAssociation[$association->challenge_id]['liked'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->liked();
-                $componentAssociation[$association->challenge_id]['favourite'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->favourite();
-                $componentAssociation[$association->challenge_id]['member_count'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->members()->count();
+                if ($association->challenge_id) {
+                    $componentAssociation[$association->challenge_id] = ChallengeService::getChallengeBasedOnId($association->challenge_id);
+                    $componentAssociation[$association->challenge_id]['liked'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->liked();
+                    $componentAssociation[$association->challenge_id]['favourite'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->favourite();
+                    $componentAssociation[$association->challenge_id]['member_count'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->members()->count();
+                }
             }
         }
         if ($this->getOrganization) {
