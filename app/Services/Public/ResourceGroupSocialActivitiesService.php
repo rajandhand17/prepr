@@ -11,7 +11,7 @@ class ResourceGroupSocialActivitiesService
         try {
             $checkActivity = ResourceGroupSocialActivity::where(
                 [
-                    'resource_group_id'  => $resource_group_id,
+                    'resource_group_id'   => $resource_group_id,
                     'user_id'             => auth()->user()->id,
                     $column               => $action,
                 ]
@@ -31,7 +31,7 @@ class ResourceGroupSocialActivitiesService
         try {
             ResourceGroupSocialActivity::updateOrInsert([
                 'user_id'           => auth()->user()->id,
-                'resource_group_id'=> $resource_group_id,
+                'resource_group_id' => $resource_group_id,
             ], [
                 $column => $action,
             ]);
