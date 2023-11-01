@@ -85,5 +85,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-module/')->middleware('api')->group(base_path('routes/v1/public/resource-module.php'));
         Route::prefix('api/v1/public/challenge-path/')->middleware('api')->group(base_path('routes/v1/public/challenge-path.php'));
         Route::prefix('api/v1/public/resource-collection/')->middleware('api')->group(base_path('routes/v1/public/resource-collection.php'));
+        Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
     }
 }
