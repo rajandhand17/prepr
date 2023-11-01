@@ -5,4 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language'])->group(function () {
     Route::get('/', [ResourceGroupController::class, 'index']);
+    Route::get('/{slug}', [ResourceGroupController::class, 'show']);
 });

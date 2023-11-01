@@ -105,4 +105,13 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public static function getResourceGroupBasedOnSlug($slug)
+    {
+        try {
+            return ResourceGroup::where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
