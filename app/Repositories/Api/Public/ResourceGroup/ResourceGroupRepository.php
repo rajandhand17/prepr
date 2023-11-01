@@ -3,14 +3,18 @@
 namespace App\Repositories\Api\Public\ResourceGroup;
 
 use App\Services\Public\ResourceGroupService;
+use App\Services\Public\ResourceGroupSocialActivitiesService;
 
 class ResourceGroupRepository implements ResourceGroupInterface
 {
     private $resourceGroupService;
 
-    public function __construct(ResourceGroupService $resourceGroupService)
+    private $resourceGroupSocialActivitiesService;
+
+    public function __construct(ResourceGroupService $resourceGroupService, ResourceGroupSocialActivitiesService $resourceGroupSocialActivitiesService)
     {
         $this->resourceGroupService = $resourceGroupService;
+        $this->resourceGroupSocialActivitiesService = $resourceGroupSocialActivitiesService;
     }
 
     public function getResourceGroupList($request)
@@ -26,6 +30,33 @@ class ResourceGroupRepository implements ResourceGroupInterface
     {
         try {
             return  $this->resourceGroupService->getResourceGroupBasedOnSlug($slug);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getColumnNameValue($action)
+    {
+        try {
+            return $this->resourceGroupSocialActivitiesService->getColumnNameValue($action);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkSocialActivity($resource_group_id, $column, $action)
+    {
+        try {
+            return $this->resourceGroupSocialActivitiesService->checkSocialActivity($resource_group_id, $column, $action);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function captureSocialActivity($resource_group_id, $column, $action)
+    {
+        try {
+            return $this->resourceGroupSocialActivitiesService->captureSocialActivity($resource_group_id, $column, $action);
         } catch(\Exception $e) {
             return false;
         }

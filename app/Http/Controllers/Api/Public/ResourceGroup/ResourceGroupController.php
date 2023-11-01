@@ -52,4 +52,30 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function socialActivity($slug, $action)
+    {
+        try {
+            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupSlugExistsOrNot !== null) {
+                $getColumnNameValue = $this->resourceGroupRepository->getColumnNameValue($action);
+                if (!$getColumnNameValue) {
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
+                }
+                $checkActivity = $this->resourceGroupRepository->checkSocialActivity($checkResourceGroupSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $action = str_replace('-', '_', $action);
+                if ($checkActivity === true) {
+                    return $this->sendError(__('responses.already_'.$action.'_resource_group'), 400);
+                }
+                $resourceGroup = $this->resourceGroupRepository->captureSocialActivity($checkResourceGroupSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                if ($resourceGroup) {
+                    return $this->sendResponse([], __('responses.'.$action.'_resource_group_successfully'));
+                }
+            }
+
+            return $this->sendError(__('responses.resource_group_slug_not_found'), 404);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
