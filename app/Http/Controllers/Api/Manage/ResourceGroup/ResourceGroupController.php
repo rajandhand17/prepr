@@ -8,6 +8,8 @@ use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
+use App\Services\Manage\OrganizationService;
+use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
 {
@@ -137,6 +139,33 @@ class ResourceGroupController extends AppBaseController
             }
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $responseGroupList = $this->resourceGroupRepository->getResourceGroupList($request, $organization);
+            if ($responseGroupList) {
+                $response = [
+                    'total_count'  => $responseGroupList->total(),
+                    'per_page'     => $responseGroupList->perPage(),
+                    'count'        => $responseGroupList->count(),
+                    'current_page' => $responseGroupList->currentPage(),
+                    'total_pages'  => $responseGroupList->lastPage(),
+                    'list'         => ResourceGroupResource::collection($responseGroupList),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_resource_group_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_group_list'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
