@@ -38,4 +38,18 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function show($slug)
+    {
+        try {
+            $resourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($resourceGroup) {
+                return $this->sendResponse(ResourceGroupResource::make($resourceGroup), __('responses.found_resource_group_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_group_list'), 404);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
