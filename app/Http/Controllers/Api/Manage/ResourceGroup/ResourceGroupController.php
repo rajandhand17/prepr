@@ -151,15 +151,15 @@ class ResourceGroupController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
-            $responseGroupList = $this->resourceGroupRepository->getResourceGroupList($request, $organization);
-            if ($responseGroupList) {
+            $resourceGroup = $this->resourceGroupRepository->getResourceGroupList($request, $organization);
+            if ($resourceGroup) {
                 $response = [
-                    'total_count'  => $responseGroupList->total(),
-                    'per_page'     => $responseGroupList->perPage(),
-                    'count'        => $responseGroupList->count(),
-                    'current_page' => $responseGroupList->currentPage(),
-                    'total_pages'  => $responseGroupList->lastPage(),
-                    'list'         => ResourceGroupResource::collection($responseGroupList),
+                    'total_count'  => $resourceGroup->total(),
+                    'per_page'     => $resourceGroup->perPage(),
+                    'count'        => $resourceGroup->count(),
+                    'current_page' => $resourceGroup->currentPage(),
+                    'total_pages'  => $resourceGroup->lastPage(),
+                    'list'         => ResourceGroupResource::collection($resourceGroup),
                 ];
 
                 return $this->sendResponse($response, __('responses.found_resource_group_list'));
