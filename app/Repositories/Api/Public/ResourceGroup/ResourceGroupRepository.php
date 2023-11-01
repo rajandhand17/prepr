@@ -44,19 +44,19 @@ class ResourceGroupRepository implements ResourceGroupInterface
         }
     }
 
-    public function checkSocialActivity($resource_collection_id, $column, $action)
+    public function checkSocialActivity($resource_group_id, $column, $action)
     {
         try {
-            return $this->resourceGroupSocialActivitiesService->checkSocialActivity($resource_collection_id, $column, $action);
+            return $this->resourceGroupSocialActivitiesService->checkSocialActivity($resource_group_id, $column, $action);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function captureSocialActivity($resource_collection_id, $column, $action)
+    public function captureSocialActivity($resource_group_id, $column, $action)
     {
         try {
-            return $this->resourceGroupSocialActivitiesService->captureSocialActivity($resource_collection_id, $column, $action);
+            return $this->resourceGroupSocialActivitiesService->captureSocialActivity($resource_group_id, $column, $action);
         } catch(\Exception $e) {
             return false;
         }
