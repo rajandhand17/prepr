@@ -53,8 +53,9 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
-    public function socialActivity($slug,$action){
-        try{
+    public function socialActivity($slug, $action)
+    {
+        try {
             $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if ($checkResourceGroupSlugExistsOrNot !== null) {
                 $getColumnNameValue = $this->resourceGroupRepository->getColumnNameValue($action);
@@ -71,8 +72,9 @@ class ResourceGroupController extends AppBaseController
                     return $this->sendResponse([], __('responses.'.$action.'_resource_group_successfully'));
                 }
             }
+
             return $this->sendError(__('responses.resource_group_slug_not_found'), 404);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
