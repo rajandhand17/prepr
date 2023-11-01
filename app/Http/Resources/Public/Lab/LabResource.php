@@ -144,7 +144,7 @@ class LabResource extends JsonResource
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'privacy'                       => $this->type,
+            'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
             'media'                         => $media,
             'category_id'                   => $category_id,
