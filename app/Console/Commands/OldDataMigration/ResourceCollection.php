@@ -2,17 +2,16 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use App\Helpers\UtilityHelper;
 use App\Models\ComponentAssociation;
+use App\Models\ResourceCollection as ModuleResourceCollection;
 use App\Models\ResourceCollectionTagsGroups;
 use App\Services\Manage\ChallengeService;
-use App\Services\Manage\OrganizationService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\TagService;
+use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
-use App\Models\ResourceCollection as ModuleResourceCollection;
-use DB;
+
 class ResourceCollection extends Command
 {
     /**
@@ -34,17 +33,17 @@ class ResourceCollection extends Command
      */
     public function handle()
     {
-        try{
+        try {
             $this->info('Migrating old data for resource group table.');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('resourcegroup')->chunkById(1000, function ($resourcesCollection){
+            DB::connection('mysql2')->table('resourcegroup')->chunkById(1000, function ($resourcesCollection) {
                 foreach ($resourcesCollection as $singleResourceCollection) {
-                    $checkUser=\App\Models\User::find($singleResourceCollection->user_id);
+                    $checkUser = \App\Models\User::find($singleResourceCollection->user_id);
                     if (!$checkUser) {
                         continue;
                     }
-                    $organization=\App\Models\Organization::find($singleResourceCollection->org_id);
-                    if (!$organization){
+                    $organization = \App\Models\Organization::find($singleResourceCollection->org_id);
+                    if (!$organization) {
                         continue;
                     }
 
@@ -61,7 +60,7 @@ class ResourceCollection extends Command
                             $privacy = null;
                     }
 
-                    $resourceCollection = new ModuleResourceCollection;
+                    $resourceCollection = new ModuleResourceCollection();
                     $resourceCollection->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $resourceCollection->language = $singleResourceCollection->language;
                     $resourceCollection->user_id = $singleResourceCollection->user_id;
@@ -69,10 +68,10 @@ class ResourceCollection extends Command
                     $resourceCollection->title = $singleResourceCollection->title;
                     $resourceCollection->slug = $singleResourceCollection->slug;
                     $resourceCollection->description = $singleResourceCollection->description;
-                    $resourceCollection->media_type = "image";
+                    $resourceCollection->media_type = 'image';
                     $resourceCollection->media = $singleResourceCollection->image;
-                    $resourceCollection->level = "1";
-                    $resourceCollection->duration ="1";
+                    $resourceCollection->level = '1';
+                    $resourceCollection->duration = '1';
                     $resourceCollection->privacy = $privacy;
                     $resourceCollection->status = $status;
                     $resourceCollection->is_accessible = $singleResourceCollection->is_accessable;
@@ -80,7 +79,7 @@ class ResourceCollection extends Command
 
                     /*Add resource collection lab*/
                     if (!empty($singleResourceGroup->assoicated_lab)) {
-                        $resourceCollectionChallengeIds=json_decode($singleResourceGroup->assoicated_lab);
+                        $resourceCollectionChallengeIds = json_decode($singleResourceGroup->assoicated_lab);
                         $getLabId = ChallengeService::getChallengeIdBasedOnId($resourceCollectionChallengeIds);
                         if (!empty($getLabId)) {
                             $existComponentAssociation = ComponentAssociation::where([
@@ -106,7 +105,7 @@ class ResourceCollection extends Command
                     }
                     /*Add resource group challenge*/
                     if (!empty($singleResourceGroup->assoicated_challange)) {
-                        $resourceGroupChallengeIDs=json_decode($singleResourceGroup->assoicated_challange);
+                        $resourceGroupChallengeIDs = json_decode($singleResourceGroup->assoicated_challange);
                         $getChallengeId = ChallengeService::getChallengeIdBasedOnId($resourceGroupChallengeIDs);
                         if (!empty($getChallengeId)) {
                             $existComponentAssociation = ComponentAssociation::where([
@@ -133,9 +132,9 @@ class ResourceCollection extends Command
 
                     /*Add resource module Id*/
                     if (!empty($singleResourceGroup->resource_id)) {
-                        $newResourceModuleID=json_decode($singleResourceGroup->resource_id);
+                        $newResourceModuleID = json_decode($singleResourceGroup->resource_id);
                         $getResourceGroupId = ResourceModuleService::getResourceModuleGetBasedId($newResourceModuleID);
-                        if (!empty($getResourceGroupId)){
+                        if (!empty($getResourceGroupId)) {
                             $existComponentAssociation = ComponentAssociation::where([
                                 ['resource_collection_id', '=', $singleResourceGroup->id],
                                 ['resource_module_id', '!=', null],
@@ -158,10 +157,10 @@ class ResourceCollection extends Command
                         }
                     }
                     /*Add tags*/
-                if(!empty($singleResourceGroup->tag)){
-                        $resourceCollectionTags=json_decode($singleResourceGroup->tag);
-                        $getResourceCollectionTagsId=TagService::getTagsBasedOnIds($resourceCollectionTags);
-                        if(!empty($getResourceCollectionTagsId)){
+                    if (!empty($singleResourceGroup->tag)) {
+                        $resourceCollectionTags = json_decode($singleResourceGroup->tag);
+                        $getResourceCollectionTagsId = TagService::getTagsBasedOnIds($resourceCollectionTags);
+                        if (!empty($getResourceCollectionTagsId)) {
                             $getExistsResourceCollectionTags = ResourceCollectionTagsGroups::where([
                                 ['resource_collection_id', '=', $singleResourceGroup->id],
                                 ['type', '=', '0'],
@@ -185,11 +184,12 @@ class ResourceCollection extends Command
             });
             DB::commit();
             $this->info('Migrating of old data for resource group table completed.');
-            return;
 
-        }catch(\Exception $e){
+            return;
+        } catch(\Exception $e) {
             DB::rollback();
             $this->error($e);
+
             return;
         }
     }
