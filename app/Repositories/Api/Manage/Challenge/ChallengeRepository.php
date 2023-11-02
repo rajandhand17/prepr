@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Models\Challenge;
 use App\Services\Manage\ChallengeAchievementService;
+use App\Services\Manage\ChallengeAnnouncementService;
 use App\Services\Manage\ChallengeAssessmentCriteriaService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeCustomTimelinesService;
@@ -32,8 +33,9 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeTimelinesService;
     private $challengeCustomTimelinesService;
     private $challengeExternalLinkService;
+    private $challengeAnnouncementService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
@@ -47,6 +49,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeTimelinesService = $challengeTimelinesService;
         $this->challengeCustomTimelinesService = $challengeCustomTimelinesService;
         $this->challengeExternalLinkService = $challengeExternalLinkService;
+        $this->challengeAnnouncementService = $challengeAnnouncementService;
     }
 
     public function getChallengeList($request, $organization)
@@ -417,6 +420,33 @@ class ChallengeRepository implements ChallengeInterface
                 DB::commit();
 
                 return $cloneChallenge['cloneChallenge'];
+            }
+
+            DB::rollback();
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createChallengeAnnouncement($challengeId, $request)
+    {
+        try {
+            $createAnnouncement = DB::transaction(function () use ($challengeId, $request) {
+                $createAnnouncement = $this->challengeAnnouncementService->createChallengeAnnouncement($challengeId, $request);
+
+                return [
+                    'createAnnouncement'    => $createAnnouncement,
+                ];
+            });
+
+            if (
+                $createAnnouncement['createAnnouncement']
+            ) {
+                DB::commit();
+
+                return $createAnnouncement['createAnnouncement'];
             }
 
             DB::rollback();

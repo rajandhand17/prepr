@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
+use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Models\Challenge;
@@ -295,19 +297,18 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function createAnnouncement($slug, Request $request)
+    public function createAnnouncement($slug, CreateChallengeAnnouncementRequest $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-            if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
-            }
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
 
-            dd("in");   
+            $createAnnouncement = $this->challengeRepository->createChallengeAnnouncement($checkComponentBasedOnSlug->id, $request);
+            if ($createAnnouncement !=  false) {
+                return $this->sendResponse(ChallengeAnnouncementResource::make($checkComponentBasedOnSlug), __('responses.challenge_announcement_created'), 200);
+            }
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
