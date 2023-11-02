@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Console\Commands;
 
-use App\Console\Commands\ResourceCollection;
 use Tests\TestCase;
 
 /**
