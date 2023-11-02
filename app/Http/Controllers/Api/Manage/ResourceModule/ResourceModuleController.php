@@ -9,7 +9,7 @@ use App\Http\Requests\Manage\ResourceModule\DeleteMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
-use App\Repositories\Api\Manage\ResourceModule\ResourceCollectionRepository;
+use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
 use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class ResourceModuleController extends AppBaseController
 {
     private $resourceModuleRepository;
 
-    public function __construct(ResourceCollectionRepository $resourceModuleRepository)
+    public function __construct(ResourceModuleRepository $resourceModuleRepository)
     {
         $this->resourceModuleRepository = $resourceModuleRepository;
     }

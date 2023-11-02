@@ -21,7 +21,6 @@ class ResourceCollectionResource extends JsonResource
      */
     public function toArray($request)
     {
-        $componentAssociation = [];
         $resourceModules = [];
         $labs = [];
         $challenges = [];

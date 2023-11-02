@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Duration;
@@ -89,7 +90,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnSlug($slug)
     {
         try {
-            return ResourceCollection::select()->where('slug', $slug)->first();
+            return ResourceCollection::where('slug', $slug)->first();
         } catch (\Exception $e) {
             return false;
         }
@@ -98,7 +99,69 @@ class ResourceCollectionService
     public static function checkName($title)
     {
         try {
-            return ResourceCollection::select()->where('title', $title)->first();
+            return ResourceCollection::select('id')->where('title', $title)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateResourceCollection($slug, $request, $upload_cover_image)
+    {
+        try {
+            $resourceCollection = ResourceCollection::where('slug', $slug)->first();
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if ($resourceCollection !== null) {
+                $status = $resourceCollection->status;
+                $privacy = $resourceCollection->privacy;
+                $is_accessible = $resourceCollection->is_accessible;
+                switch($request->status) {
+                    case 'published':
+                        $status = config('constants.resource_collection_status.publish');
+                        break;
+                    case 'archive':
+                        $status = config('constants.resource_collection_status.archive');
+                        break;
+                    default:
+                        $status = config('constants.resource_collection_status.draft');
+                        break;
+                }
+
+                switch ($request->privacy) {
+                    case 'no':
+                        $privacy = config('constants.resource_collection_privacy.no');
+                        break;
+                    case 'yes':
+                        $privacy = config('constants.resource_collection_privacy.yes');
+                        break;
+                    default:
+                        $privacy = null;
+                }
+                switch ($request->is_accessible) {
+                    case 'no':
+                        $is_accessible = config('constants.resource_collection_is_accessible.no');
+                        break;
+                    case 'yes':
+                        $is_accessible = config('constants.resource_collection_is_accessible.yes');
+                        break;
+                    default:
+                        $is_accessible = config('constants.resource_collection_is_accessible.no');
+                }
+                $resourceCollection->language = ($request->has('language')) ? $request->language : $resourceCollection->language;
+                $resourceCollection->organization_id = $organization->id;
+                $resourceCollection->title = ($request->has('title')) ? $request->title : $resourceCollection->title;
+                $resourceCollection->description = ($request->has('description')) ? $request->description : $resourceCollection->description;
+                $resourceCollection->media = ($upload_cover_image != null) ? $upload_cover_image : $resourceCollection->cover_image;
+                $resourceCollection->level = ($request->has('level')) ? $request->level : $resourceCollection->level;
+                $resourceCollection->duration = ($request->has('duration')) ? $request->duration : $resourceCollection->duration;
+                $resourceCollection->privacy = $privacy;
+                $resourceCollection->status = $status;
+                $resourceCollection->is_accessible = $is_accessible;
+                $resourceCollection->save();
+
+                return $resourceCollection;
+            }
+
+            return false;
         } catch (\Exception $e) {
             return false;
         }
@@ -197,6 +260,22 @@ class ResourceCollectionService
             }
 
             return $resourceCollectionList;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteResourceCollection($resource_collection_id)
+    {
+        try {
+            $resourceCollection = ResourceCollection::find($resource_collection_id)->delete();
+            if ($resourceCollection) {
+                event(new DeleteResourceCollectionAssociatedData($resource_collection_id));
+
+                return true;
+            }
+
+            return false;
         } catch (\Exception $e) {
             return false;
         }

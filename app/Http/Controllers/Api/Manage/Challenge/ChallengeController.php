@@ -71,7 +71,17 @@ class ChallengeController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $createChallenge = $this->challengeRepository->createChallenge($request, $upload_cover_image, $upload_achievement_image);
+
+            $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
+            if ($request->attachments !== null) {
+                $uploaded_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
+                if (!$uploaded_assessment_attachment) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_assessment_attachment = $uploaded_assessment_attachment;
+            }
+
+            $createChallenge = $this->challengeRepository->createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
 
             if ($createChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
@@ -109,6 +119,7 @@ class ChallengeController extends AppBaseController
             }
             $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             $update_participation_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->participation_achievement->achievement_image);
+            $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments);
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
                 if ($uploaded_cover_image == false) {
@@ -125,7 +136,15 @@ class ChallengeController extends AppBaseController
                 $update_participation_achievement_image = $updated_challenge_achievement_image;
             }
 
-            $updateChallenge = $this->challengeRepository->updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image);
+            if ($request->attachments !== null) {
+                $updated_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
+                if ($updated_assessment_attachment == false) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $update_assessment_attachment = $updated_assessment_attachment;
+            }
+
+            $updateChallenge = $this->challengeRepository->updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment);
             if ($updateChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($updateChallenge), __('responses.challenge_update_successfully'), 200);
             }

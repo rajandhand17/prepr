@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\manage;
+namespace Tests\Feature\Manage;
 
 use App\Helpers\UtilityHelper;
 use Illuminate\Support\Facades\Auth;

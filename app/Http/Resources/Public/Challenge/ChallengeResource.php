@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\Challenge;
 
+use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
@@ -164,7 +165,7 @@ class ChallengeResource extends JsonResource
                 'min_rank'                              => $this->challenge_requirements->min_rank,
                 'min_points'                            => $this->challenge_requirements->min_points,
                 'max_project_submission'                => $this->challenge_requirements->max_project_submission,
-                'max_project_associated'                => $this->challenge_requirements->max_project_associated,
+                'max_project_associated'                => $this->challenge_requirements->max_project_associate,
                 'min_experience'                        => $this->challenge_requirements->min_experience,
                 'min_imported_badges'                   => $this->challenge_requirements->min_imported_badges,
                 'min_achievement_counts'                => $this->challenge_requirements->min_achievement_counts,
@@ -192,46 +193,8 @@ class ChallengeResource extends JsonResource
             });
         }
 
-        if ($this->challenge_assessment) {
-            $challenge_assessment = $this->challenge_assessment->map(function ($item) {
-                switch ($item->assessment_type) {
-                    case '0':
-                        $assessment_type = 'none';
-                        break;
-                    case '1':
-                        $assessment_type = 'open';
-                        break;
-                    case '2':
-                        $assessment_type = 'close';
-                        break;
-                    default:
-                        $assessment_type = 'none';
-                        break;
-                }
-
-                switch ($item->visibility) {
-                    case '0':
-                        $visibility = 'null';
-                        break;
-                    case '1':
-                        $visibility = 'users';
-                        break;
-                    case '2':
-                        $visibility = 'hidden';
-                        break;
-                    default:
-                        $visibility = 'null';
-                        break;
-                }
-
-                return [
-                    'assessment_type'       => $assessment_type,
-                    'visibility'            => $visibility,
-                    'members_email'         => $item->members_email,
-                    'guidelines'            => $item->guidelines,
-                    'attachments'           => $item->attachments,
-                ];
-            });
+        if ($this->challenge_assessment->isNotEmpty()) {
+            $challenge_assessment = ChallengeAssessmentService::getChallengeAssessmentData($this->challenge_assessment);
         }
 
         if ($this->challenge_timelines) {

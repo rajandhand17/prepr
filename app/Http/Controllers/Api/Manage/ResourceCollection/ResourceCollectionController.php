@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
+use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
 use App\Services\Manage\OrganizationService;
@@ -71,12 +72,38 @@ class ResourceCollectionController extends AppBaseController
     public function show($slug)
     {
         try {
-            $responseView = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($responseView) {
-                return $this->sendResponse(ResourceCollectionResource::make($responseView), __('responses.found_resource_collection_list'));
+            $responseCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($responseCollection) {
+                return $this->sendResponse(ResourceCollectionResource::make($responseCollection), __('responses.found_resource_collection_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function update($slug, UpdateResourceCollectionRequest $request)
+    {
+        try {
+            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
+            }
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceCollectionSlugExistsOrNot->media);
+            if ($request->cover_image !== null) {
+                $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
+                if (!$uploaded_cover_image) {
+                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                $upload_cover_image = $uploaded_cover_image;
+            }
+            $updateResourceCollection = $this->resourceCollectionRepository->updateResourceCollection($slug, $request, $upload_cover_image);
+            if ($updateResourceCollection) {
+                return $this->sendResponse(ResourceCollectionResource::make($updateResourceCollection), __('responses.resource_collection_update_success'), 200);
+            }
+
+            return $this->sendError(__('responses.resource_collection_update_failed'), 403);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -104,5 +131,23 @@ class ResourceCollectionController extends AppBaseController
         }
 
         return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
+    }
+
+    public function delete($slug)
+    {
+        try {
+            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
+            }
+            $responseCollectionDelete = $this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionSlugExistsOrNot->id);
+            if ($responseCollectionDelete) {
+                return $this->sendResponse(null, __('responses.resource_collection_delete'));
+            }
+
+            return $this->sendError(__('responses.resource_collection_not_delete'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
 }

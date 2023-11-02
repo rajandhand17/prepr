@@ -37,7 +37,7 @@ class ResourceCollection extends Model
         return config('site-settings.aws_url').$value;
     }
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }

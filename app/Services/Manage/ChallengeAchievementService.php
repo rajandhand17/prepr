@@ -79,20 +79,20 @@ class ChallengeAchievementService
             $challengeAchievement->achievement_image = ($update_participation_achievement_image) ? $update_participation_achievement_image : $challengeAchievement->achievement_image;
             $challengeAchievement->save();
 
-            $challengeIncentiveData = !empty($request->winner_achievement_image) ? array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image, $request->winner_achievement_image) : array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image);
+            $challengeIncentiveData = !empty($request->winner_achievement_image) ? array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image ?? [], $request->winner_achievement_image ?? []) : array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image ?? []);
             if (!empty($challengeIncentiveData)) {
                 $challengeIncentiveArrayData = [];
                 foreach ($challengeIncentiveData as $key => $value) {
-                    if (!empty($value[0]) && !empty($value[1]) && !empty($value[2]) && !empty($value[3])) {
+                    if (!empty($value[0]) && !empty($value[1]) && !empty($value[2])) {
                         $upload_incentive_achievement_image = config('site-settings.default_challenge_cover_image');
                         if (!empty($request->winner_achievement_image)) {
                             if (array_key_exists($key, $request->winner_achievement_image)) {
                                 $upload_incentive_achievement_image = self::uploadChallengeIncentiveAchievementImage($request->winner_achievement_image[$key]);
                             } else {
-                                $upload_incentive_achievement_image = $value[3];
+                                $upload_incentive_achievement_image = str_replace(config('site-settings.aws_url'), '', $value[3]);
                             }
-                        } else {
-                            $upload_incentive_achievement_image = $value[3];
+                        } elseif (!empty($value[3])) {
+                            $upload_incentive_achievement_image = str_replace(config('site-settings.aws_url'), '', $value[3]);
                         }
                         $challengeIncentivesData['challenge_id'] = $challenge_id;
                         $challengeIncentivesData['achievement_type'] = '1';
