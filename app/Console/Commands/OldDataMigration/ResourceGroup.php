@@ -98,7 +98,6 @@ class ResourceGroup extends Command
                                 ['challenge_id', '!=', null],
                             ])->select('sequence')->orderBy('id', 'desc')->first();
                             $newComponentAssociationId = array_diff($existComponentAssociation, $getChallengeId);
-
                             foreach ($newComponentAssociationId as $challenge_id) {
                                 $sequence++;
                                 $challengeAssociation = new ComponentAssociation();
