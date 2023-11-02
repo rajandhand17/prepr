@@ -616,5 +616,6 @@
     "responses.choose_sending_mode": "This can be between '<b>Email</b>, <b>Inbox</b> or <b>Both</b>' only .",
     "responses.schedule_date_required": "This schedule date field is required",
     "responses.send_draft_required": "This sent status field is required",
+    "responses.challenge_announcement_failed": "Oops! The creating Challenge announcement has failed.",
     "responses.challenge_announcement_created": "Congratulations! You have successfully created a Challenge Announcement."
 }
