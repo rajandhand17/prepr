@@ -13,7 +13,6 @@ class ChallengeAnnouncementService
     public function createChallengeAnnouncement($challengeId, $request)
     {
         try {
-
             $sendAnnouncementChannelMedium = config('constants.challenge_announcement_by.both');
             switch ($request->sent_by) {
                 case 'email':
@@ -46,14 +45,14 @@ class ChallengeAnnouncementService
             $schedule_date = date('Y-m-d H:i:s', strtotime($request->schedule_at));
 
             $challengeAnnouncement = new ChallengeAnnouncement();
-            $challengeAnnouncement->challenge_id      = $challengeId;
-            $challengeAnnouncement->subject           = $request->subject;
-            $challengeAnnouncement->to_recipient_ids  = $request->to_recipient_ids;
-            $challengeAnnouncement->sent_by           = $sendAnnouncementChannelMedium;
-            $challengeAnnouncement->description       = $request->description;
-            $challengeAnnouncement->schedule_at       = $schedule_date;
-            $challengeAnnouncement->status            = '0';
-            $challengeAnnouncement->sent_status       = $sendAnnouncementSendStatus;
+            $challengeAnnouncement->challenge_id = $challengeId;
+            $challengeAnnouncement->subject = $request->subject;
+            $challengeAnnouncement->to_recipient_ids = $request->to_recipient_ids;
+            $challengeAnnouncement->sent_by = $sendAnnouncementChannelMedium;
+            $challengeAnnouncement->description = $request->description;
+            $challengeAnnouncement->schedule_at = $schedule_date;
+            $challengeAnnouncement->status = '0';
+            $challengeAnnouncement->sent_status = $sendAnnouncementSendStatus;
             $challengeAnnouncement->save();
 
             return $challengeAnnouncement;
@@ -75,7 +74,7 @@ class ChallengeAnnouncementService
                 if (!$column_name || !Schema::hasColumn('to_recipient_ids', $column_name)) {
                     return false;
                 }
-                $announcement_recipient = ChallengeAnnouncementRecipient::select('id', $column_name . ' as title');
+                $announcement_recipient = ChallengeAnnouncementRecipient::select('id', $column_name.' as title');
             }
             $challenge_announcement = $announcement_recipient->find($announcement_recipient_id);
 
