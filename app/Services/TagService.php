@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Models\Challenge;
 use App\Models\Tag;
 
 class TagService
@@ -63,6 +64,15 @@ class TagService
 
             return false;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTagsIdBasedOnId($resourceGroupTagId){
+        try {
+            return Tag::where('id', $resourceGroupTagId)->pluck('id')->first();
+
+        }catch (\Exception $e) {
             return false;
         }
     }
