@@ -51,8 +51,8 @@ class ChallengeAnnouncementService
             $challengeAnnouncement->sent_by = $sendAnnouncementChannelMedium;
             $challengeAnnouncement->description = $request->description;
             $challengeAnnouncement->schedule_at = $schedule_date;
-            $challengeAnnouncement->status = '0';
-            $challengeAnnouncement->sent_status = $sendAnnouncementSendStatus;
+            $challengeAnnouncement->status = $sendAnnouncementSendStatus;
+            $challengeAnnouncement->sent_status = '1';
             $challengeAnnouncement->save();
 
             return $challengeAnnouncement;
