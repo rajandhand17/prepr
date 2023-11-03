@@ -561,19 +561,12 @@
     "responses.challenge_field_invalid_id": "The selected challenge id is invalid.",
     "responses.level_required": "The Level is required",
     "responses.duration_required": "The Duration is required",
-
     "responses.resource_collection_slug_not_available":"This resource collection slug is not available!",
-
     "responses.resource_collection_slug_available":"This resource collection slug is available!",
-
     "responses.resource_collection_name_not_available":"This resource collection name is not available!",
-
     "responses.resource_collection_name_available":"This resource collection name is available!",
-
     "responses.found_resource_collection_list":"The resource collection list has been successfully retrieved",
-
     "responses.not_found_resource_collection_view":"The resource collection has not been retrieved with success.",
-
     "responses.already_like_resource_collection":"The Resource Collection is already liked by you!",
     "responses.like_resource_collection_successfully":"The Resource Collection have been liked successfully by you!",
     "responses.already_un_like_resource_collection":"The Resource Collection is already being dis-liked by you!",
@@ -595,5 +588,23 @@
     "responses.resource_collection_delete":"The resource module has been deleted successfully!",
     "responses.resource_collection_not_delete":"The resource module has been not deleted!",
     "responses.resource_collection_update_success":"Congratulations! You have successfully update resource module.",
-    "responses.resource_collection_update_failed":"Oops! The Updating of resource module has failed."
+    "responses.resource_collection_update_failed":"Oops! The Updating of resource module has failed.",
+    "responses.create_member_manger_error_org": "The members(s) you're trying to invite already exist in the Organization",
+    "responses.create_member_manger_error_lab": "The members(s) you're trying to invite already exist in the Lab",
+    "responses.create_member_manger_error_cha": "The members(s) you're trying to invite already exist in the Challenge",
+    "responses.found_challenge_assessment_detail": "The Challenge Assessment has been successfully retrieved",
+    "responses.challenge_assessment_not_update": "There were some issues being encountered while updating the Challenge Assessment!",
+    "responses.found_not_challenge_assessment_detail": "The Challenge Assessment has been set to none",
+    "responses.resource_group_stored_success":"Congratulations! You have successfully created a resource group.",
+    "responses.resource_group_stored_failed":"Oops! The Creation resource group has failed.",
+    "responses.found_resource_group_list":"The Resource Group list has been successfully retrieved",
+    "responses.not_found_resource_group_list":"The list of resource group has not been retrieved with success.",
+    "responses.resource_group_name_not_available":"This resource group name is not available!",
+    "responses.resource_group_name_available":"This resource group name is available!",
+    "responses.resource_group_slug_not_available":"This resource group slug is not available!",
+    "responses.resource_group_slug_available":"This resource group slug is available!",
+    "responses.resource_group_delete":"The resource module has been deleted successfully!",
+    "responses.resource_group_not_delete":"The resource module has been not deleted!",
+    "responses.challenge_clone_success": "Congratulations! You have successfully cloned a Challenge.",
+    "responses.challenge_clone_failed": "Oops! The clonning Challenge has failed."
 }

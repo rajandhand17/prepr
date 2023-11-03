@@ -124,4 +124,19 @@ class ChallengeTimelinesService
             return false;
         }
     }
+
+    public function cloneChallengeTimelines($originalChallengeProjectTemplate, $clonedChallengeId)
+    {
+        try {
+            if ($originalChallengeProjectTemplate) {
+                $cloneIncentiveAchievement = $originalChallengeProjectTemplate->replicate();
+                $cloneIncentiveAchievement->challenge_id = $clonedChallengeId;
+                $cloneIncentiveAchievement->save();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

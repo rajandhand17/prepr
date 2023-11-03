@@ -73,14 +73,18 @@ class MemberManagementRepository implements MemberManagementInterface
             $memberList = [];
             if ($request->invite_type == 'csv') {
                 $memberList = $this->memberManagementService->getRecordsFromCsv($request);
-                if (!$memberList && !count($memberList) > 0) {
-                    return false;
+                if ($memberList) {
+                    if (!$memberList && !count($memberList) > 0) {
+                        return false;
+                    }
                 }
             }
             if ($request->invite_type == 'email') {
                 $memberList = $this->memberManagementService->getRecordsFromEmailArray($request);
-                if (!$memberList && !count($memberList) > 0) {
-                    return false;
+                if ($memberList) {
+                    if (!$memberList && !count($memberList) > 0) {
+                        return false;
+                    }
                 }
             }
             if (is_array($memberList) && count($memberList) > 0) {

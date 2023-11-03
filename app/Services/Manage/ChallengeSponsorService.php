@@ -67,4 +67,21 @@ class ChallengeSponsorService
             return false;
         }
     }
+
+    public function cloneChallengeSponsor($originalChallengeSponsors, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeSponsors->each(function ($hosts) use ($clonedChallengeId) {
+                if ($hosts) {
+                    $cloneChallengeSponsor = $hosts->replicate();
+                    $cloneChallengeSponsor->challenge_id = $clonedChallengeId;
+                    $cloneChallengeSponsor->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
