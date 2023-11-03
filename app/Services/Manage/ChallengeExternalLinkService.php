@@ -84,4 +84,21 @@ class ChallengeExternalLinkService
             return false;
         }
     }
+
+    public function cloneChallengeExternalLink($originalChallengeExternalLink, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeExternalLink->each(function ($external_links) use ($clonedChallengeId) {
+                if ($external_links) {
+                    $cloneAssessment = $external_links->replicate();
+                    $cloneAssessment->challenge_id = $clonedChallengeId;
+                    $cloneAssessment->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -86,8 +86,8 @@ class ChallengeAssessmentService
     {
         try {
             $challengeAssessment = ChallengeAssessment::where('challenge_id', $challenge_id)->get();
-            if ($request->assessment_type !== null) {
-                ChallengeAssessment::where('challenge_id', $challenge_id)->delete();
+            ChallengeAssessment::where('challenge_id', $challenge_id)->delete();
+            if ($request->assessment_type !== null && $request->assessment_type !== 'null') {
                 $challenge_assessment_type = config('constants.challenge_assessment_type.null');
                 switch ($request->assessment_type) {
                     case 'close':
@@ -143,7 +143,7 @@ class ChallengeAssessmentService
         }
     }
 
-    public static function getChallengeAssessmentData($challengeId)
+    public static function getChallengeAssessmentData($challengeAssessment)
     {
         try {
             $challenge_assessment = [];
@@ -159,12 +159,12 @@ class ChallengeAssessmentService
                 '2' => 'hidden',
             ];
 
-            $assessmentType = $assessmentTypeMapping[$challengeId[0]->assessment_type] ?? 'none';
-            $visibility = $visibilityMapping[$challengeId[0]->visibility] ?? 'null';
+            $assessmentType = $assessmentTypeMapping[$challengeAssessment[0]->assessment_type] ?? 'none';
+            $visibility = $visibilityMapping[$challengeAssessment[0]->visibility] ?? 'null';
 
             $members = [];
-            if ($challengeId->isNotEmpty()) {
-                $memberEmails = $challengeId->pluck('members_email');
+            if ($challengeAssessment->isNotEmpty()) {
+                $memberEmails = $challengeAssessment->pluck('members_email');
 
                 foreach ($memberEmails as $memberEmail) {
                     $getUser = UserService::getUserByEmail($memberEmail);
@@ -180,12 +180,29 @@ class ChallengeAssessmentService
             $challenge_assessment = [
                 'assessment_type'  => $assessmentType,
                 'visibility'       => $visibility,
-                'guidelines'       => $challengeId[0]->guidelines,
-                'attachments'      => $challengeId[0]->attachments,
+                'guidelines'       => $challengeAssessment[0]->guidelines,
+                'attachments'      => $challengeAssessment[0]->attachments,
                 'members'          => $members,
             ];
 
             return $challenge_assessment;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function cloneChallengeAssessment($originalChallengeAssessment, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeAssessment->each(function ($challenge_assessment) use ($clonedChallengeId) {
+                if ($challenge_assessment) {
+                    $cloneAssessment = $challenge_assessment->replicate();
+                    $cloneAssessment->challenge_id = $clonedChallengeId;
+                    $cloneAssessment->save();
+                }
+            });
+
+            return true;
         } catch (Exception $e) {
             return false;
         }
