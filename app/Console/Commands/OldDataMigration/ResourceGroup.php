@@ -40,8 +40,8 @@ class ResourceGroup extends Command
         try{
             $this->info('Migrating old data for resource group table.');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('resourcegroup')->chunkById(1000, function ($resourcesGroup){
-                foreach ($resourcesGroup as $singleResourceGroup) {
+            DB::connection('mysql2')->table('groups')->where("type","resource")->chunkById(1000, function ($resourcesGroup){
+               foreach ($resourcesGroup as $singleResourceGroup){
                     $checkUser = User::find($singleResourceGroup->user_id);
                     if (!$checkUser) {
                         continue;
