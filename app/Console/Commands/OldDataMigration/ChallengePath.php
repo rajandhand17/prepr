@@ -155,7 +155,8 @@ class ChallengePath extends Command
                                 ['challenge_path_id', '=', $challengePath->id],
                                 ['challenge_id', '!=', null],
                             ])->select('sequence')->orderBy('id', 'desc')->first();
-                            foreach ($newComponentAssociation as $challenge_id) {
+                            $newRecordsComponentAssociation = array_diff($existComponentAssociation,$getChallengeId);
+                            foreach ($newRecordsComponentAssociation as $challenge_id) {
                                 $sequence++;
                                 $challengePathAssociation = new ComponentAssociation();
                                 $challengePathAssociation->challenge_path_id = $challengePath->id;

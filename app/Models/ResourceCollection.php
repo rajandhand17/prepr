@@ -89,11 +89,11 @@ class ResourceCollection extends Model
 
     public function tags()
     {
-        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '0');
+        return $this->hasMany(ResourceCollectionTagsGroups::class, 'resource_collection_id', 'id')->where('type', '0');
     }
 
     public function tag_groups()
     {
-        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id')->where('type', '1');
+        return $this->hasMany(ResourceCollectionTagsGroups::class, 'resource_collection_id', 'id')->where('type', '1');
     }
 }
