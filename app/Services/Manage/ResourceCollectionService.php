@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
+use App\Models\ResourceModule;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceCollectionService
@@ -299,6 +300,18 @@ class ResourceCollectionService
     {
         try {
             return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description')->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionGetBasedId($id){
+        try {
+            $resourceCollectionIds = ResourceCollection::whereIn('id',$id)->pluck('id')->all();
+            if ($resourceCollectionIds != null) {
+                return $resourceCollectionIds;
+            }
+            return false;
         } catch (\Exception $e) {
             return false;
         }

@@ -6,16 +6,18 @@ use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath as ModelsChallengePath;
 use App\Models\ComponentAssociation;
 use App\Models\Organization;
+use App\Models\ResourceGroupAchievement;
 use App\Models\ResourceGroupTagGroups;
 use App\Models\User;
 use App\Services\Manage\ChallengeService;
+use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupTagsGroupsService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\TagService;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use App\Models\ResourceGroup as ModelResourceGroup;
+use App\Models\ResourceGroup as ResourceGroupModel;
 class ResourceGroup extends Command
 {
     /**
@@ -46,71 +48,57 @@ class ResourceGroup extends Command
                     if (!$checkUser) {
                         continue;
                     }
-                    $organization = Organization::find($singleResourceGroup->org_id);
+                    $organization = Organization::find($singleResourceGroup->organisation);
                     if (!$organization) {
                         continue;
                     }
-                    $status = config('constants.resource_group_status.publish');
-                    switch ($singleResourceGroup->status){
-                        case 'unlock':
+                   switch($singleResourceGroup->status) {
+                       case 'open':
+                           $status = config('constants.resource_module_status.publish');
+                           break;
+                       case 'closed':
+                           $status = config('constants.resource_module_status.draft');
+                           break;
+                       default:
+                           $status = config('constants.resource_module_status.draft');
+                           break;
+                   }
+                    switch ($singleResourceGroup->privacy_project){
+                        case 'public':
                             $privacy = config('constants.resource_group_privacy.no');
                             break;
-                        case 'lock':
+                        case 'private':
                             $privacy = config('constants.resource_group_privacy.yes');
                             break;
                         default:
                             $privacy = null;
                     }
-                    $checkResourceGroup = ModelResourceGroup::where('id', $singleResourceGroup->id)->first();
+                    $checkResourceGroup = ResourceGroupModel::where('id', $singleResourceGroup->id)->first();
                     if ($checkResourceGroup) {
                         $newResourceGroup = $checkResourceGroup;
                     } else {
-                        $newResourceGroup = new ModelResourceGroup();
+                        $newResourceGroup = new ResourceGroupModel();
                     }
+                    $slug = UtilityHelper::generateSlug($singleResourceGroup->title, $newResourceGroup);
+                    $newResourceGroup->id = $singleResourceGroup->id;
                     $newResourceGroup->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newResourceGroup->language = $singleResourceGroup->language;
                     $newResourceGroup->user_id = $singleResourceGroup->user_id;
-                    $newResourceGroup->organization_id = $singleResourceGroup->org_id;
+                    $newResourceGroup->organization_id = $singleResourceGroup->organisation;
                     $newResourceGroup->title = $singleResourceGroup->title;
-                    $newResourceGroup->slug = $singleResourceGroup->slug;
+                    $newResourceGroup->slug = $slug;
                     $newResourceGroup->description = $singleResourceGroup->description;
                     $newResourceGroup->media_type = 'image';
-                    $newResourceGroup->media = $singleResourceGroup->image;
+                    $newResourceGroup->media = $singleResourceGroup->group_image;
                     $newResourceGroup->level = '1';
                     $newResourceGroup->duration ='1';
                     $newResourceGroup->privacy = $privacy;
                     $newResourceGroup->status = $status;
                     $newResourceGroup->save();
 
-                    /*Add resource group challenge*/
-                    if (!empty($singleResourceGroup->assoicated_challange)) {
-                        $resourceGroupChallengeIDs=json_decode($singleResourceGroup->assoicated_challange);
-                        $getChallengeId = ChallengeService::getChallengeIdBasedOnId($resourceGroupChallengeIDs);
-                        if (!empty($getChallengeId)) {
-                            $existComponentAssociation = ComponentAssociation::where([
-                                ['resource_group_id', '=', $singleResourceGroup->id],
-                                ['challenge_id', '!=', null],
-                            ])->pluck('challenge_id')->all();
-                            $newComponentAssociation = array_diff($getChallengeId, $existComponentAssociation);
-                            ComponentAssociation::where('resource_group_id', $singleResourceGroup->id)->whereIn('challenge_id', $newComponentAssociation)->delete();
-                            $sequence = ComponentAssociation::where([
-                                ['resource_group_id', '=', $singleResourceGroup->id],
-                                ['challenge_id', '!=', null],
-                            ])->select('sequence')->orderBy('id', 'desc')->first();
-                            $newComponentAssociationId = array_diff($existComponentAssociation, $getChallengeId);
-                            foreach ($newComponentAssociationId as $challenge_id) {
-                                $sequence++;
-                                $challengeAssociation = new ComponentAssociation();
-                                $challengeAssociation->resource_group_id = $singleResourceGroup->id;
-                                $challengeAssociation->challenge_id = $challenge_id;
-                                $challengeAssociation->sequence = $sequence;
-                                $challengeAssociation->save();
-                            }
-                        }
-                    }
                     /*Add resource module Id*/
                     if (!empty($singleResourceGroup->resource_id)) {
-                       $newResourceModuleID=json_decode($singleResourceGroup->resource_id);
+                        $newResourceModuleID = explode(',', $singleResourceGroup->resource_id);
                         $getResourceGroupId = ResourceModuleService::getResourceModuleGetBasedId($newResourceModuleID);
                         if (!empty($getResourceGroupId)){
                             $existComponentAssociation = ComponentAssociation::where([
@@ -134,31 +122,42 @@ class ResourceGroup extends Command
                             }
                         }
                     }
-                    /*Add tags*/
-                    if(!empty($singleResourceGroup->tag)){
-                        $resourceGroupTags=json_decode($singleResourceGroup->tag);
-                        $getResourceGroupTagsId=TagService::getTagsBasedOnIds($resourceGroupTags);
-                        if(!empty($getResourceGroupTagsId)){
-                            $getExistsGroupCollectionTags = ResourceGroupTagGroups::where([
-                                ['resource_group_id', '=', $singleResourceGroup->id],
-                                ['type', '=', '0'],
-                            ])->pluck('foreign_id')->toArray();
-                            $nonExistingIds = array_diff($getExistsGroupCollectionTags, $getResourceGroupTagsId);
-                            $deleteNonExisting = ResourceGroupTagGroups::where([
-                                ['resource_group_id', '=', $singleResourceGroup->id],
-                                ['type', '=', '0'],
-                            ])->whereIn('foreign_id', $nonExistingIds)->delete();
-                            $newTagsGroups = array_diff($getResourceGroupTagsId, $getExistsGroupCollectionTags);
-                            foreach ($newTagsGroups as $tag) {
-                                $resourceGroupTag = new ResourceGroupTagGroups();
-                                $resourceGroupTag->resource_group_id = $singleResourceGroup->id;
-                                $resourceGroupTag->foreign_id = $tag;
-                                $resourceGroupTag->type = '0';
-                                $resourceGroupTag->save();
-                            }
-                        }
-                    }
-                }
+
+                   /*Add resource collection Id*/
+                   if (!empty($singleResourceGroup->collection_id)) {
+                       $newResourceCollectionID = explode(',', $singleResourceGroup->collection_id);
+                       $getResourceGroupCollectionId = ResourceCollectionService::getResourceCollectionGetBasedId($newResourceCollectionID);
+                       if (!empty($getResourceGroupCollectionId)){
+                           $existComponentAssociation = ComponentAssociation::where([
+                               ['resource_group_id', '=', $singleResourceGroup->id],
+                               ['resource_collection_id', '!=', null],
+                           ])->pluck('resource_collection_id')->all();
+                           $newComponentAssociation = array_diff($getResourceGroupCollectionId, $existComponentAssociation);
+                           ComponentAssociation::where('resource_group_id', $singleResourceGroup->id)->whereIn('resource_collection_id', $newComponentAssociation)->delete();
+                           $sequence = ComponentAssociation::where([
+                               ['resource_group_id', '=', $singleResourceGroup->id],
+                               ['resource_collection_id', '!=', null],
+                           ])->select('sequence')->orderBy('id', 'desc')->first();
+                           $newResourceId = array_diff($existComponentAssociation, $getResourceGroupCollectionId);
+                           foreach ($newResourceId as $resource_collection_id) {
+                               $sequence++;
+                               $challengeAssociation = new ComponentAssociation();
+                               $challengeAssociation->resource_group_id = $singleResourceGroup->id;
+                               $challengeAssociation->resource_collection_id = $resource_collection_id;
+                               $challengeAssociation->sequence = $sequence;
+                               $challengeAssociation->save();
+                           }
+                       }
+                   }
+                   /*Add resource achievement*/
+                   if (!empty($singleResourceGroup->prize)) {
+                       $resourceGroupAchievement = ResourceGroupAchievement::firstOrNew(['resource_group_id' => $singleResourceGroup->id]);
+                       $resourceGroupAchievement->achievement_name =(string) $singleResourceGroup->prize;
+                       $resourceGroupAchievement->achievement_points = $singleResourceGroup->points;
+                       $resourceGroupAchievement->achievement_image = $singleResourceGroup->trophy;
+                       $resourceGroupAchievement->save();
+                   }
+               }
             });
             DB::commit();
             $this->info('Migrating of old data for resource group table completed.');
