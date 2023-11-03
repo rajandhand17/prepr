@@ -5,13 +5,16 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Helpers\UtilityHelper;
 use App\Models\ComponentAssociation;
 use App\Models\ResourceCollectionTagsGroups;
+use App\Models\ResourceModule as ResourceModules;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\OrganizationService;
+use App\Models\Organization;
+use App\Models\User;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\TagService;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
-use App\Models\ResourceCollection as ModuleResourceCollection;
+use App\Models\ResourceCollection as ResourceCollectionModule;
 use DB;
 class ResourceCollection extends Command
 {
@@ -39,17 +42,15 @@ class ResourceCollection extends Command
             DB::beginTransaction();
             DB::connection('mysql2')->table('resourcegroup')->chunkById(1000, function ($resourcesCollection){
                 foreach ($resourcesCollection as $singleResourceCollection) {
-                    $checkUser=\App\Models\User::find($singleResourceCollection->user_id);
+                    $checkUser=User::find($singleResourceCollection->user_id);
                     if (!$checkUser) {
                         continue;
                     }
-                    $organization=\App\Models\Organization::find($singleResourceCollection->org_id);
+                    $organization=Organization::find($singleResourceCollection->org_id);
                     if (!$organization){
                         continue;
                     }
-
                     $status = config('constants.resource_collection_status.publish');
-
                     switch ($singleResourceCollection->status) {
                         case 'unlock':
                             $privacy = config('constants.resource_collection_privacy.no');
@@ -60,8 +61,12 @@ class ResourceCollection extends Command
                         default:
                             $privacy = null;
                     }
-
-                    $resourceCollection = new ModuleResourceCollection;
+                    $checkResourceCollection=ResourceCollectionModule::where('id', $singleResourceCollection->id)->first();
+                   if($checkResourceCollection){
+                       $resourceCollection=$checkResourceCollection;
+                   }else{
+                       $resourceCollection = new ResourceCollectionModule;
+                   }
                     $resourceCollection->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $resourceCollection->language = $singleResourceCollection->language;
                     $resourceCollection->user_id = $singleResourceCollection->user_id;
@@ -80,8 +85,8 @@ class ResourceCollection extends Command
 
                     /*Add resource collection lab*/
                     if (!empty($singleResourceGroup->assoicated_lab)) {
-                        $resourceCollectionChallengeIds=json_decode($singleResourceGroup->assoicated_lab);
-                        $getLabId = ChallengeService::getChallengeIdBasedOnId($resourceCollectionChallengeIds);
+                        $resourceLabIds=json_decode($singleResourceGroup->assoicated_lab);
+                        $getLabId = ChallengeService::getChallengeIdBasedOnId($resourceLabIds);
                         if (!empty($getLabId)) {
                             $existComponentAssociation = ComponentAssociation::where([
                                 ['resource_collection_id', '=', $singleResourceGroup->id],
@@ -91,7 +96,7 @@ class ResourceCollection extends Command
                             ComponentAssociation::where('resource_collection_id', $singleResourceGroup->id)->whereIn('lab_id', $newComponentAssociation)->delete();
                             $sequence = ComponentAssociation::where([
                                 ['resource_collection_id', '=', $singleResourceGroup->id],
-                                ['challenge_id', '!=', null],
+                                ['lab_id', '!=', null],
                             ])->select('sequence')->orderBy('id', 'desc')->first();
                             $newComponentAssociationId = array_diff($existComponentAssociation, $getLabId);
                             foreach ($newComponentAssociationId as $lab_id) {
