@@ -8,7 +8,6 @@ use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
-use App\Models\ResourceModule;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceCollectionService
@@ -305,12 +304,14 @@ class ResourceCollectionService
         }
     }
 
-    public static function getResourceCollectionGetBasedId($id){
+    public static function getResourceCollectionGetBasedId($id)
+    {
         try {
-            $resourceCollectionIds = ResourceCollection::whereIn('id',$id)->pluck('id')->all();
+            $resourceCollectionIds = ResourceCollection::whereIn('id', $id)->pluck('id')->all();
             if ($resourceCollectionIds != null) {
                 return $resourceCollectionIds;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
