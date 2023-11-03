@@ -24,3 +24,4 @@ php artisan migrate-old-data:lab-program
 php artisan migrate-old-data:challenge
 php artisan migrate-old-data:challenge-path
 php artisan migrate-old-data:resource-modules
+php artisan migrate-old-data:resource-collection
