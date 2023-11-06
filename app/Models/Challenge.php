@@ -172,9 +172,4 @@ class Challenge extends Model
     {
         return $this->hasMany(ChallengeExternalLink::class, 'challenge_id', 'id');
     }
-
-    public function challenge_announcement()
-    {
-        return $this->hasMany(ChallengeAnnouncement::class, 'challenge_id', 'id');
-    }
 }
