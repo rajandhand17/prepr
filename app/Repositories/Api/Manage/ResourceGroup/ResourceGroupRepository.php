@@ -115,4 +115,46 @@ class ResourceGroupRepository implements ResourceGroupInterface
             return false;
         }
     }
+
+    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image)
+    {
+        try {
+            $updateResourceGroup = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
+                $updateResourceGroup = $this->resourceGroupService->updateResourceGroup($slug, $request, $upload_cover_image);
+                $updateResourceGroupComponentAssociation = $this->componentAssociationService->updateResourceGroupComponentAssociation($request, $updateResourceGroup->id);
+                $updateResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->updateResourceGroupSkillsGroupsStack($request, $updateResourceGroup->id);
+                $updateResourceGroupTagsGroups = $this->resourceGroupTagsGroupService->updateResourceGroupTagsGroups($request, $updateResourceGroup->id);
+                $updateResourceGroupsAchievements = $this->resourceGroupAchievementsService->updateResourceGroupsAchievements($request, $upload_achievement_image, $updateResourceGroup->id);
+
+                return[
+                    'updateResourceGroup'                             => $updateResourceGroup,
+                    'updateResourceGroupComponentAssociation'         => $updateResourceGroupComponentAssociation,
+                    'updateResourceGroupSkillsGroupStack'             => $updateResourceGroupSkillsGroupStack,
+                    'updateResourceGroupTagsGroups'                   => $updateResourceGroupTagsGroups,
+                    'updateResourceGroupsAchievements'                => $updateResourceGroupsAchievements,
+                ];
+            });
+            if ($updateResourceGroup['updateResourceGroup']) {
+                DB::commit();
+
+                return $updateResourceGroup['updateResourceGroup'];
+            }
+            DB::rollback();
+
+            return false;
+        } catch(\Exception $e) {
+            DB::rollback();
+
+            return false;
+        }
+    }
+
+    public function getResourceGroupList($request, $organization)
+    {
+        try {
+            return  $this->resourceGroupService->getResourceGroupList($request, $organization);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }
