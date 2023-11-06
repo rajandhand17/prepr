@@ -66,4 +66,13 @@ class TagService
             return false;
         }
     }
+
+    public static function getTagsIdBasedOnId($resourceGroupTagId)
+    {
+        try {
+            return Tag::where('id', $resourceGroupTagId)->pluck('id')->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
