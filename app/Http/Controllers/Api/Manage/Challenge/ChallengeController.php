@@ -307,7 +307,12 @@ class ChallengeController extends AppBaseController
 
             $createAnnouncement = $this->challengeRepository->createChallengeAnnouncement($checkComponentBasedOnSlug->id, $request);
             if ($createAnnouncement != false) {
-                return $this->sendResponse(ChallengeAnnouncementResource::make($checkComponentBasedOnSlug), __('responses.challenge_announcement_created'), 200);
+                $response = [
+                    'slug'                      => $checkComponentBasedOnSlug->slug,
+                    'title'                     => $checkComponentBasedOnSlug->title,
+                    'challenge_announcement'    => ChallengeAnnouncementResource::make($createAnnouncement),
+                ];
+                return $this->sendResponse($response, __('responses.challenge_announcement_created'));
             }
 
             return $this->sendError(__('responses.challenge_announcement_failed'), 400);
