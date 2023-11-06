@@ -28,4 +28,5 @@ Route::middleware(['language'])->group(function () {
     Route::get('/levels', [MasterController::class, 'getLevels']);
     Route::get('/check-pitch-task', [MasterController::class, 'getChallengePitchTask']);
     Route::post('/create-sponsor/', [MasterController::class, 'createSponsor']);
+    Route::get('/challenge-announcement-recipient', [MasterController::class, 'getChallengeAnnouncementRecipient']);
 });
