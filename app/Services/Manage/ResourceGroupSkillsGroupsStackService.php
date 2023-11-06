@@ -65,4 +65,75 @@ class ResourceGroupSkillsGroupsStackService
             return false;
         }
     }
+
+    public function updateResourceGroupSkillsGroupsStack($request, $updateResourceGroupId)
+    {
+        try {
+            if ($request->has('skills')) {
+                if (count($request->skills) > 0) {
+                    $getExistsSkills = ResourceGroupSkillsGroupStack::where([
+                        ['resource_group_id', '=', $updateResourceGroupId],
+                        ['type', '=', '0'],
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsSkills, $request->skills);
+                    $deleteNonExistingSkills = ResourceGroupSkillsGroupStack::where([
+                        ['resource_group_id', '=', $updateResourceGroupId],
+                        ['type', '=', '0'],
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newSkills = array_diff($request->skills, $getExistsSkills);
+                    foreach ($newSkills as $skill) {
+                        $ResourceGroupSkillsGroupsStack = new ResourceGroupSkillsGroupStack();
+                        $ResourceGroupSkillsGroupsStack->resource_group_id = $updateResourceGroupId;
+                        $ResourceGroupSkillsGroupsStack->foreign_id = $skill;
+                        $ResourceGroupSkillsGroupsStack->type = '0';
+                        $ResourceGroupSkillsGroupsStack->save();
+                    }
+                }
+            }
+            if ($request->has('skill_groups')) {
+                if (count($request->skill_groups) > 0) {
+                    $getExistsSkillsGroup = ResourceGroupSkillsGroupStack::where([
+                        ['resource_group_id', '=', $updateResourceGroupId],
+                        ['type', '=', '1'],
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsSkillsGroup, $request->skill_groups);
+                    $deleteNonExistingSkillsGroup = ResourceGroupSkillsGroupStack::where([
+                        ['resource_group_id', '=', $updateResourceGroupId],
+                        ['type', '=', '1'],
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newSkillGroup = array_diff($request->skill_groups, $getExistsSkillsGroup);
+                    foreach ($newSkillGroup as $skill_group) {
+                        $ResourceGroupSkillsGroupsStack = new ResourceGroupSkillsGroupStack();
+                        $ResourceGroupSkillsGroupsStack->resource_group_id = $updateResourceGroupId;
+                        $ResourceGroupSkillsGroupsStack->foreign_id = $skill_group;
+                        $ResourceGroupSkillsGroupsStack->type = '1';
+                        $ResourceGroupSkillsGroupsStack->save();
+                    }
+                }
+            }
+            if ($request->has('skill_stacks')) {
+                if (count($request->skill_stacks) > 0) {
+                    $getExistsSkillStack = ResourceGroupSkillsGroupStack::where([
+                        ['resource_group_id', '=', $updateResourceGroupId],
+                        ['type', '=', '2'],
+                    ])->pluck('foreign_id')->toArray();
+                    $nonExistingIds = array_diff($getExistsSkillStack, $request->skill_stacks);
+                    $deleteNonExistingSkillStack = ResourceGroupSkillsGroupStack::where([
+                        ['resource_group_id', '=', $updateResourceGroupId],
+                        ['type', '=', '2'],
+                    ])->whereIn('foreign_id', $nonExistingIds)->delete();
+                    $newSkillStack = array_diff($request->skill_stacks, $getExistsSkillStack);
+                    foreach ($newSkillStack as $skill_stack) {
+                        $ResourceGroupSkillsGroupsStack = new ResourceGroupSkillsGroupStack();
+                        $ResourceGroupSkillsGroupsStack->resource_group_id = $updateResourceGroupId;
+                        $ResourceGroupSkillsGroupsStack->foreign_id = $skill_stack;
+                        $ResourceGroupSkillsGroupsStack->type = '2';
+                        $ResourceGroupSkillsGroupsStack->save();
+                    }
+                }
+            }
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -114,4 +114,13 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function getResourceCollectionBasedOnId($id)
+    {
+        try {
+            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description')->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
