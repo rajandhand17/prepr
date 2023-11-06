@@ -321,4 +321,22 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function listAnnouncement($slug)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $response = [
+                'slug'                      => $checkComponentBasedOnSlug->slug,
+                'title'                     => $checkComponentBasedOnSlug->title,
+                'challenge_announcement'    => ChallengeAnnouncementResource::collection($checkComponentBasedOnSlug->challenge_announcement),
+            ];
+            return $this->sendResponse($response, __('responses.challenge_announcement_created'));
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
