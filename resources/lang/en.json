@@ -628,5 +628,7 @@
     "responses.favourite_resource_group_successfully":"You have successfully saved as favourite this resource Group!",
     "responses.un_favourite_resource_group_successfully":"You have successfully un-saved as favourite this resource Group!",
     "responses.already_favourite_resource_group":"The Resource Group is already being added to favourites!",
-    "responses.already_un_favourite_resource_group":"The Resource Group is already being removed from favourites!"
+    "responses.already_un_favourite_resource_group":"The Resource Group is already being removed from favourites!",
+    "responses.found_tag_groups_list": "The tag groups list has been successfully retrieved",
+    "responses.not_found_tag_groups_list": "The list of tag groups has not been retrieved with success."
 }

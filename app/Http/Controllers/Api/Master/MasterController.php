@@ -24,6 +24,7 @@ use App\Http\Resources\Master\SkillResource;
 use App\Http\Resources\Master\SkillStackResource;
 use App\Http\Resources\Master\SocialConnect;
 use App\Http\Resources\Master\SocialLinkResource;
+use App\Http\Resources\Master\TagGroupResource;
 use App\Http\Resources\Master\TagResource;
 use App\Repositories\Api\Master\MasterRepository;
 use Exception;
@@ -1272,6 +1273,20 @@ class MasterController extends AppBaseController
 
             return $this->sendError(__('responses.sponsor_host_stored_failed'), 403);
         } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getTagGroup(Request $request)
+    {
+        try {
+            $get_tag_groups = $this->masterRepository->getTagGroups($request);
+            if ($get_tag_groups) {
+                return $this->sendResponse(TagGroupResource::collection($get_tag_groups), __('responses.found_tag_groups_list'));
+            }
+
+            return $this->sendResponse(null, __('responses.not_found_tag_groups_list'));
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
