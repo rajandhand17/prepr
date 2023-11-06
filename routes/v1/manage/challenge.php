@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/', [ChallengeController::class, 'index']);
+    Route::get('/get-list', [ChallengeController::class, 'getList']);
     Route::get('{slug}', [ChallengeController::class, 'show'])->middleware('permission:view_challenge');
     Route::post('/create', [ChallengeController::class, 'create'])->middleware('permission:create_challenge');
     Route::post('/{slug}/update', [ChallengeController::class, 'update'])->middleware('permission:edit_challenge');

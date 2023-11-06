@@ -7,7 +7,7 @@ use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Models\Challenge;
+use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
@@ -290,6 +290,24 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getList(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $getChallengeListName = $this->challengeRepository->getChallengeListName($request, $organization);
+            if ($getChallengeListName) {
+                return $this->sendResponse(ChallengeListNameResource::collection($getChallengeListName), __('responses.found_challenges_list'));
+            }
+
+            return $this->sendResponse($getChallengeListName, __('responses.found_labs_list'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

@@ -426,4 +426,13 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
+    public function getChallengeListName($request, $organization)
+    {
+        try {
+            return $this->challengeService->getChallengeListName($request, $organization);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
