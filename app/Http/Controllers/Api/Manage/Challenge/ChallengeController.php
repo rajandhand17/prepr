@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
+use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Models\Challenge;
@@ -290,6 +292,31 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function createAnnouncement($slug, CreateChallengeAnnouncementRequest $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            $createAnnouncement = $this->challengeRepository->createChallengeAnnouncement($checkComponentBasedOnSlug->id, $request);
+            if ($createAnnouncement != false) {
+                $response = [
+                    'slug'                      => $checkComponentBasedOnSlug->slug,
+                    'title'                     => $checkComponentBasedOnSlug->title,
+                    'challenge_announcement'    => ChallengeAnnouncementResource::make($createAnnouncement),
+                ];
+
+                return $this->sendResponse($response, __('responses.challenge_announcement_created'));
+            }
+
+            return $this->sendError(__('responses.challenge_announcement_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

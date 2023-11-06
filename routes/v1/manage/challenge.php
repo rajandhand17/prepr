@@ -14,4 +14,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/assessment/{slug}/', [ChallengeController::class, 'fetchAssessment']);
     Route::post('/{slug}/assessment/update/', [ChallengeController::class, 'updateAssessment']);
     Route::post('/{slug}/clone', [ChallengeController::class, 'cloneChallenge']);
+    Route::post('/{slug}/announcement/create', [ChallengeController::class, 'createAnnouncement']);
 });
