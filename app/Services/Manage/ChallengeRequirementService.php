@@ -182,4 +182,19 @@ class ChallengeRequirementService
             return false;
         }
     }
+
+    public function cloneChallengeRequirement($originalChallengeChallengeRequirements, $clonedChallengeId)
+    {
+        try {
+            if ($originalChallengeChallengeRequirements) {
+                $cloneChallengeRequirement = $originalChallengeChallengeRequirements->replicate();
+                $cloneChallengeRequirement->challenge_id = $clonedChallengeId;
+                $cloneChallengeRequirement->save();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

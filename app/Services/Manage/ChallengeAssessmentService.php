@@ -190,4 +190,21 @@ class ChallengeAssessmentService
             return false;
         }
     }
+
+    public function cloneChallengeAssessment($originalChallengeAssessment, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeAssessment->each(function ($challenge_assessment) use ($clonedChallengeId) {
+                if ($challenge_assessment) {
+                    $cloneAssessment = $challenge_assessment->replicate();
+                    $cloneAssessment->challenge_id = $clonedChallengeId;
+                    $cloneAssessment->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
