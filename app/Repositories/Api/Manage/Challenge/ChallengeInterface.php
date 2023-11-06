@@ -45,4 +45,6 @@ interface ChallengeInterface
     public function cloneChallenge($challengeId, $organization);
 
     public function createChallengeAnnouncement($challengeId, $request);
+
+    public function deleteChallengeAnnouncement($challengeAnnouncementId);
 }

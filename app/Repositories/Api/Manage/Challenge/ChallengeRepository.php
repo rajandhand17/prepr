@@ -278,12 +278,12 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function deleteChallenge($lab_id, $request)
+    public function deleteChallenge($challenge_id, $request)
     {
         try {
             DB::beginTransaction();
 
-            $deleteChallenge = $this->challengeService->deleteChallenge($lab_id);
+            $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
             if ($deleteChallenge == false) {
                 DB::rollBack();
 
@@ -453,6 +453,27 @@ class ChallengeRepository implements ChallengeInterface
 
             return false;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteChallengeAnnouncement($challengeAnnouncementId)
+    {
+        try {
+            DB::beginTransaction();
+
+            $deleteChallengeAnnouncement = $this->challengeAnnouncementService->deleteChallengeAnnouncement($challengeAnnouncementId);
+            if ($deleteChallengeAnnouncement == false) {
+                DB::rollBack();
+
+                return false;
+            }
+            DB::commit();
+
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }

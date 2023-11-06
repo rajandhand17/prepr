@@ -83,4 +83,15 @@ class ChallengeAnnouncementService
             return false;
         }
     }
+
+    public function deleteChallengeAnnouncement($challengeAnnouncementId)
+    {
+        try {
+            ChallengeAnnouncement::find($challengeAnnouncementId)->delete();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
