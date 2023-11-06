@@ -58,7 +58,7 @@ class UtilityHelper
     {
         $formatedDate = Carbon::parse($date);
         if ($time == 0) {
-            return $formatedDate->format('M d, Y');
+            return $formatedDate->format('M d, Y H:i:s');
         }
 
         return $formatedDate->format('M d, Y H:i:s');
