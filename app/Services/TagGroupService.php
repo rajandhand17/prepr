@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
-use Illuminate\Support\Facades\Schema;
 use App\Models\TagGroup;
+use Illuminate\Support\Facades\Schema;
 
 class TagGroupService
 {
@@ -37,18 +37,18 @@ class TagGroupService
                     return false;
                 }
 
-                $tag_group = TagGroup::select('id', $column_name . ' as title', 'tags', 'description');
+                $tag_group = TagGroup::select('id', $column_name.' as title', 'tags', 'description');
             }
 
             //Search tag name based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $tag_group = $tag_group->where($column_name, 'like', '%' . $search . '%');
+                $tag_group = $tag_group->where($column_name, 'like', '%'.$search.'%');
             }
 
             //Search tag based on used input
             if ($tags != null) {
-                $tag_group = $tag_group->where('tags', 'like', '%' . $tags . '%');
+                $tag_group = $tag_group->where('tags', 'like', '%'.$tags.'%');
             }
 
             //take 20 results based from the table
