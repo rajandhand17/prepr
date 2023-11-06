@@ -473,6 +473,7 @@ class ChallengeRepository implements ChallengeInterface
             return true;
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
