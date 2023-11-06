@@ -641,5 +641,7 @@
     "responses.challenge_announcement_failed": "Oops! The creating Challenge announcement has failed.",
     "responses.challenge_announcement_created": "Congratulations! You have successfully created a Challenge Announcement.",
     "responses.challenge_announcement_delete": "The challenge announcement been deleted successfully!",
-    "responses.challenge_announcement_not_delete": "The challenge announcement was not deleted!"
+    "responses.challenge_announcement_not_delete": "The challenge announcement was not deleted!",
+    "responses.found_tag_groups_list": "The tag groups list has been successfully retrieved",
+    "responses.not_found_tag_groups_list": "The list of tag groups has not been retrieved with success."
 }

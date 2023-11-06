@@ -87,7 +87,7 @@ class ChallengePathController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 403);
             }
-            $upload_cover_image = config('site-settings.default_challenge_path_cover_image');
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             if ($request->media !== null) {
                 $uploaded_cover_image = $this->challengePathRepository->uploadChallengePathMedia($request->media);
                 if (!$uploaded_cover_image) {
@@ -96,6 +96,9 @@ class ChallengePathController extends AppBaseController
                 $upload_cover_image = $uploaded_cover_image;
             }
             $upload_achievement_image = config('site-settings.default_challenge_path_profile_image');
+            if ($checkComponentBasedOnSlug->achievement != null) {
+                $upload_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->achievement->achievement_image);
+            }
             if ($request->achievement_image !== null) {
                 $uploaded_achievement_image = $this->challengePathRepository->uploadAchievementImage($request->achievement_image);
                 if (!$uploaded_achievement_image) {

@@ -7,6 +7,7 @@ Route::middleware(['language'])->group(function () {
     Route::get('/categories', [MasterController::class, 'getCategories']);
     Route::get('/skills', [MasterController::class, 'getSkills']);
     Route::get('/tags', [MasterController::class, 'getTags']);
+    Route::get('/tag-groups', [MasterController::class, 'getTagGroup']);
     Route::get('/industries', [MasterController::class, 'getProjectIndustries']);
     Route::get('/types', [MasterController::class, 'getProjectTypes']);
     Route::get('/stages', [MasterController::class, 'getProjectStages']);
