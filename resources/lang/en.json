@@ -628,5 +628,18 @@
     "responses.favourite_resource_group_successfully":"You have successfully saved as favourite this resource Group!",
     "responses.un_favourite_resource_group_successfully":"You have successfully un-saved as favourite this resource Group!",
     "responses.already_favourite_resource_group":"The Resource Group is already being added to favourites!",
-    "responses.already_un_favourite_resource_group":"The Resource Group is already being removed from favourites!"
+    "responses.already_un_favourite_resource_group":"The Resource Group is already being removed from favourites!",
+    "responses.found_challenge_announcement_recipient": "The Challenge announcement recipient list has been successfully retrieved",
+    "responses.not_found_challenge_announcement_recipient": "The list of Challenge announcement recipient has not been retrieved with success.",
+    "responses.subject_required": "This subject field is required",
+    "responses.to_recipient_required": "This recipient field is required",
+    "responses.sending_mode": "This send by field is required",
+    "responses.to_recipient_not_found": "This recipient is not found",
+    "responses.choose_sending_mode": "This can be between '<b>Email</b>, <b>Inbox</b> or <b>Both</b>' only .",
+    "responses.schedule_date_required": "This schedule date field is required",
+    "responses.send_draft_required": "This sent status field is required",
+    "responses.challenge_announcement_failed": "Oops! The creating Challenge announcement has failed.",
+    "responses.challenge_announcement_created": "Congratulations! You have successfully created a Challenge Announcement.",
+    "responses.challenge_announcement_delete": "The challenge announcement been deleted successfully!",
+    "responses.challenge_announcement_not_delete": "The challenge announcement was not deleted!"
 }
