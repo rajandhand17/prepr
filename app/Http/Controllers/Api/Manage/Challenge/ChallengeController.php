@@ -334,6 +334,7 @@ class ChallengeController extends AppBaseController
                 'title'                     => $checkComponentBasedOnSlug->title,
                 'challenge_announcement'    => ChallengeAnnouncementResource::collection($checkComponentBasedOnSlug->challenge_announcement),
             ];
+
             return $this->sendResponse($response, __('responses.challenge_announcement_created'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
