@@ -321,4 +321,22 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function deleteAnnouncement($slug, Request $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $challengeAnnouncement = $this->challengeRepository->deleteChallengeAnnouncement($request->announcement_id);
+            if ($challengeAnnouncement) {
+                return $this->sendResponse(null, __('responses.challenge_announcement_delete'));
+            }
+
+            return $this->sendError(__('responses.challenge_announcement_not_delete'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

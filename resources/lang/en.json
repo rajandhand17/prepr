@@ -617,5 +617,7 @@
     "responses.schedule_date_required": "This schedule date field is required",
     "responses.send_draft_required": "This sent status field is required",
     "responses.challenge_announcement_failed": "Oops! The creating Challenge announcement has failed.",
-    "responses.challenge_announcement_created": "Congratulations! You have successfully created a Challenge Announcement."
+    "responses.challenge_announcement_created": "Congratulations! You have successfully created a Challenge Announcement.",
+    "responses.challenge_announcement_delete": "The challenge announcement been deleted successfully!",
+    "responses.challenge_announcement_not_delete": "The challenge announcement was not deleted!"
 }
