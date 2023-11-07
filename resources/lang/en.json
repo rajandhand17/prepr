@@ -652,5 +652,8 @@
     "responses.switch_type_skill": "Skill",
     "responses.switch_type_imported": "Imported",
     "responses.switch_type_winner": "Winner",
-    "responses.switch_type_participation": "Participation"
+    "responses.switch_type_participation": "Participation",
+
+    "responses.found_achievement_list":"The achievement list has been successfully retrieved",
+    "responses.not_found_achievement_list":"The list of achievement has not been retrieved with success."
 }
