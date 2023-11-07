@@ -14,40 +14,40 @@ class AchievementResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $activity=null;
+        $activity = null;
         switch($this->achievement_type) {
             case '0':
-                $activity = __("responses.switch_type_lab");
+                $activity = __('responses.switch_type_lab');
                 break;
             case '1':
-                $activity = __("responses.switch_type_lab_program");
+                $activity = __('responses.switch_type_lab_program');
                 break;
             case '2':
-                $activity = __("responses.switch_type_challenge");
+                $activity = __('responses.switch_type_challenge');
                 break;
             case '3':
-                $activity = __("responses.switch_type_challenge_path");
+                $activity = __('responses.switch_type_challenge_path');
                 break;
             case '4':
-                $activity = __("responses.switch_type_resource_group");
+                $activity = __('responses.switch_type_resource_group');
                 break;
             case '5':
-                $activity = __("responses.switch_type_appreciation");
+                $activity = __('responses.switch_type_appreciation');
                 break;
             case '6':
-                $activity =__("responses.switch_type_activity");
+                $activity = __('responses.switch_type_activity');
                 break;
             case '7':
-                $activity =__("responses.switch_type_skill");
+                $activity = __('responses.switch_type_skill');
                 break;
             case '8':
-                $activity = __("responses.switch_type_imported");
+                $activity = __('responses.switch_type_imported');
                 break;
             case '9':
-                $activity =__("responses.switch_type_winner");
+                $activity = __('responses.switch_type_winner');
                 break;
             case '10':
-                $activity =__("responses.switch_type_participation");
+                $activity = __('responses.switch_type_participation');
                 break;
             default:
                 $activity = null;
