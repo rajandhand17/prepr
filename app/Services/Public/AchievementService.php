@@ -44,6 +44,7 @@ class AchievementService
                         $achievement_list->orderBy('user_achievements.id', 'ASC');
                 }
             }
+
             return $achievement_list;
         } catch(\Exception $e) {
             return false;
