@@ -52,18 +52,19 @@ class AchievementResource extends JsonResource
                 $achievement_type = null;
                 break;
         }
-        $request=[
-            "id"=>$this->id,
-            "title"=>$this->title,
-            "description"=>$this->description,
-            "module_title"=>$this->module_title,
-            "module_parent_title"=>$this->module_parent_title,
-            "achievement_prize"=>$this->achievement_prize,
-            "achievement_points"=>$this->achievement_points,
-            "achievement_image"=>$this->achievement_image,
-            "promo_code"=>$this->promo_code,
-            "achievement_type"=>$achievement_type,
+        $request = [
+            'id'                 => $this->id,
+            'title'              => $this->title,
+            'description'        => $this->description,
+            'module_title'       => $this->module_title,
+            'module_parent_title'=> $this->module_parent_title,
+            'achievement_prize'  => $this->achievement_prize,
+            'achievement_points' => $this->achievement_points,
+            'achievement_image'  => $this->achievement_image,
+            'promo_code'         => $this->promo_code,
+            'achievement_type'   => $achievement_type,
         ];
+
         return $request;
     }
 }

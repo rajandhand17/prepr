@@ -229,7 +229,6 @@ return [
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
 
-
     ],
 
     /*
