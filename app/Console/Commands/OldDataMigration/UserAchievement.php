@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Carbon\Carbon;
-use Illuminate\Console\Command;
 use DB;
+use Illuminate\Console\Command;
+
 class UserAchievement extends Command
 {
     /**
@@ -26,23 +26,22 @@ class UserAchievement extends Command
      */
     public function handle()
     {
-        try{
+        try {
             $this->info('Migrating old data for users table.');
             DB::beginTransaction();
 
             DB::connection('mysql2')->table('user_achievements')->chunkById(1000, function ($userAchievement) {
-
                 foreach ($userAchievement as $single_user_achievement) {
-                    $achievement_type=null;
-                    $checkUsers=\App\Models\User::find($single_user_achievement->user_id);
-                    if($checkUsers==null){
+                    $achievement_type = null;
+                    $checkUsers = \App\Models\User::find($single_user_achievement->user_id);
+                    if ($checkUsers == null) {
                         continue;
                     }
-                    $checkUserAchievement =\App\Models\UserAchievement::where("id",$single_user_achievement->id)->first();
-                    if($checkUserAchievement){
-                        $userAchievement=$checkUserAchievement;
-                    }else{
-                        $userAchievement=new \App\Models\UserAchievement();
+                    $checkUserAchievement = \App\Models\UserAchievement::where('id', $single_user_achievement->id)->first();
+                    if ($checkUserAchievement) {
+                        $userAchievement = $checkUserAchievement;
+                    } else {
+                        $userAchievement = new \App\Models\UserAchievement();
                     }
                     switch ($single_user_achievement->achievement_type) {
                         case 'lab':
@@ -104,7 +103,7 @@ class UserAchievement extends Command
 
             DB::commit();
             $this->info('Migrating of old data for users table completed.');
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
 
