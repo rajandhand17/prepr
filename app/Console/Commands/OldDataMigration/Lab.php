@@ -165,7 +165,7 @@ class Lab extends Command
                     $newLab->duration_id = '1';
                     $newLab->level_id = '1';
                     $newLab->slug = $lab->slug;
-                    $newLab->title = $lab->slug;
+                    $newLab->title = $lab->title;
                     $newLab->description = $lab->description;
                     $newLab->privacy = $privacy;
                     $newLab->media_type = $mediaType;
