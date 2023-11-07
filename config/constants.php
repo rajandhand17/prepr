@@ -247,4 +247,18 @@ return [
         'draft'     => '1',
     ],
 
+
+    'user_achievement_type'=> [
+        'lab'=> '0',
+        'lab_program'=> '1',
+        'challenge'=> '2',
+        'challenge_path'=> '3',
+        'resource_group'=> '4',
+        'appreciation_award'=> '5',
+        'activity_award'=> '6',
+        'skill_activity' => '7',
+        'imported_award' => '8',
+        'winner_award'   => '9',
+        'participation_award'=>'10',
+    ],
 ];

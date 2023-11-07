@@ -40,7 +40,6 @@ class UserAchievement extends Command
                     }else{
                         $userAchievement=new \App\Models\UserAchievement();
                     }
-                    dd($single_user_achievement);
                     switch ($single_user_achievement->achievement_type) {
                         case 'lab':
                             $achievement_type = config('constants.user_achievement_type.lab');
