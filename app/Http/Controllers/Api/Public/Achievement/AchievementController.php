@@ -32,6 +32,7 @@ class AchievementController extends AppBaseController
 
                 return $this->sendResponse($response, __('responses.found_achievement_list'));
             }
+
             return $this->sendError(__('responses.not_found_achievement_list'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
