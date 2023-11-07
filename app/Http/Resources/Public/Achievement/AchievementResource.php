@@ -16,40 +16,40 @@ class AchievementResource extends JsonResource
     {
         switch($this->achievement_type) {
             case '0':
-                $achievement_type = 'Lab';
+                $activity = 'Lab';
                 break;
             case '1':
-                $achievement_type = 'Lab Program';
+                $activity = 'Lab Program';
                 break;
             case '2':
-                $achievement_type = 'Challenge';
+                $activity = 'Challenge';
                 break;
             case '3':
-                $achievement_type = 'Challenge Path';
+                $activity = 'Challenge Path';
                 break;
             case '4':
-                $achievement_type = 'Resource Group';
+                $activity = 'Resource Group';
                 break;
             case '5':
-                $achievement_type = 'Appreciation Award';
+                $activity = 'Appreciation Award';
                 break;
             case '6':
-                $achievement_type = 'Activity Award';
+                $activity = 'Activity Award';
                 break;
             case '7':
-                $achievement_type = 'Skill Activity';
+                $activity = 'Skill Activity';
                 break;
             case '8':
-                $achievement_type = 'Imported Award';
+                $activity = 'Imported Award';
                 break;
             case '9':
-                $achievement_type = 'Winner Award';
+                $activity = 'Winner Award';
                 break;
             case '10':
-                $achievement_type = 'Participation Award';
+                $activity = 'Participation Award';
                 break;
             default:
-                $achievement_type = null;
+                $activity = null;
                 break;
         }
         $request = [
@@ -62,7 +62,7 @@ class AchievementResource extends JsonResource
             'achievement_points' => $this->achievement_points,
             'achievement_image'  => $this->achievement_image,
             'promo_code'         => $this->promo_code,
-            'achievement_type'   => $achievement_type,
+            'achievement_type'   => $activity,
         ];
 
         return $request;
