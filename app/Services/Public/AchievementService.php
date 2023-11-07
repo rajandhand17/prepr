@@ -21,8 +21,8 @@ class AchievementService
     public function filterAchievementList($request, $achievement_list)
     {
         try {
-            if ($request->has('search') && !empty($request->search)) {
-                $achievement_list = $achievement_list->whereIn('user_achievements.achievement_type', $request->search);
+            if ($request->has('type') && !empty($request->type)) {
+                $achievement_list = $achievement_list->whereIn('user_achievements.achievement_type', $request->type);
             }
 
             return $achievement_list;
