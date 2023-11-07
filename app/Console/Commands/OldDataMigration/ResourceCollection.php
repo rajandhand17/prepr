@@ -48,7 +48,7 @@ class ResourceCollection extends Command
                     if (!$organization) {
                         continue;
                     }
-                    $status = config('constants.resource_collection_status.publish');
+                    $status = config('constants.resource_collection_status.lab');
                     switch ($singleResourceCollection->status) {
                         case 'unlock':
                             $privacy = config('constants.resource_collection_privacy.no');

@@ -14,39 +14,40 @@ class AchievementResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $activity=null;
         switch($this->achievement_type) {
             case '0':
-                $activity = 'Lab';
+                $activity = __("responses.switch_type_lab");
                 break;
             case '1':
-                $activity = 'Lab Program';
+                $activity = __("responses.switch_type_lab_program");
                 break;
             case '2':
-                $activity = 'Challenge';
+                $activity = __("responses.switch_type_challenge");
                 break;
             case '3':
-                $activity = 'Challenge Path';
+                $activity = __("responses.switch_type_challenge_path");
                 break;
             case '4':
-                $activity = 'Resource Group';
+                $activity = __("responses.switch_type_resource_group");
                 break;
             case '5':
-                $activity = 'Appreciation Award';
+                $activity = __("responses.switch_type_appreciation");
                 break;
             case '6':
-                $activity = 'Activity Award';
+                $activity =__("responses.switch_type_activity");
                 break;
             case '7':
-                $activity = 'Skill Activity';
+                $activity =__("responses.switch_type_skill");
                 break;
             case '8':
-                $activity = 'Imported Award';
+                $activity = __("responses.switch_type_imported");
                 break;
             case '9':
-                $activity = 'Winner Award';
+                $activity =__("responses.switch_type_winner");
                 break;
             case '10':
-                $activity = 'Participation Award';
+                $activity =__("responses.switch_type_participation");
                 break;
             default:
                 $activity = null;
