@@ -34,6 +34,10 @@ class UserAchievement extends Command
 
                 foreach ($userAchievement as $single_user_achievement) {
                     $achievement_type=null;
+                    $checkUsers=\App\Models\User::find($single_user_achievement->user_id);
+                    if($checkUsers==null){
+                        continue;
+                    }
                     $checkUserAchievement =\App\Models\UserAchievement::where("id",$single_user_achievement->id)->first();
                     if($checkUserAchievement){
                         $userAchievement=$checkUserAchievement;
