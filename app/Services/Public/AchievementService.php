@@ -23,7 +23,7 @@ class AchievementService
         try{
 
             if ($request->has('search') && !empty($request->search)) {
-                $achievement_list = $achievement_list->whereIN('user_achievements.achievement_type',$request->search);
+                $achievement_list = $achievement_list->whereIn('user_achievements.achievement_type',$request->search);
             }
            return $achievement_list;
         }catch(\Exception $e){
