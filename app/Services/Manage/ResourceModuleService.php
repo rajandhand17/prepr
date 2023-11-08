@@ -296,6 +296,7 @@ class ResourceModuleService
         try {
             $resourceModule = ResourceModule::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
+
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch(\Exception $e) {
             return false;

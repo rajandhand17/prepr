@@ -27,5 +27,4 @@ interface ResourceModuleInterface
     public function deleteResourceModuleMedia($request, $resource_module_id, $type);
 
     public function getListName($request, $organization);
-
 }
