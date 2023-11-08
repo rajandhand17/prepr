@@ -172,4 +172,13 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
+
+    public function getListName($request, $organization)
+    {
+        try {
+            return  $this->resourceModuleService->getListName($request, $organization);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }
