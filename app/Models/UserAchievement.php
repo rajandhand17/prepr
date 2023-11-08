@@ -17,4 +17,14 @@ class UserAchievement extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function getAchievementImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

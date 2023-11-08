@@ -641,5 +641,19 @@
     "responses.challenge_announcement_failed": "Oops! The creating Challenge announcement has failed.",
     "responses.challenge_announcement_created": "Congratulations! You have successfully created a Challenge Announcement.",
     "responses.challenge_announcement_delete": "The challenge announcement been deleted successfully!",
-    "responses.challenge_announcement_not_delete": "The challenge announcement was not deleted!"
+    "responses.challenge_announcement_not_delete": "The challenge announcement was not deleted!",
+    "responses.switch_type_lab": "Lab",
+    "responses.switch_type_lab_program": "Lab Program",
+    "responses.switch_type_challenge": "Challenge",
+    "responses.switch_type_challenge_path": "Challenge Path",
+    "responses.switch_type_resource_group": "Resource Group",
+    "responses.switch_type_appreciation": "Appreciation",
+    "responses.switch_type_activity": "Activity",
+    "responses.switch_type_skill": "Skill",
+    "responses.switch_type_imported": "Imported",
+    "responses.switch_type_winner": "Winner",
+    "responses.switch_type_participation": "Participation",
+
+    "responses.found_achievement_list":"The achievement list has been successfully retrieved",
+    "responses.not_found_achievement_list":"The list of achievement has not been retrieved with success."
 }

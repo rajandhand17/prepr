@@ -227,6 +227,7 @@ return [
         App\Repositories\Api\Public\ChallengePath\ChallengePathServiceProvider::class,
         App\Repositories\Api\Public\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
+        App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
 
     ],
 
