@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Public\Achievement;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Achievement\AchievementResource;
-use App\Http\Resources\Public\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Public\Achievement\AchievementRepository;
 use Illuminate\Http\Request;
 
@@ -40,12 +39,14 @@ class AchievementController extends AppBaseController
         }
     }
 
-    public function show($id){
+    public function show($id)
+    {
         try {
             $achievement = $this->achievementRepository->getAchievementBasedOnSlug($id);
             if ($achievement) {
                 return $this->sendResponse(AchievementResource::make($achievement), __('responses.found_achievement_list'));
             }
+
             return $this->sendError(__('responses.not_found_achievement_list'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
