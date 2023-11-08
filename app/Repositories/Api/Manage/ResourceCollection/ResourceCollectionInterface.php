@@ -14,5 +14,5 @@ interface ResourceCollectionInterface
 
     public function getResourceCollectionList($request, $organization);
 
-    public function getLabListName($request, $organization);
+    public function getListName($request, $organization);
 }
