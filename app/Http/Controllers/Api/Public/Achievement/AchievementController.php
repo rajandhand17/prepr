@@ -29,6 +29,7 @@ class AchievementController extends AppBaseController
                     'total_pages'  => $achievement->lastPage(),
                     'list'         => AchievementResource::collection($achievement),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_achievement_list'));
             }
 
