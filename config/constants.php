@@ -231,9 +231,20 @@ return [
         'archive' => '2',
     ],
 
-    'resource_group_privacy'=> [
+    'resource_group_privacy' => [
         'no'  => '0',
         'yes' => '1',
+    ],
+
+    'challenge_announcement_by' => [
+        'email'     => '0',
+        'inbox'     => '1',
+        'both'      => '2',
+    ],
+
+    'challenge_announcement_send_status' => [
+        'send'      => '0',
+        'draft'     => '1',
     ],
 
 ];

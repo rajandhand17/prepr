@@ -303,4 +303,18 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function getResourceCollectionGetBasedId($id)
+    {
+        try {
+            $resourceCollectionIds = ResourceCollection::whereIn('id', $id)->pluck('id')->all();
+            if ($resourceCollectionIds != null) {
+                return $resourceCollectionIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

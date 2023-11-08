@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Master\CreateSponsorRequest;
 use App\Http\Resources\Master\AcheivementConditionListResource;
 use App\Http\Resources\Master\CategoryResource;
+use App\Http\Resources\Master\ChallengeAnnouncementRecipientResource;
 use App\Http\Resources\Master\ChallengePitchTasksResource;
 use App\Http\Resources\Master\DurationsResource;
 use App\Http\Resources\Master\FlexibleDateDurationResource;
@@ -24,6 +25,7 @@ use App\Http\Resources\Master\SkillResource;
 use App\Http\Resources\Master\SkillStackResource;
 use App\Http\Resources\Master\SocialConnect;
 use App\Http\Resources\Master\SocialLinkResource;
+use App\Http\Resources\Master\TagGroupResource;
 use App\Http\Resources\Master\TagResource;
 use App\Repositories\Api\Master\MasterRepository;
 use Exception;
@@ -1272,6 +1274,34 @@ class MasterController extends AppBaseController
 
             return $this->sendError(__('responses.sponsor_host_stored_failed'), 403);
         } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getChallengeAnnouncementRecipient(Request $request)
+    {
+        try {
+            $levels = $this->masterRepository->getChallengeAnnouncementRecipient($request);
+            if ($levels) {
+                return $this->sendResponse(ChallengeAnnouncementRecipientResource::collection($levels), __('responses.found_challenge_announcement_recipient'));
+            }
+
+            return $this->sendResponse(null, __('responses.not_found_challenge_announcement_recipient'));
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getTagGroup(Request $request)
+    {
+        try {
+            $get_tag_groups = $this->masterRepository->getTagGroups($request);
+            if ($get_tag_groups) {
+                return $this->sendResponse(TagGroupResource::collection($get_tag_groups), __('responses.found_tag_groups_list'));
+            }
+
+            return $this->sendResponse(null, __('responses.not_found_tag_groups_list'));
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

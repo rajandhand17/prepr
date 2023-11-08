@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
+use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
+use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Models\Challenge;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
@@ -290,6 +292,86 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function createAnnouncement($slug, CreateChallengeAnnouncementRequest $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            $createAnnouncement = $this->challengeRepository->createChallengeAnnouncement($checkComponentBasedOnSlug->id, $request);
+            if ($createAnnouncement != false) {
+                $response = [
+                    'slug'                      => $checkComponentBasedOnSlug->slug,
+                    'title'                     => $checkComponentBasedOnSlug->title,
+                    'challenge_announcement'    => ChallengeAnnouncementResource::make($createAnnouncement),
+                ];
+
+                return $this->sendResponse($response, __('responses.challenge_announcement_created'));
+            }
+
+            return $this->sendError(__('responses.challenge_announcement_failed'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function listAnnouncement($slug)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $response = [
+                'slug'                      => $checkComponentBasedOnSlug->slug,
+                'title'                     => $checkComponentBasedOnSlug->title,
+                'challenge_announcement'    => ChallengeAnnouncementResource::collection($checkComponentBasedOnSlug->challenge_announcement),
+            ];
+
+            return $this->sendResponse($response, __('responses.challenge_announcement_created'));
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function deleteAnnouncement($slug, Request $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $challengeAnnouncement = $this->challengeRepository->deleteChallengeAnnouncement($request->announcement_id);
+            if ($challengeAnnouncement) {
+                return $this->sendResponse(null, __('responses.challenge_announcement_delete'));
+            }
+
+            return $this->sendError(__('responses.challenge_announcement_not_delete'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getList(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $getChallengeListName = $this->challengeRepository->getChallengeListName($request, $organization);
+            if ($getChallengeListName) {
+                return $this->sendResponse(ChallengeListNameResource::collection($getChallengeListName), __('responses.found_challenges_list'));
+            }
+
+            return $this->sendResponse($getChallengeListName, __('responses.found_labs_list'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

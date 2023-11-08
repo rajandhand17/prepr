@@ -43,4 +43,10 @@ interface ChallengeInterface
     public function updateChallengeAssessment($challengeId, $update_assessment_attachment, $request);
 
     public function cloneChallenge($challengeId, $organization);
+
+    public function getChallengeListName($request, $organization);
+
+    public function createChallengeAnnouncement($challengeId, $request);
+
+    public function deleteChallengeAnnouncement($challengeAnnouncementId);
 }
