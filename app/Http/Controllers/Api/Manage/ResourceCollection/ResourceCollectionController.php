@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
 use App\Services\Manage\OrganizationService;
@@ -149,5 +150,19 @@ class ResourceCollectionController extends AppBaseController
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
+    }
+
+    public function getList(Request $request)
+    {
+        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+        if (!$organization) {
+            return $this->sendError(__('responses.organization_not_found'), 404);
+        }
+        $resourceCollection = $this->resourceCollectionRepository->getListName($request, $organization);
+        if ($resourceCollection) {
+            return $this->sendResponse(ResourceCollectionListNameResource::collection($resourceCollection), __('responses.found_resource_collection_list'));
+        }
+
+        return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
     }
 }

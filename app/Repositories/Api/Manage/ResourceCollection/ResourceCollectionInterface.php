@@ -13,4 +13,6 @@ interface ResourceCollectionInterface
     public function checkName($title);
 
     public function getResourceCollectionList($request, $organization);
+
+    public function getLabListName($request, $organization);
 }

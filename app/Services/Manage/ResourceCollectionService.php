@@ -317,4 +317,15 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public function getListName($request, $organization)
+    {
+        try {
+            $resourceCollectionList = ResourceCollection::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
+            return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
