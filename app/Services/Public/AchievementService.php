@@ -51,10 +51,11 @@ class AchievementService
         }
     }
 
-    public function getAchievementBasedOnSlug($id){
-        try{
+    public function getAchievementBasedOnSlug($id)
+    {
+        try {
             return UserAchievement::where(['id' => $id])->first();
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
