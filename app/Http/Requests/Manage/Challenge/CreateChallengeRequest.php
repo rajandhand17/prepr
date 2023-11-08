@@ -62,6 +62,10 @@ class CreateChallengeRequest extends FormRequest
             'min_imported_badges'                   => 'required|numeric',
             'min_achievement_counts'                => 'required|numeric',
             'template_id'                           => 'required|numeric',
+            'allow_submit_project'                  => 'in:yes,no',
+            'requirement_program'                   => 'in:yes,no',
+            'complete_education_program'            => 'in:yes,no',
+            'complete_experience'                   => 'in:yes,no',
         ];
 
         if ($this->request->has('winner_achievement_participation')) {
@@ -109,7 +113,7 @@ class CreateChallengeRequest extends FormRequest
             }
         }
 
-        if ($this->has('timeline_type') == 'restricted') {
+        if ($this->has('timeline_type') && $this->input('timeline_type') === 'restricted') {
             $base_rules['open_call_date'] = 'required_if:request_type,publish';
             $base_rules['open_call_date_description'] = 'required_if:request_type,publish';
             $base_rules['last_call_date'] = 'required_if:request_type,publish';
@@ -120,7 +124,7 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['submission_deadline_date_description'] = 'required_if:request_type,publish';
         }
 
-        if ($this->has('timeline_type') == 'flexible') {
+        if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
         }

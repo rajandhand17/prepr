@@ -45,7 +45,7 @@ class ChallengeService
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
-                $challenge_list = $challenge_list->whereIn('challenges.category', $request->category);
+                $challenge_list = $challenge_list->whereIn('challenges.category_id', $request->category);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
@@ -443,6 +443,54 @@ class ChallengeService
             }
 
             return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeIdBasedOnId($id)
+    {
+        try {
+            $challenge = Challenge::whereIn('id', $id)->pluck('id')->all();
+            if ($challenge != null) {
+                return $challenge;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function cloneChallenge($challengeId, $organization)
+    {
+        try {
+            $originalChallenge = Challenge::find($challengeId);
+            $model = new Challenge();
+            $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
+
+            $clonedChallenge = $originalChallenge->replicate();
+            $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $clonedChallenge->title = $organization->title.' '.$originalChallenge->title;
+            $clonedChallenge->slug = $slug;
+            $clonedChallenge->user_id = auth()->user()->id;
+            $clonedChallenge->organization_id = $organization->id;
+            $clonedChallenge->save();
+
+            return $clonedChallenge;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getChallengeListName($request, $organization)
+    {
+        try {
+            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where('organization_id', '=', $organization->id);
+            $challenge_list = self::filterChallengeList($challenge_list, $request);
+            $limit = config('site-settings.listing_limit');
+
+            return $challenge_list->limit($limit)->get();
         } catch (Exception $e) {
             return false;
         }

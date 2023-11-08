@@ -8,9 +8,11 @@ interface ChallengeInterface
 
     public function uploadChallengeCoverImage($image);
 
+    public function uploadChallengeAssessment($attachment);
+
     public function uploadChallengeParticipationAchievementImage($image);
 
-    public function createChallenge($request, $upload_cover_image, $upload_achievement_image);
+    public function createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
 
     public function checkSlug($slug);
 
@@ -30,9 +32,21 @@ interface ChallengeInterface
 
     public function createChallengeProjectTemplate($request, $challenge);
 
-    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image);
+    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment);
 
     public function getChallengeBasedOnSlug($slug);
 
     public function deleteChallenge($lab_id, $request);
+
+    public function getChallengeAssessmentData($challengeAssessment);
+
+    public function updateChallengeAssessment($challengeId, $update_assessment_attachment, $request);
+
+    public function cloneChallenge($challengeId, $organization);
+
+    public function getChallengeListName($request, $organization);
+
+    public function createChallengeAnnouncement($challengeId, $request);
+
+    public function deleteChallengeAnnouncement($challengeAnnouncementId);
 }

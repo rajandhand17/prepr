@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Master;
 
 use App\Services\AchievementConditionListService;
 use App\Services\CategoryService;
+use App\Services\ChallengeAnnouncementRecipientService;
 use App\Services\DurationService;
 use App\Services\FlexibleExpireDateDurationService;
 use App\Services\HostService;
@@ -22,6 +23,7 @@ use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\SocialConnectService;
 use App\Services\SocialLinkService;
+use App\Services\TagGroupService;
 use App\Services\TagService;
 use Exception;
 
@@ -48,8 +50,10 @@ class MasterRepository implements MasterInterface
     private $socialConnectService;
     private $durationService;
     private $levelService;
+    private $tagGroupService;
+    private $challengeAnnouncementRecipientService;
 
-    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService)
+    public function __construct(CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;
@@ -72,6 +76,8 @@ class MasterRepository implements MasterInterface
         $this->socialConnectService = $socialConnectService;
         $this->durationService = $durationService;
         $this->levelService = $levelService;
+        $this->tagGroupService = $tagGroupService;
+        $this->challengeAnnouncementRecipientService = $challengeAnnouncementRecipientService;
     }
 
     public function getCategories($request)
@@ -268,6 +274,51 @@ class MasterRepository implements MasterInterface
         try {
             return $this->pitchTemplateService->getPitchTemplatesBasedOnId($request->template_id);
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkSponsor($request)
+    {
+        try {
+            return $this->hostService->checkSponsor($request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function uploadSponsorMedia($image)
+    {
+        try {
+            return $this->hostService->uploadSponsorMedia($image);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createSponsor($request, $upload_sponsor_image)
+    {
+        try {
+            return $this->hostService->createSponsor($request, $upload_sponsor_image);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getChallengeAnnouncementRecipient($request)
+    {
+        try {
+            return $this->challengeAnnouncementRecipientService->getChallengeAnnouncementRecipient($request->language, $request->search);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getTagGroups($request)
+    {
+        try {
+            return $this->tagGroupService->getTagGroups($request->language, $request->search, $request->skills);
+        } catch (\Exception $e) {
             return false;
         }
     }

@@ -59,4 +59,21 @@ class ChallengeCustomTimelinesService
             return false;
         }
     }
+
+    public function cloneChallengeCustomTimelines($originalChallengeCustomTimelines, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeCustomTimelines->each(function ($challenge_custom_timelines) use ($clonedChallengeId) {
+                if ($challenge_custom_timelines) {
+                    $cloneAssessment = $challenge_custom_timelines->replicate();
+                    $cloneAssessment->challenge_id = $clonedChallengeId;
+                    $cloneAssessment->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

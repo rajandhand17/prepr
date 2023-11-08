@@ -56,7 +56,7 @@ class UpdateChallengeRequest extends FormRequest
             'project_privacy'                       => 'in:yes,no',
             'is_open'                               => 'in:yes,no',
             'is_auto_created'                       => 'in:yes,no',
-            'achievement_image'                     => 'required|mimes:jpeg,jpg,png,webp|max:1024',
+            'achievement_image'                     => 'mimes:jpeg,jpg,png,webp|max:1024',
             'achievement_participation'             => 'required',
             'achievement_name'                      => 'required',
             'achievement_prize'                     => 'required|numeric',
@@ -69,11 +69,15 @@ class UpdateChallengeRequest extends FormRequest
             'min_imported_badges'                   => 'required|numeric',
             'min_achievement_counts'                => 'required|numeric',
             'template_id'                           => 'required|numeric',
+            'allow_submit_project'                  => 'in:yes,no',
+            'requirement_program'                   => 'in:yes,no',
+            'complete_education_program'            => 'in:yes,no',
+            'complete_experience'                   => 'in:yes,no',
         ];
 
         if ($this->request->has('winner_achievement_participation')) {
             $base_rules['winner_achievement_image'] = 'array';
-            $base_rules['winner_achievement_image.*'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['winner_achievement_image.*'] = 'mimes:jpeg,jpg,png,webp|max:1024';
             $base_rules['winner_achievement_participation'] = 'array';
             $base_rules['winner_achievement_participation.*'] = 'in:incentive';
             $base_rules['winner_achievement_name'] = 'array';
@@ -109,14 +113,14 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['assessment_type'] = 'required|in:open,close';
             $base_rules['visibility'] = 'required|in:users,hidden';
             $base_rules['guidelines'] = 'required_if:request_type,publish';
-            $base_rules['attachments'] = 'required_if:request_type,publish||mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['attachments'] = 'mimes:jpeg,jpg,png,webp|max:1024';
             if ($this->assessment_type == 'close' && $this->members_email !== null) {
                 $base_rules['members_email'] = 'array';
                 $base_rules['members_email.*'] = 'required_if:request_type,publish||email';
             }
         }
 
-        if ($this->has('timeline_type') == 'restricted') {
+        if ($this->has('timeline_type') && $this->input('timeline_type') === 'restricted') {
             $base_rules['open_call_date'] = 'required_if:request_type,publish';
             $base_rules['open_call_date_description'] = 'required_if:request_type,publish';
             $base_rules['last_call_date'] = 'required_if:request_type,publish';
@@ -127,7 +131,7 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['submission_deadline_date_description'] = 'required_if:request_type,publish';
         }
 
-        if ($this->has('timeline_type') == 'flexible') {
+        if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
         }

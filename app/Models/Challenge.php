@@ -132,7 +132,7 @@ class Challenge extends Model
 
     public function challenge_project_template()
     {
-        return $this->hasMany(ChallengeProjectTemplate::class, 'challenge_id', 'id');
+        return $this->hasOne(ChallengeProjectTemplate::class, 'challenge_id', 'id');
     }
 
     public function likes()
@@ -166,5 +166,15 @@ class Challenge extends Model
         }
 
         return 'NA';
+    }
+
+    public function external_links()
+    {
+        return $this->hasMany(ChallengeExternalLink::class, 'challenge_id', 'id');
+    }
+
+    public function challenge_announcement()
+    {
+        return $this->hasMany(ChallengeAnnouncement::class, 'challenge_id', 'id');
     }
 }

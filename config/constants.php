@@ -208,4 +208,43 @@ return [
         'no'  => '0',
         'yes' => '1',
     ],
+
+    'resource_collection_status'=> [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
+    ],
+
+    'resource_collection_privacy'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'resource_collection_is_accessible'=> [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'resource_group_status'=> [
+        'draft'   => '0',
+        'publish' => '1',
+        'archive' => '2',
+    ],
+
+    'resource_group_privacy' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
+    'challenge_announcement_by' => [
+        'email'     => '0',
+        'inbox'     => '1',
+        'both'      => '2',
+    ],
+
+    'challenge_announcement_send_status' => [
+        'send'      => '0',
+        'draft'     => '1',
+    ],
+
 ];

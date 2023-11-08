@@ -47,4 +47,10 @@ interface MasterInterface
     public function getLevels($request);
 
     public function getPitchTaskData($request);
+
+    public function checkSponsor($request);
+
+    public function createSponsor($request, $upload_sponsor_image);
+
+    public function getTagGroups($request);
 }

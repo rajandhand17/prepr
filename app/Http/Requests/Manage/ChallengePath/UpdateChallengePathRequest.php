@@ -31,6 +31,7 @@ class UpdateChallengePathRequest extends FormRequest
         }
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
         $base_rules = [
+            'status'                  => 'required|in:draft,publish,archive',
             'title'                   => 'required|max:255|unique:challenge_paths,title,'.$challengePath->id,
             'description'             => 'required',
             'organization_id'         => 'required|exists:organizations,uuid',
@@ -42,6 +43,7 @@ class UpdateChallengePathRequest extends FormRequest
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',
+            'is_auto_created'         => 'in:yes,no',
             'skills'                  => 'required|array',
             'skills.*'                => 'numeric|exists:skills,id',
             'skill_groups'            => 'nullable|array',
@@ -57,7 +59,7 @@ class UpdateChallengePathRequest extends FormRequest
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
             $base_rules['achievement_points'] = 'required';
-            $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['achievement_image'] = 'mimes:jpeg,jpg,png,webp|max:1024';
         }
 
         return $base_rules;

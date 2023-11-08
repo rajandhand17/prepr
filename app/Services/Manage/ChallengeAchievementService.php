@@ -71,7 +71,7 @@ class ChallengeAchievementService
     public static function updateChallengeAchievement($challenge_id, $request, $update_participation_achievement_image)
     {
         try {
-            $challengeAchievement = ChallengeAchievement::where('id', $challenge_id)->first();
+            $challengeAchievement = ChallengeAchievement::where(['challenge_id' => $challenge_id, 'achievement_type' => '0'])->first();
             $challengeAchievement->achievement_type = '0';
             $challengeAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $challengeAchievement->achievement_name;
             $challengeAchievement->achievement_prize = ($request->has('achievement_prize')) ? $request->achievement_prize : $challengeAchievement->achievement_prize;
@@ -79,20 +79,20 @@ class ChallengeAchievementService
             $challengeAchievement->achievement_image = ($update_participation_achievement_image) ? $update_participation_achievement_image : $challengeAchievement->achievement_image;
             $challengeAchievement->save();
 
-            $challengeIncentiveData = !empty($request->winner_achievement_image) ? array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image, $request->winner_achievement_image) : array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image);
+            $challengeIncentiveData = !empty($request->winner_achievement_image) ? array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image ?? [], $request->winner_achievement_image ?? []) : array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image ?? []);
             if (!empty($challengeIncentiveData)) {
                 $challengeIncentiveArrayData = [];
                 foreach ($challengeIncentiveData as $key => $value) {
-                    if (!empty($value[0]) && !empty($value[1]) && !empty($value[2]) && !empty($value[3])) {
+                    if (!empty($value[0]) && !empty($value[1]) && !empty($value[2])) {
                         $upload_incentive_achievement_image = config('site-settings.default_challenge_cover_image');
                         if (!empty($request->winner_achievement_image)) {
                             if (array_key_exists($key, $request->winner_achievement_image)) {
                                 $upload_incentive_achievement_image = self::uploadChallengeIncentiveAchievementImage($request->winner_achievement_image[$key]);
                             } else {
-                                $upload_incentive_achievement_image = $value[3];
+                                $upload_incentive_achievement_image = str_replace(config('site-settings.aws_url'), '', $value[3]);
                             }
-                        } else {
-                            $upload_incentive_achievement_image = $value[3];
+                        } elseif (!empty($value[3])) {
+                            $upload_incentive_achievement_image = str_replace(config('site-settings.aws_url'), '', $value[3]);
                         }
                         $challengeIncentivesData['challenge_id'] = $challenge_id;
                         $challengeIncentivesData['achievement_type'] = '1';
@@ -108,6 +108,38 @@ class ChallengeAchievementService
                     ChallengeAchievement::insert($challengeIncentiveArrayData);
                 }
             }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function cloneChallengeParticipationAchievement($originalChallengeParticipationAchievement, $clonedChallengeId)
+    {
+        try {
+            if ($originalChallengeParticipationAchievement) {
+                $cloneParticipationAchievement = $originalChallengeParticipationAchievement->replicate();
+                $cloneParticipationAchievement->challenge_id = $clonedChallengeId;
+                $cloneParticipationAchievement->save();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function cloneChallengeIncentiveAchievement($originalChallengeIncentiveAchievement, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeIncentiveAchievement->each(function ($incentive_achievement) use ($clonedChallengeId) {
+                if ($incentive_achievement) {
+                    $cloneIncentiveAchievement = $incentive_achievement->replicate();
+                    $cloneIncentiveAchievement->challenge_id = $clonedChallengeId;
+                    $cloneIncentiveAchievement->save();
+                }
+            });
 
             return true;
         } catch (Exception $e) {

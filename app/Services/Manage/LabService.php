@@ -38,7 +38,7 @@ class LabService
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
-                $lab_list = $lab_list->whereIn('labs.category', $request->category);
+                $lab_list = $lab_list->whereIn('labs.category_id', $request->category);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
@@ -325,6 +325,20 @@ class LabService
     {
         try {
             $lab = Lab::whereIn('uuid', $uuid)->pluck('id')->all();
+            if ($lab != null) {
+                return $lab;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabIdBasedOnId($id)
+    {
+        try {
+            $lab = Lab::whereIn('id', $id)->pluck('id')->all();
             if ($lab != null) {
                 return $lab;
             }

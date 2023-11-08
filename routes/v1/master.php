@@ -7,6 +7,7 @@ Route::middleware(['language'])->group(function () {
     Route::get('/categories', [MasterController::class, 'getCategories']);
     Route::get('/skills', [MasterController::class, 'getSkills']);
     Route::get('/tags', [MasterController::class, 'getTags']);
+    Route::get('/tag-groups', [MasterController::class, 'getTagGroup']);
     Route::get('/industries', [MasterController::class, 'getProjectIndustries']);
     Route::get('/types', [MasterController::class, 'getProjectTypes']);
     Route::get('/stages', [MasterController::class, 'getProjectStages']);
@@ -26,4 +27,6 @@ Route::middleware(['language'])->group(function () {
     Route::get('/durations', [MasterController::class, 'getDurations']);
     Route::get('/levels', [MasterController::class, 'getLevels']);
     Route::get('/check-pitch-task', [MasterController::class, 'getChallengePitchTask']);
+    Route::post('/create-sponsor/', [MasterController::class, 'createSponsor']);
+    Route::get('/challenge-announcement-recipient', [MasterController::class, 'getChallengeAnnouncementRecipient']);
 });

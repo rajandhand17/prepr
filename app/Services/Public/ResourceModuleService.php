@@ -99,4 +99,13 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public static function getResourceModuleBasedOnId($id)
+    {
+        try {
+            return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $id)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
