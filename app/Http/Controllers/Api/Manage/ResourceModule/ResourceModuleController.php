@@ -8,6 +8,7 @@ use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\DeleteMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
+use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
 use App\Services\Manage\OrganizationService;
@@ -246,6 +247,23 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.resource_module_media_not_delete'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getList(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $responseModuleList = $this->resourceModuleRepository->getListName($request, $organization);
+            if ($responseModuleList) {
+                return $this->sendResponse(ResourceModuleListNameResource::collection($responseModuleList), __('responses.found_resource_module_list'));
+            }
+            return $this->sendError(__('responses.not_found_resource_module_view'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

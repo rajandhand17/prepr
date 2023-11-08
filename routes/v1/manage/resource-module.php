@@ -14,4 +14,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/file-upload', [ResourceModuleController::class, 'fileUpload'])->middleware('permission:create_resource_module');
     Route::delete('/{slug}/delete', [ResourceModuleController::class, 'delete'])->middleware('permission:delete_resource_module');
     Route::delete('/{slug}/delete-media', [ResourceModuleController::class, 'deleteMedia'])->middleware('permission:delete_resource_module');
+    Route::get('/get-list', [ResourceModuleController::class, 'getList'])->middleware('permission:view_resource_module');
+
 });
