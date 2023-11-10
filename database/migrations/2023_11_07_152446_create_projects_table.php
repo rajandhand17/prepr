@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -19,11 +18,11 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->enum('view_enabled',['yes','no'])->default('yes')->comment('Allow users outside your team to view your project.');
-            $table->enum('download_enabled', ['yes','no'])->default('yes')->comment('Allow users outside your team to download your project files');
+            $table->enum('view_enabled', ['yes', 'no'])->default('yes')->comment('Allow users outside your team to view your project.');
+            $table->enum('download_enabled', ['yes', 'no'])->default('yes')->comment('Allow users outside your team to download your project files');
             $table->enum('media_type', ['image', 'embedded'])->default('image')->comment('Type of media defining of media');
             $table->text('media')->nullable();
-            $table->enum('status', ['0','1'])->default('0')->comment('Privacy of Project, 0 -> Public & 1 -> Private');
+            $table->enum('status', ['0', '1'])->default('0')->comment('Privacy of Project, 0 -> Public & 1 -> Private');
             $table->unsignedBigInteger('challenge_id');
             $table->unsignedBigInteger('lab_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
