@@ -33,4 +33,9 @@ class Project extends Model
         'vertical_id',
         'status_id',
     ];
+
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url') . $value;
+    }
 }

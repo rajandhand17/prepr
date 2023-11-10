@@ -495,4 +495,13 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengeBasedOnUUID($uUID)
+    {
+        try {
+            return Challenge::where('UUID', $uUID)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
