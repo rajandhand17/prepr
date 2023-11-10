@@ -28,7 +28,7 @@ class ProjectController extends AppBaseController
                 if ($challengeStatus) {
                     $checkChallengeTimelineType = $checkChallenge->challenge_timelines->timeline_type;
                     if ($checkChallengeTimelineType === '1') {
-                        if(!$checkChallenge->challenge_timelines->application_deadline_date > Carbon::now()->toDateTimeString()){
+                        if (!$checkChallenge->challenge_timelines->application_deadline_date > Carbon::now()->toDateTimeString()) {
                             return $this->sendError(__('responses.challenge_timeline_fail'), 403);
                         }
                     }
@@ -48,13 +48,14 @@ class ProjectController extends AppBaseController
                 } elseif ($request->media_type == 'embedded') {
                     $uploaded_cover_media = $request->cover_media;
                 }
-                
+
                 $upload_project_cover_media = $uploaded_cover_media;
             }
             $createProject = $this->projectRepository->createProject($request, $upload_project_cover_media);
             if ($createProject) {
                 return $this->sendResponse(ProjectResource::make($createProject), __('responses.project_stored_success'), 200);
             }
+
             return $this->sendError(__('responses.project_stored_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

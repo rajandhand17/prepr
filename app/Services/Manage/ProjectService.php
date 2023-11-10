@@ -83,7 +83,7 @@ class ProjectService
                 $labId = LabService::getLabBasedOnUUID($request->lab_id)->id;
             }
             $challengeId = ChallengeService::getChallengeBasedOnUUID($request->challenge_id)->id;
-            
+
             $model = new Project();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $createProject = new Project();
