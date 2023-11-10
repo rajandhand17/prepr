@@ -335,7 +335,7 @@ class ChallengeController extends AppBaseController
                 'challenge_announcement'    => ChallengeAnnouncementResource::collection($checkComponentBasedOnSlug->challenge_announcement),
             ];
 
-            return $this->sendResponse($response, __('responses.challenge_announcement_created'));
+            return $this->sendResponse($response, __('responses.found_challenges_announcement'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -371,7 +371,7 @@ class ChallengeController extends AppBaseController
                 return $this->sendResponse(ChallengeListNameResource::collection($getChallengeListName), __('responses.found_challenges_list'));
             }
 
-            return $this->sendResponse($getChallengeListName, __('responses.found_labs_list'));
+            return $this->sendError(__('responses.not_found_challenges_list'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
