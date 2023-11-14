@@ -645,5 +645,9 @@
     "responses.found_tag_groups_list": "The tag groups list has been successfully retrieved",
     "responses.not_found_tag_groups_list": "The list of tag groups has not been retrieved with success.",
     "responses.found_challenges_announcement": "The challenge announcement has been successfully retrieved",
-    "responses.not_found_challenges_announcement": "The announcement of challenge has not been retrieved with success."
+    "responses.not_found_challenges_announcement": "The announcement of challenge has not been retrieved with success.",
+    "responses.project_stored_failed": "Oops! The Creation Project has failed.",
+    "responses.challenge_status_fail": "The Challenge(s) which you are looking is not open or not published.",
+    "responses.challenge_timeline_fail": "The Challenge(s) which you are looking has passed registration/start date, please select other Challenge.",
+    "responses.project_stored_success": "Congratulations! You have successfully created the Project."
 }

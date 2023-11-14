@@ -247,4 +247,24 @@ return [
         'draft'     => '1',
     ],
 
+    'project_view_enabled' => [
+        'yes'       => 'yes',
+        'no'        => 'no',
+    ],
+
+    'project_download_enabled' => [
+        'yes'       => 'yes',
+        'no'        => 'no',
+    ],
+
+    'project_media_type' => [
+        'image'         => 'image',
+        'embedded'      => 'embedded',
+    ],
+
+    'project_status' => [
+        'public'       => '0',
+        'private'      => '1',
+    ],
+
 ];
