@@ -10,6 +10,8 @@ class UserAchievement extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    public $timestamps = true;
+
     protected $table = 'user_achievements';
 
     protected $fillable = [
