@@ -32,9 +32,9 @@ class UserAchievement extends Command
             DB::beginTransaction();
 
             DB::connection('mysql2')->table('user_achievements')->chunkById(1000, function ($userAchievement) {
-                $certificate_number = (int)date('ymd');
+                $certificate_date = (int) date('ymd');
                 $certificate_id = '0001';
-                $certificate_number = $certificate_number.$certificate_id;
+                $certificate_number = $certificate_date.$certificate_id;
                 foreach ($userAchievement as $single_user_achievement) {
                     $achievement_type = null;
                     $checkUsers = \App\Models\User::find($single_user_achievement->user_id);
