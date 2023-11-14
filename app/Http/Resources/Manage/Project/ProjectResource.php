@@ -20,7 +20,7 @@ class ProjectResource extends JsonResource
         $download_enabled = null;
         $challengeData = null;
         $labData = null;
-        
+
         switch ($this->view_enabled) {
             case '1':
                 $view_enabled = 'yes';
@@ -60,7 +60,7 @@ class ProjectResource extends JsonResource
         if ($this->challenge_id) {
             $challengeData = ChallengeService::getChallengeBasedOnId($this->challenge_id)->only(['id', 'uuid', 'title', 'slug']);
         }
-        
+
         if ($this->lab_id) {
             $labData = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
         }
