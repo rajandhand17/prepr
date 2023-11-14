@@ -16,6 +16,11 @@ class ProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $view_enabled = null;
+        $download_enabled = null;
+        $challengeData = null;
+        $labData = null;
+        
         switch ($this->view_enabled) {
             case '1':
                 $view_enabled = 'yes';
@@ -52,12 +57,10 @@ class ProjectResource extends JsonResource
                 break;
         }
 
-        $challengeData = null;
         if ($this->challenge_id) {
             $challengeData = ChallengeService::getChallengeBasedOnId($this->challenge_id)->only(['id', 'uuid', 'title', 'slug']);
         }
         
-        $labData = null;
         if ($this->lab_id) {
             $labData = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
         }
