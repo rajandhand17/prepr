@@ -34,7 +34,7 @@ class CreateProjectRequest extends FormRequest
             'challenge_id'              => 'required|exists:challenges,uuid',
             'lab_id'                    => 'nullable|exists:labs,id',
         ];
-        
+
         return $base_rules;
     }
 
