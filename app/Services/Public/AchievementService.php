@@ -50,4 +50,13 @@ class AchievementService
             return false;
         }
     }
+
+    public function getAchievementBasedOnCertificateNumber($certificateNumber)
+    {
+        try {
+            return UserAchievement::where(['certificate_number' => $certificateNumber])->first();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

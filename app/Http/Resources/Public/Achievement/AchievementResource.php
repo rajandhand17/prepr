@@ -54,7 +54,7 @@ class AchievementResource extends JsonResource
                 break;
         }
         $request = [
-            'id'                 => $this->id,
+            'id'                 => $this->certificate_number,
             'title'              => $this->title,
             'description'        => $this->description,
             'module_title'       => $this->module_title,

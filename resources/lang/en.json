@@ -262,7 +262,7 @@
     "responses.un_like_organization_successfully":"The Organization have been dis-liked successfully by you!",
 
     "responses.share_organization_successfully":"The Organization have been shared successfully by you!",
-    "responses.already_share_organization":"The Organization is already being dis-liked by you!",
+    "responses.already_share_organization":"The Organization is already being shared by you!",
 
     "responses.favourite_organization_successfully":"The Organization have been successfully added to favourites!",
     "responses.un_favourite_organization_successfully":"The Organization have been successfully removed from favourites!",

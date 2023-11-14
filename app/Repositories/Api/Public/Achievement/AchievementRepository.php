@@ -21,4 +21,13 @@ class AchievementRepository implements AchievementInterface
             return false;
         }
     }
+
+    public function getAchievementBasedOnCertificateNumber($certificateNumber)
+    {
+        try {
+            return $this->achievementService->getAchievementBasedOnCertificateNumber($certificateNumber);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }
