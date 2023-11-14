@@ -22,10 +22,10 @@ class AchievementRepository implements AchievementInterface
         }
     }
 
-    public function getAchievementBasedOnSlug($id)
+    public function getAchievementBasedOnId($id)
     {
         try {
-            return $this->achievementService->getAchievementBasedOnSlug($id);
+            return $this->achievementService->getAchievementBasedOnId($id);
         } catch(\Exception $e) {
             return false;
         }

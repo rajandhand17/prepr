@@ -57,7 +57,7 @@ class MemberManagementController extends AppBaseController
                 $response['current_page'] = $memberManagementListing->currentPage();
                 $response['total_pages'] = $memberManagementListing->lastPage();
                 $response['users'] = MemberManagementResource::collection($memberManagementListing);
-            } else {
+            }else{
                 $response['total_user_count'] = 0;
                 $response['per_page'] = 0;
                 $response['count'] = 0;

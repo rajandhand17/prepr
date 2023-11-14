@@ -51,10 +51,10 @@ class AchievementService
         }
     }
 
-    public function getAchievementBasedOnSlug($id)
+    public function getAchievementBasedOnId($id)
     {
         try {
-            return UserAchievement::where(['id' => $id])->first();
+            return UserAchievement::where(['certificate_number' => $id])->first();
         } catch(\Exception $e) {
             return false;
         }
