@@ -14,7 +14,6 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('certificate_number');
-            $table->string('certificate_id');
             $table->string('title');
             $table->longText('description')->nullable();
             $table->enum('achievement_type', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])->comment('0->lab,1->labprogram,2->challenge,3->challengepath,4->resourcegroup,5->appreciationaward,6->activityaward,7->skillactivity,8->importedaward,9->winneraward,10->participationaward')->default('0');
