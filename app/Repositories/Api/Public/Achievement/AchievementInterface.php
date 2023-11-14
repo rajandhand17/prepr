@@ -5,6 +5,6 @@ namespace App\Repositories\Api\Public\Achievement;
 interface AchievementInterface
 {
     public function getList($request);
-    public function getAchievementBasedOnCertificateNumber($id);
 
+    public function getAchievementBasedOnCertificateNumber($id);
 }

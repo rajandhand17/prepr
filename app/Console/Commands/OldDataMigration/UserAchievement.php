@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
-use Carbon\Carbon;
-
 
 class UserAchievement extends Command
 {
@@ -33,9 +32,9 @@ class UserAchievement extends Command
             DB::beginTransaction();
 
             DB::connection('mysql2')->table('user_achievements')->chunkById(1000, function ($userAchievement) {
-                $certificate_number =(int)date('ymd');
-                $certificate_id='0001';
-                $certificate_number=$certificate_number.$certificate_id;
+                $certificate_number = (int) date('ymd');
+                $certificate_id = '0001';
+                $certificate_number = $certificate_number.$certificate_id;
 
                 foreach ($userAchievement as $single_user_achievement) {
                     $achievement_type = null;
@@ -105,8 +104,8 @@ class UserAchievement extends Command
 
                     $userAchievement->id = $single_user_achievement->id;
                     $userAchievement->user_id = $single_user_achievement->user_id;
-                    $userAchievement->certificate_id= $certificate_id;
-                    $userAchievement->certificate_number= $certificate_number;
+                    $userAchievement->certificate_id = $certificate_id;
+                    $userAchievement->certificate_number = $certificate_number;
                     $userAchievement->title = $single_user_achievement->title;
                     $userAchievement->description = $single_user_achievement->description;
                     $userAchievement->achievement_type = $achievement_type;
@@ -121,7 +120,7 @@ class UserAchievement extends Command
                     $userAchievement->valid_date = $single_user_achievement->valid_date;
                     $userAchievement->user_notified = $single_user_achievement->user_notified;
                     $userAchievement->promo_code = $single_user_achievement->promo_code;
-                    $userAchievement->created_at =$createdAt;
+                    $userAchievement->created_at = $createdAt;
                     $userAchievement->updated_at = $updateAt;
                     $userAchievement->deleted_at = $deletedAt;
                     $userAchievement->save();
