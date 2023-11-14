@@ -86,9 +86,21 @@ class UserAchievement extends Command
                         default:
                             $achievement_type = null;
                     }
-                    $createdAt = Carbon::parse($single_user_achievement->created_at);
-                    $updateAt = Carbon::parse($single_user_achievement->updated_at)->toDateTimeString();
-                    $deletedAt = Carbon::parse($single_user_achievement->deleted_at)->toDateTimeString();
+                    if(!empty($single_user_achievement->created_at)){
+                        $createdAt = Carbon::parse($single_user_achievement->created_at);
+                    }else{
+                        $createdAt=null;
+                    }
+                    if(!empty($single_user_achievement->updated_at)){
+                        $updateAt = Carbon::parse($single_user_achievement->updated_at);
+                    }else{
+                        $updateAt=null;
+                    }
+                    if(!empty($single_user_achievement->deleted_at)){
+                        $deletedAt = Carbon::parse($single_user_achievement->deleted_at);
+                    }else{
+                        $deletedAt=null;
+                    }
                     $certificate_id=substr($certificate_number, -4);
 
                     $userAchievement->id = $single_user_achievement->id;
