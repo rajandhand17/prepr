@@ -39,10 +39,10 @@ class AchievementController extends AppBaseController
         }
     }
 
-    public function show($id)
+    public function show($certificateNumber)
     {
         try {
-            $achievement = $this->achievementRepository->getAchievementBasedOnCertificateNumber($id);
+            $achievement = $this->achievementRepository->getAchievementBasedOnCertificateNumber($certificateNumber);
             if ($achievement) {
                 return $this->sendResponse(AchievementResource::make($achievement), __('responses.found_achievement_list'));
             }

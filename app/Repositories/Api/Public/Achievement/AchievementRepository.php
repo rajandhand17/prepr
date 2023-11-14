@@ -22,10 +22,10 @@ class AchievementRepository implements AchievementInterface
         }
     }
 
-    public function getAchievementBasedOnCertificateNumber($id)
+    public function getAchievementBasedOnCertificateNumber($certificateNumber)
     {
         try {
-            return $this->achievementService->getAchievementBasedOnCertificateNumber($id);
+            return $this->achievementService->getAchievementBasedOnCertificateNumber($certificateNumber);
         } catch(\Exception $e) {
             return false;
         }
