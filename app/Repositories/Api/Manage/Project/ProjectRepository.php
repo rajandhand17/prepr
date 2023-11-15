@@ -57,4 +57,13 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function getProjectLabs($request)
+    {
+        try {
+            return $this->challengeService->getProjectLabs($request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
