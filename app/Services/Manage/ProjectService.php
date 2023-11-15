@@ -107,4 +107,13 @@ class ProjectService
             return false;
         }
     }
+
+    public static function getProjectBasedOnSlug($slug)
+    {
+        try {
+            return Project::where('slug', $slug)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

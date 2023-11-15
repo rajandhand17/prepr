@@ -51,6 +51,20 @@ class ProjectController extends AppBaseController
         }
     }
 
+    public function checkSlug($slug)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->checkSlug($slug);
+            if ($checkProjectSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.project_slug_available'), 200);
+            }
+
+            return $this->sendError(__('responses.already_exists'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function create(CreateProjectRequest $request)
     {
         try {
