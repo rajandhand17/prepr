@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\Project;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Project\CreateProjectRequest;
+use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Project\ProjectResource;
 use App\Repositories\Api\Manage\Project\ProjectRepository;
 use App\Services\Manage\ChallengeService;
@@ -23,7 +24,10 @@ class ProjectController extends AppBaseController
     public function challengeList(Request $request)
     {
         try {
-            dd($request->all());
+            $getProjectChallengeList = $this->projectRepository->getProjectChallenges($request);
+            if ($getProjectChallengeList) {
+                return $this->sendResponse(ChallengeListNameResource::collection($getProjectChallengeList), __('responses.found_challenges_list'));
+            }
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
