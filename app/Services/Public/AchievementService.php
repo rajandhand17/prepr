@@ -2,8 +2,12 @@
 
 namespace App\Services\Public;
 
+use App\Models\Challenge;
+use App\Models\Organization;
+use App\Models\ResourceGroup;
 use App\Models\UserAchievement;
-
+use Dompdf\Dompdf;
+use App\Models\User;
 class AchievementService
 {
     public function getList($request)
@@ -56,6 +60,38 @@ class AchievementService
         try {
             return UserAchievement::where(['certificate_number' => $certificateNumber])->first();
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function downloadCertificate($certificateNumber,$type)
+    {
+        try {
+            $userAchievement = UserAchievement::where(['certificate_number' => $certificateNumber])->first();
+            if ($userAchievement) {
+                $userData = User::find($userAchievement->user_id);
+                $challengeDetails = Challenge::find($userAchievement->module_parent_id);
+                $organisationDetails = Organization::find($challengeDetails->organisation);
+                $organisationName = $organisationDetails ? $organisationDetails->name : 'PreprLabs';
+                $userAchievement->organisation_name = $organisationName;
+                $data = [
+                    'userAchievement' => $userAchievement,
+                    'type'                      => $type,
+                    'user'                      => $userData,
+                    'user_id'                   => $userData->uuid,
+                    'strAchievementName'        => $userAchievement->title,
+                ];
+                $dompdf = new Dompdf();
+                $html = view('pdf.achievement_certificate', $data)->render();
+                $dompdf->loadHtml($html);
+                $dompdf->setPaper('legal', 'landscape');
+                $dompdf->render();
+                $dompdf->stream($userAchievement->certificate_number.'.pdf');
+                exit;
+            }
+            return false;
+        } catch(\Exception $e) {
+            dd($e);
             return false;
         }
     }

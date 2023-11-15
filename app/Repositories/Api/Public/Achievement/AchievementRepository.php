@@ -30,4 +30,12 @@ class AchievementRepository implements AchievementInterface
             return false;
         }
     }
+    public function downloadCertificate($certificateNumber,$type)
+    {
+        try {
+            return $this->achievementService->downloadCertificate($certificateNumber,$type);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }
