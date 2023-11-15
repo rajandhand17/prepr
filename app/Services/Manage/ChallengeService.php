@@ -526,6 +526,4 @@ class ChallengeService
             return false;
         }
     }
-
-
 }
