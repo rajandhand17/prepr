@@ -656,5 +656,7 @@
     "responses.challenge_id_field_required": "This Challenge field is required",
     "responses.challenge_not_exists": "Sorry, this Challenge has not been registered with us!",
     "responses.lab_not_exists": "Sorry, this Lab has not been registered with us!",
-    "responses.project_slug_available": "Success is yours! This Project slug is available"
+    "responses.project_slug_available": "Success is yours! This Project slug is available",
+    "responses.project_name_not_available": "This Project title is not available!",
+    "responses.project_name_available": "This Project title is available!"
 }

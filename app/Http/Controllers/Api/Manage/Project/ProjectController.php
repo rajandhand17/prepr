@@ -65,6 +65,20 @@ class ProjectController extends AppBaseController
         }
     }
 
+    public function checkName($title)
+    {
+        try {
+            $checkProjectTitle = $this->projectRepository->checkNameExistsOrNot($title);
+            if ($checkProjectTitle == false) {
+                return $this->sendResponse([], __('responses.project_name_available'));
+            }
+
+            return $this->sendError(__('responses.project_name_not_available'), 403);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function create(CreateProjectRequest $request)
     {
         try {

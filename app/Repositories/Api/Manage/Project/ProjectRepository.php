@@ -78,4 +78,13 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            return $this->projectService->checkNameExistsOrNot($title);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
