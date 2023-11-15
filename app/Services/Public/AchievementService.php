@@ -4,10 +4,10 @@ namespace App\Services\Public;
 
 use App\Models\Challenge;
 use App\Models\Organization;
-use App\Models\ResourceGroup;
+use App\Models\User;
 use App\Models\UserAchievement;
 use Dompdf\Dompdf;
-use App\Models\User;
+
 class AchievementService
 {
     public function getList($request)
@@ -64,7 +64,7 @@ class AchievementService
         }
     }
 
-    public function downloadCertificate($certificateNumber,$type)
+    public function downloadCertificate($certificateNumber, $type)
     {
         try {
             $userAchievement = UserAchievement::where(['certificate_number' => $certificateNumber])->first();
@@ -75,7 +75,7 @@ class AchievementService
                 $organisationName = $organisationDetails ? $organisationDetails->name : 'PreprLabs';
                 $userAchievement->organisation_name = $organisationName;
                 $data = [
-                    'userAchievement' => $userAchievement,
+                    'userAchievement'           => $userAchievement,
                     'type'                      => $type,
                     'user'                      => $userData,
                     'user_id'                   => $userData->uuid,
@@ -89,9 +89,11 @@ class AchievementService
                 $dompdf->stream($userAchievement->certificate_number.'.pdf');
                 exit;
             }
+
             return false;
         } catch(\Exception $e) {
             dd($e);
+
             return false;
         }
     }

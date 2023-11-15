@@ -7,5 +7,6 @@ interface AchievementInterface
     public function getList($request);
 
     public function getAchievementBasedOnCertificateNumber($certificateNumber);
-    public function downloadCertificate($certificateNumber,$type);
+
+    public function downloadCertificate($certificateNumber, $type);
 }
