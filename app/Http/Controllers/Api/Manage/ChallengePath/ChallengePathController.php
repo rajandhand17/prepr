@@ -107,7 +107,7 @@ class ChallengePathController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
             $updateChallengePath = $this->challengePathRepository->updateChallengePath($slug, $request, $upload_cover_image, $upload_achievement_image);
-            if ($updateChallengePath !=false) {
+            if ($updateChallengePath != false) {
                 return $this->sendResponse(ChallengePathResource::make($updateChallengePath), __('responses.challenge_path_update_successfully'), 200);
             }
 
