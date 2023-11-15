@@ -74,7 +74,7 @@ class ProjectRepository implements ProjectInterface
     {
         try {
             return $this->projectService->getProjectBasedOnSlug($slug);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
