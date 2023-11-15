@@ -9,7 +9,6 @@ use App\Models\ResourceCollectionTagsGroups;
 use App\Models\User;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ResourceModuleService;
-use App\Services\TagService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
@@ -161,27 +160,15 @@ class ResourceCollection extends Command
                         }
                     }
                     /*Add tags*/
-                    if (!empty($singleResourceCollection->tag)) {
-                        $resourceCollectionTags = json_decode($singleResourceCollection->tag);
-                        $getResourceCollectionTagsId = TagService::getTagsBasedOnIds($resourceCollectionTags);
-                        if (!empty($getResourceCollectionTagsId)) {
-                            $getExistsResourceCollectionTags = ResourceCollectionTagsGroups::where([
-                                ['resource_collection_id', '=', $singleResourceCollection->id],
-                                ['type', '=', '0'],
-                            ])->pluck('foreign_id')->toArray();
-                            $nonExistingIds = array_diff($getExistsResourceCollectionTags, $getResourceCollectionTagsId);
-                            ResourceCollectionTagsGroups::where([
-                                ['resource_collection_id', '=', $singleResourceCollection->id],
-                                ['type', '=', '0'],
-                            ])->whereIn('foreign_id', $nonExistingIds)->delete();
-                            $newTagsCollection = array_diff($getResourceCollectionTagsId, $getExistsResourceCollectionTags);
-                            foreach ($newTagsCollection as $tag) {
-                                $resourceGroupTag = new ResourceCollectionTagsGroups();
-                                $resourceGroupTag->resource_group_id = $singleResourceCollection->id;
-                                $resourceGroupTag->foreign_id = $tag;
-                                $resourceGroupTag->type = '0';
-                                $resourceGroupTag->save();
-                            }
+                    $resourceCollectionTags = json_decode($singleResourceCollection->tag, true);
+                    if ($resourceCollectionTags) {
+                        ResourceCollectionTagsGroups::where(['resource_collection_id' => $singleResourceCollection->id, 'foreign_id' => '0'])->delete();
+                        foreach (array_filter($resourceCollectionTags) as $tag) {
+                            $resourceGroupTag = new ResourceCollectionTagsGroups();
+                            $resourceGroupTag->resource_collection_id = $singleResourceCollection->id;
+                            $resourceGroupTag->foreign_id = $tag;
+                            $resourceGroupTag->type = '0';
+                            $resourceGroupTag->save();
                         }
                     }
                 }

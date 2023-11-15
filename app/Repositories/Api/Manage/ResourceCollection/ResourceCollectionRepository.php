@@ -139,4 +139,13 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             return  false;
         }
     }
+
+    public function getListName($request, $organization)
+    {
+        try {
+            return $this->resourceCollectionService->getListName($request, $organization);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

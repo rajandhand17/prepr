@@ -317,8 +317,8 @@
     "responses.level_id_required": "The level id is required",
     "responses.level_id_exists": "The provided level id is not exists!",
 
-    "responses.lab_id_required": "The Lab id is required!",
-    "responses.lab_id_exists": "The provided Lab id is not exists!",
+    "responses.lab_id_required": "Lab program association required. Please ensure the lab is associated with a lab program.",
+    "responses.lab_id_exists": "Oops! It seems like the Lab you're searching for doesn't exist.",
     "responses.lab_id_array": "This status should be an array!",
 
     "responses.lab_program_not_found": "The Lab Program(s) which you are looking doesn't exist in our system.",
@@ -642,6 +642,10 @@
     "responses.challenge_announcement_created": "Congratulations! You have successfully created a Challenge Announcement.",
     "responses.challenge_announcement_delete": "The challenge announcement been deleted successfully!",
     "responses.challenge_announcement_not_delete": "The challenge announcement was not deleted!",
+    "responses.found_tag_groups_list": "The tag groups list has been successfully retrieved",
+    "responses.not_found_tag_groups_list": "The list of tag groups has not been retrieved with success.",
+    "responses.found_challenges_announcement": "The challenge announcement has been successfully retrieved",
+    "responses.not_found_challenges_announcement": "The announcement of challenge has not been retrieved with success.",
     "responses.switch_type_lab": "Lab",
     "responses.switch_type_lab_program": "Lab Program",
     "responses.switch_type_challenge": "Challenge",
@@ -653,7 +657,6 @@
     "responses.switch_type_imported": "Imported",
     "responses.switch_type_winner": "Winner",
     "responses.switch_type_participation": "Participation",
-
     "responses.found_achievement_list":"The achievement list has been successfully retrieved",
     "responses.not_found_achievement_list":"The list of achievement has not been retrieved with success."
 }
