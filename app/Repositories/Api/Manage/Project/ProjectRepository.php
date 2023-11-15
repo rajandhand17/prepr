@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Manage\Project;
 
 use App\Services\Manage\ChallengeService;
+use App\Services\Manage\LabService;
 use App\Services\Manage\ProjectService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -11,11 +12,13 @@ class ProjectRepository implements ProjectInterface
 {
     private $projectService;
     private $challengeService;
+    private $labService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
+        $this->labService = $labService;
     }
 
     public function uploadCoverImage($coverImage)
@@ -53,6 +56,15 @@ class ProjectRepository implements ProjectInterface
     {
         try {
             return $this->challengeService->getProjectChallenges($request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectLabs($request, $challengeId)
+    {
+        try {
+            return $this->labService->getProjectLabs($request, $challengeId);
         } catch (Exception $e) {
             return false;
         }
