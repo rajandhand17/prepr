@@ -116,4 +116,18 @@ class ProjectService
             return false;
         }
     }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $checkProjectName = Project::where('title', $title)->first();
+            if ($checkProjectName) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
