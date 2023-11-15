@@ -37,9 +37,14 @@ class ProjectController extends AppBaseController
     public function labList(Request $request)
     {
         try {
-            $getProjectLabList = $this->projectRepository->getProjectLabs($request);
-            if ($getProjectLabList) {
-                return $this->sendResponse(LabListNameResource::collection($getProjectLabList), __('responses.found_labs_list'));
+            $checkChallenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
+            if ($checkChallenge) {
+                $getProjectLabList = $this->projectRepository->getProjectLabs($request, $checkChallenge->id);
+                if ($getProjectLabList) {
+                    return $this->sendResponse(LabListNameResource::collection($getProjectLabList), __('responses.found_labs_list'));
+                }
+            } else {
+                return $this->sendError(__('responses.not_found_labs_list'), 403);  
             }
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
