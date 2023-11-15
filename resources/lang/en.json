@@ -655,5 +655,6 @@
     "responses.choose_status": "This can be between '<b>public</b> or <b>private</b>' only .",
     "responses.challenge_id_field_required": "This Challenge field is required",
     "responses.challenge_not_exists": "Sorry, this Challenge has not been registered with us!",
-    "responses.lab_not_exists": "Sorry, this Lab has not been registered with us!"
+    "responses.lab_not_exists": "Sorry, this Lab has not been registered with us!",
+    "responses.project_slug_available": "Success is yours! This Project slug is available"
 }

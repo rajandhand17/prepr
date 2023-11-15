@@ -69,4 +69,13 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function checkSlug($slug)
+    {
+        try {
+            return $this->projectService->getProjectBasedOnSlug($slug);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
