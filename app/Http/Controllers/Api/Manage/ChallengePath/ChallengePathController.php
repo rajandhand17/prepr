@@ -70,8 +70,8 @@ class ChallengePathController extends AppBaseController
             }
 
             $createChallengePath = $this->challengePathRepository->createChallengePath($upload_cover_image, $upload_achievement_image, $request);
-            if ($createChallengePath) {
-                return $this->sendResponse($createChallengePath, __('responses.challenge_path_stored_success'), 200);
+            if ($createChallengePath != false) {
+                return $this->sendResponse(ChallengePathResource::make($createChallengePath), __('responses.challenge_path_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.challenge_path_stored_failed'), 403);
@@ -107,8 +107,8 @@ class ChallengePathController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
             $updateChallengePath = $this->challengePathRepository->updateChallengePath($slug, $request, $upload_cover_image, $upload_achievement_image);
-            if ($updateChallengePath) {
-                return $this->sendResponse($updateChallengePath, __('responses.challenge_path_update_successfully'), 200);
+            if ($updateChallengePath !=false) {
+                return $this->sendResponse(ChallengePathResource::make($updateChallengePath), __('responses.challenge_path_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.challenge_path_not_update'), 403);

@@ -85,8 +85,8 @@ class LabProgramController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
             $createLabProgram = $this->labProgramRepository->createLabProgram($request, $upload_media, $upload_achievement_image);
-            if ($createLabProgram) {
-                return $this->sendResponse($createLabProgram, __('responses.lab_program_stored_success'), 200);
+            if ($createLabProgram != false) {
+                return $this->sendResponse(LabProgramResource::make($createLabProgram), __('responses.lab_program_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.lab_program_stored_failed'), 403);
@@ -119,8 +119,8 @@ class LabProgramController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
             $updateLabProgram = $this->labProgramRepository->updateLabProgram($slug, $request, $upload_media, $upload_achievement_image);
-            if ($updateLabProgram) {
-                return $this->sendResponse($updateLabProgram, __('responses.lab_program_update_successfully'), 200);
+            if ($updateLabProgram != false) {
+                return $this->sendResponse(LabProgramResource::make($updateLabProgram), __('responses.lab_program_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.lab_program_not_update'), 403);
