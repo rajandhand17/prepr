@@ -382,7 +382,7 @@ class ChallengeController extends AppBaseController
                     ];
                 }
             }
-            
+
             $response = [
                 'slug'                      => $checkComponentBasedOnSlug->slug,
                 'title'                     => $checkComponentBasedOnSlug->title,
