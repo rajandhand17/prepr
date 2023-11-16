@@ -72,7 +72,7 @@ class AchievementService
                 $userData = User::find($userAchievement->user_id);
                 $challengeDetails = $userAchievement->module_parent_id ? Challenge::find($userAchievement->module_parent_id) : null;
                 $organisationDetails = isset($challengeDetails->organization_id) ? Organization::find($challengeDetails->organization_id) : null;
-                $organisationName = isset($organisationDetails) ? $organisationDetails->display_name : 'PreprLabs';
+                $organisationName = isset($organisationDetails) ? $organisationDetails->display_name : 'Learnlab';
                 $userAchievement->organisation_name = $organisationName;
                 $data = [
                     'userAchievement'           => $userAchievement,
@@ -82,7 +82,7 @@ class AchievementService
                     'strAchievementName'        => $userAchievement->title,
                 ];
                 $dompdf = new Dompdf();
-                $html = view('pdf.achievement_certificate', $data)->render();
+                $html = view('PDF.achievement_certificate', $data)->render();
                 $dompdf->loadHtml($html);
                 $dompdf->setPaper('legal', 'landscape');
                 $dompdf->render();

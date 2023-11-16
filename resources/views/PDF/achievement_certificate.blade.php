@@ -57,9 +57,9 @@ try {
 $image = file_get_contents($url);
 } catch(Exception $e){
 if($image_type == "issued_by_image") {
-$url    =  config('site-settings.aws_url').config('site-settings.default_challenge_achievement_image');
+$url    =  config('site-settings.aws_url').config('site-settings.default_achievement_image');
 } elseif($image_type == "trophy_image") {
-$url    =   config('site-settings.aws_url').config('site-settings.default_challenge_achievement_image');
+$url    =   config('site-settings.aws_url').config('site-settings.default_achievement_image');
 } else {
 return 'data:image/jpg;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 }
@@ -155,7 +155,7 @@ case "challenge-win":
     break;
 case "challenge-participation":
     $strIssuedByName      =   $userAchievement->organisation_name;
-    $strIssuedByImage     =   env('CDN_URL').'/front/img/logoNew.png';
+    $strIssuedByImage     =   config('site-settings.aws_url').config('site-settings.default_logo_image');
     $strAchievementName   =   $userAchievement->module_parent_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     $strTrophyImage       =   $userAchievement->achievement_image;
