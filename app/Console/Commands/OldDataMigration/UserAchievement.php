@@ -30,8 +30,7 @@ class UserAchievement extends Command
         try {
             $this->info('Migrating old data for users table.');
             DB::beginTransaction();
-
-            DB::connection('mysql2')->table('user_achievements')->chunkById(1000, function ($userAchievement) {
+            $userAchievement = DB::connection('mysql2')->table('user_achievements')->get();
                 $certificate_date = (int) date('ymd');
                 $certificate_id = '0001';
                 $certificate_number = $certificate_date.$certificate_id;
@@ -123,8 +122,6 @@ class UserAchievement extends Command
                     $userAchievement->save();
                     $certificate_number++;
                 }
-            });
-
             DB::commit();
             $this->info('Migrating of old data for users table completed.');
         } catch(\Exception $e) {

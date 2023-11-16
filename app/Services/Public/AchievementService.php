@@ -67,12 +67,12 @@ class AchievementService
     public function downloadCertificate($certificateNumber, $type)
     {
         try {
-            $userAchievement = UserAchievement::where(['certificate_number' => $certificateNumber])->first();
+            $userAchievement = UserAchievement::where('certificate_number',$certificateNumber)->first();
             if ($userAchievement) {
                 $userData = User::find($userAchievement->user_id);
                 $challengeDetails = $userAchievement->module_parent_id ? Challenge::find($userAchievement->module_parent_id) : null;
-                $organisationDetails = isset($challengeDetails->organisation) ? Organization::find($challengeDetails->organisation) : null;
-                $organisationName = isset($organisationDetails) ? $organisationDetails->name : 'PreprLabs';
+                $organisationDetails = isset($challengeDetails->organization_id) ? Organization::find($challengeDetails->organization_id) : null;
+                $organisationName = isset($organisationDetails) ? $organisationDetails->display_name : 'PreprLabs';
                 $userAchievement->organisation_name = $organisationName;
                 $data = [
                     'userAchievement'           => $userAchievement,
@@ -92,8 +92,6 @@ class AchievementService
 
             return false;
         } catch(\Exception $e) {
-            dd($e);
-
             return false;
         }
     }

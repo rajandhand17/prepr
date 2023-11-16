@@ -81,63 +81,63 @@ $strExpiresOn         =   "";
 $strTrophyImage       =   Storage::cloud()->url('front/img/trophy_sample.png');
 
 switch ($type) {
-case "appreciation-award":
+case "appreciation":
     $strIssuedByName    =   __('labels.labels_dashboard_prepr');
     $strIssuedByImage   =   env('CDN_URL').'/front/img/logoNew.png';
     $strAchievementName =   $userAchievement['title'];
     $strDescription     =   $userAchievement['description'];
     $strIssuedOn        =   ( isset($userAchievement['issue_date'] ) ? \Carbon\Carbon::parse($userAchievement['issue_date'])->translatedFormat("M d, Y") : "" );
     $strExpiresOn       =   ( isset($userAchievement['valid_date'] ) ? \Carbon\Carbon::parse($userAchievement['valid_date'])->translatedFormat("M d, Y") : "" );
-    $strTrophyImage     =   env('CDN_CloudFrontUrl').'/'. $userAchievement['achievement_image'];
+    $strTrophyImage     =    $userAchievement['achievement_image'];
     $strTrophyType      =   "Appreciation Achievement Name";
     break;
-case "activity-award":
+case "activity":
     $strIssuedByName    =   __('labels.labels_dashboard_prepr');
-    $strIssuedByImage   =   env('CDN_URL').'/front/img/logoNew.png';
+    $strIssuedByImage   =   config('site-settings.cdn_url').'/public/front/img/logoNew.png';
     $strAchievementName =   $userAchievement['title'];
     $strDescription     =   $userAchievement['description'];
     $strIssuedOn        =   ( isset($userAchievement['issue_date'] ) ? \Carbon\Carbon::parse($userAchievement['issue_date'])->translatedFormat("M d, Y") : "" );
     $strExpiresOn       =   ( isset($userAchievement['valid_date'] ) ? \Carbon\Carbon::parse($userAchievement['valid_date'])->translatedFormat("M d, Y") : "" );
-    $strTrophyImage     =   env('CDN_CloudFrontUrl').'/'. $userAchievement['achievement_image'];
+    $strTrophyImage     =   $userAchievement['achievement_image'];
     $strTrophyType      =   "Activity Achievement Name";
     break;
-case "skills-activity-award":
+case "skills-activity":
     $strIssuedByName    =   __('labels.labels_dashboard_prepr');
-    $strIssuedByImage   =   env('CDN_URL').'/front/img/logoNew.png';
+    $strIssuedByImage   =   config('site-settings.cdn_url').'/public/front/img/logoNew.png';
     $strAchievementName =   $userAchievement['title'];
     $strDescription     =   $userAchievement['description'];
     $strIssuedOn        =   ( isset($userAchievement['issue_date'] ) ? \Carbon\Carbon::parse($userAchievement['issue_date'])->translatedFormat("M d, Y") : "" );
     $strExpiresOn       =   ( isset($userAchievement['valid_date'] ) ? \Carbon\Carbon::parse($userAchievement['valid_date'])->translatedFormat("M d, Y") : "" );
-    $strTrophyImage     =   env('CDN_CloudFrontUrl').'/'. $userAchievement['achievement_image'];
+    $strTrophyImage     =    $userAchievement['achievement_image'];
     $strTrophyType      =   "Skill Activity Achievement Name";
     break;
-case "lab-win-trophy":
+case "lab":
     $strIssuedByName      =   $userAchievement->module_parent_title;
     $strIssuedByImage     =   $userAchievement->achievement_image;
     $strAchievementName   =   $userAchievement->module_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     if(isset($userAchievement) && $userAchievement !== null && isset($userAchievement->achievement_image)) {
-    $strTrophyImage   =   env('CDN_CloudFrontUrl').'/'.$userAchievement->achievement_image;
+    $strTrophyImage   =    $userAchievement->achievement_image;
     }
     $strTrophyType      =   "Lab Name";
     break;
-case "lab-program-trophy":
+case "lab-program":
     $strIssuedByName      =   $userAchievement->module_parent_title;
     $strIssuedByImage     =   $userAchievement->achievement_image;
     $strAchievementName   =   $userAchievement->module_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
-    $strTrophyImage       =   env('CDN_CloudFrontUrl').'/'. $userAchievement->achievement_image;
+    $strTrophyImage       =   $userAchievement->achievement_image;
     $strTrophyType      =   "Lab Program Name";
     break;
-case "challenge-path-trophy":
+case "challenge-path":
     $strIssuedByName      =   $userAchievement->module_parent_title;
     $strIssuedByImage     =   $userAchievement->achievement_image;
     $strAchievementName   =   $userAchievement->module_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
-    $strTrophyImage       =   env('CDN_CloudFrontUrl').'/'. $userAchievement->achievement_image;
+    $strTrophyImage       =   $userAchievement->achievement_image;
     $strTrophyType      =   "Challenge Path Name";
     break;
-case "resource-group-trophy":
+case "resource-group":
     $strIssuedByName      =   $userAchievement->module_parent_title;
     $strIssuedByImage     =   $userAchievement->achievement_image;
     $strAchievementName   =   $userAchievement->module_title;
@@ -145,25 +145,25 @@ case "resource-group-trophy":
     $strTrophyImage       =   env('CDN_CloudFrontUrl').'/'. $userAchievement->achievement_image;
     $strTrophyType      =   "Resource Group Name";
     break;
-case "challenge-win-trophy":
+case "challenge-win":
     $strIssuedByName      =   $userAchievement->organisation_name;
     $strIssuedByImage     =   $userAchievement->achievement_image;
     $strAchievementName   =   $userAchievement->module_parent_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
-    $strTrophyImage       =   env('CDN_CloudFrontUrl').'/'. $userAchievement->achievement_image;
+    $strTrophyImage       =   $userAchievement->achievement_image;
     $strTrophyType      =   "Challenge Name";
     break;
-case "challenge-participation-trophy":
+case "challenge-participation":
     $strIssuedByName      =   $userAchievement->organisation_name;
     $strIssuedByImage     =   $userAchievement->achievement_image;
     $strAchievementName   =   $userAchievement->module_parent_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
-    $strTrophyImage       =   env('CDN_CloudFrontUrl').'/'. $userAchievement->achievement_image;
+    $strTrophyImage       =   $userAchievement->achievement_image;
     $strTrophyType      =   "Challenge Name";
     break;
 }
-
 @endphp
+
 <div id="bg-div">
     <div class="certificate-container">
         <div class="certificate">
