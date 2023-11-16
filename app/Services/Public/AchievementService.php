@@ -15,7 +15,6 @@ class AchievementService
         try {
             $achievement_list = UserAchievement::select();
             $achievement_list = self::filterAchievementList($request, $achievement_list);
-
             return $achievement_list->paginate(config('site-settings.pagination_per_page'));
         } catch(\Exception $e) {
             return false;
