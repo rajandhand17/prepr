@@ -48,6 +48,7 @@ class AchievementService
                         $achievement_list->orderBy('user_achievements.id', 'ASC');
                 }
             }
+
             return $achievement_list;
         } catch(\Exception $e) {
             return false;
@@ -69,8 +70,8 @@ class AchievementService
             $userAchievement = UserAchievement::where(['certificate_number' => $certificateNumber])->first();
             if ($userAchievement) {
                 $userData = User::find($userAchievement->user_id);
-                $challengeDetails=$userAchievement->module_parent_id ? Challenge::find($userAchievement->module_parent_id) : null;
-                $organisationDetails= isset($challengeDetails->organisation) ? Organization::find($challengeDetails->organisation) : null;
+                $challengeDetails = $userAchievement->module_parent_id ? Challenge::find($userAchievement->module_parent_id) : null;
+                $organisationDetails = isset($challengeDetails->organisation) ? Organization::find($challengeDetails->organisation) : null;
                 $organisationName = isset($organisationDetails) ? $organisationDetails->name : 'PreprLabs';
                 $userAchievement->organisation_name = $organisationName;
                 $data = [
@@ -88,9 +89,11 @@ class AchievementService
                 $dompdf->stream($userAchievement->certificate_number.'.pdf');
                 exit;
             }
+
             return false;
         } catch(\Exception $e) {
             dd($e);
+
             return false;
         }
     }
