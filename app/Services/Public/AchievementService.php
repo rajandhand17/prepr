@@ -91,6 +91,7 @@ class AchievementService
             }
             return false;
         } catch(\Exception $e) {
+            dd($e);
             return false;
         }
     }
