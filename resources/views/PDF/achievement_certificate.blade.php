@@ -113,7 +113,7 @@ case "skills-activity":
     break;
 case "lab":
     $strIssuedByName      =   $userAchievement->module_parent_title;
-    $strIssuedByImage     =   $userAchievement->achievement_image;
+    $strIssuedByImage     =   env('CDN_URL').'/front/img/logoNew.png';
     $strAchievementName   =   $userAchievement->module_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     if(isset($userAchievement) && $userAchievement !== null && isset($userAchievement->achievement_image)) {
@@ -123,7 +123,7 @@ case "lab":
     break;
 case "lab-program":
     $strIssuedByName      =   $userAchievement->module_parent_title;
-    $strIssuedByImage     =   $userAchievement->achievement_image;
+    $strIssuedByImage     =   env('CDN_URL').'/front/img/logoNew.png';
     $strAchievementName   =   $userAchievement->module_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     $strTrophyImage       =   $userAchievement->achievement_image;
@@ -131,7 +131,7 @@ case "lab-program":
     break;
 case "challenge-path":
     $strIssuedByName      =   $userAchievement->module_parent_title;
-    $strIssuedByImage     =   $userAchievement->achievement_image;
+    $strIssuedByImage     =   env('CDN_URL').'/front/img/logoNew.png';
     $strAchievementName   =   $userAchievement->module_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     $strTrophyImage       =   $userAchievement->achievement_image;
@@ -139,7 +139,7 @@ case "challenge-path":
     break;
 case "resource-group":
     $strIssuedByName      =   $userAchievement->module_parent_title;
-    $strIssuedByImage     =   $userAchievement->achievement_image;
+    $strIssuedByImage     =   env('CDN_URL').'/front/img/logoNew.png';
     $strAchievementName   =   $userAchievement->module_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     $strTrophyImage       =   env('CDN_CloudFrontUrl').'/'. $userAchievement->achievement_image;
@@ -147,7 +147,7 @@ case "resource-group":
     break;
 case "challenge-win":
     $strIssuedByName      =   $userAchievement->organisation_name;
-    $strIssuedByImage     =   $userAchievement->achievement_image;
+    $strIssuedByImage     =   env('CDN_URL').'/front/img/logoNew.png';
     $strAchievementName   =   $userAchievement->module_parent_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     $strTrophyImage       =   $userAchievement->achievement_image;
@@ -155,7 +155,7 @@ case "challenge-win":
     break;
 case "challenge-participation":
     $strIssuedByName      =   $userAchievement->organisation_name;
-    $strIssuedByImage     =   $userAchievement->achievement_image;
+    $strIssuedByImage     =   env('CDN_URL').'/front/img/logoNew.png';
     $strAchievementName   =   $userAchievement->module_parent_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     $strTrophyImage       =   $userAchievement->achievement_image;
