@@ -6,6 +6,7 @@ return [
     'dropdown_listing_limit'                        => '20',
     'aws_url'                                       => env('CDN_URL'),
     'frontend_site_url'                             => env('FRONTEND_SITE_URL'),
+    'cdn_url'                                       => env('CDN_CloudFrontUrl'),
 
     'default_user_profile_image'                    => 'default_images/user.webp',
 

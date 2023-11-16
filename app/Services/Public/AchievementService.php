@@ -89,7 +89,6 @@ class AchievementService
                 $dompdf->stream($userAchievement->certificate_number.'.pdf');
                 exit;
             }
-
             return false;
         } catch(\Exception $e) {
             return false;

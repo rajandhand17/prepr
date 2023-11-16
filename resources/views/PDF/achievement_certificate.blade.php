@@ -159,7 +159,7 @@ case "challenge-participation":
     $strAchievementName   =   $userAchievement->module_parent_title;
     $strIssuedOn          =   \Carbon\Carbon::parse($userAchievement->issue_date)->translatedFormat("M d, Y");
     $strTrophyImage       =   $userAchievement->achievement_image;
-    $strTrophyType      =   "Challenge Name";
+    $strTrophyType        =   "Challenge Name";
     break;
 }
 @endphp
