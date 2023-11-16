@@ -15,6 +15,7 @@ class AchievementService
         try {
             $achievement_list = UserAchievement::select();
             $achievement_list = self::filterAchievementList($request, $achievement_list);
+
             return $achievement_list->paginate(config('site-settings.pagination_per_page'));
         } catch(\Exception $e) {
             return false;
@@ -66,7 +67,7 @@ class AchievementService
     public function downloadCertificate($certificateNumber, $type)
     {
         try {
-            $userAchievement = UserAchievement::where('certificate_number',$certificateNumber)->first();
+            $userAchievement = UserAchievement::where('certificate_number', $certificateNumber)->first();
             if ($userAchievement) {
                 $userData = User::find($userAchievement->user_id);
                 $challengeDetails = $userAchievement->module_parent_id ? Challenge::find($userAchievement->module_parent_id) : null;
@@ -88,6 +89,7 @@ class AchievementService
                 $dompdf->stream($userAchievement->certificate_number.'.pdf');
                 exit;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;

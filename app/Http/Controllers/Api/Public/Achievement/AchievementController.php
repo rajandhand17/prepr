@@ -60,8 +60,9 @@ class AchievementController extends AppBaseController
             if ($downloadFile) {
                 return $this->sendResponse(null, __('responses.download_certificate'));
             }
+
             return $this->sendError(__('responses.failed_download_certificate'), 500);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
