@@ -59,11 +59,6 @@ class LabProgramTagsGroupsService
                         $LabSkillsGroupsStack->save();
                     }
                 }
-            }else{
-                $deleteNonExisting = LabProgramsTagsGroups::where([
-                    ['lab_program_id', '=', $lab_program_id],
-                    ['type', '=', '0'],
-                ])->delete();
             }
             if ($request->has('tag_groups')) {
                 if (count($request->tag_groups) > 0) {
