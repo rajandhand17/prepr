@@ -245,6 +245,7 @@ return [
     'challenge_announcement_send_status' => [
         'send'      => '0',
         'draft'     => '1',
+        'scheduled' => '2',
     ],
 
     'user_achievement_type'=> [

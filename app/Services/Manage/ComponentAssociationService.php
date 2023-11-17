@@ -275,10 +275,10 @@ class ComponentAssociationService
 
     public function labProgramAssociation($request, $labProgram)
     {
-        if ($request->has('lab_id')) {
+        if ($request->has('lab_ids')) {
             $sequence = 1;
-            if (count($request->lab_id) > 0) {
-                foreach ($request->lab_id as $lab) {
+            if (count($request->lab_ids) > 0) {
+                foreach ($request->lab_ids as $lab) {
                     $lab_id = Lab::where('uuid', $lab)->select('id')->first()->id;
                     $labSkillsGroupsStack = new ComponentAssociation();
                     $labSkillsGroupsStack->lab_id = $lab_id;
@@ -296,18 +296,18 @@ class ComponentAssociationService
     public function updateLabProgramAssociation($request, $lab_programs)
     {
         try {
-            if ($request->has('lab_id')) {
+            if ($request->has('lab_ids')) {
                 $sequence = 1;
-                $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_id);
-                $request->merge(['lab_id' => $getLabId]);
-                if (count($request->lab_id) > 0) {
+                $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_ids);
+                $request->merge(['lab_ids' => $getLabId]);
+                if (count($request->lab_ids) > 0) {
                     $existComponentAssociation = ComponentAssociation::where([
                         ['lab_program_id', '=', $lab_programs],
                         ['lab_id', '!=', null],
                     ])->pluck('lab_id')->all();
-                    $nonExistingIds = array_diff($existComponentAssociation, $request->lab_id);
+                    $nonExistingIds = array_diff($existComponentAssociation, $request->lab_ids);
                     $deleteNonExistingComponentAssociation = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('lab_id', $nonExistingIds)->delete();
-                    $newComponentAssociation = array_diff($request->lab_id, $existComponentAssociation);
+                    $newComponentAssociation = array_diff($request->lab_ids, $existComponentAssociation);
                     $sequence = ComponentAssociation::where([
                         ['lab_program_id', '=', $lab_programs],
                         ['lab_id', '!=', null],
