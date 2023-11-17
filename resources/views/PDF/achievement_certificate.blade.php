@@ -175,6 +175,8 @@ case "challenge-participation":
                 </tr>
                 <tr>
                     <td>
+                        <small class="issuedText">{{ __('labels.labels_achi_cn') }}</small>
+                        <h5 class="issuedBy">{{$certificateNumber}}</h5>
                         <small class="issuedText">{{ __('labels.labels_achi_ib') }}</small>
                         <h5 class="issuedBy">{{$strIssuedByName}}</h5>
                     </td>

@@ -14,7 +14,6 @@ class LabProgramAchievementsService
             if ($upload_Achievement_image == false) {
                 return false;
             }
-
             return $upload_Achievement_image;
         } catch (\Exception $e) {
             return false;

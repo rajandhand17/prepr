@@ -663,6 +663,7 @@
     "responses.failed_download_certificate": "The certificate has not been downloaded successfully",
     "labels.labels_dashboard_prepr": "LearnLab",
     "labels.labels_achi_ib": "Issued by",
+    "labels.labels_achi_cn": "Certificate Number",
     "labels.labels_achi_at": "Awarded to",
     "labels.labels_pro_des": "Description",
     "labels.labels_fb": "Facebook",

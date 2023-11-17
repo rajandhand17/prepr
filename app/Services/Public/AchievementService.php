@@ -75,6 +75,7 @@ class AchievementService
                 $organisationName = isset($organisationDetails) ? $organisationDetails->display_name : 'Learnlab';
                 $userAchievement->organisation_name = $organisationName;
                 $data = [
+                    'certificateNumber'         => $certificateNumber,
                     'userAchievement'           => $userAchievement,
                     'type'                      => $type,
                     'user'                      => $userData,
