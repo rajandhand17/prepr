@@ -17,10 +17,15 @@ class ChallengeAnnouncementResource extends JsonResource
      */
     public function toArray($request)
     {
+        $schedule_at = [];
         $to_recipient_ids = [];
         foreach ($this->to_recipient_ids as $to_recipient_id) {
             $challenge_announcement_recipient = ChallengeAnnouncementService::getChallengeAnnouncementByID($request->language, $to_recipient_id);
             $to_recipient_ids[$challenge_announcement_recipient->id] = $challenge_announcement_recipient->title;
+        }
+
+        if ($this->schedule_at) {
+            $schedule_at = UtilityHelper::formatDateTime($this->schedule_at);
         }
 
         switch ($this->sent_by) {
@@ -57,6 +62,9 @@ class ChallengeAnnouncementResource extends JsonResource
             case '1':
                 $status = 'draft';
                 break;
+            case '2':
+                $status = 'scheduled';
+                break;
             default:
                 $status = 'send';
                 break;
@@ -67,7 +75,7 @@ class ChallengeAnnouncementResource extends JsonResource
             'subject'               => $this->subject,
             'sent_by'               => $sent_by,
             'description'           => $this->description,
-            'schedule_at'           => UtilityHelper::formatDateTime($this->schedule_at),
+            'schedule_at'           => $schedule_at,
             'status'                => $status,
             'sent_status'           => $sent_status,
             'to_recipient_ids'      => json_decode(json_encode($to_recipient_ids)),
