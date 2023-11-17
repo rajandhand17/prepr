@@ -305,11 +305,38 @@ class ChallengeController extends AppBaseController
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
 
+            $challenge_timelines = [];
+            if ($checkComponentBasedOnSlug->challenge_timelines) {
+                if ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '0') {
+                    $challenge_timelines = [
+                        'timeline_type'                 => 'flexible',
+                        'flexible_date_number'          => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_number,
+                        'flexible_date_duration'        => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_duration,
+                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert,
+                        'flexible_expire_deadline'      => $checkComponentBasedOnSlug->challenge_timelines->flexible_expire_deadline,
+                    ];
+                } elseif ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '1') {
+                    $challenge_timelines = [
+                        'timeline_type'                         => 'restricted',
+                        'open_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->open_call_date,
+                        'open_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->open_call_date_description,
+                        'last_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->last_call_date,
+                        'last_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->last_call_date_description,
+                        'application_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date,
+                        'application_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date_description,
+                        'submission_deadline_date'              => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
+                        'submission_deadline_date_description'  => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
+                        'challenge_duration'                    => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
+                    ];
+                }
+            }
+
             $createAnnouncement = $this->challengeRepository->createChallengeAnnouncement($checkComponentBasedOnSlug->id, $request);
             if ($createAnnouncement != false) {
                 $response = [
                     'slug'                      => $checkComponentBasedOnSlug->slug,
                     'title'                     => $checkComponentBasedOnSlug->title,
+                    'challenge_timline'         => $challenge_timelines,
                     'challenge_announcement'    => ChallengeAnnouncementResource::make($createAnnouncement),
                 ];
 
@@ -329,9 +356,37 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+
+            $challenge_timelines = [];
+            if ($checkComponentBasedOnSlug->challenge_timelines) {
+                if ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '0') {
+                    $challenge_timelines = [
+                        'timeline_type'                 => 'flexible',
+                        'flexible_date_number'          => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_number,
+                        'flexible_date_duration'        => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_duration,
+                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert,
+                        'flexible_expire_deadline'      => $checkComponentBasedOnSlug->challenge_timelines->flexible_expire_deadline,
+                    ];
+                } elseif ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '1') {
+                    $challenge_timelines = [
+                        'timeline_type'                         => 'restricted',
+                        'open_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->open_call_date,
+                        'open_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->open_call_date_description,
+                        'last_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->last_call_date,
+                        'last_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->last_call_date_description,
+                        'application_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date,
+                        'application_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date_description,
+                        'submission_deadline_date'              => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
+                        'submission_deadline_date_description'  => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
+                        'challenge_duration'                    => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
+                    ];
+                }
+            }
+
             $response = [
                 'slug'                      => $checkComponentBasedOnSlug->slug,
                 'title'                     => $checkComponentBasedOnSlug->title,
+                'challenge_timline'         => $challenge_timelines,
                 'challenge_announcement'    => ChallengeAnnouncementResource::collection($checkComponentBasedOnSlug->challenge_announcement),
             ];
 

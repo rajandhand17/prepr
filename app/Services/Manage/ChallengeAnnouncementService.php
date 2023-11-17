@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\LanguageColumnHelper;
 use App\Models\ChallengeAnnouncement;
 use App\Models\ChallengeAnnouncementRecipient;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Schema;
 
@@ -37,12 +38,15 @@ class ChallengeAnnouncementService
                 case 'draft':
                     $sendAnnouncementSendStatus = config('constants.challenge_announcement_send_status.draft');
                     break;
+                case 'scheduled':
+                    $sendAnnouncementSendStatus = config('constants.challenge_announcement_send_status.scheduled');
+                    break;
                 default:
                     $sendAnnouncementSendStatus = config('constants.challenge_announcement_send_status.send');
                     break;
             }
 
-            $schedule_date = date('Y-m-d H:i:s', strtotime($request->schedule_at));
+            $schedule_date = $request->schedule_at !== null ? date('Y-m-d H:i:s', strtotime($request->schedule_at)) : Carbon::now()->toDateTimeString();
 
             $challengeAnnouncement = new ChallengeAnnouncement();
             $challengeAnnouncement->challenge_id = $challengeId;
