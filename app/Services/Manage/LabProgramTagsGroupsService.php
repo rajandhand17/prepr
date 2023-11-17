@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\LabProgramsTagsGroups;
-use App\Models\LabTagsGroups;
 
 class LabProgramTagsGroupsService
 {
@@ -59,7 +58,7 @@ class LabProgramTagsGroupsService
                         $LabSkillsGroupsStack->save();
                     }
                 }
-            }else{
+            } else {
                 $deleteNonExisting = LabProgramsTagsGroups::where([
                     ['lab_program_id', '=', $lab_program_id],
                     ['type', '=', '0'],
@@ -85,8 +84,8 @@ class LabProgramTagsGroupsService
                         $LabSkillsGroupsStack->save();
                     }
                 }
-            }else{
-               LabProgramsTagsGroups::where([
+            } else {
+                LabProgramsTagsGroups::where([
                     ['lab_program_id', '=', $lab_program_id],
                     ['type', '=', '1'],
                 ])->delete();
