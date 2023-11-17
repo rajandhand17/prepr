@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Manage\Challenge;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -30,9 +31,9 @@ class CreateChallengeAnnouncementRequest extends FormRequest
             'sent_by'                                   => 'required',
             'sent_by.*'                                 => 'in:email,inbox,both',
             'description'                               => 'required',
-            'schedule_at'                               => 'required',
             'status'                                    => 'required',
-            'status.*'                                  => 'in:send,draft',
+            'status.*'                                  => 'in:send,draft,scheduled',
+            'schedule_at'                               => ['required_if:status,scheduled', 'date_format:Y-m-d H:i', 'after_or_equal:'.Carbon::now()->toDateTimeString()],
         ];
 
         return $base_rules;
