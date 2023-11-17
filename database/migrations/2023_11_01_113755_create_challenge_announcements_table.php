@@ -18,7 +18,7 @@ return new class() extends Migration {
             $table->enum('sent_by', ['0', '1', '2'])->default('2')->comment('0 -> email, 1 -> inbox, 2 -> both');
             $table->text('description')->comment('Announcement description')->nullable();
             $table->string('schedule_at', 255)->nullable()->comment('When do the announcement scheduled at?');
-            $table->enum('status', ['0', '1'])->default('0')->comment('0 -> Send, 1 -> Draft');
+            $table->enum('status', ['0', '1', '2'])->default('0')->comment('0 -> Send, 1 -> Draft, 2 -> Scheduled');
             $table->enum('sent_status', ['0', '1'])->default('0')->comment('0 -> Pending, 1 -> Sent');
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
             $table->timestamps();
