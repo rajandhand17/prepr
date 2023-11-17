@@ -68,14 +68,6 @@ class LabProgramSkillsGroupsStackService
                         $LabSkillsGroupsStack->save();
                     }
                 }
-<<<<<<< HEAD
-=======
-            } else {
-                $deleteNonExistingSkills = LabProgramsSkillsGroupsStack::where([
-                    ['lab_program_id', '=', $lab_program_id],
-                    ['type', '=', '0'],
-                ])->delete();
->>>>>>> 5c94b369d6f3c08f1a1589daa6a8265568cc419a
             }
             if ($request->has('skill_groups')) {
                 if (count($request->skill_groups) > 0) {
