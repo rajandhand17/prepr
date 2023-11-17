@@ -308,11 +308,11 @@ class ComponentAssociationService
                     $nonExistingIds = array_diff($existComponentAssociation, $request->lab_ids);
                     $deleteNonExistingComponentAssociation = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('lab_id', $nonExistingIds)->delete();
                     $newComponentAssociation = array_diff($request->lab_ids, $existComponentAssociation);
-                    $sequence =ComponentAssociation::where([
+                    $sequence = ComponentAssociation::where([
                         ['lab_program_id', '=', $lab_programs],
                         ['lab_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
-                    foreach ($newComponentAssociation as $lab_id){
+                    foreach ($newComponentAssociation as $lab_id) {
                         $sequence++;
                         $labSkillsGroupsStack = new ComponentAssociation();
                         $labSkillsGroupsStack->lab_program_id = $lab_programs;

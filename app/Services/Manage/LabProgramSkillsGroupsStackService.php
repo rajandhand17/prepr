@@ -68,7 +68,7 @@ class LabProgramSkillsGroupsStackService
                         $LabSkillsGroupsStack->save();
                     }
                 }
-            }else{
+            } else {
                 $deleteNonExistingSkills = LabProgramsSkillsGroupsStack::where([
                     ['lab_program_id', '=', $lab_program_id],
                     ['type', '=', '0'],
@@ -94,7 +94,7 @@ class LabProgramSkillsGroupsStackService
                         $LabSkillsGroupsStack->save();
                     }
                 }
-            }else{
+            } else {
                 $deleteNonExistingSkillsGroup = LabProgramsSkillsGroupsStack::where([
                     ['lab_program_id', '=', $lab_program_id],
                     ['type', '=', '1'],
@@ -120,7 +120,7 @@ class LabProgramSkillsGroupsStackService
                         $LabSkillsGroupsStack->save();
                     }
                 }
-            }else{
+            } else {
                 $deleteNonExistingSkillStack = LabProgramsSkillsGroupsStack::where([
                     ['lab_program_id', '=', $lab_program_id],
                     ['type', '=', '2'],
