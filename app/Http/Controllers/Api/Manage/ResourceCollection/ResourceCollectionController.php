@@ -35,7 +35,6 @@ class ResourceCollectionController extends AppBaseController
             if ($createResourceCollection) {
                 return $this->sendResponse(ResourceCollectionResource::make($createResourceCollection), __('responses.resource_collection_stored_success'), 200);
             }
-
             return $this->sendError(__('responses.resource_collection_stored_failed'), 403);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
