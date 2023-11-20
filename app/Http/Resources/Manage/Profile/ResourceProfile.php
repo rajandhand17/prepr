@@ -14,20 +14,18 @@ class ResourceProfile extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $response=[
-            'id' => $this->id,
-            'username' => $this->username,
-            'email' => $this->email,
-            'profile_image'=>$this->profile_image,
-        ];
+        $response['user']['id']=$this->id;
+        $response['user']['username']=$this->username;
+        $response['user']['email']=$this->email;
+        $response['user']['profile_image']=$this->profile_image;
         if($this->userPersonal){
-            $response['personal']['about']=$this->userPersonal->about;
-            $response['personal']['gender']=$this->userPersonal->gender;
-            $response['personal']['date_of_birth']=$this->userPersonal->date_of_birth;
-            $response['personal']['purpose']=$this->userPersonal->purpose;
-            $response['personal']['user_type']=$this->userPersonal->user_type;
-            $response['personal']['recent_immigrant']=$this->userPersonal->recent_immigrant;
-            $response['personal']['indigenous_group']=$this->userPersonal->indigenous_group;
+            $response['user_personal']['about']=$this->userPersonal->about;
+            $response['user_personal']['gender']=$this->userPersonal->gender;
+            $response['user_personal']['date_of_birth']=$this->userPersonal->date_of_birth;
+            $response['user_personal']['purpose']=$this->userPersonal->purpose;
+            $response['user_personal']['user_type']=$this->userPersonal->user_type;
+            $response['user_personal']['recent_immigrant']=$this->userPersonal->recent_immigrant;
+            $response['user_personal']['indigenous_group']=$this->userPersonal->indigenous_group;
         }
         if($this->userAddress){
             $response['userAddress']['latitude']=$this->userAddress->latitude;
