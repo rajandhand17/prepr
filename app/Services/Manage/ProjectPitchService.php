@@ -133,9 +133,9 @@ class ProjectPitchService
             }
 
             $checkPitchAnswer = ProjectPitchValue::where(['project_id' => $projectId, 'pitch_template_id' => $pitchData->template_id, 'project_pitch_id' => $pitchData->id])->first();
-            $challenge_pitch->descriptionAnswer = null;
+            $challenge_pitch->description_answer = null;
             if ($checkPitchAnswer) {
-                $challenge_pitch->descriptionAnswer = ($checkPitchAnswer->description != null) ? $checkPitchAnswer->description : null;
+                $challenge_pitch->description_answer = ($checkPitchAnswer->description != null) ? $checkPitchAnswer->description : null;
             }
 
             return $challenge_pitch;
@@ -162,11 +162,11 @@ class ProjectPitchService
             }
 
             $checkTaskAnswer = ProjectTaskValue::where(['project_id' => $projectId, 'task_template_id' => $taskData->template_id, 'project_task_id' => $taskData->id])->first();
-            $challenge_task->isCompleted = 'no';
-            $challenge_task->completedAt = null;
+            $challenge_task->is_completed = 'no';
+            $challenge_task->completed_at = null;
             if ($checkTaskAnswer) {
-                $challenge_task->isCompleted = ($checkTaskAnswer->status == '1') ? 'yes' : 'no';
-                $challenge_task->completedAt = ($checkTaskAnswer->completed_date != null) ? $checkTaskAnswer->completed_date : null;
+                $challenge_task->is_completed = ($checkTaskAnswer->status == '1') ? 'yes' : 'no';
+                $challenge_task->completed_at = ($checkTaskAnswer->completed_date != null) ? $checkTaskAnswer->completed_date : null;
             }
 
             return $challenge_task;
