@@ -19,4 +19,9 @@ class ChallengePitch extends Model
         'description',
         'fr_CA_description',
     ];
+
+    public function getProjectPitchAnswer()
+    {
+        return $this->hasMany(ProjectPitchValue::class, 'project_pitch_id', 'id');
+    }
 }

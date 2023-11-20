@@ -117,6 +117,15 @@ class ProjectService
         }
     }
 
+    public static function getProjectBasedOnUUID($uuid)
+    {
+        try {
+            return Project::where('uuid', $uuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function checkNameExistsOrNot($title)
     {
         try {

@@ -4,6 +4,7 @@ namespace App\Http\Resources\Manage\Project;
 
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
+use App\Services\Manage\ProjectPitchService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,6 +21,33 @@ class ProjectResource extends JsonResource
         $download_enabled = null;
         $challengeData = null;
         $labData = null;
+        $challenge_pitch = null;
+        $challenge_task = null;
+
+        if ($this->getProjectTemplate->getTemplatePitches) {
+            $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
+                $pitchAnswer = ProjectPitchService::getPitchAnswerBasedOnId($task, $this->id, $this->language);
+
+                return [
+                    'pitch_id'          => $pitchAnswer->id,
+                    'title'             => $pitchAnswer->title,
+                    'pitch_answer'      => $pitchAnswer->description_answer,
+                ];
+            });
+        }
+
+        if ($this->getProjectTemplate->getTemplateTasks) {
+            $challenge_task = $this->getProjectTemplate->getTemplateTasks->map(function ($task) {
+                $taskAnswer = ProjectPitchService::getTaskAnswerBasedOnId($task, $this->id, $this->language);
+
+                return [
+                    'task_id'           => $taskAnswer->id,
+                    'title'             => $taskAnswer->title,
+                    'task_answer'       => $taskAnswer->is_completed,
+                    'task_completed_at' => $taskAnswer->completed_at,
+                ];
+            });
+        }
 
         switch ($this->view_enabled) {
             case '1':
@@ -79,6 +107,8 @@ class ProjectResource extends JsonResource
             'status'            => $this->status,
             'challenge_id'      => $challengeData,
             'lab_id'            => $labData,
+            'challenge_pitch'   => $challenge_pitch,
+            'challenge_task'    => $challenge_task,
         ];
     }
 }

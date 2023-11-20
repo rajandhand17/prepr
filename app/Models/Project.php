@@ -38,4 +38,9 @@ class Project extends Model
     {
         return config('site-settings.aws_url').$value;
     }
+
+    public function getProjectTemplate()
+    {
+        return $this->hasOne(ChallengeProjectTemplate::class, 'challenge_id', 'challenge_id');
+    }
 }
