@@ -402,10 +402,10 @@ class ChallengeService
         }
     }
 
-    public static function getChallengeBasedOnId($Id)
+    public static function getChallengeBasedOnId($id)
     {
         try {
-            return Challenge::where('id', $Id)->first();
+            return Challenge::where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }
@@ -498,10 +498,10 @@ class ChallengeService
         }
     }
 
-    public static function getChallengeBasedOnUUID($uUID)
+    public static function getChallengeBasedOnUUID($uuid)
     {
         try {
-            return Challenge::where('UUID', $uUID)->first();
+            return Challenge::where('UUID', $uuid)->first();
         } catch (Exception $e) {
             return false;
         }

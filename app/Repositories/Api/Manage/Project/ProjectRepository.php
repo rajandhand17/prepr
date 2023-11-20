@@ -82,10 +82,10 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
-    public function getProjectBasedOnUUID($UUID)
+    public function getProjectBasedOnUUID($uuid)
     {
         try {
-            return $this->projectService->getProjectBasedOnUUID($UUID);
+            return $this->projectService->getProjectBasedOnUUID($uuid);
         } catch (Exception $e) {
             return false;
         }

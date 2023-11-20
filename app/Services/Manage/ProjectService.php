@@ -117,10 +117,10 @@ class ProjectService
         }
     }
 
-    public static function getProjectBasedOnUUID($UUID)
+    public static function getProjectBasedOnUUID($uuid)
     {
         try {
-            return Project::where('uuid', $UUID)->first();
+            return Project::where('uuid', $uuid)->first();
         } catch (Exception $e) {
             return false;
         }
