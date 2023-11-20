@@ -134,9 +134,9 @@ class ProjectController extends AppBaseController
             if ($checkChallenge == false) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
-            $createPitch = $this->projectRepository->createProjectPitchTask($checkProjectSlugExistsOrNot->id, $request);
+            $createPitchTask = $this->projectRepository->createProjectPitchTask($checkProjectSlugExistsOrNot->id, $request);
 
-            if ($createPitch) {
+            if ($createPitchTask) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_pitch_stored_success'), 200);
             }
 
