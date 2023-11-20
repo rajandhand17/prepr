@@ -103,7 +103,6 @@ class ProjectRepository implements ProjectInterface
     public function createProjectPitchTask($projectId, $request)
     {
         try {
-
             $createProjectPitchTaskAnswer = DB::transaction(function () use ($projectId, $request) {
                 $createProjectPitchTaskAnswer = $this->projectPitchService->createProjectPitchTaskAnswer($projectId, $request);
 
