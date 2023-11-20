@@ -127,7 +127,7 @@ class ProjectController extends AppBaseController
         try {
             $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnUUID($request->project_id);
             if ($checkProjectSlugExistsOrNot == false) {
-                return $this->sendResponse([], __('responses.project_slug_available'), 403);
+                return $this->sendResponse([], __('responses.project_not_found'), 403);
             }
 
             $checkChallenge = ChallengeService::getChallengeBasedOnId($checkProjectSlugExistsOrNot->challenge_id);
@@ -136,16 +136,11 @@ class ProjectController extends AppBaseController
             }
             $createPitch = $this->projectRepository->createProjectPitchTask($checkProjectSlugExistsOrNot->id, $request);
 
-            dd($checkProjectSlugExistsOrNot->getProjectTemplate->getTemplateTasks->getProjectTaskAnswer);
             if ($createPitch) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_pitch_stored_success'), 200);
             }
-            dd('in');
-
             return $this->sendError(__('responses.project_pitch_stored_failed'), 400);
         } catch (Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
