@@ -129,7 +129,7 @@ class ProjectPitchService
                 if (!$column_name_description || !Schema::hasColumn('challenge_pitches', $column_name_description)) {
                     return false;
                 }
-                $challenge_pitch = ChallengePitch::select('id', $column_name_title . ' as title', $column_name_description . ' as description')->where('id', $pitchData->id)->first();
+                $challenge_pitch = ChallengePitch::select('id', $column_name_title.' as title', $column_name_description.' as description')->where('id', $pitchData->id)->first();
             }
 
             $checkPitchAnswer = ProjectPitchValue::where(['project_id' => $projectId, 'pitch_template_id' => $pitchData->template_id, 'project_pitch_id' => $pitchData->id])->first();
@@ -143,7 +143,6 @@ class ProjectPitchService
             return false;
         }
     }
-
 
     public static function getTaskAnswerBasedOnId($taskData, $projectId, $projectLanguage)
     {
@@ -159,7 +158,7 @@ class ProjectPitchService
                 if (!$column_name || !Schema::hasColumn('challenge_tasks', $column_name)) {
                     return false;
                 }
-                $challenge_task = ChallengeTask::select('id', $column_name . ' as title')->where('id', $taskData->id)->first();
+                $challenge_task = ChallengeTask::select('id', $column_name.' as title')->where('id', $taskData->id)->first();
             }
 
             $checkTaskAnswer = ProjectTaskValue::where(['project_id' => $projectId, 'task_template_id' => $taskData->template_id, 'project_task_id' => $taskData->id])->first();
@@ -169,7 +168,7 @@ class ProjectPitchService
                 $challenge_task->isCompleted = ($checkTaskAnswer->status == '1') ? 'yes' : 'no';
                 $challenge_task->completedAt = ($checkTaskAnswer->completed_date != null) ? $checkTaskAnswer->completed_date : null;
             }
-            
+
             return $challenge_task;
         } catch (Exception $e) {
             return false;
