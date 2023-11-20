@@ -15,10 +15,10 @@ class ProfileController extends AppBaseController
     }
 
     public function userDetails($userName){
-        try {
-            $response = $this->profileRepository->userDetails($userName);
-            if ($response) {
-                return $this->sendResponse(ResourceCollectionResource::make($response), __('responses.found_resource_collection_list'));
+        try{
+            $response= $this->profileRepository->userDetails($userName);
+            if ($response){
+                return $response;
             }
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         }catch(\Exception $e){

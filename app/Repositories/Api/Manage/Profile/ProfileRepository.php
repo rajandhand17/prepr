@@ -13,9 +13,11 @@ class ProfileRepository implements ProfileInterface
         $this->profileService = $profileService;
     }
 
-    public function userDetails( $profileService){
-
+    public function userDetails($profileService){
+        try {
+           return $this->profileService->userDetails($profileService);
+        }catch (\Exception $e){
+            return false;
+        }
     }
-
-
 }

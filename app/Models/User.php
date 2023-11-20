@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laratrust\Traits\LaratrustUserTrait;
 use Laravel\Passport\HasApiTokens;
-
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -72,6 +71,10 @@ class User extends Authenticatable
     public function userSetting()
     {
         return $this->hasOne(UserSetting::class);
+    }
+
+    public function userAddress(){
+        return $this->hasOne(UserAddress::class);
     }
 
     /**login apis */
