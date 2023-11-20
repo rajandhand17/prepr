@@ -19,9 +19,9 @@ class ProfileController extends AppBaseController
         try{
             $responseProfile= $this->profileRepository->userDetails($userName);
             if ($responseProfile){
-                return $this->sendResponse(ResourceProfile::make($responseProfile), __('responses.found_resource_collection_list'));
+                return $this->sendResponse(ResourceProfile::make($responseProfile), __('responses.found_user_profile_detail'));
              }
-            return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
+            return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         }catch(\Exception $e){
             return false;
         }
