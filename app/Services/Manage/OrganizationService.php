@@ -212,6 +212,7 @@ class OrganizationService
             if ($slug) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

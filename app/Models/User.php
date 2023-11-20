@@ -74,7 +74,8 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class);
     }
 
-    public function userAddress(){
+    public function userAddress()
+    {
         return $this->hasOne(UserAddress::class);
     }
 
