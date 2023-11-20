@@ -27,10 +27,11 @@ class ProjectResource extends JsonResource
         if ($this->getProjectTemplate->getTemplatePitches) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
                 $pitchAnswer = ProjectPitchService::getPitchAnswerBasedOnId($task, $this->id, $this->language);
+
                 return [
-                    'pitch_id'          =>  $pitchAnswer->id,
-                    'title'             =>  $pitchAnswer->title,
-                    'pitch_answer'      =>  $pitchAnswer->descriptionAnswer,
+                    'pitch_id'          => $pitchAnswer->id,
+                    'title'             => $pitchAnswer->title,
+                    'pitch_answer'      => $pitchAnswer->descriptionAnswer,
                 ];
             });
         }
@@ -38,11 +39,12 @@ class ProjectResource extends JsonResource
         if ($this->getProjectTemplate->getTemplateTasks) {
             $challenge_task = $this->getProjectTemplate->getTemplateTasks->map(function ($task) {
                 $taskAnswer = ProjectPitchService::getTaskAnswerBasedOnId($task, $this->id, $this->language);
+
                 return [
-                    'task_id'           =>  $taskAnswer->id,
-                    'title'             =>  $taskAnswer->title,
-                    'task_answer'       =>  $taskAnswer->isCompleted,
-                    'task_completed_at' =>  $taskAnswer->completedAt,
+                    'task_id'           => $taskAnswer->id,
+                    'title'             => $taskAnswer->title,
+                    'task_answer'       => $taskAnswer->isCompleted,
+                    'task_completed_at' => $taskAnswer->completedAt,
                 ];
             });
         }
