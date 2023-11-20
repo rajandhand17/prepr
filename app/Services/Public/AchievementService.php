@@ -64,10 +64,10 @@ class AchievementService
         }
     }
 
-    public function downloadCertificate($certificateNumber, $type)
+    public function downloadCertificate($certificate_number, $type)
     {
         try {
-            $userAchievement = UserAchievement::where('certificate_number', $certificateNumber)->first();
+            $userAchievement = UserAchievement::where('certificate_number', $certificate_number)->first();
             if ($userAchievement) {
                 $userData = User::find($userAchievement->user_id);
                 $challengeDetails = $userAchievement->module_parent_id ? Challenge::find($userAchievement->module_parent_id) : null;
@@ -75,7 +75,7 @@ class AchievementService
                 $organisationName = isset($organisationDetails) ? $organisationDetails->display_name : 'Learnlab';
                 $userAchievement->organisation_name = $organisationName;
                 $data = [
-                    'certificateNumber'         => $certificateNumber,
+                    'certificateNumber'         => $certificate_number,
                     'userAchievement'           => $userAchievement,
                     'type'                      => $type,
                     'user'                      => $userData,
