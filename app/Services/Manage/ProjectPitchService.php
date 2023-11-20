@@ -17,7 +17,7 @@ class ProjectPitchService
                 foreach ($request->pitch_id as $key => $value) {
                     $pitchId = $request['pitch_id'][$key];
                     $pitchAnswer = $request['pitch_answer'][$key];
-                    
+
                     if ($pitchId != null && $pitchAnswer != null) {
                         $createPitch = self::insertPitchData($projectId, $templateId, $pitchId, $pitchAnswer);
                         if (!$createPitch) {
@@ -56,7 +56,7 @@ class ProjectPitchService
             } else {
                 $pitchData = new ProjectPitchValue();
             }
-            
+
             $pitchData->project_id = $projectId;
             $pitchData->pitch_template_id = $templateId;
             $pitchData->project_pitch_id = $pitchId;
@@ -72,7 +72,6 @@ class ProjectPitchService
     public function insertTaskData($projectId, $templateId, $taskId, $taskAnswer)
     {
         try {
-
             switch ($taskAnswer) {
                 case 'yes':
                     $taskAnswerValue = '1';

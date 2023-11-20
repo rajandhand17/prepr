@@ -140,10 +140,12 @@ class ProjectController extends AppBaseController
             if ($createPitch) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_pitch_stored_success'), 200);
             }
-            dd("in");
+            dd('in');
+
             return $this->sendError(__('responses.project_pitch_stored_failed'), 400);
         } catch (Exception $e) {
             dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
