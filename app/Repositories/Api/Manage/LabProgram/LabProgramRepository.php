@@ -112,9 +112,11 @@ class LabProgramRepository implements LabProgramInterface
             });
             if ($createLabProgram['updateLabProgram'] && $createLabProgram['componentAssociation'] && $createLabProgram['labProgramSkillsGroupsStack']) {
                 DB::commit();
+
                 return $createLabProgram['updateLabProgram'];
             }
             DB::rollback();
+
             return false;
         } catch(\Exception $e) {
             return false;
