@@ -17,4 +17,9 @@ class ChallengeTask extends Model
         'title',
         'fr_CA_title',
     ];
+
+    public function getProjectTaskAnswer()
+    {
+        return $this->hasMany(ProjectTaskValue::class, 'project_task_id', 'id');
+    }
 }

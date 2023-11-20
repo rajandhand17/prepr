@@ -168,8 +168,8 @@ return [
     ],
 
     'challenge_open_close' => [
-        'no'  => '0',
-        'yes' => '1',
+        'no'  => '1',
+        'yes' => '0',
     ],
 
     'challenge_auto_created' => [

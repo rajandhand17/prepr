@@ -21,7 +21,7 @@ return new class() extends Migration {
             $table->softDeletes();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->foreign('task_template_id')->references('id')->on('pitch_templates')->onDelete('cascade');
-            $table->foreign('project_task_id')->references('id')->on('project_tasks')->onDelete('cascade');
+            $table->foreign('project_task_id')->references('id')->on('challenge_tasks')->onDelete('cascade');
         });
     }
 
