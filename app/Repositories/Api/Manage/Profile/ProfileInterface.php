@@ -4,5 +4,5 @@ namespace App\Repositories\Api\Manage\Profile;
 
 interface ProfileInterface
 {
-    public function show($profileService);
+    public function getProfileBasedOnUserId($user_name);
 }
