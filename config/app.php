@@ -183,6 +183,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         L5Swagger\L5SwaggerServiceProvider::class,
         \PhpUnitGen\Console\Adapters\Laravel\PhpUnitGenServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -227,6 +228,7 @@ return [
         App\Repositories\Api\Public\ChallengePath\ChallengePathServiceProvider::class,
         App\Repositories\Api\Public\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
+        App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
 
     ],
 
@@ -244,6 +246,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'PDF'   => Barryvdh\DomPDF\Facade::class,
+
     ])->toArray(),
 
 ];
