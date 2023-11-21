@@ -8,8 +8,9 @@ class ProfileService
 {
     public static function getProfileBasedOnUserId($user_name)
     {
-        try{
+        try {
             $profile_list = User::where('username', $user_name)->first();
+
             return $profile_list;
         } catch(\Exception $e) {
             return false;
