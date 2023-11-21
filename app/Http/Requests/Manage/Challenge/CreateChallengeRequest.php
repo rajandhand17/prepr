@@ -91,7 +91,7 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_title'] = 'array';
             $base_rules['custom_timelines_title.*'] = 'required';
             $base_rules['custom_timelines_date'] = 'array';
-            $base_rules['custom_timelines_date.*'] = ['required', 'after_or_equal:'.Carbon::now()->toDateTimeString()];;
+            $base_rules['custom_timelines_date.*'] = ['required', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
         }
 
         if ($this->has('assessment_title') !== null && $this->has('assessment_score') !== null && $this->has('assessment_weight') !== null) {
@@ -117,7 +117,7 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'restricted') {
             $base_rules['open_call_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['open_call_date_description'] = 'required_if:request_type,publish';
-            $base_rules['last_call_date'] = ['required_if:request_type,publish', 'after_or_equal:' . Carbon::now()->toDateTimeString()];
+            $base_rules['last_call_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['last_call_date_description'] = 'required_if:request_type,publish';
             $base_rules['application_deadline_date'] = ['required_if:request_type,publish', 'after_or_equal:open_call_date'];
             $base_rules['application_deadline_date_description'] = 'required_if:request_type,publish';
@@ -128,7 +128,7 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
-            $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:' . Carbon::now()->toDateTimeString()];
+            $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
         }
 
         return $base_rules;
