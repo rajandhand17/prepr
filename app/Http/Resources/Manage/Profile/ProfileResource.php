@@ -36,6 +36,7 @@ class ProfileResource extends JsonResource
             $response['userAddress']['country'] = $this->userAddress->country;
             $response['userAddress']['zip_code'] = $this->userAddress->zip_code;
         }
+
         return $response;
     }
 }
