@@ -18,9 +18,9 @@ class ProfileController extends AppBaseController
     public function show($user_name)
     {
         try {
-            $responseProfile = $this->profileRepository->getProfileBasedOnUserId($user_name);
-            if ($responseProfile) {
-                return $this->sendResponse(ProfileResource::make($responseProfile), __('responses.found_user_profile_detail'));
+            $getProfile = $this->profileRepository->getProfileBasedOnUserName($user_name);
+            if ($getProfile) {
+                return $this->sendResponse(ProfileResource::make($getProfile), __('responses.found_user_profile_detail'));
             }
 
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);

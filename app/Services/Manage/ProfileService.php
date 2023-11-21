@@ -6,7 +6,7 @@ use App\Models\User;
 
 class ProfileService
 {
-    public static function getProfileBasedOnUserId($user_name)
+    public static function getProfileBasedOnUserName($user_name)
     {
         try {
             $profile = User::where('username', $user_name)->first();
