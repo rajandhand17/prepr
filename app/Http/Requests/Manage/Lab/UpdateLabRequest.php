@@ -59,22 +59,15 @@ class UpdateLabRequest extends FormRequest
             'tags.*'         => 'numeric',
             'tag_groups'     => 'nullable|array',
             'tag_groups.*'   => 'numeric',
-
             'is_notification_enabled'=> 'in:yes,no',
-
             'is_achievement_enabled'=> 'in:yes,no',
-
             'is_sequential'=> 'in:yes,no',
-
             'is_resource_sequential'=> 'in:yes,no',
+            'external_links'=>'array|required',
+            'external_link_ids'=>'array|exists:social_links,id|required',
+            'external_links.*'=>'url',
+            'external_link_ids.*'=>'numeric',
         ];
-
-        if ($this->request->has('external_links')) {
-            $base_rules['external_links'] = 'array';
-            $base_rules['external_link_ids'] = 'array|exists:social_links,id';
-            $base_rules['external_links.*'] = 'url';
-            $base_rules['external_link_ids.*'] = 'numeric';
-        }
 
         if ($achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
