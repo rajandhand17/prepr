@@ -36,4 +36,7 @@ return [
     'default_resource_group_achievement_image'          => 'default_images/resource-group.webp',
     'default_resource_group_cover_image'                => 'default_images/resource-group.webp',
 
+    'default_logo_image'                            => 'default_images/prepr_logo.webp',
+    'default_achievement_image'                     => 'default_images/badge.webp',
+
 ];

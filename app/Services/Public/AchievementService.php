@@ -2,7 +2,11 @@
 
 namespace App\Services\Public;
 
+use App\Models\Challenge;
+use App\Models\Organization;
+use App\Models\User;
 use App\Models\UserAchievement;
+use Dompdf\Dompdf;
 
 class AchievementService
 {
@@ -55,6 +59,39 @@ class AchievementService
     {
         try {
             return UserAchievement::where(['certificate_number' => $certificateNumber])->first();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function downloadCertificate($certificate_number, $type)
+    {
+        try {
+            $userAchievement = UserAchievement::where('certificate_number', $certificate_number)->first();
+            if ($userAchievement) {
+                $userData = User::find($userAchievement->user_id);
+                $challengeDetails = $userAchievement->module_parent_id ? Challenge::find($userAchievement->module_parent_id) : null;
+                $organisationDetails = isset($challengeDetails->organization_id) ? Organization::find($challengeDetails->organization_id) : null;
+                $organisationName = isset($organisationDetails) ? $organisationDetails->display_name : 'Learnlab';
+                $userAchievement->organisation_name = $organisationName;
+                $data = [
+                    'certificateNumber'         => $certificate_number,
+                    'userAchievement'           => $userAchievement,
+                    'type'                      => $type,
+                    'user'                      => $userData,
+                    'user_id'                   => $userData->uuid,
+                    'strAchievementName'        => $userAchievement->title,
+                ];
+                $dompdf = new Dompdf();
+                $html = view('PDF.achievement_certificate', $data)->render();
+                $dompdf->loadHtml($html);
+                $dompdf->setPaper('legal', 'landscape');
+                $dompdf->render();
+                $dompdf->stream($userAchievement->certificate_number.'.pdf');
+                exit;
+            }
+
+            return false;
         } catch(\Exception $e) {
             return false;
         }
