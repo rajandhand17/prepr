@@ -15,14 +15,13 @@ class ProfileController extends AppBaseController
         $this->profileRepository = $profileRepository;
     }
 
-    public function userDetails($userName)
+    public function show($user_name)
     {
         try {
-            $responseProfile = $this->profileRepository->userDetails($userName);
+            $responseProfile = $this->profileRepository->getProfileBasedOnUserId($user_name);
             if ($responseProfile) {
                 return $this->sendResponse(ProfileResource::make($responseProfile), __('responses.found_user_profile_detail'));
             }
-
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
             return false;
