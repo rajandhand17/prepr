@@ -8,11 +8,10 @@ class ProfileService
 {
     public static function userDetails($username)
     {
-        try {
+        try{
             $profile_list = User::where('username', $username)->first();
-
             return $profile_list;
-        } catch(\Exception $e) {
+        }catch(\Exception $e) {
             return false;
         }
     }

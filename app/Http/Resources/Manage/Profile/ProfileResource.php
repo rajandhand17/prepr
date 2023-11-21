@@ -5,14 +5,14 @@ namespace App\Http\Resources\Manage\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ResourceProfile extends JsonResource
+class ProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request)
     {
         $response['user']['id'] = $this->id;
         $response['user']['username'] = $this->username;
@@ -36,7 +36,6 @@ class ResourceProfile extends JsonResource
             $response['userAddress']['country'] = $this->userAddress->country;
             $response['userAddress']['zip_code'] = $this->userAddress->zip_code;
         }
-
         return $response;
     }
 }
