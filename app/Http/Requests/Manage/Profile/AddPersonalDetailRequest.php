@@ -23,27 +23,30 @@ class AddPersonalDetailRequest extends FormRequest
      */
     public function rules(): array
     {
-        $base_rules= [
-            'user_id'       =>'required|exists:users,id',
-            'age'           =>'required',
-            'about'         =>'required',
-            'purpose'       =>'required',
-            'gender'        =>'required',
-            'date_of_birth' =>'required',
+        $base_rules = [
+            'user_id'       => 'required|exists:users,id',
+            'age'           => 'required',
+            'about'         => 'required',
+            'purpose'       => 'required',
+            'gender'        => 'required',
+            'date_of_birth' => 'required',
         ];
+
         return $base_rules;
     }
+
     public function messages()
     {
         return [
-            'user_id.required'=>__('responses'),
-            'age.required'=>__('responses'),
-            'about.required'=>__('responses'),
-            'purpose.required'=>__('responses'),
-            'gender.required'=>__('responses'),
-            'date_of_birth.required'=>__('responses'),
+            'user_id.required'      => __('responses'),
+            'age.required'          => __('responses'),
+            'about.required'        => __('responses'),
+            'purpose.required'      => __('responses'),
+            'gender.required'       => __('responses'),
+            'date_of_birth.required'=> __('responses'),
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
