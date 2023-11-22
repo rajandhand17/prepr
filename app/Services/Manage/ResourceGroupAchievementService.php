@@ -62,7 +62,6 @@ class ResourceGroupAchievementService
                 $resourceGroupAchievement->achievement_points = $request->achievement_points;
                 $resourceGroupAchievement->achievement_image = $upload_achievement_image;
                 $resourceGroupAchievement->save();
-
                 return true;
             }
             $checkExistsResourceGroupAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsResourceGroupAchievement->achievement_name;
