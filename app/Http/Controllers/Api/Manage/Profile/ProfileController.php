@@ -26,7 +26,7 @@ class ProfileController extends AppBaseController
             }
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
-            return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
@@ -38,7 +38,7 @@ class ProfileController extends AppBaseController
             }
             return $this->sendError(__('responses.user_personal_failed'), 404);
         }catch (\Exception $e){
-            return $this->sendError(__('responses.user_personal_failed'), 404);
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }
