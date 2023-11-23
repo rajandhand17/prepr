@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Models\User;
 use App\Models\UserPersonal;
 use DB;
+
 class ProfileService
 {
     public static function getProfileBasedOnUserName($user_name)
@@ -31,9 +32,10 @@ class ProfileService
             $createdPersonal->about = $request->about;
             $createdPersonal->purpose = $request->purpose;
             $createdPersonal->gender = $request->gender;
-            $createdPersonal->date_of_birth=$request->dob;
+            $createdPersonal->date_of_birth = $request->dob;
             $createdPersonal->save();
             DB::commit();
+
             return $createdPersonal;
         } catch(\Exception $e) {
             return false;
