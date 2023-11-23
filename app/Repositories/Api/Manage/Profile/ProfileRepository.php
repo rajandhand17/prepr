@@ -21,4 +21,12 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
+    public function addExperience($request){
+        try {
+            return $this->profileService->addExperience($request);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }
