@@ -97,6 +97,9 @@ class LabService
                         $lab_list = $lab_list->join('member_management', 'labs.id', '=', 'member_management.module_id')
                         ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email]);
                         switch ($request->request_status) {
+                            case 'invited':
+                                $lab_list->where('member_management.invite_status', '0');
+                                break;
                             case 'accepted':
                                 $lab_list->where('member_management.invite_status', '1');
                                 break;
