@@ -4,7 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\User;
 use App\Models\UserPersonal;
-
+use DB;
 class ProfileService
 {
     public static function getProfileBasedOnUserName($user_name)
@@ -24,28 +24,18 @@ class ProfileService
     public function addPersonalDetail($request)
     {
         try {
-            $createdPersonal = UserPersonal::where('user_id', $request->user_id)->first();
-
-            if (!$createdPersonal != null) {
-                $createdPersonal = new UserPersonal();
-                $createdPersonal->age = $request->age;
-                $createdPersonal->about = $request->about;
-                $createdPersonal->purpose = $request->purpose;
-                $createdPersonal->gender = $request->gender;
-                $createdPersonal->date_of_birth = $request->dob;
-                $createdPersonal->save();
-            }
-            $createdPersonal->age = ($request->has('age')) ? $request->age : $createdPersonal->age;
-            $createdPersonal->about = ($request->has('about')) ? $request->about : $createdPersonal->about;
-            $createdPersonal->purpose = ($request->has('purpose')) ? $request->purpose : $createdPersonal->purpose;
-            $createdPersonal->gender = ($request->has('gender')) ? $request->gender : $createdPersonal->gender;
-            $createdPersonal->date_of_birth = ($request->has('dob')) ? $request->dob : $createdPersonal->dob;
+            DB::beginTransaction();
+            $createdPersonal = new UserPersonal();
+            $createdPersonal->user_id = $request->user_id;
+            $createdPersonal->age = $request->age;
+            $createdPersonal->about = $request->about;
+            $createdPersonal->purpose = $request->purpose;
+            $createdPersonal->gender = $request->gender;
+            $createdPersonal->date_of_birth=$request->dob;
             $createdPersonal->save();
-
+            DB::commit();
             return $createdPersonal;
         } catch(\Exception $e) {
-            dd($e);
-
             return false;
         }
     }

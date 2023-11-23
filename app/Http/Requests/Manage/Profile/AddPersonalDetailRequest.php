@@ -24,7 +24,7 @@ class AddPersonalDetailRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'user_id'       => 'required|exists:users,id',
+            'user_id'       => 'required|unique:user_personal_details,user_id',
             'age'           => 'required',
             'about'         => 'required',
             'purpose'       => 'required',
@@ -38,12 +38,12 @@ class AddPersonalDetailRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required'      => __('responses'),
-            'age.required'          => __('responses'),
-            'about.required'        => __('responses'),
-            'purpose.required'      => __('responses'),
-            'gender.required'       => __('responses'),
-            'date_of_birth.required'=> __('responses'),
+            'user_id.required'      => __('responses.user_id_required'),
+            'age.required'          => __('responses.age_required'),
+            'about.required'        => __('responses.about_required'),
+            'purpose.required'      => __('responses.purpose_required'),
+            'gender.required'       => __('responses.gender_required'),
+            'date_of_birth.required'=> __('responses.user_date_of_birth'),
         ];
     }
 
