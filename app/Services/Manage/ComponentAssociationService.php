@@ -311,7 +311,7 @@ class ComponentAssociationService
                     $sequence = ComponentAssociation::where([
                         ['lab_program_id', '=', $lab_programs],
                         ['lab_id', '!=', null],
-                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
                     foreach ($newComponentAssociation as $lab_id) {
                         $sequence++;
                         $labSkillsGroupsStack = new ComponentAssociation();
