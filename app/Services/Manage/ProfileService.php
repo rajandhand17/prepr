@@ -15,7 +15,7 @@ class ProfileService
                 return $profile;
             }
             return false;
-        } catch(\Exception $e) {
+        }catch(\Exception $e) {
             return false;
         }
     }
