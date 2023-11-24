@@ -24,7 +24,7 @@ class ProfileService
 
     public function addPersonalDetail($request)
     {
-        try{
+        try {
             DB::beginTransaction();
             $createdPersonal = new UserPersonal();
             $createdPersonal->user_id = $request->user_id;
@@ -35,6 +35,7 @@ class ProfileService
             $createdPersonal->date_of_birth = $request->dob;
             $createdPersonal->save();
             DB::commit();
+
             return $createdPersonal;
         } catch(\Exception $e) {
             return false;

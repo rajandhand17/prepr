@@ -30,8 +30,9 @@ class AddPersonalDetailRequest extends FormRequest
             'about'         => 'required',
             'purpose'       => 'required',
             'gender'        => 'required',
-            'date_of_birth' => 'required|date|before_or_equal:' . Carbon::now()->toDateTimeString(),
+            'date_of_birth' => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
         ];
+
         return $base_rules;
     }
 
