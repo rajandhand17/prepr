@@ -26,7 +26,7 @@ class AddPersonalDetailRequest extends FormRequest
     {
         $base_rules = [
             'user_id'       => 'required|unique:user_personal_details,user_id',
-            'age'           => 'required',
+            'age'           => 'required|numeric',
             'about'         => 'required',
             'purpose'       => 'required',
             'gender'        => 'required',

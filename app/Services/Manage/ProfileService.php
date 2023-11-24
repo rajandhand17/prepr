@@ -35,7 +35,6 @@ class ProfileService
             $createdPersonal->date_of_birth = $request->dob;
             $createdPersonal->save();
             DB::commit();
-
             return $createdPersonal;
         } catch(\Exception $e) {
             return false;
