@@ -52,7 +52,6 @@ class ProjectResource extends JsonResource
 
         if ($this->getProjectFile) {
             $project_files = $this->getProjectFile->map(function ($file) {
-                
                 return [
                     'id'        => $file->id,
                     'title'     => $file->title,
@@ -60,7 +59,6 @@ class ProjectResource extends JsonResource
                     'type'      => $file->type,
                 ];
             });
-
         }
 
         switch ($this->view_enabled) {

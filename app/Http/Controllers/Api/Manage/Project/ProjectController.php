@@ -155,7 +155,7 @@ class ProjectController extends AppBaseController
             }
 
             $addProjectFiles = $this->projectRepository->projectProjectFile($checkProjectSlugExistsOrNot->id, $request);
-            
+
             if ($addProjectFiles) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_file_stored_success'), 200);
             }
