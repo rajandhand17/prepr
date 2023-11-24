@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Manage\Profile;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -29,9 +30,8 @@ class AddPersonalDetailRequest extends FormRequest
             'about'         => 'required',
             'purpose'       => 'required',
             'gender'        => 'required',
-            'date_of_birth' => 'required',
+            'date_of_birth' => 'required|date|before_or_equal:' . Carbon::now()->toDateTimeString(),
         ];
-
         return $base_rules;
     }
 

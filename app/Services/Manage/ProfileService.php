@@ -23,7 +23,7 @@ class ProfileService
 
     public function addPersonalDetail($request)
     {
-        try {
+        try{
             DB::beginTransaction();
             $createdPersonal = new UserPersonal();
             $createdPersonal->user_id = $request->user_id;
