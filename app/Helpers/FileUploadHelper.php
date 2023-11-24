@@ -26,21 +26,18 @@ class FileUploadHelper
     public static function uploadVideoToS3($request, $type)
     {
         try {
-
             $pathsarray = config('s3-upload-path');
             $videoData = $request->store($pathsarray[$type], 's3');
-            
+
             return $videoData;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-
     public static function uploadDocToS3($request, $type)
     {
         try {
-
             $pathsarray = config('s3-upload-path');
             $fileData = $request->store($pathsarray[$type], 's3');
 

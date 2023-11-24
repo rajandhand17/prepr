@@ -4,9 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\ProjectFile;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Schema;
 
 class ProjectFileService
 {
@@ -36,6 +34,7 @@ class ProjectFileService
                     }
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -46,10 +45,10 @@ class ProjectFileService
     {
         try {
             $projectData = new ProjectFile();
-            $projectData->project_id    = $projectId;
-            $projectData->title         = $file_upload->getClientOriginalName();
-            $projectData->path          = $uploadedFile;
-            $projectData->type          = $file_type;
+            $projectData->project_id = $projectId;
+            $projectData->title = $file_upload->getClientOriginalName();
+            $projectData->path = $uploadedFile;
+            $projectData->type = $file_type;
             $projectData->save();
 
             return $projectData;
