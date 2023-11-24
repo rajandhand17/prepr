@@ -43,4 +43,9 @@ class Project extends Model
     {
         return $this->hasOne(ChallengeProjectTemplate::class, 'challenge_id', 'challenge_id');
     }
+
+    public function getProjectFile()
+    {
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id');
+    }
 }

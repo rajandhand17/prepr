@@ -23,6 +23,7 @@ class ProjectResource extends JsonResource
         $labData = null;
         $challenge_pitch = null;
         $challenge_task = null;
+        $project_files = null;
 
         if ($this->getProjectTemplate->getTemplatePitches) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
@@ -47,6 +48,19 @@ class ProjectResource extends JsonResource
                     'task_completed_at' => $taskAnswer->completed_at,
                 ];
             });
+        }
+
+        if ($this->getProjectFile) {
+            $project_files = $this->getProjectFile->map(function ($file) {
+                
+                return [
+                    'id'        => $file->id,
+                    'title'     => $file->title,
+                    'path'      => $file->path,
+                    'type'      => $file->type,
+                ];
+            });
+
         }
 
         switch ($this->view_enabled) {
@@ -107,8 +121,9 @@ class ProjectResource extends JsonResource
             'status'            => $this->status,
             'challenge_id'      => $challengeData,
             'lab_id'            => $labData,
-            'challenge_pitch'   => $challenge_pitch,
-            'challenge_task'    => $challenge_task,
+            'project_pitch'     => $challenge_pitch,
+            'project_task'      => $challenge_task,
+            'project_files'     => $project_files,
         ];
     }
 }

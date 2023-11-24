@@ -122,7 +122,7 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function createProjectPitchTask(Request $request)
+    public function projectPitchTask(Request $request)
     {
         try {
             $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnUUID($request->project_id);
@@ -134,13 +134,33 @@ class ProjectController extends AppBaseController
             if ($checkChallenge == false) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
-            $createPitchTask = $this->projectRepository->createProjectPitchTask($checkProjectSlugExistsOrNot->id, $request);
+            $addPitchTask = $this->projectRepository->projectPitchTask($checkProjectSlugExistsOrNot->id, $request);
 
-            if ($createPitchTask) {
+            if ($addPitchTask) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_pitch_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.project_pitch_stored_failed'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function fileUpload(Request $request)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnUUID($request->project_id);
+            if ($checkProjectSlugExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.project_not_found'), 403);
+            }
+
+            $addProjectFiles = $this->projectRepository->projectProjectFile($checkProjectSlugExistsOrNot->id, $request);
+            
+            if ($addProjectFiles) {
+                return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_file_stored_success'), 200);
+            }
+
+            return $this->sendError(__('responses.project_file_stored_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

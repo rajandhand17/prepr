@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
 
 class ProjectPitchService
 {
-    public function createProjectPitchTaskAnswer($projectId, $request)
+    public function addProjectPitchTaskAnswer($projectId, $request)
     {
         try {
             $templateId = $request->template_id;

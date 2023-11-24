@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Manage\Project;
 
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
+use App\Services\Manage\ProjectFileService;
 use App\Services\Manage\ProjectPitchService;
 use App\Services\Manage\ProjectService;
 use Exception;
@@ -15,13 +16,15 @@ class ProjectRepository implements ProjectInterface
     private $challengeService;
     private $labService;
     private $projectPitchService;
+    private $projectFileService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
         $this->labService = $labService;
         $this->projectPitchService = $projectPitchService;
+        $this->projectFileService = $projectFileService;
     }
 
     public function uploadCoverImage($coverImage)
@@ -100,16 +103,37 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
-    public function createProjectPitchTask($projectId, $request)
+    public function projectPitchTask($projectId, $request)
     {
         try {
-            $createProjectPitchTaskAnswer = DB::transaction(function () use ($projectId, $request) {
-                $createProjectPitchTaskAnswer = $this->projectPitchService->createProjectPitchTaskAnswer($projectId, $request);
+            $addProjectPitchTaskAnswer = DB::transaction(function () use ($projectId, $request) {
+                $addProjectPitchTaskAnswer = $this->projectPitchService->addProjectPitchTaskAnswer($projectId, $request);
 
-                return $createProjectPitchTaskAnswer;
+                return $addProjectPitchTaskAnswer;
             });
 
-            if ($createProjectPitchTaskAnswer) {
+            if ($addProjectPitchTaskAnswer) {
+                DB::commit();
+
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function projectProjectFile($projectId, $request)
+    {
+        try {
+            $addProjectFile = DB::transaction(function () use ($projectId, $request) {
+                $addProjectFile = $this->projectFileService->addProjectFile($projectId, $request);
+
+                return $addProjectFile;
+            });
+
+            if ($addProjectFile) {
                 DB::commit();
 
                 return true;
