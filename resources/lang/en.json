@@ -681,6 +681,14 @@
     "labels.labels_achi_io": "Issued on",
     "labels.labels_achi_eo": "Expires on",
     "responses.found_user_profile_detail":"The user detail has been successfully retrieved",
-    "responses.not_found_user_profile_detail":"The user detail has not been retrieved with success."
+    "responses.not_found_user_profile_detail":"The user detail has not been retrieved with success.",
+    "responses.user_id_required":"The user id is required",
+    "responses.about_required":"The about field is required",
+    "responses.age_required":"The age field is required",
+    "responses.gender_required":"The gender field is required",
+    "responses.user_personal_failed": "Oops! The creating user personal has failed.",
+    "responses.user_personal_created": "Congratulations! You have successfully created a User Personal.",
+    "responses.user_date_of_birth": "The Date of birth is required!"
+
 
 }
