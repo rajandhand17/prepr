@@ -137,6 +137,8 @@ class ResourceModule extends Command
                     $newResourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newResourceModule->user_id = $single_resource->user_id;
                     $newResourceModule->organization_id = $single_resource->org_id;
+                    $newResourceModule->duration_id = '1';
+                    $newResourceModule->level_id = '1';
                     $newResourceModule->title = $single_resource->res_title;
                     $newResourceModule->slug = $single_resource->res_title_slug;
                     $newResourceModule->description = $single_resource->res_desc;
