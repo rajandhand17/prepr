@@ -99,7 +99,7 @@ class ResourceModuleService
                         ->distinct();
                 })->distinct('resource_modules.uuid');
             }
-            
+
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
                     $query->select('resource_module_tags_groups.resource_module_id')
@@ -118,7 +118,6 @@ class ResourceModuleService
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceModule = $resourceModule->whereIn('level_id', $request->level_id);
             }
-
 
             return $resourceModule;
         } catch(\Exception $e) {

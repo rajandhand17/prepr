@@ -35,7 +35,7 @@ class ResourceModuleResource extends JsonResource
         $privacy = null;
         $status = null;
         $is_global = null;
-        
+
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {
                 return [

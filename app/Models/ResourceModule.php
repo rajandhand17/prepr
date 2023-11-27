@@ -111,11 +111,10 @@ class ResourceModule extends Model
         return 'N/A';
     }
 
-
     public function resource_rating()
     {
         if (auth('api')->check()) {
-            return ($this->hasOne(ResourceModuleRating::class, 'resource_module_id', 'id')->where('user_id', auth('api')->user()->id));
+            return $this->hasOne(ResourceModuleRating::class, 'resource_module_id', 'id')->where('user_id', auth('api')->user()->id);
         }
 
         return 'N/A';
