@@ -11,7 +11,7 @@ class ResourceModuleService
         try {
             $resourceModule = ResourceModule::select();
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
-            
+
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch(\Exception $e) {
             return false;
@@ -21,11 +21,11 @@ class ResourceModuleService
     public static function filterResourceModuleList($request, $resourceModule)
     {
         try {
-            if ($request->has('search') && !empty($request->search)) {  
+            if ($request->has('search') && !empty($request->search)) {
                 $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
             }
 
-            if ($request->filled('social_type') && in_array($request->social_type, [    ])) {
+            if ($request->filled('social_type') && in_array($request->social_type, [])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
                 $resourceModuleIds = ResourceModuleSocialActivitiesService::getResourceModuleBasedOnActivity($activityType)->pluck('resource_module_id');
                 $resourceModule->whereIn('resource_modules.id', $resourceModuleIds);
