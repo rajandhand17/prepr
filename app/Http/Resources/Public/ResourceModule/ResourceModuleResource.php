@@ -2,6 +2,11 @@
 
 namespace App\Http\Resources\Public\ResourceModule;
 
+use App\Services\SkillGroupService;
+use App\Services\SkillService;
+use App\Services\SkillStackService;
+use App\Services\TagGroupService;
+use App\Services\TagService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceModuleResource extends JsonResource
@@ -13,14 +18,24 @@ class ResourceModuleResource extends JsonResource
      */
     public function toArray($request)
     {
-        $links = [];
-        $files = [];
-        $document = [];
-        $video = [];
-        $audio = [];
-        $privacy = '';
-        $status = '';
-        $is_global = '';
+        $duration = null;
+        $duration_id = null;
+        $level = null;
+        $level_id = null;
+        $skills = null;
+        $skill_groups = null;
+        $skill_stacks = null;
+        $tags = null;
+        $tag_groups = null;
+        $links = null;
+        $files = null;
+        $document = null;
+        $video = null;
+        $audio = null;
+        $privacy = null;
+        $status = null;
+        $is_global = null;
+
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {
                 return [
@@ -63,10 +78,10 @@ class ResourceModuleResource extends JsonResource
         }
         switch($this->privacy) {
             case '0':
-                $privacy = 'yes';
+                $privacy = 'no';
                 break;
             case '1':
-                $privacy = 'no';
+                $privacy = 'yes';
                 break;
             default:
                 $privacy = 'no';
@@ -99,12 +114,60 @@ class ResourceModuleResource extends JsonResource
                 break;
         }
 
+        if ($this->durations) {
+            $duration = $this->durations->title;
+            $duration_id = $this->durations->id;
+        }
+
+        if ($this->levels) {
+            $level = $this->levels->title;
+            $level_id = $this->levels->id;
+        }
+
+        if ($this->skills) {
+            $associatedSkills = $this->skills->pluck('foreign_id');
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        }
+
+        if ($this->skill_groups) {
+            $associatedSkillGroups = $this->skill_groups->pluck('foreign_id');
+            $skill_groups = SkillGroupService::getSkillGroupsBasedOnIds($associatedSkillGroups)->pluck('title', 'id');
+
+            if ($skill_groups->isEmpty()) {
+                $skill_groups = $this->skill_groups->pluck('foreign_id');
+            }
+        }
+
+        if ($this->skill_stacks) {
+            $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
+            $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
+        }
+
+        if ($this->tags) {
+            $associatedSkillStacks = $this->tags->pluck('foreign_id');
+            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
+        }
+
+        if ($this->tag_groups) {
+            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
+            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
+        }
+
+        $rating = '0';
+        if ($this->resource_rating) {
+            $rating = $this->resource_rating->rating;
+        }
+
         return [
             'id'                                      => $this->uuid,
             'language'                                => $this->language,
             'title'                                   => $this->title,
             'user'                                    => $this->users->first_name.' '.$this->users->last_name,
             'organization_id'                         => $this->organization_id,
+            'duration'                                => $duration,
+            'duration_id'                             => $duration_id,
+            'level'                                   => $level,
+            'level_id'                                => $level_id,
             'slug'                                    => $this->slug,
             'description'                             => $this->description,
             'media_type'                              => $this->media_type,
@@ -112,6 +175,11 @@ class ResourceModuleResource extends JsonResource
             'privacy'                                 => $privacy,
             'status'                                  => $status,
             'is_global'                               => $is_global,
+            'skills'                                  => $skills,
+            'skill_groups'                            => $skill_groups,
+            'skill_stacks'                            => $skill_stacks,
+            'tags'                                    => $tags,
+            'tag_groups'                              => $tag_groups,
             'links'                                   => $links,
             'files'                                   => $files,
             'documents'                               => $document,
@@ -123,6 +191,7 @@ class ResourceModuleResource extends JsonResource
             'shares'                                  => $this->shares()->count(),
             'liked'                                   => $this->liked(),
             'favourite'                               => $this->favorites(),
+            'rating'                                  => $rating,
         ];
     }
 }

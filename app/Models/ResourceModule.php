@@ -18,6 +18,8 @@ class ResourceModule extends Model
         'language',
         'user_id',
         'organization_id',
+        'duration_id',
+        'level_id',
         'title',
         'slug',
         'description',
@@ -107,5 +109,49 @@ class ResourceModule extends Model
         }
 
         return 'N/A';
+    }
+
+    public function resource_rating()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ResourceModuleRating::class, 'resource_module_id', 'id')->where('user_id', auth('api')->user()->id);
+        }
+
+        return 'N/A';
+    }
+
+    public function durations()
+    {
+        return $this->belongsTo(Duration::class, 'duration_id', 'id');
+    }
+
+    public function levels()
+    {
+        return $this->belongsTo(Levels::class, 'level_id', 'id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(ResourceModuleSkillsGroupsStack::class, 'resource_module_id', 'id')->where('type', '0');
+    }
+
+    public function skill_groups()
+    {
+        return $this->hasMany(ResourceModuleSkillsGroupsStack::class, 'resource_module_id', 'id')->where('type', '1');
+    }
+
+    public function skill_stacks()
+    {
+        return $this->hasMany(ResourceModuleSkillsGroupsStack::class, 'resource_module_id', 'id')->where('type', '2');
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(ResourceModuleTagsGroups::class, 'resource_module_id', 'id')->where('type', '0');
+    }
+
+    public function tag_groups()
+    {
+        return $this->hasMany(ResourceModuleTagsGroups::class, 'resource_module_id', 'id')->where('type', '1');
     }
 }
