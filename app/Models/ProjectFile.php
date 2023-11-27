@@ -18,4 +18,9 @@ class ProjectFile extends Model
         'path',
         'type',
     ];
+
+    public function getPathAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
 }

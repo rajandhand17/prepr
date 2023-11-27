@@ -281,4 +281,10 @@ return [
         'winner_award'       => '9',
         'participation_award'=> '10',
     ],
+
+    'file_type' => [
+        'image' => 'image',
+        'video' => 'video',
+        'docs'  => 'docs',
+    ],
 ];

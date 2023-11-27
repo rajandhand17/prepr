@@ -14,4 +14,5 @@ return [
     'resource_group'            => 'resource_group/upload/',
     'resource_group_achievement'=> 'resource_group_achievement/upload/',
     'project'                   => 'project/upload/',
+    'project_file'              => 'project/upload_file',
 ];
