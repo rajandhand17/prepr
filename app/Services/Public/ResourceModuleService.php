@@ -25,7 +25,7 @@ class ResourceModuleService
                 $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
             }
 
-            if ($request->filled('social_type') && in_array($request->social_type, [])) {
+            if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
                 $resourceModuleIds = ResourceModuleSocialActivitiesService::getResourceModuleBasedOnActivity($activityType)->pluck('resource_module_id');
                 $resourceModule->whereIn('resource_modules.id', $resourceModuleIds);
