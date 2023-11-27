@@ -115,7 +115,6 @@ class CreateChallengeRequest extends FormRequest
             }
         }
 
-
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'restricted') {
             $base_rules['open_call_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['open_call_date_description'] = 'required_if:request_type,publish';
