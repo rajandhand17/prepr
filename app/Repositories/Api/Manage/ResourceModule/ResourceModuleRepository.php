@@ -55,7 +55,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
                 DB::commit();
 
-                return true;
+                return $createLabProgram['createResourceModule'];
             }
             DB::rollback();
 
@@ -127,7 +127,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
                 DB::commit();
 
-                return true;
+                return $updateResourceModule['updateResourceModule'];
             }
             DB::rollback();
 

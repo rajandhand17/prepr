@@ -86,7 +86,7 @@ class ResourceModuleController extends AppBaseController
             }
             $createResourceModule = $this->resourceModuleRepository->createResourceModule($request, $upload_cover_image);
             if ($createResourceModule) {
-                return $this->sendResponse(__('responses.resource_module_stored_success'), 200);
+                return $this->sendResponse(ResourceModuleResource::make($createResourceModule), __('responses.resource_module_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_module_stored_failed'), 403);
@@ -115,7 +115,7 @@ class ResourceModuleController extends AppBaseController
             }
             $updateResourceModule = $this->resourceModuleRepository->updateResourceModule($slug, $request, $upload_cover_image);
             if ($updateResourceModule) {
-                return $this->sendResponse($updateResourceModule, __('responses.resource_module_update_success'), 200);
+                return $this->sendResponse(ResourceModuleResource::make($updateResourceModule), __('responses.resource_module_update_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_module_stored_failed'), 403);

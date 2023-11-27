@@ -89,6 +89,37 @@ class ResourceModuleService
                 }
             }
 
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
+                $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
+                    $query->select('resource_module_skills_groups_stacks.resource_module_id')
+                    ->from('resource_module_skills_groups_stacks')
+                    ->whereIn('resource_module_skills_groups_stacks.foreign_id', $request->skills)
+                        ->where('resource_module_skills_groups_stacks.type', '0')
+                        ->whereNull('resource_module_skills_groups_stacks.deleted_at')
+                        ->distinct();
+                })->distinct('resource_modules.uuid');
+            }
+            
+            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
+                $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
+                    $query->select('resource_module_tags_groups.resource_module_id')
+                    ->from('resource_module_tags_groups')
+                    ->whereIn('resource_module_tags_groups.foreign_id', $request->tags)
+                        ->where('resource_module_tags_groups.type', '0')
+                        ->whereNull('resource_module_tags_groups.deleted_at')
+                        ->distinct();
+                })->distinct('resource_modules.uuid');
+            }
+
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $resourceModule = $resourceModule->whereIn('duration_id', $request->duration_id);
+            }
+
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $resourceModule = $resourceModule->whereIn('level_id', $request->level_id);
+            }
+
+
             return $resourceModule;
         } catch(\Exception $e) {
             return false;
@@ -172,6 +203,8 @@ class ResourceModuleService
             $resourceModule->language = $request->language;
             $resourceModule->user_id = auth()->user()->id;
             $resourceModule->organization_id = $organization->id;
+            $resourceModule->duration_id = $request->duration_id;
+            $resourceModule->level_id = $request->level_id;
             $resourceModule->title = $request->title;
             $resourceModule->slug = $slug;
             $resourceModule->description = $request->description;
@@ -240,6 +273,8 @@ class ResourceModuleService
             $resourceModule = ResourceModule::where('slug', $slug)->first();
             $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
+            $resourceModule->duration_id = ($request->has('duration_id')) ? $request->duration_id : $resourceModule->duration_id;
+            $resourceModule->level_id = ($request->has('level_id')) ? $request->level_id : $resourceModule->level_id;
             $resourceModule->title = $request->title;
             $resourceModule->description = $request->description;
             $resourceModule->media = $cover_image;
