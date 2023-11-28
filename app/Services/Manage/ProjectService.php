@@ -207,7 +207,7 @@ class ProjectService
                         $labId = $checkLab->id;
                     }
                 }
-                
+
                 $updateProject->language = ($request->has('language')) ? $request->language : $updateProject->language;
                 $updateProject->title = ($request->has('title')) ? $request->title : $updateProject->title;
                 $updateProject->description = ($request->has('description')) ? $request->description : $updateProject->description;
