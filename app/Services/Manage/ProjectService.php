@@ -139,4 +139,91 @@ class ProjectService
             return false;
         }
     }
+
+    public function updateProject($slug, $request, $uploadedCoverImage)
+    {
+        try {
+            $updateProject = Project::where('slug', $slug)->first();
+            if ($updateProject !== null) {
+                $viewEnabled = $updateProject->view_enabled;
+                switch ($request->view_enabled) {
+                    case 'yes':
+                        $viewEnabled = config('constants.project_view_enabled.yes');
+                        break;
+                    case 'no':
+                        $viewEnabled = config('constants.project_view_enabled.no');
+                        break;
+                    default:
+                        $viewEnabled = config('constants.project_view_enabled.yes');
+                        break;
+                }
+
+                $downloadEnabled = $updateProject->download_enabled;
+                switch ($request->download_enabled) {
+                    case 'yes':
+                        $downloadEnabled = config('constants.project_download_enabled.yes');
+                        break;
+                    case 'no':
+                        $downloadEnabled = config('constants.project_download_enabled.no');
+                        break;
+                    default:
+                        $downloadEnabled = config('constants.project_download_enabled.yes');
+                        break;
+                }
+
+                $mediaType = $updateProject->media_type;
+                switch ($request->media_type) {
+                    case 'image':
+                        $mediaType = config('constants.project_media_type.image');
+                        break;
+                    case 'embedded':
+                        $mediaType = config('constants.project_media_type.embedded');
+                        break;
+                    case 'video':
+                        $mediaType = config('constants.project_media_type.video');
+                        break;
+                    default:
+                        $mediaType = config('constants.project_media_type.yes');
+                        break;
+                }
+
+                $projectStatus = $updateProject->status;
+                switch ($request->status) {
+                    case 'public':
+                        $projectStatus = config('constants.project_status.public');
+                        break;
+                    case 'private':
+                        $projectStatus = config('constants.project_status.private');
+                        break;
+                    default:
+                        $projectStatus = config('constants.project_status.public');
+                        break;
+                }
+
+                $labId = $updateProject->lab_id;
+                if ($request->has('lab_id')) {
+                    $checkLab = LabService::getLabBasedOnUUID($request->lab_id);
+                    if ($checkLab != null) {
+                        $labId = $checkLab->id;
+                    }
+                }
+
+                $updateProject->language = ($request->has('language')) ? $request->language : $updateProject->language;
+                $updateProject->title = ($request->has('title')) ? $request->title : $updateProject->title;
+                $updateProject->description = ($request->has('description')) ? $request->description : $updateProject->description;
+                $updateProject->view_enabled = $viewEnabled;
+                $updateProject->download_enabled = $downloadEnabled;
+                $updateProject->media_type = $mediaType;
+                $updateProject->media = $uploadedCoverImage;
+                $updateProject->status = $projectStatus;
+                $updateProject->challenge_id = $updateProject->challenge_id;
+                $updateProject->lab_id = $labId;
+                $updateProject->save();
+
+                return $updateProject;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
