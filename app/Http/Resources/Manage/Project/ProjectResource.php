@@ -62,10 +62,10 @@ class ProjectResource extends JsonResource
         }
 
         switch ($this->view_enabled) {
-            case '1':
+            case 'yes':
                 $view_enabled = 'yes';
                 break;
-            case '0':
+            case 'no':
                 $view_enabled = 'no';
                 break;
             default:
@@ -74,10 +74,10 @@ class ProjectResource extends JsonResource
         }
 
         switch ($this->download_enabled) {
-            case '1':
+            case 'yes':
                 $download_enabled = 'yes';
                 break;
-            case '0':
+            case 'no':
                 $download_enabled = 'no';
                 break;
             default:

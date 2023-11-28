@@ -144,4 +144,26 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function updateProject($slug, $request, $uploadedCoverMedia)
+    {
+        try {
+            $updateProject = DB::transaction(function () use ($slug, $request, $uploadedCoverMedia) {
+                $updateProject = $this->projectService->updateProject($slug, $request, $uploadedCoverMedia);
+
+                return [
+                    'updateProject' => $updateProject,
+                ];
+            });
+            if ($updateProject['updateProject']) {
+                DB::commit();
+
+                return $updateProject['updateProject'];
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
