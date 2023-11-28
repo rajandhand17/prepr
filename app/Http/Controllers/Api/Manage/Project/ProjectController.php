@@ -165,4 +165,18 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function show($slug)
+    {
+        try {
+            $project = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if ($project) {
+                return $this->sendResponse(ProjectResource::make($project), __('responses.found_project_detail'), 200);
+            }
+
+            return $this->sendError(__('responses.found_not_project_detail'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

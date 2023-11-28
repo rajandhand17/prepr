@@ -697,6 +697,7 @@
     "responses.project_pitch_stored_success": "You have successfully added the Project Pitch.",
     "responses.project_pitch_stored_failed": "Oops! The Creation Project Pitch has failed.",
     "responses.project_file_stored_success": "You have successfully uploaded the Project file.",
-    "responses.project_file_stored_failed": "Oops! The Uploding Project file has failed."
-
+    "responses.project_file_stored_failed": "Oops! The Uploding Project file has failed.",
+    "responses.found_project_detail": "The Project has been successfully retrieved",
+    "responses.found_not_project_detail": "The Project has been not successfully retrieved"
 }
