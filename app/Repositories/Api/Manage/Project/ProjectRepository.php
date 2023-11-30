@@ -185,7 +185,7 @@ class ProjectRepository implements ProjectInterface
 
                 return $externalLink['externalLink'];
             }
-            
+
             return false;
         } catch (Exception $e) {
             return false;
