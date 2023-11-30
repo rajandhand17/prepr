@@ -11,8 +11,8 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/check-title/{title}', [ResourceModuleController::class, 'checkName'])->middleware('permission:create_resource_module');
     Route::get('/check-slug/{slug}', [ResourceModuleController::class, 'checkSlug'])->middleware('permission:create_resource_module');
     Route::post('/{slug}/add-links', [ResourceModuleController::class, 'addLinksAndEmbedMedia'])->middleware('permission:create_resource_module');
-    Route::post('/{slug}/file-upload', [ResourceModuleController::class, 'fileUpload'])->middleware('permission:create_resource_module');
+    Route::post('/{slug}/upload', [ResourceModuleController::class, 'fileUpload'])->middleware('permission:create_resource_module');
     Route::delete('/{slug}/delete', [ResourceModuleController::class, 'delete'])->middleware('permission:delete_resource_module');
-    Route::delete('/{slug}/delete-media', [ResourceModuleController::class, 'deleteMedia'])->middleware('permission:delete_resource_module');
+    Route::delete('/{slug}/media', [ResourceModuleController::class, 'deleteMedia'])->middleware('permission:delete_resource_module');
     Route::get('/get-list', [ResourceModuleController::class, 'getList'])->middleware('permission:view_resource_module');
 });

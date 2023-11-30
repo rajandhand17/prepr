@@ -74,7 +74,7 @@ class ResourceModuleDetailService
     public function addLinks($request, $resource_module_id)
     {
         try {
-            foreach ($request->add_links as  $value) {
+            foreach ($request->links as  $value) {
                 $type = config('constants.resource_module_type.url');
                 $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
                 if (!$resourceModuleDetailed) {
@@ -91,7 +91,7 @@ class ResourceModuleDetailService
     public function addEmbeddedMedia($request, $resource_module_id)
     {
         try {
-            foreach ($request->add_embedded_media as $key => $value) {
+            foreach ($request->embed_media as $key => $value) {
                 switch ($value['type']) {
                     case 'embedded_video':
                         $type = config('constants.resource_module_type.embedded_video');
