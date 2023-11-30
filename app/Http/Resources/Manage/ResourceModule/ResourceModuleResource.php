@@ -153,9 +153,9 @@ class ResourceModuleResource extends JsonResource
             $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        $rating = '0';
+        $rating = intval('0');
         if ($this->resource_rating) {
-            $rating = $this->resource_rating->rating;
+            $rating = intval($this->resource_rating->rating);
         }
 
         return [
@@ -163,7 +163,8 @@ class ResourceModuleResource extends JsonResource
             'language'                                => $this->language,
             'title'                                   => $this->title,
             'user'                                    => $this->users->first_name.' '.$this->users->last_name,
-            'organization_id'                         => $this->organization_id,
+            'organization_id'                         => $this->organization->uuid,
+            'organization'                            => $this->organization->title,
             'duration'                                => $duration,
             'duration_id'                             => $duration_id,
             'level'                                   => $level,
@@ -183,10 +184,10 @@ class ResourceModuleResource extends JsonResource
             'links'                                   => $links,
             'files'                                   => $files,
             'documents'                               => $document,
-            'video'                                   => $video,
-            'audio'                                   => $audio,
-            'embedded_video'                          => $embedded_video,
-            'embedded_audio'                          => $embedded_audio,
+            'videos'                                  => $video,
+            'audios'                                  => $audio,
+            'embedded_videos'                         => $embedded_video,
+            'embedded_audios'                         => $embedded_audio,
             'rating'                                  => $rating,
         ];
     }
