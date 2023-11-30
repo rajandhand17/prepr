@@ -122,6 +122,7 @@ class ProjectResource extends JsonResource
             'project_pitch'     => $challenge_pitch,
             'project_task'      => $challenge_task,
             'project_files'     => $project_files,
+            'external_links'    => ProjectExternalLinkResource::collection($this->external_links),
         ];
     }
 }
