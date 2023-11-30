@@ -244,6 +244,7 @@ class ProjectController extends AppBaseController
             if ($getProjectChallengeRequirement) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_requirement_found'), 200);
             }
+
             return $this->sendError(__('responses.project_not_requirement_found'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

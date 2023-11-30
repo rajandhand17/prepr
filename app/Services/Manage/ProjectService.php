@@ -4,9 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\ChallengePitch;
 use App\Models\Project;
-use App\Models\ProjectPitchValue;
 use App\Services\ProjectSubmissionRequirementService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -250,12 +248,12 @@ class ProjectService
                                 $requirementStatus = ProjectPitchService::checkProjectTask($projectData->id, $challengeData->challenge_project_template->template_id);
                                 break;
                         }
-                        $projectStatus = ($requirementStatus) ? "completed" : "pending";
+                        $projectStatus = ($requirementStatus) ? 'completed' : 'pending';
                         $projectState = [
-                            'status' => $projectStatus,
+                            'status'            => $projectStatus,
                             'Requirement Title' => $check_achievement_condition->title,
                         ];
-                        
+
                         $challenge_conditions[$check_achievement_condition->id] = $projectState;
                     }
                 }

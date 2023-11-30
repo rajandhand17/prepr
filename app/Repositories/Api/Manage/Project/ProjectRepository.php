@@ -171,6 +171,7 @@ class ProjectRepository implements ProjectInterface
     {
         try {
             return $this->projectService->projectRequirements($projectData);
+
             return false;
         } catch (Exception $e) {
             return false;
