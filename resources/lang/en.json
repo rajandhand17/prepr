@@ -702,6 +702,8 @@
     "responses.found_not_project_detail": "The Project has been not successfully retrieved",
     "responses.project_update_successfully": "The Project has been updated successfully",
     "responses.project_not_update": "There were some issues being encountered while updating the Project!",
+    "responses.add_external_links_success": "Congratulations! You have successfully added/updated external links in Project.",
+    "responses.add_external_links_failed": "Oops! The added/updated external links of Project has failed.",
     "responses.project_requirement_found": "The Project requirements has been successfully retrieved",
     "responses.project_not_requirement_found": "Project requirements not found!"
 }

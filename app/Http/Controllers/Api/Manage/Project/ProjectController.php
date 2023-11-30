@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Project;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Project\AddLinksProjectRequest;
 use App\Http\Requests\Manage\Project\CreateProjectRequest;
 use App\Http\Requests\Manage\Project\UpdateProjectRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
@@ -227,6 +228,24 @@ class ProjectController extends AppBaseController
             }
 
             return $this->sendError(__('responses.project_not_update'));
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addExternalLinks(AddLinksProjectRequest $request, $slug)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectSlugExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+            $addLinks = $this->projectRepository->addUpdatExternalLink($request, $checkProjectSlugExistsOrNot->id);
+            if ($addLinks) {
+                return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.add_external_links_success'), 200);
+            }
+
+            return $this->sendResponse(__('responses.add_external_links_failed'), 200);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
