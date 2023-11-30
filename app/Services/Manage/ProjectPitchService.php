@@ -22,7 +22,7 @@ class ProjectPitchService
                     $pitchId = $request['pitch_id'][$key];
                     $pitchAnswer = $request['pitch_answer'][$key];
 
-                    if ($pitchId != null && $pitchAnswer != null) {
+                    if ($pitchId != null) {
                         $createPitch = self::insertPitchData($projectId, $templateId, $pitchId, $pitchAnswer);
                         if (!$createPitch) {
                             return false;
@@ -170,6 +170,36 @@ class ProjectPitchService
             }
 
             return $challenge_task;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkProjectPitch($projectId, $templateId)
+    {
+        try {
+            $challengePitchIds = ChallengePitch::where('template_id', $templateId)->pluck('id')->all();
+            if (empty($challengePitchIds)) {
+                return true; // No challenge pitches, consider complete
+            }
+            $projectPitchCount = ProjectPitchValue::where(['project_id' => $projectId, 'pitch_template_id' => $templateId])->whereIn('project_pitch_id', $challengePitchIds)->whereNotNull('description')->count();
+            $challengePitchCount = count($challengePitchIds);
+            return $projectPitchCount === $challengePitchCount;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkProjectTask($projectId, $templateId)
+    {
+        try {
+            $challengeTaskIds = ChallengeTask::where('template_id', $templateId)->pluck('id')->all();
+            if (empty($challengeTaskIds)) {
+                return true; // No challenge task, consider complete
+            }
+            $projectTaskCount = ProjectTaskValue::where(['project_id' => $projectId, 'task_template_id' => $templateId, 'status' => '1'])->whereIn('project_task_id', $challengeTaskIds)->count();
+            $challengeTaskCount = count($challengeTaskIds);
+            return $projectTaskCount != $challengeTaskCount;
         } catch (Exception $e) {
             return false;
         }

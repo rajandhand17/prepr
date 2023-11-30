@@ -5,6 +5,7 @@ namespace App\Http\Resources\Manage\Project;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ProjectPitchService;
+use App\Services\Manage\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,6 +25,7 @@ class ProjectResource extends JsonResource
         $challenge_pitch = null;
         $challenge_task = null;
         $project_files = null;
+        $project_requirement_status = null;
 
         if ($this->getProjectTemplate->getTemplatePitches) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
@@ -105,23 +107,26 @@ class ProjectResource extends JsonResource
             $labData = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
         }
 
+        $project_requirement_status = ProjectService::projectRequirements($this);
+
         return [
-            'id'                => $this->uuid,
-            'language'          => $this->language,
-            'user_id'           => $this->user_id,
-            'title'             => $this->title,
-            'slug'              => $this->slug,
-            'description'       => $this->description,
-            'view_enabled'      => $view_enabled,
-            'download_enabled'  => $download_enabled,
-            'media_type'        => $this->media_type,
-            'media'             => $media,
-            'status'            => $this->status,
-            'challenge_id'      => $challengeData,
-            'lab_id'            => $labData,
-            'project_pitch'     => $challenge_pitch,
-            'project_task'      => $challenge_task,
-            'project_files'     => $project_files,
+            'id'                    => $this->uuid,
+            'language'              => $this->language,
+            'user_id'               => $this->user_id,
+            'title'                 => $this->title,
+            'slug'                  => $this->slug,
+            'description'           => $this->description,
+            'view_enabled'          => $view_enabled,
+            'download_enabled'      => $download_enabled,
+            'media_type'            => $this->media_type,
+            'media'                 => $media,
+            'status'                => $this->status,
+            'challenge_id'          => $challengeData,
+            'lab_id'                => $labData,
+            'requirement_status'    => $project_requirement_status,
+            'project_pitch'         => $challenge_pitch,
+            'project_task'          => $challenge_task,
+            'project_files'         => $project_files,
         ];
     }
 }

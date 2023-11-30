@@ -166,4 +166,14 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function projectRequirements($projectData)
+    {
+        try {
+            return $this->projectService->projectRequirements($projectData);
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

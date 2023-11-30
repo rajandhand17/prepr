@@ -4,7 +4,10 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\ChallengePitch;
 use App\Models\Project;
+use App\Models\ProjectPitchValue;
+use App\Services\ProjectSubmissionRequirementService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -222,6 +225,43 @@ class ProjectService
 
                 return $updateProject;
             }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function projectRequirements($projectData)
+    {
+        try {
+            $challengeData = ChallengeService::getChallengeBasedOnId($projectData->challenge_id);
+
+            $challenge_conditions = [];
+            if ($challengeData->challenge_requirements) {
+                foreach ($challengeData->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
+                    $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($challengeData->language, $project_submission_requirement);
+                    if ($challengeData->challenge_project_template) {
+                        $requirementStatus = '';
+
+                        switch ($check_achievement_condition->id) {
+                            case '1':
+                                $requirementStatus = ProjectPitchService::checkProjectPitch($projectData->id, $challengeData->challenge_project_template->template_id);
+                                break;
+                            case '2':
+                                $requirementStatus = ProjectPitchService::checkProjectTask($projectData->id, $challengeData->challenge_project_template->template_id);
+                                break;
+                        }
+                        $projectStatus = ($requirementStatus) ? "completed" : "pending";
+                        $projectState = [
+                            'status' => $projectStatus,
+                            'Requirement Title' => $check_achievement_condition->title,
+                        ];
+                        
+                        $challenge_conditions[$check_achievement_condition->id] = $projectState;
+                    }
+                }
+            }
+
+            return $challenge_conditions;
         } catch (Exception $e) {
             return false;
         }
