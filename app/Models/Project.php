@@ -48,4 +48,9 @@ class Project extends Model
     {
         return $this->hasMany(ProjectFile::class, 'project_id', 'id');
     }
+
+    public function external_links()
+    {
+        return $this->hasMany(ProjectExternalLink::class, 'project_id', 'id');
+    }
 }

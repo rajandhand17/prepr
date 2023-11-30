@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Manage\Project;
 
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
+use App\Services\Manage\ProjectExternalLinksService;
 use App\Services\Manage\ProjectFileService;
 use App\Services\Manage\ProjectPitchService;
 use App\Services\Manage\ProjectService;
@@ -17,14 +18,16 @@ class ProjectRepository implements ProjectInterface
     private $labService;
     private $projectPitchService;
     private $projectFileService;
+    private $projectExternalLinksService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
         $this->labService = $labService;
         $this->projectPitchService = $projectPitchService;
         $this->projectFileService = $projectFileService;
+        $this->projectExternalLinksService = $projectExternalLinksService;
     }
 
     public function uploadCoverImage($coverImage)
@@ -161,6 +164,28 @@ class ProjectRepository implements ProjectInterface
                 return $updateProject['updateProject'];
             }
 
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function addUpdatExternalLink($request, $projectId)
+    {
+        try {
+            $externalLink = DB::transaction(function () use ($request, $projectId) {
+                $externalLink = $this->projectExternalLinksService->addUpdatExternalLink($request, $projectId);
+
+                return [
+                    'externalLink' => $externalLink,
+                ];
+            });
+            if ($externalLink['externalLink']) {
+                DB::commit();
+
+                return $externalLink['externalLink'];
+            }
+            
             return false;
         } catch (Exception $e) {
             return false;
