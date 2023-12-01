@@ -71,6 +71,7 @@ class ResourceModuleResource extends JsonResource
                         $media_type = 'embedded_audio';
                         break;
                 }
+
                 return [
                     'id'    => $index->id,
                     'type'  => $media_type,
