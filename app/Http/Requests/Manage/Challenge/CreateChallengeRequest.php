@@ -103,7 +103,6 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['assessment_weight.*'] = 'required|numeric';
         }
 
-
         if ($this->request->has('assessment_type')) {
             $base_rules['assessment_type'] = 'in:open,close';
             $base_rules['visibility'] = 'required_if:assessment_type,open|in:users,hidden';
@@ -115,7 +114,6 @@ class CreateChallengeRequest extends FormRequest
                 $base_rules['members_email.*'] = 'email';
             }
         }
-
 
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'restricted') {
             $base_rules['open_call_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
