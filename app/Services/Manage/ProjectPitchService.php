@@ -201,7 +201,7 @@ class ProjectPitchService
             $projectTaskCount = ProjectTaskValue::where(['project_id' => $projectId, 'task_template_id' => $templateId, 'status' => '1'])->whereIn('project_task_id', $challengeTaskIds)->count();
             $challengeTaskCount = count($challengeTaskIds);
 
-            return $projectTaskCount != $challengeTaskCount;
+            return $projectTaskCount === $challengeTaskCount;
         } catch (Exception $e) {
             return false;
         }

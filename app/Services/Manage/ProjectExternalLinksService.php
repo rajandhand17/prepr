@@ -44,4 +44,19 @@ class ProjectExternalLinksService
             return false;
         }
     }
+
+    public static function checkProjectExternalLink($projectId)
+    {
+        try {
+            $checkProjectExternalLinks = ProjectExternalLink::where('project_id', $projectId)->count();
+            $projectExternalLinks = false;
+            if ($checkProjectExternalLinks > 0) {
+                $projectExternalLinks = true;
+            }
+
+            return $projectExternalLinks;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -56,4 +56,35 @@ class ProjectFileService
             return false;
         }
     }
+
+    public static function checkProjectGallery($projectId)
+    {
+        try {
+            $checkProjectGallery = ProjectFile::where('project_id', $projectId)->whereNotIn('type', ['docs', 'audio'])->count();
+            $projectGallery = false;
+            if ($checkProjectGallery > 0) {
+                $projectGallery = true;
+            }
+
+            return $projectGallery;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkProjectFile($projectId)
+    {
+        try {
+            $checkProjectFile = ProjectFile::where('project_id', $projectId)->whereNotIn('type', ['audio', 'video'])->count();
+            $projectFile = false;
+            if ($checkProjectFile > 0) {
+                $projectFile = true;
+            }
+
+            return $projectFile;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

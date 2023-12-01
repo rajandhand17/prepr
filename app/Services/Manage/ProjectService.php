@@ -247,6 +247,15 @@ class ProjectService
                             case '2':
                                 $requirementStatus = ProjectPitchService::checkProjectTask($projectData->id, $challengeData->challenge_project_template->template_id);
                                 break;
+                            case '3':
+                                $requirementStatus = ProjectExternalLinksService::checkProjectExternalLink($projectData->id);
+                                break;
+                            case '4':
+                                $requirementStatus = ProjectFileService::checkProjectGallery($projectData->id);
+                                break;
+                            case '5':
+                                $requirementStatus = ProjectFileService::checkProjectFile($projectData->id);
+                                break;
                         }
                         $projectStatus = ($requirementStatus) ? 'completed' : 'pending';
                         $projectState = [
