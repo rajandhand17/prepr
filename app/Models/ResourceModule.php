@@ -38,6 +38,11 @@ class ResourceModule extends Model
         return config('site-settings.aws_url').$value;
     }
 
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
     public function documents()
     {
         return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '0');

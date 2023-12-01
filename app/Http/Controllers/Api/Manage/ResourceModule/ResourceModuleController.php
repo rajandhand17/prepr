@@ -168,13 +168,13 @@ class ResourceModuleController extends AppBaseController
             if (!auth()->user()->isAbleTo('create_resource_module')) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
-            if ($request->has('add_links') && !empty($request->add_links)) {
+            if ($request->has('links') && !empty($request->links)) {
                 $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleSlugExistsOrNot->id);
                 if (!$addLinks) {
                     return $this->sendError(__('responses.add_links_failed'), 403);
                 }
             }
-            if ($request->has('add_embedded_media') && !empty($request->add_embedded_media)) {
+            if ($request->has('embed_media') && !empty($request->embed_media)) {
                 $addEmbeddedMedia = $this->resourceModuleRepository->addEmbeddedMedia($request, $checkResourceModuleSlugExistsOrNot->id);
                 if (!$addEmbeddedMedia) {
                     return $this->sendError(__('responses.add_embedded_media_failed'), 403);
