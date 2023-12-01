@@ -7,6 +7,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/create', [ProjectController::class, 'create']);
     Route::get('{slug}', [ProjectController::class, 'show']);
     Route::post('/{slug}/update', [ProjectController::class, 'update']);
+    Route::get('{slug}/requirements', [ProjectController::class, 'projectRequirements']);
     Route::post('/pitch-task', [ProjectController::class, 'projectPitchTask']);
     Route::post('/file-upload', [ProjectController::class, 'fileUpload']);
     Route::post('/{slug}/external-links', [ProjectController::class, 'addExternalLinks']);
