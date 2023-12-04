@@ -79,7 +79,8 @@ class User extends Authenticatable
         return $this->hasOne(UserAddress::class);
     }
 
-    public function userExperience(){
+    public function userExperience()
+    {
         return $this->hasMany(UserExperience::class);
     }
 
