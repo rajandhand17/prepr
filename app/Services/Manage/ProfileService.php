@@ -36,7 +36,7 @@ class ProfileService
             $profile->country=$request->country;
             $profile->description=$request->description;
             $profile->save();
-            return true;
+            return $profile;
         }catch(\Exception $e){
             return false;
         }

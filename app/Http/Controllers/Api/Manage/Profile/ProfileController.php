@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\Manage\Profile;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Profile\AddExperienceRequest;
 use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
+use App\Http\Resources\Manage\Profile\AddExperienceResource;
 use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
 use App\Http\Resources\Manage\Profile\ProfileResource;
 use App\Repositories\Api\Manage\Profile\ProfileRepository;
@@ -45,13 +47,14 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function addExperience(Request $request)
+    public function addExperience(AddExperienceRequest $request)
     {
         try {
             $getExperience=$this->profileRepository->addExperience($request);
             if($getExperience){
-                return $this->sendResponse(ProfileResource::make($getExperience), __(''));
+                return $this->sendResponse(AddExperienceResource::make($getExperience), __('response.user_experience_created'));
             }
+            return $this->sendError(__('responses.user_experience_failed'), 404);
         }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
