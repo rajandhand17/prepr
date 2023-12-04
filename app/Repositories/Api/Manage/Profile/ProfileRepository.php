@@ -22,6 +22,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function addPersonalDetail($request)
+    {
+        try {
+            return $this->profileService->addPersonalDetail($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function addExperience($request){
         try {
             return $this->profileService->addExperience($request);
