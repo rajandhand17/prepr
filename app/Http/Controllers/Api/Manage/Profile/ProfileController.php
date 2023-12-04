@@ -40,20 +40,23 @@ class ProfileController extends AppBaseController
             if ($addProfile) {
                 return $this->sendResponse(AddPersonalDetailResource::make($addProfile), __('responses.user_personal_created'));
             }
+
             return $this->sendError(__('responses.user_personal_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function addEducation(AddEducationRequest $request){
+    public function addEducation(AddEducationRequest $request)
+    {
         try {
-            $addEducation=$this->profileRepository->addEducation($request);
-            if($addEducation){
-                 return $this->sendResponse(AddEducationResource::make($addEducation), __('responses.user_education_created'));
+            $addEducation = $this->profileRepository->addEducation($request);
+            if ($addEducation) {
+                return $this->sendResponse(AddEducationResource::make($addEducation), __('responses.user_education_created'));
             }
+
             return $this->sendError(__('responses.user_education_failed'), 404);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

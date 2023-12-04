@@ -43,21 +43,23 @@ class ProfileService
         }
     }
 
-    public function addEducation($request){
+    public function addEducation($request)
+    {
         try {
             DB::beginTransaction();
-            $createAddEducation=new UserEducation();
-            $createAddEducation->user_id=$request->user_id;
-            $createAddEducation->university=$request->university;
-            $createAddEducation->degree=$request->degree;
-            $createAddEducation->start_date=$request->start_date;
-            $createAddEducation->end_date=$request->end_date;
-            $createAddEducation->address=$request->address;
-            $createAddEducation->description=$request->description;
+            $createAddEducation = new UserEducation();
+            $createAddEducation->user_id = $request->user_id;
+            $createAddEducation->university = $request->university;
+            $createAddEducation->degree = $request->degree;
+            $createAddEducation->start_date = $request->start_date;
+            $createAddEducation->end_date = $request->end_date;
+            $createAddEducation->address = $request->address;
+            $createAddEducation->description = $request->description;
             $createAddEducation->save();
             DB::commit();
+
             return $createAddEducation;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
