@@ -31,10 +31,11 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function addEducation($request){
+    public function addEducation($request)
+    {
         try {
             return $this->profileService->addEducation($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

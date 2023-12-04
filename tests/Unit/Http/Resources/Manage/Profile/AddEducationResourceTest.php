@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Manage\Profile;
 
-use App\Http\Resources\Manage\Profile\AddEducationResource;
 use Tests\TestCase;
 
 /**
