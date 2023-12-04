@@ -39,8 +39,9 @@ class ProfileService
             $profile->description = $request->description;
             $profile->save();
             DB::commit();
+
             return $profile;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -58,6 +59,7 @@ class ProfileService
             $createdPersonal->date_of_birth = $request->dob;
             $createdPersonal->save();
             DB::commit();
+
             return $createdPersonal;
         } catch(\Exception $e) {
             return false;
