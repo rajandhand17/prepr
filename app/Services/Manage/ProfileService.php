@@ -26,6 +26,7 @@ class ProfileService
     public function addExperience($request)
     {
         try {
+            DB::beginTransaction();
             $profile = new UserExperience();
             $profile->user_id = $request->user_id;
             $profile->company = $request->company;
@@ -37,6 +38,7 @@ class ProfileService
             $profile->country = $request->country;
             $profile->description = $request->description;
             $profile->save();
+            DB::commit();
             return $profile;
         }catch(\Exception $e){
             return false;
