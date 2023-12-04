@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Manage\Profile;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AddEducationRequest extends FormRequest
 {
@@ -29,5 +31,26 @@ class AddEducationRequest extends FormRequest
             'start_date'     => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
             'end_date'       => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
         ];
+    }
+    public function messages()
+    {
+        return[
+            'user_id.required'         => __('responses.user_id_required'),
+            'university.required'      => __('responses.university_required'),
+            'degree.required'          => __('responses.university_required'),
+            'start_date.required'      => __('responses.university_required'),
+            'start_date.before_or_equal'   => __('responses.before_or_equal'),
+            'end_date.required'        => __('responses.university_required'),
+            'end_date.before_or_equal' => __('responses.before_or_equal'),
+        ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors(),
+        ], 422));
     }
 }
