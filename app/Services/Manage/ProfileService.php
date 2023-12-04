@@ -57,7 +57,6 @@ class ProfileService
             $createAddEducation->description = $request->description;
             $createAddEducation->save();
             DB::commit();
-
             return $createAddEducation;
         } catch(\Exception $e) {
             return false;
