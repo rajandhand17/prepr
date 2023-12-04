@@ -14,8 +14,7 @@ class UserExperience extends Model
     protected $table = 'user_experiences';
 
     protected $fillable = [
-        'user_id', 'company', 'position', 'start_date', 'end_date', 'address', 'state', 'country', 'description'
+        'user_id', 'company', 'position', 'start_date', 'end_date', 'address', 'state', 'country', 'description',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-
 }

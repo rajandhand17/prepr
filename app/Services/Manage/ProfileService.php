@@ -3,8 +3,8 @@
 namespace App\Services\Manage;
 
 use App\Models\User;
-use App\Models\UserPersonal;
 use App\Models\UserExperience;
+use App\Models\UserPersonal;
 use DB;
 
 class ProfileService
@@ -18,26 +18,28 @@ class ProfileService
             }
 
             return false;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function addExperience($request){
+    public function addExperience($request)
+    {
         try {
-            $profile=new UserExperience();
-            $profile->user_id=$request->user_id;
-            $profile->company=$request->company;
-            $profile->position=$request->position;
-            $profile->start_date=$request->start_date;
-            $profile->end_date=$request->end_date;
-            $profile->address=$request->address;
-            $profile->state=$request->state;
-            $profile->country=$request->country;
-            $profile->description=$request->description;
+            $profile = new UserExperience();
+            $profile->user_id = $request->user_id;
+            $profile->company = $request->company;
+            $profile->position = $request->position;
+            $profile->start_date = $request->start_date;
+            $profile->end_date = $request->end_date;
+            $profile->address = $request->address;
+            $profile->state = $request->state;
+            $profile->country = $request->country;
+            $profile->description = $request->description;
             $profile->save();
+
             return true;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -55,6 +57,7 @@ class ProfileService
             $createdPersonal->date_of_birth = $request->dob;
             $createdPersonal->save();
             DB::commit();
+
             return $createdPersonal;
         } catch(\Exception $e) {
             return false;

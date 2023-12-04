@@ -48,11 +48,11 @@ class ProfileController extends AppBaseController
     public function addExperience(Request $request)
     {
         try {
-            $getExperience=$this->profileRepository->addExperience($request);
-            if($getExperience){
+            $getExperience = $this->profileRepository->addExperience($request);
+            if ($getExperience) {
                 return $this->sendResponse(ProfileResource::make($getExperience), __(''));
             }
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
