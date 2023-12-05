@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Profile;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Profile\AddPatientRequest;
 use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
 use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
 use App\Http\Resources\Manage\Profile\ProfileResource;
@@ -41,6 +42,18 @@ class ProfileController extends AppBaseController
 
             return $this->sendError(__('responses.user_personal_failed'), 404);
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addPatient(AddPatientRequest $request){
+        try {
+            $addPatient =$this->profileRepository->addPatient($request);
+            if($addPatient){
+                return $this->sendResponse(AddPersonalDetailResource::make($addPatient), __('responses.user_patient_created'));
+            }
+            return $this->sendError(__('responses.user_patient_failed'), 404);
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

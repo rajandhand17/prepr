@@ -30,4 +30,12 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
+    public function addPatient($request){
+        try {
+            return $this->profileService->addPatient($request);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\User;
+use App\Models\UserPatient;
 use App\Models\UserPersonal;
 use DB;
 
@@ -38,6 +39,22 @@ class ProfileService
 
             return $createdPersonal;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addPatient($request){
+        try {
+            DB::beginTransaction();
+            $addPatient = new UserPatient();
+            $addPatient->user_id=$request->user_id;
+            $addPatient->title=$request->title;
+            $addPatient->name=$request->name;
+            $addPatient->patient_date=$request->patient_date;
+            $addPatient->description=$request->description;
+            $addPatient->save();
+            DB::commit();
+        }catch(\Exception $e) {
             return false;
         }
     }

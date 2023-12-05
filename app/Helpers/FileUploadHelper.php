@@ -16,7 +16,6 @@ class FileUploadHelper
             $image_contents_cover = $image_cover->__toString();
             $webp_path_cover = $pathsarray[$type].time().'.webp';
             Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
-
             return $webp_path_cover;
         } catch(\Exception $e) {
             return false;

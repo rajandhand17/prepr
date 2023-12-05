@@ -7,4 +7,6 @@ interface ProfileInterface
     public function getProfileBasedOnUserName($user_name);
 
     public function addPersonalDetail($request);
+
+    public function addPatient($request);
 }
