@@ -50,8 +50,8 @@ class ProfileController extends AppBaseController
     public function addUserExperience(AddExperienceRequest $request)
     {
         try {
-            $getExperience=$this->profileRepository->addUserExperience($request);
-            if($getExperience){
+            $getExperience = $this->profileRepository->addUserExperience($request);
+            if ($getExperience) {
                 return $this->sendResponse(AddExperienceResource::make($getExperience), __('response.user_experience_created'));
             }
 
