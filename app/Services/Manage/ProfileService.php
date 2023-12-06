@@ -23,12 +23,12 @@ class ProfileService
         }
     }
 
-    public function addExperience($request)
+    public function addUserExperience($request)
     {
         try {
             DB::beginTransaction();
             $profile = new UserExperience();
-            $profile->user_id = $request->user_id;
+            $profile->user_id = auth()->user()->id;
             $profile->company = $request->company;
             $profile->position = $request->position;
             $profile->start_date = $request->start_date;

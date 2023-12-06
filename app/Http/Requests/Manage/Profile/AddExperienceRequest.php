@@ -23,11 +23,10 @@ class AddExperienceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id'   =>'required',
             'company'   =>'required',
             'position'  =>'required',
             'start_date'=>'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
-            'end_date'  =>'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
+            'end_date'  =>'required|date|after:start_date',
             'address'   =>'required',
             'state'     =>'required',
             'country'   =>'required',
@@ -38,7 +37,6 @@ class AddExperienceRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required' =>__("response.user_id_required"),
             'company.required' =>__("response.company_required"),
             'position.required' =>__("response.position_required"),
             'start_date.required' =>__("response.start_date_required"),
