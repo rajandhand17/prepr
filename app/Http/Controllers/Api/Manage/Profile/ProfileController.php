@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Profile;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Profile\AddPatentRequest;
 use App\Http\Requests\Manage\Profile\AddPatientRequest;
 use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
 use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
@@ -46,7 +47,7 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function addPatient(AddPatientRequest $request){
+    public function addPatient(AddPatentRequest $request){
         try {
             $addPatient =$this->profileRepository->addPatient($request);
             if($addPatient){

@@ -54,7 +54,7 @@ class ProfileService
             $addPatient->description=$request->description;
             $addPatient->save();
             DB::commit();
-        }catch(\Exception $e) {
+        }catch(\Exception $e){
             return false;
         }
     }
