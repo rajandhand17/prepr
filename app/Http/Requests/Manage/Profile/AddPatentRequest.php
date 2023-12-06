@@ -26,7 +26,7 @@ class AddPatentRequest extends FormRequest
     {
         $base_rules = [
             'user_id'      => 'required',
-            'title'        => 'required|numeric',
+            'title'        => 'required',
             'name'         => 'required',
             'description'  => 'required',
             'patent_date'  => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
@@ -42,7 +42,6 @@ class AddPatentRequest extends FormRequest
             'title.required'        => __('responses.title_required'),
             'name.required'         => __('responses.name_required'),
             'description.required'  => __('responses.description_required'),
-            'patent_date.required'  => __('responses.patent_date'),
         ];
     }
 

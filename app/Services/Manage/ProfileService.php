@@ -46,14 +46,15 @@ class ProfileService
     public function addPatent($request){
         try {
             DB::beginTransaction();
-            $addPatient = new UserPatient();
-            $addPatient->user_id=$request->user_id;
-            $addPatient->title=$request->title;
-            $addPatient->name=$request->name;
-            $addPatient->patient_date=$request->patient_date;
-            $addPatient->description=$request->description;
-            $addPatient->save();
+            $addPatent = new UserPatient();
+            $addPatent->user_id=$request->user_id;
+            $addPatent->title=$request->title;
+            $addPatent->name=$request->name;
+            $addPatent->patent_date=$request->patent_date;
+            $addPatent->description=$request->description;
+            $addPatent->save();
             DB::commit();
+            return $addPatent;
         }catch(\Exception $e){
             return false;
         }

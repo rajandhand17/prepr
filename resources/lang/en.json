@@ -688,7 +688,9 @@
     "responses.gender_required":"The gender field is required",
     "responses.user_personal_failed": "Oops! The creating user personal has failed.",
     "responses.user_personal_created": "Congratulations! You have successfully created a User Personal.",
-    "responses.user_date_of_birth": "The Date of birth is required!"
+    "responses.user_date_of_birth": "The Date of birth is required!",
+    "responses.user_patent_created": "The Patent was created successfully",
+    "responses.user_patent_failed": "Oops! The Creating of a Patent Failed."
 
 
 }
