@@ -31,10 +31,11 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function addPatent($request){
+    public function addPatent($request)
+    {
         try {
             return $this->profileService->addPatent($request);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
