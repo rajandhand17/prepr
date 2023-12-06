@@ -43,7 +43,7 @@ class ProfileService
         }
     }
 
-    public function addPatient($request){
+    public function addPatent($request){
         try {
             DB::beginTransaction();
             $addPatient = new UserPatient();

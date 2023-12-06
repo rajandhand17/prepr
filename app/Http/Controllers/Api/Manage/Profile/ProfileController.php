@@ -47,9 +47,9 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function addPatient(AddPatentRequest $request){
+    public function addPatent(AddPatentRequest $request){
         try {
-            $addPatient =$this->profileRepository->addPatient($request);
+            $addPatient =$this->profileRepository->addPatent($request);
             if($addPatient){
                 return $this->sendResponse(AddPersonalDetailResource::make($addPatient), __('responses.user_patient_created'));
             }
