@@ -38,7 +38,6 @@ class ResourceModuleDetailService
                     return false;
                 }
             }
-
             return true;
         } catch (\Exception $e) {
             return false;
@@ -81,7 +80,7 @@ class ResourceModuleDetailService
                 case 'image':
                     $type = config('constants.resource_module_type.image');
                     break;
-                case 'Embedded_Cover_Video':
+                case 'embedded_cover_video':
                     $type = config('constants.resource_module_type.Embedded_Cover_Video');
                     break;
                 default:

@@ -25,7 +25,7 @@ class DeleteMediaResourceModuleRequest extends FormRequest
     {
         return [
             'media_id' => 'required|exists:resource_module_details,id',
-            'type' => 'required|in:document,video,audio,embedded_video,embedded_audio,url,image,Embedded_Cover_Video',
+            'type' => 'required|in:document,video,audio,embedded_video,embedded_audio,url,image,embedded_cover_video',
         ];
     }
 
