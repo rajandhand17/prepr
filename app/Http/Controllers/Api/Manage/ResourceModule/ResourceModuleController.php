@@ -232,7 +232,6 @@ class ResourceModuleController extends AppBaseController
     public function deleteMedia(DeleteMediaResourceModuleRequest $request, $slug)
     {
         try {
-            $type = config('constants.resource_module_type.image');
             $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if (!$checkResourceModuleSlugExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
@@ -240,7 +239,7 @@ class ResourceModuleController extends AppBaseController
             if (!auth()->user()->isAbleTo('delete_resource_module')) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
-            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModuleMedia($request, $checkResourceModuleSlugExistsOrNot->id, $type);
+            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModuleMedia($request, $checkResourceModuleSlugExistsOrNot->id);
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_media_delete'));
             }
