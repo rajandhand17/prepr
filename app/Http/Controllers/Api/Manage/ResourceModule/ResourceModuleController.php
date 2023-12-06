@@ -262,6 +262,7 @@ class ResourceModuleController extends AppBaseController
             if ($responseModuleList) {
                 return $this->sendResponse(ResourceModuleListNameResource::collection($responseModuleList), __('responses.found_resource_module_list'));
             }
+
             return $this->sendError(__('responses.not_found_resource_module_view'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
