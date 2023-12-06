@@ -43,19 +43,21 @@ class ProfileService
         }
     }
 
-    public function addPatent($request){
+    public function addPatent($request)
+    {
         try {
             DB::beginTransaction();
             $addPatent = new UserPatient();
-            $addPatent->user_id=$request->user_id;
-            $addPatent->title=$request->title;
-            $addPatent->name=$request->name;
-            $addPatent->patent_date=$request->patent_date;
-            $addPatent->description=$request->description;
+            $addPatent->user_id = $request->user_id;
+            $addPatent->title = $request->title;
+            $addPatent->name = $request->name;
+            $addPatent->patent_date = $request->patent_date;
+            $addPatent->description = $request->description;
             $addPatent->save();
             DB::commit();
+
             return $addPatent;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

@@ -15,7 +15,7 @@ class UserPatient extends Model
     protected $table = 'user_patents';
 
     protected $fillable = [
-        'user_id', 'title', 'name', 'patent_date', 'description'
+        'user_id', 'title', 'name', 'patent_date', 'description',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

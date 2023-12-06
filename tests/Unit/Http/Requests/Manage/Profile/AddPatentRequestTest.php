@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Manage\Profile;
 
-use App\Http\Requests\Manage\Profile\AddPatentRequest;
 use Tests\TestCase;
 
 /**
