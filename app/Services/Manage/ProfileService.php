@@ -39,7 +39,6 @@ class ProfileService
             $profile->description = $request->description;
             $profile->save();
             DB::commit();
-
             return $profile;
         } catch(\Exception $e) {
             return false;
