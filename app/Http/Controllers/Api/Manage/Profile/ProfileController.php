@@ -54,8 +54,9 @@ class ProfileController extends AppBaseController
             if($getExperience){
                 return $this->sendResponse(AddExperienceResource::make($getExperience), __('response.user_experience_created'));
             }
+
             return $this->sendError(__('responses.user_experience_failed'), 404);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
