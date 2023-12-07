@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Manage\Profile;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
+use App\Http\Requests\Manage\Profile\AddSkillsRequest;
 use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
+use App\Http\Resources\Manage\Profile\AddSkillsResource;
 use App\Http\Resources\Manage\Profile\ProfileResource;
 use App\Repositories\Api\Manage\Profile\ProfileRepository;
 
@@ -41,6 +43,18 @@ class ProfileController extends AppBaseController
 
             return $this->sendError(__('responses.user_personal_failed'), 404);
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addSkills(AddSkillsRequest $request){
+        try {
+            $addSkills = $this->profileRepository->addSkills($request);
+            if($addSkills){
+                return $this->sendResponse(AddSkillsResource::make($addSkills),__('responses.add_skills_create'));
+            }
+            return $this->sendError(__('responses.add_skills_failed'),404);
+        }catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\User;
 use App\Models\UserPersonal;
+use App\Models\UserSkills;
 use DB;
 
 class ProfileService
@@ -35,9 +36,26 @@ class ProfileService
             $createdPersonal->date_of_birth = $request->dob;
             $createdPersonal->save();
             DB::commit();
-
             return $createdPersonal;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addSkills($request){
+        try {
+            DB::beginTransaction();
+            $checkSKillsExistsOrNot=UserSkills::where(['user_id' => auth()->user()->id,'skills' => $request->skills]);
+           if(!$checkSKillsExistsOrNot){
+               $addSkills = new UserSkills();
+               $addSkills->user_id = $request->user_id;
+               $addSkills->skills = $request->skills;
+               $addSkills->save();
+            }
+           $addSkills->skills=$request->skills;
+           $addSkills->save();
+            DB::commit();
+        }catch(\Exception $e){
             return false;
         }
     }
