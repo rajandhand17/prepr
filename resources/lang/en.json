@@ -683,12 +683,16 @@
     "responses.found_user_profile_detail":"The user detail has been successfully retrieved",
     "responses.not_found_user_profile_detail":"The user detail has not been retrieved with success.",
     "responses.user_id_required":"The user id is required",
+    "responses.company_required":"The Company is required",
     "responses.about_required":"The about field is required",
     "responses.age_required":"The age field is required",
     "responses.gender_required":"The gender field is required",
     "responses.user_personal_failed": "Oops! The creating user personal has failed.",
     "responses.user_personal_created": "Congratulations! You have successfully created a User Personal.",
-    "responses.user_date_of_birth": "The Date of birth is required!"
+    "responses.user_date_of_birth": "The Date of birth is required!",
+    "responses.user_experience_failed": "Oops! The creating user experience has failed.",
+    "responses.user_experience_created": "Congratulations! You have successfully created users experience.",
+    "responses.address_required": "The address field is required"
 
 
 }

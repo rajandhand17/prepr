@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\User;
+use App\Models\UserExperience;
 use App\Models\UserPersonal;
 use DB;
 
@@ -17,6 +18,29 @@ class ProfileService
             }
 
             return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addUserExperience($request)
+    {
+        try {
+            DB::beginTransaction();
+            $profile = new UserExperience();
+            $profile->user_id = auth()->user()->id;
+            $profile->company = $request->company;
+            $profile->position = $request->position;
+            $profile->start_date = $request->start_date;
+            $profile->end_date = $request->end_date;
+            $profile->address = $request->address;
+            $profile->state = $request->state;
+            $profile->country = $request->country;
+            $profile->description = $request->description;
+            $profile->save();
+            DB::commit();
+
+            return $profile;
         } catch(\Exception $e) {
             return false;
         }
