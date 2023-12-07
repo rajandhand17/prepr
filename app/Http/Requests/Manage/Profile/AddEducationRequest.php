@@ -25,11 +25,12 @@ class AddEducationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id'        => 'required',
             'university'     => 'required',
             'degree'         => 'required',
             'start_date'     => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
-            'end_date'       => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
+            'end_date'       => 'required|date|after:start_date',
+            'address'        => 'required',
+            'description'    => 'required',
         ];
     }
     public function messages()
@@ -39,7 +40,7 @@ class AddEducationRequest extends FormRequest
             'university.required'      => __('responses.university_required'),
             'degree.required'          => __('responses.university_required'),
             'start_date.required'      => __('responses.university_required'),
-            'start_date.before_or_equal'   => __('responses.before_or_equal'),
+            'start_date.before_or_equal'=> __('responses.before_or_equal'),
             'end_date.required'        => __('responses.university_required'),
             'end_date.before_or_equal' => __('responses.before_or_equal'),
         ];
