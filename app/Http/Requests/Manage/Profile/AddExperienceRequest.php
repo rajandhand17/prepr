@@ -23,28 +23,28 @@ class AddExperienceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company'   =>'required',
-            'position'  =>'required',
-            'start_date'=>'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
-            'end_date'  =>'required|date|after:start_date',
-            'address'   =>'required',
-            'state'     =>'required',
-            'country'   =>'required',
-            'description'=>'required',
+            'company'    => 'required',
+            'position'   => 'required',
+            'start_date' => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
+            'end_date'   => 'required|date|after:start_date',
+            'address'    => 'required',
+            'state'      => 'required',
+            'country'    => 'required',
+            'description'=> 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'company.required' =>__("response.company_required"),
-            'position.required' =>__("response.position_required"),
-            'start_date.required' =>__("response.start_date_required"),
-            'end_date.required' =>__("response.end_date_required"),
-            'address.required' =>__("response.address_required"),
-            'state.required' =>__("response.state_required"),
-            'country.required' =>__("response.country_required"),
-            'description.required' =>__("response.description_required"),
+            'company.required'     => __('response.company_required'),
+            'position.required'    => __('response.position_required'),
+            'start_date.required'  => __('response.start_date_required'),
+            'end_date.required'    => __('response.end_date_required'),
+            'address.required'     => __('response.address_required'),
+            'state.required'       => __('response.state_required'),
+            'country.required'     => __('response.country_required'),
+            'description.required' => __('response.description_required'),
         ];
     }
 }
