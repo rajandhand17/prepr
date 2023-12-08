@@ -70,7 +70,6 @@ class ProfileController extends AppBaseController
             if ($addEducation) {
                 return $this->sendResponse(AddEducationResource::make($addEducation), __('responses.user_education_created'));
             }
-
             return $this->sendError(__('responses.user_education_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
