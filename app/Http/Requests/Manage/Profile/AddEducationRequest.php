@@ -33,16 +33,17 @@ class AddEducationRequest extends FormRequest
             'description'    => 'required',
         ];
     }
+
     public function messages()
     {
         return[
-            'user_id.required'         => __('responses.user_id_required'),
-            'university.required'      => __('responses.university_required'),
-            'degree.required'          => __('responses.university_required'),
-            'start_date.required'      => __('responses.university_required'),
+            'user_id.required'          => __('responses.user_id_required'),
+            'university.required'       => __('responses.university_required'),
+            'degree.required'           => __('responses.university_required'),
+            'start_date.required'       => __('responses.university_required'),
             'start_date.before_or_equal'=> __('responses.before_or_equal'),
-            'end_date.required'        => __('responses.university_required'),
-            'end_date.before_or_equal' => __('responses.before_or_equal'),
+            'end_date.required'         => __('responses.university_required'),
+            'end_date.before_or_equal'  => __('responses.before_or_equal'),
         ];
     }
 

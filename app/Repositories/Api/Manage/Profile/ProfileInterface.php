@@ -11,5 +11,4 @@ interface ProfileInterface
     public function addEducation($request);
 
     public function addUserExperience($request);
-
 }
