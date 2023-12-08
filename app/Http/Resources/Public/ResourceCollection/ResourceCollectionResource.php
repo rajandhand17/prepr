@@ -153,7 +153,10 @@ class ResourceCollectionResource extends JsonResource
             'skill_stacks'                             => $skill_stacks,
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
-
+            'likes'                                    => $this->likes()->count(),
+            'shares'                                   => $this->shares()->count(),
+            'liked'                                    => $this->liked(),
+            'favourite'                                => $this->favorites(),
 
         ];
     }

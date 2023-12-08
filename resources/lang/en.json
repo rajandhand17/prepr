@@ -489,6 +489,7 @@
     "responses.create_member_manger_success_challenge": "Congratulations! You have successfully added member(s) to an Challenge.",
 
     "responses.resource_module_rating_successfully":"Congratulations! You have successfully rated the resource module",
+    "responses.resource_collection_rating_successfully":"Congratulations! You have successfully rated the resource collection",
     "responses.review_field_required": "The review field is required",
     "responses.review_in": "The review should be between 1 to 5 only",
     "responses.already_reviewed": "You have already give review on this resource module",
