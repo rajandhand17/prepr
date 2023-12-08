@@ -154,6 +154,7 @@ class ResourceCollectionResource extends JsonResource
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
 
+
         ];
     }
 }
