@@ -10,6 +10,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::put('/{slug}/update', [ResourceCollectionController::class, 'update']);
     Route::get('/check-slug/{slug}', [ResourceCollectionController::class, 'checkSlug']);
     Route::get('/check-title/{title}', [ResourceCollectionController::class, 'checkName']);
-    Route::get('/{slug}/delete', [ResourceCollectionController::class, 'delete']);
+    Route::delete('/{slug}/delete', [ResourceCollectionController::class, 'delete']);
     Route::get('/get-list', [ResourceCollectionController::class, 'getList']);
 });
