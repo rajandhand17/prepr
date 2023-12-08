@@ -3,10 +3,9 @@
 namespace App\Services\Manage;
 
 use App\Models\User;
+use App\Models\UserEducation;
 use App\Models\UserExperience;
 use App\Models\UserPersonal;
-use App\Models\UserEducation;
-
 use DB;
 
 class ProfileService
@@ -82,6 +81,7 @@ class ProfileService
             $createAddEducation->description = $request->description;
             $createAddEducation->save();
             DB::commit();
+
             return $createAddEducation;
         } catch(\Exception $e) {
             return false;

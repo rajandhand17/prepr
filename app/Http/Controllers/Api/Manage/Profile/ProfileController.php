@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api\Manage\Profile;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Profile\AddEducationRequest;
 use App\Http\Requests\Manage\Profile\AddExperienceRequest;
 use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
-use App\Http\Resources\Manage\Profile\AddExperienceResource;
-use App\Http\Requests\Manage\Profile\AddEducationRequest;
 use App\Http\Resources\Manage\Profile\AddEducationResource;
+use App\Http\Resources\Manage\Profile\AddExperienceResource;
 use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
 use App\Http\Resources\Manage\Profile\ProfileResource;
 use App\Repositories\Api\Manage\Profile\ProfileRepository;
@@ -42,6 +42,7 @@ class ProfileController extends AppBaseController
             if ($addProfile) {
                 return $this->sendResponse(AddPersonalDetailResource::make($addProfile), __('responses.user_personal_created'));
             }
+
             return $this->sendError(__('responses.user_personal_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -55,6 +56,7 @@ class ProfileController extends AppBaseController
             if ($getExperience) {
                 return $this->sendResponse(AddExperienceResource::make($getExperience), __('response.user_experience_created'));
             }
+
             return $this->sendError(__('responses.user_experience_failed'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -68,6 +70,7 @@ class ProfileController extends AppBaseController
             if ($addEducation) {
                 return $this->sendResponse(AddEducationResource::make($addEducation), __('responses.user_education_created'));
             }
+
             return $this->sendError(__('responses.user_education_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
