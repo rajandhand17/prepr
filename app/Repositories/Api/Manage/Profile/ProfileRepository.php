@@ -31,6 +31,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function addUserExperience($request)
+    {
+        try {
+            return $this->profileService->addUserExperience($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function addEducation($request)
     {
         try {
