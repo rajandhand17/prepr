@@ -27,8 +27,8 @@ class AddEducationRequest extends FormRequest
         return [
             'university'     => 'required',
             'degree'         => 'required',
-            'start_date'     => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
-            'end_date'       => 'required|date|after:start_date',
+            'start_date'     => 'required|date|before:tomorrow',
+            'end_date'       => 'required|date|after_or_equal:start_date',
             'address'        => 'required',
             'description'    => 'required',
         ];
