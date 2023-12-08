@@ -154,4 +154,6 @@ class ResourceModule extends Model
     {
         return $this->hasMany(ResourceModuleTagsGroups::class, 'resource_module_id', 'id')->where('type', '1');
     }
+
+
 }
