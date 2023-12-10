@@ -80,7 +80,8 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
-    public function addRating($slug, AddRatingRequest $request){
+    public function addRating($slug, AddRatingRequest $request)
+    {
         try {
             $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionSlugExistsOrNot == false) {
@@ -90,8 +91,9 @@ class ResourceCollectionController extends AppBaseController
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_collection_rating_successfully'));
             }
+
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
