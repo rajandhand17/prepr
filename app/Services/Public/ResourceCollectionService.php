@@ -5,7 +5,6 @@ namespace App\Services\Public;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
-use App\Models\ResourceCollectionSocialActivity;
 
 class ResourceCollectionService
 {
@@ -53,7 +52,7 @@ class ResourceCollectionService
 
             if ($request->has('privacy')) {
                 $privacy = null;
-                switch ($request->privacy){
+                switch ($request->privacy) {
                     case 'yes':
                         $privacy = config('constants.resource_collection_privacy.yes');
                         break;
@@ -68,7 +67,6 @@ class ResourceCollectionService
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
-
                 $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.id', function ($query) use ($request) {
                     $query->select('resource_collection_skills_groups_stacks.resource_collection_id')
                         ->from('resource_collection_skills_groups_stacks')
@@ -100,6 +98,7 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.duration', $duration);
                 }
             }
+
             return $resourceCollectionList;
         } catch (\Exception $e) {
             return false;

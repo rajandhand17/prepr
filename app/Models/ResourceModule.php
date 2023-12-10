@@ -107,6 +107,7 @@ class ResourceModule extends Model
         if (auth('api')->check()) {
             return ($this->hasMany(ResourceModuleSocialActivities::class, 'resource_module_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'N/A';
     }
 
@@ -153,6 +154,4 @@ class ResourceModule extends Model
     {
         return $this->hasMany(ResourceModuleTagsGroups::class, 'resource_module_id', 'id')->where('type', '1');
     }
-
-
 }

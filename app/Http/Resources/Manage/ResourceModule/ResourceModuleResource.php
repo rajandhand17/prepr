@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Manage\ResourceModule;
 
-use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -162,6 +161,7 @@ class ResourceModuleResource extends JsonResource
         if ($this->resource_rating) {
             $rating = intval($this->resource_rating->rating);
         }
+
         return [
             'id'                                      => $this->uuid,
             'language'                                => $this->language,

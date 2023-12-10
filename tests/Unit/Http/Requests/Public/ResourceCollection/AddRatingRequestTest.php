@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Public\ResourceCollection;
 
-use App\Http\Requests\Public\ResourceCollection\AddRatingRequest;
 use Tests\TestCase;
 
 /**
