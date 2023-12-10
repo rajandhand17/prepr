@@ -98,13 +98,10 @@ class ResourceCollectionSocialActivitiesService
                             $columnValue['column'] => $columnValue['action'],
                         ]
                     )->get();
-
                     return $resource_collection_ids;
                 }
-
                 return false;
             }
-
             return false;
         } catch(\Exception $e) {
             return false;
