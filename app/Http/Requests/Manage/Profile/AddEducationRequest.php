@@ -27,7 +27,7 @@ class AddEducationRequest extends FormRequest
             'university'     => 'required',
             'degree'         => 'required',
             'start_date'     => 'required|date|before:tomorrow',
-            'end_date'       => 'required|date|after_or_equal:start_date',
+            'end_date'       => 'required|date|after:start_date',
             'address'        => 'required',
             'description'    => 'required',
         ];
