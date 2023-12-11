@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
+use App\Services\Public\ResourceCollectionSocialActivitiesService;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceCollectionService
@@ -256,6 +257,19 @@ class ResourceCollectionService
                 $duration = Duration::whereIn('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
                 if ($duration) {
                     $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.duration', $duration);
+                }
+            }
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
+                $getCollectionLikedList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('like');
+                if ($getCollectionLikedList && $getCollectionLikedList->count() > 0) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionLikedList->pluck('resource_collection_id'));
+                }
+            }
+
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourites') {
+                $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('favourite');
+                if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
                 }
             }
 

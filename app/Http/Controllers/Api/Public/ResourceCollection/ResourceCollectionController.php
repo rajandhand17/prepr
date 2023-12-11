@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public\ResourceCollection;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Public\ResourceCollection\AddRatingRequest;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Public\ResourceCollection\ResourceCollectionRepository;
 use Illuminate\Http\Request;
@@ -74,6 +75,24 @@ class ResourceCollectionController extends AppBaseController
             }
 
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addRating($slug, AddRatingRequest $request)
+    {
+        try {
+            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
+            }
+            $addRating = $this->resourceCollectionRepository->addRating($checkResourceCollectionSlugExistsOrNot->id, $request);
+            if ($addRating) {
+                return $this->sendResponse(null, __('responses.resource_collection_rating_successfully'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
