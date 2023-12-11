@@ -93,4 +93,16 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function addSkills(AddSkillsRequest $request){
+        try {
+            $addSkills = $this->profileRepository->addSkills($request);
+            if($addSkills){
+                return $this->sendResponse(AddSkillsResource::make($addSkills),__('responses.add_skills_create'));
+            }
+            return $this->sendError(__('responses.add_skills_failed'),404);
+        }catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

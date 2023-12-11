@@ -24,7 +24,6 @@ class AddSkillsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' =>'required',
             'skill_id' =>'required'
         ];
     }

@@ -111,17 +111,20 @@ class ProfileService
     public function addSkills($request){
         try {
             DB::beginTransaction();
-            $checkSKillsExistsOrNot=UserSkills::where(['user_id' => auth()->user()->id,'skills' => $request->skills]);
-           if(!$checkSKillsExistsOrNot){
+            $checkSKillsExistsOrNot=UserSkills::where(['user_id' => auth()->user()->id,'skill' => $request->skill_id])->first();
+            if($checkSKillsExistsOrNot==null){
                 $addSkills = new UserSkills();
-                $addSkills->user_id = $request->user_id;
-                $addSkills->skills = $request->skills;
+                $addSkills->user_id = auth()->user()->id;
+                $addSkills->skill = $request->skill_id;
                 $addSkills->save();
+               DB::commit();
+               return $addSkills;
             }
-           $addSkills->skills=$request->skills;
-           $addSkills->save();
+            $checkSKillsExistsOrNot->skill=$request->skill_id;
+            $checkSKillsExistsOrNot->save();
             DB::commit();
-        }catch(\Exception $e){  
+            return $checkSKillsExistsOrNot;
+        }catch(\Exception $e){
             return false;
         }
     }
