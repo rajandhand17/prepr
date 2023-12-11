@@ -90,7 +90,7 @@ class ResourceCollectionController extends AppBaseController
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_collection_rating_successfully'));
             }
-            return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
+            return $this->sendError(__('responses.resource_collection_rating_failed'), 404);
         }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
