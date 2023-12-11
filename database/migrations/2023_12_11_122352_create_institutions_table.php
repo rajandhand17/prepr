@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('institutions', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('fr_CA_title');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

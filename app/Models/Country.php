@@ -18,4 +18,7 @@ class Country extends Model
         'title',
         'fr_CA_title',
     ];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
 }

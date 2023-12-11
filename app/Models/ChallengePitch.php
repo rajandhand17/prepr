@@ -19,4 +19,7 @@ class ChallengePitch extends Model
         'description',
         'fr_CA_description',
     ];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
 }
