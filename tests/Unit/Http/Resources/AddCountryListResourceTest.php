@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources;
 
-use App\Http\Resources\AddCountryListResource;
 use Tests\TestCase;
 
 /**

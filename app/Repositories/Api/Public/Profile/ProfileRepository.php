@@ -13,12 +13,12 @@ class ProfileRepository implements ProfileInterface
         $this->profileService = $profileService;
     }
 
-    public function getCountriesList($language,$search){
+    public function getCountriesList($language, $search)
+    {
         try {
-            return $this->profileService->getCountriesList($language,$search);
-        }catch (\Exception $e) {
+            return $this->profileService->getCountriesList($language, $search);
+        } catch (\Exception $e) {
             return false;
         }
     }
-
 }
