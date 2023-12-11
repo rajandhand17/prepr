@@ -8,5 +8,7 @@ interface ProfileInterface
 
     public function addPersonalDetail($request);
 
-    public function addExperience($request);
+    public function addEducation($request);
+
+    public function addUserExperience($request);
 }
