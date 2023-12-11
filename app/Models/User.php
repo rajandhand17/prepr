@@ -79,6 +79,11 @@ class User extends Authenticatable
         return $this->hasOne(UserAddress::class);
     }
 
+    public function userExperience()
+    {
+        return $this->hasMany(UserExperience::class);
+    }
+
     /**login apis */
     public function login($request)
     {

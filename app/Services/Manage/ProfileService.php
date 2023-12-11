@@ -4,6 +4,8 @@ namespace App\Services\Manage;
 
 use App\Models\User;
 use App\Models\UserPatient;
+use App\Models\UserEducation;
+use App\Models\UserExperience;
 use App\Models\UserPersonal;
 use DB;
 
@@ -18,6 +20,29 @@ class ProfileService
             }
 
             return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addUserExperience($request)
+    {
+        try {
+            DB::beginTransaction();
+            $profile = new UserExperience();
+            $profile->user_id = auth()->user()->id;
+            $profile->company = $request->company;
+            $profile->position = $request->position;
+            $profile->start_date = $request->start_date;
+            $profile->end_date = $request->end_date;
+            $profile->address = $request->address;
+            $profile->state = $request->state;
+            $profile->country = $request->country;
+            $profile->description = $request->description;
+            $profile->save();
+            DB::commit();
+
+            return $profile;
         } catch(\Exception $e) {
             return false;
         }
@@ -38,6 +63,27 @@ class ProfileService
             DB::commit();
 
             return $createdPersonal;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addEducation($request)
+    {
+        try {
+            DB::beginTransaction();
+            $createAddEducation = new UserEducation();
+            $createAddEducation->user_id = $request->user_id;
+            $createAddEducation->university = $request->university;
+            $createAddEducation->degree = $request->degree;
+            $createAddEducation->start_date = $request->start_date;
+            $createAddEducation->end_date = $request->end_date;
+            $createAddEducation->address = $request->address;
+            $createAddEducation->description = $request->description;
+            $createAddEducation->save();
+            DB::commit();
+
+            return $createAddEducation;
         } catch(\Exception $e) {
             return false;
         }

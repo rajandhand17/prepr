@@ -8,5 +8,11 @@ interface ProfileInterface
 
     public function addPersonalDetail($request);
 
+<<<<<<< HEAD
     public function addPatent($request);
+=======
+    public function addEducation($request);
+
+    public function addUserExperience($request);
+>>>>>>> feature/LLAI-177-api-development---profile
 }
