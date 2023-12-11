@@ -155,20 +155,19 @@ class ResourceCollectionController extends AppBaseController
     public function getList(Request $request)
     {
         try {
-        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-        if (!$organization) {
-            return $this->sendError(__('responses.organization_not_found'), 404);
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $resourceCollection = $this->resourceCollectionRepository->getListName($request, $organization);
+
+            if ($resourceCollection) {
+                return $this->sendResponse(ResourceCollectionListNameResource::collection($resourceCollection), __('responses.found_resource_collection_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
-        $resourceCollection = $this->resourceCollectionRepository->getListName($request, $organization);
-
-        if ($resourceCollection) {
-            return $this->sendResponse(ResourceCollectionListNameResource::collection($resourceCollection), __('responses.found_resource_collection_list'));
-        }
-        return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
-      }catch (\Exception $e){
-        return $this->sendError(__('responses.send_error'), 500);
-
-    }
-
     }
 }
