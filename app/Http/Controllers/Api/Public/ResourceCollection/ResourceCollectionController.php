@@ -80,7 +80,8 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
-    public function addRating($slug, AddRatingRequest $request){
+    public function addRating($slug, AddRatingRequest $request)
+    {
         try {
             $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionSlugExistsOrNot == false) {

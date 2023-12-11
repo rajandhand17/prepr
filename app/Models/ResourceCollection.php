@@ -96,6 +96,7 @@ class ResourceCollection extends Model
     {
         return $this->hasMany(ResourceCollectionTagsGroups::class, 'resource_collection_id', 'id')->where('type', '1');
     }
+
     public function likes()
     {
         return $this->hasMany(ResourceCollectionSocialActivity::class, 'resource_collection_id', 'id')->where('like_dislike', '1');
@@ -111,6 +112,7 @@ class ResourceCollection extends Model
         if (auth('api')->check()) {
             return ($this->hasMany(ResourceCollectionSocialActivity::class, 'resource_collection_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'N/A';
     }
 
@@ -119,7 +121,7 @@ class ResourceCollection extends Model
         if (auth('api')->check()) {
             return ($this->hasMany(ResourceCollectionSocialActivity::class, 'resource_collection_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'N/A';
     }
-
 }

@@ -62,10 +62,11 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         }
     }
 
-    public function addRating($resource_collection_id, $request){
+    public function addRating($resource_collection_id, $request)
+    {
         try {
             return $this->resourceCollectionSocialActivity->addRating($resource_collection_id, $request);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

@@ -8,7 +8,6 @@ use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
-use App\Services\Public\OrganizationSocialActivitiesService;
 use App\Services\Public\ResourceCollectionSocialActivitiesService;
 use HiFolks\RandoPhp\Randomize;
 
@@ -273,6 +272,7 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
                 }
             }
+
             return $resourceCollectionList;
         } catch (\Exception $e) {
             return false;
