@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Manage\Profile;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Profile\AddExperienceRequest;
 use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
+use App\Http\Resources\AddCountryListResource;
 use App\Http\Resources\Manage\Profile\AddExperienceResource;
 use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
 use App\Http\Resources\Manage\Profile\ProfileResource;
 use App\Repositories\Api\Manage\Profile\ProfileRepository;
+use Illuminate\Http\Request;
 
 class ProfileController extends AppBaseController
 {
@@ -59,4 +61,5 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
 }

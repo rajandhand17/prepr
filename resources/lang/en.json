@@ -692,7 +692,9 @@
     "responses.user_date_of_birth": "The Date of birth is required!",
     "responses.user_experience_failed": "Oops! The creating user experience has failed.",
     "responses.user_experience_created": "Congratulations! You have successfully created users experience.",
-    "responses.address_required": "The address field is required"
+    "responses.address_required": "The address field is required",
+    "responses.country_list_fetched_successfully": "Congratulations! You have successfully fetched countries",
+    "responses.countries_fetched_failed": "Oops! The fetching countries list has failed"
 
 
 }
