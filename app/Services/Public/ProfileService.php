@@ -29,4 +29,12 @@ class ProfileService
             return false;
         }
     }
+
+    public function getInstitutionsList(){
+        try {
+
+        }catch(\Exception $e){
+            return false;
+        }
+    }
 }

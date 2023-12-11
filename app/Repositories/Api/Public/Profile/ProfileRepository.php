@@ -21,4 +21,13 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
+    public function getInstitutionsList($language, $search)
+    {
+        try {
+            return $this->profileService->getInstitutionsList($language, $search);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
