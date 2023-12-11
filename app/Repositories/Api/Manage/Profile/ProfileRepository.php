@@ -39,4 +39,22 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
+    public function addEducation($request)
+    {
+        try {
+            return $this->profileService->addEducation($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addPatent($request)
+    {
+        try {
+            return $this->profileService->addPatent($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

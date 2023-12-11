@@ -693,6 +693,15 @@
     "responses.user_experience_failed": "Oops! The creating user experience has failed.",
     "responses.user_experience_created": "Congratulations! You have successfully created users experience.",
     "responses.address_required": "The address field is required",
+    "responses.user_education_created": "Congratulations! You have successfully added a User Education.",
+    "responses.user_education_failed": "Oops! The adding user Education has failed.",
+    "responses.university_required": "The University field is required",
+    "responses.degree_required": "The Degree field is required",
+    "responses.start_date_required": "The Start date field is required",
+    "responses.before_or_equal": "The Date should be current or before the current date",
+    "responses.end_date_required": "The Start date field is required",
+    "responses.user_patent_created": "The Patent was created successfully",
+    "responses.user_patent_failed": "Oops! The Creating of a Patent Failed.",
     "responses.country_list_fetched_successfully": "Congratulations! You have successfully fetched countries",
     "responses.countries_fetched_failed": "Oops! The fetching countries list has failed"
 
