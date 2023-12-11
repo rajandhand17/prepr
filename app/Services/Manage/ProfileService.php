@@ -62,6 +62,7 @@ class ProfileService
             $createdPersonal->date_of_birth = $request->dob;
             $createdPersonal->save();
             DB::commit();
+
             return $createdPersonal;
         } catch(\Exception $e) {
             return false;
@@ -108,23 +109,26 @@ class ProfileService
         }
     }
 
-    public function addSkills($request){
+    public function addSkills($request)
+    {
         try {
             DB::beginTransaction();
-            $checkSKillsExistsOrNot=UserSkills::where(['user_id' => auth()->user()->id,'skill' => $request->skill_id])->first();
-            if($checkSKillsExistsOrNot==null){
+            $checkSKillsExistsOrNot = UserSkills::where(['user_id' => auth()->user()->id, 'skill' => $request->skill_id])->first();
+            if ($checkSKillsExistsOrNot == null) {
                 $addSkills = new UserSkills();
                 $addSkills->user_id = auth()->user()->id;
                 $addSkills->skill = $request->skill_id;
                 $addSkills->save();
-               DB::commit();
-               return $addSkills;
+                DB::commit();
+
+                return $addSkills;
             }
-            $checkSKillsExistsOrNot->skill=$request->skill_id;
+            $checkSKillsExistsOrNot->skill = $request->skill_id;
             $checkSKillsExistsOrNot->save();
             DB::commit();
+
             return $checkSKillsExistsOrNot;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

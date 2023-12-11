@@ -58,10 +58,11 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function addSkills($request){
+    public function addSkills($request)
+    {
         try {
             return $this->profileService->addSkills($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
