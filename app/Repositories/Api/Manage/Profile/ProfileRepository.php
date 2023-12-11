@@ -39,6 +39,4 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
-
-
 }

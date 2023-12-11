@@ -2,14 +2,10 @@
 
 namespace App\Services\Manage;
 
-use App\Helpers\LanguageColumnHelper;
-use App\Models\Category;
-use App\Models\Country;
 use App\Models\User;
 use App\Models\UserExperience;
 use App\Models\UserPersonal;
 use DB;
-use Illuminate\Support\Facades\Schema;
 
 class ProfileService
 {
