@@ -15,7 +15,7 @@ class AddSkillsResource extends JsonResource
     public function toArray(Request $request): array
     {
         $response = [
-            'id'  => $this->id,
+            'id'          => $this->id,
             'skill_id'    => $this->skill,
         ];
 

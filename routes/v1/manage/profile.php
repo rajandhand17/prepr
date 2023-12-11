@@ -10,5 +10,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/add-experience', [ProfileController::class, 'addUserExperience']);
     Route::post('/add-education', [ProfileController::class, 'addEducation']);
     Route::post('/add-skills', [ProfileController::class, 'addSkills']);
-
 });
