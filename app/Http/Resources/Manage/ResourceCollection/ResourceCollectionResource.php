@@ -131,6 +131,7 @@ class ResourceCollectionResource extends JsonResource
         if ($this->resource_rating) {
             $rating = intval($this->resource_rating->rating);
         }
+
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,

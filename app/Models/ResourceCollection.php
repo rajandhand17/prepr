@@ -130,6 +130,7 @@ class ResourceCollection extends Model
         if (auth('api')->check()) {
             return $this->hasOne(ResourceCollectionRating::class, 'resource_collection_id', 'id')->where('user_id', auth('api')->user()->id);
         }
+
         return 'N/A';
     }
 }
