@@ -124,4 +124,13 @@ class ResourceCollection extends Model
 
         return 'N/A';
     }
+
+    public function resource_rating()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ResourceCollectionRating::class, 'resource_collection_id', 'id')->where('user_id', auth('api')->user()->id);
+        }
+
+        return 'N/A';
+    }
 }
