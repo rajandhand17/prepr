@@ -123,7 +123,7 @@ class ResourceModuleResource extends JsonResource
             $duration_id = $this->durations->id;
         }
 
-        if ($this->levels) {
+        if ($this->levels){
             $level = $this->levels->title;
             $level_id = $this->levels->id;
         }
