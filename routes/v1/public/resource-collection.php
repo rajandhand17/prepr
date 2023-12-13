@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Public\ResourceCollection\ResourceCollectionController;
 use Illuminate\Support\Facades\Route;
+
 $middleware = ['language'];
 if (\request()->has('social_type')) {
     $middleware = ['language', 'auth:api'];

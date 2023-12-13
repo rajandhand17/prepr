@@ -87,7 +87,7 @@ class ResourceCollectionSocialActivitiesService
     public static function getResourceCollectionBasedOnActivity($action)
     {
         try {
-            if (auth()->check()){
+            if (auth()->check()) {
                 $columnValue = self::getColumnNameValue($action);
                 if ($columnValue !== false) {
                     $resource_collection_ids = ResourceCollectionSocialActivity::where(
@@ -96,10 +96,13 @@ class ResourceCollectionSocialActivitiesService
                             $columnValue['column'] => $columnValue['action'],
                         ]
                     )->get();
+
                     return $resource_collection_ids;
                 }
+
                 return false;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
