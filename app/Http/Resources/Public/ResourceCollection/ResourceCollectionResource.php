@@ -162,7 +162,6 @@ class ResourceCollectionResource extends JsonResource
             'shares'                                   => $this->shares()->count(),
             'liked'                                    => $this->liked(),
             'favourite'                                => $this->favorites(),
-
         ];
     }
 }
