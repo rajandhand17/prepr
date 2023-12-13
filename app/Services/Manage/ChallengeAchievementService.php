@@ -123,7 +123,6 @@ class ChallengeAchievementService
                 $cloneParticipationAchievement->challenge_id = $clonedChallengeId;
                 $cloneParticipationAchievement->save();
             }
-
             return true;
         } catch (Exception $e) {
             return false;

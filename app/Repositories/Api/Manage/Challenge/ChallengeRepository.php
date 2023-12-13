@@ -486,4 +486,77 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
+    public function createTemplateChallenge($challengeId, $organization)
+    {
+        try {
+            $originalChallenge = Challenge::with(['skills', 'skill_groups', 'skill_stacks', 'tags', 'tag_groups', 'participation_achievement', 'incentive_achievement', 'challenge_requirements', 'hosts', 'challenge_assessment_criteria', 'challenge_assessment', 'challenge_timelines', 'challenge_custom_timelines', 'challenge_project_template', 'external_links'])->find($challengeId);
+            $createTemplateChallenge = DB::transaction(function () use ($challengeId, $organization, $originalChallenge) {
+                $createTemplateChallenge = $this->challengeService->createTemplateChallenge($challengeId, $organization);
+                $cloneChallengeParticipationAchievement = $this->challengeAchievementService->cloneChallengeParticipationAchievement($originalChallenge->participation_achievement, $cloneChallenge->id);
+                $cloneChallengeIncentiveAchievement = $this->challengeAchievementService->cloneChallengeIncentiveAchievement($originalChallenge->incentive_achievement, $cloneChallenge->id);
+                $cloneChallengeSkills = $this->challengeSkillsGroupsStackService->cloneChallengeSkills($originalChallenge->skills, $cloneChallenge->id);
+                $cloneChallengeGroups = $this->challengeSkillsGroupsStackService->cloneChallengeGroups($originalChallenge->skill_groups, $cloneChallenge->id);
+                $cloneChallengeStack = $this->challengeSkillsGroupsStackService->cloneChallengeStack($originalChallenge->skill_stacks, $cloneChallenge->id);
+                $cloneChallengeSponsor = $this->challengeSponsorService->cloneChallengeSponsor($originalChallenge->hosts, $cloneChallenge->id);
+                $cloneChallengeTags = $this->challengeTagsGroupsService->cloneChallengeTags($originalChallenge->tags, $cloneChallenge->id);
+                $cloneChallengeTagsGroups = $this->challengeTagsGroupsService->cloneChallengeTagsGroups($originalChallenge->tag_groups, $cloneChallenge->id);
+                $cloneChallengeRequirement = $this->challengeRequirementService->cloneChallengeRequirement($originalChallenge->challenge_requirements, $cloneChallenge->id);
+                $cloneChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->cloneChallengeAssessmentCriteria($originalChallenge->challenge_assessment_criteria, $cloneChallenge->id);
+                $cloneChallengeAssessment = $this->challengeAssessmentService->cloneChallengeAssessment($originalChallenge->challenge_assessment, $cloneChallenge->id);
+                $cloneChallengeProjectTemplate = $this->challengeProjectTemplateService->cloneChallengeProjectTemplate($originalChallenge->challenge_project_template, $cloneChallenge->id);
+                $cloneChallengeTimelines = $this->challengeTimelinesService->cloneChallengeTimelines($originalChallenge->challenge_timelines, $cloneChallenge->id);
+                $cloneChallengeCustomTimelines = $this->challengeCustomTimelinesService->cloneChallengeCustomTimelines($originalChallenge->challenge_custom_timelines, $cloneChallenge->id);
+                $cloneChallengeExternalLink = $this->challengeExternalLinkService->cloneChallengeExternalLink($originalChallenge->external_links, $cloneChallenge->id);
+
+                return [
+                    'cloneChallenge'                             => $createTemplateChallenge,
+                    'cloneChallengeParticipationAchievement'     => $cloneChallengeParticipationAchievement,
+                    'cloneChallengeIncentiveAchievement'         => $cloneChallengeIncentiveAchievement,
+                    'cloneChallengeSkills'                       => $cloneChallengeSkills,
+                    'cloneChallengeGroups'                       => $cloneChallengeGroups,
+                    'cloneChallengeStack'                        => $cloneChallengeStack,
+                    'cloneChallengeSponsor'                      => $cloneChallengeSponsor,
+                    'cloneChallengeTags'                         => $cloneChallengeTags,
+                    'cloneChallengeTagsGroups'                   => $cloneChallengeTagsGroups,
+                    'cloneChallengeRequirement'                  => $cloneChallengeRequirement,
+                    'cloneChallengeAssessmentCriteria'           => $cloneChallengeAssessmentCriteria,
+                    'cloneChallengeAssessment'                   => $cloneChallengeAssessment,
+                    'cloneChallengeProjectTemplate'              => $cloneChallengeProjectTemplate,
+                    'cloneChallengeTimelines'                    => $cloneChallengeTimelines,
+                    'cloneChallengeCustomTimelines'              => $cloneChallengeCustomTimelines,
+                    'cloneChallengeExternalLink'                 => $cloneChallengeExternalLink,
+                ];
+            });
+
+            if (
+                $createTemplateChallenge['cloneChallenge'] &&
+                $createTemplateChallenge['cloneChallengeParticipationAchievement'] &&
+                $createTemplateChallenge['cloneChallengeIncentiveAchievement'] &&
+                $createTemplateChallenge['cloneChallengeSkills'] &&
+                $createTemplateChallenge['cloneChallengeGroups'] &&
+                $createTemplateChallenge['cloneChallengeStack'] &&
+                $createTemplateChallenge['cloneChallengeSponsor'] &&
+                $createTemplateChallenge['cloneChallengeTags'] &&
+                $createTemplateChallenge['cloneChallengeTagsGroups'] &&
+                $createTemplateChallenge['cloneChallengeRequirement'] &&
+                $createTemplateChallenge['cloneChallengeAssessmentCriteria'] &&
+                $createTemplateChallenge['cloneChallengeAssessment'] &&
+                $createTemplateChallenge['cloneChallengeProjectTemplate'] &&
+                $createTemplateChallenge['cloneChallengeTimelines'] &&
+                $createTemplateChallenge['cloneChallengeCustomTimelines'] &&
+                $createTemplateChallenge['cloneChallengeExternalLink']
+            ) {
+                DB::commit();
+
+                return $createTemplateChallenge['cloneChallenge'];
+            }
+
+            DB::rollback();
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
