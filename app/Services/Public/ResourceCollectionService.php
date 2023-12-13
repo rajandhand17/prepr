@@ -104,7 +104,6 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionLikedList->pluck('resource_collection_id'));
                 }
             }
-
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourites') {
                 $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('favourite');
                 if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
