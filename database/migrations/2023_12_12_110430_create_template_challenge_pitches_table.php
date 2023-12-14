@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,7 +17,7 @@ return new class extends Migration
             $table->longText('fr_CA_title')->comment('French pitch question');
             $table->text('description')->comment('English pitch description')->nullable();
             $table->text('fr_CA_description')->comment('French pitch description')->nullable();
-            $table->foreign('template_id','fk_template_challenge_pitches')->references('id')->on('pitch_templates')->onDelete('cascade');
+            $table->foreign('template_id', 'fk_template_challenge_pitches')->references('id')->on('pitch_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

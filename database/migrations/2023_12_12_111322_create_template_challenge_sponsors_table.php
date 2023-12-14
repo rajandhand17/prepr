@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('template_challenge_id');
             $table->unsignedBigInteger('host_id');
-            $table->foreign('template_challenge_id','fk_template_challenge_sponsors')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('template_challenge_id', 'fk_template_challenge_sponsors')->references('id')->on('template_challenges')->onDelete('cascade');
             $table->foreign('host_id')->references('id')->on('hosts')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

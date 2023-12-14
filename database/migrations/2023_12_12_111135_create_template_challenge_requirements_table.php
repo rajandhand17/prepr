@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -26,7 +25,7 @@ return new class extends Migration
             $table->enum('complete_education_program', ['0', '1'])->default('0')->comment('0->no,1->yes');
             $table->enum('complete_experience', ['0', '1'])->default('0')->comment('0->no,1->yes');
             $table->text('additional_requirements')->comment('Additional requirements if any')->nullable();
-            $table->foreign('template_challenge_id','fk_template_challenge_requirements')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('template_challenge_id', 'fk_template_challenge_requirements')->references('id')->on('template_challenges')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

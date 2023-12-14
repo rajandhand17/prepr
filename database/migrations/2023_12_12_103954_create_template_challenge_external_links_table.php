@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,7 +16,7 @@ return new class extends Migration
             $table->string('social_media_link');
             $table->unsignedBigInteger('social_link_id');
             $table->foreign('template_challenge_id')->references('id')->on('template_challenges')->onDelete('cascade');
-            $table->foreign('social_link_id','fk_template_challenge_external_links')->references('id')->on('social_links')->onDelete('cascade');
+            $table->foreign('social_link_id', 'fk_template_challenge_external_links')->references('id')->on('social_links')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
