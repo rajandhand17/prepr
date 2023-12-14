@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('template_challenge_path_id');
             $table->integer('foreign_id');
             $table->enum('type', ['0', '1'])->comment('0->tag, 1-> groups');
-            $table->foreign('template_challenge_path_id')->references('id')->on('template_challenge_paths')->onDelete('cascade');
+            $table->foreign('template_challenge_path_id','fk_template_challenge_path_tag_groups')->references('id')->on('template_challenge_paths')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

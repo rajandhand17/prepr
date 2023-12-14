@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('like_dislike', ['0', '1', '2'])->default('0')->comment('0->no-activity, 1=>like, 2=>dislike');
             $table->enum('share', ['0', '1'])->default('0')->comment('0->no-activity, 1=>share');
             $table->enum('favourite', ['0', '1', '2'])->default('0')->comment('0->no-activity, 1=>favourite, 2=>unfavored');
-            $table->foreign('template_challenge_id')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('template_challenge_id','fk_template_challenge_social_activities')->references('id')->on('template_challenges')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

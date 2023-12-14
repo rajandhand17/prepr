@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('template_challenge_id');
             $table->integer('template_id')->nullable();
-            $table->foreign('template_challenge_id')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('template_challenge_id','fk_template_challenge_project_templates')->references('id')->on('template_challenges')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

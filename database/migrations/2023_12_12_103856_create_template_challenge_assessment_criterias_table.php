@@ -17,9 +17,13 @@ return new class extends Migration
             $table->string('title');
             $table->integer('score');
             $table->integer('weight');
-            $table->foreign('template_challenge_id')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('template_challenge_id', 'fk_template_challenge_criterias')
+                ->references('id')
+                ->on('template_challenges')
+                ->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
+
         });
     }
 

@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('template_challenge_path_social_activities', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('challenge_path_id');
+            $table->unsignedBigInteger('template_challenge_path_id');
             $table->enum('like_dislike', ['0', '1', '2'])->default('0')->comment('0->no-activity, 1=>like,2=>dislike');
             $table->enum('share', ['0', '1'])->default('0')->comment('0->no-activity, 1=>share');
             $table->enum('favourite', ['0', '1', '2'])->default('0')->comment('0->no-activity, 1=>favourite,2=>unfavored');
-            $table->foreign('challenge_path_id')->references('id')->on('challenge_paths')->onDelete('cascade');
+            $table->foreign('template_challenge_path_id','fk_template_challenge_path_social_activities')->references('id')->on('template_challenge_paths')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
