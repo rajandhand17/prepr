@@ -455,7 +455,6 @@ class ChallengeService
             if ($challenge != null) {
                 return $challenge;
             }
-
             return false;
         } catch (Exception $e) {
             return false;
