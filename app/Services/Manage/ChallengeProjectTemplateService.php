@@ -60,6 +60,7 @@ class ChallengeProjectTemplateService
                 $templateChallengeProjectTemplate->template_id = $challengeProjectTemplate->template_id;
                 $templateChallengeProjectTemplate->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;

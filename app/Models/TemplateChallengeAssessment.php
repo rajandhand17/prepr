@@ -21,7 +21,7 @@ class TemplateChallengeAssessment extends Model
         'attachments',
     ];
 
-    protected $hidden=[
-        "created_at","deleted_at","updated_at"
+    protected $hidden = [
+        'created_at', 'deleted_at', 'updated_at',
     ];
 }
