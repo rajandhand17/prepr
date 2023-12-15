@@ -84,4 +84,21 @@ class ChallengeSponsorService
             return false;
         }
     }
+
+    public function createTemplateChallengeSponsor($challengeId,$templateChallengeId){
+        try {
+            $getChallengeSponsor=ChallengeSponsor::where("challenge_id",$challengeId)->get();
+            foreach ($getChallengeSponsor as $getSponsor) {
+                $createChallengeSponsor = new ChallengeSponsor();
+                $createChallengeSponsor->template_challenge_id = $templateChallengeId;
+                $createChallengeSponsor->foreign_id = $getSponsor->foreign_id;
+                $createChallengeSponsor->type = $getSponsor->type;
+                $createChallengeSponsor->save();
+            }
+              return true;
+
+        }catch (Exception $e) {
+            return false;
+        }
+    }
 }

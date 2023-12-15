@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
+use App\Models\TemplateChallenge;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -364,7 +365,6 @@ class ChallengeService
                             break;
                     }
                 }
-
                 $challenge->language = ($request->has('language')) ? $request->language : $challenge->language;
                 $challenge->organization_id = $organization->id;
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
@@ -383,7 +383,6 @@ class ChallengeService
                 $challenge->is_open = $is_open;
                 $challenge->is_auto_created = $is_auto_created;
                 $challenge->save();
-
                 return $challenge;
             }
         } catch (Exception $e) {
@@ -497,16 +496,28 @@ class ChallengeService
     public function createTemplateChallenge($challengeId, $organization){
         try {
             $originalChallenge = Challenge::find($challengeId);
-            $model = new Challenge();
-            $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
-            $clonedChallenge = $originalChallenge->replicate();
-            $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $clonedChallenge->title = $organization->title.' '.$originalChallenge->title;
-            $clonedChallenge->slug = $slug;
-            $clonedChallenge->user_id = auth()->user()->id;
-            $clonedChallenge->organization_id = $organization->id;
-            $clonedChallenge->save();
-            return $clonedChallenge;
+            $templateChallenge = new TemplateChallenge();
+            $templateChallenge->uuid= $originalChallenge->uuid;
+            $templateChallenge->title=$originalChallenge->title;
+            $templateChallenge->slug= $originalChallenge->slug;
+            $templateChallenge->user_id=$originalChallenge->user_id;
+            $templateChallenge->organization_id=$originalChallenge->organization_id;
+            $templateChallenge->category_id=$originalChallenge->category_id;
+            $templateChallenge->duration_id=$originalChallenge->duration_id;
+            $templateChallenge->level_id=$originalChallenge->level_id;
+            $templateChallenge->description=$originalChallenge->description;
+            $templateChallenge->privacy=$originalChallenge->privacy;
+            $templateChallenge->media_type=$originalChallenge->media_type;
+            $templateChallenge->media=$originalChallenge->media;
+            $templateChallenge->status=$originalChallenge->status;
+            $templateChallenge->source_link=$originalChallenge->source_link;
+            $templateChallenge->agreement=$originalChallenge->agreement;
+            $templateChallenge->is_notification_enabled=$originalChallenge->is_notification_enabled;
+            $templateChallenge->project_privacy=$originalChallenge->project_privacy;
+            $templateChallenge->is_open=$originalChallenge->is_open;
+            $templateChallenge->is_auto_created=$originalChallenge->is_auto_created;
+            $templateChallenge->save();
+            return $templateChallenge;
         }catch (Exception $e){
             return false;
         }

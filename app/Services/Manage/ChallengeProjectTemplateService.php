@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\ChallengeProjectTemplate;
+use App\Models\TemplateChallengeProjectTemplate;
 use Exception;
 
 class ChallengeProjectTemplateService
@@ -45,6 +46,23 @@ class ChallengeProjectTemplateService
 
             return true;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createTemplateChallengeProjectTemplate($challengeId,$templateChallengeId){
+        try {
+            $getChallengeProjectTemplate=ChallengeProjectTemplate::where('challenge_id',$challengeId)->get();
+            foreach ($getChallengeProjectTemplate as $challengeProjectTemplate){
+                $templateChallengeProjectTemplate=new TemplateChallengeProjectTemplate();
+                $templateChallengeProjectTemplate->template_challenge_id = $templateChallengeId;
+                $templateChallengeProjectTemplate->title=$challengeProjectTemplate->title;
+                $templateChallengeProjectTemplate->score=$challengeProjectTemplate->score;
+                $templateChallengeProjectTemplate->weight=$challengeProjectTemplate->weight;
+                $templateChallengeProjectTemplate->save();
+            }
+            return true;
+        }catch (Exception $e) {
             return false;
         }
     }
