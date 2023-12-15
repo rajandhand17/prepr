@@ -3,7 +3,6 @@
 namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Models\Challenge;
-use App\Models\TemplateChallenge;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAnnouncementService;
 use App\Services\Manage\ChallengeAssessmentCriteriaService;
@@ -492,20 +491,19 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             $originalChallenge = Challenge::with(['skills', 'skill_groups', 'skill_stacks', 'tags', 'tag_groups', 'participation_achievement', 'incentive_achievement', 'challenge_requirements', 'hosts', 'challenge_assessment_criteria', 'challenge_assessment', 'challenge_timelines', 'challenge_custom_timelines', 'challenge_project_template', 'external_links'])->find($challengeId);
-            $createTemplateChallenge = DB::transaction(function () use ($challengeId, $organization, $originalChallenge) {
-
+            $createTemplateChallenge = DB::transaction(function () use ($challengeId, $organization) {
                 $createTemplateChallenge = $this->challengeService->createTemplateChallenge($challengeId, $organization);
-                $createTemplateChallengeParticipationAchievement  = $this->challengeAchievementService->createTemplateChallengeParticipationAchievement($challengeId,$createTemplateChallenge->id);
-                $createTemplateChallengeSkills = $this->challengeSkillsGroupsStackService->createTemplateChallengeSkills($challengeId,$createTemplateChallenge->id);
-                $createTemplateChallengeSponsor = $this->challengeSponsorService->createTemplateChallengeSponsor($challengeId,$createTemplateChallenge->id);
-                $createTemplateChallengeTags = $this->challengeTagsGroupsService->createChallengeTags($challengeId,$createTemplateChallenge->id);
-                $createTemplateChallengeRequirement = $this->challengeRequirementService->createTemplateChallengeRequirement($challengeId,$createTemplateChallenge->id);
-                $createTemplateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createTemplateChallengeAssessmentCriteria($challengeId,$createTemplateChallenge->id);
-                $createTemplateChallengeAssessment = $this->challengeAssessmentService->createTemplateChallengeAssessment($challengeId,$createTemplateChallenge->id);
-                $createTemplateChallengeProjectTemplate = $this->challengeProjectTemplateService->createTemplateChallengeProjectTemplate($challengeId,$createTemplateChallenge->id);
-                $createChallengeTimelines = $this->challengeTimelinesService->createTemplateChallengeTimelines($challengeId,$createTemplateChallenge->id);
-                $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createTemplateChallengeCustomTimeLines($challengeId,$createTemplateChallenge->id);
-                $createChallengeExternalLink = $this->challengeExternalLinkService->createTemplateChallengeExternalLink($challengeId,$createTemplateChallenge->id);
+                $createTemplateChallengeParticipationAchievement = $this->challengeAchievementService->createTemplateChallengeParticipationAchievement($challengeId, $createTemplateChallenge->id);
+                $createTemplateChallengeSkills = $this->challengeSkillsGroupsStackService->createTemplateChallengeSkills($challengeId, $createTemplateChallenge->id);
+                $createTemplateChallengeSponsor = $this->challengeSponsorService->createTemplateChallengeSponsor($challengeId, $createTemplateChallenge->id);
+                $createTemplateChallengeTags = $this->challengeTagsGroupsService->createChallengeTags($challengeId, $createTemplateChallenge->id);
+                $createTemplateChallengeRequirement = $this->challengeRequirementService->createTemplateChallengeRequirement($challengeId, $createTemplateChallenge->id);
+                $createTemplateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createTemplateChallengeAssessmentCriteria($challengeId, $createTemplateChallenge->id);
+                $createTemplateChallengeAssessment = $this->challengeAssessmentService->createTemplateChallengeAssessment($challengeId, $createTemplateChallenge->id);
+                $createTemplateChallengeProjectTemplate = $this->challengeProjectTemplateService->createTemplateChallengeProjectTemplate($challengeId, $createTemplateChallenge->id);
+                $createChallengeTimelines = $this->challengeTimelinesService->createTemplateChallengeTimelines($challengeId, $createTemplateChallenge->id);
+                $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createTemplateChallengeCustomTimeLines($challengeId, $createTemplateChallenge->id);
+                $createChallengeExternalLink = $this->challengeExternalLinkService->createTemplateChallengeExternalLink($challengeId, $createTemplateChallenge->id);
 
                 return [
                     'createTemplateChallenge'                           => $createTemplateChallenge,
@@ -517,9 +515,9 @@ class ChallengeRepository implements ChallengeInterface
                     'createTemplateChallengeAssessmentCriteria'         => $createTemplateChallengeAssessmentCriteria,
                     'createTemplateChallengeAssessment'                 => $createTemplateChallengeAssessment,
                     'createTemplateChallengeProjectTemplate'            => $createTemplateChallengeProjectTemplate,
-                    'createChallengeTimelines'                         => $createChallengeTimelines,
-                    'createChallengeCustomTimelines'                   => $createChallengeCustomTimelines,
-                    'createChallengeExternalLink'                      => $createChallengeExternalLink,
+                    'createChallengeTimelines'                          => $createChallengeTimelines,
+                    'createChallengeCustomTimelines'                    => $createChallengeCustomTimelines,
+                    'createChallengeExternalLink'                       => $createChallengeExternalLink,
                 ];
             });
 

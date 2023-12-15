@@ -11,7 +11,7 @@ class TemplateChallenge extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="template_challenges";
+    protected $table = 'template_challenges';
 
     protected $fillable = [
         'preferred_language',

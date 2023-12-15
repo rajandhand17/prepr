@@ -11,7 +11,6 @@ class TemplateChallengeAssessmentCriterias extends Model
     use HasFactory;
     use SoftDeletes;
 
-
     protected $table = 'template_challenge_assessment_criterias';
     protected $fillable = [
         'template_challenge_id',

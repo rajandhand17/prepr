@@ -175,17 +175,18 @@ class ChallengeSkillsGroupsStackService
         }
     }
 
-    public function createTemplateChallengeSkills($challengeId,$templateChallengeId)
+    public function createTemplateChallengeSkills($challengeId, $templateChallengeId)
     {
         try {
-            $getChallengeSkillsGroupsStack=ChallengeSkillsGroupsStack::where("challenge_id",$challengeId)->get();
+            $getChallengeSkillsGroupsStack = ChallengeSkillsGroupsStack::where('challenge_id', $challengeId)->get();
             foreach ($getChallengeSkillsGroupsStack as $getSkillsGroupStack) {
-                $templateChallengeSkillsGroupsStack=new TemplateChallengeSkillsGroupsStack();
-                $templateChallengeSkillsGroupsStack->template_challenge_id=$templateChallengeId;
-                $templateChallengeSkillsGroupsStack->foreign_id=$getSkillsGroupStack->foreign_id;
-                $templateChallengeSkillsGroupsStack->type=$getSkillsGroupStack->type;
+                $templateChallengeSkillsGroupsStack = new TemplateChallengeSkillsGroupsStack();
+                $templateChallengeSkillsGroupsStack->template_challenge_id = $templateChallengeId;
+                $templateChallengeSkillsGroupsStack->foreign_id = $getSkillsGroupStack->foreign_id;
+                $templateChallengeSkillsGroupsStack->type = $getSkillsGroupStack->type;
                 $templateChallengeSkillsGroupsStack->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;

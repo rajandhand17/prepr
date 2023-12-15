@@ -11,10 +11,10 @@ class TemplateChallengeTimeLine extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="template_challenge_timelines";
+    protected $table = 'template_challenge_timelines';
 
-    protected $fillable=[
-        "template_challenge_id",
+    protected $fillable = [
+        'template_challenge_id',
         'timeline_type',
         'open_call_date',
         'open_call_date_description',

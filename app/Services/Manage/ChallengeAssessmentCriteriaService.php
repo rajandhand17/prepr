@@ -68,19 +68,21 @@ class ChallengeAssessmentCriteriaService
         }
     }
 
-    public function createTemplateChallengeAssessmentCriteria($challengeId,$templateChallengeId){
+    public function createTemplateChallengeAssessmentCriteria($challengeId, $templateChallengeId)
+    {
         try {
-            $challengeAssessmentCriteria = ChallengeAssessmentCriteria::where('challenge_id',$challengeId)->get();
+            $challengeAssessmentCriteria = ChallengeAssessmentCriteria::where('challenge_id', $challengeId)->get();
             foreach ($challengeAssessmentCriteria as $challengeAssessmentCriterion) {
-                $templateChallengeAssessmentCriteria=new TemplateChallengeAssessmentCriterias();
+                $templateChallengeAssessmentCriteria = new TemplateChallengeAssessmentCriterias();
                 $templateChallengeAssessmentCriteria->template_challenge_id = $templateChallengeId;
-                $templateChallengeAssessmentCriteria->title=$challengeAssessmentCriterion->title;
-                $templateChallengeAssessmentCriteria->score=$challengeAssessmentCriterion->score;
-                $templateChallengeAssessmentCriteria->weight=$challengeAssessmentCriterion->weight;
+                $templateChallengeAssessmentCriteria->title = $challengeAssessmentCriterion->title;
+                $templateChallengeAssessmentCriteria->score = $challengeAssessmentCriterion->score;
+                $templateChallengeAssessmentCriteria->weight = $challengeAssessmentCriterion->weight;
                 $templateChallengeAssessmentCriteria->save();
             }
+
             return true;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
