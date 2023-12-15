@@ -221,6 +221,7 @@ class ChallengeAssessmentService
                 $templateChallengeAssessment->weight = $challengeAssessment->weight;
                 $templateChallengeAssessment->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;
