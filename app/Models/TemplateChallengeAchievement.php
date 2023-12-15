@@ -11,13 +11,13 @@ class TemplateChallengeAchievement extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="template_challenge_achievements";
+    protected $table = 'template_challenge_achievements';
 
-    protected $fillable=[
-        "template_challenge_id","achievement_type","achievement_name","achievement_prize","achievement_points","achievement_image"
+    protected $fillable = [
+        'template_challenge_id', 'achievement_type', 'achievement_name', 'achievement_prize', 'achievement_points', 'achievement_image',
     ];
 
-    protected $hidden=[
-        "created_at","updated_at","deleted_at"
+    protected $hidden = [
+        'created_at', 'updated_at', 'deleted_at',
     ];
 }

@@ -124,6 +124,7 @@ class ChallengeAchievementService
                 $cloneParticipationAchievement->challenge_id = $clonedChallengeId;
                 $cloneParticipationAchievement->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -147,20 +148,21 @@ class ChallengeAchievementService
         }
     }
 
-    public function createTemplateChallengeParticipationAchievement($createChallengeId,$templateChallengeId)
+    public function createTemplateChallengeParticipationAchievement($createChallengeId, $templateChallengeId)
     {
         try {
-            $challengeParticipation=ChallengeAchievement::where('challenge_id',$createChallengeId)->get();
-            foreach($challengeParticipation as $challengeParticipationData){
-                    $challengeParticipation=new TemplateChallengeAchievement();
-                    $challengeParticipation->template_challenge_id=$templateChallengeId;
-                    $challengeParticipation->achievement_type=     $challengeParticipationData->achievement_type;
-                    $challengeParticipation->achievement_name=     $challengeParticipationData->achievement_name;
-                    $challengeParticipation->achievement_prize=    $challengeParticipationData->achievement_prize;
-                    $challengeParticipation->achievement_points=   $challengeParticipationData->achievement_points;
-                    $challengeParticipation->achievement_image=    $challengeParticipationData->achievement_image;
-                    $challengeParticipation->save();
+            $challengeParticipation = ChallengeAchievement::where('challenge_id', $createChallengeId)->get();
+            foreach ($challengeParticipation as $challengeParticipationData) {
+                $challengeParticipation = new TemplateChallengeAchievement();
+                $challengeParticipation->template_challenge_id = $templateChallengeId;
+                $challengeParticipation->achievement_type = $challengeParticipationData->achievement_type;
+                $challengeParticipation->achievement_name = $challengeParticipationData->achievement_name;
+                $challengeParticipation->achievement_prize = $challengeParticipationData->achievement_prize;
+                $challengeParticipation->achievement_points = $challengeParticipationData->achievement_points;
+                $challengeParticipation->achievement_image = $challengeParticipationData->achievement_image;
+                $challengeParticipation->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;

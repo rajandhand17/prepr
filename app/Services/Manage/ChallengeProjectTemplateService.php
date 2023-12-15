@@ -50,19 +50,21 @@ class ChallengeProjectTemplateService
         }
     }
 
-    public function createTemplateChallengeProjectTemplate($challengeId,$templateChallengeId){
+    public function createTemplateChallengeProjectTemplate($challengeId, $templateChallengeId)
+    {
         try {
-            $getChallengeProjectTemplate=ChallengeProjectTemplate::where('challenge_id',$challengeId)->get();
-            foreach ($getChallengeProjectTemplate as $challengeProjectTemplate){
-                $templateChallengeProjectTemplate=new TemplateChallengeProjectTemplate();
+            $getChallengeProjectTemplate = ChallengeProjectTemplate::where('challenge_id', $challengeId)->get();
+            foreach ($getChallengeProjectTemplate as $challengeProjectTemplate) {
+                $templateChallengeProjectTemplate = new TemplateChallengeProjectTemplate();
                 $templateChallengeProjectTemplate->template_challenge_id = $templateChallengeId;
-                $templateChallengeProjectTemplate->title=$challengeProjectTemplate->title;
-                $templateChallengeProjectTemplate->score=$challengeProjectTemplate->score;
-                $templateChallengeProjectTemplate->weight=$challengeProjectTemplate->weight;
+                $templateChallengeProjectTemplate->title = $challengeProjectTemplate->title;
+                $templateChallengeProjectTemplate->score = $challengeProjectTemplate->score;
+                $templateChallengeProjectTemplate->weight = $challengeProjectTemplate->weight;
                 $templateChallengeProjectTemplate->save();
             }
+
             return true;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

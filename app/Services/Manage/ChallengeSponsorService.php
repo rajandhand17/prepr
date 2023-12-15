@@ -85,9 +85,10 @@ class ChallengeSponsorService
         }
     }
 
-    public function createTemplateChallengeSponsor($challengeId,$templateChallengeId){
+    public function createTemplateChallengeSponsor($challengeId, $templateChallengeId)
+    {
         try {
-            $getChallengeSponsor=ChallengeSponsor::where("challenge_id",$challengeId)->get();
+            $getChallengeSponsor = ChallengeSponsor::where('challenge_id', $challengeId)->get();
             foreach ($getChallengeSponsor as $getSponsor) {
                 $createChallengeSponsor = new ChallengeSponsor();
                 $createChallengeSponsor->template_challenge_id = $templateChallengeId;
@@ -95,9 +96,9 @@ class ChallengeSponsorService
                 $createChallengeSponsor->type = $getSponsor->type;
                 $createChallengeSponsor->save();
             }
-              return true;
 
-        }catch (Exception $e) {
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

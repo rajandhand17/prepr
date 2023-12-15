@@ -450,7 +450,8 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function createTemplate($slug,Request $request){
+    public function createTemplate($slug, Request $request)
+    {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if (!$organization) {
@@ -464,8 +465,9 @@ class ChallengeController extends AppBaseController
             if ($cloneChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($cloneChallenge), __('responses.challenge_clone_success'), 200);
             }
+
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

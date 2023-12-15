@@ -209,19 +209,21 @@ class ChallengeAssessmentService
         }
     }
 
-    public function createTemplateChallengeAssessment($challengeId,$templateChallengeId){
+    public function createTemplateChallengeAssessment($challengeId, $templateChallengeId)
+    {
         try {
-            $originalChallengeAssessment=ChallengeAssessment::where('challenge',$challengeId)->get();
-            foreach ($originalChallengeAssessment as $challengeAssessment){
-                $templateChallengeAssessment=new TemplateChallengeAssessment();
-                $templateChallengeAssessment->template_challenge_id=$templateChallengeId;
-                $templateChallengeAssessment->title=$challengeAssessment->title;
-                $templateChallengeAssessment->score=$challengeAssessment->score;
-                $templateChallengeAssessment->weight=$challengeAssessment->weight;
+            $originalChallengeAssessment = ChallengeAssessment::where('challenge', $challengeId)->get();
+            foreach ($originalChallengeAssessment as $challengeAssessment) {
+                $templateChallengeAssessment = new TemplateChallengeAssessment();
+                $templateChallengeAssessment->template_challenge_id = $templateChallengeId;
+                $templateChallengeAssessment->title = $challengeAssessment->title;
+                $templateChallengeAssessment->score = $challengeAssessment->score;
+                $templateChallengeAssessment->weight = $challengeAssessment->weight;
                 $templateChallengeAssessment->save();
             }
+
             return true;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
