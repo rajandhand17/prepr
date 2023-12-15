@@ -212,7 +212,7 @@ class ChallengeAssessmentService
     public function createTemplateChallengeAssessment($challengeId, $templateChallengeId)
     {
         try {
-            $originalChallengeAssessment = ChallengeAssessment::where('challenge', $challengeId)->get();
+            $originalChallengeAssessment = ChallengeAssessment::where('challenge_id', $challengeId)->get();
             foreach ($originalChallengeAssessment as $challengeAssessment) {
                 $templateChallengeAssessment = new TemplateChallengeAssessment();
                 $templateChallengeAssessment->template_challenge_id = $templateChallengeId;
@@ -221,7 +221,6 @@ class ChallengeAssessmentService
                 $templateChallengeAssessment->weight = $challengeAssessment->weight;
                 $templateChallengeAssessment->save();
             }
-
             return true;
         } catch (Exception $e) {
             return false;

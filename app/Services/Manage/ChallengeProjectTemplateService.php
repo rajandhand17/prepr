@@ -57,12 +57,9 @@ class ChallengeProjectTemplateService
             foreach ($getChallengeProjectTemplate as $challengeProjectTemplate) {
                 $templateChallengeProjectTemplate = new TemplateChallengeProjectTemplate();
                 $templateChallengeProjectTemplate->template_challenge_id = $templateChallengeId;
-                $templateChallengeProjectTemplate->title = $challengeProjectTemplate->title;
-                $templateChallengeProjectTemplate->score = $challengeProjectTemplate->score;
-                $templateChallengeProjectTemplate->weight = $challengeProjectTemplate->weight;
+                $templateChallengeProjectTemplate->template_id = $challengeProjectTemplate->template_id;
                 $templateChallengeProjectTemplate->save();
             }
-
             return true;
         } catch (Exception $e) {
             return false;
