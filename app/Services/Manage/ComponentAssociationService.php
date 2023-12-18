@@ -733,8 +733,8 @@ class ComponentAssociationService
     public function createTemplateLabAssociation($labTemplateId, $lab)
     {
         try {
-            $componentAssociation =ComponentAssociation::where("lab_id", $lab->id)->get();
-            if ($componentAssociation){
+            $componentAssociation = ComponentAssociation::where('lab_id', $lab->id)->get();
+            if ($componentAssociation) {
                 foreach ($componentAssociation as $association) {
                     $labSkillsGroupsStack = new TemplateComponentAssociation();
                     $labSkillsGroupsStack->template_lab_id = $labTemplateId->id;
@@ -748,8 +748,9 @@ class ComponentAssociationService
                     $labSkillsGroupsStack->save();
                 }
             }
+
             return true;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

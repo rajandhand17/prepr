@@ -12,7 +12,7 @@ interface LabInterface
 
     public function createLab($request, $upload_profile_image, $upload_achievement_image);
 
-    public function createLabTemplate($slug,$lab);
+    public function createLabTemplate($slug, $lab);
 
     public function updateLab($slug, $request, $upload_profile_image, $upload_achievement_image);
 

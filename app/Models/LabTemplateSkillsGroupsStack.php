@@ -11,11 +11,11 @@ class LabTemplateSkillsGroupsStack extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="template_lab_skills_groups_stack";
+    protected $table = 'template_lab_skills_groups_stack';
 
-    protected $fillable=[
-        "template_lab_id",
-        "foreign_id",
-        "type",
+    protected $fillable = [
+        'template_lab_id',
+        'foreign_id',
+        'type',
     ];
 }
