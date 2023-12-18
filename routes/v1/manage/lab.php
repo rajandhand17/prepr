@@ -8,6 +8,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/get-list', [LabController::class, 'getList']);
     Route::get('{slug}', [LabController::class, 'show']);
     Route::post('/create', [LabController::class, 'create']);
+    Route::post('/{slug}/create-template', [LabController::class, 'createTemplate']);
     Route::put('/{slug}/update', [LabController::class, 'update']);
     Route::delete('/{slug}/delete', [LabController::class, 'delete']);
     Route::get('/check-slug/{slug}', [LabController::class, 'checkSlug']);

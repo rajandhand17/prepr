@@ -97,6 +97,17 @@ class LabController extends AppBaseController
         }
     }
 
+    public function createTemplate($slug){
+        try {
+            $createdLabTemplate = $this->labRepository->createLabTemplate($slug);
+            if ($createdLabTemplate != false) {
+                return $this->sendResponse(LabResource::make($slug), __('responses.lab_stored_success'), 200);
+            }
+            return $this->sendError(__('responses.lab_stored_failed'), 400);
+        }catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
     public function update($slug, UpdateLabRequest $request)
     {
         try {
