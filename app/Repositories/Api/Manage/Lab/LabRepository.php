@@ -212,12 +212,4 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-
-    public function createLabTemplate($slug){
-        try {
-            return $this->labService->createLabTemplate($slug);
-        }catch (\Exception $e){
-            return false;
-        }
-    }
 }

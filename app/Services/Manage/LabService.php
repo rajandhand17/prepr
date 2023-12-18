@@ -348,16 +348,4 @@ class LabService
             return false;
         }
     }
-
-    public static function createLabTemplate($slug){
-        try {
-            $lab = Lab::where('slug',$slug)->all();
-            if ($lab != null) {
-                return $lab;
-            }
-            return false;
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
 }
