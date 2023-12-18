@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Manage\Lab;
 
 use App\Helpers\UtilityHelper;
-use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabTemplateResource extends JsonResource
@@ -15,7 +14,6 @@ class LabTemplateResource extends JsonResource
      */
     public function toArray($request)
     {
-
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

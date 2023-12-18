@@ -116,16 +116,18 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function createLabTemplate($slug,$lab){
+    public function createLabTemplate($slug, $lab)
+    {
         try {
-            $createdTemplateLab= DB::transaction(function () use ($slug,$lab) {
+            $createdTemplateLab = DB::transaction(function () use ($slug, $lab) {
                 $createLabTemplate = $this->labService->createTemplateLab($slug);
-                $createdLabTemplateAddress = $this->labAddressService->createTemplateLabAddress($createLabTemplate,$lab);
-                $createdLabTemplateSkillAssociations = $this->labSkillsGroupsStackService->createTemplateLabSkillsGroupsStack($createLabTemplate,$lab);
-                $createdLabTemplateTagAssociations = $this->labTagsGroupsService->createTemplateLabTagsGroups($createLabTemplate,$lab);
-                $createdLabTemplateExternalLinks = $this->labExternalLinksService->createTemplateLabExternalLinks($createLabTemplate,$lab);
-                $createdLabTemplateAchievement = $this->labAcheivementService->createTemplateLabAchievement($createLabTemplate,$lab);
-                $createdLabTemplateAssociations = $this->componentAssociationService->createTemplateLabAssociation($createLabTemplate,$lab);
+                $createdLabTemplateAddress = $this->labAddressService->createTemplateLabAddress($createLabTemplate, $lab);
+                $createdLabTemplateSkillAssociations = $this->labSkillsGroupsStackService->createTemplateLabSkillsGroupsStack($createLabTemplate, $lab);
+                $createdLabTemplateTagAssociations = $this->labTagsGroupsService->createTemplateLabTagsGroups($createLabTemplate, $lab);
+                $createdLabTemplateExternalLinks = $this->labExternalLinksService->createTemplateLabExternalLinks($createLabTemplate, $lab);
+                $createdLabTemplateAchievement = $this->labAcheivementService->createTemplateLabAchievement($createLabTemplate, $lab);
+                $createdLabTemplateAssociations = $this->componentAssociationService->createTemplateLabAssociation($createLabTemplate, $lab);
+
                 return [
                     'createdLabTemplate'                  => $createLabTemplate,
                     'createdLabTemplateAddress'           => $createdLabTemplateAddress,
@@ -151,12 +153,15 @@ class LabRepository implements LabInterface
             }
 
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
+
     public function updateLab($slug, $request, $upload_cover_image, $upload_achievement_image)
     {
         try {

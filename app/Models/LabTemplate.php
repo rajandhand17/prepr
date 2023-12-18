@@ -11,28 +11,28 @@ class LabTemplate extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="template_labs";
+    protected $table = 'template_labs';
 
-    protected $fillable=[
-        "uuid",
-        "language",
-        "user_id",
-        "organization_id",
-        "category_id",
-        "type",
-        "slug",
-        "title",
-        "description",
-        "privacy",
-        "media_type",
-        "media",
-        "status",
-        "total_share",
-        "is_auto_created",
-        "is_resource_sequential",
-        "is_sequential",
-        "is_achievement_enabled",
-        "is_notification_enabled",
-        "is_verified"
+    protected $fillable = [
+        'uuid',
+        'language',
+        'user_id',
+        'organization_id',
+        'category_id',
+        'type',
+        'slug',
+        'title',
+        'description',
+        'privacy',
+        'media_type',
+        'media',
+        'status',
+        'total_share',
+        'is_auto_created',
+        'is_resource_sequential',
+        'is_sequential',
+        'is_achievement_enabled',
+        'is_notification_enabled',
+        'is_verified',
     ];
 }

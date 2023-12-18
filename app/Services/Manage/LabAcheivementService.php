@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
-use App\Models\Lab;
 use App\Models\LabAcheivement;
 use App\Models\TemplateLabAchievement;
 
@@ -50,11 +49,11 @@ class LabAcheivementService
         return true;
     }
 
-    public function createTemplateLabAchievement($createLab,$lab)
+    public function createTemplateLabAchievement($createLab, $lab)
     {
         try {
-            $existingLabAchievements =LabAcheivement::where("lab_id",$lab->id)->first();
-            if($existingLabAchievements){
+            $existingLabAchievements = LabAcheivement::where('lab_id', $lab->id)->first();
+            if ($existingLabAchievements) {
                 $labAchievement = new TemplateLabAchievement();
                 $labAchievement->template_lab_id = $createLab->id;
                 $labAchievement->achievement_name = $existingLabAchievements->achievement_name;
@@ -63,8 +62,9 @@ class LabAcheivementService
                 $labAchievement->achievement_image = $existingLabAchievements->achievement_image;
                 $labAchievement->save();
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

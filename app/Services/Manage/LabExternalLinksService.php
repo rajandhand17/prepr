@@ -80,8 +80,8 @@ class LabExternalLinksService
     public function createTemplateLabExternalLinks($labTemplateId, $lab)
     {
         try {
-            $existsLabExternalLink=LabExternalLinks::where("lab_id",$lab->id)->get();
-            if($existsLabExternalLink){
+            $existsLabExternalLink = LabExternalLinks::where('lab_id', $lab->id)->get();
+            if ($existsLabExternalLink) {
                 foreach ($existsLabExternalLink as $externalLinks) {
                     $labTemplateExternalLink = new LabTemplateExternalLink();
                     $labTemplateExternalLink->template_lab_id = $labTemplateId->id;
@@ -90,8 +90,9 @@ class LabExternalLinksService
                     $labTemplateExternalLink->save();
                 }
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

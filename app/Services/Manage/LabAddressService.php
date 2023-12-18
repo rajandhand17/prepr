@@ -3,9 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\LabAddress;
-use App\Models\LabTemplate;
 use App\Models\LabTemplateAddress;
-use App\Models\TemplateLabAddress;
 
 class LabAddressService
 {
@@ -55,21 +53,23 @@ class LabAddressService
         }
     }
 
-    public static function createTemplateLabAddress($createLab,$lab){
+    public static function createTemplateLabAddress($createLab, $lab)
+    {
         try {
-            $labTemplate=LabAddress::where("lab_id",$lab->id)->get();
-            foreach($labTemplate as $template){
+            $labTemplate = LabAddress::where('lab_id', $lab->id)->get();
+            foreach ($labTemplate as $template) {
                 $labTemplateAddress = new LabTemplateAddress();
                 $labTemplateAddress->template_lab_id = $createLab->id;
-                $labTemplateAddress->latitude        = $template->latitude;
-                $labTemplateAddress->longitude       = $template->longitude;
-                $labTemplateAddress->address         = $template->address;
-                $labTemplateAddress->city            = $template->city;
-                $labTemplateAddress->country         = $template->country;
+                $labTemplateAddress->latitude = $template->latitude;
+                $labTemplateAddress->longitude = $template->longitude;
+                $labTemplateAddress->address = $template->address;
+                $labTemplateAddress->city = $template->city;
+                $labTemplateAddress->country = $template->country;
                 $labTemplateAddress->save();
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

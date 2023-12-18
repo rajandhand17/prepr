@@ -11,12 +11,12 @@ class LabTemplateExternalLink extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="template_lab_external_links";
+    protected $table = 'template_lab_external_links';
 
-    protected $fillable=[
-        "template_lab_id",
-        "social_media_link",
-        "social_link_id",
+    protected $fillable = [
+        'template_lab_id',
+        'social_media_link',
+        'social_link_id',
 
     ];
 }

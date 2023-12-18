@@ -12,11 +12,11 @@ class LabTemplateTagsGroups extends Model
 
     use SoftDeletes;
 
-    protected $table="template_lab_tags_groups";
+    protected $table = 'template_lab_tags_groups';
 
-    protected $fillable=[
-        "template_lab_id",
-        "foreign_id",
-        "type",
+    protected $fillable = [
+        'template_lab_id',
+        'foreign_id',
+        'type',
     ];
 }
