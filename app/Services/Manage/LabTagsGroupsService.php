@@ -2,7 +2,10 @@
 
 namespace App\Services\Manage;
 
+use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTagsGroups;
+use App\Models\LabTemplateSkillsGroupsStack;
+use App\Models\LabTemplateTagsGroups;
 
 class LabTagsGroupsService
 {
@@ -101,5 +104,35 @@ class LabTagsGroupsService
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function createTemplateLabTagsGroups($labTemplateId, $lab)
+    {
+        try {
+            $existsLabTagsGroups=LabTagsGroups::where("lab_id",$lab->id)->get();
+            if($existsLabTagsGroups){
+                foreach($existsLabTagsGroups as $tagsGroup){
+                    $labTemplateSkillsGroupStack=new LabTemplateTagsGroups();
+                    $labTemplateSkillsGroupStack->template_lab_id=$labTemplateId->id;
+                    $labTemplateSkillsGroupStack->foreign_id=$tagsGroup->foreign_id;
+                    $labTemplateSkillsGroupStack->type=$tagsGroup->type;
+                    $labTemplateSkillsGroupStack->save();
+                }
+            }
+            return true;
+        }catch (\Exception $e) {
+            return false;
+        }
+//        if ($request->has('tags')) {
+//            if (count($request->tags) > 0) {
+//                foreach ($request->tags as $tag) {
+//                    $LabSkillsGroupsStack = new LabTagsGroups();
+//                    $LabSkillsGroupsStack->lab_id = $lab->id;
+//                    $LabSkillsGroupsStack->foreign_id = $tag;
+//                    $LabSkillsGroupsStack->type = '0';
+//                    $LabSkillsGroupsStack->save();
+//                }
+//            }
+//        }
     }
 }

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('duration_id')->nullable();
+            $table->unsignedBigInteger('level_id')->nullable();
             $table->enum('type', ['0', '1', '2', '3', '4'])->comment('0-> assess, 1-> onboard, 2-> engage, 3-> grow, 4-> na ')->default('4');
             $table->string('slug')->nullable();
             $table->string('title')->nullable();
@@ -36,6 +38,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('level_id')->references('id')->on('levels')->onDelete('cascade');
+            $table->foreign('duration_id')->references('id')->on('durations')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

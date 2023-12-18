@@ -7,6 +7,7 @@ use App\Http\Requests\Manage\Lab\CreateLabRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
+use App\Http\Resources\Manage\Lab\LabTemplateResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
 use App\Services\Manage\OrganizationService;
@@ -97,6 +98,22 @@ class LabController extends AppBaseController
         }
     }
 
+    public function createTemplate($slug){
+        try {
+            $lab = $this->labRepository->getLabBasedOnSlug($slug);
+            if (!$lab) {
+                return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            }
+            $createdLabTemplate = $this->labRepository->createLabTemplate($slug,$lab);
+
+            if ($createdLabTemplate != false) {
+                return $this->sendResponse(LabTemplateResource::make($createdLabTemplate), __('responses.lab_stored_success'), 200);
+            }
+            return $this->sendError(__('responses.lab_stored_failed'), 400);
+        }catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
     public function update($slug, UpdateLabRequest $request)
     {
         try {
