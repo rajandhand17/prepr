@@ -98,6 +98,11 @@ class ResourceGroupResource extends JsonResource
             }
         }
 
+        $rating = intval('0');
+        if ($this->resource_rating) {
+            $rating = intval($this->resource_rating->rating);
+        }
+
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,
@@ -121,8 +126,12 @@ class ResourceGroupResource extends JsonResource
             'skill_stacks'                             => $skill_stacks,
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
+            'rating'                                   => $rating,
+            'likes'                                    => $this->likes()->count(),
+            'shares'                                   => $this->shares()->count(),
+            'liked'                                    => $this->liked(),
+            'favourite'                                => $this->favorites(),
             'resource_collection'                      => $resourceCollection,
-
         ];
     }
 }

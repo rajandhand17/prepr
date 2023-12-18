@@ -97,6 +97,11 @@ class ResourceGroupResource extends JsonResource
             }
         }
 
+        $rating = intval('0');
+        if ($this->resource_rating) {
+            $rating = intval($this->resource_rating->rating);
+        }
+
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,
@@ -120,6 +125,9 @@ class ResourceGroupResource extends JsonResource
             'skill_stacks'                             => $skill_stacks,
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
+            'favourite'                                => $this->favourite(),
+            'liked'                                    => $this->liked(),
+            'rating'                                   => $rating,
             'resource_collection'                      => $resourceCollection,
 
         ];
