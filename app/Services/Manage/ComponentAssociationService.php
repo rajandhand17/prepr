@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\ComponentAssociation;
 use App\Models\Lab;
-use App\Models\TemplateComponentAssociation;
 use Exception;
 
 class ComponentAssociationService

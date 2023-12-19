@@ -96,6 +96,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function update($slug, UpdateLabRequest $request)
     {
         try {

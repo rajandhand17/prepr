@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\LabAcheivement;
-use App\Models\TemplateLabAchievement;
 
 class LabAcheivementService
 {
@@ -48,6 +47,7 @@ class LabAcheivementService
 
         return true;
     }
+
     public function updateLabAchievement($request, $lab_id, $upload_achievement_image)
     {
         try {

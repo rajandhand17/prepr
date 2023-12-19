@@ -2,12 +2,8 @@
 
 namespace App\Services\Manage;
 
-use App\Events\Labs\DeleteLabAssociatedData;
-use App\Helpers\FileUploadHelper;
-use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\LabTemplate;
-use HiFolks\RandoPhp\Randomize;
 
 class LabTemplateService
 {
@@ -40,8 +36,10 @@ class LabTemplateService
                 $labTemplate->is_notification_enabled = $existsLabs->is_notification_enabled;
                 $labTemplate->is_verified = $existsLabs->is_verified;
                 $labTemplate->save();
+
                 return $labTemplate;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

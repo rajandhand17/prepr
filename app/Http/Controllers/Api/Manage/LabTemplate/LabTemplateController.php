@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Manage\LabTemplate;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\Manage\Lab\LabTemplateResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabTemplate\LabTemplateRepository;
@@ -13,12 +12,10 @@ class LabTemplateController extends AppBaseController
     private LabTemplateRepository $labTemplateRepository;
     private LabRepository $labRepository;
 
-
-
     public function __construct(LabRepository $labRepository, LabTemplateRepository $labTemplateRepository)
     {
         $this->labTemplateRepository = $labTemplateRepository;
-        $this->labRepository         = $labRepository;
+        $this->labRepository = $labRepository;
     }
 
     public function createTemplate($slug)
@@ -32,9 +29,10 @@ class LabTemplateController extends AppBaseController
             if ($createdLabTemplate) {
                 return $this->sendResponse(LabTemplateResource::make($createdLabTemplate), __('responses.template_lab_stored_success'), 200);
             }
+
             return $this->sendError(__('responses.template_lab_stored_failed'), 400);
-        }catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'),500);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

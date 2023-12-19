@@ -115,6 +115,7 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
     public function updateLab($slug, $request, $upload_cover_image, $upload_achievement_image)
     {
         try {

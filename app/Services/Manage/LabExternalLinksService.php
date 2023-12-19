@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\LabExternalLinks;
-use App\Models\LabTemplateExternalLink;
 
 class LabExternalLinksService
 {
