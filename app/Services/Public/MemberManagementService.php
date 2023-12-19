@@ -14,6 +14,7 @@ class MemberManagementService
             if ($member_manger) {
                 return true;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;

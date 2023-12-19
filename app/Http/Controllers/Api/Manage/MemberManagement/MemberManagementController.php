@@ -128,8 +128,10 @@ class MemberManagementController extends AppBaseController
                 if ($member_management) {
                     return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }
+
                 return $this->sendError(__('responses.join_request_'.$action.'_failed'), 400);
             }
+
             return $this->sendError(__('responses.request_not_exist'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
