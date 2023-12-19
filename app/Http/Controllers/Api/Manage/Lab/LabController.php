@@ -107,9 +107,9 @@ class LabController extends AppBaseController
             $createdLabTemplate = $this->labRepository->createLabTemplate($slug,$lab);
 
             if ($createdLabTemplate != false) {
-                return $this->sendResponse(LabTemplateResource::make($createdLabTemplate), __('responses.lab_stored_success'), 200);
+                return $this->sendResponse(LabTemplateResource::make($createdLabTemplate), __('responses.template_lab_stored_success'), 200);
             }
-            return $this->sendError(__('responses.lab_stored_failed'), 400);
+            return $this->sendError(__('responses.template_lab_stored_failed'), 400);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'),500);
         }

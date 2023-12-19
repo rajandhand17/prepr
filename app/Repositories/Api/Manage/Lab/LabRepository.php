@@ -118,7 +118,7 @@ class LabRepository implements LabInterface
 
     public function createLabTemplate($slug,$lab){
         try {
-            $createdTemplateLab= DB::transaction(function () use ($slug,$lab) {
+            $createdTemplateLab= DB::transaction(function () use ($slug,$lab){
                 $createLabTemplate = $this->labService->createTemplateLab($slug);
                 $createdLabTemplateAddress = $this->labAddressService->createTemplateLabAddress($createLabTemplate,$lab);
                 $createdLabTemplateSkillAssociations = $this->labSkillsGroupsStackService->createTemplateLabSkillsGroupsStack($createLabTemplate,$lab);
