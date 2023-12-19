@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Manage\ResourceModule;
+namespace App\Http\Requests\Public\ResourceCollection;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class FileUploadResourceModuleRequest extends FormRequest
+class AddRatingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +23,9 @@ class FileUploadResourceModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $base_rules = [
-            'file_upload'            => 'required|array',
-            'file_upload.*'          => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:153600',
+        return [
+            'rating' => 'required|in:1,2,3,4,5',
         ];
-
-        return $base_rules;
     }
 
     public function failedValidation(Validator $validator)
@@ -43,10 +40,8 @@ class FileUploadResourceModuleRequest extends FormRequest
     public function messages()
     {
         return [
-            'file_upload.required'                => __('responses.file_upload_required'),
-            'file_upload.array'                   => __('responses.file_upload_array'),
-            'file_upload.*.max'                   => __('responses.file_upload_max'),
-            'file_upload.*.mimes'                 => __('responses.resource_file_upload_mimes_image'),
+            'rating.required' => __('responses.review_field_required'),
+            'rating.in'       => __('responses.review_in'),
         ];
     }
 }

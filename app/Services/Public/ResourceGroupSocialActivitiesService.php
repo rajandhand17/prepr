@@ -42,6 +42,31 @@ class ResourceGroupSocialActivitiesService
         }
     }
 
+    public static function getResourceGroupsBasedOnActivity($action)
+    {
+        try {
+            if (auth()->check()) {
+                $columnValue = self::getColumnNameValue($action);
+                if ($columnValue !== false) {
+                    $organization_ids = ResourceGroupSocialActivity::where(
+                        [
+                            'user_id'              => auth()->user()->id,
+                            $columnValue['column'] => $columnValue['action'],
+                        ]
+                    )->get();
+
+                    return $organization_ids;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function getColumnNameValue($action)
     {
         try {

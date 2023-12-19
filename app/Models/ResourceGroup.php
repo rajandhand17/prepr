@@ -95,4 +95,31 @@ class ResourceGroup extends Model
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_group_id', 'id')->where('resource_module_id', '!=', null);
     }
+
+    public function favourite()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ResourceGroupSocialActivity::class, 'resource_group_id', 'id')->where(['favourite' => '1', 'user_id' => auth('api')->user()->id])->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
+    }
+
+    public function liked()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ResourceGroupSocialActivity::class, 'resource_group_id', 'id')->where(['like_dislike' => '1', 'user_id' => auth('api')->user()->id])->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
+    }
+
+    public function resource_rating()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ResourceGroupRating::class, 'resource_group_id', 'id')->where('user_id', auth('api')->user()->id);
+        }
+
+        return 'N/A';
+    }
 }
