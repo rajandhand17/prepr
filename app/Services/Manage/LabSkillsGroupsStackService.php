@@ -139,18 +139,19 @@ class LabSkillsGroupsStackService
     public function createTemplateLabSkillsGroupsStack($labTemplateId, $lab)
     {
         try {
-            $exisingLabSkillsGroupsStack=LabSkillsGroupsStack::where("lab_id",$lab->id)->get();
-            if($exisingLabSkillsGroupsStack){
-                foreach($exisingLabSkillsGroupsStack as $skillsGroup){
-                    $labTemplateSkillsGroupStack=new LabTemplateSkillsGroupsStack();
-                    $labTemplateSkillsGroupStack->template_lab_id=$labTemplateId->id;
-                    $labTemplateSkillsGroupStack->foreign_id=$skillsGroup->foreign_id;
-                    $labTemplateSkillsGroupStack->type=$skillsGroup->type;
+            $exisingLabSkillsGroupsStack = LabSkillsGroupsStack::where('lab_id', $lab->id)->get();
+            if ($exisingLabSkillsGroupsStack) {
+                foreach ($exisingLabSkillsGroupsStack as $skillsGroup) {
+                    $labTemplateSkillsGroupStack = new LabTemplateSkillsGroupsStack();
+                    $labTemplateSkillsGroupStack->template_lab_id = $labTemplateId->id;
+                    $labTemplateSkillsGroupStack->foreign_id = $skillsGroup->foreign_id;
+                    $labTemplateSkillsGroupStack->type = $skillsGroup->type;
                     $labTemplateSkillsGroupStack->save();
                 }
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
