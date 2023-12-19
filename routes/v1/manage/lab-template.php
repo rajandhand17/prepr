@@ -5,5 +5,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/create', [LabTemplateController::class, 'createTemplate']);
-    Route::post('/{slug}', [LabTemplateController::class, 'show']);
 });
