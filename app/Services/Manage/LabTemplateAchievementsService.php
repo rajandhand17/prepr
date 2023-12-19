@@ -9,7 +9,7 @@ use App\Models\TemplateLabAchievement;
 
 class LabTemplateAchievementsService
 {
-    public function createTemplateLabAchievement($createLab, $lab)
+    public function createLabTemplateAchievement($createLab, $lab)
     {
         try {
             $existingLabAchievements = LabAcheivement::where('lab_id', $lab->id)->first();

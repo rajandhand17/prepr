@@ -14,7 +14,7 @@ class LabTemplateComponentAssociationService
     {
         try {
             $componentAssociation = ComponentAssociation::where('lab_id', $lab->id)->get();
-            if ($componentAssociation) {
+            if ($componentAssociation){
                 foreach ($componentAssociation as $association) {
                     $labSkillsGroupsStack = new TemplateComponentAssociation();
                     $labSkillsGroupsStack->template_lab_id = $labTemplateId->id;

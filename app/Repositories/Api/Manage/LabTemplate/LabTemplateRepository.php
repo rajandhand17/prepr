@@ -43,7 +43,7 @@ class LabTemplateRepository implements LabTemplateInterface
                 $createdLabTemplateSkillAssociations = $this->labTemplateSkillsGroupStackService->createLabTemplateSkillsGroupsStack($createLabTemplate, $lab);
                 $createdLabTemplateTagAssociations = $this->labTemplateTagsGroupsService->createLabTemplateSkillsGroupsStack($createLabTemplate, $lab);
                 $createdLabTemplateExternalLinks = $this->labTemplateExternalLinksService->createLabTemplateExternalLinks($createLabTemplate, $lab);
-                $createdLabTemplateAchievement = $this->labTemplateAchievementsService->createTemplateLabAchievement($createLabTemplate, $lab);
+                $createdLabTemplateAchievement = $this->labTemplateAchievementsService->createLabTemplateAchievement($createLabTemplate, $lab);
                 $createdLabTemplateAssociations = $this->labTemplateComponentAssociationService->createLabTemplateAssociation($createLabTemplate, $lab);
 
                 return [
