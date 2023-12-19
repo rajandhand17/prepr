@@ -10,12 +10,10 @@ class MemberManagementService
     {
         try {
             $module_type = config('constants.member_management_component_type.lab');
-
             $member_manger = MemberManagement::where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'email' => $request->email, 'invite_status'=>'2'])->first();
             if ($member_manger) {
                 return true;
             }
-
             return false;
         } catch(\Exception $e) {
             return false;

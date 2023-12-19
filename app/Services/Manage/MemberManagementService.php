@@ -18,7 +18,6 @@ class MemberManagementService
         try {
             $module_type = null;
             $memberListCollection = MemberManagement::select();
-
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
@@ -48,7 +47,6 @@ class MemberManagementService
             }
             if ($module_type != null) {
                 $memberList = self::filterUserList($memberListCollection, $request);
-
                 return $memberList->paginate(config('site-settings.pagination_per_page'));
             }
 
@@ -67,7 +65,6 @@ class MemberManagementService
                     ->orWhere('email', 'like', '%'.$request->search.'%');
                 });
             }
-
             if ($request->has('role') && !empty($request->role)) {
                 $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
             }
@@ -96,9 +93,9 @@ class MemberManagementService
                     $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
                 }
             }
-            if ($request->has('invite_type') && !empty($request->invite_type)) {
+            if ($request->has('invite_type') && !empty($request->invite_type)){
                 $invite_type = null;
-                switch ($request->invite_type) {
+                switch ($request->invite_type){
                     case 'email':
                         $invite_type = config('constants.member_management_invite_type.email');
                         break;
@@ -402,16 +399,14 @@ class MemberManagementService
                                 'subject_line'  => $subject,
                                 'email_body'    => $emailBody,
                             ]);
-
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
-
                             $invited_emails[] = $member['invitee_email'];
-                        } else {
+                        }else{
                             $already_members[] = $member['invitee_email'];
                         }
-                    } else {
+                    }else{
                         $invalid_emails[] = $member['invitee_email'];
                     }
                 }
