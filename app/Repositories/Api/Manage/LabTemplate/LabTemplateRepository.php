@@ -45,7 +45,6 @@ class LabTemplateRepository implements LabTemplateInterface
                 $createdLabTemplateExternalLinks = $this->labTemplateExternalLinksService->createLabTemplateExternalLinks($createLabTemplate, $lab);
                 $createdLabTemplateAchievement = $this->labTemplateAchievementsService->createLabTemplateAchievement($createLabTemplate, $lab);
                 $createdLabTemplateAssociations = $this->labTemplateComponentAssociationService->createLabTemplateAssociation($createLabTemplate, $lab);
-
                 return [
                     'createdLabTemplate'                  => $createLabTemplate,
                     'createdLabTemplateAddress'           => $createdLabTemplateAddress,
