@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\LabTagsGroups;
-use App\Models\LabTemplateTagsGroups;
 
 class LabTagsGroupsService
 {

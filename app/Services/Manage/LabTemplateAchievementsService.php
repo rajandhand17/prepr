@@ -3,8 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\LabAcheivement;
-use App\Models\LabAddress;
-use App\Models\LabTemplateAddress;
 use App\Models\TemplateLabAchievement;
 
 class LabTemplateAchievementsService
@@ -22,6 +20,7 @@ class LabTemplateAchievementsService
                 $labAchievement->achievement_image = $existingLabAchievements->achievement_image;
                 $labAchievement->save();
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

@@ -3,18 +3,15 @@
 namespace App\Services\Manage;
 
 use App\Models\ComponentAssociation;
-use App\Models\LabAddress;
-use App\Models\LabTemplateAddress;
 use App\Models\TemplateComponentAssociation;
 
 class LabTemplateComponentAssociationService
 {
-
     public function createLabTemplateAssociation($labTemplateId, $lab)
     {
         try {
             $componentAssociation = ComponentAssociation::where('lab_id', $lab->id)->get();
-            if ($componentAssociation){
+            if ($componentAssociation) {
                 foreach ($componentAssociation as $association) {
                     $labSkillsGroupsStack = new TemplateComponentAssociation();
                     $labSkillsGroupsStack->template_lab_id = $labTemplateId->id;
@@ -28,6 +25,7 @@ class LabTemplateComponentAssociationService
                     $labSkillsGroupsStack->save();
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

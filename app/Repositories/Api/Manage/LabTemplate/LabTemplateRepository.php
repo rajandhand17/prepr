@@ -2,9 +2,6 @@
 
 namespace App\Repositories\Api\Manage\LabTemplate;
 
-use App\Repositories\Api\Manage\LabTemplate\LabTemplateInterface;
-use App\Services\Manage\LabExternalLinksService;
-use App\Services\Manage\LabService;
 use App\Services\Manage\LabTemplateAchievementsService;
 use App\Services\Manage\LabTemplateAddressService;
 use App\Services\Manage\LabTemplateComponentAssociationService;
@@ -24,20 +21,22 @@ class LabTemplateRepository implements LabTemplateInterface
     private $labTemplateAchievementsService;
 
     private $labTemplateComponentAssociationService;
-    public function __construct(LabTemplateService $labTemplateService,LabTemplateAddressService $labTemplateAddressService,LabTemplateSkillsGroupsStackService $labTemplateSkillsGroupStackService,LabTemplateTagsGroupsService $labTemplateTagsGroupsService,LabTemplateExternalLinksService $labTemplateExternalLinksService, LabTemplateAchievementsService $labTemplateAchievementsService,LabTemplateComponentAssociationService $labTemplateComponentAssociationService)
+
+    public function __construct(LabTemplateService $labTemplateService, LabTemplateAddressService $labTemplateAddressService, LabTemplateSkillsGroupsStackService $labTemplateSkillsGroupStackService, LabTemplateTagsGroupsService $labTemplateTagsGroupsService, LabTemplateExternalLinksService $labTemplateExternalLinksService, LabTemplateAchievementsService $labTemplateAchievementsService, LabTemplateComponentAssociationService $labTemplateComponentAssociationService)
     {
         $this->labTemplateService = $labTemplateService;
         $this->labTemplateAddressService = $labTemplateAddressService;
         $this->labTemplateSkillsGroupStackService = $labTemplateSkillsGroupStackService;
         $this->labTemplateTagsGroupsService = $labTemplateTagsGroupsService;
-        $this->labTemplateExternalLinksService=$labTemplateExternalLinksService;
-        $this->labTemplateAchievementsService=$labTemplateAchievementsService;
-        $this->labTemplateComponentAssociationService=$labTemplateComponentAssociationService;
+        $this->labTemplateExternalLinksService = $labTemplateExternalLinksService;
+        $this->labTemplateAchievementsService = $labTemplateAchievementsService;
+        $this->labTemplateComponentAssociationService = $labTemplateComponentAssociationService;
     }
+
     public function createLabTemplate($slug, $lab)
     {
         try {
-            $createdTemplateLab= DB::transaction(function () use ($slug,$lab){
+            $createdTemplateLab = DB::transaction(function () use ($slug, $lab) {
                 $createLabTemplate = $this->labTemplateService->createLabTemplate($slug);
                 $createdLabTemplateAddress = $this->labTemplateAddressService->createLabTemplateAddress($createLabTemplate, $lab);
                 $createdLabTemplateSkillAssociations = $this->labTemplateSkillsGroupStackService->createLabTemplateSkillsGroupsStack($createLabTemplate, $lab);
@@ -45,6 +44,7 @@ class LabTemplateRepository implements LabTemplateInterface
                 $createdLabTemplateExternalLinks = $this->labTemplateExternalLinksService->createLabTemplateExternalLinks($createLabTemplate, $lab);
                 $createdLabTemplateAchievement = $this->labTemplateAchievementsService->createLabTemplateAchievement($createLabTemplate, $lab);
                 $createdLabTemplateAssociations = $this->labTemplateComponentAssociationService->createLabTemplateAssociation($createLabTemplate, $lab);
+
                 return [
                     'createdLabTemplate'                  => $createLabTemplate,
                     'createdLabTemplateAddress'           => $createdLabTemplateAddress,
@@ -78,6 +78,4 @@ class LabTemplateRepository implements LabTemplateInterface
             return false;
         }
     }
-
-
 }

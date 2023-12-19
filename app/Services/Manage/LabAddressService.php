@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\LabAddress;
-use App\Models\LabTemplateAddress;
 
 class LabAddressService
 {

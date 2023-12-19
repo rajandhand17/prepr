@@ -6,7 +6,6 @@ use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
-use App\Models\LabTemplate;
 use HiFolks\RandoPhp\Randomize;
 
 class LabService
