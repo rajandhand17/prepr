@@ -7,7 +7,6 @@ use App\Http\Requests\Manage\Lab\CreateLabRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
-use App\Http\Resources\Manage\Lab\LabTemplateResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
 use App\Services\Manage\OrganizationService;
