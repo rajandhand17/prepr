@@ -3,6 +3,8 @@
 namespace App\Services\Manage;
 
 use App\Models\LabAcheivement;
+use App\Models\LabTemplateAcheivement;
+use App\Models\LabTemplateAchievement;
 use App\Models\TemplateLabAchievement;
 
 class LabTemplateAchievementsService
@@ -12,7 +14,7 @@ class LabTemplateAchievementsService
         try {
             $existingLabAchievements = LabAcheivement::where('lab_id', $lab->id)->first();
             if ($existingLabAchievements) {
-                $labAchievement = new TemplateLabAchievement();
+                $labAchievement = new LabTemplateAchievement();
                 $labAchievement->template_lab_id = $createLab->id;
                 $labAchievement->achievement_name = $existingLabAchievements->achievement_name;
                 $labAchievement->achievement_points = $existingLabAchievements->achievement_points;

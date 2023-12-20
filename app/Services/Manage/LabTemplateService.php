@@ -45,4 +45,12 @@ class LabTemplateService
             return false;
         }
     }
+
+    public static function getLabTemplateBasedOnSlug($slug){
+        try {
+            return LabTemplate::where('slug',$slug)->first();
+        }catch (\Exception $e){
+            return false;
+        }
+    }
 }
