@@ -18,7 +18,6 @@ class MemberManagementService
         try {
             $module_type = null;
             $memberListCollection = MemberManagement::select();
-
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
@@ -67,7 +66,6 @@ class MemberManagementService
                     ->orWhere('email', 'like', '%'.$request->search.'%');
                 });
             }
-
             if ($request->has('role') && !empty($request->role)) {
                 $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
             }
@@ -402,11 +400,9 @@ class MemberManagementService
                                 'subject_line'  => $subject,
                                 'email_body'    => $emailBody,
                             ]);
-
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
-
                             $invited_emails[] = $member['invitee_email'];
                         } else {
                             $already_members[] = $member['invitee_email'];
