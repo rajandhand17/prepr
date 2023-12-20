@@ -36,7 +36,7 @@ class CreateResourceModuleRequest extends FormRequest
             'title'                  => 'required|unique:resource_modules,title',
             'organization_id'        => 'required|exists:organizations,uuid',
             'description'            => 'required',
-            'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
+            'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:153600',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,publish,archive',
             'is_global'              => 'required|in:yes,no',

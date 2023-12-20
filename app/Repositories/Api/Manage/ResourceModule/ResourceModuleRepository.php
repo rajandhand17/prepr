@@ -146,10 +146,10 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function deleteResourceModuleMedia($request, $resource_module_id, $type)
+    public function deleteResourceModuleMedia($request, $resource_module_id)
     {
         try {
-            return $this->resourceModuleDetailsService->deleteResourceModuleMedia($request, $resource_module_id, $type);
+            return $this->resourceModuleDetailsService->deleteResourceModuleMedia($request, $resource_module_id);
         } catch(\Exception $e) {
             return false;
         }

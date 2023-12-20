@@ -5,11 +5,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/', [ResourceCollectionController::class, 'index']);
+    Route::get('/get-list', [ResourceCollectionController::class, 'getList']);
     Route::get('/{slug}', [ResourceCollectionController::class, 'show']);
     Route::post('/create', [ResourceCollectionController::class, 'create']);
     Route::put('/{slug}/update', [ResourceCollectionController::class, 'update']);
     Route::get('/check-slug/{slug}', [ResourceCollectionController::class, 'checkSlug']);
     Route::get('/check-title/{title}', [ResourceCollectionController::class, 'checkName']);
-    Route::get('/{slug}/delete', [ResourceCollectionController::class, 'delete']);
-    Route::get('/get-list', [ResourceCollectionController::class, 'getList']);
+    Route::delete('/{slug}/delete', [ResourceCollectionController::class, 'delete']);
 });
