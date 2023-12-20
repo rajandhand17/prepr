@@ -11,13 +11,13 @@ class LabTemplateAchievement extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table="template_lab_achievements";
+    protected $table = 'template_lab_achievements';
 
-    protected $fillable=[
-        "template_lab_id",
-        "achievement_name",
-        "achievement_points",
-        "achievement_condition",
-        "achievement_image",
+    protected $fillable = [
+        'template_lab_id',
+        'achievement_name',
+        'achievement_points',
+        'achievement_condition',
+        'achievement_image',
     ];
 }

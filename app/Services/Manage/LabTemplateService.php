@@ -46,10 +46,11 @@ class LabTemplateService
         }
     }
 
-    public static function getLabTemplateBasedOnSlug($slug){
+    public static function getLabTemplateBasedOnSlug($slug)
+    {
         try {
-            return LabTemplate::where('slug',$slug)->first();
-        }catch (\Exception $e){
+            return LabTemplate::where('slug', $slug)->first();
+        } catch (\Exception $e) {
             return false;
         }
     }
