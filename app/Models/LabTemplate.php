@@ -35,6 +35,7 @@ class LabTemplate extends Model
         'is_notification_enabled',
         'is_verified',
     ];
+
     public function getMediaAttribute($value)
     {
         return config('site-settings.aws_url').$value;
@@ -152,4 +153,3 @@ class LabTemplate extends Model
         return $this->belongsTo(Levels::class, 'level_id', 'id');
     }
 }
-

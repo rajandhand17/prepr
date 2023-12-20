@@ -3,9 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\LabAcheivement;
-use App\Models\LabTemplateAcheivement;
 use App\Models\LabTemplateAchievement;
-use App\Models\TemplateLabAchievement;
 
 class LabTemplateAchievementsService
 {

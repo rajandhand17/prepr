@@ -36,13 +36,14 @@ class LabTemplateController extends AppBaseController
         }
     }
 
-    public function show($slug){
+    public function show($slug)
+    {
         try {
             $labTemplate = $this->labTemplateRepository->getLabTemplateBasedOnSlug($slug);
             if ($labTemplate) {
                 return $this->sendResponse(LabTemplateResource::make($labTemplate), __('responses.template_lab_stored_success'), 200);
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

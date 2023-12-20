@@ -79,10 +79,11 @@ class LabTemplateRepository implements LabTemplateInterface
         }
     }
 
-    public function getLabTemplateBasedOnSlug($slug){
-        try{
+    public function getLabTemplateBasedOnSlug($slug)
+    {
+        try {
             return $this->labTemplateService->getLabTemplateBasedOnSlug($slug);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
