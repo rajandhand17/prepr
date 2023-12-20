@@ -211,6 +211,7 @@ return [
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
         App\Repositories\Api\Manage\MemberManagement\MemberManagementServiceProvider::class,
         App\Repositories\Api\Manage\Lab\LabServiceProvider::class,
+        App\Repositories\Api\Manage\LabTemplate\LabTemplateServiceProvider::class,
         App\Repositories\Api\Manage\LabProgram\LabProgramServiceProvider::class,
         App\Repositories\Api\Manage\ResourceModule\ResourceModuleServiceProvider::class,
         App\Repositories\Api\Manage\Challenge\ChallengeServiceProvider::class,
