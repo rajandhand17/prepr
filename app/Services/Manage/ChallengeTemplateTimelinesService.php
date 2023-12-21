@@ -14,7 +14,7 @@ class ChallengeTemplateTimelinesService
             $challengeTimelines = ChallengeTimelines::where('challenge_id', $challengeId)->get();
             if ($challengeTimelines) {
                 foreach ($challengeTimelines as $challengeTimeline) {
-                    $challengeTemplateTimeline=new ChallengeTemplateTimeLine();
+                    $challengeTemplateTimeline = new ChallengeTemplateTimeLine();
                     $challengeTemplateTimeline->Template_challenge_id = $templateChallengeId;
                     $challengeTemplateTimeline->timeline_type = $challengeTimeline->timeline_type;
                     $challengeTemplateTimeline->open_call_date = $challengeTimeline->open_call_date;

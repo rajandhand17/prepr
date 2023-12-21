@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\ChallengeExternalLink;
 use App\Models\ChallengeTemplateExternalLink;
-use App\Models\TemplateChallengeExternalLink;
 use Exception;
 
 class ChallengeTemplateExternalLinkService
@@ -24,6 +23,7 @@ class ChallengeTemplateExternalLinkService
                     $challengeTemplateExternalLink->save();
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;

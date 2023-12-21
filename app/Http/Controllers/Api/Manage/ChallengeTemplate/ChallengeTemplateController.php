@@ -42,7 +42,8 @@ class ChallengeTemplateController extends AppBaseController
         }
     }
 
-    public function show($slug){
+    public function show($slug)
+    {
         try {
             $challenge = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);
             if ($challenge) {
