@@ -192,6 +192,10 @@ class ResourceModuleResource extends JsonResource
             'audios'                                  => $audio,
             'embedded_media'                          => $embedded_media,
             'rating'                                  => $rating,
+            'likes'                                   => $this->likes()->count(),
+            'shares'                                  => $this->shares()->count(),
+            'liked'                                   => $this->liked(),
+            'favourite'                               => $this->favorites(),
         ];
     }
 }

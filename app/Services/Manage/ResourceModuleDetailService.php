@@ -56,9 +56,38 @@ class ResourceModuleDetailService
         }
     }
 
-    public function deleteResourceModuleMedia($request, $resource_module_id, $type)
+    public function deleteResourceModuleMedia($request, $resource_module_id)
     {
         try {
+            switch ($request->type) {
+                case 'document':
+                    $type = config('constants.resource_module_type.document');
+                    break;
+                case 'video':
+                    $type = config('constants.resource_module_type.video');
+                    break;
+                case 'audio':
+                    $type = config('constants.resource_module_type.audio');
+                    break;
+                case 'embedded_video':
+                    $type = config('constants.resource_module_type.embedded_video');
+                    break;
+                case 'embedded_audio':
+                    $type = config('constants.resource_module_type.embedded_audio');
+                    break;
+                case 'url':
+                    $type = config('constants.resource_module_type.url');
+                    break;
+                case 'image':
+                    $type = config('constants.resource_module_type.image');
+                    break;
+                case 'embedded_cover_video':
+                    $type = config('constants.resource_module_type.Embedded_Cover_Video');
+                    break;
+                default:
+                    $type = config('constants.resource_module_type.image');
+                    break;
+            }
             ResourceModuleDetail::where([
                 'id'                 => $request->media_id,
                 'resource_module_id' => $resource_module_id,
