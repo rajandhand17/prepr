@@ -22,6 +22,7 @@ class ChallengeTemplateAssessmentService
                 $challengeTemplateAssessment->attachments = $challengeAssessment->attachments;
                 $challengeTemplateAssessment->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;
