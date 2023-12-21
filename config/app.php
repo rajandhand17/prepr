@@ -218,6 +218,7 @@ return [
         App\Repositories\Api\Manage\ChallengePath\ChallengePathServiceProvider::class,
         App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
+        App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
