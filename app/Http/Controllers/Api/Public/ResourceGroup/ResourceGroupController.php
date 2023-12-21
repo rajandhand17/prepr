@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public\ResourceGroup;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Public\ResourceGroup\AddRatingRequest;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Public\ResourceGroup\ResourceGroupRepository;
 use Illuminate\Http\Request;
@@ -75,6 +76,24 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.resource_group_slug_not_found'), 404);
         } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addRating($slug, AddRatingRequest $request)
+    {
+        try {
+            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupSlugExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_group_slug_not_found'), 404);
+            }
+            $addRating = $this->resourceGroupRepository->addRating($checkResourceGroupSlugExistsOrNot->id, $request);
+            if ($addRating) {
+                return $this->sendResponse(null, __('responses.resource_group_rating_successfully'));
+            }
+
+            return $this->sendError(__('responses.resource_group_rating_failed'), 404);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

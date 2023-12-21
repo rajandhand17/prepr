@@ -61,4 +61,13 @@ class ResourceGroupRepository implements ResourceGroupInterface
             return false;
         }
     }
+
+    public function addRating($resource_group_id, $request)
+    {
+        try {
+            return $this->resourceGroupService->addRating($resource_group_id, $request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

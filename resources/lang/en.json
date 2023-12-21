@@ -683,6 +683,8 @@
     "labels.labels_achi_rc": "Reply chat",
     "labels.labels_achi_cc": "Create chat",
     "labels.labels_achi_io": "Issued on",
-    "labels.labels_achi_eo": "Expires on"
-
+    "labels.labels_achi_eo": "Expires on",
+    "responses.resource_group_rating_successfully": "Congratulations! You have successfully rated the resource group",
+    "responses.resource_group_rating_failed": "Oops! You have failed to rate the resource group",
+    "responses.resource_group_slug_not_found": "The resource group which you are looking doesn't exist in our system."
 }

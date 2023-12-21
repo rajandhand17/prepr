@@ -81,33 +81,6 @@ class ResourceGroupResource extends JsonResource
             $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        switch($this->privacy) {
-            case '0':
-                $privacy = 'yes';
-                break;
-            case '1':
-                $privacy = 'no';
-                break;
-            default:
-                $privacy = 'no';
-                break;
-        }
-
-        switch($this->status) {
-            case '0':
-                $status = 'draft';
-                break;
-            case '1':
-                $status = 'published';
-                break;
-            case '2':
-                $status = 'archive';
-                break;
-            default:
-                $status = 'draft';
-                break;
-        }
-
         if ($this->achievement) {
             $achievements = [
                 'achievement_name'      => $this->achievement->achievement_name,
@@ -116,12 +89,17 @@ class ResourceGroupResource extends JsonResource
             ];
         }
         if ($this->resource_collection) {
-            foreach ($this->resource_collection as $key=>$resource_collection) {
+            foreach ($this->resource_collection as $key => $resource_collection) {
                 $resourceCollection[$resource_collection->resource_collection_id]['uuid'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->uuid;
                 $resourceCollection[$resource_collection->resource_collection_id]['title'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->title;
                 $resourceCollection[$resource_collection->resource_collection_id]['image'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->media;
                 $resourceCollection[$resource_collection->resource_collection_id]['description'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->description;
             }
+        }
+
+        $rating = intval('0');
+        if ($this->resource_rating) {
+            $rating = intval($this->resource_rating->rating);
         }
 
         return [
@@ -132,8 +110,8 @@ class ResourceGroupResource extends JsonResource
             'description'                              => $this->description,
             'media_type'                               => $this->media_type,
             'cover_image'                              => $this->media,
-            'privacy'                                  => $privacy,
-            'status'                                   => $status,
+            'privacy'                                  => ($this->privacy == '1') ? 'yes' : 'no',
+            'status'                                   => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'duration_id'                              => $duration_id,
             'duration'                                 => $duration,
             'level_id'                                 => $level_id,
@@ -147,6 +125,9 @@ class ResourceGroupResource extends JsonResource
             'skill_stacks'                             => $skill_stacks,
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
+            'favourite'                                => $this->favourite(),
+            'liked'                                    => $this->liked(),
+            'rating'                                   => $rating,
             'resource_collection'                      => $resourceCollection,
 
         ];
