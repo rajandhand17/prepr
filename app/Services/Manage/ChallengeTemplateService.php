@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\Challenge;
 use App\Models\ChallengeTemplate;
-use App\Models\TemplateChallenge;
 
 class ChallengeTemplateService
 {
@@ -40,10 +39,11 @@ class ChallengeTemplateService
         }
     }
 
-    public function getChallengeTemplateBasedOnSlug($slug){
+    public function getChallengeTemplateBasedOnSlug($slug)
+    {
         try {
-        return ChallengeTemplate::where('slug',$slug)->first();
-        }catch (\Exception $e) {
+            return ChallengeTemplate::where('slug', $slug)->first();
+        } catch (\Exception $e) {
             return false;
         }
     }

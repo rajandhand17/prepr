@@ -89,7 +89,7 @@ class ResourceGroupResource extends JsonResource
             ];
         }
         if ($this->resource_collection) {
-            foreach ($this->resource_collection as $key=>$resource_collection) {
+            foreach ($this->resource_collection as $key => $resource_collection) {
                 $resourceCollection[$resource_collection->resource_collection_id]['uuid'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->uuid;
                 $resourceCollection[$resource_collection->resource_collection_id]['title'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->title;
                 $resourceCollection[$resource_collection->resource_collection_id]['image'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->media;
