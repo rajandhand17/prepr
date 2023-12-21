@@ -8,6 +8,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/get-list', [ChallengeController::class, 'getList']);
     Route::get('{slug}', [ChallengeController::class, 'show'])->middleware('permission:view_challenge');
     Route::post('/create', [ChallengeController::class, 'create'])->middleware('permission:create_challenge');
+    Route::post('/{slug}/create-template', [ChallengeController::class, 'createTemplate']);
     Route::post('/{slug}/update', [ChallengeController::class, 'update'])->middleware('permission:edit_challenge');
     Route::get('/check-slug/{slug}', [ChallengeController::class, 'checkSlug']);
     Route::get('/check-title/{title}', [ChallengeController::class, 'checkName']);
