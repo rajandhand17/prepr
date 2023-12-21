@@ -15,18 +15,4 @@ class ProfileController extends AppBaseController
     {
         $this->profileRepository = $profileRepository;
     }
-
-    public function getCountries(Request $request)
-    {
-        try {
-            $getCountryList = $this->profileRepository->getCountriesList($request->language, $request->search);
-            if ($getCountryList) {
-                return $this->sendResponse(AddCountryListResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
-            }
-
-            return $this->sendError(__('responses.countries_fetched_failed'), 404);
-        } catch(\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
 }
