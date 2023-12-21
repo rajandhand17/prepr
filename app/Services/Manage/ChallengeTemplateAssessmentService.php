@@ -20,6 +20,7 @@ class ChallengeTemplateAssessmentService
                 $templateChallengeAssessmentCriteria->weight = $challengeAssessmentCriterion->weight;
                 $templateChallengeAssessmentCriteria->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;

@@ -22,6 +22,7 @@ class ChallengeTemplateAchievementService
                 $challengeParticipation->achievement_image = $challengeParticipationData->achievement_image;
                 $challengeParticipation->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;

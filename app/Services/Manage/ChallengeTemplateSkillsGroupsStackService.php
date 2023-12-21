@@ -19,8 +19,9 @@ class ChallengeTemplateSkillsGroupsStackService
                 $templateChallengeSkillsGroupsStack->type = $getSkillsGroupStack->type;
                 $templateChallengeSkillsGroupsStack->save();
             }
+
             return true;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

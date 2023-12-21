@@ -14,12 +14,11 @@ class ChallengeTemplateController extends AppBaseController
     private ChallengeTemplateRepository  $challengeTemplateRepository;
     private ChallengeRepository $challengeRepository;
 
-    public function __construct(ChallengeTemplateRepository $challengeTemplateRepository,ChallengeRepository $challengeRepository)
+    public function __construct(ChallengeTemplateRepository $challengeTemplateRepository, ChallengeRepository $challengeRepository)
     {
         $this->challengeTemplateRepository = $challengeTemplateRepository;
-        $this->challengeRepository=$challengeRepository;
+        $this->challengeRepository = $challengeRepository;
     }
-
 
     public function create($slug, Request $request)
     {
@@ -36,6 +35,7 @@ class ChallengeTemplateController extends AppBaseController
             if ($cloneChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($cloneChallenge), __('responses.challenge_clone_success'), 200);
             }
+
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

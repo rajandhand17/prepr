@@ -24,5 +24,4 @@ class ChallengeTemplateProjectTemplateService
             return false;
         }
     }
-
 }
