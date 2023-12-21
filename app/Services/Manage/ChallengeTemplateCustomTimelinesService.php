@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\ChallengeCustomTimelines;
 use App\Models\ChallengeTemplateCustomTimeLine;
-use App\Models\TemplateChallengeCustomeTimeLine;
 use Exception;
 
 class ChallengeTemplateCustomTimelinesService

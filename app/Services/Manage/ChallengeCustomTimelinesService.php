@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\ChallengeCustomTimelines;
-use App\Models\TemplateChallengeCustomeTimeLine;
 use Exception;
 
 class ChallengeCustomTimelinesService
