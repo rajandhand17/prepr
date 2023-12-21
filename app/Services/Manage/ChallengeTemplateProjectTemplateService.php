@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\ChallengeProjectTemplate;
+use App\Models\ChallengeTemplateProjectTemplate;
 use App\Models\TemplateChallengeProjectTemplate;
 use Exception;
 
@@ -13,10 +14,10 @@ class ChallengeTemplateProjectTemplateService
         try {
             $getChallengeProjectTemplate = ChallengeProjectTemplate::where('challenge_id', $challengeId)->get();
             foreach ($getChallengeProjectTemplate as $challengeProjectTemplate) {
-                $templateChallengeProjectTemplate = new TemplateChallengeProjectTemplate();
-                $templateChallengeProjectTemplate->template_challenge_id = $templateChallengeId;
-                $templateChallengeProjectTemplate->template_id = $challengeProjectTemplate->template_id;
-                $templateChallengeProjectTemplate->save();
+                $challengeTemplateProjectTemplate = new ChallengeTemplateProjectTemplate();
+                $challengeTemplateProjectTemplate->template_challenge_id = $templateChallengeId;
+                $challengeTemplateProjectTemplate->template_id = $challengeProjectTemplate->template_id;
+                $challengeTemplateProjectTemplate->save();
             }
 
             return true;

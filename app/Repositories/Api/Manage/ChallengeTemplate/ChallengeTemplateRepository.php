@@ -114,8 +114,14 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return false;
         } catch (\Exception $e) {
-            dd($e);
+            return false;
+        }
+    }
 
+    public function getChallengeTemplateBasedOnSlug($slug){
+        try {
+            return $this->challengeTemplateService->getChallengeTemplateBasedOnSlug($slug);
+        }catch (\Exception $e){
             return false;
         }
     }

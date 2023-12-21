@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\Challenge;
+use App\Models\ChallengeTemplate;
 use App\Models\TemplateChallenge;
 
 class ChallengeTemplateService
@@ -11,7 +12,7 @@ class ChallengeTemplateService
     {
         try {
             $originalChallenge = Challenge::find($challengeId);
-            $templateChallenge = new TemplateChallenge();
+            $templateChallenge = new ChallengeTemplate();
             $templateChallenge->uuid = $originalChallenge->uuid;
             $templateChallenge->title = $originalChallenge->title;
             $templateChallenge->slug = $originalChallenge->slug;
@@ -35,6 +36,14 @@ class ChallengeTemplateService
 
             return $templateChallenge;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getChallengeTemplateBasedOnSlug($slug){
+        try {
+        return ChallengeTemplate::where('slug',$slug)->first();
+        }catch (\Exception $e) {
             return false;
         }
     }

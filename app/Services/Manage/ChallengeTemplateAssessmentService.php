@@ -2,8 +2,8 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ChallengeAssessmentCriteria;
-use App\Models\TemplateChallengeAssessmentCriterias;
+use App\Models\ChallengeAssessment;
+use App\Models\ChallengeTemplateAssessment;
 use Exception;
 
 class ChallengeTemplateAssessmentService
@@ -11,16 +11,17 @@ class ChallengeTemplateAssessmentService
     public function createChallengeTemplateAssessment($challengeId, $templateChallengeId)
     {
         try {
-            $challengeAssessmentCriteria = ChallengeAssessmentCriteria::where('challenge_id', $challengeId)->get();
-            foreach ($challengeAssessmentCriteria as $challengeAssessmentCriterion) {
-                $templateChallengeAssessmentCriteria = new TemplateChallengeAssessmentCriterias();
-                $templateChallengeAssessmentCriteria->template_challenge_id = $templateChallengeId;
-                $templateChallengeAssessmentCriteria->title = $challengeAssessmentCriterion->title;
-                $templateChallengeAssessmentCriteria->score = $challengeAssessmentCriterion->score;
-                $templateChallengeAssessmentCriteria->weight = $challengeAssessmentCriterion->weight;
-                $templateChallengeAssessmentCriteria->save();
+            $challengeAssessments = ChallengeAssessment::where('challenge_id', $challengeId)->get();
+            foreach ($challengeAssessments as $challengeAssessment) {
+                $challengeTemplateAssessment = new ChallengeTemplateAssessment();
+                $challengeTemplateAssessment->template_challenge_id = $templateChallengeId;
+                $challengeTemplateAssessment->assessment_type = $challengeAssessment->assessment_type;
+                $challengeTemplateAssessment->visibility = $challengeAssessment->visibility;
+                $challengeTemplateAssessment->members_email = $challengeAssessment->members_email;
+                $challengeTemplateAssessment->guidelines = $challengeAssessment->guidelines;
+                $challengeTemplateAssessment->attachments = $challengeAssessment->attachments;
+                $challengeTemplateAssessment->save();
             }
-
             return true;
         } catch (Exception $e) {
             return false;

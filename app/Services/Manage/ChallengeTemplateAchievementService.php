@@ -3,7 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\ChallengeAchievement;
-use App\Models\TemplateChallengeAchievement;
+use App\Models\ChallengeTemplateAchievement;
 use Exception;
 
 class ChallengeTemplateAchievementService
@@ -13,7 +13,7 @@ class ChallengeTemplateAchievementService
         try {
             $challengeParticipation = ChallengeAchievement::where('challenge_id', $createChallengeId)->get();
             foreach ($challengeParticipation as $challengeParticipationData) {
-                $challengeParticipation = new TemplateChallengeAchievement();
+                $challengeParticipation = new ChallengeTemplateAchievement();
                 $challengeParticipation->template_challenge_id = $templateChallengeId;
                 $challengeParticipation->achievement_type = $challengeParticipationData->achievement_type;
                 $challengeParticipation->achievement_name = $challengeParticipationData->achievement_name;
