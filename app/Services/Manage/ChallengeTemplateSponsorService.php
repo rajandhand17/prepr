@@ -2,11 +2,8 @@
 
 namespace App\Services\Manage;
 
-
-use App\Models\Challenge;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTemplateSponsor;
-use App\Models\TemplateChallenge;
 
 class ChallengeTemplateSponsorService
 {
@@ -17,9 +14,10 @@ class ChallengeTemplateSponsorService
             foreach ($getChallengeSponsor as $getSponsor) {
                 $createChallengeSponsor = new ChallengeTemplateSponsor();
                 $createChallengeSponsor->template_challenge_id = $templateChallengeId;
-                $createChallengeSponsor->host_id= $getSponsor->host_id;
+                $createChallengeSponsor->host_id = $getSponsor->host_id;
                 $createChallengeSponsor->save();
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
