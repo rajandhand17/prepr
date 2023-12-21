@@ -62,27 +62,27 @@ class ChallengeTemplate extends Model
 
     public function skills()
     {
-        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'challenge_id', 'id')->where('type', '0');
+        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'template_challenge_id', 'id')->where('type', '0');
     }
 
     public function skill_groups()
     {
-        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'challenge_id', 'id')->where('type', '1');
+        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'template_challenge_id', 'id')->where('type', '1');
     }
 
     public function skill_stacks()
     {
-        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'challenge_id', 'id')->where('type', '2');
+        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'template_challenge_id', 'id')->where('type', '2');
     }
 
     public function tags()
     {
-        return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '0');
+        return $this->hasMany(ChallengeTemplateTagsGroups::class, 'template_challenge_id', 'id')->where('type', '0');
     }
 
     public function tag_groups()
     {
-        return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '1');
+        return $this->hasMany(ChallengeTemplateTagsGroups::class, 'template_challenge_id', 'id')->where('type', '1');
     }
 
     public function durations()
@@ -97,27 +97,27 @@ class ChallengeTemplate extends Model
 
     public function participation_achievement()
     {
-        return $this->hasOne(ChallengeAchievement::class, 'challenge_id', 'id')->where('achievement_type', '0');
+        return $this->hasOne(ChallengeTemplateAchievement::class, 'template_challenge_id', 'id')->where('achievement_type', '0');
     }
 
     public function incentive_achievement()
     {
-        return $this->hasMany(ChallengeAchievement::class, 'challenge_id', 'id')->where('achievement_type', '1');
+        return $this->hasMany(ChallengeTemplateAchievement::class, 'template_challenge_id', 'id')->where('achievement_type', '1');
     }
 
     public function challenge_requirements()
     {
-        return $this->hasOne(ChallengeRequirement::class, 'challenge_id', 'id');
+        return $this->hasOne(ChallengeTemplateRequirement::class, 'template_challenge_id', 'id');
     }
 
     public function hosts()
     {
-        return $this->hasMany(ChallengeSponsor::class, 'challenge_id', 'id');
+        return $this->hasMany(ChallengeTemplateRequirement::class, 'template_challenge_id', 'id');
     }
 
     public function challenge_assessment_criteria()
     {
-        return $this->hasMany(ChallengeAssessmentCriteria::class, 'challenge_id', 'id');
+        return $this->hasMany(ChallengeTemplateAssessmentCriteria::class, 'challenge_id', 'id');
     }
 
     public function challenge_assessment()
