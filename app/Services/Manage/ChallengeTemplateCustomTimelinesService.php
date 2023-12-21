@@ -24,7 +24,6 @@ class ChallengeTemplateCustomTimelinesService
                     $challengeTemplateCustomTimeLine->save();
                 }
             }
-
             return true;
         } catch (Exception $e) {
             return false;
