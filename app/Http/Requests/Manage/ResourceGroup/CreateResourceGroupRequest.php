@@ -29,7 +29,7 @@ class CreateResourceGroupRequest extends FormRequest
             'description'              => 'required',
             'cover_image'              => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                  => 'required|in:yes,no',
-            'status'                   => 'required|in:draft,published,archive',
+            'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',
             'resource_ids.*'           => 'exists:resource_modules,uuid',
             'resource_collection_ids'  => 'required|array',
