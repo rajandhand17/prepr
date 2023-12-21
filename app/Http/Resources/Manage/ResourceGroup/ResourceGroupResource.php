@@ -127,10 +127,8 @@ class ResourceGroupResource extends JsonResource
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
             'rating'                                   => $rating,
-            'likes'                                    => $this->likes()->count(),
-            'shares'                                   => $this->shares()->count(),
             'liked'                                    => $this->liked(),
-            'favourite'                                => $this->favorites(),
+            'favourite'                                => $this->favourite(),
             'resource_collection'                      => $resourceCollection,
         ];
     }
