@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\ChallengeTemplateTimeLine;
 use App\Models\ChallengeTimelines;
-use App\Models\TemplateChallengeTimeLine;
 use Exception;
 
 class ChallengeTemplateTimelinesService
@@ -15,7 +14,6 @@ class ChallengeTemplateTimelinesService
             $challengeTimelines = ChallengeTimelines::where('challenge_id', $challengeId)->get();
             if ($challengeTimelines) {
                 foreach ($challengeTimelines as $challengeTimeline) {
-                    $challengeTemplateTimeline = new TemplateChallengeTimeLine();
                     $challengeTemplateTimeline=new ChallengeTemplateTimeLine();
                     $challengeTemplateTimeline->Template_challenge_id = $templateChallengeId;
                     $challengeTemplateTimeline->timeline_type = $challengeTimeline->timeline_type;

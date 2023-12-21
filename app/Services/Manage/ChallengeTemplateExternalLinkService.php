@@ -15,6 +15,7 @@ class ChallengeTemplateExternalLinkService
             if ($challengeExternalLinks) {
                 foreach ($challengeExternalLinks as $challengeExternalLink) {
                     $templateChallengeExternalLink = new TemplateChallengeExternalLink();
+                    $
                     $templateChallengeExternalLink->template_challenge_id = $templateChallengeId;
                     $templateChallengeExternalLink->custom_timelines_title = $challengeExternalLink->custom_timelines_title;
                     $templateChallengeExternalLink->custom_timelines_description = $challengeExternalLink->custom_timelines_description;
@@ -23,7 +24,6 @@ class ChallengeTemplateExternalLinkService
                     $templateChallengeExternalLink->save();
                 }
             }
-
             return true;
         } catch (Exception $e) {
             return false;
