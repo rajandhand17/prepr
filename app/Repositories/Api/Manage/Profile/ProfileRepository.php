@@ -12,5 +12,4 @@ class ProfileRepository implements ProfileInterface
     {
         $this->profileService = $profileService;
     }
-
 }
