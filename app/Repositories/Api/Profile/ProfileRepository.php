@@ -66,4 +66,13 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
+    public function addCertificate($request){
+        try {
+            return $this->profileService->addCertificate($request);
+
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -131,4 +131,22 @@ class ProfileService
             return false;
         }
     }
+
+    public function addCertificate($request){
+        try {
+            DB::beginTransaction();
+            $createdCertificate = new UserCertificate();
+            $createdCertificate->user_id =$request->user_id;
+            $createdCertificate->company =$request->company;
+            $createdCertificate->name    =$request->name;
+            $createdCertificate->start_date=$request->start_date;
+            $createdCertificate->end_date =$request->end_date;
+            $createdCertificate->description=$request->description;
+            $createdCertificate->save();
+            DB::commit();
+            return $createdCertificate;
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
 }

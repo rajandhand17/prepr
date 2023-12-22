@@ -10,4 +10,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/add-education', [ProfileController::class, 'addEducation']);
     Route::post('/add-skills', [ProfileController::class, 'addSkills']);
     Route::post('/add-patent', [ProfileController::class, 'addPatent']);
+    Route::post('/add-certificate', [ProfileController::class, 'addCertificate']);
 });

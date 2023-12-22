@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Profile\AddCertificateRequest;
 use App\Http\Requests\Profile\AddEducationRequest;
 use App\Http\Requests\Profile\AddExperienceRequest;
 use App\Http\Requests\Profile\AddPatentRequest;
 use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
+use App\Http\Resources\Profile\AddCertificateResource;
 use App\Http\Resources\Profile\AddEducationResource;
 use App\Http\Resources\Profile\AddExperienceResource;
 use App\Http\Resources\Profile\AddPersonalDetailResource;
@@ -103,6 +105,18 @@ class ProfileController extends AppBaseController
 
             return $this->sendError(__('responses.add_skills_failed'), 404);
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addCertificate(AddCertificateRequest $request){
+        try {
+            $addCertificate = $this->profileRepository->addCertificate($request);
+            if ($addCertificate){
+                return $this->sendResponse(AddCertificateResource::make($addCertificate),__('responses.add_certificate_created'));
+            }
+            return $this->sendError(__('responses.add_certificate_failed'), 404);
+        }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
