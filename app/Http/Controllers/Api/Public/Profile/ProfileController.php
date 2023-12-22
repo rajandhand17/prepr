@@ -3,8 +3,17 @@
 namespace App\Http\Controllers\Api\Public\Profile;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Profile\AddEducationRequest;
+use App\Http\Requests\Manage\Profile\AddExperienceRequest;
+use App\Http\Requests\Manage\Profile\AddPatentRequest;
+//use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
+use App\Http\Requests\Public\Profile\AddPersonalDetailRequest;
 use App\Http\Resources\AddCountryListResource;
 use App\Http\Resources\AddInstitutionsResource;
+use App\Http\Resources\Manage\Profile\AddEducationResource;
+use App\Http\Resources\Manage\Profile\AddExperienceResource;
+use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
+use App\Http\Resources\Manage\Profile\ProfileResource;
 use App\Repositories\Api\Public\Profile\ProfileRepository;
 use Illuminate\Http\Request;
 
@@ -17,29 +26,74 @@ class ProfileController extends AppBaseController
         $this->profileRepository = $profileRepository;
     }
 
-    public function getCountries(Request $request)
+    public function show($user_name)
     {
         try {
-            $getCountryList = $this->profileRepository->getCountriesList($request->language, $request->search);
-            if ($getCountryList) {
-                return $this->sendResponse(AddCountryListResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
+            $getProfile = $this->profileRepository->getProfileBasedOnUserName($user_name);
+            if ($getProfile) {
+                return $this->sendResponse(ProfileResource::make($getProfile), __('responses.found_user_profile_detail'));
             }
 
-            return $this->sendError(__('responses.countries_fetched_failed'), 404);
+            return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function getInstitutions(Request $request){
-        try{
-            $getCountryList = $this->profileRepository->getInstitutionsList($request->language, $request->search);
-            if ($getCountryList) {
-                return $this->sendResponse(AddInstitutionsResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
+    public function addPersonalDetail(AddPersonalDetailRequest $request)
+    {
+        try {
+            $addProfile = $this->profileRepository->addPersonalDetail($request);
+            if ($addProfile) {
+                return $this->sendResponse(AddPersonalDetailResource::make($addProfile), __('responses.user_personal_created'));
             }
-            return $this->sendError(__('responses.countries_fetched_failed'), 404);
-        }catch(\Exception $e){
+
+            return $this->sendError(__('responses.user_personal_failed'), 404);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function addUserExperience(AddExperienceRequest $request)
+    {
+        try {
+            $getExperience = $this->profileRepository->addUserExperience($request);
+            if ($getExperience) {
+                return $this->sendResponse(AddExperienceResource::make($getExperience), __('response.user_experience_created'));
+            }
+
+            return $this->sendError(__('responses.user_experience_failed'), 404);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addEducation(AddEducationRequest $request)
+    {
+        try {
+            $addEducation = $this->profileRepository->addEducation($request);
+            if ($addEducation) {
+                return $this->sendResponse(AddEducationResource::make($addEducation), __('responses.user_education_created'));
+            }
+
+            return $this->sendError(__('responses.user_education_failed'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addPatent(AddPatentRequest $request)
+    {
+        try {
+            $addPatient = $this->profileRepository->addPatent($request);
+            if ($addPatient) {
+                return $this->sendResponse(AddPersonalDetailResource::make($addPatient), __('responses.user_patent_created'));
+            }
+            return $this->sendError(__('responses.user_patent_failed'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+
 }

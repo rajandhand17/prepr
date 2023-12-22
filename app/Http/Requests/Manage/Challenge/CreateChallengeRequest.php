@@ -103,14 +103,15 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['assessment_weight.*'] = 'required|numeric';
         }
 
-        if ($this->request->has('assessment_type') !== null) {
-            $base_rules['assessment_type'] = 'required|in:open,close';
-            $base_rules['visibility'] = 'required|in:users,hidden';
-            $base_rules['guidelines'] = 'required_if:request_type,publish';
-            $base_rules['attachments'] = 'required_if:request_type,publish||mimes:jpeg,jpg,png,webp|max:1024';
-            if ($this->assessment_type == 'close' && $this->members_email !== null) {
-                $base_rules['members_email'] = 'array';
-                $base_rules['members_email.*'] = 'required_if:request_type,publish||email';
+        if ($this->request->has('assessment_type')) {
+            $base_rules['assessment_type'] = 'in:open,close';
+            $base_rules['visibility'] = 'required_if:assessment_type,open|in:users,hidden';
+            $base_rules['guidelines'] = 'required_if:assessment_type,open';
+            $base_rules['attachments'] = 'required_if:assessment_type,open|mimes:jpeg,jpg,png,webp|max:1024';
+
+            if ($this->request->get('assessment_type') == 'close') {
+                $base_rules['members_email'] = 'array|required';
+                $base_rules['members_email.*'] = 'email';
             }
         }
 

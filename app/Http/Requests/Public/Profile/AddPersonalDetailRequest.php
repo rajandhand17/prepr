@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Manage\Profile;
+namespace App\Http\Requests\Public\Profile;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
@@ -25,7 +25,6 @@ class AddPersonalDetailRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'user_id'       => 'required|unique:user_personal_details,user_id',
             'age'           => 'required|numeric',
             'about'         => 'required',
             'purpose'       => 'required',
@@ -39,7 +38,6 @@ class AddPersonalDetailRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required'      => __('responses.user_id_required'),
             'age.required'          => __('responses.age_required'),
             'about.required'        => __('responses.about_required'),
             'purpose.required'      => __('responses.purpose_required'),

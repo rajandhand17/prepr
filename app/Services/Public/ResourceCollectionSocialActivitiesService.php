@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Models\ResourceCollectionRating;
 use App\Models\ResourceCollectionSocialActivity;
 
 class ResourceCollectionSocialActivitiesService
@@ -103,6 +104,22 @@ class ResourceCollectionSocialActivitiesService
             }
 
             return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addRating($resource_collection_id, $request)
+    {
+        try {
+            ResourceCollectionRating::updateOrInsert([
+                'resource_collection_id'=> $resource_collection_id,
+                'user_id'               => auth()->user()->id,
+            ], [
+                'rating' => $request->rating,
+            ]);
+
+            return true;
         } catch(\Exception $e) {
             return false;
         }

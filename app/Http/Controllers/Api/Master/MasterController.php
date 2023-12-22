@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Master;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Master\CreateSponsorRequest;
+use App\Http\Resources\AddCountryListResource;
+use App\Http\Resources\AddInstitutionsResource;
 use App\Http\Resources\Master\AcheivementConditionListResource;
 use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ChallengeAnnouncementRecipientResource;
@@ -1302,6 +1304,32 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_tag_groups_list'));
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getCountries(Request $request)
+    {
+        try {
+            $getCountryList = $this->masterRepository->getCountriesList($request->language, $request->search);
+            if ($getCountryList) {
+                return $this->sendResponse(AddCountryListResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
+            }
+
+            return $this->sendError(__('responses.countries_fetched_failed'), 404);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getInstitutions(Request $request){
+        try{
+            $getCountryList = $this->masterRepository->getInstitutionsList($request->language, $request->search);
+            if ($getCountryList) {
+                return $this->sendResponse(AddInstitutionsResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
+            }
+            return $this->sendError(__('responses.countries_fetched_failed'), 404);
+        }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
