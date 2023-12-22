@@ -83,7 +83,6 @@ class ResourceGroupResource extends JsonResource
             ];
         }
         if ($this->resource_modules) {
-
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
                 $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
@@ -93,9 +92,7 @@ class ResourceGroupResource extends JsonResource
             }
         }
         if ($this->resource_collection) {
-
             foreach ($this->resource_collection as $resource_collection) {
-
                 $resourceCollection[$resource_collection->resource_collection_id]['uuid'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->uuid;
                 $resourceCollection[$resource_collection->resource_collection_id]['title'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->title;
                 $resourceCollection[$resource_collection->resource_collection_id]['image'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->media;
