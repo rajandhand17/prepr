@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\Public\Profile;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Manage\Profile\AddEducationRequest;
-use App\Http\Requests\Manage\Profile\AddExperienceRequest;
-use App\Http\Requests\Manage\Profile\AddPatentRequest;
+use App\Http\Requests\Public\Profile\AddEducationRequest;
+use App\Http\Requests\Public\Profile\AddExperienceRequest;
+use App\Http\Requests\Public\Profile\AddPatentRequest;
 use App\Http\Requests\Public\Profile\AddPersonalDetailRequest;
 use App\Http\Resources\Manage\Profile\AddEducationResource;
 use App\Http\Resources\Manage\Profile\AddExperienceResource;
