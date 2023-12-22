@@ -67,19 +67,20 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function addCertificate($request){
+    public function addCertificate($request)
+    {
         try {
             return $this->profileService->addCertificate($request);
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteSkill($id){
+    public function deleteSkill($id)
+    {
         try {
             return $this->profileService->deleteSkill($id);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

@@ -66,7 +66,6 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapProfileRoutes()
     {
         Route::prefix('api/v1/profile/')->middleware('api')->group(base_path('routes/v1/profile.php'));
-
     }
 
     protected function mapManageRoutes()

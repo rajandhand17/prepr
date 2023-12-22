@@ -20,6 +20,7 @@ class ProfileService
             if ($profile != null) {
                 return $profile;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
@@ -133,32 +134,36 @@ class ProfileService
         }
     }
 
-    public function addCertificate($request){
+    public function addCertificate($request)
+    {
         try {
             DB::beginTransaction();
             $createdCertificate = new UserCertificate();
-            $createdCertificate->user_id =$request->user_id;
-            $createdCertificate->company =$request->company;
-            $createdCertificate->name    =$request->name;
-            $createdCertificate->start_date=$request->start_date;
-            $createdCertificate->end_date =$request->end_date;
-            $createdCertificate->description=$request->description;
+            $createdCertificate->user_id = $request->user_id;
+            $createdCertificate->company = $request->company;
+            $createdCertificate->name = $request->name;
+            $createdCertificate->start_date = $request->start_date;
+            $createdCertificate->end_date = $request->end_date;
+            $createdCertificate->description = $request->description;
             $createdCertificate->save();
             DB::commit();
+
             return $createdCertificate;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public static function deleteSkill($id){
+    public static function deleteSkill($id)
+    {
         try {
-            $deleteSkill= UserSkills::where('id',$id)->delete();
-            if($deleteSkill){
+            $deleteSkill = UserSkills::where('id', $id)->delete();
+            if ($deleteSkill) {
                 return true;
             }
+
             return false;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }

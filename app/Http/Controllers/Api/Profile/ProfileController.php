@@ -33,6 +33,7 @@ class ProfileController extends AppBaseController
             if ($getProfile) {
                 return $this->sendResponse(ProfileResource::make($getProfile), __('responses.found_user_profile_detail'));
             }
+
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -109,27 +110,31 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function addCertificate(AddCertificateRequest $request){
+    public function addCertificate(AddCertificateRequest $request)
+    {
         try {
             $addCertificate = $this->profileRepository->addCertificate($request);
-            if ($addCertificate){
-                return $this->sendResponse(AddCertificateResource::make($addCertificate),__('responses.add_certificate_created'));
+            if ($addCertificate) {
+                return $this->sendResponse(AddCertificateResource::make($addCertificate), __('responses.add_certificate_created'));
             }
+
             return $this->sendError(__('responses.add_certificate_failed'), 404);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function deleteSkill($id){
+    public function deleteSkill($id)
+    {
         try {
-            $deleteSkill=$this->profileRepository->deleteSkill($id);
-            if($deleteSkill){
-                return $this->sendResponse(null,__('response.user_experience_created'));
+            $deleteSkill = $this->profileRepository->deleteSkill($id);
+            if ($deleteSkill) {
+                return $this->sendResponse(null, __('response.user_experience_created'));
             }
+
             return $this->sendError(__('responses.user_experience_failed'), 404);
-        }catch(\Exception $e) {
-            return $this->sendError(__('responses.send_error'),500);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }
