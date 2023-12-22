@@ -120,4 +120,16 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function deleteSkill($id){
+        try {
+            $deleteSkill=$this->profileRepository->deleteSkill($id);
+            if($deleteSkill){
+                return $this->sendResponse(null,__('response.user_experience_created'));
+            }
+            return $this->sendError(__('responses.user_experience_failed'), 404);
+        }catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
 }

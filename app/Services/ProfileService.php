@@ -150,4 +150,16 @@ class ProfileService
             return false;
         }
     }
+
+    public static function deleteSkill($id){
+        try {
+            $deleteSkill= UserSkills::where('id',$id)->delete();
+            if($deleteSkill){
+                return true;
+            }
+            return false;
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
 }

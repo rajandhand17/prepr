@@ -75,4 +75,12 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
+    public function deleteSkill($id){
+        try {
+            return $this->profileService->deleteSkill($id);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }
