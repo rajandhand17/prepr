@@ -34,15 +34,7 @@ class ResourceGroupResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-        if ($this->resource_modules) {
-            foreach ($this->resource_modules as $resource_module) {
-                $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
-                $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
-                $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
-                $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
-                $resourceModules[$resource_module->resource_module_id]['slug'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->slug;
-            }
-        }
+
         if ($this->getDuration) {
             $duration = $this->getDuration->title;
             $duration_id = $this->getDuration->id;
@@ -89,8 +81,17 @@ class ResourceGroupResource extends JsonResource
                 'achievement_image'     => $this->achievement->achievement_image,
             ];
         }
+        if ($this->resource_modules) {
+            foreach ($this->resource_modules as $resource_module) {
+                $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
+                $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
+                $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
+                $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
+                $resourceModules[$resource_module->resource_module_id]['slug'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->slug;
+            }
+        }
         if ($this->resource_collection) {
-            foreach ($this->resource_collection as $key => $resource_collection) {
+            foreach ($this->resource_collection as  $resource_collection) {
                 $resourceCollection[$resource_collection->resource_collection_id]['uuid'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->uuid;
                 $resourceCollection[$resource_collection->resource_collection_id]['title'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->title;
                 $resourceCollection[$resource_collection->resource_collection_id]['image'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->media;
