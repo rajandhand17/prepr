@@ -41,6 +41,7 @@ class ResourceGroupResource extends JsonResource
                 $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
                 $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
                 $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
+                $resourceModules[$resource_module->resource_module_id]['slug'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->slug;
             }
         }
         if ($this->getDuration) {
@@ -95,6 +96,7 @@ class ResourceGroupResource extends JsonResource
                 $resourceCollection[$resource_collection->resource_collection]['title'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->title;
                 $resourceCollection[$resource_collection->resource_collection]['image'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->media;
                 $resourceCollection[$resource_collection->resource_collection]['description'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->description;
+                $resourceCollection[$resource_collection->resource_collection]['slug'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->slug;
             }
         }
 
