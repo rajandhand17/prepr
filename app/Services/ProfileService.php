@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Public;
+namespace App\Services;
 
 use App\Models\User;
 use App\Models\UserEducation;
@@ -19,7 +19,6 @@ class ProfileService
             if ($profile != null) {
                 return $profile;
             }
-
             return false;
         } catch(\Exception $e) {
             return false;

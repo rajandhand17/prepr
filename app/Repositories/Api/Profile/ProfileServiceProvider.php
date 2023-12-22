@@ -22,6 +22,6 @@ class ProfileServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Public\Profile\ProfileInterface', 'App\Repositories\Api\Public\Profile\ProfileRepository');
+        $this->app->bind('App\Repositories\Api\Profile\ProfileInterface', 'App\Repositories\Api\Profile\ProfileRepository');
     }
 }

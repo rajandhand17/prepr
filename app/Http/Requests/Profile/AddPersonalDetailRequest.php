@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Public\Profile;
+namespace App\Http\Requests\Profile;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AddPatentRequest extends FormRequest
+class AddPersonalDetailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +25,11 @@ class AddPatentRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'user_id'      => 'required',
-            'title'        => 'required',
-            'name'         => 'required',
-            'description'  => 'required',
-            'patent_date'  => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
+            'age'           => 'required|numeric',
+            'about'         => 'required',
+            'purpose'       => 'required',
+            'gender'        => 'required',
+            'date_of_birth' => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
         ];
 
         return $base_rules;
@@ -38,10 +38,11 @@ class AddPatentRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required'      => __('responses.user_id_required'),
-            'title.required'        => __('responses.title_required'),
-            'name.required'         => __('responses.name_required'),
-            'description.required'  => __('responses.description_required'),
+            'age.required'          => __('responses.age_required'),
+            'about.required'        => __('responses.about_required'),
+            'purpose.required'      => __('responses.purpose_required'),
+            'gender.required'       => __('responses.gender_required'),
+            'date_of_birth.required'=> __('responses.user_date_of_birth'),
         ];
     }
 

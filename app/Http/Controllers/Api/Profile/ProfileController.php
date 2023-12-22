@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api\Public\Profile;
+namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Public\Profile\AddEducationRequest;
-use App\Http\Requests\Public\Profile\AddExperienceRequest;
-use App\Http\Requests\Public\Profile\AddPatentRequest;
-use App\Http\Requests\Public\Profile\AddPersonalDetailRequest;
-use App\Http\Resources\Manage\Profile\AddEducationResource;
-use App\Http\Resources\Manage\Profile\AddExperienceResource;
-use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
-use App\Http\Resources\Manage\Profile\AddSkillsResource;
-use App\Http\Resources\Manage\Profile\ProfileResource;
-use App\Repositories\Api\Public\Profile\ProfileRepository;
+use App\Http\Requests\Profile\AddEducationRequest;
+use App\Http\Requests\Profile\AddExperienceRequest;
+use App\Http\Requests\Profile\AddPatentRequest;
+use App\Http\Requests\Profile\AddPersonalDetailRequest;
+use App\Http\Requests\Profile\AddSkillsRequest;
+use App\Http\Resources\Profile\AddEducationResource;
+use App\Http\Resources\Profile\AddExperienceResource;
+use App\Http\Resources\Profile\AddPersonalDetailResource;
+use App\Http\Resources\Profile\AddSkillsResource;
+use App\Http\Resources\Profile\ProfileResource;
+use App\Repositories\Api\Profile\ProfileRepository;
 
 class ProfileController extends AppBaseController
 {
@@ -30,7 +31,6 @@ class ProfileController extends AppBaseController
             if ($getProfile) {
                 return $this->sendResponse(ProfileResource::make($getProfile), __('responses.found_user_profile_detail'));
             }
-
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Api\Public\Profile;
+namespace App\Repositories\Api\Profile;
 
-use App\Services\Public\ProfileService;
+use App\Services\ProfileService;
 
 class ProfileRepository implements ProfileInterface
 {

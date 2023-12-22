@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Public\Profile;
+namespace App\Http\Requests\Profile;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
