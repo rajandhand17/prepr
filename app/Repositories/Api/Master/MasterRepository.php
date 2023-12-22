@@ -58,7 +58,7 @@ class MasterRepository implements MasterInterface
     private $tagGroupService;
     private $challengeAnnouncementRecipientService;
 
-    public function __construct(InstitutionService $institutionsService,CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService)
+    public function __construct(InstitutionService $institutionsService, CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;
@@ -83,8 +83,8 @@ class MasterRepository implements MasterInterface
         $this->levelService = $levelService;
         $this->tagGroupService = $tagGroupService;
         $this->challengeAnnouncementRecipientService = $challengeAnnouncementRecipientService;
-        $this->countryService=$countryService;
-        $this->institutionsService=$institutionsService;
+        $this->countryService = $countryService;
+        $this->institutionsService = $institutionsService;
     }
 
     public function getCategories($request)
@@ -329,6 +329,7 @@ class MasterRepository implements MasterInterface
             return false;
         }
     }
+
     public function getCountriesList($language, $search)
     {
         try {

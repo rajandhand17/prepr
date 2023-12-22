@@ -4,12 +4,12 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Institutions;
-use App\Models\Country;
 use Illuminate\Support\Facades\Schema;
 
 class InstitutionService
 {
-    public function getInstitutionsList($language, $search){
+    public function getInstitutionsList($language, $search)
+    {
         try {
             if ($language == 'en') {
                 $country_list = Institutions::select('id', 'title');
@@ -22,8 +22,9 @@ class InstitutionService
                 }
                 $country_list = Institutions::select('id', $column_name.' as title');
             }
+
             return $country_list->get();
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

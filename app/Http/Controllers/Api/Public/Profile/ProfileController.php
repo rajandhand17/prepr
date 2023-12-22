@@ -8,14 +8,11 @@ use App\Http\Requests\Manage\Profile\AddExperienceRequest;
 use App\Http\Requests\Manage\Profile\AddPatentRequest;
 //use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Public\Profile\AddPersonalDetailRequest;
-use App\Http\Resources\AddCountryListResource;
-use App\Http\Resources\AddInstitutionsResource;
 use App\Http\Resources\Manage\Profile\AddEducationResource;
 use App\Http\Resources\Manage\Profile\AddExperienceResource;
 use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
 use App\Http\Resources\Manage\Profile\ProfileResource;
 use App\Repositories\Api\Public\Profile\ProfileRepository;
-use Illuminate\Http\Request;
 
 class ProfileController extends AppBaseController
 {
@@ -89,11 +86,10 @@ class ProfileController extends AppBaseController
             if ($addPatient) {
                 return $this->sendResponse(AddPersonalDetailResource::make($addPatient), __('responses.user_patent_created'));
             }
+
             return $this->sendError(__('responses.user_patent_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
-
 }

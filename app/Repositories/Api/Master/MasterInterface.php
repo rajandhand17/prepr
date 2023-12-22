@@ -57,5 +57,4 @@ interface MasterInterface
     public function getInstitutionsList($language, $search);
 
     public function getCountriesList($language, $search);
-
 }
