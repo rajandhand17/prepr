@@ -38,6 +38,8 @@ class UpdateResourceGroupRequest extends FormRequest
             'status'                 => 'required|in:draft,publish,archive',
             'resource_ids'           => 'required|array',
             'resource_ids.*'         => 'exists:resource_modules,uuid',
+            'resource_collection_ids'=> 'array',
+            'resource_collection_ids.*'=> 'exists:resource_collections,uuid',
             'skills'                 => 'required|array',
             'skills.*'               => 'numeric|exists:skills,id',
             'tags'                   => 'required|array',
