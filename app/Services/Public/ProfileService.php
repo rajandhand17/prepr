@@ -31,7 +31,8 @@ class ProfileService
         }
     }
 
-    public function getInstitutionsList($language, $search){
+    public function getInstitutionsList($language, $search)
+    {
         try {
             if ($language == 'en') {
                 $country_list = Institutions::select('id', 'title');
@@ -44,8 +45,9 @@ class ProfileService
                 }
                 $country_list = Institutions::select('id', $column_name.' as title');
             }
+
             return $country_list->get();
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
