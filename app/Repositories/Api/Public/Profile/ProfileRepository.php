@@ -51,7 +51,7 @@ class ProfileRepository implements ProfileInterface
 
     public function addPatent($request)
     {
-        try{
+        try {
             return $this->profileService->addPatent($request);
         } catch (\Exception $e) {
             return false;
