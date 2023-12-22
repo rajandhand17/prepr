@@ -99,7 +99,6 @@ class ResourceGroupResource extends JsonResource
                 $resourceCollection[$resource_collection->resource_collection_id]['slug'] = ResourceCollectionService::getResourceCollectionBasedOnId($resource_collection->resource_collection_id)->slug;
             }
         }
-
         $rating = intval('0');
         if ($this->resource_rating) {
             $rating = intval($this->resource_rating->rating);
