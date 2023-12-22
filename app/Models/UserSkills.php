@@ -11,11 +11,10 @@ class UserSkills extends Model
     use HasFactory;
     use SoftDeletes;
 
-
     protected $table = 'user_skills';
 
     protected $fillable = [
-        'user_id','skills','pinned'
+        'user_id', 'skills', 'pinned',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
