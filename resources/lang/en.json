@@ -489,6 +489,8 @@
     "responses.create_member_manger_success_challenge": "Congratulations! You have successfully added member(s) to an Challenge.",
 
     "responses.resource_module_rating_successfully":"Congratulations! You have successfully rated the resource module",
+    "responses.resource_collection_rating_successfully":"Congratulations! You have successfully rated the resource collection",
+    "responses.resource_collection_rating_failed":"Oops! You have failed to rate the resource collection",
     "responses.review_field_required": "The review field is required",
     "responses.review_in": "The review should be between 1 to 5 only",
     "responses.already_reviewed": "You have already give review on this resource module",
@@ -505,7 +507,7 @@
     "responses.already_like_resource_module":"The Resource Module is already liked by you!",
     "responses.like_resource_module_successfully":"The Resource Module have been liked successfully by you!",
     "responses.already_un_like_resource_module":"The Resource Module is already being dis-liked by you!",
-    "responses.un_like_resource_module_successfully":"The Resource Module have been dis-liked successfully by you!",
+    "responses.un_like_resource_module_successfully":"The Resource Module have been unliked successfully by you!",
     "responses.already_follow_resource_module":"The Resource Module is already being followed by you!",
     "responses.share_resource_module_successfully":"The Resource Module have been shared successfully by you!",
     "responses.already_share_resource_module":"The Resource Module is already being shared by you!",
@@ -704,5 +706,9 @@
     "responses.user_patent_failed": "Oops! The Creating of a Patent Failed.",
     "responses.skill_id_required": "The Skill field is required",
     "responses.add_skills_create": "Congratulations! You have successfully added your Skill",
-    "responses.add_skills_failed": "Oops! You have failed to add your Skills"
+    "responses.add_skills_failed": "Oops! You have failed to add your Skills",
+    "responses.country_list_fetched_successfully": "Congratulations! You have successfully fetched countries",
+    "responses.countries_fetched_failed": "Oops! The fetching countries list has failed"
+
+
 }

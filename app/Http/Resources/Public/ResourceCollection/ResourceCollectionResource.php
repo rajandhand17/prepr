@@ -103,10 +103,10 @@ class ResourceCollectionResource extends JsonResource
 
         switch($this->privacy) {
             case '0':
-                $privacy = 'yes';
+                $privacy = 'no';
                 break;
             case '1':
-                $privacy = 'no';
+                $privacy = 'yes';
                 break;
             default:
                 $privacy = 'no';
@@ -153,6 +153,10 @@ class ResourceCollectionResource extends JsonResource
             'skill_stacks'                             => $skill_stacks,
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
+            'likes'                                    => $this->likes()->count(),
+            'shares'                                   => $this->shares()->count(),
+            'liked'                                    => $this->liked(),
+            'favourite'                                => $this->favorites(),
 
         ];
     }

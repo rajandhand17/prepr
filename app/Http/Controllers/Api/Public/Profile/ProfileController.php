@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Api\Manage\Profile;
+namespace App\Http\Controllers\Api\Public\Profile;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Profile\AddEducationRequest;
 use App\Http\Requests\Manage\Profile\AddExperienceRequest;
 use App\Http\Requests\Manage\Profile\AddPatentRequest;
-use App\Http\Requests\Manage\Profile\AddPersonalDetailRequest;
-use App\Http\Requests\Manage\Profile\AddSkillsRequest;
+use App\Http\Requests\Public\Profile\AddPersonalDetailRequest;
 use App\Http\Resources\Manage\Profile\AddEducationResource;
 use App\Http\Resources\Manage\Profile\AddExperienceResource;
 use App\Http\Resources\Manage\Profile\AddPersonalDetailResource;
 use App\Http\Resources\Manage\Profile\AddSkillsResource;
 use App\Http\Resources\Manage\Profile\ProfileResource;
-use App\Repositories\Api\Manage\Profile\ProfileRepository;
+use App\Repositories\Api\Public\Profile\ProfileRepository;
 
 class ProfileController extends AppBaseController
 {

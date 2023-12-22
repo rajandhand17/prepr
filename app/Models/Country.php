@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Duration extends Model
+class Country extends Model
 {
     use HasFactory;
-    use softDeletes;
 
-    protected $table = 'durations';
+    use SoftDeletes;
+
+    protected $table = 'countries';
 
     protected $fillable = [
         'title',

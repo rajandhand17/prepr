@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Api\Manage\Profile;
+namespace App\Repositories\Api\Public\Profile;
 
 interface ProfileInterface
 {

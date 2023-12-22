@@ -66,7 +66,6 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->where('privacy', $privacy);
                 }
             }
-
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.id', function ($query) use ($request) {
                     $query->select('resource_collection_skills_groups_stacks.resource_collection_id')

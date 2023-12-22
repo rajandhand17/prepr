@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Manage;
+namespace App\Services\Public;
 
 use App\Models\User;
 use App\Models\UserEducation;
@@ -54,7 +54,7 @@ class ProfileService
         try {
             DB::beginTransaction();
             $createdPersonal = new UserPersonal();
-            $createdPersonal->user_id = $request->user_id;
+            $createdPersonal->user_id = auth()->user()->id;
             $createdPersonal->age = $request->age;
             $createdPersonal->about = $request->about;
             $createdPersonal->purpose = $request->purpose;
@@ -73,7 +73,7 @@ class ProfileService
         try {
             DB::beginTransaction();
             $createAddEducation = new UserEducation();
-            $createAddEducation->user_id = $request->user_id;
+            $createAddEducation->user_id = auth()->user()->id;
             $createAddEducation->university = $request->university;
             $createAddEducation->degree = $request->degree;
             $createAddEducation->start_date = $request->start_date;
@@ -94,7 +94,7 @@ class ProfileService
         try {
             DB::beginTransaction();
             $addPatent = new UserPatient();
-            $addPatent->user_id = $request->user_id;
+            $addPatent->user_id = auth()->user()->id;
             $addPatent->title = $request->title;
             $addPatent->name = $request->name;
             $addPatent->patent_date = $request->patent_date;

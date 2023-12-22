@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Api\Manage\Profile;
+namespace App\Repositories\Api\Public\Profile;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +22,6 @@ class ProfileServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Manage\Profile\ProfileInterface', 'App\Repositories\Api\Manage\Profile\ProfileRepository');
+        $this->app->bind('App\Repositories\Api\Public\Profile\ProfileInterface', 'App\Repositories\Api\Public\Profile\ProfileRepository');
     }
 }
