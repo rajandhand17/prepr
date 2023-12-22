@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\UserCertificate;
 use App\Models\UserEducation;
 use App\Models\UserExperience;
 use App\Models\UserPatient;
