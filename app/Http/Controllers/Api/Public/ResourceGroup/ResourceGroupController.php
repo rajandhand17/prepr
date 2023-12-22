@@ -30,7 +30,6 @@ class ResourceGroupController extends AppBaseController
                     'total_pages'  => $resourceGroup->lastPage(),
                     'list'         => ResourceGroupResource::collection($resourceGroup),
                 ];
-
                 return $this->sendResponse($response, __('responses.found_resource_group_list'));
             }
 
