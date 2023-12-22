@@ -32,6 +32,7 @@ class AddCertificateRequest extends FormRequest
             'description'   => 'required',
         ];
     }
+
     public function messages()
     {
         return [
