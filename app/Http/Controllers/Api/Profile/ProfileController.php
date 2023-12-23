@@ -127,7 +127,6 @@ class ProfileController extends AppBaseController
     public function deleteSkill($id)
     {
         try {
-<<<<<<< HEAD
             $deleteSkill=$this->profileRepository->deleteSkill($id);
             if($deleteSkill){
                 return $this->sendResponse(null,__('responses.delete_skills'));
@@ -135,16 +134,6 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.failed_delete_skills'), 404);
         }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'),500);
-=======
-            $deleteSkill = $this->profileRepository->deleteSkill($id);
-            if ($deleteSkill) {
-                return $this->sendResponse(null, __('response.user_experience_created'));
-            }
-
-            return $this->sendError(__('responses.user_experience_failed'), 404);
-        } catch(\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
->>>>>>> bde8691b65bc86e895d143a2377589359f4450a9
         }
     }
 }
