@@ -172,9 +172,10 @@ class ProfileController extends AppBaseController
             if($deleteSkill){
                 return $this->sendResponse(null,__('responses.delete_skills'));
             }
+
             return $this->sendError(__('responses.failed_delete_skills'), 404);
-        }catch(\Exception $e) {
-            return $this->sendError(__('responses.send_error'),500);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }
