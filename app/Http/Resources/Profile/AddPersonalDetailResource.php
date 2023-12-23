@@ -15,9 +15,10 @@ class AddPersonalDetailResource extends JsonResource
     public function toArray(Request $request): array
     {
         $response = [
-            'about'  => $this->about,
-            'age'    => $this->age,
-            'purpose'=> $this->purpose,
+            'title'  => $this->title,
+            'name'    => $this->name,
+            'patent_date'=> $this->patent_date,
+            'description'=> $this->description,
         ];
 
         return $response;

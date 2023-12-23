@@ -25,7 +25,6 @@ class AddPatentRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'user_id'      => 'required',
             'title'        => 'required',
             'name'         => 'required',
             'description'  => 'required',

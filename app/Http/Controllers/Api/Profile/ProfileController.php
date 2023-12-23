@@ -9,13 +9,17 @@ use App\Http\Requests\Profile\AddExperienceRequest;
 use App\Http\Requests\Profile\AddPatentRequest;
 use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
+use App\Http\Requests\Profile\DeleteExperienceRequest;
 use App\Http\Resources\Profile\AddCertificateResource;
 use App\Http\Resources\Profile\AddEducationResource;
 use App\Http\Resources\Profile\AddExperienceResource;
 use App\Http\Resources\Profile\AddPersonalDetailResource;
 use App\Http\Resources\Profile\AddSkillsResource;
 use App\Http\Resources\Profile\ProfileResource;
+use App\Models\UserEducation;
+use App\Models\UserSkills;
 use App\Repositories\Api\Profile\ProfileRepository;
+use App\Services\ProfileService;
 
 class ProfileController extends AppBaseController
 {
@@ -68,6 +72,22 @@ class ProfileController extends AppBaseController
         }
     }
 
+    public function deleteUserExperience($id){
+        try {
+            $checkUserExperienceExistsOrNot=ProfileService::checkUserExperience($id);
+            if(!$checkUserExperienceExistsOrNot){
+                return $this->sendError(__('responses.user_experience_not_exists'), 404);
+            }
+            $getUserExperience =$this->profileRepository->deleteUserExperience($id);
+            if ($getUserExperience) {
+                return $this->sendResponse(null, __('responses.delete_experience'));
+            }
+            return $this->sendError(__('responses.failed_delete_experience'), 404);
+
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
     public function addEducation(AddEducationRequest $request)
     {
         try {
@@ -75,10 +95,27 @@ class ProfileController extends AppBaseController
             if ($addEducation) {
                 return $this->sendResponse(AddEducationResource::make($addEducation), __('responses.user_education_created'));
             }
-
             return $this->sendError(__('responses.user_education_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function deleteEducation($id){
+        try {
+            $checkEducationExistsOrNot=ProfileService::checkUserEducation($id);
+            if(!$checkEducationExistsOrNot){
+                return $this->sendError(__('responses.user_education_not_found'), 404);
+            }
+            $deleteEducation = $this->profileRepository->deleteEducation($id);
+            if ($deleteEducation){
+                return $this->sendResponse(null,__('responses.delete_education_success'));
+            }
+
+            return $this->sendError(__('responses.delete_education_failed'));
+        }catch (\Exception $e) {
+            dd($e);
+            return $this->sendError(__('responses.send_error'),500);
         }
     }
 
@@ -127,6 +164,10 @@ class ProfileController extends AppBaseController
     public function deleteSkill($id)
     {
         try {
+            $checkUserDeleteExists=ProfileService::checkUserSkillDeleteExists($id);
+            if (!$checkUserDeleteExists){
+                return $this->sendError(__('responses.skills_not_found'), 404);
+            }
             $deleteSkill=$this->profileRepository->deleteSkill($id);
             if($deleteSkill){
                 return $this->sendResponse(null,__('responses.delete_skills'));

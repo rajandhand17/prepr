@@ -711,8 +711,15 @@
     "responses.countries_fetched_failed": "Oops! The fetching countries list has failed",
     "responses.delete_skills": "Congratulations! You have successfully deleted your Skill",
     "responses.failed_delete_skills": "Oops! You have failed to delete your Skill",
+    "responses.delete_experience": "Congratulations! You have successfully deleted experience",
+    "responses.failed_delete_experience": "Oops! You have failed to delete your experience",
     "responses.add_certificate_created": "Congratulations! You have successfully added your Certificate",
-    "responses.add_certificate_failed": "Oops! You have failed to add your Certificate"
+    "responses.add_certificate_failed": "Oops! You have failed to add your Certificate",
+    "responses.user_experience_not_exists": "This user experience is not available",
+    "responses.user_education_not_found": "This user education is not available",
+    "responses.delete_education_success": "Congratulations! You have successfully deleted your education",
+    "responses.delete_education_failed": "Oops! You have failed to delete your education",
+    "responses.skills_not_found": "This user skills is not available"
 
 
 }

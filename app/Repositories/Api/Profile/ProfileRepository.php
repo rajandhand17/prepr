@@ -40,6 +40,14 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function deleteUserExperience($id){
+        try {
+            return $this->profileService->deleteUserExperience($id);
+
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public function addEducation($request)
     {
         try {
@@ -48,7 +56,13 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
-
+    public function deleteEducation($id){
+        try {
+            return $this->profileService->deleteEducation($id);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public function addPatent($request)
     {
         try {

@@ -49,7 +49,13 @@ class ProfileService
             return false;
         }
     }
-
+    public function deleteUserExperience($id){
+        try{
+         return  UserExperience::where('id',$id)->delete();
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
     public function addPersonalDetail($request)
     {
         try {
@@ -91,6 +97,21 @@ class ProfileService
         }
     }
 
+    public static function deleteEducation($id){
+        try {
+            return UserEducation::where('id', '=',$id)->delete();
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkUserEducation($id){
+        try {
+            return UserEducation::where('id', '=',$id)->first();
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public function addPatent($request)
     {
         try {
@@ -164,6 +185,21 @@ class ProfileService
 
             return false;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkUserSkillDeleteExists($id){
+        try {
+            return UserSkills::where('id', $id)->first();
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+    public static function checkUserExperience($id){
+        try {
+            return UserExperience::where('id',$id)->first();
+        }catch(\Exception $e) {
             return false;
         }
     }
