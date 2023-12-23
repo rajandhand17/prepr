@@ -28,7 +28,7 @@ class AddPersonalDetailRequest extends FormRequest
             'age'           => 'required|numeric',
             'about'         => 'required',
             'purpose'       => 'required',
-            'gender'        => 'required',
+            'gender'        => 'required|in:male,female, transgender',
             'date_of_birth' => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
         ];
 
