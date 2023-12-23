@@ -139,12 +139,12 @@ class ProfileService
         try {
             DB::beginTransaction();
             $createdCertificate = new UserCertificate();
-            $createdCertificate->user_id =auth()->user()->id;
-            $createdCertificate->company =$request->company;
-            $createdCertificate->name    =$request->name;
-            $createdCertificate->start_date=$request->start_date;
-            $createdCertificate->end_date =$request->end_date;
-            $createdCertificate->description=$request->description;
+            $createdCertificate->user_id = auth()->user()->id;
+            $createdCertificate->company = $request->company;
+            $createdCertificate->name = $request->name;
+            $createdCertificate->start_date = $request->start_date;
+            $createdCertificate->end_date = $request->end_date;
+            $createdCertificate->description = $request->description;
             $createdCertificate->save();
             DB::commit();
 
