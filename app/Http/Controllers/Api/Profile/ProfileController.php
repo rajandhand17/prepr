@@ -119,20 +119,35 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function addPatent(AddPatentRequest $request)
+    public function addPatient(AddPatentRequest $request)
     {
         try {
-            $addPatient = $this->profileRepository->addPatent($request);
+            $addPatient = $this->profileRepository->addPatient($request);
             if ($addPatient) {
                 return $this->sendResponse(AddPersonalDetailResource::make($addPatient), __('responses.user_patent_created'));
             }
-
             return $this->sendError(__('responses.user_patent_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
+    public function deletePatient($id){
+        try {
+            $checkUserPatentExists = ProfileService::checkUserPatient($id);
+
+            if(!$checkUserPatentExists){
+                return $this->sendError(__('responses.user_patient_not_found'), 404);
+            }
+            $deleteUserPatent = $this->profileRepository->deleteUserPatient($id);
+            if($deleteUserPatent){
+               return $this->sendResponse(null,__('responses.user_patient_deleted'), 200);
+            }
+            return $this->sendError(__('responses.user_patient_failed'), 400);
+        }catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
     public function addSkills(AddSkillsRequest $request)
     {
         try {

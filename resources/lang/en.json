@@ -719,7 +719,9 @@
     "responses.user_education_not_found": "This user education is not available",
     "responses.delete_education_success": "Congratulations! You have successfully deleted your education",
     "responses.delete_education_failed": "Oops! You have failed to delete your education",
-    "responses.skills_not_found": "This user skills is not available"
-
+    "responses.skills_not_found": "This user skills is not available",
+    "responses.user_patient_deleted": "Congratulations! You have successfully deleted your patient",
+    "responses.user_patient_failed": "Oops! You have failed to delete your patient",
+    "responses.user_patient_not_found": "This user patient is not available"
 
 }

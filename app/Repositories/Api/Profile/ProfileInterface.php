@@ -8,7 +8,7 @@ interface ProfileInterface
 
     public function addPersonalDetail($request);
 
-    public function addPatent($request);
+    public function addPatient($request);
 
     public function addEducation($request);
 

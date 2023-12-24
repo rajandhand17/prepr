@@ -12,7 +12,7 @@ class UserPatient extends Model
 
     use SoftDeletes;
 
-    protected $table = 'user_patents';
+    protected $table = 'user_patients';
 
     protected $fillable = [
         'user_id', 'title', 'name', 'patent_date', 'description',

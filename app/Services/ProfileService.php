@@ -112,7 +112,7 @@ class ProfileService
             return false;
         }
     }
-    public function addPatent($request)
+    public function addPatient($request)
     {
         try {
             DB::beginTransaction();
@@ -124,7 +124,6 @@ class ProfileService
             $addPatent->description = $request->description;
             $addPatent->save();
             DB::commit();
-
             return $addPatent;
         } catch(\Exception $e) {
             return false;
@@ -199,6 +198,21 @@ class ProfileService
     public static function checkUserExperience($id){
         try {
             return UserExperience::where('id',$id)->first();
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+    public static function checkUserPatient($id){
+        try {
+            return UserPatient::where('id',$id)->first();
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteUserPatient($id){
+        try {
+            return UserPatient::where('id',$id)->delete();
         }catch(\Exception $e) {
             return false;
         }
