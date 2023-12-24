@@ -40,14 +40,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function deleteUserExperience($id){
+    public function deleteUserExperience($id)
+    {
         try {
             return $this->profileService->deleteUserExperience($id);
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function addEducation($request)
     {
         try {
@@ -56,13 +57,16 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
-    public function deleteEducation($id){
+
+    public function deleteEducation($id)
+    {
         try {
             return $this->profileService->deleteEducation($id);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function addPatient($request)
     {
         try {
@@ -99,18 +103,20 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function deleteUserPatient($id){
+    public function deleteUserPatient($id)
+    {
         try {
             return $this->profileService->deleteUserPatient($id);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteUserCertificate($id){
+    public function deleteUserCertificate($id)
+    {
         try {
             return $this->profileService->deleteUserCertificate($id);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

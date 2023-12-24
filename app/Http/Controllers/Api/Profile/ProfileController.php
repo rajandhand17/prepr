@@ -9,15 +9,12 @@ use App\Http\Requests\Profile\AddExperienceRequest;
 use App\Http\Requests\Profile\AddPatentRequest;
 use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
-use App\Http\Requests\Profile\DeleteExperienceRequest;
 use App\Http\Resources\Profile\AddCertificateResource;
 use App\Http\Resources\Profile\AddEducationResource;
 use App\Http\Resources\Profile\AddExperienceResource;
 use App\Http\Resources\Profile\AddPersonalDetailResource;
 use App\Http\Resources\Profile\AddSkillsResource;
 use App\Http\Resources\Profile\ProfileResource;
-use App\Models\UserEducation;
-use App\Models\UserSkills;
 use App\Repositories\Api\Profile\ProfileRepository;
 use App\Services\ProfileService;
 
@@ -72,22 +69,24 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function deleteUserExperience($id){
+    public function deleteUserExperience($id)
+    {
         try {
-            $checkUserExperienceExistsOrNot=ProfileService::checkUserExperience($id);
-            if(!$checkUserExperienceExistsOrNot){
+            $checkUserExperienceExistsOrNot = ProfileService::checkUserExperience($id);
+            if (!$checkUserExperienceExistsOrNot) {
                 return $this->sendError(__('responses.user_experience_not_exists'), 404);
             }
-            $getUserExperience =$this->profileRepository->deleteUserExperience($id);
+            $getUserExperience = $this->profileRepository->deleteUserExperience($id);
             if ($getUserExperience) {
                 return $this->sendResponse(null, __('responses.delete_experience'));
             }
-            return $this->sendError(__('responses.failed_delete_experience'), 404);
 
+            return $this->sendError(__('responses.failed_delete_experience'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function addEducation(AddEducationRequest $request)
     {
         try {
@@ -95,27 +94,30 @@ class ProfileController extends AppBaseController
             if ($addEducation) {
                 return $this->sendResponse(AddEducationResource::make($addEducation), __('responses.user_education_created'));
             }
+
             return $this->sendError(__('responses.user_education_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function deleteEducation($id){
+    public function deleteEducation($id)
+    {
         try {
-            $checkEducationExistsOrNot=ProfileService::checkUserEducation($id);
-            if(!$checkEducationExistsOrNot){
+            $checkEducationExistsOrNot = ProfileService::checkUserEducation($id);
+            if (!$checkEducationExistsOrNot) {
                 return $this->sendError(__('responses.user_education_not_found'), 404);
             }
             $deleteEducation = $this->profileRepository->deleteEducation($id);
-            if ($deleteEducation){
-                return $this->sendResponse(null,__('responses.delete_education_success'));
+            if ($deleteEducation) {
+                return $this->sendResponse(null, __('responses.delete_education_success'));
             }
 
             return $this->sendError(__('responses.delete_education_failed'));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             dd($e);
-            return $this->sendError(__('responses.send_error'),500);
+
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
@@ -126,28 +128,32 @@ class ProfileController extends AppBaseController
             if ($addPatient) {
                 return $this->sendResponse(AddPersonalDetailResource::make($addPatient), __('responses.user_patent_created'));
             }
+
             return $this->sendError(__('responses.user_patent_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function deletePatient($id){
+    public function deletePatient($id)
+    {
         try {
             $checkUserPatentExists = ProfileService::checkUserPatient($id);
 
-            if(!$checkUserPatentExists){
+            if (!$checkUserPatentExists) {
                 return $this->sendError(__('responses.user_patient_not_found'), 404);
             }
             $deleteUserPatent = $this->profileRepository->deleteUserPatient($id);
-            if($deleteUserPatent){
-               return $this->sendResponse(null,__('responses.user_patient_deleted'), 200);
+            if ($deleteUserPatent) {
+                return $this->sendResponse(null, __('responses.user_patient_deleted'), 200);
             }
+
             return $this->sendError(__('responses.user_patient_failed'), 400);
-        }catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'),500);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function addSkills(AddSkillsRequest $request)
     {
         try {
@@ -179,13 +185,13 @@ class ProfileController extends AppBaseController
     public function deleteSkill($id)
     {
         try {
-            $checkUserDeleteExists=ProfileService::checkUserSkillDeleteExists($id);
-            if (!$checkUserDeleteExists){
+            $checkUserDeleteExists = ProfileService::checkUserSkillDeleteExists($id);
+            if (!$checkUserDeleteExists) {
                 return $this->sendError(__('responses.skills_not_found'), 404);
             }
-            $deleteSkill=$this->profileRepository->deleteSkill($id);
-            if($deleteSkill){
-                return $this->sendResponse(null,__('responses.delete_skills'));
+            $deleteSkill = $this->profileRepository->deleteSkill($id);
+            if ($deleteSkill) {
+                return $this->sendResponse(null, __('responses.delete_skills'));
             }
 
             return $this->sendError(__('responses.failed_delete_skills'), 404);
@@ -194,19 +200,21 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function deleteCertificate($id){
+    public function deleteCertificate($id)
+    {
         try {
-            $checkExistsCertificateOrNot=ProfileService::checkUserCertificate($id);
-            if(!$checkExistsCertificateOrNot){
-                return $this->sendError(__('responses.user_certificate_not_found'),404);
+            $checkExistsCertificateOrNot = ProfileService::checkUserCertificate($id);
+            if (!$checkExistsCertificateOrNot) {
+                return $this->sendError(__('responses.user_certificate_not_found'), 404);
             }
-            $deleteCertificate=$this->profileRepository->deleteUserCertificate($id);
-            if($deleteCertificate){
-                return $this->sendResponse(null,__('responses.user_certificate_deleted'));
+            $deleteCertificate = $this->profileRepository->deleteUserCertificate($id);
+            if ($deleteCertificate) {
+                return $this->sendResponse(null, __('responses.user_certificate_deleted'));
             }
-            return $this->sendError(__('responses.user_certificate_failed'),400);
-        }catch(\Exception $e){
-            return $this->sendError(__('responses.send_error'),500);
+
+            return $this->sendError(__('responses.user_certificate_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }
