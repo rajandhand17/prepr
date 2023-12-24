@@ -106,4 +106,12 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
+    public function deleteUserCertificate($id){
+        try {
+            return $this->profileService->deleteUserCertificate($id);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

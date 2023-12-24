@@ -193,4 +193,20 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function deleteCertificate($id){
+        try {
+            $checkExistsCertificateOrNot=ProfileService::checkUserCertificate($id);
+            if(!$checkExistsCertificateOrNot){
+                return $this->sendError(__('responses.user_certificate_not_found'),404);
+            }
+            $deleteCertificate=$this->profileRepository->deleteUserCertificate($id);
+            if($deleteCertificate){
+                return $this->sendResponse(null,__('responses.user_certificate_deleted'));
+            }
+            return $this->sendError(__('responses.user_certificate_failed'),400);
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
 }

@@ -15,4 +15,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/add-patient', [ProfileController::class, 'addPatient']);
     Route::delete('{id}/delete-patient', [ProfileController::class, 'deletePatient']);
     Route::post('/add-certificate', [ProfileController::class, 'addCertificate']);
+    Route::delete('{id}/delete-certificate', [ProfileController::class, 'deleteCertificate']);
 });

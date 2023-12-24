@@ -722,6 +722,9 @@
     "responses.skills_not_found": "This user skills is not available",
     "responses.user_patient_deleted": "Congratulations! You have successfully deleted your patient",
     "responses.user_patient_failed": "Oops! You have failed to delete your patient",
-    "responses.user_patient_not_found": "This user patient is not available"
+    "responses.user_patient_not_found": "This user patient is not available",
+    "responses.user_certificate_not_found": "This user certificate is not available",
+    "responses.user_certificate_deleted": "Congratulations! You have successfully deleted your certificate",
+    "responses.user_certificate_failed": "Oops! You have failed to delete your certificate"
 
 }

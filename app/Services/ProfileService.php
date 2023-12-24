@@ -59,18 +59,16 @@ class ProfileService
     public function addPersonalDetail($request)
     {
         try {
-            DB::beginTransaction();
-            $createdPersonal = new UserPersonal();
-            $createdPersonal->user_id = auth()->user()->id;
-            $createdPersonal->age = $request->age;
-            $createdPersonal->about = $request->about;
-            $createdPersonal->purpose = $request->purpose;
-            $createdPersonal->gender = $request->gender;
-            $createdPersonal->date_of_birth = $request->dob;
-            $createdPersonal->save();
-            DB::commit();
-
-            return $createdPersonal;
+            $userPersonalDetails= UserPersonal::updateOrCreate([
+                'user_id' => auth()->user()->id,
+            ],[
+                "age" => $request->age,
+                "about" => $request->about,
+                "purpose" => $request->purpose,
+                "gender" => $request->gender,
+                "date_of_birth" => $request->dob,
+            ]);
+            return $userPersonalDetails;
         } catch(\Exception $e) {
             return false;
         }
@@ -213,6 +211,21 @@ class ProfileService
     public static function deleteUserPatient($id){
         try {
             return UserPatient::where('id',$id)->delete();
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkUserCertificate($id){
+        try {
+            return UserCertificate::where('id',$id)->first();
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+    public static function deleteUserCertificate($id){
+        try {
+            return UserCertificate::where('id',$id)->delete();
         }catch(\Exception $e) {
             return false;
         }
