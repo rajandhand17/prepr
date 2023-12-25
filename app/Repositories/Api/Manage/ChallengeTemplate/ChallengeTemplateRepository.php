@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Api\Manage\ChallengeTemplate;
 
-use App\Models\ChallengeTemplate;
 use App\Services\Manage\ChallengeTemplateAchievementService;
 use App\Services\Manage\ChallengeTemplateAssessmentCriteriaService;
 use App\Services\Manage\ChallengeTemplateAssessmentService;
@@ -14,8 +13,8 @@ use App\Services\Manage\ChallengeTemplateService;
 use App\Services\Manage\ChallengeTemplateSkillsGroupsStackService;
 use App\Services\Manage\ChallengeTemplateSponsorService;
 use App\Services\Manage\ChallengeTemplateTagsGroupsService;
-use Illuminate\Support\Facades\DB;
 use App\Services\Manage\ChallengeTemplateTimelinesService;
+use Illuminate\Support\Facades\DB;
 
 class ChallengeTemplateRepository implements ChallengeTemplateInterface
 {
@@ -43,21 +42,20 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
     private $challengeTemplateExternalLinkService;
 
-    public function __construct(ChallengeTemplateExternalLinkService $challengeTemplateExternalLinkService,ChallengeTemplateCustomTimelinesService $challengeTemplateCustomTimelinesService, ChallengeTemplateTimelinesService $challengeTemplateTimelinesService,ChallengeTemplateProjectTemplateService $challengeTemplateProjectTemplateService, ChallengeTemplateAssessmentService $challengeTemplateAssessmentService, ChallengeTemplateAssessmentCriteriaService $challengeTemplateAssessmentCriteriaService,ChallengeTemplateRequirementService $challengeTemplateRequirementService,ChallengeTemplateTagsGroupsService $challengeTemplateTagsGroupsService, ChallengeTemplateSponsorService $challengeTemplateSponsorService,ChallengeTemplateSkillsGroupsStackService $challengeTemplateSkillsGroupsStackService, ChallengeTemplateService $challengeTemplateService, ChallengeTemplateAchievementService $challengeTemplateAchievementService)
+    public function __construct(ChallengeTemplateExternalLinkService $challengeTemplateExternalLinkService, ChallengeTemplateCustomTimelinesService $challengeTemplateCustomTimelinesService, ChallengeTemplateTimelinesService $challengeTemplateTimelinesService, ChallengeTemplateProjectTemplateService $challengeTemplateProjectTemplateService, ChallengeTemplateAssessmentService $challengeTemplateAssessmentService, ChallengeTemplateAssessmentCriteriaService $challengeTemplateAssessmentCriteriaService, ChallengeTemplateRequirementService $challengeTemplateRequirementService, ChallengeTemplateTagsGroupsService $challengeTemplateTagsGroupsService, ChallengeTemplateSponsorService $challengeTemplateSponsorService, ChallengeTemplateSkillsGroupsStackService $challengeTemplateSkillsGroupsStackService, ChallengeTemplateService $challengeTemplateService, ChallengeTemplateAchievementService $challengeTemplateAchievementService)
     {
         $this->challengeTemplateService = $challengeTemplateService;
-        $this->challengeTemplateAchievementService=$challengeTemplateAchievementService;
-        $this->challengeTemplateSkillsGroupsStackService=$challengeTemplateSkillsGroupsStackService;
-        $this->challengeTemplateSponsorService=$challengeTemplateSponsorService;
-        $this->challengeTemplateTagsGroupsService=$challengeTemplateTagsGroupsService;
-        $this->challengeTemplateRequirementService=$challengeTemplateRequirementService;
-        $this->challengeTemplateAssessmentService=$challengeTemplateAssessmentService;
-        $this->challengeTemplateProjectTemplateService=$challengeTemplateProjectTemplateService;
-        $this->challengeTemplateAssessmentCriteriaService=$challengeTemplateAssessmentCriteriaService;
-        $this->challengeTemplateTimelinesService=$challengeTemplateTimelinesService;
-        $this->challengeTemplateCustomTimelinesService=$challengeTemplateCustomTimelinesService;
-        $this->challengeTemplateExternalLinkService=$challengeTemplateExternalLinkService;
-
+        $this->challengeTemplateAchievementService = $challengeTemplateAchievementService;
+        $this->challengeTemplateSkillsGroupsStackService = $challengeTemplateSkillsGroupsStackService;
+        $this->challengeTemplateSponsorService = $challengeTemplateSponsorService;
+        $this->challengeTemplateTagsGroupsService = $challengeTemplateTagsGroupsService;
+        $this->challengeTemplateRequirementService = $challengeTemplateRequirementService;
+        $this->challengeTemplateAssessmentService = $challengeTemplateAssessmentService;
+        $this->challengeTemplateProjectTemplateService = $challengeTemplateProjectTemplateService;
+        $this->challengeTemplateAssessmentCriteriaService = $challengeTemplateAssessmentCriteriaService;
+        $this->challengeTemplateTimelinesService = $challengeTemplateTimelinesService;
+        $this->challengeTemplateCustomTimelinesService = $challengeTemplateCustomTimelinesService;
+        $this->challengeTemplateExternalLinkService = $challengeTemplateExternalLinkService;
     }
 
     public function createTemplateChallenge($challengeId, $organization)
@@ -113,6 +111,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             }
 
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             return false;

@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-
 use App\Models\Challenge;
 use App\Models\TemplateChallenge;
 
@@ -33,6 +32,7 @@ class ChallengeTemplateService
             $templateChallenge->is_open = $originalChallenge->is_open;
             $templateChallenge->is_auto_created = $originalChallenge->is_auto_created;
             $templateChallenge->save();
+
             return $templateChallenge;
         } catch (\Exception $e) {
             return false;

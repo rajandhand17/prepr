@@ -204,7 +204,7 @@ class ChallengeRequirementService
         try {
             $challengeRequirement = ChallengeRequirement::where('challenge_id', $challenge_id)->get();
             if ($challengeRequirement) {
-                foreach ($challengeRequirement as $challenge){
+                foreach ($challengeRequirement as $challenge) {
                     $templateChallengeRequirement = new TemplateChallengeRequirement();
                     $templateChallengeRequirement->template_challenge_id = $templateChallengeId;
                     $templateChallengeRequirement->min_rank = $challenge->min_rank;

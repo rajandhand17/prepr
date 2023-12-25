@@ -17,7 +17,7 @@ class ChallengeTemplateRequirementService
                     $templateChallengeRequirement = new TemplateChallengeRequirement();
                     $templateChallengeRequirement->template_challenge_id = $templateChallengeId;
                     $templateChallengeRequirement->min_rank = $challenge->min_rank;
-                    $templateChallengeRequirement->project_submission_requirement_ids=json_encode($challenge->project_submission_requirement_ids);
+                    $templateChallengeRequirement->project_submission_requirement_ids = json_encode($challenge->project_submission_requirement_ids);
                     $templateChallengeRequirement->max_project_submission = $challenge->max_project_submission;
                     $templateChallengeRequirement->max_project_associate = $challenge->max_project_associate;
                     $templateChallengeRequirement->min_experience = $challenge->min_experience;
@@ -31,9 +31,11 @@ class ChallengeTemplateRequirementService
                     $templateChallengeRequirement->save();
                 }
             }
+
             return true;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }

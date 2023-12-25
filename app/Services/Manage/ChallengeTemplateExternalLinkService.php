@@ -23,6 +23,7 @@ class ChallengeTemplateExternalLinkService
                     $templateChallengeExternalLink->save();
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;
