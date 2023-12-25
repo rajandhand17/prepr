@@ -115,7 +115,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             DB::rollback();
             return false;
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
