@@ -47,6 +47,7 @@ class ResourceGroupSocialActivitiesService
         try {
             if (auth()->check()) {
                 $columnValue = self::getColumnNameValue($action);
+
                 if ($columnValue !== false) {
                     $organization_ids = ResourceGroupSocialActivity::where(
                         [
