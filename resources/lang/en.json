@@ -683,6 +683,7 @@
     "labels.labels_achi_rc": "Reply chat",
     "labels.labels_achi_cc": "Create chat",
     "labels.labels_achi_io": "Issued on",
-    "labels.labels_achi_eo": "Expires on"
-
+    "labels.labels_achi_eo": "Expires on",
+    "responses.organization_id":"The Organization id field is required",
+    "responses.organization_exists":"This Organization id is not exists"
 }
