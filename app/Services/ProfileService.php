@@ -48,25 +48,29 @@ class ProfileService
             return false;
         }
     }
-    public function deleteUserExperience($id){
-        try{
-         return  UserExperience::where('id',$id)->delete();
-        }catch(\Exception $e) {
+
+    public function deleteUserExperience($id)
+    {
+        try {
+            return  UserExperience::where('id', $id)->delete();
+        } catch(\Exception $e) {
             return false;
         }
     }
+
     public function addPersonalDetail($request)
     {
         try {
-            $userPersonalDetails= UserPersonal::updateOrCreate([
+            $userPersonalDetails = UserPersonal::updateOrCreate([
                 'user_id' => auth()->user()->id,
-            ],[
-                "age" => $request->age,
-                "about" => $request->about,
-                "purpose" => $request->purpose,
-                "gender" => $request->gender,
-                "date_of_birth" => $request->dob,
+            ], [
+                'age'           => $request->age,
+                'about'         => $request->about,
+                'purpose'       => $request->purpose,
+                'gender'        => $request->gender,
+                'date_of_birth' => $request->dob,
             ]);
+
             return $userPersonalDetails;
         } catch(\Exception $e) {
             return false;
@@ -94,21 +98,24 @@ class ProfileService
         }
     }
 
-    public static function deleteEducation($id){
+    public static function deleteEducation($id)
+    {
         try {
-            return UserEducation::where('id', '=',$id)->delete();
-        }catch(\Exception $e) {
+            return UserEducation::where('id', '=', $id)->delete();
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public static function checkUserEducation($id){
+    public static function checkUserEducation($id)
+    {
         try {
-            return UserEducation::where('id', '=',$id)->first();
-        }catch (\Exception $e) {
+            return UserEducation::where('id', '=', $id)->first();
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function addPatient($request)
     {
         try {
@@ -121,6 +128,7 @@ class ProfileService
             $addPatent->description = $request->description;
             $addPatent->save();
             DB::commit();
+
             return $addPatent;
         } catch(\Exception $e) {
             return false;
@@ -185,47 +193,56 @@ class ProfileService
         }
     }
 
-    public static function checkUserSkillDeleteExists($id){
+    public static function checkUserSkillDeleteExists($id)
+    {
         try {
             return UserSkills::where('id', $id)->first();
-        }catch(\Exception $e) {
-            return false;
-        }
-    }
-    public static function checkUserExperience($id){
-        try {
-            return UserExperience::where('id',$id)->first();
-        }catch(\Exception $e) {
-            return false;
-        }
-    }
-    public static function checkUserPatient($id){
-        try {
-            return UserPatient::where('id',$id)->first();
-        }catch (\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public static function deleteUserPatient($id){
+    public static function checkUserExperience($id)
+    {
         try {
-            return UserPatient::where('id',$id)->delete();
-        }catch(\Exception $e) {
+            return UserExperience::where('id', $id)->first();
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public static function checkUserCertificate($id){
+    public static function checkUserPatient($id)
+    {
         try {
-            return UserCertificate::where('id',$id)->first();
-        }catch(\Exception $e) {
+            return UserPatient::where('id', $id)->first();
+        } catch (\Exception $e) {
             return false;
         }
     }
-    public static function deleteUserCertificate($id){
+
+    public static function deleteUserPatient($id)
+    {
         try {
-            return UserCertificate::where('id',$id)->delete();
-        }catch(\Exception $e) {
+            return UserPatient::where('id', $id)->delete();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkUserCertificate($id)
+    {
+        try {
+            return UserCertificate::where('id', $id)->first();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteUserCertificate($id)
+    {
+        try {
+            return UserCertificate::where('id', $id)->delete();
+        } catch(\Exception $e) {
             return false;
         }
     }
