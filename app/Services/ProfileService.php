@@ -20,7 +20,6 @@ class ProfileService
             if ($profile != null) {
                 return $profile;
             }
-
             return false;
         } catch(\Exception $e) {
             return false;
