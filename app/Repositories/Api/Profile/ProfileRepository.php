@@ -67,10 +67,10 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function addPatient($request)
+    public function addPatent($request)
     {
         try {
-            return $this->profileService->addPatient($request);
+            return $this->profileService->addPatent($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -103,10 +103,10 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function deleteUserPatient($id)
+    public function deleteUserPatent($id)
     {
         try {
-            return $this->profileService->deleteUserPatient($id);
+            return $this->profileService->deleteUserPatent($id);
         } catch (\Exception $e) {
             return false;
         }

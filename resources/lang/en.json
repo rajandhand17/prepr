@@ -693,7 +693,7 @@
     "responses.user_personal_created": "Congratulations! You have successfully created a User Personal.",
     "responses.user_date_of_birth": "The Date of birth is required!",
     "responses.user_experience_failed": "Oops! The creating user experience has failed.",
-    "responses.user_experience_created": "Congratulations! You have successfully created users experience.",
+    "responses.user_experience_update": "Congratulations! You have successfully update users experience.",
     "responses.address_required": "The address field is required",
     "responses.user_education_created": "Congratulations! You have successfully added a User Education.",
     "responses.user_education_failed": "Oops! The adding user Education has failed.",
@@ -725,6 +725,12 @@
     "responses.user_patient_not_found": "This user patient is not available",
     "responses.user_certificate_not_found": "This user certificate is not available",
     "responses.user_certificate_deleted": "Congratulations! You have successfully deleted your certificate",
-    "responses.user_certificate_failed": "Oops! You have failed to delete your certificate"
+    "responses.user_certificate_failed": "Oops! You have failed to delete your certificate",
+    "responses.numeric_allowed_only": "Only numbers are allowed",
+    "responses.between_allowed_purpose": "The purpose field must be between 0 and 12.",
+    "responses.between_allowed_user_type": "The user type field must be between 0 and 23.",
+    "responses.gender_between": "The gender value should be male,female,other or decline_to_answer",
+    "responses.date_of_birth_date": "The date of birth field must contain a date that is on or before 10 years ago.",
+    "responses.true_or_false": "The value should be true or false"
 
 }

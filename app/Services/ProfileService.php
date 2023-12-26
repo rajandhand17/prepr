@@ -2,14 +2,17 @@
 
 namespace App\Services;
 
+use App\Models\CampusConnectStudentInformation;
 use App\Models\User;
 use App\Models\UserCertificate;
 use App\Models\UserEducation;
 use App\Models\UserExperience;
-use App\Models\UserPatient;
+use App\Models\UserPatent;
 use App\Models\UserPersonal;
+use App\Models\UserPersonalFile;
 use App\Models\UserSkills;
 use DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileService
 {
@@ -29,21 +32,22 @@ class ProfileService
     public function addUserExperience($request)
     {
         try {
-            DB::beginTransaction();
-            $profile = new UserExperience();
-            $profile->user_id = auth()->user()->id;
-            $profile->company = $request->company;
-            $profile->position = $request->position;
-            $profile->start_date = $request->start_date;
-            $profile->end_date = $request->end_date;
-            $profile->address = $request->address;
-            $profile->state = $request->state;
-            $profile->country = $request->country;
-            $profile->description = $request->description;
-            $profile->save();
-            DB::commit();
-
-            return $profile;
+           $deleteExistingExperience=UserExperience::where('user_id',auth()->user()->id)->forceDelete();
+            $userInput = $request->all();
+            $input = $request->all();
+            foreach ($userInput['company'] as $key=> $value){
+                $userExperience=UserExperience::create(['user_id' =>auth()->user()->id,
+                    'company' => $value,
+                    'position' => $input['position'][$key],
+                    'start_date' => $input['start_date'][$key],
+                    'end_date' => $input['end_date'][$key],
+                    'address' => $input['address'][$key],
+                    'state' => $input['state'][$key],
+                    'country' => $input['country'][$key],
+                    'description' => $input['description'][$key],
+                ]);
+            }
+            return $userExperience;
         } catch(\Exception $e) {
             return false;
         }
@@ -61,43 +65,148 @@ class ProfileService
     public function addPersonalDetail($request)
     {
         try {
+            $gender = config('constants.gender.decline_to_answer');
+            switch ($request->gender){
+                case 'male':
+                    $gender = config('constants.gender.male');
+                    break;
+                case 'female':
+                    $gender = config('constants.gender.female');
+                    break;
+                case 'other':
+                    $gender = config('constants.gender.other');
+                    break;
+                default:
+                    $gender = config('constants.gender.decline_to_answer');
+                    break;
+            }
+            $recent_immigrant=config('constants.recent_immigration.no');
+            switch ($request->recent_immigrant) {
+                case 'true':
+                    $recent_immigrant=config('constants.recent_immigrant.yes');
+                    break;
+                case 'false':
+                    $recent_immigrant=config('constants.recent_immigration.no');
+                    break;
+                default:
+                    $recent_immigrant=config('constants.recent_immigration.no');
+            }
+
+            $indigenous_group=config('constants.indigenous_group.no');
+            switch ($request->indigenous_group) {
+                case 'true':
+                    $indigenous_group=config('constants.indigenous_group.yes');
+                    break;
+                case 'false':
+                    $indigenous_group=config('constants.indigenous_group.no');
+                    break;
+                default:
+                    $indigenous_group=config('constants.indigenous_group.no');
+            }
+
+            $visible_minority=config('constants.visible_minority.no');
+            switch ($request->visible_minority) {
+                case 'true':
+                    $visible_minority=config('constants.visible_minority.yes');
+                    break;
+                case 'false':
+                    $visible_minority=config('constants.visible_minority.no');
+                    break;
+                default:
+                    $visible_minority=config('constants.visible_minority.no');
+            }
+            $disability=config('constants.disability.no');
+            switch ($request->disability) {
+                case 'true':
+                    $disability=config('constants.disability.yes');
+                    break;
+                case 'false':
+                    $disability=config('constants.disability.no');
+                    break;
+                default:
+                    $disability=config('constants.disability.no');
+            }
+
             $userPersonalDetails = UserPersonal::updateOrCreate([
                 'user_id' => auth()->user()->id,
             ], [
                 'age'           => $request->age,
                 'about'         => $request->about,
                 'purpose'       => $request->purpose,
-                'gender'        => $request->gender,
-                'date_of_birth' => $request->dob,
+                'user_type'     => $request->user_type,
+                'gender'        => $gender,
+                'date_of_birth' => $request->date_of_birth,
+                'recent_immigrant'=> $recent_immigrant,
+                'indigenous_group'=> $indigenous_group,
+                'visible_minority'=> $visible_minority,
+                'disability'      => $disability,
             ]);
-
-            return $userPersonalDetails;
+             self::uploadResume($request);
+             return $userPersonalDetails;
         } catch(\Exception $e) {
             return false;
         }
     }
 
+    public static function uploadResume($request){
+        try {
+            $resumeFile = $request->file('resume');
+            $resumePath = 'uploads/personal_files/' . auth()->user()->id . '_' . $resumeFile->getClientOriginalName();
+            $storeResumePath=Storage::disk('s3')->put($resumePath, file_get_contents($resumeFile));
+            $storeData= UserPersonalFile::updateOrCreate(
+                ['user_id' => auth()->user()->id, 'name' => $resumePath],
+                [
+                    'original' => $resumeFile->getClientOriginalName(),
+                    'path' => 'uploads/personal_files',
+                    'public' => '1'
+                ]
+            );
+           return $storeData;
+        }catch(\Exception $e){
+            return false;
+        }
+    }
     public function addEducation($request)
     {
         try {
-            DB::beginTransaction();
-            $createAddEducation = new UserEducation();
-            $createAddEducation->user_id = auth()->user()->id;
-            $createAddEducation->university = $request->university;
-            $createAddEducation->degree = $request->degree;
-            $createAddEducation->start_date = $request->start_date;
-            $createAddEducation->end_date = $request->end_date;
-            $createAddEducation->address = $request->address;
-            $createAddEducation->description = $request->description;
-            $createAddEducation->save();
-            DB::commit();
-
+            $education=UserEducation::where('user_id',auth()->user()->id)->forceDelete();
+            $input=$request->all();
+            foreach($input['university'] as $key => $value) {
+                $createAddEducation=  UserEducation::create([
+                    "user_id"    => auth()->user()->id,
+                    "university" => $value,
+                    "degree"     =>$input['degree'][$key],
+                    "start_date" =>$input['start_date'][$key],
+                    "end_date"   =>$input['end_date'][$key],
+                    "address"    =>$input['address'][$key],
+                    "description"=>$input['description'][$key],
+                ]);
+            }
+            if ($request->enrollment_status == 'yes') {
+               $records= self::addCampusConnectStudentInformation($request);
+            }
             return $createAddEducation;
         } catch(\Exception $e) {
             return false;
         }
     }
-
+    public function addCampusConnectStudentInformation($request){
+        try {
+                $campus_info = CampusConnectStudentInformation::create([
+                    'user_id' => auth()->user()->id,
+                    'student_number' => $request->student_number,
+                    'current_program' => $request->current_program,
+                    'current_degree' => $request->current_degree,
+                    'current_institution' => $request->current_institution,
+                    'institution_type' => $request->institution_type,
+                    'enrollment_status' => $request->enrollment_status,
+                    'current_year' => $request->current_year,
+                ]);
+                return true;
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
     public static function deleteEducation($id)
     {
         try {
@@ -116,20 +225,22 @@ class ProfileService
         }
     }
 
-    public function addPatient($request)
+    public function addPatent($request)
     {
         try {
-            DB::beginTransaction();
-            $addPatent = new UserPatient();
-            $addPatent->user_id = auth()->user()->id;
-            $addPatent->title = $request->title;
-            $addPatent->name = $request->name;
-            $addPatent->patent_date = $request->patent_date;
-            $addPatent->description = $request->description;
-            $addPatent->save();
-            DB::commit();
-
-            return $addPatent;
+            $deleteExistingPatent=UserPatent::where('user_id', '=', auth()->user()->id)->delete();
+            $input=$request->all();
+            $inputData=$input;
+            foreach ($inputData['title'] as $key => $value){
+                $create=UserPatent::create([
+                    'user_id'    => auth()->user()->id,
+                    "title"      =>$value,
+                    "name"       =>$input['name'][$key],
+                    "patent_date"=>$input['patent_date'][$key],
+                    "description"=>$input['description'][$key],
+                ]);
+            }
+            return $create;
         } catch(\Exception $e) {
             return false;
         }
@@ -138,22 +249,15 @@ class ProfileService
     public function addSkills($request)
     {
         try {
-            DB::beginTransaction();
-            $checkSKillsExistsOrNot = UserSkills::where(['user_id' => auth()->user()->id, 'skill' => $request->skill_id])->first();
-            if ($checkSKillsExistsOrNot == null) {
-                $addSkills = new UserSkills();
-                $addSkills->user_id = auth()->user()->id;
-                $addSkills->skill = $request->skill_id;
-                $addSkills->save();
-                DB::commit();
-
-                return $addSkills;
+            $deleteSKills=UserSkills::where(['user_id' => auth()->user()->id])->forceDelete();
+            $inputAllSkills = $request->all();
+            foreach($inputAllSkills['skill_id'] as $key => $value){
+                $addSkills = UserSkills::create([
+                    'user_id' => auth()->user()->id,
+                    'skill'   => $value,
+                ]);
             }
-            $checkSKillsExistsOrNot->skill = $request->skill_id;
-            $checkSKillsExistsOrNot->save();
-            DB::commit();
-
-            return $checkSKillsExistsOrNot;
+                return $addSkills;
         } catch(\Exception $e) {
             return false;
         }
@@ -162,18 +266,21 @@ class ProfileService
     public function addCertificate($request)
     {
         try {
-            DB::beginTransaction();
-            $createdCertificate = new UserCertificate();
-            $createdCertificate->user_id = auth()->user()->id;
-            $createdCertificate->company = $request->company;
-            $createdCertificate->name = $request->name;
-            $createdCertificate->start_date = $request->start_date;
-            $createdCertificate->end_date = $request->end_date;
-            $createdCertificate->description = $request->description;
-            $createdCertificate->save();
-            DB::commit();
+            $deleteExisitingCertificate=UserCertificate::where("user_id",auth()->user()->id)->forceDelete();
+            $allInputs=$request->all();
+            $inputs=$request->all();
 
-            return $createdCertificate;
+            foreach ($allInputs['company'] as $key => $value){
+             $certificate=UserCertificate::create([
+                    "user_id" => auth()->user()->id,
+                    "company"=>$value,
+                    "name"=>$inputs["name"][$key],
+                    "start_date"=>$inputs["start_date"][$key],
+                    "end_date"=>$inputs["end_date"][$key],
+                    "description"=>$inputs["description"][$key],
+                ]);
+            }
+            return $certificate;
         } catch(\Exception $e) {
             return false;
         }
@@ -211,19 +318,19 @@ class ProfileService
         }
     }
 
-    public static function checkUserPatient($id)
+    public static function checkUserPatent($id)
     {
         try {
-            return UserPatient::where('id', $id)->first();
+            return UserPatent::where('id', $id)->first();
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function deleteUserPatient($id)
+    public static function deleteUserPatent($id)
     {
         try {
-            return UserPatient::where('id', $id)->delete();
+            return UserPatent::where('id', $id)->delete();
         } catch(\Exception $e) {
             return false;
         }

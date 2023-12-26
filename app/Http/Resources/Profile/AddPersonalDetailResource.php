@@ -20,6 +20,7 @@ class AddPersonalDetailResource extends JsonResource
             'age'    => $this->age,
             'about'  => $this->about,
             'gender' => $this->gender,
+
         ];
 
         return $response;

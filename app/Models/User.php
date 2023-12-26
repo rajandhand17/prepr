@@ -83,7 +83,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserExperience::class);
     }
+    public function userEducation()
+    {
+        return $this->hasMany(UserEducation::class);
+    }
 
+    public function userPatents(){
+        return $this->hasMany(UserPatent::class);
+    }
+
+    public function userSkills(){
+        return $this->hasMany(UserSkills::class);
+    }
+
+    public function userCertificates(){
+        return $this->hasMany(UserCertificate::class);
+    }
     /**login apis */
     public function login($request)
     {

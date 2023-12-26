@@ -25,11 +25,11 @@ class AddCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company'       => 'required',
-            'name'          => 'required',
-            'start_date'    => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
-            'end_date'      => 'required|date|after:start_date',
-            'description'   => 'required',
+            'company.*'       => 'required',
+            'name.*'          => 'required',
+            'start_date.*' => 'required|before:tomorrow',
+            'end_date.*'   => 'required|after_or_equal:start_date.*',
+            'description.*'   => 'required',
         ];
     }
 

@@ -248,6 +248,13 @@ return [
         'scheduled' => '2',
     ],
 
+    'gender'=>[
+        'male' => '0',
+        'female' => '1',
+        'other' => '2',
+        'decline_to_answer'=>'3',
+    ],
+
     'user_achievement_type'=> [
         'lab'                => '0',
         'lab_program'        => '1',
@@ -260,5 +267,24 @@ return [
         'imported_award'     => '8',
         'winner_award'       => '9',
         'participation_award'=> '10',
+    ],
+
+    'recent_immigrant'=> [
+        'yes'    => '1',
+        'no'     => '2',
+    ],
+
+    'indigenous_group'=> [
+        'yes'    => '1',
+        'no'     => '2',
+    ],
+
+    'visible_minority'=> [
+        'yes'    => '1',
+        'no'     => '2',
+    ],
+    'disability'=> [
+        'yes'    => '1',
+        'no'     => '2',
     ],
 ];

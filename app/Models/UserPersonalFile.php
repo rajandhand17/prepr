@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserSkills extends Model
+class UserPersonalFile extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'user_skills';
+    protected $table="user_personal_files";
 
-    protected $fillable = [
-        'user_id', 'skill', 'pinned',
+    protected $fillable=[
+        "user_id",
+        "original",
+        "name",
+        "path",
+        "public",
     ];
-
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

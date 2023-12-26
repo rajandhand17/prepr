@@ -25,10 +25,10 @@ class AddPatentRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'title'        => 'required',
-            'name'         => 'required',
-            'description'  => 'required',
-            'patent_date'  => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
+            'title.*'        => 'required',
+            'name.*'         => 'required',
+            'description.*'  => 'required',
+            'patent_date'  => 'required|before:tomorrow',
         ];
 
         return $base_rules;

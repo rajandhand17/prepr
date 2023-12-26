@@ -23,28 +23,31 @@ class AddExperienceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company'    => 'required',
-            'position'   => 'required',
-            'start_date' => 'required|date|before_or_equal:'.Carbon::now()->toDateTimeString(),
-            'end_date'   => 'required|date|after:start_date',
-            'address'    => 'required',
-            'state'      => 'required',
-            'country'    => 'required',
-            'description'=> 'required',
+            'company.*'    => 'required|max:255',
+            'description.*'=> 'required',
+            'start_date.*' => 'required|before:tomorrow',
+            'end_date.*'   => 'required|after_or_equal:start_date.*',
+            'position.*'   => 'required',
+            'address.*'    => 'required',
+            'state.*'      => 'required',
+            'country.*'    => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'company.required'     => __('response.company_required'),
-            'position.required'    => __('response.position_required'),
-            'start_date.required'  => __('response.start_date_required'),
-            'end_date.required'    => __('response.end_date_required'),
-            'address.required'     => __('response.address_required'),
-            'state.required'       => __('response.state_required'),
-            'country.required'     => __('response.country_required'),
-            'description.required' => __('response.description_required'),
+            'company.*.required'     => __('response.company_required'),
+            'company.*.max'          => __('response.max_content_255'),
+            'description.*.required' => __('response.description_required'),
+            'position.*.required'    => __('response.position_required'),
+            'start_date.*.required'  => __('response.start_date_required'),
+            'start_date.*.before'    => __('response.before_or_equal'),
+            'end_date.*.required'    => __('response.end_date_required'),
+            'end_date.*.after_or_equal'    => __('response.end_date_required'),
+            'address.*.required.*'     => __('response.address_required'),
+            'state.required.*'       => __('response.state_required'),
+            'country.required.*'     => __('response.country_required'),
         ];
     }
 }

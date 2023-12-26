@@ -24,13 +24,15 @@ class AddEducationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'university'     => 'required',
-            'degree'         => 'required',
-            'start_date'     => 'required|date|before:tomorrow',
-            'end_date'       => 'required|date|after:start_date',
-            'address'        => 'required',
-            'description'    => 'required',
+            'university.*'     => 'required',
+            'degree.*'         => 'required',
+            'start_date.*' => 'required|before:tomorrow',
+            'end_date.*'   => 'required|after_or_equal:start_date.*',
+            'address.*'        => 'required',
+            'description.*'    => 'required',
+
         ];
+
     }
 
     public function messages()
