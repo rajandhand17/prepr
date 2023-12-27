@@ -24,15 +24,15 @@ class AddSkillsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'skill_id' => 'required',
+            'skill_id' => 'required|array',
         ];
     }
 
     public function messages()
     {
         return [
-            'user_id.required'       => __('responses.user_id_required'),
             'skill_id.required'      => __('responses.skill_id_required'),
+            'skill_id.array'         => __('responses.status_array'),
         ];
     }
 

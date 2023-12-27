@@ -25,13 +25,13 @@ class AddEducationRequest extends FormRequest
     {
         $return= [
             'university'       => 'required|array',
-            'university.*'     => 'required',
             'degree'           => 'required|array',
-            'degree.*'         => 'required',
-            'start_date.*'     => 'required|before:tomorrow',
-            'end_date.*'       => 'required|after_or_equal:start_date.*',
-            'address.*'        => 'required',
-            'description.*'    => 'required',
+            'start_date'       => 'required|array',
+            'start_date.*'     => 'before:tomorrow',
+            'end_date'         => 'required|array',
+            'end_date.*'       => 'after_or_equal:start_date.*',
+            'address'          => 'required|array',
+            'description'      => 'required|array',
         ];
         if ($this->enrollment_status == 'yes') {
             $return = [
@@ -50,14 +50,27 @@ class AddEducationRequest extends FormRequest
     public function messages()
     {
         return[
-            'user_id.required'          => __('responses.user_id_required'),
-            'university.array'          => __('responses.university_required'),
-            'university.required'       => __('responses.university_required'),
-            'degree.required'           => __('responses.university_required'),
-            'start_date.required'       => __('responses.university_required'),
-            'start_date.before_or_equal'=> __('responses.before_or_equal'),
-            'end_date.required'         => __('responses.university_required'),
-            'end_date.before_or_equal'  => __('responses.before_or_equal'),
+            'university.array'           => __('responses.array_status'),
+            'university.required'        => __('responses.university_required'),
+            'degree.required'            => __('responses.university_required'),
+            'degree.array'               => __('responses.array_status'),
+            'start_date.required'        => __('response.start_date_required'),
+            'start_date.array'           => __('response.array_status'),
+            'start_date.*.before'        => __('response.before_or_equal'),
+            'end_date.required'          => __('response.end_date_required'),
+            'end_date.array'             => __('response.array_status'),
+            'end_date.*.after_or_equal'  => __('response.end_date_required'),
+            'address.required'           => __('response.required_field'),
+            'address.array'              => __('response.array_status'),
+            'description.required'       => __('response.required_field'),
+            'description.array'          => __('response.array_status'),
+            'student_number.required'    => __('responses.required_field'),
+            'current_program.required'    => __('responses.required_field'),
+            'current_degree.required'     => __('responses.required_field'),
+            'current_institution.required'=> __('responses.required_field'),
+            'institution_type.required'   => __('responses.required_field'),
+            'current_year.required'       => __('responses.required_field')
+
         ];
     }
 

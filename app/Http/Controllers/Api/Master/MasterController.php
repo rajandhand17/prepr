@@ -1311,23 +1311,9 @@ class MasterController extends AppBaseController
     public function getCountries(Request $request)
     {
         try {
-            $getCountryList = $this->masterRepository->getCountriesList($request->language, $request->search);
+            $getCountryList = $this->masterRepository->getCountries($request);
             if ($getCountryList) {
                 return $this->sendResponse(AddCountryListResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
-            }
-
-            return $this->sendError(__('responses.countries_fetched_failed'), 404);
-        } catch(\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function getInstitutions(Request $request)
-    {
-        try {
-            $getCountryList = $this->masterRepository->getInstitutionsList($request->language, $request->search);
-            if ($getCountryList) {
-                return $this->sendResponse(AddInstitutionsResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
             }
 
             return $this->sendError(__('responses.countries_fetched_failed'), 404);

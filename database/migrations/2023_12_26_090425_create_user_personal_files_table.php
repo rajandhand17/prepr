@@ -16,6 +16,7 @@ return new class() extends Migration {
             $table->string('original');
             $table->string('name');
             $table->string('path');
+            $table->enum('type', ['0', '1', '2'])->comment('0->resume, 1->cover letter, 2->other')->default('0');
             $table->tinyInteger('public')->default('1');
             $table->timestamps();
             $table->softDeletes();

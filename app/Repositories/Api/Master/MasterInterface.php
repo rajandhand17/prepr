@@ -54,7 +54,5 @@ interface MasterInterface
 
     public function getTagGroups($request);
 
-    public function getInstitutionsList($language, $search);
-
-    public function getCountriesList($language, $search);
+    public function getCountries($request);
 }

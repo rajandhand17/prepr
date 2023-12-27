@@ -4,16 +4,20 @@ use App\Http\Controllers\Api\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::post('/add-personal-detail', [ProfileController::class, 'addPersonalDetail']);
-    Route::get('/{user_name}', [ProfileController::class, 'show']);
-    Route::post('/add-experience', [ProfileController::class, 'addUserExperience']);
-    Route::post('/add-certificate', [ProfileController::class, 'addCertificate']);
-    Route::post('/add-education', [ProfileController::class, 'addEducation']);
-    Route::post('/add-patent', [ProfileController::class, 'addPatent']);
-    Route::post('/add-skills', [ProfileController::class, 'addSkills']);
-    Route::delete('{id}/delete-experience', [ProfileController::class, 'deleteUserExperience']);
-    Route::delete('{id}/delete-education', [ProfileController::class, 'deleteEducation']);
-    Route::delete('/{id}/delete-skill', [ProfileController::class, 'deleteSkill']);
-    Route::delete('{id}/delete-patent', [ProfileController::class, 'deletePatent']);
-    Route::delete('{id}/delete-certificate', [ProfileController::class, 'deleteCertificate']);
+    Route::get('/{username}', [ProfileController::class, 'show']);
+    Route::post('/personal-detail/add', [ProfileController::class, 'create']);
+    Route::post('/experience/add', [ProfileController::class, 'addExperience']);
+    Route::delete('{id}/experience/delete', [ProfileController::class, 'deleteExperience']);
+    Route::post('/certificate/add', [ProfileController::class, 'addCertificate']);
+    Route::delete('{id}/certificate/delete', [ProfileController::class, 'deleteCertificate']);
+    Route::post('/education/add', [ProfileController::class, 'addEducation']);
+    Route::delete('{id}/education/delete', [ProfileController::class, 'deleteEducation']);
+    Route::post('/patent/add', [ProfileController::class, 'addPatent']);
+    Route::delete('{id}/patent/delete', [ProfileController::class, 'deletePatent']);
+    Route::post('/skills/add', [ProfileController::class, 'addSkills']);
+    Route::delete('/{id}/skill/delete', [ProfileController::class, 'deleteSkill']);
+    Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
+
+
+
 });

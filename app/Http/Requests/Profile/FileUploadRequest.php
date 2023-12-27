@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests\Profile;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AddPatentRequest extends FormRequest
+class FileUploadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,31 +25,19 @@ class AddPatentRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'title'        => 'required|array',
-            'name'         => 'required|array',
-            'description'  => 'required|array',
-            'patent_date'  => 'required|array',
-            'patent_date.*'=> 'before:tomorrow',
-        ];
 
+            'file'          => 'required|mimes:pdf,doc,docx|max:1024',
+        ];
         return $base_rules;
     }
-
     public function messages()
     {
         return [
-            'title.required'         => __('responses.title_required'),
-            'title.array'            => __('responses.status_array'),
-            'name.required'          => __('responses.name_required'),
-            'name.array'             => __('responses.status_array'),
-            'description.required'   => __('responses.description_required'),
-            'description.array'      => __('responses.status_array'),
-            'parent_date.required'   => __('responses.parent_date_required'),
-            'parent_date.array'      => __('responses.status_array'),
-            'parent_date.*.before'   => __('responses.before_or_equal'),
+            'file.required'             =>__('responses.required_field'),
+            'file.max'                  => __('responses.mimes_image_max'),
+            'file.mimes'                => __('responses.files_mimes_image'),
         ];
     }
-
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

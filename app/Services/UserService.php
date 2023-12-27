@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use function Symfony\Component\Translation\t;
 
 class UserService
 {
@@ -55,7 +56,6 @@ class UserService
             if ($user != null) {
                 return $user;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
@@ -73,6 +73,19 @@ class UserService
 
             return $user;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updateUserName($user,$request){
+        try {
+            $user=User::updateOrCreate([
+                'id' => $user->id,
+            ],[
+                "full_name"=> $request->name,
+            ]);
+            return true;
+        }catch (\Exception $e) {
             return false;
         }
     }

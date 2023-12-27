@@ -66,6 +66,20 @@ class SkillService
             if ($getSkillsList) {
                 return $getSkillsList;
             }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getSkillBasedOnSingleId($skill_ids)
+    {
+        try {
+            $getSkillsList = Skill::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+                ->where('id', $skill_ids)->get();
+            if ($getSkillsList) {
+                return $getSkillsList;
+            }
 
             return false;
         } catch (\Exception $e) {

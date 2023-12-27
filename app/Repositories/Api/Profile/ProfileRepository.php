@@ -2,48 +2,73 @@
 
 namespace App\Repositories\Api\Profile;
 
-use App\Services\ProfileService;
+use App\Services\UserCertificateService;
+use App\Services\UserEducationService;
+use App\Services\UserExperienceService;
+use App\Services\UserPatentService;
+use App\Services\UserPersonalService;
+use App\Services\UserService;
+use App\Services\UserSkillsService;
 
 class ProfileRepository implements ProfileInterface
 {
-    private $profileService;
+    private $userService;
 
-    public function __construct(ProfileService $profileService)
+    private $userPersonalService;
+
+    private $userExperienceService;
+
+    private $userEducationService;
+
+    private $userSkillsService;
+
+    private $userPatentsService;
+
+    private $userCertificatesService;
+
+
+    public function __construct(UserCertificateService $userCertificatesService, UserPatentService $userPatentsService,UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService,UserExperienceService $userExperienceService,UserEducationService $userEducationService)
     {
-        $this->profileService = $profileService;
+        $this->userService = $userService;
+        $this->userPersonalService = $userPersonalService;
+        $this->userExperienceService = $userExperienceService;
+        $this->userEducationService = $userEducationService;
+        $this->userSkillsService=$userSkillsService;
+        $this->userPatentsService=$userPatentsService;
+        $this->userCertificatesService=$userCertificatesService;
     }
 
-    public function getProfileBasedOnUserName($user_name)
+    public function getUserByUsername($user_name)
     {
         try {
-            return $this->profileService->getProfileBasedOnUserName($user_name);
+            return $this->userService->getUserByUsername($user_name);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function addPersonalDetail($request)
+    public function createPersonalDetail($request)
     {
         try {
-            return $this->profileService->addPersonalDetail($request);
+            return $this->userPersonalService->createPersonalDetail($request);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function addUserExperience($request)
+    public function addExperience($request)
     {
         try {
-            return $this->profileService->addUserExperience($request);
+            return $this->userExperienceService->addExperience($request);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteUserExperience($id)
+    public function deleteExperience($id)
     {
         try {
-            return $this->profileService->deleteUserExperience($id);
+            return $this->userExperienceService->deleteExperience($id);
         } catch (\Exception $e) {
             return false;
         }
@@ -52,16 +77,23 @@ class ProfileRepository implements ProfileInterface
     public function addEducation($request)
     {
         try {
-            return $this->profileService->addEducation($request);
+            return $this->userEducationService->addEducation($request);
         } catch (\Exception $e) {
             return false;
         }
     }
 
+    public function fileUpload($request){
+        try {
+            return $this->userExperienceService->fileUpload($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
     public function deleteEducation($id)
     {
         try {
-            return $this->profileService->deleteEducation($id);
+            return $this->userEducationService->deleteEducation($id);
         } catch (\Exception $e) {
             return false;
         }
@@ -70,34 +102,7 @@ class ProfileRepository implements ProfileInterface
     public function addPatent($request)
     {
         try {
-            return $this->profileService->addPatent($request);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function addSkills($request)
-    {
-        try {
-            return $this->profileService->addSkills($request);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function addCertificate($request)
-    {
-        try {
-            return $this->profileService->addCertificate($request);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function deleteSkill($id)
-    {
-        try {
-            return $this->profileService->deleteSkill($id);
+            return $this->userPatentsService->addPatent($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -106,7 +111,31 @@ class ProfileRepository implements ProfileInterface
     public function deleteUserPatent($id)
     {
         try {
-            return $this->profileService->deleteUserPatent($id);
+            return $this->userPatentsService->deleteUserPatent($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function addSkills($request)
+    {
+        try {
+            return $this->userSkillsService->addSkills($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function deleteSkill($id)
+    {
+        try {
+            return $this->userSkillsService->deleteSkill($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function addCertificate($request)
+    {
+        try {
+            return $this->userCertificatesService->addCertificate($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -115,7 +144,7 @@ class ProfileRepository implements ProfileInterface
     public function deleteUserCertificate($id)
     {
         try {
-            return $this->profileService->deleteUserCertificate($id);
+            return $this->userCertificatesService->deleteUserCertificate($id);
         } catch (\Exception $e) {
             return false;
         }

@@ -20,4 +20,8 @@ class UserPersonalFile extends Model
         'path',
         'public',
     ];
+
+    public function getOriginalAttribute($value){
+        return config('site-settings.aws_url').$value;
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Resources\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AddSkillsResource extends JsonResource
+class UserPersonalFilesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,11 +14,11 @@ class AddSkillsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $response = [
-            'id'          => $this->id,
-            'skill_id'    => $this->skill,
+        $array = explode("/", $this->name);
+        return [
+            "id"        =>$this->id,
+            "path"      =>$this->original,
+            "name"      =>end($array),
         ];
-
-        return $response;
     }
 }

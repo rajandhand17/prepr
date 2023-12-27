@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Profile;
 
+use App\Services\SkillService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,75 +16,163 @@ class ProfileResource extends JsonResource
      */
     public function toArray(Request $request)
     {
-        $response['user'] = [];
-        $response['user_personal'] = [];
-        $response['user_experience'] = [];
-        $response['user_education'] = [];
-        $response['user_patent'] = [];
-        $response['user_skill'] = [];
-        $response['user_certificates'] = [];
-        $response['user']['id'] = $this->id;
-        $response['user']['username'] = $this->username;
-        $response['user']['email'] = $this->email;
-        $response['user']['profile_image'] = $this->profile_image;
-
-        if ($this->userPersonal) {
-            $response['user_personal']['about'] = $this->userPersonal->about;
-            $response['user_personal']['gender'] = $this->userPersonal->gender;
-            $response['user_personal']['date_of_birth'] = $this->userPersonal->date_of_birth;
-            $response['user_personal']['purpose'] = $this->userPersonal->purpose;
-            $response['user_personal']['user_type'] = $this->userPersonal->user_type;
-            $response['user_personal']['recent_immigrant'] = $this->userPersonal->recent_immigrant;
-            $response['user_personal']['indigenous_group'] = $this->userPersonal->indigenous_group;
-        }
-        if (count($this->userExperience) > 0) {
-            foreach ($this->userExperience as $key=>$single_user_experience) {
-                $response['user_experience'][$key]['company'] = $single_user_experience->company;
-                $response['user_experience'][$key]['position'] = $single_user_experience->position;
-                $response['user_experience'][$key]['start_date'] = $single_user_experience->start_date;
-                $response['user_experience'][$key]['end_date'] = $single_user_experience->end_date;
-                $response['user_experience'][$key]['address'] = $single_user_experience->address;
-                $response['user_experience'][$key]['state'] = $single_user_experience->state;
-                $response['user_experience'][$key]['country'] = $single_user_experience->country;
-                $response['user_experience'][$key]['description'] = $single_user_experience->description;
-            }
-        }
-
-        if (count($this->userEducation) > 0) {
-            foreach ($this->userEducation as $key=> $single_user_education) {
-                $response['user_education'][$key]['university'] = $single_user_education->university;
-                $response['user_education'][$key]['degree'] = $single_user_education->degree;
-                $response['user_education'][$key]['start_date'] = $single_user_education->start_date;
-                $response['user_education'][$key]['end_date'] = $single_user_education->end_date;
-                $response['user_education'][$key]['address'] = $single_user_education->address;
-                $response['user_education'][$key]['description'] = $single_user_education->description;
-            }
-        }
-        if ($this->userPatents) {
-            foreach ($this->userPatents as $key => $single_user_patient) {
-                $response['user_patent'][$key]['title'] = $single_user_patient->title;
-                $response['user_patent'][$key]['name'] = $single_user_patient->name;
-                $response['user_patent'][$key]['patent_date'] = $single_user_patient->patent_date;
-                $response['user_patent'][$key]['description'] = $single_user_patient->description;
-            }
+        switch($this->userPersonal->purpose) {
+            case '0':
+                $purpose = __('responses.switch_purpose_looking_team');
+                break;
+            case '1':
+                $purpose = __('responses.switch_purpose_currently_mentor');
+                break;
+            case '2':
+                $purpose = __('responses.switch_purpose_looking_employers');
+                break;
+            case '3':
+                $purpose = __('responses.switch_purpose_currently_team');
+                break;
+            case '4':
+                $purpose = __('responses.switch_purpose_looking_teammates');
+                break;
+            case '5':
+                $purpose = __('responses.switch_purpose_looking_employees');
+                break;
+            case '6':
+                $purpose = __('responses.switch_purpose_looking_invest');
+                break;
+            case '7':
+                $purpose = __('responses.switch_purpose_looking_mentor');
+                break;
+            case '8':
+                $purpose = __('responses.switch_purpose_looking_for_investors');
+                break;
+            case '9':
+                $purpose = __('responses.switch_purpose_looking_to_create_social_impact');
+                break;
+            case '10':
+                $purpose = __('responses.switch_purpose_looking_to_learn');
+                break;
+            case '11':
+                $purpose = __('responses.switch_purpose_looking_to_solve_problems');
+                break;
+            case '12':
+                $purpose = __('responses.switch_purpose_looking_to_build_skills');
+                break;
+            default:
+                $purpose = null;
+                break;
         }
 
+        switch($this->userPersonal->user_type) {
+            case '0':
+                $user_type = __('responses.switch_user_type_employee');
+                break;
+            case '1':
+                $user_type = __('responses.switch_user_type_investor');
+                break;
+            case '2':
+                $user_type = __('responses.switch_user_type_teacher');
+                break;
+            case '3':
+                $user_type = __('responses.switch_user_type_job_seeker');
+                break;
+            case '4':
+                $user_type = __('responses.switch_user_type_student');
+                break;
+            case '5':
+                $user_type = __('responses.switch_user_type_recent_grad');
+                break;
+            case '6':
+                $user_type = __('responses.switch_user_type_expert');
+                break;
+            case '7':
+                $user_type = __('responses.switch_user_type_employer');
+                break;
+            case '8':
+                $user_type = __('responses.switch_user_type_recent_grad');
+                break;
+            case '9':
+                $user_type = __('responses.switch_user_type_facilitator');
+                break;
+            case '10':
+                $user_type = __('responses.switch_user_type_job_seeker');
+                break;
+            case '11':
+                $user_type = __('responses.switch_user_type_startup');
+                break;
+            case '12':
+                $user_type = __('responses.switch_user_type_learner');
+                break;
+            case '13':
+                $user_type = __('responses.switch_user_type_mentor');
+                break;
+            case '14':
+                $user_type = __('responses.switch_user_type_innovator');
+                break;
+            case '15':
+                $user_type = __('responses.switch_user_type_aspiring_entrepreneur');
+                break;
+            case '16':
+                $user_type = __('responses.switch_user_type_evaluator');
+                break;
+            case '17':
+                $user_type = __('responses.switch_user_type_small_mid_size_business');
+                break;
+            case '18':
+                $user_type = __('responses.switch_user_type_entrepreneur');
+                break;
+            case '19':
+                $user_type = __('responses.switch_user_type_ngo_charity_not_for_profit');
+                break;
+            case '20':
+                $user_type = __('responses.switch_user_type_enterprise');
+                break;
+            case '21':
+                $user_type = __('responses.switch_user_type_applicant');
+                break;
+            case '22':
+                $user_type = __('responses.switch_user_type_educational_institution');
+                break;
+            case '23':
+                $user_type = __('responses.switch_user_type_community_organization');
+                break;
+            default:
+                $user_type = null;
+                break;
+        }
         if ($this->userSkills) {
-            foreach ($this->userSkills as $key => $singluar_skill) {
-                $response['user_skill'][$key] = $singluar_skill->skill;
-            }
+            $associatedSkills = $this->userSkills->pluck('skill');
+            $associatedPinned = $this->userSkills->pluck('pinned');
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id')->put('pinned', $associatedPinned);
         }
+        return [
+            "id"                =>$this->id,
+            "first_name"        =>$this->first_name,
+            "last_name"         => $this->last_name,
+            "full_name"         => $this->full_name,
+            "username"          =>$this->username,
+            "email"             =>$this->email,
+            "country_code"      =>$this->country_code,
+            "phone_number"      =>$this->phone_number,
+            "profile_image"     =>$this->profile_image,
+            "about"             =>$this->userPersonal->about,
+            "age"             =>$this->userPersonal->age,
+            "gender"            =>$this->userPersonal->gender,
+            "date_of_birth"     =>$this->userPersonal->date_of_birth,
+            "purpose"           =>$purpose,
+            "user_type"         =>$user_type,
+            "recent_immigrant"  =>$this->userPersonal->recent_immigrant==1 ? "Yes" : "No",
+            "indigenous_group"  =>$this->userPersonal->indigenous_group==1 ? "Yes" : "No",
+            "visible_minority"  =>$this->userPersonal->visible_minority==1 ? "Yes" : "No",
+            "disability"        =>$this->userPersonal->disability==1 ? "Yes" : "No",
+            "user_experiences"  =>UserExperienceResource::collection($this->userExperience),
+            "user_educations"   =>UserEducationResource::collection($this->userEducation),
+            "user_patents"      =>UserPatentResource::collection($this->userPatents),
+            "user_certificates" =>UserCertificateResource::collection($this->userCertificates),
+            "user_skills"       =>$skills,
+            "user_personal_files"=>UserPersonalFilesResource::collection($this->userPersonalFiles),
 
-        if ($this->userCertificates) {
-            foreach ($this->userCertificates as $key => $singluar_certificate) {
-                $response['user_certificates'][$key]['company'] = $singluar_certificate->company;
-                $response['user_certificates'][$key]['name'] = $singluar_certificate->name;
-                $response['user_certificates'][$key]['start_date'] = $singluar_certificate->start_date;
-                $response['user_certificates'][$key]['end_date'] = $singluar_certificate->end_date;
-                $response['user_certificates'][$key]['description'] = $singluar_certificate->description;
-            }
-        }
 
-        return $response;
+
+        ];
+
     }
 }

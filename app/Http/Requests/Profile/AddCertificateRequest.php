@@ -24,23 +24,33 @@ class AddCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'company'         => 'required|array',
             'company.*'       => 'required',
-            'name.*'          => 'required',
-            'start_date.*'    => 'required|before:tomorrow',
-            'end_date.*'      => 'required|after_or_equal:start_date.*',
-            'description.*'   => 'required',
+            'name'            => 'required|array',
+            'start_date'      => 'required|array',
+            'start_date.*'    => 'before:tomorrow',
+            'end_date'        => 'required|array',
+            'end_date.*'      => 'after_or_equal:start_date.*',
+            'description'     => 'required|array',
         ];
     }
 
     public function messages()
     {
         return [
-            'user_id.required'      => __('responses.user_id_required'),
             'company.required'      => __('responses.company_required'),
+            'company.array'         => __('responses.array_status'),
+            'company.*.required'    => __('responses.company_required'),
             'name.required'         => __('responses.name_required'),
+            'name.array'            => __('responses.array_status'),
             'start_date.required'   => __('responses.start_date_required'),
+            'start_date.array'      => __('responses.array_status'),
+            'start_date.*.before'      => __('responses.before_or_equal'),
             'end_date.required'     => __('responses.end_date_required'),
+            'end_date.array'        => __('responses.array_status'),
+            'end_date.*.after_or_equal'=> __('responses.after_start'),
             'description.required'  => __('responses.description_required'),
+            'description.array'     => __('responses.array_status'),
         ];
     }
 
