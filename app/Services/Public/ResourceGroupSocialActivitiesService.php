@@ -54,6 +54,7 @@ class ResourceGroupSocialActivitiesService
                             $columnValue['column'] => $columnValue['action'],
                         ]
                     )->get();
+
                     return $organization_ids;
                 }
 
