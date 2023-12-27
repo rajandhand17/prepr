@@ -27,12 +27,14 @@ class LabTemplateController extends AppBaseController
             if (!$lab) {
                 return $this->sendError(__('responses.lab_slug_not_found'), 404);
             }
+
             $createdLabTemplate = $this->labTemplateRepository->createLabTemplate($slug, $lab);
+            dd($createdLabTemplate);
             if ($createdLabTemplate) {
                 return $this->sendResponse(LabTemplateResource::make($createdLabTemplate), __('responses.template_lab_stored_success'), 200);
             }
             return $this->sendError(__('responses.template_lab_stored_failed'), 400);
-        } catch (\Exception $e) {
+        }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

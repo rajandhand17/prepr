@@ -38,13 +38,13 @@ class LabTemplateRepository implements LabTemplateInterface
         try {
             $createdTemplateLab = DB::transaction(function () use ($slug, $lab) {
                 $createLabTemplate = $this->labTemplateService->createLabTemplate($slug);
-                $createdLabTemplateAddress = $this->labTemplateAddressService->createLabTemplateAddress($createLabTemplate, $lab);
-                $createdLabTemplateSkillAssociations = $this->labTemplateSkillsGroupStackService->createLabTemplateSkillsGroupsStack($createLabTemplate, $lab);
-                $createdLabTemplateTagAssociations = $this->labTemplateTagsGroupsService->createLabTemplateSkillsGroupsStack($createLabTemplate, $lab);
-                $createdLabTemplateExternalLinks = $this->labTemplateExternalLinksService->createLabTemplateExternalLinks($createLabTemplate, $lab);
-                $createdLabTemplateAchievement = $this->labTemplateAchievementsService->createLabTemplateAchievement($createLabTemplate, $lab);
+//                $createdLabTemplateAddress = $this->labTemplateAddressService->createLabTemplateAddress($createLabTemplate, $lab);
+//                $createdLabTemplateSkillAssociations = $this->labTemplateSkillsGroupStackService->createLabTemplateSkillsGroupsStack($createLabTemplate, $lab);
+//                $createdLabTemplateTagAssociations = $this->labTemplateTagsGroupsService->createLabTemplateSkillsGroupsStack($createLabTemplate, $lab);
+//                $createdLabTemplateExternalLinks = $this->labTemplateExternalLinksService->createLabTemplateExternalLinks($createLabTemplate, $lab);
+//                $createdLabTemplateAchievement = $this->labTemplateAchievementsService->createLabTemplateAchievement($createLabTemplate, $lab);
                 $createdLabTemplateAssociations = $this->labTemplateComponentAssociationService->createLabTemplateAssociation($createLabTemplate, $lab);
-
+                dd($createdLabTemplateAssociations);
                 return [
                     'createdLabTemplate'                  => $createLabTemplate,
                     'createdLabTemplateAddress'           => $createdLabTemplateAddress,
@@ -73,6 +73,7 @@ class LabTemplateRepository implements LabTemplateInterface
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
 
             return false;
