@@ -23,7 +23,7 @@ class AddEducationRequest extends FormRequest
      */
     public function rules(): array
     {
-        $return= [
+        $return = [
             'university.*'     => 'required',
             'degree.*'         => 'required',
             'start_date.*'     => 'required|before:tomorrow',
@@ -32,15 +32,16 @@ class AddEducationRequest extends FormRequest
             'description.*'    => 'required',
         ];
         if ($this->enrollment_status == 'yes') {
-            $return=[
-                'student_number'=>'required',
-                'current_program'=>'required',
-                'current_degree'=>'required',
-                'current_institution'=>'required',
-                'institution_type'=>'required',
-                'current_year'=>'required',
+            $return = [
+                'student_number'     => 'required',
+                'current_program'    => 'required',
+                'current_degree'     => 'required',
+                'current_institution'=> 'required',
+                'institution_type'   => 'required',
+                'current_year'       => 'required',
             ];
         }
+
         return $return;
     }
 

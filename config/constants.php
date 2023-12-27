@@ -248,11 +248,11 @@ return [
         'scheduled' => '2',
     ],
 
-    'gender'=>[
-        'male' => '0',
-        'female' => '1',
-        'other' => '2',
-        'decline_to_answer'=>'3',
+    'gender'=> [
+        'male'             => '0',
+        'female'           => '1',
+        'other'            => '2',
+        'decline_to_answer'=> '3',
     ],
 
     'user_achievement_type'=> [

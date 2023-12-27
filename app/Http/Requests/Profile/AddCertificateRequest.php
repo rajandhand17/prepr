@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Profile;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,8 +26,8 @@ class AddCertificateRequest extends FormRequest
         return [
             'company.*'       => 'required',
             'name.*'          => 'required',
-            'start_date.*' => 'required|before:tomorrow',
-            'end_date.*'   => 'required|after_or_equal:start_date.*',
+            'start_date.*'    => 'required|before:tomorrow',
+            'end_date.*'      => 'required|after_or_equal:start_date.*',
             'description.*'   => 'required',
         ];
     }
