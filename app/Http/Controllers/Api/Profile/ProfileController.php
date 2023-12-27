@@ -205,7 +205,6 @@ class ProfileController extends AppBaseController
             if ($deleteCertificate) {
                 return $this->sendResponse(null, __('responses.user_certificate_deleted'));
             }
-
             return $this->sendError(__('responses.user_certificate_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
