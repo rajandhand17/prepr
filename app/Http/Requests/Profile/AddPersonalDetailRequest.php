@@ -31,10 +31,10 @@ class AddPersonalDetailRequest extends FormRequest
             'user_type'         => 'required|numeric|between:0,23',
             'gender'            => 'required|in:male,female,other,decline_to_answer',
             'date_of_birth'     => 'required|date|before_or_equal:'.Carbon::now()->subYears(10)->toDateTimeString(),
-            'recent_immigrant'  =>'in:true,false',
-            'indigenous_group'  =>'in:true,false',
-            'visible_minority'  =>'in:true,false',
-            'disability'        =>'in:true,false',
+            'recent_immigrant'  => 'in:true,false',
+            'indigenous_group'  => 'in:true,false',
+            'visible_minority'  => 'in:true,false',
+            'disability'        => 'in:true,false',
             'resume.*'          => 'mimes:pdf,doc,docx',
         ];
 
@@ -60,7 +60,7 @@ class AddPersonalDetailRequest extends FormRequest
             'recent_immigrant.in'           => __('responses.true_or_false'),
             'indigenous_group.in'           => __('responses.true_or_false'),
             'visible_minority.in'           => __('responses.true_or_false'),
-            'disability.in'           => __('responses.true_or_false'),
+            'disability.in'                 => __('responses.true_or_false'),
         ];
     }
 
