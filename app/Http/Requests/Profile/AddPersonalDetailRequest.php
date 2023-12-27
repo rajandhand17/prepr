@@ -35,7 +35,7 @@ class AddPersonalDetailRequest extends FormRequest
             'indigenous_group'  =>'in:true,false',
             'visible_minority'  =>'in:true,false',
             'disability'        =>'in:true,false',
-            'resume.*'          => 'mimes:pdf,doc,docx,ods',
+            'resume.*'          => 'mimes:pdf,doc,docx',
         ];
 
         return $base_rules;

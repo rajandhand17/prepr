@@ -23,13 +23,21 @@ class AddExperienceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company.*'    => 'required|max:255',
+            'company'      => 'required|array',
+            'company.*'    => 'max:255',
+            'description'  => 'required|array',
             'description.*'=> 'required',
+            'start_date'   => 'required|array',
             'start_date.*' => 'required|before:tomorrow',
+            'end_date'     => 'required|array',
             'end_date.*'   => 'required|after_or_equal:start_date.*',
+            'position'   => 'required|array',
             'position.*'   => 'required',
+            'address'     => 'required|array',
             'address.*'    => 'required',
+            'state'      => 'required|array',
             'state.*'      => 'required',
+            'country'    => 'required|array',
             'country.*'    => 'required',
         ];
     }
@@ -44,10 +52,10 @@ class AddExperienceRequest extends FormRequest
             'start_date.*.required'  => __('response.start_date_required'),
             'start_date.*.before'    => __('response.before_or_equal'),
             'end_date.*.required'    => __('response.end_date_required'),
-            'end_date.*.after_or_equal'    => __('response.end_date_required'),
-            'address.*.required.*'     => __('response.address_required'),
-            'state.required.*'       => __('response.state_required'),
-            'country.required.*'     => __('response.country_required'),
+            'end_date.*.after_or_equal'=> __('response.end_date_required'),
+            'address.*.required'     => __('response.address_required'),
+            'state.*.required'       => __('response.state_required'),
+            'country.*.required'     => __('response.country_required'),
         ];
     }
 }

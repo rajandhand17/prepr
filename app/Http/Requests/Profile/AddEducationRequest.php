@@ -23,16 +23,25 @@ class AddEducationRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $return= [
             'university.*'     => 'required',
             'degree.*'         => 'required',
-            'start_date.*' => 'required|before:tomorrow',
-            'end_date.*'   => 'required|after_or_equal:start_date.*',
+            'start_date.*'     => 'required|before:tomorrow',
+            'end_date.*'       => 'required|after_or_equal:start_date.*',
             'address.*'        => 'required',
             'description.*'    => 'required',
-
         ];
-
+        if ($this->enrollment_status == 'yes') {
+            $return=[
+                'student_number'=>'required',
+                'current_program'=>'required',
+                'current_degree'=>'required',
+                'current_institution'=>'required',
+                'institution_type'=>'required',
+                'current_year'=>'required',
+            ];
+        }
+        return $return;
     }
 
     public function messages()

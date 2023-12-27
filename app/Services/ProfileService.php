@@ -141,7 +141,9 @@ class ProfileService
                 'visible_minority'=> $visible_minority,
                 'disability'      => $disability,
             ]);
-             self::uploadResume($request);
+            if($request->file('resume')){
+                self::uploadResume($request);
+            }
              return $userPersonalDetails;
         } catch(\Exception $e) {
             return false;
@@ -161,6 +163,7 @@ class ProfileService
                     'public' => '1'
                 ]
             );
+
            return $storeData;
         }catch(\Exception $e){
             return false;
@@ -192,7 +195,9 @@ class ProfileService
     }
     public function addCampusConnectStudentInformation($request){
         try {
-                $campus_info = CampusConnectStudentInformation::create([
+                $campus_info = CampusConnectStudentInformation::updateOrCreate(
+                    ['user_id' => auth()->user()->id],
+                    [
                     'user_id' => auth()->user()->id,
                     'student_number' => $request->student_number,
                     'current_program' => $request->current_program,
@@ -269,7 +274,6 @@ class ProfileService
             $deleteExisitingCertificate=UserCertificate::where("user_id",auth()->user()->id)->forceDelete();
             $allInputs=$request->all();
             $inputs=$request->all();
-
             foreach ($allInputs['company'] as $key => $value){
              $certificate=UserCertificate::create([
                     "user_id" => auth()->user()->id,
