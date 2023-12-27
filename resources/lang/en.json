@@ -732,6 +732,7 @@
     "responses.gender_between": "The gender value should be male,female,other or decline_to_answer",
     "responses.date_of_birth_date": "The date of birth field must contain a date that is on or before 10 years ago.",
     "responses.true_or_false": "The value should be true or false",
-    "responses.name_required": "The name of the field should be required"
+    "responses.name_required": "The name of the field should be required",
+    "responses.array_status": "This field should be an array"
 
 }

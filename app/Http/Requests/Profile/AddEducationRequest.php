@@ -24,7 +24,9 @@ class AddEducationRequest extends FormRequest
     public function rules(): array
     {
         $return= [
+            'university'       => 'required|array',
             'university.*'     => 'required',
+            'degree'           => 'required|array',
             'degree.*'         => 'required',
             'start_date.*'     => 'required|before:tomorrow',
             'end_date.*'       => 'required|after_or_equal:start_date.*',
@@ -48,6 +50,7 @@ class AddEducationRequest extends FormRequest
     {
         return[
             'user_id.required'          => __('responses.user_id_required'),
+            'university.array'          => __('responses.university_required'),
             'university.required'       => __('responses.university_required'),
             'degree.required'           => __('responses.university_required'),
             'start_date.required'       => __('responses.university_required'),
