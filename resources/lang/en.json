@@ -108,6 +108,7 @@
     "responses.description_required":"This description field is required",
     "response.type_image":"Please provide a valid image",
     "responses.mimes_image":"Allowed Image extensions are jpeg,jpg,png, or webp",
+    "responses.resume_mimes_image":"Allowed Image extensions are pdf,doc, and docx",
     "responses.resource_file_upload_mimes_image":"Allowed Image extensions are jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv, and mpeg-2",
     "responses.mimes_image_max":"Maximum image size allowed is 1 mb",
     "responses.category_required":"This category field is required",

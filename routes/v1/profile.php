@@ -11,7 +11,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/add-education', [ProfileController::class, 'addEducation']);
     Route::post('/add-patent', [ProfileController::class, 'addPatent']);
     Route::post('/add-skills', [ProfileController::class, 'addSkills']);
-
     Route::delete('{id}/delete-experience', [ProfileController::class, 'deleteUserExperience']);
     Route::delete('{id}/delete-education', [ProfileController::class, 'deleteEducation']);
     Route::delete('/{id}/delete-skill', [ProfileController::class, 'deleteSkill']);

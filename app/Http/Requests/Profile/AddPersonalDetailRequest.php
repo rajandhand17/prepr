@@ -35,7 +35,7 @@ class AddPersonalDetailRequest extends FormRequest
             'indigenous_group'  => 'in:true,false',
             'visible_minority'  => 'in:true,false',
             'disability'        => 'in:true,false',
-            'resume.*'          => 'mimes:pdf,doc,docx',
+            'resume.*'          => 'mimes:pdf,doc,docx|max:1024',
         ];
 
         return $base_rules;
@@ -61,6 +61,8 @@ class AddPersonalDetailRequest extends FormRequest
             'indigenous_group.in'           => __('responses.true_or_false'),
             'visible_minority.in'           => __('responses.true_or_false'),
             'disability.in'                 => __('responses.true_or_false'),
+            'resume.*.max'                  => __('responses.mimes_image_max'),
+            'resume.*.mimes'                => __('responses.resume_mimes_image'),
         ];
     }
 
