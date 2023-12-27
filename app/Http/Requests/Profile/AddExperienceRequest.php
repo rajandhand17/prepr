@@ -33,13 +33,13 @@ class AddExperienceRequest extends FormRequest
             'start_date.*' => 'required|before:tomorrow',
             'end_date'     => 'required|array',
             'end_date.*'   => 'required|after_or_equal:start_date.*',
-            'position'   => 'required|array',
+            'position'     => 'required|array',
             'position.*'   => 'required',
-            'address'     => 'required|array',
+            'address'      => 'required|array',
             'address.*'    => 'required',
-            'state'      => 'required|array',
+            'state'        => 'required|array',
             'state.*'      => 'required',
-            'country'    => 'required|array',
+            'country'      => 'required|array',
             'country.*'    => 'required',
         ];
     }

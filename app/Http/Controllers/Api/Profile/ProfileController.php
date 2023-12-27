@@ -9,12 +9,7 @@ use App\Http\Requests\Profile\AddExperienceRequest;
 use App\Http\Requests\Profile\AddPatentRequest;
 use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
-use App\Http\Requests\Profile\ShowDetailRequest;
-use App\Http\Resources\Profile\AddCertificateResource;
-use App\Http\Resources\Profile\AddEducationResource;
-use App\Http\Resources\Profile\AddExperienceResource;
 use App\Http\Resources\Profile\AddPersonalDetailResource;
-use App\Http\Resources\Profile\AddSkillsResource;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Repositories\Api\Profile\ProfileRepository;
 use App\Services\ProfileService;
@@ -35,6 +30,7 @@ class ProfileController extends AppBaseController
             if ($getProfile) {
                 return $this->sendResponse(ProfileResource::make($getProfile), __('responses.found_user_profile_detail'));
             }
+
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -48,6 +44,7 @@ class ProfileController extends AppBaseController
             if ($addProfile) {
                 return $this->sendResponse(AddPersonalDetailResource::make($addProfile), __('responses.user_personal_created'));
             }
+
             return $this->sendError(__('responses.user_personal_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -61,6 +58,7 @@ class ProfileController extends AppBaseController
             if ($getExperience) {
                 return $this->sendResponse(null, __('responses.user_experience_update'));
             }
+
             return $this->sendError(__('responses.user_experience_failed'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -92,6 +90,7 @@ class ProfileController extends AppBaseController
             if ($addEducation) {
                 return $this->sendResponse(null, __('responses.user_education_created'));
             }
+
             return $this->sendError(__('responses.user_education_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -123,6 +122,7 @@ class ProfileController extends AppBaseController
             if ($addPatient) {
                 return $this->sendResponse(null, __('responses.user_patent_created'));
             }
+
             return $this->sendError(__('responses.user_patent_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -169,6 +169,7 @@ class ProfileController extends AppBaseController
             if ($addCertificate) {
                 return $this->sendResponse(null, __('responses.add_certificate_created'));
             }
+
             return $this->sendError(__('responses.add_certificate_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
