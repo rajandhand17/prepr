@@ -6,17 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Duration extends Model
+class UserCertificate extends Model
 {
     use HasFactory;
-    use softDeletes;
+    use SoftDeletes;
 
-    protected $table = 'durations';
+    protected $table = 'user_certificates';
 
     protected $fillable = [
-        'title',
-        'fr_CA_title',
+        'user_id',
+        'company',
+        'name',
+        'start_date',
+        'end_date',
+        'description',
     ];
-
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

@@ -10,16 +10,15 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('user_patents', function (Blueprint $table) {
+        Schema::create('user_skills', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('title')->nullable();
-            $table->string('name')->nullable();
-            $table->dateTime('patent_date')->nullable();
-            $table->string('description')->nullable();
+            $table->unsignedBigInteger('skill');
+            $table->tinyInteger('pinned')->default('0');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('skill')->references('id')->on('skills')->onDelete('cascade');
         });
     }
 
@@ -28,6 +27,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_patients');
+        Schema::dropIfExists('user_skills');
     }
 };

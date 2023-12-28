@@ -35,6 +35,7 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('api/v1/auth/')->middleware('api')->group(base_path('routes/v1/auth.php'));
             Route::prefix('api/v1/user/')->middleware('api')->group(base_path('routes/v1/user.php'));
 
+            $this->mapProfileRoutes();
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
         });
@@ -62,6 +63,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('api')->prefix('api')->group(base_path('routes/api.php'));
     }
 
+    protected function mapProfileRoutes()
+    {
+        Route::prefix('api/v1/profile/')->middleware('api')->group(base_path('routes/v1/profile.php'));
+    }
+
     protected function mapManageRoutes()
     {
         Route::prefix('api/v1/manage/organization/')->middleware('api')->group(base_path('routes/v1/manage/organization.php'));
@@ -73,7 +79,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/challenge-path/')->middleware('api')->group(base_path('routes/v1/manage/challenge-path.php'));
         Route::prefix('api/v1/manage/resource-collection/')->middleware('api')->group(base_path('routes/v1/manage/resource-collection.php'));
         Route::prefix('api/v1/manage/resource-group/')->middleware('api')->group(base_path('routes/v1/manage/resource-group.php'));
-        Route::prefix('api/v1/manage/profile/')->middleware('api')->group(base_path('routes/v1/manage/profile.php'));
     }
 
     protected function mapPublicRoutes()
@@ -88,6 +93,5 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-collection/')->middleware('api')->group(base_path('routes/v1/public/resource-collection.php'));
         Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
-        Route::prefix('api/v1/public/profile/')->middleware('api')->group(base_path('routes/v1/public/profile.php'));
     }
 }

@@ -10,13 +10,14 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('user_patents', function (Blueprint $table) {
+        Schema::create('user_personal_files', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('title')->nullable();
-            $table->string('name')->nullable();
-            $table->dateTime('patent_date')->nullable();
-            $table->string('description')->nullable();
+            $table->string('original');
+            $table->string('name');
+            $table->string('path');
+            $table->enum('type', ['0', '1', '2'])->comment('0->resume, 1->cover letter, 2->other')->default('0');
+            $table->tinyInteger('public')->default('1');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -28,6 +29,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_patients');
+        Schema::dropIfExists('user_personal_files');
     }
 };

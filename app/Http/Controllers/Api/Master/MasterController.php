@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api\Master;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Master\CreateSponsorRequest;
-use App\Http\Resources\AddCountryListResource;
 use App\Http\Resources\Master\AcheivementConditionListResource;
 use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ChallengeAnnouncementRecipientResource;
 use App\Http\Resources\Master\ChallengePitchTasksResource;
+use App\Http\Resources\Master\CountryResource;
 use App\Http\Resources\Master\DurationsResource;
 use App\Http\Resources\Master\FlexibleDateDurationResource;
 use App\Http\Resources\Master\HostResource;
@@ -1310,9 +1310,9 @@ class MasterController extends AppBaseController
     public function getCountries(Request $request)
     {
         try {
-            $getCountryList = $this->masterRepository->getCountriesList($request->language, $request->search);
+            $getCountryList = $this->masterRepository->getCountries($request);
             if ($getCountryList) {
-                return $this->sendResponse(AddCountryListResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
+                return $this->sendResponse(CountryResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
             }
 
             return $this->sendError(__('responses.countries_fetched_failed'), 404);

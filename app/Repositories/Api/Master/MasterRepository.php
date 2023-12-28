@@ -81,7 +81,7 @@ class MasterRepository implements MasterInterface
         $this->levelService = $levelService;
         $this->tagGroupService = $tagGroupService;
         $this->challengeAnnouncementRecipientService = $challengeAnnouncementRecipientService;
-        $this->countryService=$countryService;
+        $this->countryService = $countryService;
     }
 
     public function getCategories($request)
@@ -312,7 +312,7 @@ class MasterRepository implements MasterInterface
     public function getChallengeAnnouncementRecipient($request)
     {
         try {
-            return $this->challengeAnnouncementRecipientService->getChallengeAnnouncementRecipient($request->language, $request->search);
+            return $this->challengeAnnouncementRecipientService->getChallengeAnnouncementRecipient($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -326,10 +326,11 @@ class MasterRepository implements MasterInterface
             return false;
         }
     }
-    public function getCountriesList($language, $search)
+
+    public function getCountries($request)
     {
         try {
-            return $this->countryService->getCountriesList($language, $search);
+            return $this->countryService->getCountries($request);
         } catch (\Exception $e) {
             return false;
         }
