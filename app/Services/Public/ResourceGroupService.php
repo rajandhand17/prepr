@@ -42,7 +42,7 @@ class ResourceGroupService
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
                 $resourceIds = ResourceGroupSocialActivitiesService::getResourceGroupsBasedOnActivity($activityType)->pluck('resource_group_id');
-               $resourceGroupList->whereIn('resource_groups.id', $resourceIds);
+                $resourceGroupList->whereIn('resource_groups.id', $resourceIds);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {

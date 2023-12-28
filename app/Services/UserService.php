@@ -76,4 +76,21 @@ class UserService
             return false;
         }
     }
+
+    public static function addUserName($request)
+    {
+        try {
+            $user = User::updateOrCreate([
+                'id' => auth()->user()->id,
+            ], [
+                'first_name' => $request->first_name,
+                'last_name'  => $request->last_name,
+                'full_name'  => $request->first_name, ' '.$request->last_name,
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

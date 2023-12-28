@@ -6,17 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Duration extends Model
+class UserPatent extends Model
 {
     use HasFactory;
-    use softDeletes;
 
-    protected $table = 'durations';
+    use SoftDeletes;
+
+    protected $table = 'user_patents';
 
     protected $fillable = [
-        'title',
-        'fr_CA_title',
+        'user_id', 'title', 'name', 'patent_date', 'description',
     ];
-
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }
