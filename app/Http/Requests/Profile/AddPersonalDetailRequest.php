@@ -28,7 +28,7 @@ class AddPersonalDetailRequest extends FormRequest
             'name'              => 'required|string',
             'gender'            => 'required|in:male,female,other,decline_to_answer',
             'purpose'           => 'numeric|between:0,12',
-            'date_of_birth'     => 'date|before_or_equal:'.Carbon::now()->subYears(10)->toDateTimeString(),
+            'date_of_birth'     => 'date|before_or_equal:'.Carbon::now()->toDateTimeString(),
             'recent_immigrant'  => 'in:true,false',
             'indigenous_group'  => 'in:true,false',
             'visible_minority'  => 'in:true,false',

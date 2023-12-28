@@ -30,7 +30,7 @@ class AddCertificateRequest extends FormRequest
             'name'            => 'required|array',
             'name.*'          => 'max:255|string',
             'start_date'      => 'required|array',
-            'start_date.*'    => 'before_or_equal:'.Carbon::now()->subYears(10)->toDateTimeString(),
+            'start_date.*'    => 'before_or_equal:'.Carbon::now()->toDateTimeString(),
             'end_date'        => 'required|array',
             'end_date.*'      => 'after_or_equal:start_date.*',
             'description'     => 'required|array',
