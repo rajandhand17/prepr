@@ -17,7 +17,7 @@ class ProfileResource extends JsonResource
     {
 
         $purpose = null;
-        if ($this->userPersonal!==null && $this->userPersonal->purpose!==null) {
+        if ($this->userPersonal!==null) {
             switch ($this->userPersonal->purpose) {
                 case '0':
                     $purpose = __('responses.switch_purpose_looking_team');
@@ -64,7 +64,7 @@ class ProfileResource extends JsonResource
             }
         }
         $user_type=null;
-        if ($this->userPersonal!==null && $this->userPersonal->user_type!==null) {
+        if ($this->userPersonal!==null) {
         switch ($this->userPersonal->user_type) {
             case '0':
                 $user_type = __('responses.switch_user_type_employee');
