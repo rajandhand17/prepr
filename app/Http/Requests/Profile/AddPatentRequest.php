@@ -40,18 +40,18 @@ class AddPatentRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required'         => __('responses.title_required'),
-            'title.array'            => __('responses.status_array'),
-            'title.*.max'             => __('responses.status_array'),
-            'title.*.string'         => __('responses.string_data_allowed'),
-            'name.*.max'             => __('responses.status_array'),
-            'name.*.string'         => __('responses.string_data_allowed'),
-            'name.required'          => __('responses.name_required'),
-            'name.array'             => __('responses.status_array'),
-            'description.required'   => __('responses.description_required'),
-            'description.array'      => __('responses.status_array'),
-            'parent_date.required'   => __('responses.parent_date_required'),
-            'parent_date.array'      => __('responses.status_array'),
+            'title.required'                  => __('responses.title_required'),
+            'title.array'                     => __('responses.status_array'),
+            'title.*.max'                     => __('responses.status_array'),
+            'title.*.string'                  => __('responses.string_data_allowed'),
+            'name.*.max'                      => __('responses.status_array'),
+            'name.*.string'                   => __('responses.string_data_allowed'),
+            'name.required'                   => __('responses.name_required'),
+            'name.array'                      => __('responses.status_array'),
+            'description.required'            => __('responses.description_required'),
+            'description.array'               => __('responses.status_array'),
+            'parent_date.required'            => __('responses.parent_date_required'),
+            'parent_date.array'               => __('responses.status_array'),
             'parent_date.*.before_or_equal'   => __('responses.before_or_equal'),
         ];
     }

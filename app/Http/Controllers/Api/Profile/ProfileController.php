@@ -71,7 +71,7 @@ class ProfileController extends AppBaseController
     public function deleteExperience($id)
     {
         try {
-            $checkUserExperienceExistsOrNot =$this->profileRepository->checkUserExperience($id);
+            $checkUserExperienceExistsOrNot = $this->profileRepository->checkUserExperience($id);
             if (!$checkUserExperienceExistsOrNot) {
                 return $this->sendError(__('responses.user_experience_not_exists'), 404);
             }
@@ -157,6 +157,7 @@ class ProfileController extends AppBaseController
             if ($addSkills) {
                 return $this->sendResponse(UserSkillsResource::collection($addSkills), __('responses.add_skills_create'));
             }
+
             return $this->sendError(__('responses.add_skills_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
