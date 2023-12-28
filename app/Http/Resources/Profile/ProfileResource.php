@@ -15,52 +15,57 @@ class ProfileResource extends JsonResource
      */
     public function toArray(Request $request)
     {
-        switch($this->userPersonal->purpose) {
-            case '0':
-                $purpose = __('responses.switch_purpose_looking_team');
-                break;
-            case '1':
-                $purpose = __('responses.switch_purpose_currently_mentor');
-                break;
-            case '2':
-                $purpose = __('responses.switch_purpose_looking_employers');
-                break;
-            case '3':
-                $purpose = __('responses.switch_purpose_currently_team');
-                break;
-            case '4':
-                $purpose = __('responses.switch_purpose_looking_teammates');
-                break;
-            case '5':
-                $purpose = __('responses.switch_purpose_looking_employees');
-                break;
-            case '6':
-                $purpose = __('responses.switch_purpose_looking_invest');
-                break;
-            case '7':
-                $purpose = __('responses.switch_purpose_looking_mentor');
-                break;
-            case '8':
-                $purpose = __('responses.switch_purpose_looking_for_investors');
-                break;
-            case '9':
-                $purpose = __('responses.switch_purpose_looking_to_create_social_impact');
-                break;
-            case '10':
-                $purpose = __('responses.switch_purpose_looking_to_learn');
-                break;
-            case '11':
-                $purpose = __('responses.switch_purpose_looking_to_solve_problems');
-                break;
-            case '12':
-                $purpose = __('responses.switch_purpose_looking_to_build_skills');
-                break;
-            default:
-                $purpose = null;
-                break;
-        }
 
-        switch($this->userPersonal->user_type) {
+        $purpose = null;
+        if ($this->userPersonal!==null && $this->userPersonal->purpose!==null) {
+            switch ($this->userPersonal->purpose) {
+                case '0':
+                    $purpose = __('responses.switch_purpose_looking_team');
+                    break;
+                case '1':
+                    $purpose = __('responses.switch_purpose_currently_mentor');
+                    break;
+                case '2':
+                    $purpose = __('responses.switch_purpose_looking_employers');
+                    break;
+                case '3':
+                    $purpose = __('responses.switch_purpose_currently_team');
+                    break;
+                case '4':
+                    $purpose = __('responses.switch_purpose_looking_teammates');
+                    break;
+                case '5':
+                    $purpose = __('responses.switch_purpose_looking_employees');
+                    break;
+                case '6':
+                    $purpose = __('responses.switch_purpose_looking_invest');
+                    break;
+                case '7':
+                    $purpose = __('responses.switch_purpose_looking_mentor');
+                    break;
+                case '8':
+                    $purpose = __('responses.switch_purpose_looking_for_investors');
+                    break;
+                case '9':
+                    $purpose = __('responses.switch_purpose_looking_to_create_social_impact');
+                    break;
+                case '10':
+                    $purpose = __('responses.switch_purpose_looking_to_learn');
+                    break;
+                case '11':
+                    $purpose = __('responses.switch_purpose_looking_to_solve_problems');
+                    break;
+                case '12':
+                    $purpose = __('responses.switch_purpose_looking_to_build_skills');
+                    break;
+                default:
+                    $purpose = null;
+                    break;
+            }
+        }
+        $user_type=null;
+        if ($this->userPersonal!==null && $this->userPersonal->user_type!==null) {
+        switch ($this->userPersonal->user_type) {
             case '0':
                 $user_type = __('responses.switch_user_type_employee');
                 break;
@@ -137,10 +142,30 @@ class ProfileResource extends JsonResource
                 $user_type = null;
                 break;
         }
+        }
         if ($this->userSkills) {
             $associatedSkills = $this->userSkills->pluck('skill');
             $associatedPinned = $this->userSkills->pluck('pinned');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id')->put('pinned', $associatedPinned);
+        }
+        if($this->userPersonal!==null){
+            $about=$this->userPersonal->about?$this->userPersonal->about:null;
+            $age=$this->userPersonal->age?$this->userPersonal->age:null;
+            $gender=$this->userPersonal->gender?$this->userPersonal->gender:null;
+            $dob=$this->userPersonal->date_of_birth?$this->userPersonal->date_of_birth:null;
+            $recent_immigrant=$this->userPersonal->recent_immigrant == 1 ? 'Yes' : 'No';
+            $indigenous_group=$this->userPersonal->indigenous_group == 1 ? 'Yes' : 'No';
+            $visible_minority=$this->userPersonal->visible_minority == 1 ? 'Yes' : 'No';
+            $disability=$this->userPersonal->disability == 1 ? 'Yes' : 'No';
+        }else{
+            $about=null;
+            $age=null;
+            $gender=null;
+            $dob=null;
+            $recent_immigrant='No';
+            $indigenous_group='No';
+            $visible_minority='No';
+            $disability='No';
         }
 
         return [
@@ -153,16 +178,16 @@ class ProfileResource extends JsonResource
             'country_code'       => $this->country_code,
             'phone_number'       => $this->phone_number,
             'profile_image'      => $this->profile_image,
-            'about'              => $this->userPersonal->about,
-            'age'                => $this->userPersonal->age,
-            'gender'             => $this->userPersonal->gender,
-            'date_of_birth'      => $this->userPersonal->date_of_birth,
+            'about'              => $about,
+            'age'                => $age,
+            'gender'             => $gender,
+            'date_of_birth'      => $dob,
             'purpose'            => $purpose,
             'user_type'          => $user_type,
-            'recent_immigrant'   => $this->userPersonal->recent_immigrant == 1 ? 'Yes' : 'No',
-            'indigenous_group'   => $this->userPersonal->indigenous_group == 1 ? 'Yes' : 'No',
-            'visible_minority'   => $this->userPersonal->visible_minority == 1 ? 'Yes' : 'No',
-            'disability'         => $this->userPersonal->disability == 1 ? 'Yes' : 'No',
+            'recent_immigrant'   => $recent_immigrant,
+            'indigenous_group'   => $indigenous_group,
+            'visible_minority'   => $visible_minority,
+            'disability'         => $disability,
             'user_experiences'   => UserExperienceResource::collection($this->userExperience),
             'user_educations'    => UserEducationResource::collection($this->userEducation),
             'user_patents'       => UserPatentResource::collection($this->userPatents),

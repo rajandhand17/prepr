@@ -90,7 +90,6 @@ class UserPersonalService
                 'visible_minority'=> $visible_minority,
                 'disability'      => $disability,
             ]);
-
             return $user;
         } catch(\Exception $e) {
             return false;
