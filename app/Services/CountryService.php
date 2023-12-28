@@ -11,7 +11,6 @@ class CountryService
     public function getCountries($request)
     {
         try {
-
             if ($request->language == 'en') {
                 $country_list = Country::select('id', 'title');
             } else {

@@ -66,6 +66,7 @@ class SkillService
             if ($getSkillsList) {
                 return $getSkillsList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

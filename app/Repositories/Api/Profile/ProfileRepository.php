@@ -26,16 +26,15 @@ class ProfileRepository implements ProfileInterface
 
     private $userCertificatesService;
 
-
-    public function __construct(UserCertificateService $userCertificatesService, UserPatentService $userPatentsService,UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService,UserExperienceService $userExperienceService,UserEducationService $userEducationService)
+    public function __construct(UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
     {
         $this->userService = $userService;
         $this->userPersonalService = $userPersonalService;
         $this->userExperienceService = $userExperienceService;
         $this->userEducationService = $userEducationService;
-        $this->userSkillsService=$userSkillsService;
-        $this->userPatentsService=$userPatentsService;
-        $this->userCertificatesService=$userCertificatesService;
+        $this->userSkillsService = $userSkillsService;
+        $this->userPatentsService = $userPatentsService;
+        $this->userCertificatesService = $userCertificatesService;
     }
 
     public function getUserByUsername($user_name)
@@ -83,13 +82,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function fileUpload($request){
+    public function fileUpload($request)
+    {
         try {
             return $this->userExperienceService->fileUpload($request);
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public function deleteEducation($id)
     {
         try {
@@ -116,6 +117,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function addSkills($request)
     {
         try {
@@ -124,6 +126,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function deleteSkill($id)
     {
         try {
@@ -132,6 +135,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function addCertificate($request)
     {
         try {

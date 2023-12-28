@@ -14,11 +14,12 @@ class UserPersonalFilesResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $array = explode("/", $this->name);
+        $array = explode('/', $this->name);
+
         return [
-            "id"        =>$this->id,
-            "path"      =>$this->original,
-            "name"      =>end($array),
+            'id'        => $this->id,
+            'path'      => $this->original,
+            'name'      => end($array),
         ];
     }
 }

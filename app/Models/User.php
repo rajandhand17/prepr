@@ -104,9 +104,11 @@ class User extends Authenticatable
         return $this->hasMany(UserCertificate::class);
     }
 
-    public function userPersonalFiles(){
+    public function userPersonalFiles()
+    {
         return $this->hasMany(UserPersonalFile::class);
     }
+
     /**login apis */
     public function login($request)
     {

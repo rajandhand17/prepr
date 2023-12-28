@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\UserExperience;
-use App\Models\UserPersonal;
 use App\Models\UserPersonalFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +13,7 @@ class UserExperienceService
         try {
             $deleteExistingExperience = UserExperience::where('user_id', auth()->user()->id)->delete();
             $input = $request->all();
-            $insertRecords=array();
+            $insertRecords = [];
             foreach ($input['company'] as $key=> $value) {
                 $userExperience = UserExperience::create(['user_id' => auth()->user()->id,
                     'company'                                       => $value,
@@ -27,8 +25,9 @@ class UserExperienceService
                     'country'                                       => $input['country'][$key],
                     'description'                                   => $input['description'][$key],
                 ]);
-                $insertRecords[]=$userExperience;
+                $insertRecords[] = $userExperience;
             }
+
             return $insertRecords;
         } catch(\Exception $e) {
             return false;

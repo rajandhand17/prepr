@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\UserCertificate;
 
 class UserCertificateService
@@ -12,7 +11,7 @@ class UserCertificateService
         try {
             $deleteExisitingCertificate = UserCertificate::where('user_id', auth()->user()->id)->delete();
             $inputs = $request->all();
-            $allCertificates= array();
+            $allCertificates = [];
             foreach ($inputs['company'] as $key => $value) {
                 $certificate = UserCertificate::create([
                     'user_id'    => auth()->user()->id,
@@ -22,8 +21,9 @@ class UserCertificateService
                     'end_date'   => $inputs['end_date'][$key],
                     'description'=> $inputs['description'][$key],
                 ]);
-                $allCertificates[]=$certificate;
+                $allCertificates[] = $certificate;
             }
+
             return $allCertificates;
         } catch(\Exception $e) {
             return false;

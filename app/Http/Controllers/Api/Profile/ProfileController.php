@@ -7,7 +7,6 @@ use App\Http\Requests\Profile\AddCertificateRequest;
 use App\Http\Requests\Profile\AddEducationRequest;
 use App\Http\Requests\Profile\AddExperienceRequest;
 use App\Http\Requests\Profile\AddPatentRequest;
-use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
 use App\Http\Requests\Profile\FileUploadRequest;
 use App\Http\Requests\Profile\PersonalDetailRequest;
@@ -41,6 +40,7 @@ class ProfileController extends AppBaseController
             if ($getUserDetails) {
                 return $this->sendResponse(ProfileResource::make($getUserDetails), __('responses.found_user_profile_detail'));
             }
+
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -51,9 +51,10 @@ class ProfileController extends AppBaseController
     {
         try {
             $createProfile = $this->profileRepository->createPersonalDetail($request);
-            if ($createProfile){
+            if ($createProfile) {
                 return $this->sendResponse(ProfileResource::make($createProfile), __('responses.user_personal_created'));
             }
+
             return $this->sendError(__('responses.user_personal_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -67,6 +68,7 @@ class ProfileController extends AppBaseController
             if ($addExperience) {
                 return $this->sendResponse(UserExperienceResource::collection($addExperience), __('responses.user_experience_update'));
             }
+
             return $this->sendError(__('responses.user_experience_failed'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -84,6 +86,7 @@ class ProfileController extends AppBaseController
             if ($getUserExperience) {
                 return $this->sendResponse(null, __('responses.delete_experience'));
             }
+
             return $this->sendError(__('responses.failed_delete_experience'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -95,8 +98,9 @@ class ProfileController extends AppBaseController
         try {
             $addEducation = $this->profileRepository->addEducation($request);
             if ($addEducation) {
-                return $this->sendResponse(UserEducationResource::collection($addEducation) , __('responses.user_education_created'));
+                return $this->sendResponse(UserEducationResource::collection($addEducation), __('responses.user_education_created'));
             }
+
             return $this->sendError(__('responses.user_education_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -160,6 +164,7 @@ class ProfileController extends AppBaseController
             if ($addSkills) {
                 return $this->sendResponse(UserSkillsResource::collection($addSkills), __('responses.add_skills_create'));
             }
+
             return $this->sendError(__('responses.add_skills_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -173,6 +178,7 @@ class ProfileController extends AppBaseController
             if ($addCertificate) {
                 return $this->sendResponse(UserCertificateResource::collection($addCertificate), __('responses.add_certificate_created'));
             }
+
             return $this->sendError(__('responses.add_certificate_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -208,21 +214,24 @@ class ProfileController extends AppBaseController
             if ($deleteCertificate) {
                 return $this->sendResponse(null, __('responses.user_certificate_deleted'));
             }
+
             return $this->sendError(__('responses.user_certificate_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public  function fileUpload(FileUploadRequest $request){
+    public function fileUpload(FileUploadRequest $request)
+    {
         try {
             $uploadFile = $this->profileRepository->fileUpload($request);
             if ($uploadFile) {
-                return $this->sendResponse(UserPersonalFilesResource::make($uploadFile) , __('responses.successfully_upload_file'));
+                return $this->sendResponse(UserPersonalFilesResource::make($uploadFile), __('responses.successfully_upload_file'));
             }
+
             return $this->sendError(__('responses.user_experience_failed'), 404);
-        }catch(\Exception $e) {
-            return $this->sendError(__('responses.send_error'),500);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

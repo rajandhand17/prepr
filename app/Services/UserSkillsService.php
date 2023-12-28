@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Skill;
-use App\Models\User;
 use App\Models\UserSkills;
 
 class UserSkillsService
@@ -13,14 +11,15 @@ class UserSkillsService
         try {
             $deleteSKills = UserSkills::where(['user_id' => auth()->user()->id])->delete();
             $inputAllSkills = $request->all();
-            $allSkills=array();
+            $allSkills = [];
             foreach ($inputAllSkills['skill_id'] as $key => $value) {
                 $addSkill = UserSkills::create([
                     'user_id' => auth()->user()->id,
                     'skill'   => $value,
                 ]);
-                $allSkills[]=$addSkill;
+                $allSkills[] = $addSkill;
             }
+
             return $allSkills;
         } catch(\Exception $e) {
             return false;
@@ -34,6 +33,7 @@ class UserSkillsService
             if ($deleteSkill) {
                 return true;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
