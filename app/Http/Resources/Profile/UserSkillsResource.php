@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Profile;
 
 use App\Services\SkillService;
-use App\Services\UserSkillsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,8 +18,8 @@ class UserSkillsResource extends JsonResource
         $skills = SkillService::getSkillBasedOnIds($this->skill)->pluck('title', 'id');
 
         return [
-            "id"=>$this->id,
-            "skill"=>$skills,
+            'id'   => $this->id,
+            'skill'=> $skills,
         ];
     }
 }

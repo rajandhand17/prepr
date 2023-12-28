@@ -9,7 +9,6 @@ use App\Services\CountryService;
 use App\Services\DurationService;
 use App\Services\FlexibleExpireDateDurationService;
 use App\Services\HostService;
-use App\Services\InstitutionService;
 use App\Services\LabConditionService;
 use App\Services\LevelService;
 use App\Services\PitchTemplateService;

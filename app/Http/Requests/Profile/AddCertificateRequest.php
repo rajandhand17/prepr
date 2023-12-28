@@ -38,19 +38,19 @@ class AddCertificateRequest extends FormRequest
     public function messages()
     {
         return [
-            'company.required'      => __('responses.company_required'),
-            'company.array'         => __('responses.array_status'),
-            'company.*.required'    => __('responses.company_required'),
-            'name.required'         => __('responses.name_required'),
-            'name.array'            => __('responses.array_status'),
-            'start_date.required'   => __('responses.start_date_required'),
-            'start_date.array'      => __('responses.array_status'),
+            'company.required'         => __('responses.company_required'),
+            'company.array'            => __('responses.array_status'),
+            'company.*.required'       => __('responses.company_required'),
+            'name.required'            => __('responses.name_required'),
+            'name.array'               => __('responses.array_status'),
+            'start_date.required'      => __('responses.start_date_required'),
+            'start_date.array'         => __('responses.array_status'),
             'start_date.*.before'      => __('responses.before_or_equal'),
-            'end_date.required'     => __('responses.end_date_required'),
-            'end_date.array'        => __('responses.array_status'),
+            'end_date.required'        => __('responses.end_date_required'),
+            'end_date.array'           => __('responses.array_status'),
             'end_date.*.after_or_equal'=> __('responses.after_start'),
-            'description.required'  => __('responses.description_required'),
-            'description.array'     => __('responses.array_status'),
+            'description.required'     => __('responses.description_required'),
+            'description.array'        => __('responses.array_status'),
         ];
     }
 

@@ -41,7 +41,7 @@ class PersonalDetailRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'                 =>__('responses.name_required'),
+            'name.required'                 => __('responses.name_required'),
             'purpose.numeric'               => __('responses.numeric_allowed_only'),
             'purpose.between'               => __('responses.between_allowed_purpose'),
             'gender.required'               => __('responses.gender_required'),

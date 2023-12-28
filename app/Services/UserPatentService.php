@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\UserPatent;
 
 class UserPatentService
@@ -12,7 +11,7 @@ class UserPatentService
         try {
             $deleteExistingPatent = UserPatent::where('user_id', '=', auth()->user()->id)->delete();
             $input = $request->all();
-            $allPatents=array();
+            $allPatents = [];
             foreach ($input['title'] as $key => $value) {
                 $create = UserPatent::create([
                     'user_id'    => auth()->user()->id,
@@ -21,7 +20,7 @@ class UserPatentService
                     'patent_date'=> $input['patent_date'][$key],
                     'description'=> $input['description'][$key],
                 ]);
-                $allPatents[]=$create;
+                $allPatents[] = $create;
             }
 
             return $allPatents;

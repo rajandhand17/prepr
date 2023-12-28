@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Profile;
 
 use App\Services\SkillService;
-use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -143,36 +142,34 @@ class ProfileResource extends JsonResource
             $associatedPinned = $this->userSkills->pluck('pinned');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id')->put('pinned', $associatedPinned);
         }
+
         return [
-            "id"                =>$this->id,
-            "first_name"        =>$this->first_name,
-            "last_name"         => $this->last_name,
-            "full_name"         => $this->full_name,
-            "username"          =>$this->username,
-            "email"             =>$this->email,
-            "country_code"      =>$this->country_code,
-            "phone_number"      =>$this->phone_number,
-            "profile_image"     =>$this->profile_image,
-            "about"             =>$this->userPersonal->about,
-            "age"             =>$this->userPersonal->age,
-            "gender"            =>$this->userPersonal->gender,
-            "date_of_birth"     =>$this->userPersonal->date_of_birth,
-            "purpose"           =>$purpose,
-            "user_type"         =>$user_type,
-            "recent_immigrant"  =>$this->userPersonal->recent_immigrant==1 ? "Yes" : "No",
-            "indigenous_group"  =>$this->userPersonal->indigenous_group==1 ? "Yes" : "No",
-            "visible_minority"  =>$this->userPersonal->visible_minority==1 ? "Yes" : "No",
-            "disability"        =>$this->userPersonal->disability==1 ? "Yes" : "No",
-            "user_experiences"  =>UserExperienceResource::collection($this->userExperience),
-            "user_educations"   =>UserEducationResource::collection($this->userEducation),
-            "user_patents"      =>UserPatentResource::collection($this->userPatents),
-            "user_certificates" =>UserCertificateResource::collection($this->userCertificates),
-            "user_skills"       =>$skills,
-            "user_personal_files"=>UserPersonalFilesResource::collection($this->userPersonalFiles),
-
-
+            'id'                 => $this->id,
+            'first_name'         => $this->first_name,
+            'last_name'          => $this->last_name,
+            'full_name'          => $this->full_name,
+            'username'           => $this->username,
+            'email'              => $this->email,
+            'country_code'       => $this->country_code,
+            'phone_number'       => $this->phone_number,
+            'profile_image'      => $this->profile_image,
+            'about'              => $this->userPersonal->about,
+            'age'                => $this->userPersonal->age,
+            'gender'             => $this->userPersonal->gender,
+            'date_of_birth'      => $this->userPersonal->date_of_birth,
+            'purpose'            => $purpose,
+            'user_type'          => $user_type,
+            'recent_immigrant'   => $this->userPersonal->recent_immigrant == 1 ? 'Yes' : 'No',
+            'indigenous_group'   => $this->userPersonal->indigenous_group == 1 ? 'Yes' : 'No',
+            'visible_minority'   => $this->userPersonal->visible_minority == 1 ? 'Yes' : 'No',
+            'disability'         => $this->userPersonal->disability == 1 ? 'Yes' : 'No',
+            'user_experiences'   => UserExperienceResource::collection($this->userExperience),
+            'user_educations'    => UserEducationResource::collection($this->userEducation),
+            'user_patents'       => UserPatentResource::collection($this->userPatents),
+            'user_certificates'  => UserCertificateResource::collection($this->userCertificates),
+            'user_skills'        => $skills,
+            'user_personal_files'=> UserPersonalFilesResource::collection($this->userPersonalFiles),
 
         ];
-
     }
 }

@@ -31,6 +31,7 @@ class ChallengeAnnouncementRecipientService
             if (!$challengeAnnouncementRecipients->isEmpty()) {
                 return $challengeAnnouncementRecipients;
             }
+
             return false;
         } catch(Exception $e) {
             return false;

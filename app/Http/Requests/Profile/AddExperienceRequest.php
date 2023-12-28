@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Profile;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -47,27 +46,28 @@ class AddExperienceRequest extends FormRequest
     public function messages()
     {
         return [
-            'company.required'       => __('responses.company_required'),
-            'company.array'          => __('responses.array_status'),
-            'company.*.max'          => __('response.max_content_255'),
-            'description.required'   => __('response.description_required'),
-            'description.array'      => __('response.array_status'),
-            'position.required'      => __('response.position_required'),
-            'position.array'         => __('response.array_status'),
-            'start_date.required'    => __('response.start_date_required'),
-            'start_date.array'       => __('response.array_status'),
-            'start_date.*.before'    => __('response.before_or_equal'),
-            'end_date.required'      => __('response.end_date_required'),
-            'end_date.array'         => __('response.array_status'),
+            'company.required'         => __('responses.company_required'),
+            'company.array'            => __('responses.array_status'),
+            'company.*.max'            => __('response.max_content_255'),
+            'description.required'     => __('response.description_required'),
+            'description.array'        => __('response.array_status'),
+            'position.required'        => __('response.position_required'),
+            'position.array'           => __('response.array_status'),
+            'start_date.required'      => __('response.start_date_required'),
+            'start_date.array'         => __('response.array_status'),
+            'start_date.*.before'      => __('response.before_or_equal'),
+            'end_date.required'        => __('response.end_date_required'),
+            'end_date.array'           => __('response.array_status'),
             'end_date.*.after_or_equal'=> __('response.end_date_required'),
-            'address.required'       => __('response.address_required'),
-            'address.array'          => __('response.array_status'),
-            'state.required'         => __('response.state_required'),
-            'state.array'            => __('response.array_status'),
-            'country.required'       => __('response.country_required'),
-            'country.array'          => __('response.array_status'),
+            'address.required'         => __('response.address_required'),
+            'address.array'            => __('response.array_status'),
+            'state.required'           => __('response.state_required'),
+            'state.array'              => __('response.array_status'),
+            'country.required'         => __('response.country_required'),
+            'country.array'            => __('response.array_status'),
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

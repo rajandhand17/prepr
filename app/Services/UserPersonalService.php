@@ -2,11 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\UserPersonal;
-use App\Models\UserPersonalFile;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
 
 class UserPersonalService
 {
@@ -75,15 +72,15 @@ class UserPersonalService
                     $disability = config('constants.disability.no');
             }
 
-            $user=auth()->user();
+            $user = auth()->user();
             $dob = new Carbon($request->date_of_birth);
             $now = Carbon::now();
             $age = $dob->diffInYears($now);
-            $updateUserName=UserService::updateUserName($user,$request);
+            $updateUserName = UserService::updateUserName($user, $request);
             $userPersonalDetails = UserPersonal::updateOrCreate([
                 'user_id' => $user->id,
             ], [
-                "age"             => $age,
+                'age'             => $age,
                 'about'           => $request->about,
                 'purpose'         => $request->purpose,
                 'user_type'       => $request->user_type,
@@ -94,10 +91,10 @@ class UserPersonalService
                 'visible_minority'=> $visible_minority,
                 'disability'      => $disability,
             ]);
+
             return $user;
         } catch(\Exception $e) {
             return false;
         }
     }
-
 }

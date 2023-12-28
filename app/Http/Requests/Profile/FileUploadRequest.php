@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Profile;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -28,16 +27,19 @@ class FileUploadRequest extends FormRequest
 
             'file'          => 'required|mimes:pdf,doc,docx|max:1024',
         ];
+
         return $base_rules;
     }
+
     public function messages()
     {
         return [
-            'file.required'             =>__('responses.required_field'),
+            'file.required'             => __('responses.required_field'),
             'file.max'                  => __('responses.mimes_image_max'),
             'file.mimes'                => __('responses.files_mimes_image'),
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

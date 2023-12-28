@@ -17,7 +17,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/skills/add', [ProfileController::class, 'addSkills']);
     Route::delete('/{id}/skill/delete', [ProfileController::class, 'deleteSkill']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
-
-
-
 });

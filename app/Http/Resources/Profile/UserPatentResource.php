@@ -16,11 +16,11 @@ class UserPatentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "id"             =>$this->id,
-            "title"          =>$this->title,
-            "name"           =>$this->name,
-            "patent_date"    =>UtilityHelper::formatDateTime($this->patent_date),
-            "description"    =>$this->description,
+            'id'             => $this->id,
+            'title'          => $this->title,
+            'name'           => $this->name,
+            'patent_date'    => UtilityHelper::formatDateTime($this->patent_date),
+            'description'    => $this->description,
         ];
     }
 }

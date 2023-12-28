@@ -16,13 +16,13 @@ class UserEducationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "id"            => $this->id,
-            "university"    =>$this->university,
-            "description"   =>$this->description,
-            "degree"        =>$this->degree,
-            "start_date"    =>UtilityHelper::formatDateTime($this->start_date),
-            "end_date"      =>UtilityHelper::formatDateTime($this->end_date),
-            "address"       =>$this->address,
+            'id'            => $this->id,
+            'university'    => $this->university,
+            'description'   => $this->description,
+            'degree'        => $this->degree,
+            'start_date'    => UtilityHelper::formatDateTime($this->start_date),
+            'end_date'      => UtilityHelper::formatDateTime($this->end_date),
+            'address'       => $this->address,
 
         ];
     }

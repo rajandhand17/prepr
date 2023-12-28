@@ -3,10 +3,7 @@
 namespace App\Services;
 
 use App\Models\CampusConnectStudentInformation;
-use App\Models\User;
-
 use App\Models\UserEducation;
-use Illuminate\Support\Facades\Storage;
 
 class UserEducationService
 {
@@ -15,7 +12,7 @@ class UserEducationService
         try {
             $education = UserEducation::where('user_id', auth()->user()->id)->delete();
             $input = $request->all();
-            $allEducation=array();
+            $allEducation = [];
             foreach ($input['university'] as $key => $value) {
                 $createEducation = UserEducation::create([
                     'user_id'    => auth()->user()->id,
@@ -26,11 +23,12 @@ class UserEducationService
                     'address'    => $input['address'][$key],
                     'description'=> $input['description'][$key],
                 ]);
-                $allEducation[]=$createEducation;
+                $allEducation[] = $createEducation;
             }
             if ($request->enrollment_status == 'yes') {
                 $records = self::addCampusConnectStudentInformation($request);
             }
+
             return $allEducation;
         } catch(\Exception $e) {
             return false;
