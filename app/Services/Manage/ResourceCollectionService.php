@@ -18,7 +18,7 @@ class ResourceCollectionService
         try {
             $status = config('constants.resource_collection_status.draft');
             switch($request->status) {
-                case 'published':
+                case 'publish':
                     $status = config('constants.resource_collection_status.publish');
                     break;
                 case 'archive':
@@ -59,7 +59,6 @@ class ResourceCollectionService
             $resourceCollection->title = $request->title;
             $resourceCollection->slug = $slug;
             $resourceCollection->description = $request->description;
-            $resourceCollection->media_type = $request->media_type;
             $resourceCollection->media = $upload_cover_image;
             $resourceCollection->level = $request->level;
             $resourceCollection->duration = $request->duration;
@@ -116,7 +115,7 @@ class ResourceCollectionService
                 $privacy = $resourceCollection->privacy;
                 $is_accessible = $resourceCollection->is_accessible;
                 switch($request->status) {
-                    case 'published':
+                    case 'publish':
                         $status = config('constants.resource_collection_status.publish');
                         break;
                     case 'archive':
@@ -273,6 +272,13 @@ class ResourceCollectionService
                 }
             }
 
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'shared') {
+                $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('share');
+                if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
+                }
+            }
+
             return $resourceCollectionList;
         } catch (\Exception $e) {
             return false;
@@ -312,7 +318,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnId($id)
     {
         try {
-            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description')->first();
+            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description', 'slug')->first();
         } catch (\Exception $e) {
             return false;
         }
