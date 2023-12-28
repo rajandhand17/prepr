@@ -25,17 +25,14 @@ class AddPersonalDetailRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'age'               => 'required|numeric',
-            'about'             => 'required',
-            'purpose'           => 'required|numeric|between:0,12',
-            'user_type'         => 'required|numeric|between:0,23',
+            'name'              => 'required|string',
             'gender'            => 'required|in:male,female,other,decline_to_answer',
-            'date_of_birth'     => 'required|date|before_or_equal:'.Carbon::now()->subYears(10)->toDateTimeString(),
+            'purpose'           => 'numeric|between:0,12',
+            'date_of_birth'     => 'date|before_or_equal:'.Carbon::now()->subYears(10)->toDateTimeString(),
             'recent_immigrant'  => 'in:true,false',
             'indigenous_group'  => 'in:true,false',
             'visible_minority'  => 'in:true,false',
             'disability'        => 'in:true,false',
-            'resume.*'          => 'mimes:pdf,doc,docx|max:1024',
         ];
 
         return $base_rules;
@@ -44,15 +41,9 @@ class AddPersonalDetailRequest extends FormRequest
     public function messages()
     {
         return [
-            'age.required'                  => __('responses.age_required'),
-            'age.numeric'                   => __('responses.numeric_allowed_only'),
-            'about.required'                => __('responses.about_required'),
-            'purpose.required'              => __('responses.purpose_required'),
+            'name.required'                 => __('responses.name_required'),
             'purpose.numeric'               => __('responses.numeric_allowed_only'),
             'purpose.between'               => __('responses.between_allowed_purpose'),
-            'user_type.required'            => __('responses.user_type_required'),
-            'user_type.numeric'             => __('responses.numeric_allowed_only'),
-            'user_type.between'             => __('responses.between_allowed_user_type'),
             'gender.required'               => __('responses.gender_required'),
             'gender.in'                     => __('responses.gender_between'),
             'date_of_birth.required'        => __('responses.user_date_of_birth'),
@@ -61,8 +52,6 @@ class AddPersonalDetailRequest extends FormRequest
             'indigenous_group.in'           => __('responses.true_or_false'),
             'visible_minority.in'           => __('responses.true_or_false'),
             'disability.in'                 => __('responses.true_or_false'),
-            'resume.*.max'                  => __('responses.mimes_image_max'),
-            'resume.*.mimes'                => __('responses.resume_mimes_image'),
         ];
     }
 

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{username}', [ProfileController::class, 'show']);
-    Route::post('/personal-detail/add', [ProfileController::class, 'create']);
+    Route::post('/personal-detail/add', [ProfileController::class, 'addPersonalDetail']);
     Route::post('/experience/add', [ProfileController::class, 'addExperience']);
     Route::delete('{id}/experience/delete', [ProfileController::class, 'deleteExperience']);
     Route::post('/certificate/add', [ProfileController::class, 'addCertificate']);

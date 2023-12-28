@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Profile;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,19 +28,14 @@ class AddExperienceRequest extends FormRequest
             'company'      => 'required|array',
             'company.*'    => 'max:255',
             'description'  => 'required|array',
-            'description.*'=> 'required',
             'start_date'   => 'required|array',
-            'start_date.*' => 'required|before:tomorrow',
+            'start_date.*' => 'before_or_equal:'.Carbon::now()->subYears(10)->toDateTimeString(),
             'end_date'     => 'required|array',
-            'end_date.*'   => 'required|after_or_equal:start_date.*',
+            'end_date.*'   => 'after_or_equal:start_date.*',
             'position'     => 'required|array',
-            'position.*'   => 'required',
             'address'      => 'required|array',
-            'address.*'    => 'required',
             'state'        => 'required|array',
-            'state.*'      => 'required',
             'country'      => 'required|array',
-            'country.*'    => 'required',
         ];
     }
 
@@ -55,7 +51,7 @@ class AddExperienceRequest extends FormRequest
             'position.array'           => __('response.array_status'),
             'start_date.required'      => __('response.start_date_required'),
             'start_date.array'         => __('response.array_status'),
-            'start_date.*.before'      => __('response.before_or_equal'),
+            'start_date.*.before_or_equal'=> __('response.before_or_equal'),
             'end_date.required'        => __('response.end_date_required'),
             'end_date.array'           => __('response.array_status'),
             'end_date.*.after_or_equal'=> __('response.end_date_required'),

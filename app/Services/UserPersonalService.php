@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class UserPersonalService
 {
-    public function createPersonalDetail($request)
+    public function addPersonalDetail($request)
     {
         try {
             $gender = config('constants.gender.decline_to_answer');
@@ -76,7 +76,6 @@ class UserPersonalService
             $dob = new Carbon($request->date_of_birth);
             $now = Carbon::now();
             $age = $dob->diffInYears($now);
-            $updateUserName = UserService::updateUserName($user, $request);
             $userPersonalDetails = UserPersonal::updateOrCreate([
                 'user_id' => $user->id,
             ], [

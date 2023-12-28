@@ -40,7 +40,7 @@ class UserSkillsService
         }
     }
 
-    public static function checkUserSkillDeleteExists($id)
+    public static function checkUserSkillExists($id)
     {
         try {
             return UserSkills::where('id', $id)->first();

@@ -25,6 +25,7 @@ class AddSkillsRequest extends FormRequest
     {
         return [
             'skill_id' => 'required|array',
+            'skill_id.*' =>'exists:skills,id'
         ];
     }
 
@@ -33,6 +34,7 @@ class AddSkillsRequest extends FormRequest
         return [
             'skill_id.required'      => __('responses.skill_id_required'),
             'skill_id.array'         => __('responses.status_array'),
+            'skill_id.*.exists'     => __('responses.skill_id_exists'),
         ];
     }
 

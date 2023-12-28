@@ -77,13 +77,15 @@ class UserService
         }
     }
 
-    public static function updateUserName($user, $request)
+    public static function addUserName($request)
     {
         try {
             $user = User::updateOrCreate([
-                'id' => $user->id,
+                'id' => auth()->user()->id,
             ], [
-                'full_name'=> $request->name,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'full_name'=> $request->first_name,' '.$request->last_name,
             ]);
 
             return true;

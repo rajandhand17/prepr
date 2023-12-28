@@ -7,6 +7,7 @@ use App\Http\Requests\Profile\AddCertificateRequest;
 use App\Http\Requests\Profile\AddEducationRequest;
 use App\Http\Requests\Profile\AddExperienceRequest;
 use App\Http\Requests\Profile\AddPatentRequest;
+use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
 use App\Http\Requests\Profile\FileUploadRequest;
 use App\Http\Requests\Profile\PersonalDetailRequest;
@@ -18,11 +19,6 @@ use App\Http\Resources\Profile\UserPatentResource;
 use App\Http\Resources\Profile\UserPersonalFilesResource;
 use App\Http\Resources\Profile\UserSkillsResource;
 use App\Repositories\Api\Profile\ProfileRepository;
-use App\Services\UserCertificateService;
-use App\Services\UserEducationService;
-use App\Services\UserExperienceService;
-use App\Services\UserPatentService;
-use App\Services\UserSkillsService;
 
 class ProfileController extends AppBaseController
 {
@@ -47,10 +43,10 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function create(PersonalDetailRequest $request)
+    public function addPersonalDetail(AddPersonalDetailRequest $request)
     {
         try {
-            $createProfile = $this->profileRepository->createPersonalDetail($request);
+            $createProfile = $this->profileRepository->addPersonalDetail($request);
             if ($createProfile) {
                 return $this->sendResponse(ProfileResource::make($createProfile), __('responses.user_personal_created'));
             }
@@ -78,7 +74,7 @@ class ProfileController extends AppBaseController
     public function deleteExperience($id)
     {
         try {
-            $checkUserExperienceExistsOrNot = UserExperienceService::checkUserExperience($id);
+            $checkUserExperienceExistsOrNot =$this->profileRepository->checkUserExperience($id);
             if (!$checkUserExperienceExistsOrNot) {
                 return $this->sendError(__('responses.user_experience_not_exists'), 404);
             }
@@ -110,7 +106,7 @@ class ProfileController extends AppBaseController
     public function deleteEducation($id)
     {
         try {
-            $checkEducationExistsOrNot = UserEducationService::checkUserEducation($id);
+            $checkEducationExistsOrNot = $this->profileRepository->checkUserEducation($id);
             if (!$checkEducationExistsOrNot) {
                 return $this->sendError(__('responses.user_education_not_found'), 404);
             }
@@ -142,7 +138,7 @@ class ProfileController extends AppBaseController
     public function deletePatent($id)
     {
         try {
-            $checkUserPatentExists = UserPatentService::checkUserPatent($id);
+            $checkUserPatentExists = $this->profileRepository->checkUserPatent($id);
             if (!$checkUserPatentExists) {
                 return $this->sendError(__('responses.user_patient_not_found'), 404);
             }
@@ -164,7 +160,6 @@ class ProfileController extends AppBaseController
             if ($addSkills) {
                 return $this->sendResponse(UserSkillsResource::collection($addSkills), __('responses.add_skills_create'));
             }
-
             return $this->sendError(__('responses.add_skills_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -188,7 +183,7 @@ class ProfileController extends AppBaseController
     public function deleteSkill($id)
     {
         try {
-            $checkUserDeleteExists = UserSkillsService::checkUserSkillDeleteExists($id);
+            $checkUserDeleteExists = $this->profileRepository->checkUserSkillExists($id);
             if (!$checkUserDeleteExists) {
                 return $this->sendError(__('responses.skills_not_found'), 404);
             }
@@ -206,7 +201,7 @@ class ProfileController extends AppBaseController
     public function deleteCertificate($id)
     {
         try {
-            $checkExistsCertificateOrNot = UserCertificateService::checkUserCertificate($id);
+            $checkExistsCertificateOrNot = $this->profileRepository->checkUserCertificate($id);
             if (!$checkExistsCertificateOrNot) {
                 return $this->sendError(__('responses.user_certificate_not_found'), 404);
             }

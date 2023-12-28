@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Profile;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -25,9 +26,11 @@ class AddEducationRequest extends FormRequest
     {
         $return = [
             'university'       => 'required|array',
+            'university.*'     => 'max:255',
             'degree'           => 'required|array',
+            'degree.*'         => 'max:255',
             'start_date'       => 'required|array',
-            'start_date.*'     => 'before:tomorrow',
+            'start_date.*'     => 'before_or_equal:'.Carbon::now()->subYears(10)->toDateTimeString(),
             'end_date'         => 'required|array',
             'end_date.*'       => 'after_or_equal:start_date.*',
             'address'          => 'required|array',
@@ -52,8 +55,10 @@ class AddEducationRequest extends FormRequest
         return[
             'university.array'            => __('responses.array_status'),
             'university.required'         => __('responses.university_required'),
+            'university.*.max'            => __('responses.max_content_255'),
             'degree.required'             => __('responses.university_required'),
             'degree.array'                => __('responses.array_status'),
+            'degree.*.max'                => __('responses.max_content_255'),
             'start_date.required'         => __('response.start_date_required'),
             'start_date.array'            => __('response.array_status'),
             'start_date.*.before'         => __('response.before_or_equal'),
