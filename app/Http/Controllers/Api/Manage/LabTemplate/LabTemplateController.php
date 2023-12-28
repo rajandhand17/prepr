@@ -20,7 +20,7 @@ class LabTemplateController extends AppBaseController
         $this->labRepository = $labRepository;
     }
 
-    public function createTemplate($slug,CreateLabTemplateRequest $request)
+    public function createLabMarketplace($slug,CreateLabTemplateRequest $request)
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
@@ -29,7 +29,6 @@ class LabTemplateController extends AppBaseController
             }
 
             $createdLabTemplate = $this->labTemplateRepository->createLabTemplate($slug, $lab);
-            dd($createdLabTemplate);
             if ($createdLabTemplate) {
                 return $this->sendResponse(LabTemplateResource::make($createdLabTemplate), __('responses.template_lab_stored_success'), 200);
             }
