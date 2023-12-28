@@ -10,7 +10,6 @@ use App\Http\Requests\Profile\AddPatentRequest;
 use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
 use App\Http\Requests\Profile\FileUploadRequest;
-use App\Http\Requests\Profile\PersonalDetailRequest;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Profile\UserCertificateResource;
 use App\Http\Resources\Profile\UserEducationResource;
@@ -74,7 +73,7 @@ class ProfileController extends AppBaseController
     public function deleteExperience($id)
     {
         try {
-            $checkUserExperienceExistsOrNot =$this->profileRepository->checkUserExperience($id);
+            $checkUserExperienceExistsOrNot = $this->profileRepository->checkUserExperience($id);
             if (!$checkUserExperienceExistsOrNot) {
                 return $this->sendError(__('responses.user_experience_not_exists'), 404);
             }
@@ -160,6 +159,7 @@ class ProfileController extends AppBaseController
             if ($addSkills) {
                 return $this->sendResponse(UserSkillsResource::collection($addSkills), __('responses.add_skills_create'));
             }
+
             return $this->sendError(__('responses.add_skills_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

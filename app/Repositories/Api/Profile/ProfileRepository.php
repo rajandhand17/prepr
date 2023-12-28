@@ -11,6 +11,7 @@ use App\Services\UserPersonalService;
 use App\Services\UserService;
 use App\Services\UserSkillsService;
 use DB;
+
 class ProfileRepository implements ProfileInterface
 {
     private $userService;
@@ -38,7 +39,7 @@ class ProfileRepository implements ProfileInterface
         $this->userSkillsService = $userSkillsService;
         $this->userPatentsService = $userPatentsService;
         $this->userCertificatesService = $userCertificatesService;
-        $this->userAddressService=$userAddressService;
+        $this->userAddressService = $userAddressService;
     }
 
     public function getUserByUsername($user_name)
@@ -53,10 +54,10 @@ class ProfileRepository implements ProfileInterface
     public function addPersonalDetail($request)
     {
         try {
-        $personalDetail = DB::transaction(function () use ($request) {
-                $createUser=$this->userService->addUserName($request);
+            $personalDetail = DB::transaction(function () use ($request) {
+                $createUser = $this->userService->addUserName($request);
                 $createPersonalDetail = $this->userPersonalService->addPersonalDetail($request);
-                $createAddress=$this->userAddressService->addUserAddress($request);
+                $createAddress = $this->userAddressService->addUserAddress($request);
 
                 return [
                     'createdUser'             => $createUser,
@@ -64,14 +65,17 @@ class ProfileRepository implements ProfileInterface
                     'createdAddress'          => $createAddress,
                 ];
             });
-        if($personalDetail['createdUser'] && $personalDetail['createdPersonalDetail'] && $personalDetail['createdAddress']){
-            DB::commit();
-            return $personalDetail['createdPersonalDetail'];
-        }
+            if ($personalDetail['createdUser'] && $personalDetail['createdPersonalDetail'] && $personalDetail['createdAddress']) {
+                DB::commit();
+
+                return $personalDetail['createdPersonalDetail'];
+            }
             DB::rollBack();
+
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
@@ -94,10 +98,11 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function checkUserExperience($id){
+    public function checkUserExperience($id)
+    {
         try {
             return $this->userExperienceService->checkUserExperience($id);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -147,13 +152,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function checkUserPatent($id){
+    public function checkUserPatent($id)
+    {
         try {
             return $this->userPatentsService->checkUserPatent($id);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function addSkills($request)
     {
         try {
@@ -176,10 +183,11 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userSkillsService->checkUserSkillExists($id);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function addCertificate($request)
     {
         try {
@@ -198,10 +206,11 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function checkUserCertificate($id){
+    public function checkUserCertificate($id)
+    {
         try {
             return $this->userCertificatesService->checkUserCertificate($id);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -210,8 +219,7 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userEducationService->checkUserEducation($id);
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

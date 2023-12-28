@@ -84,8 +84,8 @@ class UserService
                 'id' => auth()->user()->id,
             ], [
                 'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'full_name'=> $request->first_name,' '.$request->last_name,
+                'last_name'  => $request->last_name,
+                'full_name'  => $request->first_name, ' '.$request->last_name,
             ]);
 
             return true;
