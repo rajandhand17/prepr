@@ -5,11 +5,15 @@ namespace App\Repositories\Api\Profile;
 interface ProfileInterface
 {
     public function getUserByUsername($user_name);
+
     public function addPersonalDetail($request);
 
     public function addExperience($request);
+
     public function deleteExperience($id);
+
     public function checkUserExperience($id);
+
     public function addEducation($request);
 
     public function fileUpload($request);
@@ -17,6 +21,7 @@ interface ProfileInterface
     public function deleteEducation($id);
 
     public function addPatent($request);
+
     public function deleteUserPatent($id);
 
     public function checkUserPatent($id);
@@ -34,5 +39,4 @@ interface ProfileInterface
     public function checkUserCertificate($id);
 
     public function checkUserEducation($id);
-
 }
