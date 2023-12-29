@@ -17,6 +17,7 @@ class ProfileResource extends JsonResource
     {
 
         $purpose = null;
+        $user_type=null;
         if ($this->userPersonal!==null) {
             switch ($this->userPersonal->purpose) {
                 case '0':
@@ -62,9 +63,6 @@ class ProfileResource extends JsonResource
                     $purpose = null;
                     break;
             }
-        }
-        $user_type=null;
-        if ($this->userPersonal!==null) {
         switch ($this->userPersonal->user_type) {
             case '0':
                 $user_type = __('responses.switch_user_type_employee');
@@ -142,13 +140,7 @@ class ProfileResource extends JsonResource
                 $user_type = null;
                 break;
         }
-        }
-        if ($this->userSkills) {
-            $associatedSkills = $this->userSkills->pluck('skill');
-            $associatedPinned = $this->userSkills->pluck('pinned');
-            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id')->put('pinned', $associatedPinned);
-        }
-        if($this->userPersonal!==null){
+
             $about=$this->userPersonal->about?$this->userPersonal->about:null;
             $age=$this->userPersonal->age?$this->userPersonal->age:null;
             $gender=$this->userPersonal->gender?$this->userPersonal->gender:null;
@@ -167,7 +159,11 @@ class ProfileResource extends JsonResource
             $visible_minority='No';
             $disability='No';
         }
-
+        if ($this->userSkills) {
+            $associatedSkills = $this->userSkills->pluck('skill');
+            $associatedPinned = $this->userSkills->pluck('pinned');
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id')->put('pinned', $associatedPinned);
+        }
         return [
             'id'                 => $this->id,
             'first_name'         => $this->first_name,
