@@ -49,6 +49,7 @@ class ProfileController extends AppBaseController
             if ($createProfile) {
                 return $this->sendResponse(ProfileResource::make($createProfile), __('responses.user_personal_created'));
             }
+
             return $this->sendError(__('responses.user_personal_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -172,6 +173,7 @@ class ProfileController extends AppBaseController
             if ($addCertificate) {
                 return $this->sendResponse(UserCertificateResource::collection($addCertificate), __('responses.add_certificate_created'));
             }
+
             return $this->sendError(__('responses.add_certificate_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

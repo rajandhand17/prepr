@@ -21,6 +21,7 @@ class UserSkillsService
 
                 $allSkills[] = $addSkill;
             }
+
             return $allSkills;
         } catch(\Exception $e) {
             return false;
