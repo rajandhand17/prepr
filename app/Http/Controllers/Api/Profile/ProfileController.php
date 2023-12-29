@@ -38,11 +38,6 @@ class ProfileController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
-<<<<<<< HEAD
-=======
-            dd($e);
-
->>>>>>> 51476ddc6567fedbeaa7319f28ebae32def43792
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
