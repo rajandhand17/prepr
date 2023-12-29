@@ -55,6 +55,7 @@ class UserService
             if ($user != null) {
                 return $user;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
