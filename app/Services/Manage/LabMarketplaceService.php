@@ -7,7 +7,7 @@ use App\Models\LabTemplate;
 
 class LabMarketplaceService
 {
-    public static function cloneLab($slug)
+    public static function createLabMarketplace($slug)
     {
         try {
             $existsLabs = Lab::where('slug', $slug)->first();
@@ -45,4 +45,5 @@ class LabMarketplaceService
             return false;
         }
     }
+
 }
