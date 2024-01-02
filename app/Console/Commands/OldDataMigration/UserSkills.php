@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
@@ -31,7 +30,6 @@ class UserSkills extends Command
             $this->info('Migrating old data for users skills table.');
             DB::beginTransaction();
             DB::connection('mysql2')->table('user_skills')->chunkById(1000, function ($userSkills) {
-
                 foreach ($userSkills as $skill) {
                     $checkUsers = \App\Models\User::find($skill->user_id);
                     if ($checkUsers == null) {

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
@@ -31,7 +30,6 @@ class UserPatent extends Command
             $this->info('Migrating old data for users patent table.');
             DB::beginTransaction();
             DB::connection('mysql2')->table('user_patents')->chunkById(1000, function ($userPatents) {
-
                 foreach ($userPatents as $userPatent) {
                     $checkUsers = \App\Models\User::find($userPatent->user_id);
                     if ($checkUsers == null) {

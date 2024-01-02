@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
@@ -36,19 +35,19 @@ class UserEducation extends Command
                     if ($checkUsers == null) {
                         continue;
                     }
-                    $checkUserEducation=\App\Models\UserEducation::where("id",$education->id)->first();
-                    if($checkUserEducation){
-                        $userEducations=$checkUserEducation;
-                    }else{
-                        $userEducations=new \App\Models\UserEducation();
+                    $checkUserEducation = \App\Models\UserEducation::where('id', $education->id)->first();
+                    if ($checkUserEducation) {
+                        $userEducations = $checkUserEducation;
+                    } else {
+                        $userEducations = new \App\Models\UserEducation();
                     }
-                    $userEducations->user_id=$education->user_id;
-                    $userEducations->university=$education->university;
-                    $userEducations->degree=$education->degree;
-                    $userEducations->start_date=$education->start_date;
-                    $userEducations->end_date=$education->end_date;
-                    $userEducations->address=$education->address;
-                    $userEducations->description=$education->description;
+                    $userEducations->user_id = $education->user_id;
+                    $userEducations->university = $education->university;
+                    $userEducations->degree = $education->degree;
+                    $userEducations->start_date = $education->start_date;
+                    $userEducations->end_date = $education->end_date;
+                    $userEducations->address = $education->address;
+                    $userEducations->description = $education->description;
                     $userEducations->save();
                 }
             });
