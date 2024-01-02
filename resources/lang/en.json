@@ -776,5 +776,16 @@
     "responses.skill_id_exists": "This skill id is not exists",
     "responses.resource_group_rating_successfully": "Congratulations! You have successfully rated the resource group",
     "responses.resource_group_rating_failed": "Oops! You have failed to rate the resource group",
-    "responses.resource_group_slug_not_found": "The resource group which you are looking doesn't exist in our system."
+    "responses.resource_group_slug_not_found": "The resource group which you are looking doesn't exist in our system.",
+    "responses.user_achievement_type_lab": "Lab",
+    "responses.user_achievement_type_lab_program": "Lab Program",
+    "responses.user_achievement_type_challenge": "Challenge",
+    "responses.user_achievement_type_challenge_path": "Challenge Path",
+    "responses.user_achievement_type_resource_group": "Resource Group",
+    "responses.user_achievement_type_appreciation_award": "Appreciation Award",
+    "responses.user_achievement_type_activity_award": "Activity Award",
+    "responses.user_achievement_type_skill_activity": "Skill Activity",
+    "responses.user_achievement_type_imported_award": "Imported Award",
+    "responses.user_achievement_type_winner_award": "Winner Award",
+    "responses.user_achievement_type_participation_award": "Participation Award"
 }
