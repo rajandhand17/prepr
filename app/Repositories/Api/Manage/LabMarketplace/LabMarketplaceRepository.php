@@ -57,12 +57,14 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
         try {
             $createLabMarketplace= DB::transaction(function () use ($slug,$lab){
                 $createLabMarketplace=$this->labMarketplaceService->createLabMarketplace($slug);
+                dd($createLabMarketplace);
                 $createLabMarketplaceAddress=$this->labMarketplaceAddressService->createLabMarketplaceAddress($createLabMarketplace,$lab);
                 $createdLabMarketplaceSkillAssociations = $this->labMarketplaceSkillsGroupStackService->createLabMarketplaceSkillsGroupsStack($createLabMarketplace, $lab);
                 $createdLabMarketplaceTagAssociations = $this->labMarketplaceTagsGroupsService->createLabMarketplaceTagsGroupsStack($createLabMarketplace, $lab);
                 $createdLabMarketplaceExternalLinks = $this->labMarketplaceExternalLinksService->createLabMarketplaceExternalLinks($createLabMarketplace, $lab);
                 $createdLabMarketplaceAchievement = $this->labMarketplaceAchievementsService->createLabMarketplaceAchievements($createLabMarketplace, $lab);
                 $createdLabMarketplaceAssociations = $this->labMarketplaceComponentAssociationService->createMarketplaceComponentAssociation($createLabMarketplace, $lab);
+                $updateLab=$this->labService->updatePreBuilt($lab->id,'1');
                 return[
                     "labMarketplace" => $createLabMarketplace,
                     'createLabMarketplaceAddress'=>$createLabMarketplaceAddress,
@@ -71,10 +73,10 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                     'createdLabMarketplaceExternalLinks'=>$createdLabMarketplaceExternalLinks,
                     'createdLabMarketplaceAchievement'=>$createdLabMarketplaceAchievement,
                     'createdLabMarketplaceAssociations'=>$createdLabMarketplaceAssociations,
-
+                    'updateLab'=>$updateLab,
                 ];
             });
-            if($createLabMarketplace['createdLabMarketplaceAssociations'] && $createLabMarketplace['createdLabMarketplaceAchievement'] && $createLabMarketplace['createdLabMarketplaceExternalLinks'] && $createLabMarketplace['createdLabMarketplaceTagAssociations'] && $createLabMarketplace['createdLabMarketplaceSkillAssociations'] && $createLabMarketplace['labMarketplace'] && $createLabMarketplace['createLabMarketplaceAddress'] ){
+            if($createLabMarketplace['createdLabMarketplaceAssociations'] && $createLabMarketplace['createdLabMarketplaceAchievement'] && $createLabMarketplace['createdLabMarketplaceExternalLinks'] && $createLabMarketplace['createdLabMarketplaceTagAssociations'] && $createLabMarketplace['createdLabMarketplaceSkillAssociations'] && $createLabMarketplace['labMarketplace'] && $createLabMarketplace['createLabMarketplaceAddress'] && $createLabMarketplace['updateLab']){
                 DB::commit();
                 return $createLabMarketplace['labMarketplace'];
             }
