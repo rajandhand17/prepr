@@ -74,6 +74,13 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class);
     }
 
+    public function userLabs(){
+        return $this->hasMany(Lab::class,'user_id','id');
+    }
+
+    public function userAchievements(){
+        return $this->hasMany(UserAchievement::class,'user_id','id');
+    }
     public function userAddress()
     {
         return $this->hasOne(UserAddress::class);
