@@ -26,6 +26,7 @@ class UserCertificateService
 
             return $allCertificates;
         } catch(\Exception $e) {
+            dd($e);
             return false;
         }
     }
