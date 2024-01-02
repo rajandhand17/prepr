@@ -30,6 +30,7 @@ class UserExperienceService
 
             return $insertRecords;
         } catch(\Exception $e) {
+            dd($e);
             return false;
         }
     }
