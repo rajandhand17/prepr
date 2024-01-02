@@ -17,7 +17,7 @@ class LabMarketplaceController extends AppBaseController
     public function createLabMarketplace($slug){
         try {
             $checkLabExistsOrNot=$this->labMarketplaceRepository->getLabBasedOnSlug($slug);
-            if (!$checkLabExistsOrNot) {
+            if (!$checkLabExistsOrNot){
                 return $this->sendError(__('responses.lab_slug_not_found'), 404);
             }
             $checkLabMarketplace=$this->labMarketplaceRepository->getCheckUuid($checkLabExistsOrNot->uuid);
