@@ -17,6 +17,7 @@ class ProfileResource extends JsonResource
     {
         $purpose = null;
         $user_type = null;
+
         if ($this->userPersonal !== null) {
             switch ($this->userPersonal->purpose) {
                 case '0':
@@ -176,6 +177,16 @@ class ProfileResource extends JsonResource
             'country_code'       => $this->country_code,
             'phone_number'       => $this->phone_number,
             'profile_image'      => $this->profile_image,
+            'pronouns'           => null,
+            'project'            => 0,
+            'labs'               => $this->userLabs->count(),
+            'achievements'       => $this->userAchievements->count(),
+            'achievements_list'  => UserAchievementResource::collection($this->userAchievements),
+            'role'               => 'user',
+            'challenge_history'  => [],
+            'project_history'    => [],
+            'friends'            => [],
+            'tags'               => [],
             'about'              => $about,
             'age'                => $age,
             'gender'             => $gender,
