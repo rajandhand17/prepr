@@ -15,11 +15,11 @@ class LabMarketplaceExternalLinksService
             $existsLabExternalLink = LabExternalLinks::where('lab_id', $lab->id)->get();
             if ($existsLabExternalLink) {
                 foreach ($existsLabExternalLink as $externalLinks) {
-                    $labTemplateExternalLink = new LabTemplateExternalLink();
-                    $labTemplateExternalLink->template_lab_id = $labMarketplaceId->id;
-                    $labTemplateExternalLink->social_media_link = $externalLinks->external_links;
-                    $labTemplateExternalLink->social_link_id = $externalLinks->social_link_id;
-                    $labTemplateExternalLink->save();
+                    $labMarketplaceExternalLink = new LabTemplateExternalLink();
+                    $labMarketplaceExternalLink->template_lab_id = $labMarketplaceId->id;
+                    $labMarketplaceExternalLink->social_media_link = $externalLinks->external_links;
+                    $labMarketplaceExternalLink->social_link_id = $externalLinks->social_link_id;
+                    $labMarketplaceExternalLink->save();
                 }
             }
 

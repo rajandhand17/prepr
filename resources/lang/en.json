@@ -685,5 +685,6 @@
     "labels.labels_achi_io": "Issued on",
     "labels.labels_achi_eo": "Expires on",
     "responses.organization_id":"The Organization id field is required",
-    "responses.organization_exists":"This Organization id is not exists"
+    "responses.organization_exists":"This Organization id is not exists",
+    "responses.already_cloned": "This already cloned Lab Marketplace"
 }

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api\Manage\LabMarketplace;
 
+use App\Http\Controllers\AppBaseController;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Manage\Lab\LabTemplateResource;
 use App\Repositories\Api\Manage\LabMarketplace\LabMarketplaceRepository;
-use Illuminate\Http\Request;
 
-class LabMarketplaceController extends Controller
+class LabMarketplaceController extends AppBaseController
 {
     private LabMarketplaceRepository $labMarketplaceRepository;
 
@@ -20,6 +19,10 @@ class LabMarketplaceController extends Controller
             $checkLabExistsOrNot=$this->labMarketplaceRepository->getLabBasedOnSlug($slug);
             if (!$checkLabExistsOrNot) {
                 return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            }
+            $checkLabMarketplace=$this->labMarketplaceRepository->getCheckUuid($checkLabExistsOrNot->uuid);
+            if ($checkLabMarketplace) {
+                return $this->sendError(__('responses.already_cloned'),200);
             }
             $labMarketplace=$this->labMarketplaceRepository->createLabMarketplace($slug,$checkLabExistsOrNot);
             if ($labMarketplace) {
