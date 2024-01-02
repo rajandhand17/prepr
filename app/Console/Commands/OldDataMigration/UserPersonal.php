@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
@@ -37,60 +36,60 @@ class UserPersonal extends Command
                         continue;
                     }
 
-                    $checkUserPersonalDetails=\App\Models\UserPersonal::where('id',$userPersonalDetail->id)->first();
-                    if($checkUserPersonalDetails){
-                        $userPersonal=$checkUserPersonalDetails;
-                    }else{
-                        $userPersonal=new \App\Models\UserPersonal();
+                    $checkUserPersonalDetails = \App\Models\UserPersonal::where('id', $userPersonalDetail->id)->first();
+                    if ($checkUserPersonalDetails) {
+                        $userPersonal = $checkUserPersonalDetails;
+                    } else {
+                        $userPersonal = new \App\Models\UserPersonal();
                     }
-                    switch ($userPersonalDetail->status){
+                    switch ($userPersonalDetail->status) {
                         case 'looking_team':
-                            $status='0';
+                            $status = '0';
                             break;
                         case 'currently_mentor':
-                            $status='1';
+                            $status = '1';
                             break;
                         case 'looking_employers':
-                            $status='2';
+                            $status = '2';
                             break;
                         case 'currently_team':
-                            $status='3';
+                            $status = '3';
                             break;
                         case 'Looking_teammates':
-                            $status='4';
+                            $status = '4';
                             break;
                         case 'looking_employees':
-                            $status='5';
+                            $status = '5';
                             break;
                         case 'looking_invest':
-                            $status='6';
+                            $status = '6';
                             break;
                         case 'looking_mentor':
-                            $status='7';
+                            $status = '7';
                             break;
                         case 'looking_for_investors':
-                            $status='8';
+                            $status = '8';
                             break;
                         case 'looking_to_create_social_impact':
-                            $status='9';
+                            $status = '9';
                             break;
                         case 'looking_to_learn':
-                            $status='10';
+                            $status = '10';
                             break;
                         case 'looking_to_solve_problems':
-                            $status='11';
+                            $status = '11';
                             break;
                         case 'looking_to_build_skills':
-                            $status='12';
+                            $status = '12';
                             break;
                         default:
-                            $status='1';
+                            $status = '1';
                             break;
                     }
-                    $user_type=null;
+                    $user_type = null;
                     switch ($userPersonalDetail->user_type) {
                         case 'employee':
-                            $user_type ='0';
+                            $user_type = '0';
                             break;
                         case 'investor':
                             $user_type = '1';
@@ -129,7 +128,7 @@ class UserPersonal extends Command
                             $user_type = '12';
                             break;
                         case 'mentor':
-                            $user_type ='13';
+                            $user_type = '13';
                             break;
                         case 'innovator':
                             $user_type = '14';
@@ -153,47 +152,47 @@ class UserPersonal extends Command
                             $user_type = '20';
                             break;
                         case 'applicant':
-                            $user_type ='21';
+                            $user_type = '21';
                             break;
                         case 'educational_institution':
                             $user_type = '22';
                             break;
                         case 'community_organization':
-                            $user_type ='23';
+                            $user_type = '23';
                             break;
                         default:
                             $user_type = null;
                             break;
                     }
-                    switch ($userPersonal->gender){
+                    switch ($userPersonal->gender) {
                         case 'male':
-                            $gender='0';
+                            $gender = '0';
                             break;
                         case 'female':
-                            $gender='1';
+                            $gender = '1';
                             break;
                         case 'other':
-                            $gender='2';
+                            $gender = '2';
                             break;
                         case 'decline':
-                            $gender='3';
+                            $gender = '3';
                             break;
                         default:
-                            $gender='3';
+                            $gender = '3';
                             break;
                     }
 
-                    $userPersonal->user_id=$userPersonalDetail->user_id;
-                    $userPersonal->about=$userPersonalDetail->about?$userPersonalDetail->about:null;
-                    $userPersonal->gender=$gender;
-                    $userPersonal->date_of_birth=$userPersonalDetail->date_of_birth?$userPersonalDetail->date_of_birth:null;
-                    $userPersonal->age=$userPersonalDetail->age;
-                    $userPersonal->purpose=$status;
-                    $userPersonal->user_type=$user_type;
-                    $userPersonal->recent_immigrant=$userPersonalDetail->recent_immigrant=='1'?'2':'1';
-                    $userPersonal->indigenous_group=$userPersonalDetail->indigenous_group=='1'?'2':'1';
-                    $userPersonal->visible_minority=$userPersonalDetail->visible_minority=='1'?'2':'1';
-                    $userPersonal->disability=$userPersonalDetail->disability=='1'?'2':'1';
+                    $userPersonal->user_id = $userPersonalDetail->user_id;
+                    $userPersonal->about = $userPersonalDetail->about ? $userPersonalDetail->about : null;
+                    $userPersonal->gender = $gender;
+                    $userPersonal->date_of_birth = $userPersonalDetail->date_of_birth ? $userPersonalDetail->date_of_birth : null;
+                    $userPersonal->age = $userPersonalDetail->age;
+                    $userPersonal->purpose = $status;
+                    $userPersonal->user_type = $user_type;
+                    $userPersonal->recent_immigrant = $userPersonalDetail->recent_immigrant == '1' ? '2' : '1';
+                    $userPersonal->indigenous_group = $userPersonalDetail->indigenous_group == '1' ? '2' : '1';
+                    $userPersonal->visible_minority = $userPersonalDetail->visible_minority == '1' ? '2' : '1';
+                    $userPersonal->disability = $userPersonalDetail->disability == '1' ? '2' : '1';
                     $userPersonal->save();
                 }
             });
