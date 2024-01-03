@@ -74,6 +74,51 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class);
     }
 
+    public function userLabs()
+    {
+        return $this->hasMany(Lab::class, 'user_id', 'id');
+    }
+
+    public function userAchievements()
+    {
+        return $this->hasMany(UserAchievement::class, 'user_id', 'id');
+    }
+
+    public function userAddress()
+    {
+        return $this->hasOne(UserAddress::class);
+    }
+
+    public function userExperience()
+    {
+        return $this->hasMany(UserExperience::class);
+    }
+
+    public function userEducation()
+    {
+        return $this->hasMany(UserEducation::class);
+    }
+
+    public function userPatents()
+    {
+        return $this->hasMany(UserPatent::class);
+    }
+
+    public function userSkills()
+    {
+        return $this->hasMany(UserSkills::class);
+    }
+
+    public function userCertificates()
+    {
+        return $this->hasMany(UserCertificate::class);
+    }
+
+    public function userPersonalFiles()
+    {
+        return $this->hasMany(UserPersonalFile::class);
+    }
+
     /**login apis */
     public function login($request)
     {

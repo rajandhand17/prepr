@@ -66,7 +66,6 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->where('privacy', $privacy);
                 }
             }
-
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.id', function ($query) use ($request) {
                     $query->select('resource_collection_skills_groups_stacks.resource_collection_id')
@@ -99,6 +98,25 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.duration', $duration);
                 }
             }
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
+                $getCollectionLikedList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('like');
+                if ($getCollectionLikedList && $getCollectionLikedList->count() > 0) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionLikedList->pluck('resource_collection_id'));
+                }
+            }
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourites') {
+                $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('favourite');
+                if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
+                }
+            }
+
+            if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'shared') {
+                $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('share');
+                if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
+                }
+            }
 
             return $resourceCollectionList;
         } catch (\Exception $e) {
@@ -118,7 +136,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnId($id)
     {
         try {
-            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description')->first();
+            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description', 'slug')->first();
         } catch (\Exception $e) {
             return false;
         }

@@ -25,7 +25,7 @@ class FileUploadResourceModuleRequest extends FormRequest
     {
         $base_rules = [
             'file_upload'            => 'required|array',
-            'file_upload.*'          => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:1024',
+            'file_upload.*'          => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:153600',
         ];
 
         return $base_rules;

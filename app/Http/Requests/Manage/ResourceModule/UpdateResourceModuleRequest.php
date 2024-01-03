@@ -35,7 +35,7 @@ class UpdateResourceModuleRequest extends FormRequest
             'description'            => 'required',
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
-            'status'                 => 'required|in:draft,published,archive',
+            'status'                 => 'required|in:draft,publish,archive',
             'is_global'              => 'required|in:yes,no',
             'skills'                 => 'required|array',
             'skills.*'               => 'numeric|exists:skills,id',

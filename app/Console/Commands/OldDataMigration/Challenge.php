@@ -64,9 +64,11 @@ class Challenge extends Command
                     $category = '1';
                     if ($challenge->category != '0' && $challenge->category != null) {
                         $checkOldCategory = DB::connection('mysql2')->table('categories')->find($challenge->category);
-                        $checkCategory = Category::where('title', $checkOldCategory->name)->first();
-                        if ($checkCategory) {
-                            $category = $checkCategory->id;
+                        if ($checkOldCategory) {
+                            $checkCategory = Category::where('title', $checkOldCategory->name)->first();
+                            if ($checkCategory) {
+                                $category = $checkCategory->id;
+                            }
                         }
                     }
 

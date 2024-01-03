@@ -29,7 +29,7 @@ class CreateResourceCollectionRequest extends FormRequest
             'description'            => 'required',
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
-            'status'                 => 'required|in:draft,published,archive',
+            'status'                 => 'required|in:draft,publish,archive',
             'lab_ids'                => 'required|array',
             'lab_ids.*'              => 'exists:labs,uuid',
             'challenge_ids'          => 'required|array',

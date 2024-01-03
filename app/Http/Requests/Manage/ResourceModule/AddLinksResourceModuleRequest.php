@@ -27,12 +27,12 @@ class AddLinksResourceModuleRequest extends FormRequest
             $base_rules['links'] = 'array';
             $base_rules['links.*.title'] = 'max:255|required|string';
             $base_rules['links.*.social_link_id'] = 'required|exists:social_links,id';
-            $base_rules['links.*.path'] = 'required|max:255';
+            $base_rules['links.*.path'] = 'required|max:1600';
         }
         if ($this->request->has('embed_media')) {
             $base_rules['embed_media'] = 'array';
             $base_rules['embed_media.*.type'] = 'required|in:embedded_audio,embedded_video';
-            $base_rules['embed_media.*.path'] = 'required|max:255';
+            $base_rules['embed_media.*.path'] = 'required|max:16000';
         }
 
         return $base_rules;

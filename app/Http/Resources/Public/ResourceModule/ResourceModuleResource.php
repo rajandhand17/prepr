@@ -35,6 +35,7 @@ class ResourceModuleResource extends JsonResource
         $privacy = null;
         $status = null;
         $is_global = null;
+        $embedded_media = null;
 
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {
@@ -58,24 +59,27 @@ class ResourceModuleResource extends JsonResource
         if ($this->audios) {
             $audio = $this->audios;
         }
-        if ($this->embedded_videos) {
-            $embedded_video = $this->embedded_videos->map(function ($index) {
+
+        if ($this->embedded_medias) {
+            $embedded_media = $this->embedded_medias->map(function ($index) {
+                $media_type = null;
+                switch ($index->type) {
+                    case '3':
+                        $media_type = 'embedded_video';
+                        break;
+                    case '4':
+                        $media_type = 'embedded_audio';
+                        break;
+                }
+
                 return [
-                    'id'    => $index->id,
-                    'title' => $index->title,
-                    'path'  => $index->getRawOriginal('path'),
+                    'id'                => $index->id,
+                    'type'              => $media_type,
+                    'path'              => $index->getRawOriginal('path'),
                 ];
             })->all();
         }
-        if ($this->embedded_audios) {
-            $embedded_audio = $this->embedded_audios->map(function ($index) {
-                return [
-                    'id'    => $index->id,
-                    'title' => $index->title,
-                    'path'  => $index->getRawOriginal('path'),
-                ];
-            })->all();
-        }
+
         switch($this->privacy) {
             case '0':
                 $privacy = 'no';
@@ -104,10 +108,10 @@ class ResourceModuleResource extends JsonResource
         }
         switch($this->is_global) {
             case '0':
-                $is_global = 'yes';
+                $is_global = 'no';
                 break;
             case '1':
-                $is_global = 'no';
+                $is_global = 'yes';
                 break;
             default:
                 $is_global = 'no';
@@ -153,9 +157,9 @@ class ResourceModuleResource extends JsonResource
             $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        $rating = '0';
+        $rating = intval('0');
         if ($this->resource_rating) {
-            $rating = $this->resource_rating->rating;
+            $rating = intval($this->resource_rating->rating);
         }
 
         return [
@@ -163,7 +167,8 @@ class ResourceModuleResource extends JsonResource
             'language'                                => $this->language,
             'title'                                   => $this->title,
             'user'                                    => $this->users->first_name.' '.$this->users->last_name,
-            'organization_id'                         => $this->organization_id,
+            'organization_id'                         => $this->organization->uuid,
+            'organization'                            => $this->organization->title,
             'duration'                                => $duration,
             'duration_id'                             => $duration_id,
             'level'                                   => $level,
@@ -183,15 +188,14 @@ class ResourceModuleResource extends JsonResource
             'links'                                   => $links,
             'files'                                   => $files,
             'documents'                               => $document,
-            'video'                                   => $video,
-            'audio'                                   => $audio,
-            'embedded_video'                          => $embedded_video,
-            'embedded_audio'                          => $embedded_audio,
+            'videos'                                  => $video,
+            'audios'                                  => $audio,
+            'embedded_media'                          => $embedded_media,
+            'rating'                                  => $rating,
             'likes'                                   => $this->likes()->count(),
             'shares'                                  => $this->shares()->count(),
             'liked'                                   => $this->liked(),
             'favourite'                               => $this->favorites(),
-            'rating'                                  => $rating,
         ];
     }
 }
