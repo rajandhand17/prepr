@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Profile;
 
+use App\Services\FriendService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;
 use App\Services\UserEducationService;
@@ -10,9 +11,7 @@ use App\Services\UserPatentService;
 use App\Services\UserPersonalService;
 use App\Services\UserService;
 use App\Services\UserSkillsService;
-use App\Services\FriendService;
 use DB;
-
 
 class ProfileRepository implements ProfileInterface
 {
@@ -229,34 +228,38 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function sendFriendRequest($request){
+    public function sendFriendRequest($request)
+    {
         try {
             return $this->friendService->sendFriendRequest($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkFriendRequest($request){
+    public function checkFriendRequest($request)
+    {
         try {
             return $this->friendService->checkFriendRequest($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function acceptFriendRequest($request){
+    public function acceptFriendRequest($request)
+    {
         try {
             return $this->friendService->acceptFriendRequest($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function rejectFriendRequest($request){
+    public function rejectFriendRequest($request)
+    {
         try {
             return $this->friendService->rejectFriendRequest($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

@@ -19,7 +19,6 @@ class ProfileResource extends JsonResource
         $user_type = null;
 
         if ($this->userPersonal !== null) {
-
             switch ($this->userPersonal->user_type) {
                 case '0':
                     $user_type = __('responses.switch_user_type_employee');
@@ -97,19 +96,19 @@ class ProfileResource extends JsonResource
                     $user_type = null;
                     break;
             }
-            $gender=null;
-            switch ($this->userPersonal->gender){
-                case '0';
-                $gender='male';
+            $gender = null;
+            switch ($this->userPersonal->gender) {
+                case '0':
+                $gender = 'male';
                 break;
-                case '1';
-                $gender='female';
+                case '1':
+                $gender = 'female';
                 break;
-                case '2';
-                $gender='other';
+                case '2':
+                $gender = 'other';
                 break;
                 default:
-                    $gender='other';
+                    $gender = 'other';
                     break;
             }
             $about = $this->userPersonal->about ? $this->userPersonal->about : null;
@@ -120,7 +119,7 @@ class ProfileResource extends JsonResource
             $indigenous_group = $this->userPersonal->indigenous_group == 1 ? 'Yes' : 'No';
             $visible_minority = $this->userPersonal->visible_minority == 1 ? 'Yes' : 'No';
             $disability = $this->userPersonal->disability == 1 ? 'Yes' : 'No';
-            $purpose=$this->userPersonal->purpose;
+            $purpose = $this->userPersonal->purpose;
         } else {
             $about = null;
             $age = null;
@@ -130,7 +129,7 @@ class ProfileResource extends JsonResource
             $indigenous_group = 'No';
             $visible_minority = 'No';
             $disability = 'No';
-            $purpose=null;
+            $purpose = null;
         }
         if ($this->userSkills) {
             $associatedSkills = $this->userSkills->pluck('skill');
@@ -155,29 +154,29 @@ class ProfileResource extends JsonResource
             'lab_count'           => $this->userLabs->count(),
             'achievements'        => $this->userAchievements->count(),
             'achievements_list'   => UserAchievementResource::collection($this->userAchievements),
-            'featured_achievement'=>null,
-            'role'               => 'user',
-            'challenge_history'  => [],
-            'project_history'    => [],
-            'friends'            => [],
-            'tags'               => [],
-            'about'              => $about,
-            'age'                => $age,
-            'learnrank'         =>'1',
-            'gender'             => $gender,
-            'date_of_birth'      => $dob,
-            'purpose'            => $purpose,
-            'user_type'          => $user_type,
-            'recent_immigrant'   => $recent_immigrant,
-            'indigenous_group'   => $indigenous_group,
-            'visible_minority'   => $visible_minority,
-            'disability'         => $disability,
-            'user_experiences'   => UserExperienceResource::collection($this->userExperience),
-            'user_educations'    => UserEducationResource::collection($this->userEducation),
-            'user_patents'       => UserPatentResource::collection($this->userPatents),
-            'user_certificates'  => UserCertificateResource::collection($this->userCertificates),
-            'user_skills'        => $skills,
-            'user_personal_files'=> UserPersonalFilesResource::collection($this->userPersonalFiles),
+            'featured_achievement'=> null,
+            'role'                => 'user',
+            'challenge_history'   => [],
+            'project_history'     => [],
+            'friends'             => [],
+            'tags'                => [],
+            'about'               => $about,
+            'age'                 => $age,
+            'learnrank'           => '1',
+            'gender'              => $gender,
+            'date_of_birth'       => $dob,
+            'purpose'             => $purpose,
+            'user_type'           => $user_type,
+            'recent_immigrant'    => $recent_immigrant,
+            'indigenous_group'    => $indigenous_group,
+            'visible_minority'    => $visible_minority,
+            'disability'          => $disability,
+            'user_experiences'    => UserExperienceResource::collection($this->userExperience),
+            'user_educations'     => UserEducationResource::collection($this->userEducation),
+            'user_patents'        => UserPatentResource::collection($this->userPatents),
+            'user_certificates'   => UserCertificateResource::collection($this->userCertificates),
+            'user_skills'         => $skills,
+            'user_personal_files' => UserPersonalFilesResource::collection($this->userPersonalFiles),
 
         ];
     }
