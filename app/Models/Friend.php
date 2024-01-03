@@ -10,13 +10,12 @@ class Friend extends Model
 {
     use HasFactory;
     use SoftDeletes;
-     protected $table="friends";
+    protected $table = 'friends';
 
-     protected $fillable=[
-         'user_id',
-         'reference_id',
-         'status',
-         'newsfeed',
-     ];
-
+    protected $fillable = [
+        'user_id',
+        'reference_id',
+        'status',
+        'newsfeed',
+    ];
 }

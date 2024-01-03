@@ -34,7 +34,7 @@ class AddEducationRequest extends FormRequest
             'end_date'         => 'required|array',
             'end_date.*'       => 'after_or_equal:start_date.*',
             'address'          => 'required|array',
-            'state'          => 'required|array',
+            'state'            => 'required|array',
             'country'          => 'required|array',
             'description'      => 'required|array',
         ];

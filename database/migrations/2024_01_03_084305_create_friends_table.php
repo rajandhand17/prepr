@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,9 +14,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('reference_id');
-            $table->enum('status',['0','1','2'])->default('0')->comment("0 for pending, 1 for accepted,2 for rejected");
-            $table->enum('follow',['0','1','2'])->default('1')->comment("0 for pending, 1 for follow,2 for unfollow");
-            $table->enum('newsfeed',['1','2'])->default('1')->comment(" 1 for allowed all,2 for not allowed");
+            $table->enum('status', ['0', '1', '2'])->default('0')->comment('0 for pending, 1 for accepted,2 for rejected');
+            $table->enum('follow', ['0', '1', '2'])->default('1')->comment('0 for pending, 1 for follow,2 for unfollow');
+            $table->enum('newsfeed', ['1', '2'])->default('1')->comment(' 1 for allowed all,2 for not allowed');
             $table->timestamps();
             $table->softDeletes();
         });

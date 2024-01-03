@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Profile;
 
-use App\Http\Requests\Profile\FriendRequest;
 use Tests\TestCase;
 
 /**
