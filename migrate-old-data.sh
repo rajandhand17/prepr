@@ -27,3 +27,11 @@ php artisan migrate-old-data:resource-modules
 php artisan migrate-old-data:resource-collection
 php artisan migrate-old-data:resource-groups
 php artisan migrate-old-data:users-achievement
+php artisan migrate-old-data:users-skills
+php artisan migrate-old-data:users-personal
+php artisan migrate-old-data:users-patent
+php artisan migrate-old-data:users-experiences
+php artisan migrate-old-data:users-education
+php artisan migrate-old-data:users-certificate
+
+
