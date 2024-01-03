@@ -163,7 +163,7 @@ class ProfileResource extends JsonResource
             'tags'               => [],
             'about'              => $about,
             'age'                => $age,
-            'learn-rank'         =>'1',
+            'learnrank'         =>'1',
             'gender'             => $gender,
             'date_of_birth'      => $dob,
             'purpose'            => $purpose,
