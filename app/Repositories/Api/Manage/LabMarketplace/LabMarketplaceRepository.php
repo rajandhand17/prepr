@@ -57,7 +57,6 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
         try {
             $createLabMarketplace= DB::transaction(function () use ($slug,$lab){
                 $createLabMarketplace=$this->labMarketplaceService->createLabMarketplace($slug);
-                dd($createLabMarketplace);
                 $createLabMarketplaceAddress=$this->labMarketplaceAddressService->createLabMarketplaceAddress($createLabMarketplace,$lab);
                 $createdLabMarketplaceSkillAssociations = $this->labMarketplaceSkillsGroupStackService->createLabMarketplaceSkillsGroupsStack($createLabMarketplace, $lab);
                 $createdLabMarketplaceTagAssociations = $this->labMarketplaceTagsGroupsService->createLabMarketplaceTagsGroupsStack($createLabMarketplace, $lab);

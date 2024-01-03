@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Manage\LabMarketplace;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Controllers\Controller;
 use App\Repositories\Api\Manage\LabMarketplace\LabMarketplaceRepository;
 
 class LabMarketplaceController extends AppBaseController
@@ -20,10 +19,10 @@ class LabMarketplaceController extends AppBaseController
             if (!$checkLabExistsOrNot){
                 return $this->sendError(__('responses.lab_slug_not_found'), 404);
             }
-//            $checkLabMarketplace=$this->labMarketplaceRepository->getCheckUuid($checkLabExistsOrNot->uuid);
-//            if ($checkLabMarketplace) {
-//                return $this->sendError(__('responses.already_cloned'),200);
-//            }
+            $checkLabMarketplace=$this->labMarketplaceRepository->getCheckUuid($checkLabExistsOrNot->uuid);
+            if ($checkLabMarketplace) {
+                return $this->sendError(__('responses.already_cloned'),200);
+            }
             $labMarketplace=$this->labMarketplaceRepository->createLabMarketplace($slug,$checkLabExistsOrNot);
             if ($labMarketplace) {
                 return $this->sendResponse($labMarketplace, __('responses.template_lab_stored_success'), 200);
@@ -33,5 +32,4 @@ class LabMarketplaceController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
 }
