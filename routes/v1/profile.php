@@ -17,4 +17,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/skills/add', [ProfileController::class, 'addSkills']);
     Route::delete('/{id}/skill/delete', [ProfileController::class, 'deleteSkill']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
+    Route::post('/send-friend-request', [ProfileController::class, 'sendFriendRequest']);
+    Route::post('/accept-friend-request', [ProfileController::class, 'acceptFriendRequest']);
+    Route::post('/reject-friend-request', [ProfileController::class, 'rejectFriendRequest']);
 });

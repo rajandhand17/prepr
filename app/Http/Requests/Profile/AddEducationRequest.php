@@ -34,6 +34,8 @@ class AddEducationRequest extends FormRequest
             'end_date'         => 'required|array',
             'end_date.*'       => 'after_or_equal:start_date.*',
             'address'          => 'required|array',
+            'state'          => 'required|array',
+            'country'          => 'required|array',
             'description'      => 'required|array',
         ];
         if ($this->enrollment_status == 'yes') {
@@ -67,6 +69,10 @@ class AddEducationRequest extends FormRequest
             'end_date.*.after_or_equal'   => __('response.end_date_required'),
             'address.required'            => __('response.required_field'),
             'address.array'               => __('response.array_status'),
+            'state.required'              => __('response.required_field'),
+            'state.array'                 => __('response.array_status'),
+            'country.required'            => __('response.required_field'),
+            'country.array'               => __('response.array_status'),
             'description.required'        => __('response.required_field'),
             'description.array'           => __('response.array_status'),
             'student_number.required'     => __('responses.required_field'),

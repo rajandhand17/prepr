@@ -12,7 +12,7 @@ class UserPatentService
             $deleteExistingPatent = UserPatent::where('user_id', '=', auth()->user()->id)->delete();
             $input = $request->all();
             $allPatents = [];
-            foreach ($input['title'] as $key => $value) {
+            foreach ($input['company'] as $key => $value) {
                 $create = UserPatent::create([
                     'user_id'    => auth()->user()->id,
                     'title'      => $value,
@@ -22,7 +22,6 @@ class UserPatentService
                 ]);
                 $allPatents[] = $create;
             }
-
             return $allPatents;
         } catch(\Exception $e) {
             return false;
