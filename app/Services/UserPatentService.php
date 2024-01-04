@@ -22,6 +22,7 @@ class UserPatentService
                 ]);
                 $allPatents[] = $create;
             }
+
             return $allPatents;
         } catch(\Exception $e) {
             return false;

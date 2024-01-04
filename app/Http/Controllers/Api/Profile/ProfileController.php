@@ -125,9 +125,10 @@ class ProfileController extends AppBaseController
     {
         try {
             $addPatient = $this->profileRepository->addPatent($request);
-            if($addPatient) {
+            if ($addPatient) {
                 return $this->sendResponse(UserPatentResource::collection($addPatient), __('responses.user_patent_created'));
             }
+
             return $this->sendError(__('responses.user_patent_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -230,21 +231,23 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function sendFriendRequest(FriendRequest $request){
+    public function sendFriendRequest(FriendRequest $request)
+    {
         try {
             $checkFriendRequest = $this->profileRepository->checkFriendRequest($request);
-            if($checkFriendRequest && $checkFriendRequest->status=='0'){
+            if ($checkFriendRequest && $checkFriendRequest->status == '0') {
                 return $this->sendError(__('responses.user_request_already_send'));
             }
-            if($checkFriendRequest && $checkFriendRequest->status=='1'){
+            if ($checkFriendRequest && $checkFriendRequest->status == '1') {
                 return $this->sendError(__('responses.user_request_already_accepted'));
             }
-            $addFriend=$this->profileRepository->sendFriendRequest($request);
-            if($addFriend){
-                return $this->sendResponse(null,__('responses.send_request_successfully'));
+            $addFriend = $this->profileRepository->sendFriendRequest($request);
+            if ($addFriend) {
+                return $this->sendResponse(null, __('responses.send_request_successfully'));
             }
-            return $this->sendError(__('responses.send_request_failed'),401);
-        }catch (\Exception $e){
+
+            return $this->sendError(__('responses.send_request_failed'), 401);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
