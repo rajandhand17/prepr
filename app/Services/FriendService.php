@@ -10,41 +10,43 @@ class FriendService
     {
         try {
             $friend = Friend::updateOrCreate([
-                'user_id' => auth()->user()->id,
+                'user_id'      => auth()->user()->id,
                 'reference_id' => $request->reference_id,
             ], [
-                'user_id' => auth()->user()->id,
+                'user_id'      => auth()->user()->id,
                 'reference_id' => $request->reference_id,
-                'status' => '0',
+                'status'       => '0',
             ]);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
-
     }
 
-    public function getActionValue($action){
+    public function getActionValue($action)
+    {
         try {
-            $value=null;
-            switch($action){
+            $value = null;
+            switch($action) {
                 case 'accept':
-                    $value='1';
+                    $value = '1';
                     break;
                 case 'reject':
-                    $value='2';
+                    $value = '2';
                     break;
                 default:
-                    $value=null;
+                    $value = null;
                     break;
             }
-            if($value!==null){
+            if ($value !== null) {
                 return $value;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function checkFriendRequest($request)
     {
         try {
@@ -56,15 +58,16 @@ class FriendService
         }
     }
 
-    public function friendRequest($request,$action){
+    public function friendRequest($request, $action)
+    {
         try {
-            $acceptFriendRequest=Friend::where(['user_id'=>auth()->user()->id,'reference_id'=>$request->reference_id,'status'=>'0'])->first();
-            $acceptFriendRequest->status=$action;
+            $acceptFriendRequest = Friend::where(['user_id'=>auth()->user()->id, 'reference_id'=>$request->reference_id, 'status'=>'0'])->first();
+            $acceptFriendRequest->status = $action;
             $acceptFriendRequest->save();
+
             return $acceptFriendRequest;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
-
 }
