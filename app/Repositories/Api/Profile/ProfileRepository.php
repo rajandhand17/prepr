@@ -245,17 +245,17 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function acceptFriendRequest($request){
+    public function friendRequest($request,$action){
         try {
-            return $this->friendService->acceptFriendRequest($request);
+            return $this->friendService->friendRequest($request,$action);
         }catch (\Exception $e) {
             return false;
         }
     }
 
-    public function rejectFriendRequest($request){
+    public function getActionValue($action){
         try {
-            return $this->friendService->rejectFriendRequest($request);
+            return $this->friendService->getActionValue($action);
         }catch (\Exception $e) {
             return false;
         }

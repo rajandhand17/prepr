@@ -25,10 +25,10 @@ class FriendService
             }
         }
 
-        public function acceptFriendRequest($request){
+        public function friendRequest($request,$action){
             try {
                 $acceptFriendRequest=Friend::where(['user_id'=>auth()->user()->id,'reference_id'=>$request->reference_id,'status'=>'0'])->first();
-                $acceptFriendRequest->status=1;
+                $acceptFriendRequest->status=$action;
                 $acceptFriendRequest->save();
                 return $acceptFriendRequest;
             }catch (\Exception $e) {
@@ -36,12 +36,24 @@ class FriendService
             }
         }
 
-        public function rejectFriendRequest($request){
+        public function getActionValue($action){
             try {
-                $rejectFriendRequest=Friend::where(['user_id'=>auth()->user()->id,'reference_id'=>$request->reference_id,'status'=>'0'])->first();
-                $rejectFriendRequest->status='2';
-                $rejectFriendRequest->save();
-                return true;
+                $value=null;
+                switch($action){
+                    case 'accept':
+                        $value='1';
+                        break;
+                    case 'reject':
+                        $value='2';
+                        break;
+                    default:
+                        $value=null;
+                        break;
+                }
+                if($value!==null){
+                    return $value;
+                }
+                return false;
             }catch (\Exception $e) {
                 return false;
             }

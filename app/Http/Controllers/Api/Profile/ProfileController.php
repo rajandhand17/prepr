@@ -249,33 +249,21 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function acceptFriendRequest(FriendRequest $request){
+    public function friendRequest(FriendRequest $request,$action){
         try {
             $checkFriendRequest = $this->profileRepository->checkFriendRequest($request);
+            $getActionValue=$this->profileRepository->getActionValue($action);
+            if(!$getActionValue){
+                return $this->sendError(__('responses.handler_bad_request'), 400);
+            }
             if($checkFriendRequest && $checkFriendRequest->status!=='0'){
                 return $this->sendError(__('responses.user_no_request'));
             }
-            $acceptedFriendRequest =$this->profileRepository->acceptFriendRequest($request);
+            $acceptedFriendRequest =$this->profileRepository->friendRequest($request,$getActionValue);
             if($acceptedFriendRequest){
-                return $this->sendResponse(null,'responses.accept_friend_request');
+                return $this->sendResponse(null,__('responses.'.$action.'_friend_request'));
             }
-            return $this->sendError(__('responses.accept_friend_request_failed'));
-        }catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function rejectFriendRequest(FriendRequest $request){
-        try{
-            $checkFriendRequest = $this->profileRepository->checkFriendRequest($request);
-            if($checkFriendRequest && $checkFriendRequest->status!=='0'){
-                return $this->sendError(__('responses.user_no_request'),404);
-            }
-            $rejectFriendRequest = $this->profileRepository->rejectFriendRequest($request);
-            if($rejectFriendRequest){
-                return $this->sendResponse(null,__('responses.reject_friend_request_successful'));
-            }
-            return $this->sendError(__('responses.accept_friend_request_failed'),401);
+            return $this->sendError(__('responses.'.$action.'_friend_request_failed'));
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }

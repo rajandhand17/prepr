@@ -793,7 +793,9 @@
     "responses.user_request_already_send": "The Friend Request has already sent",
     "responses.user_request_already_accepted": "The Friend Request has already accepted",
     "responses.user_no_request": "There are no Friend Request for accepting",
-    "responses.reject_friend_request_successful": "The Friend Request has been accepted successfully",
+    "responses.reject_friend_request": "The Friend Request has been rejected successfully",
+    "responses.reject_friend_request_failed": "The Friend Request has failed to reject",
+    "responses.accept_friend_request": "The Friend Request has been accepted successfully",
     "responses.accept_friend_request_failed": "The Friend Request has failed to accept"
 
 
