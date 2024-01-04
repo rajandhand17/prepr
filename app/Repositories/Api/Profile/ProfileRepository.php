@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Profile;
 
+use App\Services\FriendService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;
 use App\Services\UserEducationService;
@@ -30,7 +31,9 @@ class ProfileRepository implements ProfileInterface
 
     private $userAddressService;
 
-    public function __construct(UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
+    private $friendService;
+
+    public function __construct(FriendService $friendService, UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
     {
         $this->userService = $userService;
         $this->userPersonalService = $userPersonalService;
@@ -40,6 +43,7 @@ class ProfileRepository implements ProfileInterface
         $this->userPatentsService = $userPatentsService;
         $this->userCertificatesService = $userCertificatesService;
         $this->userAddressService = $userAddressService;
+        $this->friendService = $friendService;
     }
 
     public function getUserByUsername($user_name)
@@ -219,6 +223,42 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userEducationService->checkUserEducation($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function sendFriendRequest($request)
+    {
+        try {
+            return $this->friendService->sendFriendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkFriendRequest($request)
+    {
+        try {
+            return $this->friendService->checkFriendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function friendRequest($request, $action)
+    {
+        try {
+            return $this->friendService->friendRequest($request, $action);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getActionValue($action)
+    {
+        try {
+            return $this->friendService->getActionValue($action);
         } catch (\Exception $e) {
             return false;
         }
