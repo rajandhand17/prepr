@@ -18,7 +18,7 @@ class FriendService
                 'status'       => '0',
             ]);
 
-            return $friend;
+            return true;
         } catch(\Exception $e) {
             return false;
         }
