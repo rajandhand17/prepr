@@ -10,6 +10,7 @@ use App\Http\Requests\Profile\AddPatentRequest;
 use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
 use App\Http\Requests\Profile\FileUploadRequest;
+use App\Http\Requests\Profile\FriendRequest;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Profile\UserCertificateResource;
 use App\Http\Resources\Profile\UserEducationResource;
@@ -226,6 +227,49 @@ class ProfileController extends AppBaseController
 
             return $this->sendError(__('responses.user_experience_failed'), 404);
         } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function sendFriendRequest(FriendRequest $request)
+    {
+        try {
+            $checkFriendRequest = $this->profileRepository->checkFriendRequest($request);
+            if ($checkFriendRequest && $checkFriendRequest->status == '0') {
+                return $this->sendError(__('responses.user_request_already_send'));
+            }
+            if ($checkFriendRequest && $checkFriendRequest->status == '1') {
+                return $this->sendError(__('responses.user_request_already_accepted'));
+            }
+            $addFriend = $this->profileRepository->sendFriendRequest($request);
+            if ($addFriend) {
+                return $this->sendResponse(null, __('responses.send_request_successfully'));
+            }
+
+            return $this->sendError(__('responses.send_request_failed'), 401);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function friendRequest(FriendRequest $request, $action)
+    {
+        try {
+            $checkFriendRequest = $this->profileRepository->checkFriendRequest($request);
+            $getActionValue = $this->profileRepository->getActionValue($action);
+            if (!$getActionValue) {
+                return $this->sendError(__('responses.handler_bad_request'), 400);
+            }
+            if ($checkFriendRequest && $checkFriendRequest->status !== '0') {
+                return $this->sendError(__('responses.user_no_request'));
+            }
+            $acceptedFriendRequest = $this->profileRepository->friendRequest($request, $getActionValue);
+            if ($acceptedFriendRequest) {
+                return $this->sendResponse(null, __('responses.'.$action.'_friend_request'));
+            }
+
+            return $this->sendError(__('responses.'.$action.'_friend_request_failed'));
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

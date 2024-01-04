@@ -21,6 +21,8 @@ class UserEducationService
                     'start_date' => $input['start_date'][$key],
                     'end_date'   => $input['end_date'][$key],
                     'address'    => $input['address'][$key],
+                    'state'      => $input['state'][$key],
+                    'country'    => $input['country'][$key],
                     'description'=> $input['description'][$key],
                 ]);
                 $allEducation[] = $createEducation;
