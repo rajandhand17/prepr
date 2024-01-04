@@ -17,6 +17,8 @@ class FriendService
                 'reference_id' => $request->reference_id,
                 'status'       => '0',
             ]);
+
+            return true;
         } catch(\Exception $e) {
             return false;
         }
