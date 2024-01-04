@@ -31,7 +31,7 @@ class ProfileRepository implements ProfileInterface
 
     private $userAddressService;
 
-    protected $friendService;
+    private $friendService;
 
     public function __construct(FriendService $friendService, UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
     {
