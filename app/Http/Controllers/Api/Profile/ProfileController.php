@@ -252,22 +252,24 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function friendRequest(FriendRequest $request,$action){
+    public function friendRequest(FriendRequest $request, $action)
+    {
         try {
             $checkFriendRequest = $this->profileRepository->checkFriendRequest($request);
-            $getActionValue=$this->profileRepository->getActionValue($action);
-            if(!$getActionValue){
+            $getActionValue = $this->profileRepository->getActionValue($action);
+            if (!$getActionValue) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            if($checkFriendRequest && $checkFriendRequest->status!=='0'){
+            if ($checkFriendRequest && $checkFriendRequest->status !== '0') {
                 return $this->sendError(__('responses.user_no_request'));
             }
-            $acceptedFriendRequest =$this->profileRepository->friendRequest($request,$getActionValue);
-            if($acceptedFriendRequest){
-                return $this->sendResponse(null,__('responses.'.$action.'_friend_request'));
+            $acceptedFriendRequest = $this->profileRepository->friendRequest($request, $getActionValue);
+            if ($acceptedFriendRequest) {
+                return $this->sendResponse(null, __('responses.'.$action.'_friend_request'));
             }
+
             return $this->sendError(__('responses.'.$action.'_friend_request_failed'));
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
