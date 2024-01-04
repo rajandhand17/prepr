@@ -99,14 +99,14 @@ class ProfileResource extends JsonResource
             $gender = null;
             switch ($this->userPersonal->gender) {
                 case '0':
-                $gender = 'male';
-                break;
+                    $gender = 'male';
+                    break;
                 case '1':
-                $gender = 'female';
-                break;
+                    $gender = 'female';
+                    break;
                 case '2':
-                $gender = 'other';
-                break;
+                    $gender = 'other';
+                    break;
                 default:
                     $gender = 'other';
                     break;
