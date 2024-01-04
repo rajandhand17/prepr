@@ -18,4 +18,9 @@ class Friend extends Model
         'status',
         'newsfeed',
     ];
+
+    public function getFriendsProfile(){
+        return $this->belongsTo(User::class,'reference_id','id');
+    }
+
 }

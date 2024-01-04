@@ -246,10 +246,18 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function friendRequest($request, $action)
+    public function checkFriendRequestBasedOnAction($request,$column,$value){
+        try {
+            return $this->friendService->checkFriendRequestBasedOnAction($request,$column,$value);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function friendRequest($request,$column,$value)
     {
         try {
-            return $this->friendService->friendRequest($request, $action);
+            return $this->friendService->friendRequest($request, $column,$value);
         } catch (\Exception $e) {
             return false;
         }
@@ -260,6 +268,44 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->getActionValue($action);
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFriendsListing($getColumnName){
+        try {
+            return $this->friendService->getFriendsListing($getColumnName);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFriendRequestList($column){
+        try {
+            return $this->friendService->getFriendRequestList($column);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function getColumnName($column){
+        try {
+            return $this->friendService->getColumnName($column);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkFriendsStatus($request){
+        try {
+            return $this->friendService->checkFriendsStatus($request);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function removeFriend($request){
+        try {
+            return $this->friendService->removeFriend($request);
+        }catch (\Exception $e) {
             return false;
         }
     }
