@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Profile;
 
-use App\Models\Friend;
 use App\Services\SkillService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
