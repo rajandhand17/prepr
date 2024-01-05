@@ -11,6 +11,7 @@ use App\Services\UserPatentService;
 use App\Services\UserPersonalService;
 use App\Services\UserService;
 use App\Services\UserSkillsService;
+use App\Services\UserTagsService;
 use DB;
 
 class ProfileRepository implements ProfileInterface
@@ -33,13 +34,16 @@ class ProfileRepository implements ProfileInterface
 
     private $friendService;
 
-    public function __construct(FriendService $friendService, UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
+    private $userTagsService;
+
+    public function __construct(FriendService $friendService, UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserTagsService $userTagsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
     {
         $this->userService = $userService;
         $this->userPersonalService = $userPersonalService;
         $this->userExperienceService = $userExperienceService;
         $this->userEducationService = $userEducationService;
         $this->userSkillsService = $userSkillsService;
+        $this->userTagsService = $userTagsService;
         $this->userPatentsService = $userPatentsService;
         $this->userCertificatesService = $userCertificatesService;
         $this->userAddressService = $userAddressService;
@@ -129,6 +133,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function profileImageUpload($request)
+    {
+        try {
+            return $this->userPersonalService->profileImageUpload($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function deleteEducation($id)
     {
         try {
@@ -174,6 +187,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function addTags($request)
+    {
+        try {
+            return $this->userTagsService->addTags($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function deleteSkill($id)
     {
         try {
@@ -183,10 +205,28 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function deleteTag($id)
+    {
+        try {
+            return $this->userTagsService->deleteTag($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function checkUserSkillExists($id)
     {
         try {
             return $this->userSkillsService->checkUserSkillExists($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkUserTagExists($id)
+    {
+        try {
+            return $this->userTagsService->checkUserTagExists($id);
         } catch (\Exception $e) {
             return false;
         }
