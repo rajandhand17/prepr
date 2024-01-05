@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Models\Skill;
 use App\Models\Tag;
 
 class TagService
@@ -70,7 +71,12 @@ class TagService
     public static function getTagsIdBasedOnId($resourceGroupTagId)
     {
         try {
-            return Tag::where('id', $resourceGroupTagId)->pluck('id')->first();
+            $getTagsList = Tag::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+                ->where('id', $resourceGroupTagId)->get();
+            if ($getTagsList) {
+                return $getTagsList;
+            }
+            return false;
         } catch (\Exception $e) {
             return false;
         }
