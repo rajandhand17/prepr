@@ -36,7 +36,7 @@ class ProfileRepository implements ProfileInterface
 
     private $userTagsService;
 
-    public function __construct(FriendService $friendService, UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService,UserTagsService $userTagsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
+    public function __construct(FriendService $friendService, UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserTagsService $userTagsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
     {
         $this->userService = $userService;
         $this->userPersonalService = $userPersonalService;
@@ -133,13 +133,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function profileImageUpload($request){
+    public function profileImageUpload($request)
+    {
         try {
             return $this->userPersonalService->profileImageUpload($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function deleteEducation($id)
     {
         try {
@@ -193,6 +195,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function deleteSkill($id)
     {
         try {
@@ -210,6 +213,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function checkUserSkillExists($id)
     {
         try {
@@ -227,6 +231,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function addCertificate($request)
     {
         try {
