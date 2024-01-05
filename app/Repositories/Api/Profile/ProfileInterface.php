@@ -39,4 +39,25 @@ interface ProfileInterface
     public function checkUserCertificate($id);
 
     public function checkUserEducation($id);
+
+    public function sendFriendRequest($request);
+
+    public function checkFriendRequest($request);
+
+    public function checkFriendRequestBasedOnAction($request,$column,$value);
+
+    public function friendRequest($request,$column,$value);
+
+    public function getActionValue($action);
+
+    public function getFriendsListing($columnName);
+
+    public function getFriendRequestList($column);
+
+    public function getColumnName($column);
+
+    public function checkFriendsStatus($request);
+
+    public function removeFriend($request);
+
 }

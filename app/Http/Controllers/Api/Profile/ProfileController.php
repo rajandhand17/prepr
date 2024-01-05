@@ -276,11 +276,11 @@ class ProfileController extends AppBaseController
 
     public function getFriendsListing($activity){
         try {
-            $getColumnName=$this->profileRepository->getColumnName($activity);
-            if($getColumnName==null){
+            $columnName=$this->profileRepository->getColumnName($activity);
+            if($columnName==null){
                 return $this->sendError(__('responses.wrong_url'),405);
             }
-            $friendsListing=$this->profileRepository->getFriendsListing($getColumnName);
+            $friendsListing=$this->profileRepository->getFriendsListing($columnName);
             if ($friendsListing) {
                 return $this->sendResponse(FriendsResource::collection($friendsListing),__('responses.friends_listing'));
             }

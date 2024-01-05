@@ -272,22 +272,24 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function getFriendsListing($getColumnName){
+    public function getFriendsListing($columnName){
         try {
-            return $this->friendService->getFriendsListing($getColumnName);
+            return $this->friendService->getFriendsListing($columnName);
         }catch (\Exception $e) {
             return false;
         }
     }
 
-    public function getFriendRequestList($column){
+    public function getFriendRequestList($column)
+    {
         try {
             return $this->friendService->getFriendRequestList($column);
         }catch (\Exception $e) {
             return false;
         }
     }
-    public function getColumnName($column){
+    public function getColumnName($column)
+    {
         try {
             return $this->friendService->getColumnName($column);
         }catch (\Exception $e) {
@@ -295,14 +297,16 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function checkFriendsStatus($request){
+    public function checkFriendsStatus($request)
+    {
         try {
             return $this->friendService->checkFriendsStatus($request);
         }catch (\Exception $e) {
             return false;
         }
     }
-    public function removeFriend($request){
+    public function removeFriend($request)
+    {
         try {
             return $this->friendService->removeFriend($request);
         }catch (\Exception $e) {

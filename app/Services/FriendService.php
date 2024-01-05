@@ -99,9 +99,9 @@ class FriendService
         }
     }
 
-    public function getFriendsListing($getColumnName){
+    public function getFriendsListing($columnName){
         try {
-            $friends=Friend::where(['user_id'=>auth()->user()->id,$getColumnName=>'1'])->get();
+            $friends=Friend::where(['user_id'=>auth()->user()->id,$columnName=>'1'])->get();
             if($friends){
                 return  $friends;
             }
