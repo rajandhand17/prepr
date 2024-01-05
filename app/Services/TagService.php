@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
-use App\Models\Skill;
 use App\Models\Tag;
 
 class TagService
@@ -76,6 +75,7 @@ class TagService
             if ($getTagsList) {
                 return $getTagsList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

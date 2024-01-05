@@ -15,7 +15,7 @@ class UserTagsService
 
             foreach ($inputAllTags['tag_id'] as $key => $value) {
                 $addTag = UserTag::create([
-                    'user_id' => auth()->user()->id,
+                    'user_id'  => auth()->user()->id,
                     'tag_id'   => $value,
                 ]);
 
@@ -35,6 +35,7 @@ class UserTagsService
             if ($deleteTag) {
                 return true;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
