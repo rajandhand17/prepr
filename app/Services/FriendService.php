@@ -31,6 +31,7 @@ class FriendService
             switch($action) {
                 case 'send':
                     $value='0';
+                    $column='status';
                     break;
                 case 'accept':
                     $value = '1';
@@ -76,9 +77,10 @@ class FriendService
         }
     }
 
-    public function checkFriendRequestBasedOnAction($request, $column, $value)
+    public function checkFriendStatusBasedOnAction($request, $column, $value)
     {
         try {
+
             $friendRequest = Friend::where([
                 'user_id'     => auth()->user()->id,
                 'reference_id'=> $request->user_id,
@@ -98,7 +100,13 @@ class FriendService
             if ($friends) {
                 $friends->$column = $value;
                 $friends->save();
-
+                return true;
+            }else{
+                $friends =new Friend;
+                $friends->user_id = $request->user_id;
+                $friends->reference_id =auth()->user()->id;
+                $friends->$column = $value;
+                $friends->save();
                 return true;
             }
 

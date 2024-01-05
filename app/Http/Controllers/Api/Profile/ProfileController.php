@@ -260,11 +260,18 @@ class ProfileController extends AppBaseController
             if (!$getActionValue) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            dd($getActionValue);
-            $checkFriendRequest = $this->profileRepository->checkFriendRequestBasedOnAction($request, $getActionValue['column'], '0');
-            if ($checkFriendRequest == null) {
-                return $this->sendError(__('responses.user_no_request'));
+            $checkFriendRequest = $this->profileRepository->checkFriendRequest($request);
+
+            if ($checkFriendRequest && $checkFriendRequest->status == '0') {
+                return $this->sendError(__('responses.user_request_already_send'));
             }
+            if ($checkFriendRequest && $checkFriendRequest->status == '1') {
+                return $this->sendError(__('responses.user_request_already_accepted'));
+            }
+//            $checkFriendRequest = $this->profileRepository->checkFriendStatusBasedOnAction($request, $getActionValue['column'], '0');
+//            if ($checkFriendRequest == null) {
+//                return $this->sendError(__('responses.user_no_request'));
+//            }
             $acceptedFriendRequest = $this->profileRepository->friendRequest($request, $getActionValue['column'], $getActionValue['value']);
             if ($acceptedFriendRequest) {
                 return $this->sendResponse(null, __('responses.'.$action.'_friend_request'));
