@@ -29,6 +29,9 @@ class FriendService
         try {
             $value = null;
             switch($action) {
+                case 'send':
+                    $value='0';
+                    break;
                 case 'accept':
                     $value = '1';
                     $column = 'status';

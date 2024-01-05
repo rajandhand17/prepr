@@ -18,6 +18,12 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::delete('/{id}/skill/delete', [ProfileController::class, 'deleteSkill']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
     Route::post('/send-friend-request', [ProfileController::class, 'sendFriendRequest']);
+    Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequest']);
+    Route::post('/friends/{activity}', [ProfileController::class, 'sendFriendRequest']);
+
+
+
+    Route::post('/send-friend-request', [ProfileController::class, 'sendFriendRequest']);
     Route::post('/friend-request/{activity}', [ProfileController::class, 'friendRequest']);
     Route::get('/listing/{activity}', [ProfileController::class, 'getFriendsListing']);
     Route::post('/pending/requests/{activity}', [ProfileController::class, 'getFriendRequestList']);

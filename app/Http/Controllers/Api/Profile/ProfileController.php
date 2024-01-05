@@ -260,6 +260,7 @@ class ProfileController extends AppBaseController
             if (!$getActionValue) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
+            dd($getActionValue);
             $checkFriendRequest = $this->profileRepository->checkFriendRequestBasedOnAction($request, $getActionValue['column'], '0');
             if ($checkFriendRequest == null) {
                 return $this->sendError(__('responses.user_no_request'));
