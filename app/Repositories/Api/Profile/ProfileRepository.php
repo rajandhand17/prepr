@@ -246,18 +246,19 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function checkFriendRequestBasedOnAction($request,$column,$value){
+    public function checkFriendRequestBasedOnAction($request, $column, $value)
+    {
         try {
-            return $this->friendService->checkFriendRequestBasedOnAction($request,$column,$value);
-        }catch (\Exception $e) {
+            return $this->friendService->checkFriendRequestBasedOnAction($request, $column, $value);
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function friendRequest($request,$column,$value)
+    public function friendRequest($request, $column, $value)
     {
         try {
-            return $this->friendService->friendRequest($request, $column,$value);
+            return $this->friendService->friendRequest($request, $column, $value);
         } catch (\Exception $e) {
             return false;
         }
@@ -272,10 +273,11 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function getFriendsListing($columnName){
+    public function getFriendsListing($columnName)
+    {
         try {
             return $this->friendService->getFriendsListing($columnName);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -284,15 +286,16 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->friendService->getFriendRequestList($column);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function getColumnName($column)
     {
         try {
             return $this->friendService->getColumnName($column);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -301,15 +304,16 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->friendService->checkFriendsStatus($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function removeFriend($request)
     {
         try {
             return $this->friendService->removeFriend($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

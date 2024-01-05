@@ -19,8 +19,8 @@ class Friend extends Model
         'newsfeed',
     ];
 
-    public function getFriendsProfile(){
-        return $this->belongsTo(User::class,'reference_id','id');
+    public function getFriendsProfile()
+    {
+        return $this->belongsTo(User::class, 'reference_id', 'id');
     }
-
 }

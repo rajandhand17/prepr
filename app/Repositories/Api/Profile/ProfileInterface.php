@@ -44,9 +44,9 @@ interface ProfileInterface
 
     public function checkFriendRequest($request);
 
-    public function checkFriendRequestBasedOnAction($request,$column,$value);
+    public function checkFriendRequestBasedOnAction($request, $column, $value);
 
-    public function friendRequest($request,$column,$value);
+    public function friendRequest($request, $column, $value);
 
     public function getActionValue($action);
 
@@ -59,5 +59,4 @@ interface ProfileInterface
     public function checkFriendsStatus($request);
 
     public function removeFriend($request);
-
 }
