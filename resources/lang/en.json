@@ -791,7 +791,7 @@
     "responses.send_request_successfully": "The Friend Request has successfully sent",
     "responses.send_request_failed": "The Friend Request has failed",
     "responses.user_request_already_send": "The Friend Request has already sent",
-    "responses.user_request_already_accepted": "You both already added with each other",
+    "responses.user_request_already_accepted": "you both are already friends",
     "responses.user_no_request": "There are no Friend Request for accepting",
     "responses.reject_friend_request": "The Friend Request has been rejected successfully",
     "responses.reject_friend_request_failed": "The Friend Request has failed to reject",
@@ -805,6 +805,6 @@
     "responses.un-follow_friend_request": "You have reject follow request",
     "responses.wrong_url": "Please ensure your url is correct",
     "responses.not_friend_status": "Sorry, we cannot unfriend, because you both are not friends",
-    "responses.remove_friend_successfully": "Congratulations, You successfully removed a friend",
+    "responses.remove_friend_successfully": "You successfully removed a friend",
     "responses.remove_friend_failed": "Sorry, we cannot remove your this friend"
 }
