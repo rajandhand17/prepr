@@ -92,8 +92,9 @@ class FriendService
              if ($friends) {
                 $friends->$column = $value;
                 $friends->save();
-            }
-            return true;
+                 return true;
+             }
+             return false;
         } catch (\Exception $e) {
             return false;
         }
@@ -159,8 +160,9 @@ class FriendService
                 $removedFriend->follow = '2';
                 $removedFriend->newsfeed = '2';
                 $removedFriend->save();
+                return $removedFriend;
             };
-            return $removedFriend;
+            return false;
         }catch (\Exception $e) {
             return false;
         }
