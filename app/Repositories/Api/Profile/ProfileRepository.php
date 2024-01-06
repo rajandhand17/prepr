@@ -74,7 +74,7 @@ class ProfileRepository implements ProfileInterface
             });
             if ($personalDetail['createdUser'] && $personalDetail['createdPersonalDetail'] && $personalDetail['createdAddress']) {
                 DB::commit();
-                return $personalDetail['createdPersonalDetail'];
+                return $personalDetail['createdUser'];
             }
             DB::rollBack();
 

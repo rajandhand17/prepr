@@ -134,8 +134,7 @@ class ProfileResource extends JsonResource
         if ($this->userSkills) {
             $associatedSkills = $this->userSkills->pluck('skill');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
-            $associatedPinned = $this->userSkills->pluck('pinned');
-            $featured_skill_id=[];
+
         } else {
             $skills = null;
         }

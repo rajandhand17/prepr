@@ -93,7 +93,7 @@ class UserPersonalService
                 'disability'      => $disability,
             ]);
 
-            return $user;
+            return true;
         } catch(\Exception $e) {
             return false;
         }
