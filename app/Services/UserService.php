@@ -83,9 +83,7 @@ class UserService
             $user = User::updateOrCreate([
                 'id' => auth()->user()->id,
             ], [
-                'first_name' => $request->first_name,
-                'last_name'  => $request->last_name,
-                'full_name'  => $request->first_name.' '.$request->last_name,
+                'full_name'  => $request->name,
             ]);
 
             return true;

@@ -66,7 +66,6 @@ class ProfileRepository implements ProfileInterface
                 $createUser = $this->userService->addUserName($request);
                 $createPersonalDetail = $this->userPersonalService->addPersonalDetail($request);
                 $createAddress = $this->userAddressService->addUserAddress($request);
-
                 return [
                     'createdUser'             => $createUser,
                     'createdPersonalDetail'   => $createPersonalDetail,
@@ -75,7 +74,6 @@ class ProfileRepository implements ProfileInterface
             });
             if ($personalDetail['createdUser'] && $personalDetail['createdPersonalDetail'] && $personalDetail['createdAddress']) {
                 DB::commit();
-
                 return $personalDetail['createdPersonalDetail'];
             }
             DB::rollBack();
@@ -178,9 +176,9 @@ class ProfileRepository implements ProfileInterface
 
     public function addSkills($request)
     {
-        try {
+        try{
             return $this->userSkillsService->addSkills($request);
-        } catch (\Exception $e) {
+        }catch(\Exception $e) {
             return false;
         }
     }
