@@ -52,6 +52,7 @@ class ProfileController extends AppBaseController
             if ($createProfile) {
                 return $this->sendResponse(ProfileResource::make($createProfile), __('responses.user_personal_created'));
             }
+
             return $this->sendError(__('responses.user_personal_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -168,17 +169,20 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function addTags(AddTagsRequest $request){
+    public function addTags(AddTagsRequest $request)
+    {
         try {
             $addTags = $this->profileRepository->addTags($request);
             if ($addTags) {
                 return $this->sendResponse(UserTagsResource::collection($addTags), __('responses.add_tags_create'));
             }
+
             return $this->sendError(__('responses.add_tags_failed'), 404);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function addCertificate(AddCertificateRequest $request)
     {
         try {
@@ -254,23 +258,27 @@ class ProfileController extends AppBaseController
             if ($uploadFile) {
                 return $this->sendResponse(UserPersonalFilesResource::make($uploadFile), __('responses.successfully_upload_file'));
             }
+
             return $this->sendError(__('responses.user_experience_failed'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function profileImageUpload(FileUploadRequest $request){
+    public function profileImageUpload(FileUploadRequest $request)
+    {
         try {
-            $profileImage=$this->profileRepository->profileImageUpload($request);
+            $profileImage = $this->profileRepository->profileImageUpload($request);
             if ($profileImage) {
                 return $this->sendResponse(null, __('responses.successfully_upload_file'));
             }
+
             return $this->sendError(__('responses.user_experience_failed'), 404);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function sendFriendRequest(FriendRequest $request)
     {
         try {

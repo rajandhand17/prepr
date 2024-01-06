@@ -19,7 +19,7 @@ class UserTagsResource extends JsonResource
 
         return [
             'id'   => $this->id,
-            'tag'=> $tags,
+            'tag'  => $tags,
         ];
     }
 }

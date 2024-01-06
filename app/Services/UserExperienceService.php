@@ -72,5 +72,4 @@ class UserExperienceService
             return false;
         }
     }
-
 }
