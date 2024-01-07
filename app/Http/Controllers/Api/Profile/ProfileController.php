@@ -259,8 +259,7 @@ class ProfileController extends AppBaseController
             if ($uploadFile) {
                 return $this->sendResponse(UserPersonalFilesResource::make($uploadFile), __('responses.successfully_upload_file'));
             }
-
-            return $this->sendError(__('responses.user_experience_failed'), 404);
+            return $this->sendError(__('responses.upload_file_failed'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
