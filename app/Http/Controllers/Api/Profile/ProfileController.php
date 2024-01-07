@@ -12,6 +12,7 @@ use App\Http\Requests\Profile\AddSkillsRequest;
 use App\Http\Requests\Profile\AddTagsRequest;
 use App\Http\Requests\Profile\FileUploadRequest;
 use App\Http\Requests\Profile\FriendRequest;
+use App\Http\Requests\Profile\ProfileUploadRequest;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Profile\UserCertificateResource;
 use App\Http\Resources\Profile\UserEducationResource;
@@ -265,15 +266,14 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function profileImageUpload(FileUploadRequest $request)
+    public function profileImageUpload(ProfileUploadRequest $request)
     {
         try {
-            $profileImage = $this->profileRepository->profileImageUpload($request);
-            if ($profileImage) {
-                return $this->sendResponse(null, __('responses.successfully_upload_file'));
+            $profile = $this->profileRepository->profileImageUpload($request);
+            if ($profile) {
+                return $this->sendResponse(ProfileResource::make($profile), __('responses.successfully_profile'));
             }
-
-            return $this->sendError(__('responses.user_experience_failed'), 404);
+            return $this->sendError(__('responses.failed_profile_image'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
