@@ -259,6 +259,7 @@ class ProfileController extends AppBaseController
             if ($uploadFile) {
                 return $this->sendResponse(UserPersonalFilesResource::make($uploadFile), __('responses.successfully_upload_file'));
             }
+
             return $this->sendError(__('responses.upload_file_failed'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -272,6 +273,7 @@ class ProfileController extends AppBaseController
             if ($profile) {
                 return $this->sendResponse(ProfileResource::make($profile), __('responses.successfully_profile'));
             }
+
             return $this->sendError(__('responses.failed_profile_image'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

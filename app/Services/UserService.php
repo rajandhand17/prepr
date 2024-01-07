@@ -85,6 +85,7 @@ class UserService
             ], [
                 'full_name'  => $request->name,
             ]);
+
             return $user;
         } catch (\Exception $e) {
             return false;

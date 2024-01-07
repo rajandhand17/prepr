@@ -113,6 +113,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSkills::class)->where('pinned', '1');
     }
+
     public function userCertificates()
     {
         return $this->hasMany(UserCertificate::class);
