@@ -106,11 +106,12 @@ class UserPersonalService
             $profile = $request->file('profile_image');
             $profilePath = 'uploads/users/'.auth()->user()->id.Str::random(40).'.'.$profile->extension();
             $storeResumePath = Storage::disk('s3')->put($profilePath, file_get_contents($profile));
-           $user= User::updateOrCreate([
+            $user = User::updateOrCreate([
                 'id' => auth()->user()->id,
             ], [
                 'profile_image'=> $profilePath,
             ]);
+
             return $user;
         } catch(\Exception $e) {
             return false;
