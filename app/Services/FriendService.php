@@ -50,7 +50,7 @@ class FriendService
         }
     }
 
-    public function checkFriendRequest($request,$column,$value)
+    public function checkFriendRequest($request)
     {
         try {
             $friendRequest = Friend::where([
