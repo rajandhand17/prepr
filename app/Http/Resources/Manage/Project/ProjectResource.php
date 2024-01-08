@@ -24,8 +24,6 @@ class ProjectResource extends JsonResource
         $labData = null;
         $challenge_pitch = null;
         $challenge_task = null;
-        $project_files = null;
-        $project_requirement_status = null;
 
         if ($this->getProjectTemplate->getTemplatePitches) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
@@ -48,17 +46,6 @@ class ProjectResource extends JsonResource
                     'title'             => $taskAnswer->title,
                     'task_answer'       => $taskAnswer->is_completed,
                     'task_completed_at' => $taskAnswer->completed_at,
-                ];
-            });
-        }
-
-        if ($this->getProjectFile) {
-            $project_files = $this->getProjectFile->map(function ($file) {
-                return [
-                    'id'        => $file->id,
-                    'title'     => $file->title,
-                    'path'      => $file->path,
-                    'type'      => $file->type,
                 ];
             });
         }
@@ -107,8 +94,6 @@ class ProjectResource extends JsonResource
             $labData = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
         }
 
-        $project_requirement_status = ProjectService::projectRequirements($this);
-
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
@@ -123,10 +108,10 @@ class ProjectResource extends JsonResource
             'status'                => $this->status,
             'challenge_id'          => $challengeData,
             'lab_id'                => $labData,
-            'requirement_status'    => $project_requirement_status,
+            'requirement_status'    => ProjectRequirementResource::make($this),
             'project_pitch'         => $challenge_pitch,
             'project_task'          => $challenge_task,
-            'project_files'         => $project_files,
+            'project_files'         => ProjectFileResource::make($this),
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
         ];
     }

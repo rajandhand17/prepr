@@ -8,6 +8,9 @@ use App\Http\Requests\Manage\Project\CreateProjectRequest;
 use App\Http\Requests\Manage\Project\UpdateProjectRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
+use App\Http\Resources\Manage\Project\ProjectExternalLinkResource;
+use App\Http\Resources\Manage\Project\ProjectFileResource;
+use App\Http\Resources\Manage\Project\ProjectRequirementResource;
 use App\Http\Resources\Manage\Project\ProjectResource;
 use App\Repositories\Api\Manage\Project\ProjectRepository;
 use App\Services\Manage\ChallengeService;
@@ -159,7 +162,7 @@ class ProjectController extends AppBaseController
             $addProjectFiles = $this->projectRepository->projectProjectFile($checkProjectSlugExistsOrNot->id, $request);
 
             if ($addProjectFiles) {
-                return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_file_stored_success'), 200);
+                return $this->sendResponse(ProjectFileResource::make($checkProjectSlugExistsOrNot), __('responses.project_file_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.project_file_stored_failed'), 400);
@@ -242,7 +245,7 @@ class ProjectController extends AppBaseController
             }
             $addLinks = $this->projectRepository->addUpdatExternalLink($request, $checkProjectSlugExistsOrNot->id);
             if ($addLinks) {
-                return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.add_external_links_success'), 200);
+                return $this->sendResponse(ProjectExternalLinkResource::collection($checkProjectSlugExistsOrNot->external_links), __('responses.add_external_links_success'), 200);
             }
 
             return $this->sendResponse(__('responses.add_external_links_failed'), 200);
@@ -261,7 +264,7 @@ class ProjectController extends AppBaseController
 
             $getProjectChallengeRequirement = $this->projectRepository->projectRequirements($checkProjectSlugExistsOrNot);
             if ($getProjectChallengeRequirement) {
-                return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_requirement_found'), 200);
+                return $this->sendResponse(ProjectRequirementResource::make($checkProjectSlugExistsOrNot), __('responses.project_requirement_found'), 200);
             }
 
             return $this->sendError(__('responses.project_not_requirement_found'));
