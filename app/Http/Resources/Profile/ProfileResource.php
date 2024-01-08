@@ -138,11 +138,11 @@ class ProfileResource extends JsonResource
         } else {
             $skills = null;
         }
-        if($this->userTags) {
+        if ($this->userTags) {
             $associatedTag = $this->userTags->pluck('id');
-            $userTag=TagService::getTagsBasedOnIds($associatedTag)->pluck('title', 'id');
-        }else {
-            $userTag=null;
+            $userTag = TagService::getTagsBasedOnIds($associatedTag)->pluck('title', 'id');
+        } else {
+            $userTag = null;
         }
         if ($this->userPinnedSkills) {
             $associatedSkills = $this->userPinnedSkills->pluck('id');
@@ -159,11 +159,11 @@ class ProfileResource extends JsonResource
             'username'            => $this->username,
             'email'               => $this->email,
             'country_code'        => $this->country_code,
-            'address'             =>$this->userAddress->address,
-            'city'                =>$this->userAddress->city,
-            'state'               =>$this->userAddress->state,
-            'country'             =>$this->userAddress->country,
-            'zip_code'            =>$this->userAddress->zip_code,
+            'address'             => $this->userAddress->address,
+            'city'                => $this->userAddress->city,
+            'state'               => $this->userAddress->state,
+            'country'             => $this->userAddress->country,
+            'zip_code'            => $this->userAddress->zip_code,
             'phone_number'        => $this->phone_number,
             'profile_image'       => $this->profile_image,
             'pronouns'            => null,
