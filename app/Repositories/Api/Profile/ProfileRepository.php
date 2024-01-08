@@ -75,6 +75,7 @@ class ProfileRepository implements ProfileInterface
             });
             if ($personalDetail['updateUser'] && $personalDetail['updatePersonalDetail'] && $personalDetail['updateAddress']) {
                 DB::commit();
+
                 return $personalDetail['updateUser'];
             }
             DB::rollBack();
@@ -82,6 +83,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
