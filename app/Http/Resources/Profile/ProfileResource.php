@@ -132,13 +132,14 @@ class ProfileResource extends JsonResource
             $purpose = null;
         }
         if ($this->userSkills) {
-            $associatedSkills = $this->userSkills->pluck('skill');
+            $associatedSkills = $this->userSkills->pluck('id');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+
         } else {
             $skills = null;
         }
         if ($this->userPinnedSkills) {
-            $associatedSkills = $this->userPinnedSkills->pluck('skill');
+            $associatedSkills = $this->userPinnedSkills->pluck('id');
             $pinnedSkills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         } else {
             $pinnedSkills = [];
