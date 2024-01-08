@@ -260,24 +260,38 @@ class ProfileController extends AppBaseController
             if (!$getActionValue) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            $checkFriendRequest = $this->profileRepository->checkFriendRequest($request);
-
-            if ($checkFriendRequest && $checkFriendRequest->status == '0') {
-                return $this->sendError(__('responses.user_request_already_send'));
-            }
-            if ($checkFriendRequest && $checkFriendRequest->status == '1') {
-                return $this->sendError(__('responses.user_request_already_accepted'));
-            }
-//            $checkFriendRequest = $this->profileRepository->checkFriendStatusBasedOnAction($request, $getActionValue['column'], '0');
-//            if ($checkFriendRequest == null) {
-//                return $this->sendError(__('responses.user_no_request'));
-//            }
-            $acceptedFriendRequest = $this->profileRepository->friendRequest($request, $getActionValue['column'], $getActionValue['value']);
-            if ($acceptedFriendRequest) {
+            if($action=='send'){
+                $getSendFriendRequest=$this->profileRepository->checkFriendRequest($request);
+                if($getSendFriendRequest!==null && $getSendFriendRequest->status=='1'){
+                    return $this->sendError(__('responses.user_request_already_accepted'),403);
+                }
+                if($getSendFriendRequest!==null && $getSendFriendRequest->status=='0'){
+                    return $this->sendError(__('responses.user_request_already_send'),403);
+                }
+                $data=$this->profileRepository->sendFriendRequest($request,$getActionValue['column'], $getActionValue['value']);
                 return $this->sendResponse(null, __('responses.'.$action.'_friend_request'));
+            }else{
+              $checkFriendRequest = $this->profileRepository->checkFriendRequest($request,$getActionValue['column'], $getActionValue['value']);
+              if($checkFriendRequest===null){
+                    return $this->sendError(__('responses.'.$action.'_friend_request'));
+              }
+
+            }
+            $getRecordsbasedOnUser=$this->profileRepository->checkFriendStatusBasedOnAction($request);
+
+
+            dd($getActionValue);
+            $checkFriendRequest = $this->profileRepository->checkFriendStatusBasedOnAction($request);
+            if ($checkFriendRequest !== null) {
+                return $this->sendError(__('responses.user_no_request'));
             }
 
-            return $this->sendError(__('responses.'.$action.'_friend_request_failed'));
+            dd($checkFriendRequest);
+//            $acceptedFriendRequest = $this->profileRepository->friendRequest($request, $getActionValue['column'], $getActionValue['value']);
+//            if ($acceptedFriendRequest) {
+//                return $this->sendResponse(null, __('responses.'.$action.'_friend_request'));
+//            }
+          //  return $this->sendError(__('responses.'.$action.'_friend_request_failed'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

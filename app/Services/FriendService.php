@@ -9,15 +9,14 @@ class FriendService
     public function sendFriendRequest($request)
     {
         try {
-            $friend = Friend::updateOrCreate([
-                'user_id'      => $request->user_id,
-                'reference_id' => auth()->user()->id,
-            ], [
-                'user_id'      => $request->user_id,
-                'reference_id' => auth()->user()->id,
-                'status'       => '0',
+            $friend=Friend::updateOrCreate([
+                'reference_id'=>auth()->user()->id,
+                'user_id'=>$request->user_id,
+            ],[
+                'reference_id'=>auth()->user()->id,
+                'user_id'=>$request->user_id,
+                'status'=>'0',
             ]);
-
             return true;
         } catch(\Exception $e) {
             return false;
@@ -70,23 +69,20 @@ class FriendService
                 'user_id'     => $request->user_id,
                 'reference_id'=> auth()->user()->id,
             ])->first();
-
             return $friendRequest;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkFriendStatusBasedOnAction($request, $column, $value)
+    public function checkFriendStatusBasedOnAction($request)
     {
         try {
 
             $friendRequest = Friend::where([
                 'user_id'     => auth()->user()->id,
                 'reference_id'=> $request->user_id,
-                $column       => $value,
             ])->first();
-
             return $friendRequest;
         } catch (\Exception $e) {
             return false;

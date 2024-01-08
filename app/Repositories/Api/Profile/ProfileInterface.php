@@ -42,9 +42,9 @@ interface ProfileInterface
 
     public function sendFriendRequest($request);
 
-    public function checkFriendRequest($request);
+   // public function checkFriendRequest($request);
 
-    public function checkFriendStatusBasedOnAction($request, $column, $value);
+    //public function checkFriendStatusBasedOnAction($request, $column, $value);
 
     public function friendRequest($request, $column, $value);
 
