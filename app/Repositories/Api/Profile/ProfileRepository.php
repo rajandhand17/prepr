@@ -63,20 +63,20 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             $personalDetail = DB::transaction(function () use ($request) {
-                $createUser = $this->userService->addUserName($request);
-                $createPersonalDetail = $this->userPersonalService->addPersonalDetail($request);
-                $createAddress = $this->userAddressService->addUserAddress($request);
+                $updateUser = $this->userService->addUserName($request);
+                $updatePersonalDetail = $this->userPersonalService->addPersonalDetail($request);
+                $updateAddress = $this->userAddressService->addUserAddress($request);
 
                 return [
-                    'createdUser'             => $createUser,
-                    'createdPersonalDetail'   => $createPersonalDetail,
-                    'createdAddress'          => $createAddress,
+                    'updateUser'             => $updateUser,
+                    'updatePersonalDetail'   => $updatePersonalDetail,
+                    'updateAddress'          => $updateAddress,
                 ];
             });
-            if ($personalDetail['createdUser'] && $personalDetail['createdPersonalDetail'] && $personalDetail['createdAddress']) {
+            if ($personalDetail['updateUser'] && $personalDetail['updatePersonalDetail'] && $personalDetail['updateAddress']) {
                 DB::commit();
 
-                return $personalDetail['createdPersonalDetail'];
+                return $personalDetail['updateUser'];
             }
             DB::rollBack();
 
@@ -182,7 +182,7 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userSkillsService->addSkills($request);
-        } catch (\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }

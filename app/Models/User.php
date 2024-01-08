@@ -106,7 +106,12 @@ class User extends Authenticatable
 
     public function userSkills()
     {
-        return $this->hasMany(UserSkills::class);
+        return $this->hasMany(UserSkills::class)->where('pinned', '0');
+    }
+
+    public function userPinnedSkills()
+    {
+        return $this->hasMany(UserSkills::class)->where('pinned', '1');
     }
 
     public function userCertificates()

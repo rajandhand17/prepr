@@ -133,10 +133,15 @@ class ProfileResource extends JsonResource
         }
         if ($this->userSkills) {
             $associatedSkills = $this->userSkills->pluck('skill');
-            $associatedPinned = $this->userSkills->pluck('pinned');
-            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id')->put('pinned', $associatedPinned);
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         } else {
             $skills = null;
+        }
+        if ($this->userPinnedSkills) {
+            $associatedSkills = $this->userPinnedSkills->pluck('skill');
+            $pinnedSkills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        } else {
+            $pinnedSkills = [];
         }
 
         return [
@@ -176,6 +181,7 @@ class ProfileResource extends JsonResource
             'user_patents'        => UserPatentResource::collection($this->userPatents),
             'user_certificates'   => UserCertificateResource::collection($this->userCertificates),
             'user_skills'         => $skills,
+            'user_pinned_skills'  => $pinnedSkills,
             'user_personal_files' => UserPersonalFilesResource::collection($this->userPersonalFiles),
 
         ];

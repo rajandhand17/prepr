@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserPersonal;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserPersonalService
 {
@@ -93,7 +94,7 @@ class UserPersonalService
                 'disability'      => $disability,
             ]);
 
-            return $user;
+            return true;
         } catch(\Exception $e) {
             return false;
         }
@@ -102,16 +103,14 @@ class UserPersonalService
     public function profileImageUpload($request)
     {
         try {
-            $profile = $request->file('file');
-            $profilePath = 'uploads/users/'.auth()->user()->id.str_random(40).$profile->extension();
+            $profile = $request->file('profile_image');
+            $profilePath = 'uploads/users/'.auth()->user()->id.Str::random(40).'.'.$profile->extension();
             $storeResumePath = Storage::disk('s3')->put($profilePath, file_get_contents($profile));
-            User::updateOrCreate([
-                'id' => auth()->user()->id,
-            ], [
-                'profile_image'=> $profilePath,
-            ]);
+            $updateProfile = User::where('id', auth()->user()->id)->first();
+            $updateProfile->profile_image = $profilePath;
+            $updateProfile->save();
 
-            return true;
+            return $updateProfile;
         } catch(\Exception $e) {
             return false;
         }
