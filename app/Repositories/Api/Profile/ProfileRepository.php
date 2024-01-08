@@ -237,29 +237,29 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function checkFriendRequest($request)
+    public function checkFriendRequest($request,$column,$value)
     {
         try {
-            return $this->friendService->checkFriendRequest($request);
+            return $this->friendService->checkFriendRequest($request,$column,$value);
 
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkFriendStatusBasedOnAction($request)
+    public function checkFriendStatusBasedOnAction($request,$column,$value)
     {
         try {
-            return $this->friendService->checkFriendStatusBasedOnAction($request);
+            return $this->friendService->checkFriendStatusBasedOnAction($request,$column,$value);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function friendRequest($request, $column, $value)
+    public function responseOfFriendRequest($request, $column, $value)
     {
         try {
-            return $this->friendService->friendRequest($request, $column, $value);
+            return $this->friendService->responseOfFriendRequest($request, $column, $value);
         } catch (\Exception $e) {
             return false;
         }

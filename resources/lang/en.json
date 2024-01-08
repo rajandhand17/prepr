@@ -795,8 +795,8 @@
     "responses.user_no_request": "There are no friend requests to accept.",
     "responses.reject_friend_request": "The friend request has been rejected successfully.",
     "responses.reject_friend_request_failed": "The friend request has failed to be rejected.",
-    "responses.accept_friend_request": "The friend request has been accepted successfully.",
-    "responses.accept_friend_request_failed": "The friend request has failed to be accepted.",
+    "responses.accept_friend_request": "Congratulations! You have successfully accepted the friend request.",
+    "responses.accept_friend_request_failed": "Oops,the friend request has failed to be accepted.",
     "responses.friends_listing": "Congratulations! You have successfully retrieved the friends listing.",
     "responses.friends_listing_failed": "Sorry, You have failed to retrieve friends listing",
     "responses.friends_request_listing": "Congratulations! You have successfully retrieved the friends list.",
@@ -806,5 +806,9 @@
     "responses.wrong_url": "Please ensure your URL is correct.",
     "responses.not_friend_status": "Sorry, we cannot unfriend because you both are not friends.",
     "responses.remove_friend_successfully": "You have successfully removed a friend.",
-    "responses.remove_friend_failed": "Sorry, we cannot remove this friend for you."
+    "responses.remove_friend_failed": "Sorry, we cannot remove this friend for you.",
+    "responses.already_reject_friend_request": "The friend request has been already rejected",
+    "responses.already_accept_friend_request": "The friend request has been already accepted.",
+    "responses.already_follow_friend_request": "The friend has been already followed.",
+    "responses.already_un_follow_friend_request": "The friend has been already un-followed."
 }

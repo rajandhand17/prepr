@@ -32,20 +32,8 @@ class FriendService
                     $value='0';
                     $column='status';
                     break;
-                case 'accept':
-                    $value = '1';
-                    $column = 'status';
-                    break;
-                case 'reject':
-                    $value = '2';
-                    $column = 'status';
-                    break;
                 case 'follow':
                     $value = '1';
-                    $column = 'follow';
-                    break;
-                case 'un-follow':
-                    $value = '2';
                     $column = 'follow';
                     break;
                 default:
@@ -62,7 +50,7 @@ class FriendService
         }
     }
 
-    public function checkFriendRequest($request)
+    public function checkFriendRequest($request,$column,$value)
     {
         try {
             $friendRequest = Friend::where([
@@ -75,13 +63,13 @@ class FriendService
         }
     }
 
-    public function checkFriendStatusBasedOnAction($request)
+    public function checkFriendStatusBasedOnAction($request,$column,$value)
     {
         try {
-
             $friendRequest = Friend::where([
                 'user_id'     => auth()->user()->id,
                 'reference_id'=> $request->user_id,
+                $column=>$value,
             ])->first();
             return $friendRequest;
         } catch (\Exception $e) {
@@ -89,7 +77,7 @@ class FriendService
         }
     }
 
-    public function friendRequest($request, $column, $value)
+    public function responseOfFriendRequest($request, $column, $value)
     {
         try {
             $friends = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id])->first();
@@ -97,15 +85,7 @@ class FriendService
                 $friends->$column = $value;
                 $friends->save();
                 return true;
-            }else{
-                $friends =new Friend;
-                $friends->user_id = $request->user_id;
-                $friends->reference_id =auth()->user()->id;
-                $friends->$column = $value;
-                $friends->save();
-                return true;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
@@ -176,16 +156,10 @@ class FriendService
     public function removeFriend($request)
     {
         try {
-            $removedFriend = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id, 'status' => '1'])->first();
+            $removedFriend = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id])->delete();
             if ($removedFriend) {
-                $removedFriend->status = '2';
-                $removedFriend->follow = '2';
-                $removedFriend->newsfeed = '2';
-                $removedFriend->save();
-
                 return $removedFriend;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
