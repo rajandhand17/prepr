@@ -806,7 +806,8 @@
     "responses.reject_friend_request": "The Friend Request has been rejected successfully",
     "responses.reject_friend_request_failed": "The Friend Request has failed to reject",
     "responses.accept_friend_request": "The Friend Request has been accepted successfully",
-    "responses.accept_friend_request_failed": "The Friend Request has failed to accept"
+    "responses.accept_friend_request_failed": "The Friend Request has failed to accept",
+    "responses.image": "Only Images are supported"
 
 
 }

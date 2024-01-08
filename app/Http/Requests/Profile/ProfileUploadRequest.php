@@ -37,6 +37,7 @@ class ProfileUploadRequest extends FormRequest
             'profile_image.required'             => __('responses.required_field'),
             'profile_image.max'                  => __('responses.mimes_image_max'),
             'profile_image.mimes'                => __('responses.mimes_image'),
+            'profile_image.image'                => __('responses.image'),
         ];
     }
 

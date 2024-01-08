@@ -106,12 +106,10 @@ class UserPersonalService
             $profile = $request->file('profile_image');
             $profilePath = 'uploads/users/'.auth()->user()->id.Str::random(40).'.'.$profile->extension();
             $storeResumePath = Storage::disk('s3')->put($profilePath, file_get_contents($profile));
-            $updateProfile = User::where('id', auth()->user()->id)
-                ->update([
-                    'profile_image' => $profilePath,
-                ]);
-            $user=User::where('id', auth()->user()->id)->first();
-            return $user;
+            $updateProfile = User::where('id', auth()->user()->id)->first();
+            $updateProfile->profile_image=$profilePath;
+            $updateProfile->save();
+            return $updateProfile;
         } catch(\Exception $e) {
             return false;
         }
