@@ -181,7 +181,7 @@ class ProfileResource extends JsonResource
             'user_patents'        => UserPatentResource::collection($this->userPatents),
             'user_certificates'   => UserCertificateResource::collection($this->userCertificates),
             'user_skills'         => $skills,
-            'user_pinned_skills'     => $pinnedSkills,
+            'user_pinned_skills'  => $pinnedSkills,
             'user_personal_files' => UserPersonalFilesResource::collection($this->userPersonalFiles),
 
         ];
