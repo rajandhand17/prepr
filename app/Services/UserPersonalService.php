@@ -110,7 +110,8 @@ class UserPersonalService
                 ->update([
                     'profile_image' => $profilePath,
                 ]);
-            $user=User::where('id', auth()->user()->id)->first();
+            $user = User::where('id', auth()->user()->id)->first();
+
             return $user;
         } catch(\Exception $e) {
             return false;
