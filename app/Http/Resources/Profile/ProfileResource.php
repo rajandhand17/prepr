@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Profile;
 
 use App\Services\SkillService;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -137,6 +138,12 @@ class ProfileResource extends JsonResource
         } else {
             $skills = null;
         }
+        if($this->userTags) {
+            $associatedTag = $this->userTags->pluck('id');
+            $userTag=TagService::getTagsBasedOnIds($associatedTag)->pluck('title', 'id');
+        }else {
+            $userTag=null;
+        }
         if ($this->userPinnedSkills) {
             $associatedSkills = $this->userPinnedSkills->pluck('id');
             $pinnedSkills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
@@ -152,6 +159,11 @@ class ProfileResource extends JsonResource
             'username'            => $this->username,
             'email'               => $this->email,
             'country_code'        => $this->country_code,
+            'address'             =>$this->userAddress->address,
+            'city'                =>$this->userAddress->city,
+            'state'               =>$this->userAddress->state,
+            'country'             =>$this->userAddress->country,
+            'zip_code'            =>$this->userAddress->zip_code,
             'phone_number'        => $this->phone_number,
             'profile_image'       => $this->profile_image,
             'pronouns'            => null,
@@ -164,7 +176,7 @@ class ProfileResource extends JsonResource
             'challenge_history'   => [],
             'project_history'     => [],
             'friends'             => [],
-            'tags'                => [],
+            'tags'                => $userTag,
             'about'               => $about,
             'age'                 => $age,
             'learnrank'           => '1',
