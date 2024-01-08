@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Manage\Project;
 
-use App\Services\Manage\ProjectService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectFileResource extends JsonResource

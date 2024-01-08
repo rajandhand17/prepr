@@ -5,7 +5,6 @@ namespace App\Http\Resources\Manage\Project;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ProjectPitchService;
-use App\Services\Manage\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
