@@ -14,12 +14,14 @@ class UserTagsService
             $allTags = [];
 
             foreach ($inputAllTags['tag_id'] as $key => $value) {
-                $addTag = UserTag::create([
-                    'user_id'  => auth()->user()->id,
-                    'tag_id'   => $value,
-                ]);
-
-                $allTags[] = $addTag;
+                $checkExistingTags = UserTag::where(['user_id' =>auth()->user()->id, 'tag_id'=>$value])->first();
+                if (!$checkExistingTags) {
+                    $addTag = UserTag::create([
+                        'user_id'  => auth()->user()->id,
+                        'tag_id'   => $value,
+                    ]);
+                    $allTags[] = $addTag;
+                }
             }
 
             return $allTags;

@@ -12,15 +12,16 @@ class UserSkillsService
             $deleteSKills = UserSkills::where(['user_id' => auth()->user()->id])->delete();
             $inputAllSkills = $request->all();
             $allSkills = [];
-
             foreach ($inputAllSkills['skill_id'] as $key => $value) {
-                $addSkill = UserSkills::create([
-                    'user_id' => auth()->user()->id,
-                    'skill'   => $value,
-                    'pinned'  => $inputAllSkills['pinned'][$key],
-                ]);
-
-                $allSkills[] = $addSkill;
+                $checkExisitngSKills = UserSkills::where(['user_id' => auth()->user()->id, 'skill'=>$value])->first();
+                if (!$checkExisitngSKills) {
+                    $addSkill = UserSkills::create([
+                        'user_id' => auth()->user()->id,
+                        'skill'   => $value,
+                        'pinned'  => $inputAllSkills['pinned'][$key],
+                    ]);
+                    $allSkills[] = $addSkill;
+                }
             }
 
             return $allSkills;
