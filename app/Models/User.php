@@ -86,7 +86,7 @@ class User extends Authenticatable
 
     public function userAddress()
     {
-        return $this->hasOne(UserAddress::class,'user_id','id');
+        return $this->hasOne(UserAddress::class, 'user_id', 'id');
     }
 
     public function userExperience()
@@ -111,8 +111,9 @@ class User extends Authenticatable
 
     public function userTags()
     {
-        return $this->hasMany(UserTag::class,'user_id','id');
+        return $this->hasMany(UserTag::class, 'user_id', 'id');
     }
+
     public function userPinnedSkills()
     {
         return $this->hasMany(UserSkills::class)->where('pinned', '1');
