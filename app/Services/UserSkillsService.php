@@ -17,6 +17,7 @@ class UserSkillsService
                 $addSkill = UserSkills::create([
                     'user_id' => auth()->user()->id,
                     'skill'   => $value,
+                    'pinned'  => $inputAllSkills['pinned'][$key],
                 ]);
 
                 $allSkills[] = $addSkill;

@@ -9,8 +9,10 @@ use App\Http\Requests\Profile\AddExperienceRequest;
 use App\Http\Requests\Profile\AddPatentRequest;
 use App\Http\Requests\Profile\AddPersonalDetailRequest;
 use App\Http\Requests\Profile\AddSkillsRequest;
+use App\Http\Requests\Profile\AddTagsRequest;
 use App\Http\Requests\Profile\FileUploadRequest;
 use App\Http\Requests\Profile\FriendRequest;
+use App\Http\Requests\Profile\ProfileUploadRequest;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Profile\UserCertificateResource;
 use App\Http\Resources\Profile\UserEducationResource;
@@ -18,6 +20,7 @@ use App\Http\Resources\Profile\UserExperienceResource;
 use App\Http\Resources\Profile\UserPatentResource;
 use App\Http\Resources\Profile\UserPersonalFilesResource;
 use App\Http\Resources\Profile\UserSkillsResource;
+use App\Http\Resources\Profile\UserTagsResource;
 use App\Repositories\Api\Profile\ProfileRepository;
 
 class ProfileController extends AppBaseController
@@ -167,6 +170,20 @@ class ProfileController extends AppBaseController
         }
     }
 
+    public function addTags(AddTagsRequest $request)
+    {
+        try {
+            $addTags = $this->profileRepository->addTags($request);
+            if ($addTags) {
+                return $this->sendResponse(UserTagsResource::collection($addTags), __('responses.add_tags_create'));
+            }
+
+            return $this->sendError(__('responses.add_tags_failed'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function addCertificate(AddCertificateRequest $request)
     {
         try {
@@ -199,6 +216,24 @@ class ProfileController extends AppBaseController
         }
     }
 
+    public function deleteTag($id)
+    {
+        try {
+            $checkUserDeleteExists = $this->profileRepository->checkUserTagExists($id);
+            if (!$checkUserDeleteExists) {
+                return $this->sendError(__('responses.tags_not_found'), 404);
+            }
+            $deleteTag = $this->profileRepository->deleteTag($id);
+            if ($deleteTag) {
+                return $this->sendResponse(null, __('responses.delete_tags'));
+            }
+
+            return $this->sendError(__('responses.failed_delete_tags'), 404);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function deleteCertificate($id)
     {
         try {
@@ -225,7 +260,21 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(UserPersonalFilesResource::make($uploadFile), __('responses.successfully_upload_file'));
             }
 
-            return $this->sendError(__('responses.user_experience_failed'), 404);
+            return $this->sendError(__('responses.upload_file_failed'), 404);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function profileImageUpload(ProfileUploadRequest $request)
+    {
+        try {
+            $profile = $this->profileRepository->profileImageUpload($request);
+            if ($profile) {
+                return $this->sendResponse(ProfileResource::make($profile), __('responses.successfully_profile'));
+            }
+
+            return $this->sendError(__('responses.failed_profile_image'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

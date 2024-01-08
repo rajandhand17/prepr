@@ -132,11 +132,16 @@ class ProfileResource extends JsonResource
             $purpose = null;
         }
         if ($this->userSkills) {
-            $associatedSkills = $this->userSkills->pluck('skill');
-            $associatedPinned = $this->userSkills->pluck('pinned');
-            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id')->put('pinned', $associatedPinned);
+            $associatedSkills = $this->userSkills->pluck('id');
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         } else {
             $skills = null;
+        }
+        if ($this->userPinnedSkills) {
+            $associatedSkills = $this->userPinnedSkills->pluck('id');
+            $pinnedSkills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        } else {
+            $pinnedSkills = [];
         }
 
         return [
@@ -154,7 +159,7 @@ class ProfileResource extends JsonResource
             'lab_count'           => $this->userLabs->count(),
             'achievements'        => $this->userAchievements->count(),
             'achievements_list'   => UserAchievementResource::collection($this->userAchievements),
-            'featured_achievement'=> null,
+            'featured_achievement'=> UserAchievementResource::collection($this->userAchievements),
             'role'                => 'user',
             'challenge_history'   => [],
             'project_history'     => [],
@@ -176,6 +181,7 @@ class ProfileResource extends JsonResource
             'user_patents'        => UserPatentResource::collection($this->userPatents),
             'user_certificates'   => UserCertificateResource::collection($this->userCertificates),
             'user_skills'         => $skills,
+            'user_pinned_skills'  => $pinnedSkills,
             'user_personal_files' => UserPersonalFilesResource::collection($this->userPersonalFiles),
 
         ];

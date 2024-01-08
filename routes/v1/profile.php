@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{username}', [ProfileController::class, 'show']);
     Route::post('/personal-detail/add', [ProfileController::class, 'addPersonalDetail']);
+    Route::post('/image', [ProfileController::class, 'profileImageUpload']);
     Route::post('/experience/add', [ProfileController::class, 'addExperience']);
     Route::delete('{id}/experience/delete', [ProfileController::class, 'deleteExperience']);
     Route::post('/certificate/add', [ProfileController::class, 'addCertificate']);
@@ -15,7 +16,9 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/patent/add', [ProfileController::class, 'addPatent']);
     Route::delete('{id}/patent/delete', [ProfileController::class, 'deletePatent']);
     Route::post('/skills/add', [ProfileController::class, 'addSkills']);
-    Route::delete('/{id}/skill/delete', [ProfileController::class, 'deleteSkill']);
+    Route::delete('/{id}/skills/delete', [ProfileController::class, 'deleteSkill']);
+    Route::post('/tags/add', [ProfileController::class, 'addTags']);
+    Route::delete('/{id}/tags/delete', [ProfileController::class, 'deleteTag']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
     Route::post('/send-friend-request', [ProfileController::class, 'sendFriendRequest']);
     Route::post('/friend-request/{activity}', [ProfileController::class, 'friendRequest']);
