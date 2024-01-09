@@ -12,15 +12,16 @@ class UserSkillsService
             $deleteSKills = UserSkills::where(['user_id' => auth()->user()->id])->delete();
             $inputAllSkills = $request->all();
             $allSkills = [];
-
             foreach ($inputAllSkills['skill_id'] as $key => $value) {
-                $addSkill = UserSkills::create([
-                    'user_id' => auth()->user()->id,
-                    'skill'   => $value,
-                    'pinned'  => $inputAllSkills['pinned'][$key],
-                ]);
-
-                $allSkills[] = $addSkill;
+                $checkExisitngSKills = UserSkills::where(['user_id' => auth()->user()->id, 'skill'=>$value])->first();
+                if (!$checkExisitngSKills) {
+                    $addSkill = UserSkills::create([
+                        'user_id' => auth()->user()->id,
+                        'skill'   => $value,
+                        'pinned'  => $inputAllSkills['pinned'][$key],
+                    ]);
+                    $allSkills[] = $addSkill;
+                }
             }
 
             return $allSkills;
@@ -32,7 +33,7 @@ class UserSkillsService
     public static function deleteSkill($id)
     {
         try {
-            $deleteSkill = UserSkills::where('id', $id)->delete();
+            $deleteSkill = UserSkills::where(['skill'=>$id, 'user_id'=>auth()->user()->id])->delete();
             if ($deleteSkill) {
                 return true;
             }
@@ -46,7 +47,7 @@ class UserSkillsService
     public static function checkUserSkillExists($id)
     {
         try {
-            return UserSkills::where('id', $id)->first();
+            return UserSkills::where(['skill'=>$id, 'user_id'=>auth()->user()->id])->first();
         } catch(\Exception $e) {
             return false;
         }
