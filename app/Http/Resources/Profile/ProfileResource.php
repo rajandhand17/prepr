@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Profile;
 
 use App\Services\SkillService;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -132,13 +133,19 @@ class ProfileResource extends JsonResource
             $purpose = null;
         }
         if ($this->userSkills) {
-            $associatedSkills = $this->userSkills->pluck('id');
+            $associatedSkills = $this->userSkills->pluck('skill');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         } else {
             $skills = null;
         }
+        if ($this->userTags) {
+            $associatedTag = $this->userTags->pluck('tag_id');
+            $userTag = TagService::getTagsBasedOnIds($associatedTag)->pluck('title', 'id');
+        } else {
+            $userTag = null;
+        }
         if ($this->userPinnedSkills) {
-            $associatedSkills = $this->userPinnedSkills->pluck('id');
+            $associatedSkills = $this->userPinnedSkills->pluck('skill');
             $pinnedSkills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         } else {
             $pinnedSkills = [];
@@ -152,6 +159,11 @@ class ProfileResource extends JsonResource
             'username'            => $this->username,
             'email'               => $this->email,
             'country_code'        => $this->country_code,
+            'address'             => isset($this->userAddress->address) ? $this->userAddress->address : null,
+            'city'                => isset($this->userAddress->city) ? $this->userAddress->city : null,
+            'state'               => isset($this->userAddress->state) ? $this->userAddress->state : null,
+            'country'             => isset($this->userAddress->country) ? $this->userAddress->country : null,
+            'zip_code'            => isset($this->userAddress->zip_code) ? $this->userAddress->zip_code : null,
             'phone_number'        => $this->phone_number,
             'profile_image'       => $this->profile_image,
             'pronouns'            => null,
@@ -164,7 +176,7 @@ class ProfileResource extends JsonResource
             'challenge_history'   => [],
             'project_history'     => [],
             'friends'             => [],
-            'tags'                => [],
+            'tags'                => $userTag,
             'about'               => $about,
             'age'                 => $age,
             'learnrank'           => '1',
