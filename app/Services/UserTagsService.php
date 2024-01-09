@@ -33,7 +33,7 @@ class UserTagsService
     public static function deleteTag($id)
     {
         try {
-            $deleteTag = UserTag::where(['tag_id'=>$id,'user_id'=>auth()->user()->id])->delete();
+            $deleteTag = UserTag::where(['tag_id'=>$id, 'user_id'=>auth()->user()->id])->delete();
             if ($deleteTag) {
                 return true;
             }
@@ -47,7 +47,7 @@ class UserTagsService
     public static function checkUserTagExists($id)
     {
         try {
-            return UserTag::where(['tag_id'=>$id,'user_id'=>auth()->user()->id])->first();
+            return UserTag::where(['tag_id'=>$id, 'user_id'=>auth()->user()->id])->first();
         } catch(\Exception $e) {
             return false;
         }

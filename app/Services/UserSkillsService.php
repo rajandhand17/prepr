@@ -33,7 +33,7 @@ class UserSkillsService
     public static function deleteSkill($id)
     {
         try {
-            $deleteSkill = UserSkills::where(['skill'=>$id,'user_id'=>auth()->user()->id])->delete();
+            $deleteSkill = UserSkills::where(['skill'=>$id, 'user_id'=>auth()->user()->id])->delete();
             if ($deleteSkill) {
                 return true;
             }
@@ -47,7 +47,7 @@ class UserSkillsService
     public static function checkUserSkillExists($id)
     {
         try {
-            return UserSkills::where(['skill'=>$id,'user_id'=>auth()->user()->id])->first();
+            return UserSkills::where(['skill'=>$id, 'user_id'=>auth()->user()->id])->first();
         } catch(\Exception $e) {
             return false;
         }
