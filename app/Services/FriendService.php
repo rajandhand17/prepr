@@ -63,20 +63,57 @@ class FriendService
         }
     }
 
-    public function checkFriendStatusBasedOnAction($request,$column,$value)
+    public function checkAction($action){
+        try {
+            $value = null;
+            switch($action) {
+                case 'accept':
+                    $value='1';
+                    $column='status';
+                    break;
+                case 'follow':
+                    $value = '1';
+                    $column = 'follow';
+                    break;
+                default:
+                    $value = null;
+                    break;
+            }
+            if ($value !== null) {
+                return ['column' => $column, 'value' => $value];
+            }
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function createFriendsBasedOnAction($request,$column,$value)
     {
         try {
-            $friendRequest = Friend::where([
-                'user_id'     => auth()->user()->id,
-                'reference_id'=> $request->user_id,
-                $column=>$value,
-            ])->first();
+            $friendRequest=new Friend();
+            $friendRequest->user_id = $request->user_id;
+            $friendRequest->reference_id = auth()->user()->id;
+            $friendRequest->$column=$value;
+            $friendRequest->save();
             return $friendRequest;
         } catch (\Exception $e) {
             return false;
         }
     }
 
+    public function updateFriendsBasedOnAction($request, $column, $value){
+        try {
+            $friends = Friend::where(['user_id' =>$request->user_id, 'reference_id' =>auth()->user()->id])->first();
+            if ($friends) {
+                $friends->$column = $value;
+                $friends->save();
+                return true;
+            }
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public function responseOfFriendRequest($request, $column, $value)
     {
         try {
@@ -125,10 +162,10 @@ class FriendService
         try {
             $columnName = null;
             switch($column) {
-                case 'follow':
+                case 'follow-list':
                     $columnName = 'follow';
                     break;
-                case 'friends':
+                case 'list':
                     $columnName = 'status';
                     break;
                 default:

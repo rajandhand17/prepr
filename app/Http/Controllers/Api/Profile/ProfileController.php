@@ -262,16 +262,19 @@ class ProfileController extends AppBaseController
             }
             $getSendFriendRequest=$this->profileRepository->checkFriendRequest($request);
             if($getSendFriendRequest==null){
-                $checkFriendRequest = $this->profileRepository->checkFriendRequest($request,$getActionValue['column'], $getActionValue['value']);
+                $createFriendRequest= $this->profileRepository->createFriendsBasedOnAction($request,$getActionValue['column'], $getActionValue['value']);
+                return $createFriendRequest;
             }else{
-                return $this->sendError(__('responses.user_request_already_accepted'),401);
+                $checkFriendRequest = $this->profileRepository->updateFriendsBasedOnAction($request,$getActionValue['column'], $getActionValue['value']);
+                return $checkFriendRequest;
             }
-            if($getSendFriendRequest!==null && $getSendFriendRequest->status=='1'){
-                return $this->sendError(__('responses.user_request_already_accepted'),403);
-            }
-            if($getSendFriendRequest!==null && $getSendFriendRequest->status=='0'){
-                return $this->sendError(__('responses.user_request_already_send'),403);
-            }
+
+//            if($getSendFriendRequest!==null && $getSendFriendRequest->status=='1'){
+//                return $this->sendError(__('responses.user_request_already_accepted'),403);
+//            }
+//            if($getSendFriendRequest!==null && $getSendFriendRequest->status=='0'){
+//                return $this->sendError(__('responses.user_request_already_send'),403);
+//            }
 
 //            if($action=='send'){
 //                $getSendFriendRequest=$this->profileRepository->checkFriendRequest($request);
@@ -299,7 +302,18 @@ class ProfileController extends AppBaseController
         }
     }
 
-    public function getFriendsListing($activity)
+    public function responseOfRequest(FriendRequest $request, $action){
+        try {
+            $checkAction=$this->profileRepository->checkAction($action);
+            if (!$checkAction){
+                return $this->sendError(__('responses.this_action_not_found'), 408);
+            }
+
+        }catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+    public function listBasedOnAction($activity)
     {
         try {
             $columnName = $this->profileRepository->getColumnName($activity);
