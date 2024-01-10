@@ -240,6 +240,7 @@ class ProjectRepository implements ProjectInterface
                 return false;
             }
             DB::commit();
+
             return true;
         } catch (Exception $e) {
             DB::rollBack();
