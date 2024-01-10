@@ -268,37 +268,154 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function sendFriendRequest($request)
+    public function checkAction($action)
     {
         try {
-            return $this->friendService->sendFriendRequest($request);
+            return $this->friendService->checkAction($action);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function checkFriendRequest($request)
+    public function getRecordsBasedOnId($request)
     {
         try {
-            return $this->friendService->checkFriendRequest($request);
+            return $this->friendService->getRecordsBasedOnId($request);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function friendRequest($request, $action)
+    public function friendRequestResponse($request, $value)
     {
         try {
-            return $this->friendService->friendRequest($request, $action);
+            return $this->friendService->friendRequestResponse($request, $value);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function getActionValue($action)
+    public function followRequestResponse($request, $value)
     {
         try {
-            return $this->friendService->getActionValue($action);
+            return $this->friendService->followRequestResponse($request, $value);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkRequests($request)
+    {
+        try {
+            return $this->friendService->checkRequests($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkFollowRequests($request)
+    {
+        try {
+            return $this->friendService->checkFollowRequests($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getColumnNameValue($action)
+    {
+        try {
+            return $this->friendService->getColumnNameValue($action);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFriendsListing()
+    {
+        try {
+            return $this->friendService->getFriendsListing();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFollowersListing()
+    {
+        try {
+            return $this->friendService->getFollowersListing();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFollowListing()
+    {
+        try {
+            return $this->friendService->getFollowListing();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFriendRequestList()
+    {
+        try {
+            return $this->friendService->getFriendRequestList();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFollowersRequestList()
+    {
+        try {
+            return $this->friendService->getFollowersRequestList();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkFriendsStatus($request)
+    {
+        try {
+            return $this->friendService->checkFriendsStatus($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkFollowStatus($request)
+    {
+        try {
+            return $this->friendService->checkFollowStatus($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function removeFriend($request)
+    {
+        try {
+            return $this->friendService->removeFriend($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function unfollowFriend($request)
+    {
+        try {
+            return $this->friendService->unfollowFriend($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createFriendsBasedOnAction($request, $column, $value)
+    {
+        try {
+            return $this->friendService->createFriendsBasedOnAction($request, $column, $value);
         } catch (\Exception $e) {
             return false;
         }
