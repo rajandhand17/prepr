@@ -409,4 +409,13 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
+    public function createFriendsBasedOnAction($request, $column, $value){
+        try {
+            return $this->friendService->createFriendsBasedOnAction($request, $column, $value);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 }
