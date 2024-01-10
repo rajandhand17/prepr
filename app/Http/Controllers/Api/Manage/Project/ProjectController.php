@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\Manage\Project;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Project\AddAdditionalInfoProjectRequest;
 use App\Http\Requests\Manage\Project\AddLinksProjectRequest;
 use App\Http\Requests\Manage\Project\CreateProjectRequest;
 use App\Http\Requests\Manage\Project\UpdateProjectRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
+use App\Http\Resources\Manage\Project\ProjectAdditionalInfoResource;
 use App\Http\Resources\Manage\Project\ProjectExternalLinkResource;
 use App\Http\Resources\Manage\Project\ProjectFileResource;
 use App\Http\Resources\Manage\Project\ProjectRequirementResource;
@@ -236,19 +238,37 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function addExternalLinks(AddLinksProjectRequest $request, $slug)
+    public function projectExternalLinks(AddLinksProjectRequest $request, $slug)
     {
         try {
             $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
             if (!$checkProjectSlugExistsOrNot) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
-            $addLinks = $this->projectRepository->addUpdatExternalLink($request, $checkProjectSlugExistsOrNot->id);
+            $addLinks = $this->projectRepository->addUpdateExternalLink($request, $checkProjectSlugExistsOrNot->id);
             if ($addLinks) {
                 return $this->sendResponse(ProjectExternalLinkResource::collection($checkProjectSlugExistsOrNot->external_links), __('responses.add_external_links_success'), 200);
             }
 
-            return $this->sendResponse(__('responses.add_external_links_failed'), 200);
+            return $this->sendResponse(__('responses.add_external_links_failed'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function projectAdditionalInfo(AddAdditionalInfoProjectRequest $request, $slug)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectSlugExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+            $addAdditionalInfo = $this->projectRepository->addUpdateAdditionalInfo($request, $checkProjectSlugExistsOrNot->id);
+            if ($addAdditionalInfo) {
+                return $this->sendResponse(ProjectAdditionalInfoResource::make($checkProjectSlugExistsOrNot->getProjectAdditionalInfo), __('responses.add_additional_success'), 200);
+            }
+
+            return $this->sendResponse(__('responses.add_additional_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

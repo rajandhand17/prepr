@@ -7,7 +7,7 @@ use Exception;
 
 class ProjectExternalLinksService
 {
-    public function addUpdatExternalLink($request, $projectId)
+    public function addUpdateExternalLink($request, $projectId)
     {
         try {
             if ($request->has('external_links') && $request->get('external_link_ids')) {
