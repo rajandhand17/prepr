@@ -149,7 +149,6 @@ class ProfileResource extends JsonResource
         } else {
             $pinnedSkills = [];
         }
-
         return [
             'id'                  => $this->id,
             'first_name'          => $this->first_name,

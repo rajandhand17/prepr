@@ -295,19 +295,19 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function responseOfFriendRequest($request,$value)
+    public function friendRequestResponse($request,$value)
     {
         try {
-            return $this->friendService->responseOfFriendRequest($request, $value);
+            return $this->friendService->friendRequestResponse($request, $value);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function responseOfFollowRequest($request,$value)
+    public function followRequestResponse($request,$value)
     {
         try {
-            return $this->friendService->responseOfFollowRequest($request, $value);
+            return $this->friendService->followRequestResponse($request, $value);
         } catch (\Exception $e) {
             return false;
         }
@@ -329,10 +329,10 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
-    public function getActionValue($action)
+    public function getColumnNameValue($action)
     {
         try {
-            return $this->friendService->getActionValue($action);
+            return $this->friendService->getColumnNameValue($action);
         } catch (\Exception $e) {
             return false;
         }
@@ -353,7 +353,15 @@ class ProfileRepository implements ProfileInterface
             return $this->friendService->getFollowersListing();
         }catch (\Exception $e) {
             return false;
-}
+        }
+    }
+    public function getFollowListing()
+    {
+        try {
+            return $this->friendService->getFollowListing();
+        }catch (\Exception $e) {
+            return false;
+        }
     }
     public function getFriendRequestList()
     {

@@ -6,7 +6,7 @@ use App\Models\Friend;
 
 class FriendService
 {
-    public function getActionValue($action)
+    public function getColumnNameValue($action)
     {
         try {
             $value = null;
@@ -17,10 +17,6 @@ class FriendService
                     break;
                 case 'follow':
                     $value = '0';
-                    $column = 'follow';
-                    break;
-                case 'un-follow':
-                    $value = '2';
                     $column = 'follow';
                     break;
                 default:
@@ -96,7 +92,7 @@ class FriendService
             return false;
         }
     }
-    public function responseOfFriendRequest($request,$value)
+    public function friendRequestResponse($request,$value)
     {
         try {
             $friends = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id])->first();
@@ -111,7 +107,7 @@ class FriendService
         }
     }
 
-    public function responseOfFollowRequest($request,$value)
+    public function followRequestResponse($request,$value)
     {
         try {
             $friends = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id])->first();
@@ -128,7 +124,12 @@ class FriendService
     public function getFriendsListing()
     {
         try {
-            $friends = Friend::where(['user_id'=>auth()->user()->id, 'status'=>'1'])->get();
+            $friends=Friend::where(function ($query) {
+                $query->where(['reference_id' => auth()->user()->id,'status' => '1'])
+                    ->orWhere(function ($query) {
+                        $query->where(['user_id' => auth()->user()->id,'status' => '1']);
+                    });
+            })->get();
             if ($friends) {
                 return  $friends;
             }
@@ -142,6 +143,19 @@ class FriendService
     {
         try {
             $followers = Friend::where(['user_id'=>auth()->user()->id, 'follow'=>'1'])->get();
+            if ($followers) {
+                return  $followers;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFollowListing()
+    {
+        try {
+            $followers = Friend::where(['reference_id'=>auth()->user()->id, 'follow'=>'1'])->get();
             if ($followers) {
                 return  $followers;
             }

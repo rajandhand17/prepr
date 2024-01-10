@@ -24,7 +24,8 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/friends/response/{activity}', [ProfileController::class, 'friendRequestResponse']);
     Route::post('/friends/response/follow/{activity}', [ProfileController::class, 'followRequestResponse']);
     Route::get('/friends/list', [ProfileController::class, 'getFriendsListing']);
-    Route::get('/friends/follow/list', [ProfileController::class, 'getFollowersListing']);
+    Route::get('/friends/followers/list', [ProfileController::class, 'getFollowersListing']);
+    Route::get('/friends/follow/list', [ProfileController::class, 'getFollowListing']);
     Route::get('/friends/pending/list', [ProfileController::class, 'getFriendRequestList']);
     Route::get('/friends/pending/follow/list', [ProfileController::class, 'getFollowersRequestList']);
     Route::post('/friends/un-follow', [ProfileController::class, 'unFollow']);
