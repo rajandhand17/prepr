@@ -91,7 +91,32 @@ class User extends Authenticatable
 
     public function userFriends()
     {
-        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '1');
+        return $this->hasMany(Friend::class, 'reference_id', 'id')
+            ->where('status', '1')
+            ->orWhere(function ($query) {
+                $query->where('user_id', $this->id)
+                    ->where('status', '1');
+            });
+    }
+
+    public function userRequestSend()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '0');
+    }
+
+    public function userFollowRequest()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('follow', '0');
+    }
+
+    public function requestReceived()
+    {
+        return $this->hasMany(Friend::class, 'user_id', 'id')->where('status', '0');
+    }
+
+    public function followRequestReceived()
+    {
+        return $this->hasMany(Friend::class, 'user_id', 'id')->where('follow', '0');
     }
 
     public function userAddress()
