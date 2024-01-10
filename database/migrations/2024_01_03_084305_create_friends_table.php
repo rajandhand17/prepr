@@ -15,10 +15,12 @@ return new class() extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('reference_id');
             $table->enum('status', ['0', '1', '2'])->default('0')->comment('0 for pending, 1 for accepted,2 for rejected');
-            $table->enum('follow', ['0', '1', '2'])->default('1')->comment('0 for pending, 1 for follow,2 for unfollow');
-            $table->enum('newsfeed', ['1', '2'])->default('1')->comment(' 1 for allowed all,2 for not allowed');
+            $table->enum('follow', ['0', '1', '2'])->default('0')->comment('0 for pending, 1 for follow,2 for unfollow');
+            $table->enum('newsfeed', ['0', '1', '2'])->default('1')->comment('0 for pending, 1 for allowed all,2 for not allowed');
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('reference_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

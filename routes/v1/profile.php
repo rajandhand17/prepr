@@ -20,6 +20,14 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/tags/add', [ProfileController::class, 'addTags']);
     Route::delete('/{id}/tags/delete', [ProfileController::class, 'deleteTag']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
-    Route::post('/send-friend-request', [ProfileController::class, 'sendFriendRequest']);
-    Route::post('/friend-request/{activity}', [ProfileController::class, 'friendRequest']);
+    Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequest']);
+    Route::post('/friends/response/{activity}', [ProfileController::class, 'friendRequestResponse']);
+    Route::post('/friends/response/follow/{activity}', [ProfileController::class, 'followRequestResponse']);
+    Route::get('/friends/list', [ProfileController::class, 'getFriendsListing']);
+    Route::get('/friends/followers/list', [ProfileController::class, 'getFollowersListing']);
+    Route::get('/friends/follow/list', [ProfileController::class, 'getFollowListing']);
+    Route::get('/friends/pending/list', [ProfileController::class, 'getFriendRequestList']);
+    Route::get('/friends/pending/follow/list', [ProfileController::class, 'getFollowersRequestList']);
+    Route::post('/friends/un-follow', [ProfileController::class, 'unFollow']);
+    Route::post('/friends/un-friend', [ProfileController::class, 'unFriend']);
 });
