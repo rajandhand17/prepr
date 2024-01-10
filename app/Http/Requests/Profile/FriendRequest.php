@@ -24,7 +24,7 @@ class FriendRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'reference_id'=> 'required|exists:users,id',
+            'user_id'=> 'required|exists:users,id',
         ];
 
         return $base_rules;
@@ -33,8 +33,8 @@ class FriendRequest extends FormRequest
     public function messages()
     {
         return [
-            'reference_id.required' => __('responses.reference_id_required'),
-            'reference_id.exists'   => __('responses.reference_id_exists'),
+            'user_id.required' => __('responses.reference_id_required'),
+            'user_id.exists'   => __('responses.reference_id_exists'),
         ];
     }
 

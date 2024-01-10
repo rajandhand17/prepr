@@ -84,6 +84,16 @@ class User extends Authenticatable
         return $this->hasMany(UserAchievement::class, 'user_id', 'id');
     }
 
+    public function userFollow()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('follow', '1');
+    }
+
+    public function userFriends()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '1');
+    }
+
     public function userAddress()
     {
         return $this->hasOne(UserAddress::class, 'user_id', 'id');

@@ -18,7 +18,6 @@ class ProfileResource extends JsonResource
     {
         $purpose = null;
         $user_type = null;
-
         if ($this->userPersonal !== null) {
             switch ($this->userPersonal->user_type) {
                 case '0':
@@ -175,7 +174,7 @@ class ProfileResource extends JsonResource
             'role'                => 'user',
             'challenge_history'   => [],
             'project_history'     => [],
-            'friends'             => [],
+            'friends'             => FriendsResource::collection($this->userFriends),
             'tags'                => $userTag,
             'about'               => $about,
             'age'                 => $age,
