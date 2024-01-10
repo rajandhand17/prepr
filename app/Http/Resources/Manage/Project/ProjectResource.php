@@ -112,6 +112,7 @@ class ProjectResource extends JsonResource
             'project_task'          => $challenge_task,
             'project_files'         => ProjectFileResource::make($this),
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
+            'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
         ];
     }
 }

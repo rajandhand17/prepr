@@ -833,5 +833,17 @@
     "responses.add_external_links_success": "Congratulations! You have successfully added/updated external links in Project.",
     "responses.add_external_links_failed": "Oops! The added/updated external links of Project has failed.",
     "responses.project_requirement_found": "The Project requirements has been successfully retrieved",
-    "responses.project_not_requirement_found": "Project requirements not found!"
+    "responses.project_not_requirement_found": "Project requirements not found!",
+    "responses.project_industry_numeric":"Project Industry should be in numeric",
+    "responses.project_industry_not_found": "This Project Industry is not found",
+    "responses.project_verticals_numeric":"Project Verticals should be in numeric",
+    "responses.project_verticals_not_found": "This Project Verticals is not found",
+    "responses.project_type_numeric":"Project Type should be in numeric",
+    "responses.project_type_not_found": "This Project Type is not found",
+    "responses.project_stage_numeric":"Project Stage should be in numeric",
+    "responses.project_stage_not_found": "This Project Stage is not found",
+    "responses.project_status_numeric":"Project Status should be in numeric",
+    "responses.project_status_not_found": "This Project Status is not found",
+    "responses.add_additional_success": "Congratulations! You have successfully added/updated additional information in Project.",
+    "responses.add_additional_failed": "Oops! The added/updated additional information of Project has failed."
 }

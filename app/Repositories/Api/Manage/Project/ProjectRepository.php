@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Manage\Project;
 
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
+use App\Services\Manage\ProjectAdditionalInfoService;
 use App\Services\Manage\ProjectExternalLinksService;
 use App\Services\Manage\ProjectFileService;
 use App\Services\Manage\ProjectPitchService;
@@ -19,8 +20,9 @@ class ProjectRepository implements ProjectInterface
     private $projectPitchService;
     private $projectFileService;
     private $projectExternalLinksService;
+    private $projectAdditionalInfoService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -28,6 +30,7 @@ class ProjectRepository implements ProjectInterface
         $this->projectPitchService = $projectPitchService;
         $this->projectFileService = $projectFileService;
         $this->projectExternalLinksService = $projectExternalLinksService;
+        $this->projectAdditionalInfoService = $projectAdditionalInfoService;
     }
 
     public function uploadCoverImage($coverImage)
@@ -170,11 +173,11 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
-    public function addUpdatExternalLink($request, $projectId)
+    public function addUpdateExternalLink($request, $projectId)
     {
         try {
             $externalLink = DB::transaction(function () use ($request, $projectId) {
-                $externalLink = $this->projectExternalLinksService->addUpdatExternalLink($request, $projectId);
+                $externalLink = $this->projectExternalLinksService->addUpdateExternalLink($request, $projectId);
 
                 return [
                     'externalLink' => $externalLink,
@@ -184,6 +187,28 @@ class ProjectRepository implements ProjectInterface
                 DB::commit();
 
                 return $externalLink['externalLink'];
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function addUpdateAdditionalInfo($request, $projectId)
+    {
+        try {
+            $additionalInfo = DB::transaction(function () use ($request, $projectId) {
+                $additionalInfo = $this->projectAdditionalInfoService->addUpdateAdditionalInfoService($request, $projectId);
+
+                return [
+                    'additionalInfo' => $additionalInfo,
+                ];
+            });
+            if ($additionalInfo['additionalInfo']) {
+                DB::commit();
+
+                return $additionalInfo['additionalInfo'];
             }
 
             return false;

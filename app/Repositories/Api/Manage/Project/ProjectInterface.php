@@ -6,7 +6,7 @@ interface ProjectInterface
 {
     public function uploadCoverImage($coverImage);
 
-    public function createProject($request, $uploadedCoverImage);
+    public function createProject($request, $uploadedCoverMedia);
 
     public function getProjectChallenges($request);
 
@@ -21,4 +21,12 @@ interface ProjectInterface
     public function projectPitchTask($projectId, $request);
 
     public function projectProjectFile($projectId, $request);
+
+    public function updateProject($slug, $request, $uploadedCoverMedia);
+
+    public function addUpdateExternalLink($request, $projectId);
+
+    public function addUpdateAdditionalInfo($request, $projectId);
+
+    public function projectRequirements($projectData);
 }
