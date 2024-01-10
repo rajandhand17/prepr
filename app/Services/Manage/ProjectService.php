@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Events\Project\DeleteProjectAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Project;
@@ -269,6 +270,21 @@ class ProjectService
             }
 
             return $challenge_conditions;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteProject($projectId)
+    {
+        try {
+            $project = Project::find($projectId)->delete();
+            if ($project) {
+                $projectAssociatedData = event(new DeleteProjectAssociatedData($projectId));
+
+                return true;
+            }
+            return false;
         } catch (Exception $e) {
             return false;
         }

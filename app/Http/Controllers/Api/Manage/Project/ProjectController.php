@@ -282,7 +282,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            $getProjectChallengeRequirement = $this->projectRepository->projectRequirements($checkProjectExistsOrNot);
+            $getProjectChallengeRequirement = $this->projectRepository->projectRequirements($checkProjectExistsOrNot->id);
             if ($getProjectChallengeRequirement) {
                 return $this->sendResponse(ProjectRequirementResource::make($checkProjectExistsOrNot), __('responses.project_requirement_found'), 200);
             }
@@ -301,7 +301,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            $deleteProject = $this->projectRepository->deleteProject($checkProjectExistsOrNot);
+            $deleteProject = $this->projectRepository->deleteProject($checkProjectExistsOrNot->id);
             if ($deleteProject) {
                 return $this->sendResponse(null, __('responses.project_delete'));
             }
