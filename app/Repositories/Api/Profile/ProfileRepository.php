@@ -268,12 +268,11 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-
     public function checkAction($action)
     {
         try {
             return $this->friendService->checkAction($action);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -282,20 +281,21 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->friendService->getRecordsBasedOnId($request);
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
-    public function createFriendsBasedOnAction($request,$column,$value)
-    {
-        try {
-            return $this->friendService->createFriendsBasedOnAction($request,$column,$value);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function responseOfFriendRequest($request,$value)
+    public function createFriendsBasedOnAction($request, $column, $value)
+    {
+        try {
+            return $this->friendService->createFriendsBasedOnAction($request, $column, $value);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function responseOfFriendRequest($request, $value)
     {
         try {
             return $this->friendService->responseOfFriendRequest($request, $value);
@@ -304,7 +304,7 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function responseOfFollowRequest($request,$value)
+    public function responseOfFollowRequest($request, $value)
     {
         try {
             return $this->friendService->responseOfFollowRequest($request, $value);
@@ -312,23 +312,25 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function checkRequests($request)
     {
-        try{
+        try {
             return $this->friendService->checkRequests($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
     public function checkFollowRequests($request)
     {
-        try{
+        try {
             return $this->friendService->checkFollowRequests($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function getActionValue($action)
     {
         try {
@@ -351,10 +353,11 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->friendService->getFollowersListing();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
-}
+        }
     }
+
     public function getFriendRequestList()
     {
         try {
@@ -368,7 +371,7 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->friendService->getFollowersRequestList();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -381,14 +384,16 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function checkFollowStatus($request)
     {
         try {
             return $this->friendService->checkFollowStatus($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function removeFriend($request)
     {
         try {
@@ -397,11 +402,12 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function unfollowFriend($request)
     {
         try {
             return $this->friendService->unfollowFriend($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

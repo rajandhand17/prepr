@@ -5,6 +5,7 @@ namespace App\Repositories\Api\Profile;
 interface ProfileInterface
 {
     public function getUserByUsername($user_name);
+
     public function addPersonalDetail($request);
 
     public function addExperience($request);
@@ -24,6 +25,7 @@ interface ProfileInterface
     public function deleteUserPatent($id);
 
     public function checkUserPatent($id);
+
     public function addSkills($request);
 
     public function deleteSkill($id);
@@ -42,17 +44,18 @@ interface ProfileInterface
 
     public function getRecordsBasedOnId($request);
 
-    public function createFriendsBasedOnAction($request,$column,$value);
+    public function createFriendsBasedOnAction($request, $column, $value);
 
-    public function responseOfFriendRequest($request,$value);
+    public function responseOfFriendRequest($request, $value);
 
-    public function responseOfFollowRequest($request,$value);
+    public function responseOfFollowRequest($request, $value);
 
     public function checkRequests($request);
 
     public function checkFollowRequests($request);
 
     public function getActionValue($action);
+
     public function getFriendsListing();
 
     public function getFollowersListing();
@@ -60,10 +63,12 @@ interface ProfileInterface
     public function getFriendRequestList();
 
     public function getFollowersRequestList();
+
     public function checkFriendsStatus($request);
+
     public function checkFollowStatus($request);
+
     public function removeFriend($request);
 
     public function unfollowFriend($request);
-
 }
