@@ -801,14 +801,19 @@
     "responses.friends_listing_failed": "Sorry, You have failed to retrieve friends listing",
     "responses.friends_request_listing": "Congratulations! You have successfully retrieved the friends list.",
     "responses.friends_requesting_listing_no_records": "Sorry, you have no pending requests to respond to.",
-    "responses.follow_friend_request": "Congratulations! You have successfully accepted the follow request.",
-    "responses.un-follow_friend_request": "You have rejected the follow request.",
+    "responses.accept_follow_friend_request": "You have successfully accepted the follow request.",
+    "responses.reject_follow_friend_request": "You have rejected the follow request.",
     "responses.wrong_url": "Please ensure your URL is correct.",
     "responses.not_friend_status": "Sorry, we cannot unfriend because you both are not friends.",
-    "responses.remove_friend_successfully": "You have successfully removed a friend.",
+    "responses.not_follow_status": "Sorry, we cannot unfollow because you are not following.",
+    "responses.remove_friend_successfully": "You have successfully un-friend a friend.",
+    "responses.unfollow_friend_successfully": "You have successfully un-follow your friend.",
     "responses.remove_friend_failed": "Sorry, we cannot remove this friend for you.",
     "responses.already_reject_friend_request": "The friend request has been already rejected",
     "responses.already_accept_friend_request": "The friend request has been already accepted.",
     "responses.already_follow_friend_request": "The friend has been already followed.",
-    "responses.already_un_follow_friend_request": "The friend has been already un-followed."
+    "responses.already_un_follow_friend_request": "The friend has been already un-followed.",
+    "responses.success_send_message": "The friend request has been successfully sent.",
+    "responses.success_follow_message": "The follow request has been successfully sent.",
+    "responses.reference_id_required": "The User Id is required"
 }

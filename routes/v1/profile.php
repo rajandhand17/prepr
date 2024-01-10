@@ -17,15 +17,13 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/skills/add', [ProfileController::class, 'addSkills']);
     Route::delete('/{id}/skill/delete', [ProfileController::class, 'deleteSkill']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
-    Route::post('/send-friend-request', [ProfileController::class, 'sendFriendRequest']);
     Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequest']);
-    Route::get('/friends/{activity}', [ProfileController::class, 'listBasedOnAction']);
-
-
-
-    Route::post('/send-friend-request', [ProfileController::class, 'sendFriendRequest']);
-    Route::post('/friend-request/{activity}', [ProfileController::class, 'friendRequest']);
-    Route::get('/listing/{activity}', [ProfileController::class, 'getFriendsListing']);
-    Route::post('/pending/requests/{activity}', [ProfileController::class, 'getFriendRequestList']);
-    Route::post('/remove-friend', [ProfileController::class, 'removeFriend']);
+    Route::post('/friends/response/{activity}', [ProfileController::class, 'friendRequestResponse']);
+    Route::post('/friends/response/follow/{activity}', [ProfileController::class, 'followRequestResponse']);
+    Route::get('/friends/list', [ProfileController::class, 'getFriendsListing']);
+    Route::get('/friends/follow/list', [ProfileController::class, 'getFollowersListing']);
+    Route::get('/friends/pending/list', [ProfileController::class, 'getFriendRequestList']);
+    Route::get('/friends/pending/follow/list', [ProfileController::class, 'getFollowersRequestList']);
+    Route::post('/friends/un-follow', [ProfileController::class, 'unFollow']);
+    Route::post('/friends/un-friend', [ProfileController::class, 'unFriend']);
 });
