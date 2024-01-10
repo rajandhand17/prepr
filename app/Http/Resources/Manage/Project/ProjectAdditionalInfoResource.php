@@ -23,10 +23,10 @@ class ProjectAdditionalInfoResource extends JsonResource
         $verticals_id = null;
         $type = null;
         $type_id = null;
-        $stage  = null;
-        $stage_id  = null;
-        $status  = null;
-        $status_id  = null;
+        $stage = null;
+        $stage_id = null;
+        $status = null;
+        $status_id = null;
 
         if ($this->category_id) {
             $category = $this->getCategory->title;
@@ -54,9 +54,10 @@ class ProjectAdditionalInfoResource extends JsonResource
         }
 
         if ($this->status_id) {
-            $status =  $this->getStatus->title;
+            $status = $this->getStatus->title;
             $status_id = $this->getStatus->id;
         }
+
         return [
             'category'              => $category,
             'category_id'           => $category_id,

@@ -216,6 +216,7 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
     public function projectRequirements($projectData)
     {
         try {
