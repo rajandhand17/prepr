@@ -113,6 +113,7 @@ class User extends Authenticatable
     public function followRequestReceived(){
         return $this->hasMany(Friend::class,'user_id', 'id')->where('follow','0');
     }
+
     public function userAddress()
     {
         return $this->hasOne(UserAddress::class, 'user_id', 'id');
@@ -157,6 +158,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserPersonalFile::class);
     }
+
     /**login apis */
     public function login($request)
     {

@@ -286,7 +286,7 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function friendRequestResponse($request,$value)
+    public function friendRequestResponse($request, $value)
     {
         try {
             return $this->friendService->friendRequestResponse($request, $value);
@@ -295,7 +295,7 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function followRequestResponse($request,$value)
+    public function followRequestResponse($request, $value)
     {
         try {
             return $this->friendService->followRequestResponse($request, $value);
@@ -321,6 +321,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function getColumnNameValue($action)
     {
         try {
@@ -347,11 +348,12 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
+
     public function getFollowListing()
     {
         try {
             return $this->friendService->getFollowListing();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -410,12 +412,12 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function createFriendsBasedOnAction($request, $column, $value){
+    public function createFriendsBasedOnAction($request, $column, $value)
+    {
         try {
             return $this->friendService->createFriendsBasedOnAction($request, $column, $value);
         } catch (\Exception $e) {
             return false;
         }
     }
-
 }

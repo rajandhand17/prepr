@@ -18,6 +18,8 @@ interface ProfileInterface
 
     public function fileUpload($request);
 
+    public function profileImageUpload($request);
+
     public function deleteEducation($id);
 
     public function addPatent($request);
@@ -28,9 +30,15 @@ interface ProfileInterface
 
     public function addSkills($request);
 
+    public function addTags($request);
+
+    public function deleteTag($id);
+
     public function deleteSkill($id);
 
     public function checkUserSkillExists($id);
+
+    public function checkUserTagExists($id);
 
     public function addCertificate($request);
 
@@ -46,18 +54,21 @@ interface ProfileInterface
 
     public function createFriendsBasedOnAction($request, $column, $value);
 
-    public function friendRequestResponse($request,$value);
+    public function friendRequestResponse($request, $value);
 
-    public function followRequestResponse($request,$value);
+    public function followRequestResponse($request, $value);
 
     public function checkRequests($request);
 
     public function checkFollowRequests($request);
 
     public function getColumnNameValue($action);
+
     public function getFriendsListing();
 
     public function getFollowersListing();
+
+    public function getFollowListing();
 
     public function getFriendRequestList();
 

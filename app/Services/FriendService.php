@@ -98,7 +98,8 @@ class FriendService
             return false;
         }
     }
-    public function friendRequestResponse($request,$value)
+
+    public function friendRequestResponse($request, $value)
     {
         try {
             $friends = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id])->first();
@@ -115,7 +116,7 @@ class FriendService
         }
     }
 
-    public function followRequestResponse($request,$value)
+    public function followRequestResponse($request, $value)
     {
         try {
             $friends = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id])->first();
@@ -135,10 +136,10 @@ class FriendService
     public function getFriendsListing()
     {
         try {
-            $friends=Friend::where(function ($query) {
-                $query->where(['reference_id' => auth()->user()->id,'status' => '1'])
+            $friends = Friend::where(function ($query) {
+                $query->where(['reference_id' => auth()->user()->id, 'status' => '1'])
                     ->orWhere(function ($query) {
-                        $query->where(['user_id' => auth()->user()->id,'status' => '1']);
+                        $query->where(['user_id' => auth()->user()->id, 'status' => '1']);
                     });
             })->get();
             if ($friends) {
@@ -172,11 +173,13 @@ class FriendService
             if ($followers) {
                 return  $followers;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public function getFriendRequestList()
     {
         try {
