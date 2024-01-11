@@ -18,7 +18,7 @@ class ResourceCollectionService
         try {
             $status = config('constants.resource_collection_status.draft');
             switch($request->status) {
-                case 'published':
+                case 'publish':
                     $status = config('constants.resource_collection_status.publish');
                     break;
                 case 'archive':
@@ -59,7 +59,6 @@ class ResourceCollectionService
             $resourceCollection->title = $request->title;
             $resourceCollection->slug = $slug;
             $resourceCollection->description = $request->description;
-            $resourceCollection->media_type = $request->media_type;
             $resourceCollection->media = $upload_cover_image;
             $resourceCollection->level = $request->level;
             $resourceCollection->duration = $request->duration;
@@ -116,7 +115,7 @@ class ResourceCollectionService
                 $privacy = $resourceCollection->privacy;
                 $is_accessible = $resourceCollection->is_accessible;
                 switch($request->status) {
-                    case 'published':
+                    case 'publish':
                         $status = config('constants.resource_collection_status.publish');
                         break;
                     case 'archive':
