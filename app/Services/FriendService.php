@@ -90,9 +90,10 @@ class FriendService
                 if ($friendRequest->$column == '2') {
                     $friendRequest->$column = '0';
                     $friendRequest->save();
+                }else {
+                    return false;
                 }
             }
-
             return true;
         } catch (\Exception $e) {
             return false;
