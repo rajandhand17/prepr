@@ -45,7 +45,7 @@ class EventServiceProvider extends ServiceProvider
             HandleDeleteResourceGroupAssociatedData::class,
         ],
         DeleteProjectAssociatedData::class=> [
-            HandleDeleteProjectAssociatedData::class
+            HandleDeleteProjectAssociatedData::class,
         ],
     ];
 
