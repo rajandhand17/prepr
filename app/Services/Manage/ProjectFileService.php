@@ -86,4 +86,18 @@ class ProjectFileService
             return false;
         }
     }
+
+    public static function deleteProjectFile($projectId)
+    {
+        try {
+            $checkProjectFileExists = ProjectFile::where('project_id', $projectId)->pluck('id');
+            if ($checkProjectFileExists->isNotEmpty()) {
+                $deleteProjectFile = ProjectFile::whereIn('id', $checkProjectFileExists)->delete();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

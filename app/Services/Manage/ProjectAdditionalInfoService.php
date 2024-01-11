@@ -31,4 +31,18 @@ class ProjectAdditionalInfoService
             return false;
         }
     }
+
+    public static function deleteProjectAdditionalInfo($projectId)
+    {
+        try {
+            $checkProjectAdditionalInfo = ProjectAdditionalInfo::where('project_id', $projectId)->first();
+            if ($checkProjectAdditionalInfo) {
+                $checkProjectAdditionalInfo->delete();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
