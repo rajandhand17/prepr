@@ -25,6 +25,7 @@ class FriendsResource extends JsonResource
             'country_code' => $this->getFriendsProfile->country_code,
             'phone_number' => $this->getFriendsProfile->phone_number,
             'profile_image'=> $this->getFriendsProfile->profile_image,
+            'learnrank'    => '1',
         ];
     }
 }
