@@ -363,9 +363,9 @@ class ProfileController extends AppBaseController
             if ($friendsListing) {
                 return $this->sendResponse(FriendsResource::collection($friendsListing), __('responses.friends_listing'));
             }
-
             return $this->sendError(__('responses.friends_listing'));
         } catch (\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
