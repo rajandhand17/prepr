@@ -12,16 +12,16 @@ class DeleteProjectAssociatedData
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
-    public $project_Id;
+    public $projectId;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($project_Id)
+    public function __construct($projectId)
     {
-        $this->project_Id = $project_Id;
+        $this->projectId = $projectId;
     }
 
     /**
