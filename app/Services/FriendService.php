@@ -62,9 +62,9 @@ class FriendService
     {
         try {
             $friendRequest = Friend::where(function ($query) use ($request) {
-                $query->where(['user_id' => $request->user_id, 'reference_id' => auth()->user()->id, 'status' => '0'])
+                $query->where(['user_id' => $request->user_id, 'reference_id' => auth()->user()->id])
                     ->orWhere(function ($query) use ($request) {
-                        $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id, 'status' => '0']);
+                        $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id]);
                     });
             })->first();
 
@@ -77,7 +77,12 @@ class FriendService
     public function createFriendsBasedOnAction($request, $column, $value)
     {
         try {
-            $friendRequest = Friend::where(['user_id'=>$request->user_id, 'reference_id'=>auth()->user()->id])->first();
+            $friendRequest =  Friend::where(function ($query) use ($request) {
+                $query->where(['user_id' => $request->user_id, 'reference_id' => auth()->user()->id])
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id]);
+                    });
+            })->first();
             $secondColumn = $column == 'status' ? 'follow' : 'status';
             if (!$friendRequest) {
                 $friendRequest = new Friend();
@@ -90,9 +95,10 @@ class FriendService
                 if ($friendRequest->$column == '2') {
                     $friendRequest->$column = '0';
                     $friendRequest->save();
+                }else {
+                    return false;
                 }
             }
-
             return true;
         } catch (\Exception $e) {
             return false;
