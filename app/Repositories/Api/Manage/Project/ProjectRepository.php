@@ -227,4 +227,25 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function deleteProject($projectId)
+    {
+        try {
+            DB::beginTransaction();
+
+            $deleteProject = $this->projectService->deleteProject($projectId);
+            if ($deleteProject == false) {
+                DB::rollBack();
+
+                return false;
+            }
+            DB::commit();
+
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
 }

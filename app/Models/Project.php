@@ -34,6 +34,8 @@ class Project extends Model
         'status_id',
     ];
 
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
     public function getMediaAttribute($value)
     {
         return config('site-settings.aws_url').$value;

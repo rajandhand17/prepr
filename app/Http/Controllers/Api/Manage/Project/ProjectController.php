@@ -132,19 +132,19 @@ class ProjectController extends AppBaseController
     public function projectPitchTask(Request $request)
     {
         try {
-            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnUUID($request->project_id);
-            if ($checkProjectSlugExistsOrNot == false) {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnUUID($request->project_id);
+            if ($checkProjectExistsOrNot == false) {
                 return $this->sendResponse([], __('responses.project_not_found'), 403);
             }
 
-            $checkChallenge = ChallengeService::getChallengeBasedOnId($checkProjectSlugExistsOrNot->challenge_id);
+            $checkChallenge = ChallengeService::getChallengeBasedOnId($checkProjectExistsOrNot->challenge_id);
             if ($checkChallenge == false) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
-            $addPitchTask = $this->projectRepository->projectPitchTask($checkProjectSlugExistsOrNot->id, $request);
+            $addPitchTask = $this->projectRepository->projectPitchTask($checkProjectExistsOrNot->id, $request);
 
             if ($addPitchTask) {
-                return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_pitch_stored_success'), 200);
+                return $this->sendResponse(ProjectResource::make($checkProjectExistsOrNot), __('responses.project_pitch_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.project_pitch_stored_failed'), 400);
@@ -156,15 +156,15 @@ class ProjectController extends AppBaseController
     public function fileUpload(Request $request)
     {
         try {
-            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnUUID($request->project_id);
-            if ($checkProjectSlugExistsOrNot == false) {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnUUID($request->project_id);
+            if ($checkProjectExistsOrNot == false) {
                 return $this->sendResponse([], __('responses.project_not_found'), 403);
             }
 
-            $addProjectFiles = $this->projectRepository->projectProjectFile($checkProjectSlugExistsOrNot->id, $request);
+            $addProjectFiles = $this->projectRepository->projectProjectFile($checkProjectExistsOrNot->id, $request);
 
             if ($addProjectFiles) {
-                return $this->sendResponse(ProjectFileResource::make($checkProjectSlugExistsOrNot), __('responses.project_file_stored_success'), 200);
+                return $this->sendResponse(ProjectFileResource::make($checkProjectExistsOrNot), __('responses.project_file_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.project_file_stored_failed'), 400);
@@ -190,12 +190,12 @@ class ProjectController extends AppBaseController
     public function update($slug, UpdateProjectRequest $request)
     {
         try {
-            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
-            if (!$checkProjectSlugExistsOrNot) {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            $checkChallenge = ChallengeService::getChallengeBasedOnId($checkProjectSlugExistsOrNot->challenge_id);
+            $checkChallenge = ChallengeService::getChallengeBasedOnId($checkProjectExistsOrNot->challenge_id);
             if ($checkChallenge) {
                 $challengeStatus = ($checkChallenge->status === '1' && $checkChallenge->is_open === '0');
                 if ($challengeStatus) {
@@ -213,7 +213,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
 
-            $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkProjectSlugExistsOrNot->media);
+            $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkProjectExistsOrNot->media);
             if ($request->cover_media != null) {
                 if ($request->media_type == 'image') {
                     $uploaded_cover_media = $this->projectRepository->uploadCoverImage($request->cover_media);
@@ -241,13 +241,13 @@ class ProjectController extends AppBaseController
     public function projectExternalLinks(AddLinksProjectRequest $request, $slug)
     {
         try {
-            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
-            if (!$checkProjectSlugExistsOrNot) {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
-            $addLinks = $this->projectRepository->addUpdateExternalLink($request, $checkProjectSlugExistsOrNot->id);
+            $addLinks = $this->projectRepository->addUpdateExternalLink($request, $checkProjectExistsOrNot->id);
             if ($addLinks) {
-                return $this->sendResponse(ProjectExternalLinkResource::collection($checkProjectSlugExistsOrNot->external_links), __('responses.add_external_links_success'), 200);
+                return $this->sendResponse(ProjectExternalLinkResource::collection($checkProjectExistsOrNot->external_links), __('responses.add_external_links_success'), 200);
             }
 
             return $this->sendResponse(__('responses.add_external_links_failed'), 400);
@@ -259,13 +259,13 @@ class ProjectController extends AppBaseController
     public function projectAdditionalInfo(AddAdditionalInfoProjectRequest $request, $slug)
     {
         try {
-            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
-            if (!$checkProjectSlugExistsOrNot) {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
-            $addAdditionalInfo = $this->projectRepository->addUpdateAdditionalInfo($request, $checkProjectSlugExistsOrNot->id);
+            $addAdditionalInfo = $this->projectRepository->addUpdateAdditionalInfo($request, $checkProjectExistsOrNot->id);
             if ($addAdditionalInfo) {
-                return $this->sendResponse(ProjectAdditionalInfoResource::make($checkProjectSlugExistsOrNot->getProjectAdditionalInfo), __('responses.add_additional_success'), 200);
+                return $this->sendResponse(ProjectAdditionalInfoResource::make($checkProjectExistsOrNot->getProjectAdditionalInfo), __('responses.add_additional_success'), 200);
             }
 
             return $this->sendResponse(__('responses.add_additional_failed'), 400);
@@ -277,17 +277,36 @@ class ProjectController extends AppBaseController
     public function projectRequirements($slug)
     {
         try {
-            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
-            if (!$checkProjectSlugExistsOrNot) {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            $getProjectChallengeRequirement = $this->projectRepository->projectRequirements($checkProjectSlugExistsOrNot);
+            $getProjectChallengeRequirement = $this->projectRepository->projectRequirements($checkProjectExistsOrNot->id);
             if ($getProjectChallengeRequirement) {
-                return $this->sendResponse(ProjectRequirementResource::make($checkProjectSlugExistsOrNot), __('responses.project_requirement_found'), 200);
+                return $this->sendResponse(ProjectRequirementResource::make($checkProjectExistsOrNot), __('responses.project_requirement_found'), 200);
             }
 
             return $this->sendError(__('responses.project_not_requirement_found'));
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function delete($slug)
+    {
+        try {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $deleteProject = $this->projectRepository->deleteProject($checkProjectExistsOrNot->id);
+            if ($deleteProject) {
+                return $this->sendResponse(null, __('responses.project_delete'));
+            }
+
+            return $this->sendError(__('responses.project_not_delete'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

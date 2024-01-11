@@ -12,6 +12,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/file-upload', [ProjectController::class, 'fileUpload']);
     Route::post('/{slug}/additional-info', [ProjectController::class, 'projectAdditionalInfo']);
     Route::post('/{slug}/external-links', [ProjectController::class, 'projectExternalLinks']);
+    Route::delete('/{slug}/delete', [ProjectController::class, 'delete']);
     Route::get('/challenge-list', [ProjectController::class, 'challengeList']);
     Route::get('/lab-list', [ProjectController::class, 'labList']);
     Route::get('/check-slug/{slug}', [ProjectController::class, 'checkSlug']);

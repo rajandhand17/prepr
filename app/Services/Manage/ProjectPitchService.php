@@ -206,4 +206,32 @@ class ProjectPitchService
             return false;
         }
     }
+
+    public static function deleteProjectPitch($projectId)
+    {
+        try {
+            $checkProjectPitchExists = ProjectPitchValue::where('project_id', $projectId)->pluck('id');
+            if ($checkProjectPitchExists->isNotEmpty()) {
+                $deleteProjectPitch = ProjectPitchValue::whereIn('id', $checkProjectPitchExists)->delete();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteProjectTask($projectId)
+    {
+        try {
+            $checkProjectTaskExists = ProjectTaskValue::where('project_id', $projectId)->pluck('id');
+            if ($checkProjectTaskExists->isNotEmpty()) {
+                $deleteProjectTask = ProjectTaskValue::whereIn('id', $checkProjectTaskExists)->delete();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
