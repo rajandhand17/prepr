@@ -89,8 +89,7 @@ class User extends Authenticatable
         return $this->hasMany(Friend::class, 'reference_id', 'id')
             ->where('follow', '1')
             ->orWhere(function ($query) {
-                $query->where('user_id', $this->id)
-                    ->where('follow', '1');
+                $query->where(['user_id' => $this->id, 'follow' => '1']);
             });
     }
 
