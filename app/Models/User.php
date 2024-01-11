@@ -114,7 +114,7 @@ class User extends Authenticatable
     }
 
     public function followRequestSent(){
-        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('follow', '0');
+        return $this->hasMany(Friend::class, 'user_id', 'id')->where('follow', '0');
 
     }
     public function requestReceived()
@@ -124,7 +124,7 @@ class User extends Authenticatable
 
     public function followRequestReceived()
     {
-        return $this->hasMany(Friend::class, 'user_id', 'id')->where('follow', '0');
+        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('follow', '0');
     }
 
     public function userAddress()
