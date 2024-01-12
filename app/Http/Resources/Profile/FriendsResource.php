@@ -28,6 +28,7 @@ class FriendsResource extends JsonResource
             'profile_image' => $profile->profile_image,
             'learnrank'     => '1',
         ];
+
         return $data;
     }
 }
