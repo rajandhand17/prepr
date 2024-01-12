@@ -20,6 +20,7 @@ class LabMarketplaceSkillsGroupStackService
                     $labTemplateSkillsGroupStack->save();
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

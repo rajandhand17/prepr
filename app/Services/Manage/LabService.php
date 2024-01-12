@@ -349,13 +349,15 @@ class LabService
         }
     }
 
-    public static function updatePreBuilt($id,$is_pre_built){
+    public static function updatePreBuilt($id, $is_pre_built)
+    {
         try {
-            $lab=Lab::find($id);
-            $lab->is_pre_built=$is_pre_built;
+            $lab = Lab::find($id);
+            $lab->is_pre_built = $is_pre_built;
             $lab->save();
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

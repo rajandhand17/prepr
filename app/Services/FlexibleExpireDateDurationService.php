@@ -13,7 +13,7 @@ class FlexibleExpireDateDurationService
         try {
             if ($language == 'en') {
                 $flexible_date_duration = FlexibleExpireDateDuration::select('id', 'title');
-                //Search categories based on user input
+            //Search categories based on user input
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');

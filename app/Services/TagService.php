@@ -28,7 +28,7 @@ class TagService
         try {
             if ($language == 'en') {
                 $tag_list = Tag::select('id', 'title', 'tag_image', 'components');
-                //Search categories based on user input
+            //Search categories based on user input
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');

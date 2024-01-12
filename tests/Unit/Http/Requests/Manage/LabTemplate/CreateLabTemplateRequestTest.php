@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Manage\LabTemplate;
 
-use App\Http\Requests\Manage\LabTemplate\CreateLabTemplateRequest;
 use Tests\TestCase;
 
 /**
