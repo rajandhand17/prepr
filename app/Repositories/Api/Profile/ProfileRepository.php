@@ -385,10 +385,10 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function unfollowFriend($request,$column)
+    public function unfollowFriend($request, $column)
     {
         try {
-            return $this->friendService->unfollowFriend($request,$column);
+            return $this->friendService->unfollowFriend($request, $column);
         } catch (\Exception $e) {
             return false;
         }
