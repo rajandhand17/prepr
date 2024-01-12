@@ -77,7 +77,7 @@ class FriendService
     public function createFriendsBasedOnAction($request, $column, $value)
     {
         try {
-            $friendRequest =  Friend::where(function ($query) use ($request) {
+            $friendRequest = Friend::where(function ($query) use ($request) {
                 $query->where(['user_id' => $request->user_id, 'reference_id' => auth()->user()->id])
                     ->orWhere(function ($query) use ($request) {
                         $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id]);
@@ -95,10 +95,11 @@ class FriendService
                 if ($friendRequest->$column == '2') {
                     $friendRequest->$column = '0';
                     $friendRequest->save();
-                }else {
+                } else {
                     return false;
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
