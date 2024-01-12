@@ -27,6 +27,7 @@ class FriendsResource extends JsonResource
             'phone_number'  => $profile->phone_number,
             'profile_image' => $profile->profile_image,
         ];
+
         return $data;
     }
 }
