@@ -105,12 +105,12 @@ class User extends Authenticatable
 
     public function userRequestSend()
     {
-        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '0');
+        return $this->hasMany(Friend::class, 'user_id', 'id')->where('status', '0');
     }
 
     public function requestReceived()
     {
-        return $this->hasMany(Friend::class, 'user_id', 'id')->where('status', '0');
+        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '0');
     }
 
     public function userFollowRequest()
