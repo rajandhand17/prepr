@@ -24,12 +24,10 @@ class Friend extends Model
     public function getFriendsProfilebasedOnReference()
     {
         return $this->belongsTo(User::class, 'reference_id', 'id');
-
     }
+
     public function getFriendsProfileBasedOnUserId()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
-
     }
-
 }
