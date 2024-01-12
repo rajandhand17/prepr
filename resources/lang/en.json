@@ -820,6 +820,7 @@
     "responses.remove_friend_successfully": "You have successfully un-friend a friend.",
     "responses.unfollow_friend_successfully": "You have successfully un-follow your friend.",
     "responses.remove_friend_failed": "Sorry, we cannot remove this friend for you.",
+    "responses.unfollow_friend_failed": "Sorry, we cannot unfollow this friend for you.",
     "responses.already_reject_friend_request": "The friend request has been already rejected",
     "responses.already_accept_friend_request": "The friend request has been already accepted.",
     "responses.already_follow_friend_request": "The friend has been already followed.",

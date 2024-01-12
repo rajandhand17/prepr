@@ -43,6 +43,7 @@ class ProfileController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
         } catch(\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -286,31 +287,36 @@ class ProfileController extends AppBaseController
         try {
             if($request->user_id==auth()->user()->id) {
                 return $this->sendError(__('responses.self_request'), 400);
-
             }
-            $getColumnNameValue = $this->profileRepository->getColumnNameValue($action);
-            if (!$getColumnNameValue) {
+            if ($action!=='send' && $action!== 'follow') {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            if ($action == 'send' || $action == 'follow') {
-                $getFriendsRecords = $this->profileRepository->getRecordsBasedOnId($request);
-                $column = $getColumnNameValue['column'];
-               if($column=='follow' && $getFriendsRecords==null || $getFriendsRecords->status !=='1'){
-                   return $this->sendError(__('responses.not_friend'),404);
-               }
-                if ($getFriendsRecords !== null && $getFriendsRecords->$column == '0') {
+            $getFriendsRecords = $this->profileRepository->getRecordsBasedOnId($request);
+            if ($action == 'send') {
+                if ($getFriendsRecords !== null && $getFriendsRecords->status == '0') {
                     return $this->sendError(__('responses.user_request_already_send'), 403);
                 }
-                if ($getFriendsRecords !== null && $getFriendsRecords->$column == '1') {
+                if ($getFriendsRecords !== null && $getFriendsRecords->status == '1') {
                     return $this->sendError(__('responses.user_request_already_accepted'), 403);
                 }
-                $createFriendRequest = $this->profileRepository->createFriendsBasedOnAction($request, $getColumnNameValue['column'], $getColumnNameValue['value']);
-                if ($createFriendRequest) {
-                    return $this->sendResponse(null, __('responses.success_'.$action.'_message'));
-                }
-                return $this->sendError(__('responses.failed_'.$action.'_message'), 403);
+                $column = 'status';
+                $value='0';
             }
+            if($action == 'follow'){
+                if (($getFriendsRecords == null || ($getFriendsRecords->status) !== '1')) {
+                    return $this->sendError(__('responses.not_friend'), 404);
+                }
+                $column=$getFriendsRecords->user_id==$request->user_id ? 'user_follow':'reference_follow';
+                $value='2';
+                if($getFriendsRecords->$column=='2'){
+                    return $this->sendError(__('responses.already_follow_friend_request'), 400);
 
+                }
+            }
+            $createFriendRequest = $this->profileRepository->createFriendsBasedOnAction($request, $column, $value);
+            if ($createFriendRequest) {
+                return $this->sendResponse(null, __('responses.success_'.$action.'_message'),200);
+            }
             return $this->sendError(__('responses.send_error'), 402);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -334,7 +340,6 @@ class ProfileController extends AppBaseController
                     }
                 }
             }
-
             return $this->sendError(__('responses.send_error'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -452,16 +457,19 @@ class ProfileController extends AppBaseController
     public function unFollow(FriendRequest $request)
     {
         try {
-            $checkFollowStatus = $this->profileRepository->checkFollowStatus($request);
-            if ($checkFollowStatus == null) {
+            $getFriendsRecords = $this->profileRepository->getRecordsBasedOnId($request);
+            if($getFriendsRecords==null){
+                return $this->sendError(__('responses.not_friend'), 404);
+            }
+            $column=$getFriendsRecords->user_id==$request->user_id ? 'user_follow':'reference_follow';
+            if($getFriendsRecords->$column!=='2'){
                 return $this->sendError(__('responses.not_follow_status'), 402);
             }
-            $response = $this->profileRepository->unfollowFriend($request);
+            $response = $this->profileRepository->unfollowFriend($request,$column);
             if ($response) {
-                return $this->sendResponse($response, __('responses.remove_friend_successfully'));
+                return $this->sendResponse($response, __('responses.unfollow_friend_successfully'));
             }
-
-            return $this->sendError(__('responses.remove_friend_failed'));
+            return $this->sendError(__('responses.unfollow_friend_failed'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

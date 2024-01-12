@@ -191,8 +191,6 @@ class ProfileResource extends JsonResource
             'is_follower'            => $this->userFollow()->exists() ? 'Yes' : 'No',
             'request_sent'           => $this->userRequestSend()->exists() ? 'Yes' : 'No',
             'request_received'       => $this->requestReceived()->exists() ? 'Yes' : 'No',
-            'follow_request_sent'    => $this->followRequestSent()->exists() ? 'Yes' : 'No',
-            'follow_request_received'=> $this->followRequestReceived()->exists() ? 'Yes' : 'No',
             'user_experiences'       => UserExperienceResource::collection($this->userExperience),
             'user_educations'        => UserEducationResource::collection($this->userEducation),
             'user_patents'           => UserPatentResource::collection($this->userPatents),

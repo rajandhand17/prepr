@@ -62,8 +62,6 @@ interface ProfileInterface
 
     public function checkFollowRequests($request);
 
-    public function getColumnNameValue($action);
-
     public function getFriendsListing();
 
     public function getFollowersListing();
@@ -76,9 +74,7 @@ interface ProfileInterface
 
     public function checkFriendsStatus($request);
 
-    public function checkFollowStatus($request);
-
     public function removeFriend($request);
 
-    public function unfollowFriend($request);
+    public function unfollowFriend($request,$column);
 }

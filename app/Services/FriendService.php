@@ -6,33 +6,6 @@ use App\Models\Friend;
 
 class FriendService
 {
-    public function getColumnNameValue($action)
-    {
-        try {
-            $value = null;
-            switch($action) {
-                case 'send':
-                    $value = '0';
-                    $column = 'status';
-                    break;
-                case 'follow':
-                    $value = '1';
-                    $column = 'follow';
-                    break;
-                default:
-                    $value = null;
-                    break;
-            }
-            if ($value !== null) {
-                return ['column' => $column, 'value' => $value];
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function checkAction($action)
     {
         try {
@@ -82,21 +55,15 @@ class FriendService
                         $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id]);
                     });
             })->first();
-            $secondColumn = $column == 'status' ? 'follow' : 'status';
             if (!$friendRequest) {
                 $friendRequest = new Friend();
                 $friendRequest->user_id = $request->user_id;
                 $friendRequest->reference_id = auth()->user()->id;
                 $friendRequest->$column = $value;
-                $friendRequest->$secondColumn = '2';
                 $friendRequest->save();
             } else {
-                if ($friendRequest->$column == '2') {
-                    $friendRequest->$column = '1';
+                    $friendRequest->$column =$value;
                     $friendRequest->save();
-                }else {
-                    return false;
-                }
             }
             return true;
         } catch (\Exception $e) {
@@ -160,7 +127,12 @@ class FriendService
     public function getFollowersListing()
     {
         try {
-            $followers = Friend::where(['user_id'=>auth()->user()->id, 'follow'=>'1'])->get();
+            $followers=Friend::where(function ($query){
+                $query->where([ 'reference_id' => auth()->user()->id, 'user_follow' => '2'])
+                    ->orWhere(function ($query){
+                        $query->where(['user_id' => auth()->user()->id, 'reference_follow' => '2']);
+                    });
+            })->get();
             if ($followers) {
                 return  $followers;
             }
@@ -174,7 +146,12 @@ class FriendService
     public function getFollowListing()
     {
         try {
-            $followers = Friend::where(['reference_id'=>auth()->user()->id, 'follow'=>'1'])->get();
+            $followers=Friend::where(function ($query){
+                $query->where([ 'reference_id' => auth()->user()->id, 'reference_follow' => '2'])
+                    ->orWhere(function ($query){
+                        $query->where(['user_id' => auth()->user()->id, 'user_follow' => '2']);
+                    });
+            })->get();
             if ($followers) {
                 return  $followers;
             }
@@ -228,18 +205,6 @@ class FriendService
             return false;
         }
     }
-
-    public function checkFollowStatus($request)
-    {
-        try {
-            $follow = Friend::where(['user_id' => $request->user_id, 'reference_id' => auth()->user()->id, 'follow' => '1'])->first();
-
-            return $follow;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function checkRequests($request)
     {
         try {
@@ -255,8 +220,7 @@ class FriendService
     {
         try {
             try {
-                $existsFriend = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id, 'follow'=>'0'])->first();
-
+                $existsFriend = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id, 'reference_follow'=>'1'])->first();
                 return $existsFriend;
             } catch (\Exception $e) {
                 return false;
@@ -285,12 +249,17 @@ class FriendService
         }
     }
 
-    public function unfollowFriend($request)
+    public function unfollowFriend($request,$column)
     {
         try {
-            $friend = Friend::where(['user_id' => $request->user_id, 'reference_id' => auth()->user()->id, 'follow'=>'1'])->first();
+            $friend=Friend::where(function ($query) use ($request,$column) {
+                $query->where(['user_id' => $request->user_id, 'reference_id' => auth()->user()->id, $column => '2'])
+                    ->orWhere(function ($query) use ($request,$column) {
+                        $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id, $column => '2']);
+                    });
+            })->first();
             if ($friend) {
-                $friend->follow = '2';
+                $friend->$column = '3';
                 $friend->save();
 
                 return true;

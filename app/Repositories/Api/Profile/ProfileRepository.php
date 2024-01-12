@@ -322,15 +322,6 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function getColumnNameValue($action)
-    {
-        try {
-            return $this->friendService->getColumnNameValue($action);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function getFriendsListing()
     {
         try {
@@ -385,15 +376,6 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function checkFollowStatus($request)
-    {
-        try {
-            return $this->friendService->checkFollowStatus($request);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function removeFriend($request)
     {
         try {
@@ -403,10 +385,10 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function unfollowFriend($request)
+    public function unfollowFriend($request,$column)
     {
         try {
-            return $this->friendService->unfollowFriend($request);
+            return $this->friendService->unfollowFriend($request,$column);
         } catch (\Exception $e) {
             return false;
         }

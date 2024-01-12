@@ -15,7 +15,8 @@ return new class() extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('reference_id');
             $table->enum('status', ['0', '1', '2'])->default('0')->comment('0 for pending, 1 for accepted,2 for rejected');
-            $table->enum('follow', ['0', '1', '2'])->default('0')->comment('0 for pending, 1 for follow,2 for unfollow');
+            $table->enum('user_follow', ['0', '1', '2','3'])->default('0')->comment('0 for none, 1 for request,2 for follow,3 for unfollow');
+            $table->enum('reference_follow', ['0', '1', '2','3'])->default('0')->comment('0 for none, 1 for request,2 for follow, 3 for unfollow');
             $table->enum('newsfeed', ['0', '1', '2'])->default('1')->comment('0 for pending, 1 for allowed all,2 for not allowed');
             $table->timestamps();
             $table->softDeletes();
