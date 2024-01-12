@@ -16,7 +16,7 @@ class FriendService
                     $column = 'status';
                     break;
                 case 'follow':
-                    $value = '0';
+                    $value = '1';
                     $column = 'follow';
                     break;
                 default:
@@ -67,7 +67,6 @@ class FriendService
                         $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id]);
                     });
             })->first();
-
             return $friendRequest;
         } catch (\Exception $e) {
             return false;
@@ -93,7 +92,7 @@ class FriendService
                 $friendRequest->save();
             } else {
                 if ($friendRequest->$column == '2') {
-                    $friendRequest->$column = '0';
+                    $friendRequest->$column = '1';
                     $friendRequest->save();
                 }else {
                     return false;

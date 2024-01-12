@@ -105,6 +105,10 @@ class User extends Authenticatable
 
     public function userRequestSend()
     {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '0');
+    }
+    public function requestReceived()
+    {
         return $this->hasMany(Friend::class, 'user_id', 'id')->where('status', '0');
     }
 
@@ -117,11 +121,6 @@ class User extends Authenticatable
         return $this->hasMany(Friend::class, 'user_id', 'id')->where('follow', '0');
 
     }
-    public function requestReceived()
-    {
-        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '0');
-    }
-
     public function followRequestReceived()
     {
         return $this->hasMany(Friend::class, 'reference_id', 'id')->where('follow', '0');

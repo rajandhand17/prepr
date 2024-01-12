@@ -284,6 +284,10 @@ class ProfileController extends AppBaseController
     public function friendRequest(FriendRequest $request, $action)
     {
         try {
+            if($request->user_id==auth()->user()->id) {
+                return $this->sendError(__('responses.self_request'), 400);
+
+            }
             $getColumnNameValue = $this->profileRepository->getColumnNameValue($action);
             if (!$getColumnNameValue) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
@@ -291,6 +295,9 @@ class ProfileController extends AppBaseController
             if ($action == 'send' || $action == 'follow') {
                 $getFriendsRecords = $this->profileRepository->getRecordsBasedOnId($request);
                 $column = $getColumnNameValue['column'];
+               if($column=='follow' && $getFriendsRecords==null || $getFriendsRecords->status !=='1'){
+                   return $this->sendError(__('responses.not_friend'),404);
+               }
                 if ($getFriendsRecords !== null && $getFriendsRecords->$column == '0') {
                     return $this->sendError(__('responses.user_request_already_send'), 403);
                 }
@@ -301,7 +308,6 @@ class ProfileController extends AppBaseController
                 if ($createFriendRequest) {
                     return $this->sendResponse(null, __('responses.success_'.$action.'_message'));
                 }
-
                 return $this->sendError(__('responses.failed_'.$action.'_message'), 403);
             }
 

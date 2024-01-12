@@ -815,6 +815,7 @@
     "responses.reject_follow_friend_request": "You have rejected the follow request.",
     "responses.wrong_url": "Please ensure your URL is correct.",
     "responses.not_friend_status": "Sorry, we cannot unfriend because you both are not friends.",
+    "responses.not_friend": "Sorry, we cannot send follow request, because you both are not friends.",
     "responses.not_follow_status": "Sorry, we cannot unfollow because you are not following.",
     "responses.remove_friend_successfully": "You have successfully un-friend a friend.",
     "responses.unfollow_friend_successfully": "You have successfully un-follow your friend.",
@@ -826,5 +827,6 @@
     "responses.success_send_message": "The friend request has been successfully sent.",
     "responses.success_follow_message": "The follow request has been successfully sent.",
     "responses.reference_id_required": "The User Id is required",
-    "responses.image": "Only Images are supported"
+    "responses.image": "Only Images are supported",
+    "responses.self_request": "Sorry, but you are not allowed to send requests to self"
 }
