@@ -11,25 +11,25 @@ class ChallengePathTemplate extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "template_challenge_paths";
+    protected $table = 'template_challenge_paths';
 
     protected $fillable = [
-        "uuid",
-        "language",
-        "title",
-        "slug",
-        "description",
-        "user_id",
-        "organization_id",
-        "category_id",
-        "duration_id",
-        "level_id",
-        "media_type",
-        "media",
-        "privacy",
-        "status",
-        "is_achievement_enabled",
-        "is_sequential",
-        "is_auto_created",
+        'uuid',
+        'language',
+        'title',
+        'slug',
+        'description',
+        'user_id',
+        'organization_id',
+        'category_id',
+        'duration_id',
+        'level_id',
+        'media_type',
+        'media',
+        'privacy',
+        'status',
+        'is_achievement_enabled',
+        'is_sequential',
+        'is_auto_created',
     ];
 }

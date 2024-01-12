@@ -50,7 +50,7 @@ class LabMarketplaceService
     {
         try {
             return LabTemplate::where('uuid', $uuid)->first();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

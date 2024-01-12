@@ -13,7 +13,7 @@ class ProjectIndustryService
         try {
             if ($language == 'en') {
                 $project_industry_list = ProjectIndustry::select('id', 'title');
-                //Search categories based on user input
+            //Search categories based on user input
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
