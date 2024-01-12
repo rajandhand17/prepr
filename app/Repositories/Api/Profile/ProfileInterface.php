@@ -76,5 +76,5 @@ interface ProfileInterface
 
     public function removeFriend($request);
 
-    public function unfollowFriend($request,$column);
+    public function unfollowFriend($request, $column);
 }

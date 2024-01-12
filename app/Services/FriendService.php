@@ -40,6 +40,7 @@ class FriendService
                         $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id]);
                     });
             })->first();
+
             return $friendRequest;
         } catch (\Exception $e) {
             return false;
@@ -62,8 +63,8 @@ class FriendService
                 $friendRequest->$column = $value;
                 $friendRequest->save();
             } else {
-                    $friendRequest->$column =$value;
-                    $friendRequest->save();
+                $friendRequest->$column = $value;
+                $friendRequest->save();
             }
 
             return true;
@@ -128,9 +129,9 @@ class FriendService
     public function getFollowersListing()
     {
         try {
-            $followers=Friend::where(function ($query){
-                $query->where([ 'reference_id' => auth()->user()->id, 'user_follow' => '2'])
-                    ->orWhere(function ($query){
+            $followers = Friend::where(function ($query) {
+                $query->where(['reference_id' => auth()->user()->id, 'user_follow' => '2'])
+                    ->orWhere(function ($query) {
                         $query->where(['user_id' => auth()->user()->id, 'reference_follow' => '2']);
                     });
             })->get();
@@ -147,9 +148,9 @@ class FriendService
     public function getFollowListing()
     {
         try {
-            $followers=Friend::where(function ($query){
-                $query->where([ 'reference_id' => auth()->user()->id, 'reference_follow' => '2'])
-                    ->orWhere(function ($query){
+            $followers = Friend::where(function ($query) {
+                $query->where(['reference_id' => auth()->user()->id, 'reference_follow' => '2'])
+                    ->orWhere(function ($query) {
                         $query->where(['user_id' => auth()->user()->id, 'user_follow' => '2']);
                     });
             })->get();
@@ -206,6 +207,7 @@ class FriendService
             return false;
         }
     }
+
     public function checkRequests($request)
     {
         try {
@@ -222,6 +224,7 @@ class FriendService
         try {
             try {
                 $existsFriend = Friend::where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id, 'reference_follow'=>'1'])->first();
+
                 return $existsFriend;
             } catch (\Exception $e) {
                 return false;
@@ -250,12 +253,12 @@ class FriendService
         }
     }
 
-    public function unfollowFriend($request,$column)
+    public function unfollowFriend($request, $column)
     {
         try {
-            $friend=Friend::where(function ($query) use ($request,$column) {
+            $friend = Friend::where(function ($query) use ($request, $column) {
                 $query->where(['user_id' => $request->user_id, 'reference_id' => auth()->user()->id, $column => '2'])
-                    ->orWhere(function ($query) use ($request,$column) {
+                    ->orWhere(function ($query) use ($request, $column) {
                         $query->where(['user_id' => auth()->user()->id, 'reference_id' => $request->user_id, $column => '2']);
                     });
             })->first();
