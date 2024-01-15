@@ -53,11 +53,11 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return false;
         }
     }
-    public function createLabMarketplace($slug,$lab){
+    public function createLabMarketplace($slug,$labId,$organizationId){
         try {
-            $createLabMarketplace= DB::transaction(function () use ($slug,$lab){
-                $createLabMarketplace=$this->labMarketplaceService->createLabMarketplace($slug);
-                $createLabMarketplaceAddress=$this->labMarketplaceAddressService->createLabMarketplaceAddress($createLabMarketplace,$lab);
+            $createLabMarketplace= DB::transaction(function () use ($slug,$labId,$organizationId){
+                $createLabMarketplace=$this->labMarketplaceService->createLabMarketplace($slug,$organizationId);
+                $createLabMarketplaceAddress=$this->labMarketplaceAddressService->createLabMarketplaceAddress($createLabMarketplace,$labId);
                 $createdLabMarketplaceSkillAssociations = $this->labMarketplaceSkillsGroupStackService->createLabMarketplaceSkillsGroupsStack($createLabMarketplace, $lab);
                 $createdLabMarketplaceTagAssociations = $this->labMarketplaceTagsGroupsService->createLabMarketplaceTagsGroupsStack($createLabMarketplace, $lab);
                 $createdLabMarketplaceExternalLinks = $this->labMarketplaceExternalLinksService->createLabMarketplaceExternalLinks($createLabMarketplace, $lab);

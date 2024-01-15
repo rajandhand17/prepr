@@ -3,20 +3,21 @@
 namespace App\Services\Manage;
 
 use App\Models\Lab;
+use App\Models\LabMarketplace;
 use App\Models\LabTemplate;
 
 class LabMarketplaceService
 {
-    public static function createLabMarketplace($slug)
+    public static function createLabMarketplace($slug,$organizationId)
     {
         try {
             $existsLabs = Lab::where('slug', $slug)->first();
             if ($existsLabs != null) {
-                $labTemplate = new LabTemplate();
+                $labTemplate = new LabMarketplace();
                 $labTemplate->uuid = $existsLabs->uuid;
                 $labTemplate->language = $existsLabs->language;
-                $labTemplate->user_id = $existsLabs->user_id;
-                $labTemplate->organization_id = $existsLabs->organization_id;
+                $labTemplate->user_id = auth()->user()->id;
+                $labTemplate->organization_id = $organizationId;
                 $labTemplate->category_id = $existsLabs->category_id;
                 $labTemplate->duration_id = $existsLabs->duration_id;
                 $labTemplate->level_id = $existsLabs->level_id;
@@ -36,7 +37,6 @@ class LabMarketplaceService
                 $labTemplate->is_notification_enabled = $existsLabs->is_notification_enabled;
                 $labTemplate->is_verified = $existsLabs->is_verified;
                 $labTemplate->save();
-
                 return $labTemplate;
             }
 
