@@ -6,6 +6,8 @@ use App\Models\Challenge;
 use App\Models\ChallengePath;
 use App\Models\ChallengePathTemplate;
 use App\Models\ComponentAssociation;
+use App\Models\LabMarketplaceComponentAssociations;
+use App\Models\LabMarketplaceProgram;
 use App\Models\LabProgram;
 use App\Models\LabProgramTemplate;
 use App\Models\TemplateChallenge;
@@ -13,31 +15,31 @@ use App\Models\TemplateComponentAssociation;
 
 class LabMarketplaceComponentAssociationService
 {
-    public function createMarketplaceComponentAssociation($labMarketplaceId, $lab)
+    public function createMarketplaceComponentAssociation($labMarketplaceId, $labId)
     {
         try {
-            $componentAssociations = ComponentAssociation::where('lab_id', $lab->id)->get();
+            $componentAssociations = ComponentAssociation::where('lab_id', $labId)->get();
             foreach ($componentAssociations as $componentAssociation) {
                 if ($componentAssociation->lab_program_id !== '') {
                     $labProgram = LabProgram::where('id', $componentAssociation->lab_program_id)->first();
-                    $labProgramTemplate = new LabProgramTemplate();
-                    $labProgramTemplate->language = $labProgram->language;
-                    $labProgramTemplate->title = $labProgram->title;
-                    $labProgramTemplate->slug = $labProgram->slug;
-                    $labProgramTemplate->description = $labProgram->description;
-                    $labProgramTemplate->organization_id = $labProgram->organization_id;
-                    $labProgramTemplate->category_id = $labProgram->category_id;
-                    $labProgramTemplate->duration_id = $labProgram->duration_id;
-                    $labProgramTemplate->level_id = $labProgram->level_id;
-                    $labProgramTemplate->user_id = $labProgram->user_id;
-                    $labProgramTemplate->media_type = $labProgram->media_type;
-                    $labProgramTemplate->media = $labProgram->upload_media;
-                    $labProgramTemplate->privacy = $labProgram->privacy;
-                    $labProgramTemplate->status = $labProgram->status;
-                    $labProgramTemplate->is_auto_created = $labProgram->is_auto_created;
-                    $labProgramTemplate->is_sequential = $labProgram->is_sequential;
-                    $labProgramTemplate->is_achievement_enabled = $labProgram->is_achievement_enabled;
-                    $labProgramTemplate->save();
+                    $labMarketplaceProgram = new LabMarketplaceProgram();
+                    $labMarketplaceProgram->language = $labProgram->language;
+                    $labMarketplaceProgram->title = $labProgram->title;
+                    $labMarketplaceProgram->slug = $labProgram->slug;
+                    $labMarketplaceProgram->description = $labProgram->description;
+                    $labMarketplaceProgram->organization_id = $labProgram->organization_id;
+                    $labMarketplaceProgram->category_id = $labProgram->category_id;
+                    $labMarketplaceProgram->duration_id = $labProgram->duration_id;
+                    $labMarketplaceProgram->level_id = $labProgram->level_id;
+                    $labMarketplaceProgram->user_id = $labProgram->user_id;
+                    $labMarketplaceProgram->media_type = $labProgram->media_type;
+                    $labMarketplaceProgram->media = $labProgram->upload_media;
+                    $labMarketplaceProgram->privacy = $labProgram->privacy;
+                    $labMarketplaceProgram->status = $labProgram->status;
+                    $labMarketplaceProgram->is_auto_created = $labProgram->is_auto_created;
+                    $labMarketplaceProgram->is_sequential = $labProgram->is_sequential;
+                    $labMarketplaceProgram->is_achievement_enabled = $labProgram->is_achievement_enabled;
+                    $labMarketplaceProgram->save();
                 }
 
                 if ($componentAssociation->challenge_id !== '') {
@@ -89,9 +91,9 @@ class LabMarketplaceComponentAssociationService
                     $challengesPathTemplate->is_auto_created = $chllengePath->is_auto_created;
                     $challengesPathTemplate->save();
                 }
-                $labSkillsGroupsStack = new TemplateComponentAssociation();
-                $labSkillsGroupsStack->template_lab_id = $labMarketplaceId->id;
-                $labSkillsGroupsStack->template_lab_program_id = $labProgramTemplate->id;
+                $labSkillsGroupsStack = new LabMarketplaceComponentAssociations();
+                $labSkillsGroupsStack->template_lab_id =$labMarketplaceProgram->id;
+                $labSkillsGroupsStack->lab_marketplace_id = $labMarketplaceId;
                 $labSkillsGroupsStack->template_challenge_id = $challengesTemplate->id;
                 $labSkillsGroupsStack->template_challenge_path_id = $challengesPathTemplate->challenge_path_id;
                 $labSkillsGroupsStack->template_resource_module_id = $componentAssociation->resource_module_id;
@@ -103,6 +105,21 @@ class LabMarketplaceComponentAssociationService
 
             return true;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteLabMarketplaceComponentAssociation($labMarketplaceId){
+        try {
+            $labMarketplaceComponentAssociations=LabMarketplaceComponentAssociations::where('lab_marketplace_id',$labMarketplaceId)->first();
+            if($labMarketplaceComponentAssociations){
+                $deleteLabMarketplaceComponentAssociation=LabMarketplaceComponentAssociations::where('lab_marketplace_id',$labMarketplaceId)->delete();
+                if(!$deleteLabMarketplaceComponentAssociation){
+                    return false;
+                }
+            }
+            return true;
+        }catch (\Exception $e) {
             return false;
         }
     }

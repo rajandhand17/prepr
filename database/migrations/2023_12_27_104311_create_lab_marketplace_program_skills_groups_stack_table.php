@@ -10,15 +10,14 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_lab_programs_achievements', function (Blueprint $table) {
+        Schema::create('lab_marketplace_program_skills_groups_stack', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('lab_marketplace_program_id');
-            $table->string('achievement_name', 255)->nullable();
-            $table->string('achievement_points', 255)->nullable();
-            $table->text('achievement_image')->nullable();
+            $table->integer('foreign_id');
+            $table->enum('type', ['0', '1', '2'])->comment('0->skills, 1->group,2->stack');
+            $table->foreign('lab_marketplace_program_id', 'tmp_skills_groups_stack_lab_marketplace_program_id_foreign')->references('id')->on('lab_marketplace_program')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('lab_marketplace_program_id', 'lmp_achievements_lab_marketplace_program_foreign')->references('id')->on('lab_marketplace_program')->onDelete('cascade');
         });
     }
 
@@ -27,6 +26,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_lab_programs_achievements');
+        Schema::dropIfExists('template_lab_programs_skills_groups_stack');
     }
 };

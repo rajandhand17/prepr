@@ -5,4 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/clone', [LabMarketplaceController::class, 'createLabMarketplace']);
+    Route::get('/{slug}', [LabMarketplaceController::class, 'show']);
+    Route::delete('/{slug}/delete', [LabMarketplaceController::class, 'deleteLabMarketplace']);
 });

@@ -10,7 +10,7 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_lab_program', function (Blueprint $table) {
+        Schema::create('lab_marketplace_program', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
             $table->string('language')->default('en');

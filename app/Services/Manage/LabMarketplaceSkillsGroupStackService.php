@@ -2,19 +2,20 @@
 
 namespace App\Services\Manage;
 
+use App\Models\LabMarketplaceSkillsGroupsStack;
 use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTemplateSkillsGroupsStack;
 
 class LabMarketplaceSkillsGroupStackService
 {
-    public function createLabMarketplaceSkillsGroupsStack($labMarketplaceId, $lab)
+    public function createLabMarketplaceSkillsGroupsStack($labMarketplaceId, $labId)
     {
         try {
-            $exisingLabSkillsGroupsStack = LabSkillsGroupsStack::where('lab_id', $lab->id)->get();
+            $exisingLabSkillsGroupsStack = LabSkillsGroupsStack::where('lab_id', $labId)->get();
             if ($exisingLabSkillsGroupsStack) {
                 foreach ($exisingLabSkillsGroupsStack as $skillsGroup) {
-                    $labTemplateSkillsGroupStack = new LabTemplateSkillsGroupsStack();
-                    $labTemplateSkillsGroupStack->template_lab_id = $labMarketplaceId->id;
+                    $labTemplateSkillsGroupStack = new LabMarketplaceSkillsGroupsStack();
+                    $labTemplateSkillsGroupStack->lab_marketplace_id = $labMarketplaceId;
                     $labTemplateSkillsGroupStack->foreign_id = $skillsGroup->foreign_id;
                     $labTemplateSkillsGroupStack->type = $skillsGroup->type;
                     $labTemplateSkillsGroupStack->save();
@@ -23,6 +24,21 @@ class LabMarketplaceSkillsGroupStackService
 
             return true;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteLabMarketplaceSkillsGroupStackService($labMarketplaceId){
+        try {
+            $checkLabMarketplaceSKillsGroupStackService=LabMarketplaceSkillsGroupsStack::where('lab_marketplace_id',$labMarketplaceId)->first();
+            if($checkLabMarketplaceSKillsGroupStackService){
+                $deleteLabMarketplaceSKillsGroupStackService=LabMarketplaceSkillsGroupsStack::where('lab_marketplace_id',$labMarketplaceId)->delete();
+                if(!$deleteLabMarketplaceSKillsGroupStackService){
+                    return false;
+                }
+            }
+            return true;
+        }catch (\Exception $e){
             return false;
         }
     }

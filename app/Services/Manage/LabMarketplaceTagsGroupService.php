@@ -2,20 +2,21 @@
 
 namespace App\Services\Manage;
 
+use App\Models\LabMarketplaceTagsGroups;
 use App\Models\LabTagsGroups;
 use App\Models\LabTemplateTagsGroups;
 
 class LabMarketplaceTagsGroupService
 {
-    public function createLabMarketplaceTagsGroupsStack($labTemplateId, $lab)
+    public function createLabMarketplaceTagsGroupsStack($labTemplateId, $labId)
     {
         try {
-            $existingLabTagsGroupsStack = LabTagsGroups::where('lab_id', $lab->id)->get();
+            $existingLabTagsGroupsStack = LabTagsGroups::where('lab_id', $labId)->get();
 
             if ($existingLabTagsGroupsStack) {
                 foreach ($existingLabTagsGroupsStack as $existingLabTagGroup) {
-                    $labMarketplaceTagsGroupStack = new LabTemplateTagsGroups();
-                    $labMarketplaceTagsGroupStack->template_lab_id = $labTemplateId->id;
+                    $labMarketplaceTagsGroupStack = new LabMarketplaceTagsGroups();
+                    $labMarketplaceTagsGroupStack->lab_marketplace_id = $labTemplateId;
                     $labMarketplaceTagsGroupStack->foreign_id = $existingLabTagGroup->foreign_id;
                     $labMarketplaceTagsGroupStack->type = $existingLabTagGroup->type;
                     $labMarketplaceTagsGroupStack->save();
@@ -24,6 +25,21 @@ class LabMarketplaceTagsGroupService
 
             return true;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteLabMarketplaceTagsGroup($labMarketplaceTagsGroupId){
+        try {
+            $getLabMarketplaceTagsGroup=LabMarketplaceTagsGroups::where('lab_marketplace_id',$labMarketplaceTagsGroupId)->first();
+            if($getLabMarketplaceTagsGroup){
+                $deleteLabMarketplaceTagsGroup=LabMarketplaceTagsGroups::where('lab_marketplace_id',$labMarketplaceTagsGroupId)->delete();
+                if(!$deleteLabMarketplaceTagsGroup){
+                    return false;
+                }
+            }
+            return true;
+        }catch (\Exception $e) {
             return false;
         }
     }

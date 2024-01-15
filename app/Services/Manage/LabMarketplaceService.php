@@ -2,6 +2,8 @@
 
 namespace App\Services\Manage;
 
+use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
+use App\Events\Labs\DeleteLabAssociatedData;
 use App\Models\Lab;
 use App\Models\LabMarketplace;
 use App\Models\LabTemplate;
@@ -12,6 +14,7 @@ class LabMarketplaceService
     {
         try {
             $existsLabs = Lab::where('slug', $slug)->first();
+
             if ($existsLabs != null) {
                 $labTemplate = new LabMarketplace();
                 $labTemplate->uuid = $existsLabs->uuid;
@@ -49,8 +52,29 @@ class LabMarketplaceService
     public static function getCheckUuid($uuid)
     {
         try {
-            return LabTemplate::where('uuid', $uuid)->first();
+            return LabMarketplace::where('uuid', $uuid)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getLabMarketplaceBasedOnSlug($slug){
+        try {
+            return LabMarketplace::where('slug', $slug)->first();
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteLabMarketplace($slug,$labMarketplaceId){
+        try {
+            $labMarketplace=LabMarketplace::where("slug",$slug)->delete();
+            if($labMarketplace){
+                $associatedLabMarketplace=event(new DeleteLabMarketplaceAssociatedData($labMarketplaceId));
+                return true;
+            }
+            return false;
+        }catch (\Exception $e) {
             return false;
         }
     }

@@ -689,5 +689,8 @@
     "responses.resource_group_slug_not_found": "The resource group which you are looking doesn't exist in our system.",
     "responses.organization_id":"The Organization id field is required",
     "responses.organization_exists":"This Organization id is not exists",
-    "responses.already_cloned": "This already cloned Lab Marketplace"
+    "responses.already_cloned": "This already cloned Lab Marketplace",
+    "responses.lab_marketplace_not_exists": "This Lab Marketplace is not available",
+    "responses.lab_marketplace_deleted_successfully": "This Lab Marketplace has been deleted successfully",
+    "responses.lab_marketplace_deleted_failed": "Oops!,This Lab Marketplace has been failed to deleted"
 }
