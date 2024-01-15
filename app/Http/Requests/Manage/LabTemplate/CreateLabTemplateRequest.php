@@ -24,7 +24,7 @@ class CreateLabTemplateRequest extends FormRequest
     public function rules()
     {
         return [
-            'organization_id'=>'required|exists:organizations,uuid'
+            'organization_id'=> 'required|exists:organizations,uuid',
         ];
     }
 

@@ -21,6 +21,7 @@ class LabMarketplaceAddressService
                 $labTemplateAddress->country = $template->country;
                 $labTemplateAddress->save();
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

@@ -60,7 +60,7 @@ class LabProgramRepository implements LabProgramInterface
     public function createLabProgram($request, $upload_media, $upload_achievement_image)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($request, $upload_media, $upload_achievement_image){
+            $createLabProgram = DB::transaction(function () use ($request, $upload_media, $upload_achievement_image) {
                 $createdLabProgram = $this->labProgramService->createLabProgram($request, $upload_media);
                 $labProgramSkillsGroupsStack = $this->labProgramSkillsGroupsStackService->createLabProgramSkillsGroupsStack($request, $createdLabProgram->id);
                 if ($request->is_achievement_enabled == 'yes') {
