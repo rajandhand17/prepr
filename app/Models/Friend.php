@@ -16,6 +16,8 @@ class Friend extends Model
         'user_id',
         'reference_id',
         'status',
+        'user_follow',
+        'reference_follow',
         'newsfeed',
     ];
 

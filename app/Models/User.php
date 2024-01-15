@@ -87,9 +87,9 @@ class User extends Authenticatable
     public function userFollow()
     {
         return $this->hasMany(Friend::class, 'reference_id', 'id')
-            ->where('follow', '1')
+            ->where('reference_follow', '2')
             ->orWhere(function ($query) {
-                $query->where(['user_id' => $this->id, 'follow' => '1']);
+                $query->where(['user_id' => $this->id, 'user_follow' => '2']);
             });
     }
 
@@ -108,24 +108,32 @@ class User extends Authenticatable
         return $this->hasMany(Friend::class, 'user_id', 'id')->where('status', '0');
     }
 
-    public function userFollowRequest()
-    {
-        return $this->hasMany(Friend::class, 'user_id', 'id')->where('follow', '0');
-    }
-
-    public function followRequestSent()
-    {
-        return $this->hasMany(Friend::class, 'user_id', 'id')->where('follow', '0');
-    }
-
     public function requestReceived()
     {
         return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '0');
     }
 
+    public function userFollowRequest()
+    {
+        return $this->hasMany(Friend::class, 'user_id', 'id')->where('user_follow', '0');
+    }
+
+    public function followRequestSent()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')
+            ->where('user_follow', '1')
+            ->orWhere(function ($query) {
+                $query->where(['user_id' => $this->id, 'reference_follow' => '1']);
+            });
+    }
+
     public function followRequestReceived()
     {
-        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('follow', '0');
+        return $this->hasMany(Friend::class, 'reference_id', 'id')
+            ->where('reference_follow', '1')
+            ->orWhere(function ($query) {
+                $query->where(['user_id' => $this->id, 'user_follow' => '1']);
+            });
     }
 
     public function userAddress()
