@@ -23,54 +23,9 @@ class LabMarketplaceComponentAssociationService
         try {
             $componentAssociations = ComponentAssociation::where('lab_id', $labId)->get();
             foreach ($componentAssociations as $componentAssociation){
-                if ($componentAssociation->lab_program_id !== '') {
-                    $labProgram = LabProgram::where('id', $componentAssociation->lab_program_id)->first();
-                    $labMarketplaceProgram = new LabMarketplaceProgram();
-                    $labMarketplaceProgram->language = $labProgram->language;
-                    $labMarketplaceProgram->title = $labProgram->title;
-                    $labMarketplaceProgram->slug = $labProgram->slug;
-                    $labMarketplaceProgram->description = $labProgram->description;
-                    $labMarketplaceProgram->organization_id = $labProgram->organization_id;
-                    $labMarketplaceProgram->category_id = $labProgram->category_id;
-                    $labMarketplaceProgram->duration_id = $labProgram->duration_id;
-                    $labMarketplaceProgram->level_id = $labProgram->level_id;
-                    $labMarketplaceProgram->user_id = $labProgram->user_id;
-                    $labMarketplaceProgram->media_type = $labProgram->media_type;
-                    $labMarketplaceProgram->media = $labProgram->upload_media;
-                    $labMarketplaceProgram->privacy = $labProgram->privacy;
-                    $labMarketplaceProgram->status = $labProgram->status;
-                    $labMarketplaceProgram->is_auto_created = $labProgram->is_auto_created;
-                    $labMarketplaceProgram->is_sequential = $labProgram->is_sequential;
-                    $labMarketplaceProgram->is_achievement_enabled = $labProgram->is_achievement_enabled;
-                    $labMarketplaceProgram->save();
-                }
-
                 if ($componentAssociation->challenge_id !== '') {
                     $getChallenges = Challenge::where('id', $componentAssociation->challenge_id)->first();
                     $challengesTemplate=$this->challengeTemplateRepository->createTemplateChallenge($getChallenges->id, $getChallenges->organization_id);
-//                    $challengesTemplate = new TemplateChallenge();
-//                    $challengesTemplate->uuid = $getChallenges->uuid;
-//                    $challengesTemplate->language = $getChallenges->language;
-//                    $challengesTemplate->user_id = $getChallenges->user_id;
-//                    $challengesTemplate->organization_id = $getChallenges->organization_id;
-//                    $challengesTemplate->category_id = $getChallenges->category_id;
-//                    $challengesTemplate->duration_id = $getChallenges->duration_id;
-//                    $challengesTemplate->level_id = $getChallenges->level_id;
-//                    $challengesTemplate->slug = $getChallenges->slug;
-//                    $challengesTemplate->title = $getChallenges->title;
-//                    $challengesTemplate->description = $getChallenges->description;
-//                    $challengesTemplate->privacy = $getChallenges->privacy;
-//                    $challengesTemplate->media_type = $getChallenges->media_type;
-//                    $challengesTemplate->media = $getChallenges->media;
-//                    $challengesTemplate->status = $getChallenges->status;
-//                    $challengesTemplate->source_link = $getChallenges->source_link;
-//                    $challengesTemplate->agreement = $getChallenges->agreement;
-//                    $challengesTemplate->is_notification_enabled = $getChallenges->is_notification_enabled;
-//                    $challengesTemplate->project_privacy = $getChallenges->project_privacy;
-//                    $challengesTemplate->is_pre_built = $getChallenges->is_pre_built;
-//                    $challengesTemplate->is_open = $getChallenges->is_open;
-//                    $challengesTemplate->is_auto_created = $getChallenges->is_auto_created;
-//                    $challengesTemplate->save();
                 }
 
                 if ($componentAssociation->challenge_path_id !== '') {
@@ -96,7 +51,7 @@ class LabMarketplaceComponentAssociationService
                     $challengesPathTemplate->save();
                 }
                 $labSkillsGroupsStack = new LabMarketplaceComponentAssociations();
-                $labSkillsGroupsStack->template_lab_id = $labMarketplaceProgram->id;
+                $labSkillsGroupsStack->template_lab_id = $componentAssociation->lab_program_id;
                 $labSkillsGroupsStack->lab_marketplace_id = $labMarketplaceId;
                 $labSkillsGroupsStack->template_challenge_id = $challengesTemplate->id;
                 $labSkillsGroupsStack->template_challenge_path_id = $challengesPathTemplate->challenge_path_id;
