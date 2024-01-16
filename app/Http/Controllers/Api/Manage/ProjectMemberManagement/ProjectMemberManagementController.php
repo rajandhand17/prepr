@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\Manage\ProjectMemberManagement;
 
 use App\Helpers\UtilityHelper;
@@ -15,6 +16,7 @@ class ProjectMemberManagementController extends AppBaseController
     {
         $this->projectMemberManagementRepository = $projectMemberManagementRepository;
     }
+
     public function create(Request $request)
     {
         try {
@@ -26,6 +28,7 @@ class ProjectMemberManagementController extends AppBaseController
             dd($checkProjectExistsOrNot);
         } catch (Exception $e) {
             dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
