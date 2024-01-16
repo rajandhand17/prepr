@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{username}', [ProfileController::class, 'show']);
-    Route::get('/{username}/friends/{activity?}', [ProfileController::class, 'getListingBasedOnActivity']);
     Route::post('/personal-detail/add', [ProfileController::class, 'addPersonalDetail']);
     Route::post('/image', [ProfileController::class, 'profileImageUpload']);
     Route::post('/experience/add', [ProfileController::class, 'addExperience']);
@@ -22,5 +21,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::delete('/tags/{id}/delete', [ProfileController::class, 'deleteTag']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
     Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequest']);
+    Route::get('/{username}/friends/{activity?}', [ProfileController::class, 'getListingBasedOnActivity']);
 
 });
