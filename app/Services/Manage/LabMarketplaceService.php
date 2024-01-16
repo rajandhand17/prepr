@@ -3,14 +3,12 @@
 namespace App\Services\Manage;
 
 use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
-use App\Events\Labs\DeleteLabAssociatedData;
 use App\Models\Lab;
 use App\Models\LabMarketplace;
-use App\Models\LabTemplate;
 
 class LabMarketplaceService
 {
-    public static function createLabMarketplace($slug,$organizationId)
+    public static function createLabMarketplace($slug, $organizationId)
     {
         try {
             $existsLabs = Lab::where('slug', $slug)->first();
@@ -40,6 +38,7 @@ class LabMarketplaceService
                 $labTemplate->is_notification_enabled = $existsLabs->is_notification_enabled;
                 $labTemplate->is_verified = $existsLabs->is_verified;
                 $labTemplate->save();
+
                 return $labTemplate;
             }
 
@@ -58,23 +57,27 @@ class LabMarketplaceService
         }
     }
 
-    public function getLabMarketplaceBasedOnSlug($slug){
+    public function getLabMarketplaceBasedOnSlug($slug)
+    {
         try {
             return LabMarketplace::where('slug', $slug)->first();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteLabMarketplace($slug,$labMarketplaceId){
+    public function deleteLabMarketplace($slug, $labMarketplaceId)
+    {
         try {
-            $labMarketplace=LabMarketplace::where("slug",$slug)->delete();
-            if($labMarketplace){
-                $associatedLabMarketplace=event(new DeleteLabMarketplaceAssociatedData($labMarketplaceId));
+            $labMarketplace = LabMarketplace::where('slug', $slug)->delete();
+            if ($labMarketplace) {
+                $associatedLabMarketplace = event(new DeleteLabMarketplaceAssociatedData($labMarketplaceId));
+
                 return true;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

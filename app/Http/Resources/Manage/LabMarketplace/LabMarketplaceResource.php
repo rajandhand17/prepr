@@ -15,14 +15,14 @@ class LabMarketplaceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'uuid' => $this->uuid,
-            'language' => $this->language,
-            'user_id' => $this->user_id,
+            'id'              => $this->id,
+            'uuid'            => $this->uuid,
+            'language'        => $this->language,
+            'user_id'         => $this->user_id,
             'organization_id' => $this->organization_id,
-            'slug' => $this->slug,
-            'title' => $this->title,
-            'description' => $this->description
+            'slug'            => $this->slug,
+            'title'           => $this->title,
+            'description'     => $this->description,
         ];
     }
 }

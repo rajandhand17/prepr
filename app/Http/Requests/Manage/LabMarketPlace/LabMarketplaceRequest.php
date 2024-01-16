@@ -24,9 +24,10 @@ class LabMarketplaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'organization_id'=>'required|exists:organizations,uuid'
+            'organization_id'=> 'required|exists:organizations,uuid',
         ];
     }
+
     public function messages()
     {
         return[

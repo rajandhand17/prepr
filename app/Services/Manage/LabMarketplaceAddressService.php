@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\LabAddress;
 use App\Models\LabMarketplaceAddress;
-use App\Models\LabTemplateAddress;
 
 class LabMarketplaceAddressService
 {
@@ -22,23 +21,26 @@ class LabMarketplaceAddressService
                 $labTemplateAddress->country = $template->country;
                 $labTemplateAddress->save();
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function deleteLabMarketplaceAddress($labMarketplaceId){
+    public static function deleteLabMarketplaceAddress($labMarketplaceId)
+    {
         try {
-            $checkLabMarketplaceAddress =LabMarketplaceAddress::where('lab_marketplace_id',$labMarketplaceId)->first();
-            if($checkLabMarketplaceAddress){
-                $deleteLabMarketplaceAddress = LabMarketplaceAddress::where('lab_marketplace_id',$labMarketplaceId)->delete();
-                if(!$deleteLabMarketplaceAddress){
+            $checkLabMarketplaceAddress = LabMarketplaceAddress::where('lab_marketplace_id', $labMarketplaceId)->first();
+            if ($checkLabMarketplaceAddress) {
+                $deleteLabMarketplaceAddress = LabMarketplaceAddress::where('lab_marketplace_id', $labMarketplaceId)->delete();
+                if (!$deleteLabMarketplaceAddress) {
                     return false;
                 }
+
                 return true;
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

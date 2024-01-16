@@ -3,7 +3,6 @@
 namespace App\Listeners\Lab;
 
 use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
-use App\Events\Labs\DeleteLabAssociatedData;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
