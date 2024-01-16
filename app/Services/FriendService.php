@@ -12,10 +12,10 @@ class FriendService
             $value = null;
             switch($action) {
                 case 'send':
-                    $value='1';
+                    $value = '1';
                     break;
                 case 'follow':
-                    $value='2';
+                    $value = '2';
                     break;
                 case 'accept':
                     $value = '1';

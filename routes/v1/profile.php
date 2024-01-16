@@ -22,5 +22,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::delete('/tags/{id}/delete', [ProfileController::class, 'deleteTag']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
     Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequest']);
-
 });
