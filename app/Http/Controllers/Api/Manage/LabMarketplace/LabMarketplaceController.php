@@ -34,7 +34,7 @@ class LabMarketplaceController extends AppBaseController
             }
             $labMarketplace=$this->labMarketplaceRepository->createLabMarketplace($slug,$checkLabExistsOrNot->id,$getOrganizationId->id);
             if ($labMarketplace) {
-                return $this->sendResponse($labMarketplace, __('responses.template_lab_stored_success'), 200);
+                return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.template_lab_stored_success'), 200);
             }
             return $this->sendError(__('responses.template_lab_stored_failed'), 400);
         } catch(\Exception $e) {
