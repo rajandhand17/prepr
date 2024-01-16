@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\LabMarketplaceSkillsGroupsStack;
 use App\Models\LabSkillsGroupsStack;
-use App\Models\LabTemplateSkillsGroupsStack;
 
 class LabMarketplaceSkillsGroupStackService
 {
@@ -28,17 +27,19 @@ class LabMarketplaceSkillsGroupStackService
         }
     }
 
-    public static function deleteLabMarketplaceSkillsGroupStackService($labMarketplaceId){
+    public static function deleteLabMarketplaceSkillsGroupStackService($labMarketplaceId)
+    {
         try {
-            $checkLabMarketplaceSKillsGroupStackService=LabMarketplaceSkillsGroupsStack::where('lab_marketplace_id',$labMarketplaceId)->first();
-            if($checkLabMarketplaceSKillsGroupStackService){
-                $deleteLabMarketplaceSKillsGroupStackService=LabMarketplaceSkillsGroupsStack::where('lab_marketplace_id',$labMarketplaceId)->delete();
-                if(!$deleteLabMarketplaceSKillsGroupStackService){
+            $checkLabMarketplaceSKillsGroupStackService = LabMarketplaceSkillsGroupsStack::where('lab_marketplace_id', $labMarketplaceId)->first();
+            if ($checkLabMarketplaceSKillsGroupStackService) {
+                $deleteLabMarketplaceSKillsGroupStackService = LabMarketplaceSkillsGroupsStack::where('lab_marketplace_id', $labMarketplaceId)->delete();
+                if (!$deleteLabMarketplaceSKillsGroupStackService) {
                     return false;
                 }
             }
+
             return true;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

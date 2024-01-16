@@ -43,7 +43,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
         $this->labMarketplaceExternalLinksService = $labMarketplaceExternalLinksService;
         $this->labMarketplaceAchievementsService = $labMarketplaceAchievementsService;
         $this->labMarketplaceComponentAssociationService = $labMarketplaceComponentAssociationService;
-        $this->organizationService=$organizationService;
+        $this->organizationService = $organizationService;
     }
 
     public function getLabBasedOnSlug($slug)
@@ -64,32 +64,37 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
         }
     }
 
-    public function getOrganizationIdBasedOnUuid($uuid){
+    public function getOrganizationIdBasedOnUuid($uuid)
+    {
         try {
             return $this->organizationService->getOrganizationExistBasedOnUuid($uuid);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function getLabMarketplaceBasedOnSlug($slug){
-        try{
+    public function getLabMarketplaceBasedOnSlug($slug)
+    {
+        try {
             return $this->labMarketplaceService->getLabMarketplaceBasedOnSlug($slug);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
-    public function createLabMarketplace($slug,$labId,$organizationId){
+
+    public function createLabMarketplace($slug, $labId, $organizationId)
+    {
         try {
-            $createLabMarketplace= DB::transaction(function () use ($slug,$labId,$organizationId){
-                $createLabMarketplace=$this->labMarketplaceService->createLabMarketplace($slug,$organizationId);
-                $createLabMarketplaceAddress=$this->labMarketplaceAddressService->createLabMarketplaceAddress($createLabMarketplace->id,$labId);
+            $createLabMarketplace = DB::transaction(function () use ($slug, $labId, $organizationId) {
+                $createLabMarketplace = $this->labMarketplaceService->createLabMarketplace($slug, $organizationId);
+                $createLabMarketplaceAddress = $this->labMarketplaceAddressService->createLabMarketplaceAddress($createLabMarketplace->id, $labId);
                 $createdLabMarketplaceSkillAssociations = $this->labMarketplaceSkillsGroupStackService->createLabMarketplaceSkillsGroupsStack($createLabMarketplace->id, $labId);
                 $createdLabMarketplaceTagAssociations = $this->labMarketplaceTagsGroupsService->createLabMarketplaceTagsGroupsStack($createLabMarketplace->id, $labId);
                 $createdLabMarketplaceExternalLinks = $this->labMarketplaceExternalLinksService->createLabMarketplaceExternalLinks($createLabMarketplace->id, $labId);
                 $createdLabMarketplaceAchievement = $this->labMarketplaceAchievementsService->createLabMarketplaceAchievements($createLabMarketplace->id, $labId);
                 $createdLabMarketplaceAssociations = $this->labMarketplaceComponentAssociationService->createMarketplaceComponentAssociation($createLabMarketplace->id, $labId);
                 $updateLab = $this->labService->updatePreBuilt($labId, '1');
+
                 return[
                     'labMarketplace'                        => $createLabMarketplace,
                     'createLabMarketplaceAddress'           => $createLabMarketplaceAddress,
@@ -110,20 +115,24 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                 $createLabMarketplace['createdLabMarketplaceAssociations'] &&
                 $createLabMarketplace['updateLab']) {
                 DB::commit();
+
                 return $createLabMarketplace['labMarketplace'];
             }
             DB::rollback();
+
             return false;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
 
-    public function deleteLabMarketplace($slug,$labMarketplaceId){
-        try{
-            return $this->labMarketplaceService->deleteLabMarketplace($slug,$labMarketplaceId);
-        }catch (\Exception $e){
+    public function deleteLabMarketplace($slug, $labMarketplaceId)
+    {
+        try {
+            return $this->labMarketplaceService->deleteLabMarketplace($slug, $labMarketplaceId);
+        } catch (\Exception $e) {
             return false;
         }
     }

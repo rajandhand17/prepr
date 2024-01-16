@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\LabMarketplaceTagsGroups;
 use App\Models\LabTagsGroups;
-use App\Models\LabTemplateTagsGroups;
 
 class LabMarketplaceTagsGroupService
 {
@@ -29,17 +28,19 @@ class LabMarketplaceTagsGroupService
         }
     }
 
-    public static function deleteLabMarketplaceTagsGroup($labMarketplaceTagsGroupId){
+    public static function deleteLabMarketplaceTagsGroup($labMarketplaceTagsGroupId)
+    {
         try {
-            $getLabMarketplaceTagsGroup=LabMarketplaceTagsGroups::where('lab_marketplace_id',$labMarketplaceTagsGroupId)->first();
-            if($getLabMarketplaceTagsGroup){
-                $deleteLabMarketplaceTagsGroup=LabMarketplaceTagsGroups::where('lab_marketplace_id',$labMarketplaceTagsGroupId)->delete();
-                if(!$deleteLabMarketplaceTagsGroup){
+            $getLabMarketplaceTagsGroup = LabMarketplaceTagsGroups::where('lab_marketplace_id', $labMarketplaceTagsGroupId)->first();
+            if ($getLabMarketplaceTagsGroup) {
+                $deleteLabMarketplaceTagsGroup = LabMarketplaceTagsGroups::where('lab_marketplace_id', $labMarketplaceTagsGroupId)->delete();
+                if (!$deleteLabMarketplaceTagsGroup) {
                     return false;
                 }
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

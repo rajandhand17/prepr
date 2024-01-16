@@ -9,9 +9,7 @@ use App\Models\ComponentAssociation;
 use App\Models\LabMarketplaceComponentAssociations;
 use App\Models\LabMarketplaceProgram;
 use App\Models\LabProgram;
-use App\Models\LabProgramTemplate;
 use App\Models\TemplateChallenge;
-use App\Models\TemplateComponentAssociation;
 
 class LabMarketplaceComponentAssociationService
 {
@@ -92,7 +90,7 @@ class LabMarketplaceComponentAssociationService
                     $challengesPathTemplate->save();
                 }
                 $labSkillsGroupsStack = new LabMarketplaceComponentAssociations();
-                $labSkillsGroupsStack->template_lab_id =$labMarketplaceProgram->id;
+                $labSkillsGroupsStack->template_lab_id = $labMarketplaceProgram->id;
                 $labSkillsGroupsStack->lab_marketplace_id = $labMarketplaceId;
                 $labSkillsGroupsStack->template_challenge_id = $challengesTemplate->id;
                 $labSkillsGroupsStack->template_challenge_path_id = $challengesPathTemplate->challenge_path_id;
@@ -109,17 +107,19 @@ class LabMarketplaceComponentAssociationService
         }
     }
 
-    public static function deleteLabMarketplaceComponentAssociation($labMarketplaceId){
+    public static function deleteLabMarketplaceComponentAssociation($labMarketplaceId)
+    {
         try {
-            $labMarketplaceComponentAssociations=LabMarketplaceComponentAssociations::where('lab_marketplace_id',$labMarketplaceId)->first();
-            if($labMarketplaceComponentAssociations){
-                $deleteLabMarketplaceComponentAssociation=LabMarketplaceComponentAssociations::where('lab_marketplace_id',$labMarketplaceId)->delete();
-                if(!$deleteLabMarketplaceComponentAssociation){
+            $labMarketplaceComponentAssociations = LabMarketplaceComponentAssociations::where('lab_marketplace_id', $labMarketplaceId)->first();
+            if ($labMarketplaceComponentAssociations) {
+                $deleteLabMarketplaceComponentAssociation = LabMarketplaceComponentAssociations::where('lab_marketplace_id', $labMarketplaceId)->delete();
+                if (!$deleteLabMarketplaceComponentAssociation) {
                     return false;
                 }
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

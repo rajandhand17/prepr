@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\LabExternalLinks;
 use App\Models\LabMarketplaceExternalLink;
-use App\Models\LabTemplateExternalLink;
 
 class LabMarketplaceExternalLinksService
 {
@@ -28,17 +27,19 @@ class LabMarketplaceExternalLinksService
         }
     }
 
-    public static function deleteLabMarketplaceExternalLink($labMarketplaceId){
+    public static function deleteLabMarketplaceExternalLink($labMarketplaceId)
+    {
         try {
-            $labMarketplaceExternalLink=LabMarketplaceExternalLink::where('lab_marketplace_id',$labMarketplaceId)->first();
-            if($labMarketplaceExternalLink){
-                $labMarketplaceExternalLink=LabMarketplaceExternalLink::where('lab_marketplace_id',$labMarketplaceId)->first();
-                if(!$labMarketplaceExternalLink){
+            $labMarketplaceExternalLink = LabMarketplaceExternalLink::where('lab_marketplace_id', $labMarketplaceId)->first();
+            if ($labMarketplaceExternalLink) {
+                $labMarketplaceExternalLink = LabMarketplaceExternalLink::where('lab_marketplace_id', $labMarketplaceId)->first();
+                if (!$labMarketplaceExternalLink) {
                     return false;
                 }
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
