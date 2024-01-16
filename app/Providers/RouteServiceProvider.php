@@ -80,6 +80,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/resource-collection/')->middleware('api')->group(base_path('routes/v1/manage/resource-collection.php'));
         Route::prefix('api/v1/manage/resource-group/')->middleware('api')->group(base_path('routes/v1/manage/resource-group.php'));
         Route::prefix('api/v1/manage/project/')->middleware('api')->group(base_path('routes/v1/manage/project.php'));
+        Route::prefix('api/v1/manage/project-member-management/')->middleware('api')->group(base_path('routes/v1/manage/project-member-management.php'));
     }
 
     protected function mapPublicRoutes()
