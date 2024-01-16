@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Services\Manage;
+
+use App\Models\LabExternalLinks;
+use App\Models\LabSkillsGroupsStack;
+use App\Models\LabTemplateExternalLink;
+use App\Models\LabTemplateSkillsGroupsStack;
+
+class LabMarketplaceExternalLinksService
+{
+    public function createLabMarketplaceExternalLinks($labMarketplaceId, $lab)
+    {
+        try {
+            $existsLabExternalLink = LabExternalLinks::where('lab_id', $lab->id)->get();
+            if ($existsLabExternalLink) {
+                foreach ($existsLabExternalLink as $externalLinks) {
+                    $labMarketplaceExternalLink = new LabTemplateExternalLink();
+                    $labMarketplaceExternalLink->template_lab_id = $labMarketplaceId->id;
+                    $labMarketplaceExternalLink->social_media_link = $externalLinks->external_links;
+                    $labMarketplaceExternalLink->social_link_id = $externalLinks->social_link_id;
+                    $labMarketplaceExternalLink->save();
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}
