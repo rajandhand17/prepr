@@ -361,10 +361,13 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function getListingBasedOnActivity($activity = null)
+    public function getListingBasedOnActivity($username,$activity = null)
     {
         try {
-            if($activity==''){
+            if($activity!=='follow' && $activity !=='pending' && $activity!=='followers' && $activity!==null){
+                return $this->sendError(__('responses.handler_bad_request'), 400);
+            }
+            if($activity==null){
                 $friendsListing = $this->profileRepository->getFriendsListing();
                 if ($friendsListing) {
                     return $this->sendResponse(FriendsResource::collection($friendsListing), __('responses.friends_listing'));
