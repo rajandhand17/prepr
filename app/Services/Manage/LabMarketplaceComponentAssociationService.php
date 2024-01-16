@@ -10,14 +10,19 @@ use App\Models\LabMarketplaceComponentAssociations;
 use App\Models\LabMarketplaceProgram;
 use App\Models\LabProgram;
 use App\Models\TemplateChallenge;
+use App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateRepository;
 
 class LabMarketplaceComponentAssociationService
 {
+    private $challengeTemplateRepository;
+    public function __construct(ChallengeTemplateRepository $challengeTemplateRepository){
+        $this->challengeTemplateRepository = $challengeTemplateRepository;
+    }
     public function createMarketplaceComponentAssociation($labMarketplaceId, $labId)
     {
         try {
             $componentAssociations = ComponentAssociation::where('lab_id', $labId)->get();
-            foreach ($componentAssociations as $componentAssociation) {
+            foreach ($componentAssociations as $componentAssociation){
                 if ($componentAssociation->lab_program_id !== '') {
                     $labProgram = LabProgram::where('id', $componentAssociation->lab_program_id)->first();
                     $labMarketplaceProgram = new LabMarketplaceProgram();
@@ -42,29 +47,30 @@ class LabMarketplaceComponentAssociationService
 
                 if ($componentAssociation->challenge_id !== '') {
                     $getChallenges = Challenge::where('id', $componentAssociation->challenge_id)->first();
-                    $challengesTemplate = new TemplateChallenge();
-                    $challengesTemplate->uuid = $getChallenges->uuid;
-                    $challengesTemplate->language = $getChallenges->language;
-                    $challengesTemplate->user_id = $getChallenges->user_id;
-                    $challengesTemplate->organization_id = $getChallenges->organization_id;
-                    $challengesTemplate->category_id = $getChallenges->category_id;
-                    $challengesTemplate->duration_id = $getChallenges->duration_id;
-                    $challengesTemplate->level_id = $getChallenges->level_id;
-                    $challengesTemplate->slug = $getChallenges->slug;
-                    $challengesTemplate->title = $getChallenges->title;
-                    $challengesTemplate->description = $getChallenges->description;
-                    $challengesTemplate->privacy = $getChallenges->privacy;
-                    $challengesTemplate->media_type = $getChallenges->media_type;
-                    $challengesTemplate->media = $getChallenges->media;
-                    $challengesTemplate->status = $getChallenges->status;
-                    $challengesTemplate->source_link = $getChallenges->source_link;
-                    $challengesTemplate->agreement = $getChallenges->agreement;
-                    $challengesTemplate->is_notification_enabled = $getChallenges->is_notification_enabled;
-                    $challengesTemplate->project_privacy = $getChallenges->project_privacy;
-                    $challengesTemplate->is_pre_built = $getChallenges->is_pre_built;
-                    $challengesTemplate->is_open = $getChallenges->is_open;
-                    $challengesTemplate->is_auto_created = $getChallenges->is_auto_created;
-                    $challengesTemplate->save();
+                    $challengesTemplate=$this->challengeTemplateRepository->createTemplateChallenge($getChallenges->id, $getChallenges->organization_id);
+//                    $challengesTemplate = new TemplateChallenge();
+//                    $challengesTemplate->uuid = $getChallenges->uuid;
+//                    $challengesTemplate->language = $getChallenges->language;
+//                    $challengesTemplate->user_id = $getChallenges->user_id;
+//                    $challengesTemplate->organization_id = $getChallenges->organization_id;
+//                    $challengesTemplate->category_id = $getChallenges->category_id;
+//                    $challengesTemplate->duration_id = $getChallenges->duration_id;
+//                    $challengesTemplate->level_id = $getChallenges->level_id;
+//                    $challengesTemplate->slug = $getChallenges->slug;
+//                    $challengesTemplate->title = $getChallenges->title;
+//                    $challengesTemplate->description = $getChallenges->description;
+//                    $challengesTemplate->privacy = $getChallenges->privacy;
+//                    $challengesTemplate->media_type = $getChallenges->media_type;
+//                    $challengesTemplate->media = $getChallenges->media;
+//                    $challengesTemplate->status = $getChallenges->status;
+//                    $challengesTemplate->source_link = $getChallenges->source_link;
+//                    $challengesTemplate->agreement = $getChallenges->agreement;
+//                    $challengesTemplate->is_notification_enabled = $getChallenges->is_notification_enabled;
+//                    $challengesTemplate->project_privacy = $getChallenges->project_privacy;
+//                    $challengesTemplate->is_pre_built = $getChallenges->is_pre_built;
+//                    $challengesTemplate->is_open = $getChallenges->is_open;
+//                    $challengesTemplate->is_auto_created = $getChallenges->is_auto_created;
+//                    $challengesTemplate->save();
                 }
 
                 if ($componentAssociation->challenge_path_id !== '') {
