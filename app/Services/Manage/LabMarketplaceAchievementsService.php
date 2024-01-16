@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\LabAcheivement;
 use App\Models\LabMarketplaceAchievement;
-use App\Models\TemplateLabAchievement;
 
 class LabMarketplaceAchievementsService
 {
@@ -28,17 +27,19 @@ class LabMarketplaceAchievementsService
         }
     }
 
-    public static function deleteLabMarketplaceAchievement($labMarketplaceId){
+    public static function deleteLabMarketplaceAchievement($labMarketplaceId)
+    {
         try {
-            $checkLabMarketplaceAchievement=LabMarketplaceAchievement::where('lab_marketplace_id',$labMarketplaceId)->first();
-            if($checkLabMarketplaceAchievement){
-                $deleteLabMarketplaceAchievement=LabMarketplaceAchievement::where('lab_marketplace_id',$checkLabMarketplaceAchievement)->delete();
-                if(!$deleteLabMarketplaceAchievement){
+            $checkLabMarketplaceAchievement = LabMarketplaceAchievement::where('lab_marketplace_id', $labMarketplaceId)->first();
+            if ($checkLabMarketplaceAchievement) {
+                $deleteLabMarketplaceAchievement = LabMarketplaceAchievement::where('lab_marketplace_id', $checkLabMarketplaceAchievement)->delete();
+                if (!$deleteLabMarketplaceAchievement) {
                     return false;
                 }
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

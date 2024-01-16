@@ -44,7 +44,7 @@ class EventServiceProvider extends ServiceProvider
             HandleDeleteResourceGroupAssociatedData::class,
         ],
 
-        DeleteLabMarketplaceAssociatedData::class=>[
+        DeleteLabMarketplaceAssociatedData::class=> [
             HandleDeleteLabAssociatedData::class,
         ],
     ];

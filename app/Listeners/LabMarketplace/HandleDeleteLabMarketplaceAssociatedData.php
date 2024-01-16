@@ -30,31 +30,32 @@ class HandleDeleteLabMarketplaceAssociatedData
     public function handle(DeleteLabMarketplaceAssociatedData $event)
     {
         try {
-            $labMarketplaceId=$event->labMarketplaceId;
+            $labMarketplaceId = $event->labMarketplaceId;
             $deleteLabMarketplace = LabMarketplaceAddressService::deleteLabMarketplaceAddress($labMarketplaceId);
             if (!$deleteLabMarketplace) {
                 return false;
             }
-            $deleteLabMarketplaceSkillsGroupsStack=LabMarketplaceSkillsGroupStackService::deleteLabMarketplaceSkillsGroupStackService($labMarketplaceId);
-            if(!$deleteLabMarketplaceSkillsGroupsStack){
+            $deleteLabMarketplaceSkillsGroupsStack = LabMarketplaceSkillsGroupStackService::deleteLabMarketplaceSkillsGroupStackService($labMarketplaceId);
+            if (!$deleteLabMarketplaceSkillsGroupsStack) {
                 return false;
             }
-            $deleteLabMarketplaceTagsGroupsStack=LabMarketplaceTagsGroupService::deleteLabMarketplaceTagsGroup($labMarketplaceId);
-            if(!$deleteLabMarketplaceTagsGroupsStack){
+            $deleteLabMarketplaceTagsGroupsStack = LabMarketplaceTagsGroupService::deleteLabMarketplaceTagsGroup($labMarketplaceId);
+            if (!$deleteLabMarketplaceTagsGroupsStack) {
                 return false;
             }
-            $deleteLabMarketplaceExternalLinks=LabMarketplaceExternalLinksService::deleteLabMarketplaceExternalLink($labMarketplaceId);
-            if(!$deleteLabMarketplaceExternalLinks){
+            $deleteLabMarketplaceExternalLinks = LabMarketplaceExternalLinksService::deleteLabMarketplaceExternalLink($labMarketplaceId);
+            if (!$deleteLabMarketplaceExternalLinks) {
                 return false;
             }
-            $deleteLabMarketplaceAchievement=LabMarketplaceAchievementsService::deleteLabMarketplaceAchievement($labMarketplaceId);
-            if(!$deleteLabMarketplaceExternalLinks){
+            $deleteLabMarketplaceAchievement = LabMarketplaceAchievementsService::deleteLabMarketplaceAchievement($labMarketplaceId);
+            if (!$deleteLabMarketplaceExternalLinks) {
                 return false;
             }
-            $deleteLabMarketplaceComponentAssociation=LabMarketplaceComponentAssociationService::deleteLabMarketplaceComponentAssociation($labMarketplaceId);
-            if(!$deleteLabMarketplaceComponentAssociation){
+            $deleteLabMarketplaceComponentAssociation = LabMarketplaceComponentAssociationService::deleteLabMarketplaceComponentAssociation($labMarketplaceId);
+            if (!$deleteLabMarketplaceComponentAssociation) {
                 return false;
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
