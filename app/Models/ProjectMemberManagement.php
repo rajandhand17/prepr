@@ -12,7 +12,7 @@ class ProjectMemberManagement extends Model
     use SoftDeletes;
 
     protected $table = 'project_member_management';
-    protected  $fillable = [
+    protected $fillable = [
         'uuid',
         'project_id',
         'inviter_id',
