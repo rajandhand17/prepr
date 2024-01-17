@@ -394,10 +394,10 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function createFriendsBasedOnAction($request, $column, $value)
+    public function updateFriendsBasedOnAction($request, $column, $value)
     {
         try {
-            return $this->friendService->createFriendsBasedOnAction($request, $column, $value);
+            return $this->friendService->updateFriendsBasedOnAction($request, $column, $value);
         } catch (\Exception $e) {
             return false;
         }
