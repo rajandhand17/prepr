@@ -196,19 +196,19 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function deleteSkill($id)
+    public function deleteProfileSkill($id)
     {
         try {
-            return $this->userSkillsService->deleteSkill($id);
+            return $this->userSkillsService->deleteProfileSkill($id);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteTag($id)
+    public function deleteProfileTag($id)
     {
         try {
-            return $this->userTagsService->deleteTag($id);
+            return $this->userTagsService->deleteProfileTag($id);
         } catch (\Exception $e) {
             return false;
         }

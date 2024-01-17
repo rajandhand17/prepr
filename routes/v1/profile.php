@@ -16,10 +16,10 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/patent/add', [ProfileController::class, 'addPatent']);
     Route::delete('/patent/{id}/delete', [ProfileController::class, 'deletePatent']);
     Route::post('/skills/add', [ProfileController::class, 'addSkills']);
-    Route::delete('/skills/{id}/delete', [ProfileController::class, 'deleteSkill']);
+    Route::delete('/skills/{id}/delete', [ProfileController::class, 'deleteProfileSkill']);
     Route::post('/tags/add', [ProfileController::class, 'addTags']);
-    Route::delete('/tags/{id}/delete', [ProfileController::class, 'deleteTag']);
+    Route::delete('/tags/{id}/delete', [ProfileController::class, 'deleteProfileTag']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
-    Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequest']);
-    Route::get('/{username}/friends/{activity?}', [ProfileController::class, 'getListingBasedOnActivity']);
+    Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequestActivity']);
+    Route::get('/{username}/friends/{activity?}', [ProfileController::class, 'getFriendListingBasedOnActivity']);
 });
