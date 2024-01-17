@@ -4,7 +4,12 @@ namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ProjectMemberManagement;
+use App\Notifications\InviteMemberNotification;
+use App\Services\UserService;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class ProjectMemberManagementService
 {
@@ -63,21 +68,90 @@ class ProjectMemberManagementService
             $already_members = [];
             $invalid_emails = [];
             $invited_emails = [];
+            $addedMemberResponse = null;
 
+            DB::beginTransaction();
             foreach ($pariticipateLists as $pariticipateData) {
                 if (UtilityHelper::validEmail($pariticipateData['invitee_email'])) {
                     $checkExistenceEntry = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $pariticipateData['invitee_email']])->exists();
                     if ($checkExistenceEntry == false) {
                         $invite_status = config('constants.project_member_management_invite_status.invited');
                         $email_status = config('constants.project_member_management_email_status.scheduled');
+
+                        switch ($pariticipateData['access_level']) {
+                            case 'Editor':
+                                $access_level = config('constants.project_access_level.editor');
+                                break;
+                            case 'Viewer':
+                                $access_level = config('constants.project_access_level.viewer');
+                                break;
+                            default:
+                                $access_level = config('constants.project_access_level.viewer');
+                                break;
+                        }
+
+                        $subject = $request->subject_line;
+                        $emailBody = $request->email_body;
+                        $module_type = config('constants.member_management_component_type.project');
+                        $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
+
+                        if (empty($request->subject_line) || empty($request->email_body)) {
+                            $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
+                            if ($getTemplate) {
+                                $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $projectData->title, $getTemplate->body_content));
+
+                                if (empty($request->subject_line)) {
+                                    $subject = $getTemplate->subject;
+                                }
+                                if (empty($request->email_body)) {
+                                    $emailBody = $getTemplate->body_content;
+                                }
+                            }
+                        }
+
+                        ProjectMemberManagement::create([
+                            'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                            'project_id'                => $projectData->id,
+                            'inviter_id'                => auth()->user()->id,
+                            'invitee_id'                => null,
+                            'email'                     => $pariticipateData['invitee_email'],
+                            'invite_type'               => $pariticipateData['invite_type'],
+                            'invite_status'             => $invite_status,
+                            'email_status'              => $email_status,
+                            'inviter_access_level'      => $access_level,
+                        ]);
+
+                        $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
+                        $email_detail = ['invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                        Notification::route('mail', $pariticipateData['invitee_email'])->notify(new InviteMemberNotification($email_detail));
+                        $invited_emails[] = $pariticipateData['invitee_email'];
                     } else {
                         $already_members[] = $pariticipateData['invitee_email'];
                     }
+                } else {
+                    $invalid_emails[] = $pariticipateData['invitee_email'];
                 }
-                dd($pariticipateData);
             }
+            DB::commit();
+            if (count($invalid_emails) > 0 || count($already_members) > 0) {
+                if (count($invited_emails) < 1) {
+                    $addedMemberResponse = __('responses.create_member_manger_error_prjt');
+                } else {
+                    $addedMemberResponse = __('responses.create_member_manger_error_certain');
+                }
+            } elseif (count($invited_emails) > 0) {
+                $addedMemberResponse = $addedMemberResponse;
+            }
+            $data = [
+                'invalid_emails'        => $invalid_emails,
+                'invited_emails'        => $invited_emails,
+                'already_members'       => $already_members,
+                'add_member_response'   => $addedMemberResponse,
+            ];
+
+            return $data;
         } catch (Exception $e) {
-            dd($e);
+            DB::rollBack();
 
             return false;
         }

@@ -14,7 +14,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         $this->projectMemberManagementService = $projectMemberManagementService;
     }
 
-    public function addMembers($projectData, $request)
+    public function addParticipates($projectData, $request)
     {
         try {
             $participatesList = [];
@@ -29,9 +29,14 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
 
             if (is_array($participatesList) && count($participatesList) > 0) {
                 $addParticipates = $this->projectMemberManagementService->addParticipates($projectData, $request, $participatesList);
+                if ($addParticipates) {
+                    return $addParticipates;
+                }
+
+                return false;
             }
 
-            dd($participatesList);
+            return false;
         } catch (Exception $e) {
             return false;
         }

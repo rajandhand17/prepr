@@ -36,9 +36,17 @@ class EmailTemplateSeeder extends Seeder
                 'module_type'        => '3',
                 'subject'            => 'Invitation to join Challenge',
                 'fr_CA_subject'      => 'Invitation à rejoindre le Défi',
-                'body_content'       => 'You have been invited to the lab component_title by user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the organization once you log in.',
+                'body_content'       => 'You have been invited to the Challenge component_title by user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the Lab once you log in.',
                 'fr_CA_body_content' => 'Vous avez été invité au Défi component_title par user_name. Utilisez le lien ci-dessous pour vous inscrire et vous connecter à PreprLabs avec cette adresse e-mail. Vous serez ajouté à l\'organisation une fois connecté.',
             ],
+            [
+                'template_type'      => '0',
+                'module_type'        => '5',
+                'subject'            => 'Invitation to join Project',
+                'fr_CA_subject'      => 'Invitation à rejoindre le projet',
+                'body_content'       => 'You have been invited to the Project component_title by user_name. Use the link below to register and log in on PreprLabs with this email address. You will be added to the Project once you log in.',
+                'fr_CA_body_content' => 'Vous avez été invité au projet composant_titre par nom_utilisateur. Utilisez le lien ci-dessous pour vous inscrire et vous connecter à PreprLabs avec cette adresse e-mail. Vous serez ajouté au projet une fois connecté.',
+            ]
         ];
 
         foreach ($emailTemplates as $emailTemplate) {

@@ -24,11 +24,15 @@ class ProjectMemberManagementController extends AppBaseController
             if ($checkProjectExistsOrNot == false) {
                 return $this->sendResponse([], __('responses.project_not_found'), 403);
             }
-            $membersList = $this->projectMemberManagementRepository->addMembers($checkProjectExistsOrNot, $request);
-            dd($checkProjectExistsOrNot);
-        } catch (Exception $e) {
-            dd($e);
+            $participatesList = $this->projectMemberManagementRepository->addParticipates($checkProjectExistsOrNot, $request);
+            if ((count($participatesList['invalid_emails']) > 0 || count($participatesList['already_members']) > 0) && count($participatesList['invited_emails']) < 1) {
+                return $this->sendError($participatesList['add_member_response'], 403);
+            } elseif ($participatesList) {
+                return $this->sendResponse($participatesList, $participatesList['add_member_response']);
+            }
 
+            return $this->sendError(__('responses.create_member_manger_failed'), 403);
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

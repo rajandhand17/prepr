@@ -32,7 +32,7 @@ return [
         'organization' => '0',
         'lab'          => '1',
         'challenge'    => '2',
-        'project'      => '3',
+        'project'      => '5',
     ],
 
     'member_management_invite_status' => [
@@ -331,5 +331,10 @@ return [
         'sent'      => '1',
         'fail'      => '2',
         'na'        => '3',
+    ],
+
+    'project_access_level' => [
+        'editor'    => '0',
+        'viewer'    => '1',
     ],
 ];

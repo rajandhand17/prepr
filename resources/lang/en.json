@@ -869,5 +869,7 @@
     "responses.add_additional_success": "Congratulations! You have successfully added/updated additional information in Project.",
     "responses.add_additional_failed": "Oops! The added/updated additional information of Project has failed.",
     "responses.project_delete": "The Project has been deleted successfully!",
-    "responses.project_not_delete": "The Project has been not deleted!"
+    "responses.project_not_delete": "The Project has been not deleted!",
+    "responses.create_member_manger_success_prjt": "Congratulations! You have successfully added member(s) to an Project.",
+    "responses.create_member_manger_error_prjt": "The members(s) you're trying to invite already exist in the Project"
 }
