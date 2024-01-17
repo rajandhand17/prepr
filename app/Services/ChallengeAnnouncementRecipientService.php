@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Schema;
 
 class ChallengeAnnouncementRecipientService
 {
-    public function getChallengeAnnouncementRecipient($language, $search)
+    public function getChallengeAnnouncementRecipient($request)
     {
         try {
-            if ($language == 'en') {
+            if ($request->language == 'en') {
                 $challengeAnnouncementRecipients = ChallengeAnnouncementRecipient::select('id', 'title');
             } else {
-                $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
+                $column_name = LanguageColumnHelper::getLanguageColumnName($request->language, 'title');
                 //check whether the column exist in the db or not
 
                 if (!$column_name || !Schema::hasColumn('durations', $column_name)) {
@@ -23,9 +23,9 @@ class ChallengeAnnouncementRecipientService
                 }
                 $challengeAnnouncementRecipients = ChallengeAnnouncementRecipient::select('id', $column_name.' as title');
             }
-            if ($search != null) {
+            if ($request->search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $challengeAnnouncementRecipients = $challengeAnnouncementRecipients->where($column_name, 'like', '%'.$search.'%');
+                $challengeAnnouncementRecipients = $challengeAnnouncementRecipients->where($column_name, 'like', '%'.$request->search.'%');
             }
             $challengeAnnouncementRecipients = $challengeAnnouncementRecipients->take(config('site-settings.dropdown_listing_limit'))->get();
             if (!$challengeAnnouncementRecipients->isEmpty()) {

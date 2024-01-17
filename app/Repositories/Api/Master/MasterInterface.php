@@ -53,4 +53,6 @@ interface MasterInterface
     public function createSponsor($request, $upload_sponsor_image);
 
     public function getTagGroups($request);
+
+    public function getCountries($request);
 }
