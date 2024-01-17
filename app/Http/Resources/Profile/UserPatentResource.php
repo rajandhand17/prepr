@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Resources\Profile;
+
+use App\Helpers\UtilityHelper;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserPatentResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id'             => $this->id,
+            'company'        => $this->title,
+            'name'           => $this->name,
+            'patent_date'    => UtilityHelper::formatDateTime($this->patent_date),
+            'description'    => $this->description,
+        ];
+    }
+}

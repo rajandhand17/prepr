@@ -3,7 +3,11 @@
 use App\Http\Controllers\Api\Public\ResourceGroup\ResourceGroupController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language'])->group(function () {
+$middleware = ['language'];
+if (\request()->has('social_type')) {
+    $middleware = ['language', 'auth:api'];
+}
+Route::middleware($middleware)->group(function () {
     Route::get('/', [ResourceGroupController::class, 'index']);
     Route::get('/{slug}', [ResourceGroupController::class, 'show']);
 });
