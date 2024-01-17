@@ -61,7 +61,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
     public function createTemplateChallenge($challengeId, $organization)
     {
         try {
-            $createTemplateChallenge = DB::transaction(function () use ($challengeId, $organization) {
+            $createTemplateChallenge = DB::transaction(function () use ($challengeId) {
                 $createTemplateChallenge = $this->challengeTemplateService->createTemplateChallenge($challengeId);
                 $createTemplateChallengeParticipationAchievement = $this->challengeTemplateAchievementService->createChallengeTemplateAchievement($challengeId, $createTemplateChallenge->id);
                 $createTemplateChallengeSkills = $this->challengeTemplateSkillsGroupsStackService->createChallengeTemplateSkills($challengeId, $createTemplateChallenge->id);

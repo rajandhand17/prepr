@@ -7,25 +7,25 @@ use App\Models\ChallengePath;
 use App\Models\ChallengePathTemplate;
 use App\Models\ComponentAssociation;
 use App\Models\LabMarketplaceComponentAssociations;
-use App\Models\LabMarketplaceProgram;
-use App\Models\LabProgram;
-use App\Models\TemplateChallenge;
 use App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateRepository;
 
 class LabMarketplaceComponentAssociationService
 {
     private $challengeTemplateRepository;
-    public function __construct(ChallengeTemplateRepository $challengeTemplateRepository){
+
+    public function __construct(ChallengeTemplateRepository $challengeTemplateRepository)
+    {
         $this->challengeTemplateRepository = $challengeTemplateRepository;
     }
+
     public function createMarketplaceComponentAssociation($labMarketplaceId, $labId)
     {
         try {
             $componentAssociations = ComponentAssociation::where('lab_id', $labId)->get();
-            foreach ($componentAssociations as $componentAssociation){
+            foreach ($componentAssociations as $componentAssociation) {
                 if ($componentAssociation->challenge_id !== '') {
                     $getChallenges = Challenge::where('id', $componentAssociation->challenge_id)->first();
-                    $challengesTemplate=$this->challengeTemplateRepository->createTemplateChallenge($getChallenges->id, $getChallenges->organization_id);
+                    $challengesTemplate = $this->challengeTemplateRepository->createTemplateChallenge($getChallenges->id, $getChallenges->organization_id);
                 }
 
                 if ($componentAssociation->challenge_path_id !== '') {
