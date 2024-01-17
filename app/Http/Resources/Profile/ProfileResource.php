@@ -107,6 +107,9 @@ class ProfileResource extends JsonResource
                 case '2':
                     $gender = 'other';
                     break;
+                case '3':
+                    $gender = 'decline_to_answer';
+                    break;
                 default:
                     $gender = 'other';
                     break;
