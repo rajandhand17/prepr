@@ -35,6 +35,7 @@ class ChallengeTemplateController extends AppBaseController
             if ($cloneChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($cloneChallenge), __('responses.challenge_clone_success'), 200);
             }
+
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
