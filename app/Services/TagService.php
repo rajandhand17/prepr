@@ -28,7 +28,7 @@ class TagService
         try {
             if ($language == 'en') {
                 $tag_list = Tag::select('id', 'title', 'tag_image', 'components');
-                //Search categories based on user input
+            //Search categories based on user input
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -70,7 +70,13 @@ class TagService
     public static function getTagsIdBasedOnId($resourceGroupTagId)
     {
         try {
-            return Tag::where('id', $resourceGroupTagId)->pluck('id')->first();
+            $getTagsList = Tag::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+                ->where('id', $resourceGroupTagId)->get();
+            if ($getTagsList) {
+                return $getTagsList;
+            }
+
+            return false;
         } catch (\Exception $e) {
             return false;
         }
