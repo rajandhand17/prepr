@@ -3,9 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\LabExternalLinks;
-use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTemplateExternalLink;
-use App\Models\LabTemplateSkillsGroupsStack;
 
 class LabMarketplaceExternalLinksService
 {
