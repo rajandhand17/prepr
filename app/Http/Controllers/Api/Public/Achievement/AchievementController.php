@@ -39,24 +39,24 @@ class AchievementController extends AppBaseController
         }
     }
 
-    public function show($certificateNumber)
+    public function show($certificate_id)
     {
         try {
-            $achievement = $this->achievementRepository->getAchievementBasedOnCertificateNumber($certificateNumber);
+            $achievement = $this->achievementRepository->getAchievementBasedOnCertificateNumber($certificate_id);
             if ($achievement) {
-                return $this->sendResponse(AchievementResource::make($achievement), __('responses.found_achievement_list'));
+                return $this->sendResponse(AchievementResource::make($achievement), __('responses.found_achievement'));
             }
 
-            return $this->sendError(__('responses.not_found_achievement_list'), 404);
+            return $this->sendError(__('responses.not_found_achievement'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function downloadCertificate($certificate_number, $type)
+    public function downloadCertificate($certificate_id)
     {
         try {
-            $downloadFile = $this->achievementRepository->downloadCertificate($certificate_number, $type);
+            $downloadFile = $this->achievementRepository->downloadCertificate($certificate_id);
             if ($downloadFile) {
                 return $this->sendResponse(null, __('responses.download_certificate'));
             }
