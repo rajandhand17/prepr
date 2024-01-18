@@ -41,7 +41,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(ProfileResource::make($getUserDetails), __('responses.found_user_profile_detail'));
             }
 
-            return $this->sendError(__('responses.not_found_user_profile_detail'), 404);
+            return $this->sendError(__('responses.not_found_user_profile_detail'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -55,7 +55,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(ProfileResource::make($createProfile), __('responses.user_personal_created'));
             }
 
-            return $this->sendError(__('responses.user_personal_failed'), 404);
+            return $this->sendError(__('responses.user_personal_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -69,7 +69,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(UserExperienceResource::collection($addExperience), __('responses.user_experience_update'));
             }
 
-            return $this->sendError(__('responses.user_experience_failed'), 404);
+            return $this->sendError(__('responses.user_experience_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -87,7 +87,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(null, __('responses.delete_experience'));
             }
 
-            return $this->sendError(__('responses.failed_delete_experience'), 404);
+            return $this->sendError(__('responses.failed_delete_experience'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -101,7 +101,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(UserEducationResource::collection($addEducation), __('responses.user_education_created'));
             }
 
-            return $this->sendError(__('responses.user_education_failed'), 404);
+            return $this->sendError(__('responses.user_education_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -119,7 +119,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(null, __('responses.delete_education_success'));
             }
 
-            return $this->sendError(__('responses.delete_education_failed'));
+            return $this->sendError(__('responses.delete_education_failed'),400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -133,7 +133,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(UserPatentResource::collection($addPatient), __('responses.user_patent_created'));
             }
 
-            return $this->sendError(__('responses.user_patent_failed'), 404);
+            return $this->sendError(__('responses.user_patent_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -165,7 +165,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(UserSkillsResource::collection($addSkills), __('responses.add_skills_create'));
             }
 
-            return $this->sendError(__('responses.add_skills_failed'), 404);
+            return $this->sendError(__('responses.add_skills_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -193,7 +193,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(UserCertificateResource::collection($addCertificate), __('responses.add_certificate_created'));
             }
 
-            return $this->sendError(__('responses.add_certificate_failed'), 404);
+            return $this->sendError(__('responses.add_certificate_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -211,7 +211,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(null, __('responses.delete_skills'));
             }
 
-            return $this->sendError(__('responses.failed_delete_skills'), 404);
+            return $this->sendError(__('responses.failed_delete_skills'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -229,7 +229,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(null, __('responses.delete_tags'));
             }
 
-            return $this->sendError(__('responses.failed_delete_tags'), 404);
+            return $this->sendError(__('responses.failed_delete_tags'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -261,7 +261,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(UserPersonalFilesResource::make($uploadFile), __('responses.successfully_upload_file'));
             }
 
-            return $this->sendError(__('responses.upload_file_failed'), 404);
+            return $this->sendError(__('responses.upload_file_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -275,7 +275,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(ProfileResource::make($profile), __('responses.successfully_profile'));
             }
 
-            return $this->sendError(__('responses.failed_profile_image'), 404);
+            return $this->sendError(__('responses.failed_profile_image'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -288,17 +288,17 @@ class ProfileController extends AppBaseController
                 return $this->sendError(__('responses.self_request'), 400);
             }
             $activity = $this->profileRepository->checkAction($action);
-            if ($activity == 'false') {
+            if (!$activity) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $getFriendsRecords = $this->profileRepository->getRecordsBasedOnId($request);
             switch ($action) {
                 case 'send':
                     if ($getFriendsRecords !== null && $getFriendsRecords->status == '0') {
-                        return $this->sendError(__('responses.user_request_already_send'), 403);
+                        return $this->sendError(__('responses.user_request_already_send'), 400);
                     }
                     if ($getFriendsRecords !== null && $getFriendsRecords->status == '1') {
-                        return $this->sendError(__('responses.user_request_already_accepted'), 403);
+                        return $this->sendError(__('responses.user_request_already_accepted'), 400);
                     }
                     $column = 'status';
                     $value = '0';
@@ -340,7 +340,7 @@ class ProfileController extends AppBaseController
                     }
                     $column = $getFriendsRecords->user_id == $request->user_id ? 'user_follow' : 'reference_follow';
                     if ($getFriendsRecords->$column !== '2') {
-                        return $this->sendError(__('responses.not_follow_status'), 402);
+                        return $this->sendError(__('responses.not_follow_status'), 400);
                     }
                     $response = $this->profileRepository->unfollowFriend($request, $column);
                     if ($response) {
@@ -350,7 +350,7 @@ class ProfileController extends AppBaseController
                 case 'un-friend':
                     $checkFriends = $this->profileRepository->checkFriendsStatus($request);
                     if ($checkFriends == null) {
-                        return $this->sendError(__('responses.not_friend_status'), 406);
+                        return $this->sendError(__('responses.not_friend_status'), 400);
                     }
                     $response = $this->profileRepository->removeFriend($request);
                     if ($response) {
@@ -360,7 +360,7 @@ class ProfileController extends AppBaseController
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            return $this->sendError(__('responses.send_error'), 402);
+            return $this->sendError(__('responses.send_error'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -375,30 +375,19 @@ class ProfileController extends AppBaseController
 
             switch ($activity) {
                 case 'pending':
-                    $getFriendRequestList = $this->profileRepository->getFriendRequestList();
-                        if (!empty($getFriendRequestList)) {
-                            return $this->sendResponse(FriendsResource::collection($getFriendRequestList), __('responses.friends_request_listing'));
-                        }
+                    $friendsListing = $this->profileRepository->getFriendRequestList();
                     break;
                 case 'followers':
-                    $getFollowersListing = $this->profileRepository->getFollowersListing();
-                        if ($getFollowersListing) {
-                            return $this->sendResponse(FriendsResource::collection($getFollowersListing), __('responses.friends_listing'));
-                        }
+                    $friendsListing = $this->profileRepository->getFollowersListing();
                     break;
                 case 'follow':
-                    $getFollowListing = $this->profileRepository->getFollowListing();
-                        if ($getFollowListing) {
-                            return $this->sendResponse(FriendsResource::collection($getFollowListing), __('responses.friends_listing'));
-                        }
+                    $friendsListing = $this->profileRepository->getFollowListing();
                     break;
                 default:
                     $friendsListing = $this->profileRepository->getFriendsListing();
-                        if ($friendsListing) {
-                            return $this->sendResponse(FriendsResource::collection($friendsListing), __('responses.friends_listing'));
-                        }
                     break;
             }
+            return $this->sendResponse(FriendsResource::collection($friendsListing), __('responses.friends_listing'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
