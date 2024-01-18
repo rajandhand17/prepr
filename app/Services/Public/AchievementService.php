@@ -26,28 +26,27 @@ class AchievementService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $achievement_list = $achievement_list->where('user_achievements.title', 'like', '%' . $request->search . '%');
+                $achievement_list = $achievement_list->where('user_achievements.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('type') && !empty($request->type)) {
-
                 $typesMapping = [
-                    'lab' => '0',
-                    'labprogram' => '1',
-                    'challenge' => ['9', '10'],
+                    'lab'           => '0',
+                    'labprogram'    => '1',
+                    'challenge'     => ['9', '10'],
                     'challengepath' => '3',
                     'resourcegroup' => '4',
-                    'appreciation' => '5',
-                    'activity' => '6',
+                    'appreciation'  => '5',
+                    'activity'      => '6',
                     'skillactivity' => '7',
-                    'imported' => '8',
-                    'winner' => '9',
+                    'imported'      => '8',
+                    'winner'        => '9',
                     'participation' => '10',
                 ];
                 $achievementTypeMap = array_map(function ($type) use ($typesMapping) {
                     return $typesMapping[$type] ?? null;
                 }, $request->type);
-                
+
                 $achievementType = array_reduce($achievementTypeMap, function ($carry, $item) {
                     return is_array($item) ? array_merge($carry, $item) : array_merge($carry, [$item]);
                 }, []);
