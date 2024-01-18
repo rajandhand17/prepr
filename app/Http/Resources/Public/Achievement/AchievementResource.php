@@ -17,37 +17,37 @@ class AchievementResource extends JsonResource
         $activity = null;
         switch($this->achievement_type) {
             case '0':
-                $activity = __('responses.switch_type_lab');
+                $activity = 'lab';
                 break;
             case '1':
-                $activity = __('responses.switch_type_lab_program');
+                $activity = 'labprogram';
                 break;
             case '2':
-                $activity = __('responses.switch_type_challenge');
+                $activity = 'challenge';
                 break;
             case '3':
-                $activity = __('responses.switch_type_challenge_path');
+                $activity = 'challengepath';
                 break;
             case '4':
-                $activity = __('responses.switch_type_resource_group');
+                $activity = 'resourcegroup';
                 break;
             case '5':
-                $activity = __('responses.switch_type_appreciation');
+                $activity = 'appreciation';
                 break;
             case '6':
-                $activity = __('responses.switch_type_activity');
+                $activity = 'activity';
                 break;
             case '7':
-                $activity = __('responses.switch_type_skill');
+                $activity = 'skillactivity';
                 break;
             case '8':
-                $activity = __('responses.switch_type_imported');
+                $activity = 'imported';
                 break;
             case '9':
-                $activity = __('responses.switch_type_winner');
+                $activity = 'winner';
                 break;
             case '10':
-                $activity = __('responses.switch_type_participation');
+                $activity = 'participation';
                 break;
             default:
                 $activity = null;
