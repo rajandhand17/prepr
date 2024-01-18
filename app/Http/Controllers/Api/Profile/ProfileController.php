@@ -52,10 +52,10 @@ class ProfileController extends AppBaseController
         try {
             $createProfile = $this->profileRepository->addPersonalDetail($request);
             if ($createProfile) {
-                return $this->sendResponse(ProfileResource::make($createProfile), __('responses.user_personal_created'));
+                return $this->sendResponse(ProfileResource::make($createProfile), __('responses.add_user_personal_created'));
             }
 
-            return $this->sendError(__('responses.user_personal_failed'), 400);
+            return $this->sendError(__('responses.add_user_personal_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -66,10 +66,10 @@ class ProfileController extends AppBaseController
         try {
             $addExperience = $this->profileRepository->addExperience($request);
             if ($addExperience) {
-                return $this->sendResponse(UserExperienceResource::collection($addExperience), __('responses.user_experience_update'));
+                return $this->sendResponse(UserExperienceResource::collection($addExperience), __('responses.add_user_experience_update'));
             }
 
-            return $this->sendError(__('responses.user_experience_failed'), 400);
+            return $this->sendError(__('responses.add_user_experience_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -98,10 +98,10 @@ class ProfileController extends AppBaseController
         try {
             $addEducation = $this->profileRepository->addEducation($request);
             if ($addEducation) {
-                return $this->sendResponse(UserEducationResource::collection($addEducation), __('responses.user_education_created'));
+                return $this->sendResponse(UserEducationResource::collection($addEducation), __('responses.add_user_education_created'));
             }
 
-            return $this->sendError(__('responses.user_education_failed'), 400);
+            return $this->sendError(__('responses.add_user_education_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -130,10 +130,10 @@ class ProfileController extends AppBaseController
         try {
             $addPatient = $this->profileRepository->addPatent($request);
             if ($addPatient) {
-                return $this->sendResponse(UserPatentResource::collection($addPatient), __('responses.user_patent_created'));
+                return $this->sendResponse(UserPatentResource::collection($addPatient), __('responses.add_user_patent_created'));
             }
 
-            return $this->sendError(__('responses.user_patent_failed'), 400);
+            return $this->sendError(__('responses.add_user_patent_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
