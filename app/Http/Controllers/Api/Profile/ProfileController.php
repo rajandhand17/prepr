@@ -119,7 +119,7 @@ class ProfileController extends AppBaseController
                 return $this->sendResponse(null, __('responses.delete_education_success'));
             }
 
-            return $this->sendError(__('responses.delete_education_failed'),400);
+            return $this->sendError(__('responses.delete_education_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -304,7 +304,7 @@ class ProfileController extends AppBaseController
                     $value = '0';
                     $updateFriendRequest = $this->profileRepository->updateFriendsBasedOnAction($request, $column, $value);
                     if ($updateFriendRequest) {
-                        return $this->sendResponse(null, __('responses.success_' . $action . '_message'), 200);
+                        return $this->sendResponse(null, __('responses.success_'.$action.'_message'), 200);
                     }
                     break;
                 case 'follow':
@@ -318,7 +318,7 @@ class ProfileController extends AppBaseController
                     }
                     $updateFriendRequest = $this->profileRepository->updateFriendsBasedOnAction($request, $column, $value);
                     if ($updateFriendRequest) {
-                        return $this->sendResponse(null, __('responses.success_' . $action . '_message'), 200);
+                        return $this->sendResponse(null, __('responses.success_'.$action.'_message'), 200);
                     }
                     break;
                 case in_array($action, ['accept', 'reject']):
@@ -330,7 +330,7 @@ class ProfileController extends AppBaseController
                     if ($value !== null && $getFriendsRecords) {
                         $updateResponse = $this->profileRepository->friendRequestResponse($request, $value);
                         if ($updateResponse) {
-                            return $this->sendResponse(null, __('responses.' . $action . '_friend_request'));
+                            return $this->sendResponse(null, __('responses.'.$action.'_friend_request'));
                         }
                     }
                     break;
@@ -360,6 +360,7 @@ class ProfileController extends AppBaseController
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
             }
+
             return $this->sendError(__('responses.send_error'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -387,6 +388,7 @@ class ProfileController extends AppBaseController
                     $friendsListing = $this->profileRepository->getFriendsListing();
                     break;
             }
+
             return $this->sendResponse(FriendsResource::collection($friendsListing), __('responses.friends_listing'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
