@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AddSkillsRequest extends FormRequest
+class FriendRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,18 +23,18 @@ class AddSkillsRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'skill_id'   => 'required|array',
-            'skill_id.*' => 'exists:skills,id',
+        $base_rules = [
+            'user_id'=> 'required|exists:users,id',
         ];
+
+        return $base_rules;
     }
 
     public function messages()
     {
         return [
-            'skill_id.required'      => __('responses.skill_id_required'),
-            'skill_id.array'         => __('responses.array_status'),
-            'skill_id.*.exists'      => __('responses.skill_id_exists'),
+            'user_id.required' => __('responses.reference_id_required'),
+            'user_id.exists'   => __('responses.reference_id_exists'),
         ];
     }
 

@@ -26,11 +26,32 @@ class AchievementService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $achievement_list = $achievement_list->where('user_achievements.title', $request->search);
+                $achievement_list = $achievement_list->where('user_achievements.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('type') && !empty($request->type)) {
-                $achievement_list = $achievement_list->whereIn('user_achievements.achievement_type', $request->type);
+                $typesMapping = [
+                    'lab'           => '0',
+                    'labprogram'    => '1',
+                    'challenge'     => ['9', '10'],
+                    'challengepath' => '3',
+                    'resourcegroup' => '4',
+                    'appreciation'  => '5',
+                    'activity'      => '6',
+                    'skillactivity' => '7',
+                    'imported'      => '8',
+                    'winner'        => '9',
+                    'participation' => '10',
+                ];
+                $achievementTypeMap = array_map(function ($type) use ($typesMapping) {
+                    return $typesMapping[$type] ?? null;
+                }, $request->type);
+
+                $achievementType = array_reduce($achievementTypeMap, function ($carry, $item) {
+                    return is_array($item) ? array_merge($carry, $item) : array_merge($carry, [$item]);
+                }, []);
+
+                $achievement_list = $achievement_list->whereIn('user_achievements.achievement_type', $achievementType);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
@@ -55,19 +76,19 @@ class AchievementService
         }
     }
 
-    public function getAchievementBasedOnCertificateNumber($certificateNumber)
+    public function getAchievementBasedOnCertificateNumber($certificate_id)
     {
         try {
-            return UserAchievement::where(['certificate_number' => $certificateNumber])->first();
+            return UserAchievement::where(['certificate_number' => $certificate_id])->first();
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function downloadCertificate($certificate_number, $type)
+    public function downloadCertificate($certificate_id)
     {
         try {
-            $userAchievement = UserAchievement::where('certificate_number', $certificate_number)->first();
+            $userAchievement = UserAchievement::where('certificate_number', $certificate_id)->first();
             if ($userAchievement) {
                 $userData = User::find($userAchievement->user_id);
                 $challengeDetails = $userAchievement->module_parent_id ? Challenge::find($userAchievement->module_parent_id) : null;
@@ -75,9 +96,9 @@ class AchievementService
                 $organisationName = isset($organisationDetails) ? $organisationDetails->display_name : 'Learnlab';
                 $userAchievement->organisation_name = $organisationName;
                 $data = [
-                    'certificateNumber'         => $certificate_number,
+                    'certificateNumber'         => $certificate_id,
                     'userAchievement'           => $userAchievement,
-                    'type'                      => $type,
+                    'type'                      => $userAchievement->achievement_type,
                     'user'                      => $userData,
                     'user_id'                   => $userData->uuid,
                     'strAchievementName'        => $userAchievement->title,

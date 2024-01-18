@@ -80,15 +80,11 @@ class UserService
     public static function addUserName($request)
     {
         try {
-            $user = User::updateOrCreate([
-                'id' => auth()->user()->id,
-            ], [
-                'first_name' => $request->first_name,
-                'last_name'  => $request->last_name,
-                'full_name'  => $request->first_name, ' '.$request->last_name,
-            ]);
+            $updateUser = User::where('id', auth()->user()->id)->first();
+            $updateUser->full_name = $request->name;
+            $updateUser->save();
 
-            return true;
+            return $updateUser;
         } catch (\Exception $e) {
             return false;
         }

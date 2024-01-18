@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Profile;
 
+use App\Services\FriendService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;
 use App\Services\UserEducationService;
@@ -10,6 +11,7 @@ use App\Services\UserPatentService;
 use App\Services\UserPersonalService;
 use App\Services\UserService;
 use App\Services\UserSkillsService;
+use App\Services\UserTagsService;
 use DB;
 
 class ProfileRepository implements ProfileInterface
@@ -30,16 +32,22 @@ class ProfileRepository implements ProfileInterface
 
     private $userAddressService;
 
-    public function __construct(UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
+    private $friendService;
+
+    private $userTagsService;
+
+    public function __construct(FriendService $friendService, UserAddressService $userAddressService, UserCertificateService $userCertificatesService, UserPatentService $userPatentsService, UserTagsService $userTagsService, UserSkillsService $userSkillsService, UserService $userService, UserPersonalService $userPersonalService, UserExperienceService $userExperienceService, UserEducationService $userEducationService)
     {
         $this->userService = $userService;
         $this->userPersonalService = $userPersonalService;
         $this->userExperienceService = $userExperienceService;
         $this->userEducationService = $userEducationService;
         $this->userSkillsService = $userSkillsService;
+        $this->userTagsService = $userTagsService;
         $this->userPatentsService = $userPatentsService;
         $this->userCertificatesService = $userCertificatesService;
         $this->userAddressService = $userAddressService;
+        $this->friendService = $friendService;
     }
 
     public function getUserByUsername($user_name)
@@ -55,20 +63,20 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             $personalDetail = DB::transaction(function () use ($request) {
-                $createUser = $this->userService->addUserName($request);
-                $createPersonalDetail = $this->userPersonalService->addPersonalDetail($request);
-                $createAddress = $this->userAddressService->addUserAddress($request);
+                $updateUser = $this->userService->addUserName($request);
+                $updatePersonalDetail = $this->userPersonalService->addPersonalDetail($request);
+                $updateAddress = $this->userAddressService->addUserAddress($request);
 
                 return [
-                    'createdUser'             => $createUser,
-                    'createdPersonalDetail'   => $createPersonalDetail,
-                    'createdAddress'          => $createAddress,
+                    'updateUser'             => $updateUser,
+                    'updatePersonalDetail'   => $updatePersonalDetail,
+                    'updateAddress'          => $updateAddress,
                 ];
             });
-            if ($personalDetail['createdUser'] && $personalDetail['createdPersonalDetail'] && $personalDetail['createdAddress']) {
+            if ($personalDetail['updateUser'] && $personalDetail['updatePersonalDetail'] && $personalDetail['updateAddress']) {
                 DB::commit();
 
-                return $personalDetail['createdPersonalDetail'];
+                return $personalDetail['updateUser'];
             }
             DB::rollBack();
 
@@ -125,6 +133,15 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function profileImageUpload($request)
+    {
+        try {
+            return $this->userPersonalService->profileImageUpload($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function deleteEducation($id)
     {
         try {
@@ -165,15 +182,33 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userSkillsService->addSkills($request);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addTags($request)
+    {
+        try {
+            return $this->userTagsService->addTags($request);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deleteSkill($id)
+    public function deleteProfileSkill($id)
     {
         try {
-            return $this->userSkillsService->deleteSkill($id);
+            return $this->userSkillsService->deleteProfileSkill($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteProfileTag($id)
+    {
+        try {
+            return $this->userTagsService->deleteProfileTag($id);
         } catch (\Exception $e) {
             return false;
         }
@@ -183,6 +218,15 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userSkillsService->checkUserSkillExists($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkUserTagExists($id)
+    {
+        try {
+            return $this->userTagsService->checkUserTagExists($id);
         } catch (\Exception $e) {
             return false;
         }
@@ -219,6 +263,141 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userEducationService->checkUserEducation($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkAction($action)
+    {
+        try {
+            return $this->friendService->checkAction($action);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getRecordsBasedOnId($request)
+    {
+        try {
+            return $this->friendService->getRecordsBasedOnId($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function friendRequestResponse($request, $value)
+    {
+        try {
+            return $this->friendService->friendRequestResponse($request, $value);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function followRequestResponse($request, $value)
+    {
+        try {
+            return $this->friendService->followRequestResponse($request, $value);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkRequests($request)
+    {
+        try {
+            return $this->friendService->checkRequests($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkFollowRequests($request)
+    {
+        try {
+            return $this->friendService->checkFollowRequests($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFriendsListing()
+    {
+        try {
+            return $this->friendService->getFriendsListing();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFollowersListing()
+    {
+        try {
+            return $this->friendService->getFollowersListing();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFollowListing()
+    {
+        try {
+            return $this->friendService->getFollowListing();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFriendRequestList()
+    {
+        try {
+            return $this->friendService->getFriendRequestList();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFollowersRequestList()
+    {
+        try {
+            return $this->friendService->getFollowersRequestList();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkFriendsStatus($request)
+    {
+        try {
+            return $this->friendService->checkFriendsStatus($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function removeFriend($request)
+    {
+        try {
+            return $this->friendService->removeFriend($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function unfollowFriend($request, $column)
+    {
+        try {
+            return $this->friendService->unfollowFriend($request, $column);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateFriendsBasedOnAction($request, $column, $value)
+    {
+        try {
+            return $this->friendService->updateFriendsBasedOnAction($request, $column, $value);
         } catch (\Exception $e) {
             return false;
         }
