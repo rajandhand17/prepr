@@ -30,7 +30,7 @@ class UserSkillsService
         }
     }
 
-    public static function deleteSkill($id)
+    public static function deleteProfileSkill($id)
     {
         try {
             $deleteSkill = UserSkills::where(['skill'=>$id, 'user_id'=>auth()->user()->id])->delete();
