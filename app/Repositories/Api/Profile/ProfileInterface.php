@@ -32,9 +32,9 @@ interface ProfileInterface
 
     public function addTags($request);
 
-    public function deleteTag($id);
+    public function deleteProfileTag($id);
 
-    public function deleteSkill($id);
+    public function deleteProfileSkill($id);
 
     public function checkUserSkillExists($id);
 
@@ -52,7 +52,7 @@ interface ProfileInterface
 
     public function getRecordsBasedOnId($request);
 
-    public function createFriendsBasedOnAction($request, $column, $value);
+    public function updateFriendsBasedOnAction($request, $column, $value);
 
     public function friendRequestResponse($request, $value);
 

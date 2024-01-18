@@ -11,6 +11,12 @@ class FriendService
         try {
             $value = null;
             switch($action) {
+                case 'send':
+                    $value = '1';
+                    break;
+                case 'follow':
+                    $value = '2';
+                    break;
                 case 'accept':
                     $value = '1';
                     break;
@@ -47,7 +53,7 @@ class FriendService
         }
     }
 
-    public function createFriendsBasedOnAction($request, $column, $value)
+    public function updateFriendsBasedOnAction($request, $column, $value)
     {
         try {
             $friendRequest = Friend::where(function ($query) use ($request) {
