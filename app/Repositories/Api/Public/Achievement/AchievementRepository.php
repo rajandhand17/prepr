@@ -22,19 +22,19 @@ class AchievementRepository implements AchievementInterface
         }
     }
 
-    public function getAchievementBasedOnCertificateNumber($certificateNumber)
+    public function getAchievementBasedOnCertificateNumber($certificate_id)
     {
         try {
-            return $this->achievementService->getAchievementBasedOnCertificateNumber($certificateNumber);
+            return $this->achievementService->getAchievementBasedOnCertificateNumber($certificate_id);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function downloadCertificate($certificate_number, $type)
+    public function downloadCertificate($certificate_id)
     {
         try {
-            return $this->achievementService->downloadCertificate($certificate_number, $type);
+            return $this->achievementService->downloadCertificate($certificate_id);
         } catch(\Exception $e) {
             return false;
         }
