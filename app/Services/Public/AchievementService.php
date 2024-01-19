@@ -7,17 +7,30 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Models\UserAchievement;
 use Dompdf\Dompdf;
+use Exception;
 
 class AchievementService
 {
     public function getList($request)
     {
         try {
-            $achievement_list = UserAchievement::select();
+            $achievement_list = UserAchievement::select()->where('user_id', auth()->user()->id);
             $achievement_list = self::filterAchievementList($request, $achievement_list);
 
             return $achievement_list->paginate(config('site-settings.pagination_per_page'));
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAchievementList($userId, $request)
+    {
+        try {
+            $achievement_list = UserAchievement::select()->where('user_id', $userId);
+            $achievement_list = self::filterAchievementList($request, $achievement_list);
+
+            return $achievement_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -71,7 +84,7 @@ class AchievementService
             }
 
             return $achievement_list;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
@@ -80,7 +93,7 @@ class AchievementService
     {
         try {
             return UserAchievement::where(['certificate_number' => $certificate_id])->first();
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
@@ -113,7 +126,7 @@ class AchievementService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }

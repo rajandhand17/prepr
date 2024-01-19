@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Public\Achievement;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Achievement\AchievementResource;
 use App\Repositories\Api\Public\Achievement\AchievementRepository;
+use App\Services\UserService;
+use Exception;
 use Illuminate\Http\Request;
 
 class AchievementController extends AppBaseController
@@ -34,7 +36,33 @@ class AchievementController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_achievement_list'), 404);
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getAchievementListBasedOnUsername($username, Request $request)
+    {
+        try {
+            $checkUserExistsOrNot = UserService::getUserByUsername($username);
+            if (!$checkUserExistsOrNot) {
+                return $this->sendError(__('responses.user_not_found'), 404);
+            }
+            $userAchievement = $this->achievementRepository->getAchievementList($checkUserExistsOrNot->id, $request);
+            if ($userAchievement !== false) {
+                $response = [
+                    'total_count'  => $userAchievement->total(),
+                    'per_page'     => $userAchievement->perPage(),
+                    'count'        => $userAchievement->count(),
+                    'current_page' => $userAchievement->currentPage(),
+                    'total_pages'  => $userAchievement->lastPage(),
+                    'list'         => AchievementResource::collection($userAchievement),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_achievement_list'));
+            }
+            return $this->sendError(__('responses.not_found_achievement_list'), 404);
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -48,7 +76,7 @@ class AchievementController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_achievement'), 404);
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -57,12 +85,10 @@ class AchievementController extends AppBaseController
     {
         try {
             $downloadFile = $this->achievementRepository->downloadCertificate($certificate_id);
-            if ($downloadFile) {
-                return $this->sendResponse(null, __('responses.download_certificate'));
+            if (!$downloadFile) {
+                return $this->sendError(__('responses.failed_download_certificate'), 500);
             }
-
-            return $this->sendError(__('responses.failed_download_certificate'), 500);
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
