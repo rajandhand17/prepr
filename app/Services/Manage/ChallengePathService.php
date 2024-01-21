@@ -346,4 +346,13 @@ class ChallengePathService
             return false;
         }
     }
+
+    public static function getChallengePathBasedOnId($Id)
+    {
+        try {
+            return ChallengePath::where('id', $Id)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
