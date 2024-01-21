@@ -35,15 +35,15 @@ class AchievementResource extends JsonResource
                 $getLab = LabService::getLabBasedOnId($this->module_id);
                 if ($getLab) {
                     $associated_data = [
-                        'name'  => $getLab->title ?? $this->module_title,
-                        'associated_link' =>  config('site-settings.frontend_site_url'). 'lab/' .$getLab->slug,
+                        'name'            => $getLab->title ?? $this->module_title,
+                        'associated_link' => config('site-settings.frontend_site_url').'lab/'.$getLab->slug,
                     ];
                 }
                 $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($this->module_parent_id);
                 if ($getIssuerData) {
-                    $issuer_link = config('site-settings.frontend_site_url') . 'organization/' . $getIssuerData->slug;
+                    $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
                     $getUser = UserService::getUserById($getIssuerData->user_id);
-                    $issuer_username = UserService::joinName($getUser->first_name, $getUser->last_name) ?? $this->module_parent_title;                    
+                    $issuer_username = UserService::joinName($getUser->first_name, $getUser->last_name) ?? $this->module_parent_title;
                 }
                 $issued_by = $getIssuerData->title ?? $this->module_parent_title;
                 break;
@@ -51,13 +51,13 @@ class AchievementResource extends JsonResource
                 $activity = 'labprogram';
                 $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($this->module_parent_id);
                 if ($getIssuerData) {
-                    $issuer_link = config('site-settings.frontend_site_url') . 'organization/' . $getIssuerData->slug;
+                    $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
                     $getUser = UserService::getUserById($getIssuerData->user_id);
                     $issuer_username = UserService::joinName($getUser->first_name, $getUser->last_name) ?? $this->module_parent_title;
                     $getLabProgram = LabProgramService::getLabProgramBasedOnId($this->module_id);
                     $associated_data = [
-                        'name'  => $getLabProgram->title ?? $this->module_title,
-                        'associated_link' =>  config('site-settings.frontend_site_url') . 'lab-program/' . $getLabProgram->slug,
+                        'name'            => $getLabProgram->title ?? $this->module_title,
+                        'associated_link' => config('site-settings.frontend_site_url').'lab-program/'.$getLabProgram->slug,
                     ];
                 }
                 $issued_by = $getIssuerData->title ?? $this->module_parent_title;
@@ -67,10 +67,10 @@ class AchievementResource extends JsonResource
                 $getChallengeData = ChallengeService::getChallengeBasedOnId($this->module_parent_id);
                 if ($getChallengeData) {
                     $challenge_name = $getChallengeData->title ?? $this->module_parent_title;
-                    $project_name = "Static Preprlabs Project";
+                    $project_name = 'Static Preprlabs Project';
                     $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($getChallengeData->organization_id);
                     if ($getIssuerData) {
-                        $issuer_link = config('site-settings.frontend_site_url') . 'organization/' . $getIssuerData->slug;
+                        $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
                         $getUser = UserService::getUserById($getIssuerData->user_id);
                         $issuer_username = UserService::joinName($getUser->first_name, $getUser->last_name) ?? $this->module_parent_title;
                     }
@@ -81,13 +81,13 @@ class AchievementResource extends JsonResource
                 $activity = 'challengepath';
                 $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($this->module_parent_id);
                 if ($getIssuerData) {
-                    $issuer_link = config('site-settings.frontend_site_url') . 'organization/' . $getIssuerData->slug;
+                    $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
                     $getUser = UserService::getUserById($getIssuerData->user_id);
                     $issuer_username = UserService::joinName($getUser->first_name, $getUser->last_name) ?? $this->module_parent_title;
                     $getChallengePath = ChallengePathService::getChallengePathBasedOnId($this->module_id);
                     $associated_data = [
-                        'name'  => $getChallengePath->title ?? $this->module_title,
-                        'associated_link' =>  config('site-settings.frontend_site_url') . 'challenge-path/' . $getChallengePath->slug,
+                        'name'            => $getChallengePath->title ?? $this->module_title,
+                        'associated_link' => config('site-settings.frontend_site_url').'challenge-path/'.$getChallengePath->slug,
                     ];
                 }
                 $issued_by = $getIssuerData->title ?? $this->module_parent_title;
@@ -96,13 +96,13 @@ class AchievementResource extends JsonResource
                 $activity = 'resourcegroup';
                 $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($this->module_parent_id);
                 if ($getIssuerData) {
-                    $issuer_link = config('site-settings.frontend_site_url') . 'organization/' . $getIssuerData->slug;
+                    $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
                     $getUser = UserService::getUserById($getIssuerData->user_id);
                     $issuer_username = UserService::joinName($getUser->first_name, $getUser->last_name) ?? $this->module_parent_title;
                     $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($this->module_id);
                     $associated_data = [
-                        'name'  => $getResourceGroup->title ?? $this->module_title,
-                        'associated_link' =>  config('site-settings.frontend_site_url') . 'resource-group/' . $getResourceGroup->slug,
+                        'name'            => $getResourceGroup->title ?? $this->module_title,
+                        'associated_link' => config('site-settings.frontend_site_url').'resource-group/'.$getResourceGroup->slug,
                     ];
                 }
                 $issued_by = $getIssuerData->title ?? $this->module_parent_title;
@@ -125,13 +125,13 @@ class AchievementResource extends JsonResource
                 if ($getChallengeData) {
                     $challenge_name = $getChallengeData->title ?? $this->module_parent_title;
                     $associated_data = [
-                        'name'  => $getChallengeData->title ?? $this->module_title,
-                        'associated_link' =>  config('site-settings.frontend_site_url') . 'challenge/' . $getChallengeData->slug,
+                        'name'            => $getChallengeData->title ?? $this->module_title,
+                        'associated_link' => config('site-settings.frontend_site_url').'challenge/'.$getChallengeData->slug,
                     ];
-                    $project_name = "Static Preprlabs Project";
+                    $project_name = 'Static Preprlabs Project';
                     $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($getChallengeData->organization_id);
                     if ($getIssuerData) {
-                        $issuer_link = config('site-settings.frontend_site_url') . 'organization/' . $getIssuerData->slug;
+                        $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
                         $getUser = UserService::getUserById($getIssuerData->user_id);
                         $issuer_username = UserService::joinName($getUser->first_name, $getUser->last_name) ?? $this->module_parent_title;
                     }
@@ -144,13 +144,13 @@ class AchievementResource extends JsonResource
                 if ($getChallengeData) {
                     $challenge_name = $getChallengeData->title ?? $this->module_parent_title;
                     $associated_data = [
-                        'name'  => $getChallengeData->title ?? $this->module_title,
-                        'associated_link' =>  config('site-settings.frontend_site_url') . 'challenge/' . $getChallengeData->slug,
+                        'name'            => $getChallengeData->title ?? $this->module_title,
+                        'associated_link' => config('site-settings.frontend_site_url').'challenge/'.$getChallengeData->slug,
                     ];
-                    $project_name = "Static Preprlabs Project";
+                    $project_name = 'Static Preprlabs Project';
                     $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($getChallengeData->organization_id);
                     if ($getIssuerData) {
-                        $issuer_link = config('site-settings.frontend_site_url') . 'organization/' . $getIssuerData->slug;
+                        $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
                         $getUser = UserService::getUserById($getIssuerData->user_id);
                         $issuer_username = UserService::joinName($getUser->first_name, $getUser->last_name) ?? $this->module_parent_title;
                     }
