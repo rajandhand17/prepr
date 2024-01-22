@@ -186,7 +186,7 @@ class AchievementResource extends JsonResource
             'description'           => $this->description,
             'issuer_username'       => $issuer_username,
             'issuer_link'           => $issuer_link,
-            'is_feature'            => $is_feature,
+            'is_featured'           => $is_feature,
             'associated_data'       => $associated_data,
             'challenge_title'       => $challenge_name,
             'project_title'         => $project_name,
