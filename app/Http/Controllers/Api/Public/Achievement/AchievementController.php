@@ -120,9 +120,9 @@ class AchievementController extends AppBaseController
                     return $this->sendError(__('responses.already_' . $action . '_achievement'), 400);
                 }
 
-                $challengePath = $this->achievementRepository->achievementActivity($certificate_id, $getColumnValue['action']);
-                if ($challengePath) {
-                    return $this->sendResponse([], __('responses.' . $action . '_achievement'));
+                $achievementAction = $this->achievementRepository->achievementActivity($certificate_id, $getColumnValue['action']);
+                if ($achievementAction) {
+                    return $this->sendResponse(AchievementResource::make($achievement), __('responses.' . $action . '_achievement'));
                 }
             }
             return $this->sendError(__('responses.not_found_achievement'), 404);
