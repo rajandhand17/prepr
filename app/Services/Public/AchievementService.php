@@ -179,6 +179,7 @@ class AchievementService
     {
         try {
             UserAchievement::where('certificate_number', $certificate_id)->update(['is_featured' => $action]);
+
             return true;
         } catch (Exception $e) {
             return false;

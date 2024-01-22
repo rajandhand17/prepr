@@ -103,28 +103,29 @@ class AchievementController extends AppBaseController
                 if (!$getColumnValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
-                
+
                 $checkActivity = $this->achievementRepository->checkachievementActivity($certificate_id, $getColumnValue['action']);
                 switch ($getColumnValue['action']) {
                     case '0':
-                        $action = "unpinned";
+                        $action = 'unpinned';
                         break;
                     case '1':
-                        $action = "pinned";
+                        $action = 'pinned';
                         break;
                     default:
                         $action = null;
                         break;
                 }
                 if ($checkActivity === true) {
-                    return $this->sendError(__('responses.already_' . $action . '_achievement'), 400);
+                    return $this->sendError(__('responses.already_'.$action.'_achievement'), 400);
                 }
 
                 $achievementAction = $this->achievementRepository->achievementActivity($certificate_id, $getColumnValue['action']);
                 if ($achievementAction) {
-                    return $this->sendResponse(AchievementResource::make($achievement), __('responses.' . $action . '_achievement'));
+                    return $this->sendResponse(AchievementResource::make($achievement), __('responses.'.$action.'_achievement'));
                 }
             }
+
             return $this->sendError(__('responses.not_found_achievement'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
