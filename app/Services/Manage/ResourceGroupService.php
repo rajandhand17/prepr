@@ -257,7 +257,6 @@ class ResourceGroupService
         }
     }
 
-
     public static function getResourceGroupBasedOnId($id)
     {
         try {
@@ -266,5 +265,4 @@ class ResourceGroupService
             return false;
         }
     }
-
 }
