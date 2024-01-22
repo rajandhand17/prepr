@@ -44,17 +44,17 @@ class AchievementService
 
             if ($request->has('type') && !empty($request->type)) {
                 $typesMapping = [
-                    'lab'           => '0',
+                    'lab'            => '0',
                     'lab-program'    => '1',
-                    'challenge'     => ['9', '10'],
+                    'challenge'      => ['9', '10'],
                     'challenge-path' => '3',
                     'resource-group' => '4',
-                    'appreciation'  => '5',
-                    'activity'      => '6',
+                    'appreciation'   => '5',
+                    'activity'       => '6',
                     'skill-activity' => '7',
-                    'imported'      => '8',
-                    'winner'        => '9',
-                    'participation' => '10',
+                    'imported'       => '8',
+                    'winner'         => '9',
+                    'participation'  => '10',
                 ];
                 $achievementTypeMap = array_map(function ($type) use ($typesMapping) {
                     return $typesMapping[$type] ?? null;
