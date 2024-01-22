@@ -823,5 +823,9 @@
     "responses.image": "Only Images are supported",
     "responses.self_request": "Sorry, but you are not allowed to send requests to self",
     "responses.found_achievement": "Achievement successfully retrieved",
-    "responses.not_found_achievement": "Unable to find the requested achievement."
+    "responses.not_found_achievement": "Unable to find the requested achievement.",
+    "responses.pinned_achievement": "The Achievement added in featured list!",
+    "responses.unpinned_achievement": "The Achievement removed in featured list!",
+    "responses.already_pinned_achievement": "The Achievement is already being pinned by you!",
+    "responses.already_unpinned_achievement": "The Achievement is already being un-pinned by you!"
 }
