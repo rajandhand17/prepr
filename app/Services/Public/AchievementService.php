@@ -45,13 +45,13 @@ class AchievementService
             if ($request->has('type') && !empty($request->type)) {
                 $typesMapping = [
                     'lab'           => '0',
-                    'labprogram'    => '1',
+                    'lab-program'    => '1',
                     'challenge'     => ['9', '10'],
-                    'challengepath' => '3',
-                    'resourcegroup' => '4',
+                    'challenge-path' => '3',
+                    'resource-group' => '4',
                     'appreciation'  => '5',
                     'activity'      => '6',
-                    'skillactivity' => '7',
+                    'skill-activity' => '7',
                     'imported'      => '8',
                     'winner'        => '9',
                     'participation' => '10',
