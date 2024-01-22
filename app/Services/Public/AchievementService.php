@@ -130,4 +130,58 @@ class AchievementService
             return false;
         }
     }
+
+    public static function getColumnValue($request)
+    {
+        try {
+            $value = null;
+            switch ($request->is_featured) {
+                case 'no':
+                    $value = '0';
+                    break;
+                case 'yes':
+                    $value = '1';
+                    break;
+                default:
+                    $value = null;
+                    break;
+            }
+            if ($value != null) {
+                return ['action' => $value];
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkachievementActivity($certificate_id, $action)
+    {
+        try {
+            $checkActivity = UserAchievement::where(
+                [
+                    'certificate_number'    => $certificate_id,
+                    'is_featured'           => $action,
+                ]
+            )->first();
+            if ($checkActivity != null) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function achievementActivity($certificate_id, $action)
+    {
+        try {
+            UserAchievement::where('certificate_number', $certificate_id)->update(['is_featured' => $action]);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

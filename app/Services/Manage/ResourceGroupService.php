@@ -258,10 +258,10 @@ class ResourceGroupService
     }
 
 
-    public static function getResourceGroupBasedOnId($Id)
+    public static function getResourceGroupBasedOnId($id)
     {
         try {
-            return ResourceGroup::where('id', $Id)->first();
+            return ResourceGroup::where('id', $id)->first();
         } catch (\Exception $e) {
             return false;
         }

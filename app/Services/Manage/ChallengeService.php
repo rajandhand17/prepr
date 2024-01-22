@@ -400,10 +400,10 @@ class ChallengeService
         }
     }
 
-    public static function getChallengeBasedOnId($Id)
+    public static function getChallengeBasedOnId($id)
     {
         try {
-            return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'organization_id')->where('id', $Id)->first();
+            return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'organization_id')->where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }

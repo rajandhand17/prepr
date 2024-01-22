@@ -49,4 +49,31 @@ class AchievementRepository implements AchievementInterface
             return false;
         }
     }
+
+    public function getColumnValue($request)
+    {
+        try {
+            return $this->achievementService->getColumnValue($request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkachievementActivity($certificate_id, $action)
+    {
+        try {
+            return $this->achievementService->checkachievementActivity($certificate_id, $action);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function achievementActivity($certificate_id, $action)
+    {
+        try {
+            return $this->achievementService->achievementActivity($certificate_id, $action);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

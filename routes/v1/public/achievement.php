@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/', [AchievementController::class, 'index']);
+    Route::get('/{certificate_id}/activity', [AchievementController::class, 'achievementActivity']);
 });
 
 Route::middleware(['language'])->group(function () {

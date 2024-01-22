@@ -93,4 +93,41 @@ class AchievementController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function achievementActivity($certificate_id, Request $request)
+    {
+        try {
+            $achievement = $this->achievementRepository->getAchievementBasedOnCertificateNumber($certificate_id);
+            if ($achievement !== null) {
+                $getColumnValue = $this->achievementRepository->getColumnValue($request);
+                if (!$getColumnValue) {
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
+                }
+                
+                $checkActivity = $this->achievementRepository->checkachievementActivity($certificate_id, $getColumnValue['action']);
+                switch ($getColumnValue['action']) {
+                    case '0':
+                        $action = "unpinned";
+                        break;
+                    case '1':
+                        $action = "pinned";
+                        break;
+                    default:
+                        $action = null;
+                        break;
+                }
+                if ($checkActivity === true) {
+                    return $this->sendError(__('responses.already_' . $action . '_achievement'), 400);
+                }
+
+                $challengePath = $this->achievementRepository->achievementActivity($certificate_id, $getColumnValue['action']);
+                if ($challengePath) {
+                    return $this->sendResponse([], __('responses.' . $action . '_achievement'));
+                }
+            }
+            return $this->sendError(__('responses.not_found_achievement'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

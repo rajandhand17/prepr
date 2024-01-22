@@ -105,10 +105,10 @@ class LabProgramService
         }
     }
 
-    public static function getLabProgramBasedOnId($Id)
+    public static function getLabProgramBasedOnId($id)
     {
         try {
-            return LabProgram::where('id', $Id)->first();
+            return LabProgram::where('id', $id)->first();
         } catch (\Exception $e) {
             return false;
         }

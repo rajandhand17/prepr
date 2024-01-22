@@ -347,10 +347,10 @@ class ChallengePathService
         }
     }
 
-    public static function getChallengePathBasedOnId($Id)
+    public static function getChallengePathBasedOnId($id)
     {
         try {
-            return ChallengePath::where('id', $Id)->first();
+            return ChallengePath::where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }
