@@ -48,7 +48,7 @@ class AchievementResource extends JsonResource
                 $issued_by = $getIssuerData->title ?? $this->module_parent_title;
                 break;
             case '1':
-                $activity = 'labprogram';
+                $activity = 'lab-program';
                 $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($this->module_parent_id);
                 if ($getIssuerData) {
                     $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
@@ -78,7 +78,7 @@ class AchievementResource extends JsonResource
                 }
                 break;
             case '3':
-                $activity = 'challengepath';
+                $activity = 'challenge-path';
                 $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($this->module_parent_id);
                 if ($getIssuerData) {
                     $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
@@ -93,7 +93,7 @@ class AchievementResource extends JsonResource
                 $issued_by = $getIssuerData->title ?? $this->module_parent_title;
                 break;
             case '4':
-                $activity = 'resourcegroup';
+                $activity = 'resource-group';
                 $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($this->module_parent_id);
                 if ($getIssuerData) {
                     $issuer_link = config('site-settings.frontend_site_url').'organization/'.$getIssuerData->slug;
@@ -114,7 +114,7 @@ class AchievementResource extends JsonResource
                 $activity = 'activity';
                 break;
             case '7':
-                $activity = 'skillactivity';
+                $activity = 'skill-activity';
                 break;
             case '8':
                 $activity = 'imported';
