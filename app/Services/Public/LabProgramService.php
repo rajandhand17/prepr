@@ -104,4 +104,13 @@ class LabProgramService
             return false;
         }
     }
+
+    public static function getLabProgramBasedOnId($id)
+    {
+        try {
+            return LabProgram::where('id', $id)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
