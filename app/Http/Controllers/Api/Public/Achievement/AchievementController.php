@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public\Achievement;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Profile\UserScoreDataResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
 use App\Repositories\Api\Public\Achievement\AchievementRepository;
 use App\Services\UserService;
@@ -24,12 +25,13 @@ class AchievementController extends AppBaseController
             $achievement = $this->achievementRepository->getList($request);
             if ($achievement !== false) {
                 $response = [
-                    'total_count'  => $achievement->total(),
-                    'per_page'     => $achievement->perPage(),
-                    'count'        => $achievement->count(),
-                    'current_page' => $achievement->currentPage(),
-                    'total_pages'  => $achievement->lastPage(),
-                    'list'         => AchievementResource::collection($achievement),
+                    'total_count'   => $achievement->total(),
+                    'per_page'      => $achievement->perPage(),
+                    'count'         => $achievement->count(),
+                    'current_page'  => $achievement->currentPage(),
+                    'total_pages'   => $achievement->lastPage(),
+                    'user_data'     => UserScoreDataResource::make($request),
+                    'list'          => AchievementResource::collection($achievement),
                 ];
 
                 return $this->sendResponse($response, __('responses.found_achievement_list'));
