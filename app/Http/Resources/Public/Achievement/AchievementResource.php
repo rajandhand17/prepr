@@ -164,13 +164,13 @@ class AchievementResource extends JsonResource
 
         switch ($this->is_featured) {
             case '0':
-                $is_feature = 'no';
+                $is_featured = 'no';
                 break;
             case '1':
-                $is_feature = 'yes';
+                $is_featured = 'yes';
                 break;
             default:
-                $is_feature = 'no';
+                $is_featured = 'no';
                 break;
         }
 
@@ -186,7 +186,7 @@ class AchievementResource extends JsonResource
             'description'           => $this->description,
             'issuer_username'       => $issuer_username,
             'issuer_link'           => $issuer_link,
-            'is_featured'           => $is_feature,
+            'is_featured'           => $is_featured,
             'associated_data'       => $associated_data,
             'challenge_title'       => $challenge_name,
             'project_title'         => $project_name,
