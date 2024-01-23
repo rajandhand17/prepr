@@ -30,7 +30,7 @@ class AchievementController extends AppBaseController
                     'count'         => $achievement->count(),
                     'current_page'  => $achievement->currentPage(),
                     'total_pages'   => $achievement->lastPage(),
-                    'user_data'     => UserScoreDataResource::make($request),
+                    'user_data'     => UserScoreDataResource::make("static_data"),
                     'list'          => AchievementResource::collection($achievement),
                 ];
 
