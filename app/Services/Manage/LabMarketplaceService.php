@@ -48,7 +48,7 @@ class LabMarketplaceService
         }
     }
 
-    public static function getCheckUuid($uuid)
+    public static function getCheckLabUuid($uuid)
     {
         try {
             return LabMarketplace::where('uuid', $uuid)->first();

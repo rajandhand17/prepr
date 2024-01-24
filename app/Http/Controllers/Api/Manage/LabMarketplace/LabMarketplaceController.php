@@ -23,7 +23,7 @@ class LabMarketplaceController extends AppBaseController
             if (!$checkLabExistsOrNot) {
                 return $this->sendError(__('responses.lab_slug_not_found'), 404);
             }
-            $checkLabMarketplace = $this->labMarketplaceRepository->getCheckUuid($checkLabExistsOrNot->uuid);
+            $checkLabMarketplace = $this->labMarketplaceRepository->getCheckLabUuid($checkLabExistsOrNot->uuid);
             if ($checkLabMarketplace) {
                 return $this->sendError(__('responses.already_cloned'), 200);
             }

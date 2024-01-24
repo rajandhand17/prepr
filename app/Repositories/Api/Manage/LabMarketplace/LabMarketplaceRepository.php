@@ -55,10 +55,10 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
         }
     }
 
-    public function getCheckUuid($uuid)
+    public function getCheckLabUuid($uuid)
     {
         try {
-            return $this->labMarketplaceService->getCheckUuid($uuid);
+            return $this->labMarketplaceService->getCheckLabUuid($uuid);
         } catch (\Exception $e) {
             return false;
         }
