@@ -84,13 +84,15 @@ class AchievementController extends AppBaseController
         }
     }
 
-    public function downloadCertificate($certificate_id)
+    public function downloadCertificate($certificate_id, Request $request)
     {
         try {
-            $downloadFile = $this->achievementRepository->downloadCertificate($certificate_id);
-            if (!$downloadFile) {
-                return $this->sendError(__('responses.failed_download_certificate'), 500);
+            $downloadFile = $this->achievementRepository->downloadCertificate($certificate_id, $request->format);
+            if ($downloadFile) {
+                return $this->sendResponse($downloadFile, __('responses.download_successfull'));
             }
+
+            return $this->sendError(__('responses.failed_download_certificate'), 500);
         } catch(Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
