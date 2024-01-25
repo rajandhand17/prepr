@@ -123,21 +123,23 @@ class AchievementService
                 $dompdf->loadHtml($html);
                 $dompdf->setPaper('legal', 'landscape');
                 $dompdf->render();
-                $pdfPath = public_path('certificate/' . $userAchievement->certificate_number . '.pdf');
+                $pdfPath = public_path('certificate/'.$userAchievement->certificate_number.'.pdf');
                 if ($format === 'image') {
                     file_put_contents($pdfPath, $dompdf->output());
                     $pdf = new Pdf($pdfPath);
                     $pdf->setOutputFormat('png');
-                    $imagePath = public_path('certificate/' . $userAchievement->certificate_number . '.png');
+                    $imagePath = public_path('certificate/'.$userAchievement->certificate_number.'.png');
                     $pdf->saveImage($imagePath);
-                    $fileName = $userAchievement->certificate_number . '.png';
+                    $fileName = $userAchievement->certificate_number.'.png';
                     $s3BackUrl = FileUploadHelper::uploadLocalStorageImageToS3(response()->download($imagePath), 'achievement');
                 } elseif ($format === 'pdf') {
                     file_put_contents($pdfPath, $dompdf->output());
                     $s3BackUrl = FileUploadHelper::uploadLocalStoragePDFToS3(response()->download($pdfPath), 'achievement');
                 }
+
                 return config('site-settings.aws_url').$s3BackUrl;
             }
+
             return false;
         } catch(Exception $e) {
             return false;
