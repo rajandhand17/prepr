@@ -25,6 +25,7 @@
         "predis/predis": "^2.0",
         "santigarcor/laratrust": "^7.2",
         "sendgrid/sendgrid": "^7",
+        "spatie/pdf-to-image": "^2.2",
         "twilio/sdk": "^6.44"
     },
     "require-dev": {
