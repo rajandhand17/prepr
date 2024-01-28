@@ -2,12 +2,14 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\FileUploadHelper;
 use App\Models\Challenge;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\UserAchievement;
 use Dompdf\Dompdf;
 use Exception;
+use Spatie\PdfToImage\Pdf;
 
 class AchievementService
 {
@@ -98,7 +100,7 @@ class AchievementService
         }
     }
 
-    public function downloadCertificate($certificate_id)
+    public function downloadCertificate($certificate_id, $format)
     {
         try {
             $userAchievement = UserAchievement::where('certificate_number', $certificate_id)->first();
@@ -121,8 +123,21 @@ class AchievementService
                 $dompdf->loadHtml($html);
                 $dompdf->setPaper('legal', 'landscape');
                 $dompdf->render();
-                $dompdf->stream($userAchievement->certificate_number.'.pdf');
-                exit;
+                $pdfPath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.pdf');
+                if ($format === 'image') {
+                    file_put_contents($pdfPath, $dompdf->output());
+                    $pdf = new Pdf($pdfPath);
+                    $pdf->setOutputFormat('png');
+                    $imagePath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.png');
+                    $pdf->saveImage($imagePath);
+                    $fileName = $userAchievement->certificate_number.'.png';
+                    $s3BackUrl = FileUploadHelper::uploadLocalStorageImageToS3(response()->download($imagePath), 'certificate');
+                } elseif ($format === 'pdf') {
+                    file_put_contents($pdfPath, $dompdf->output());
+                    $s3BackUrl = FileUploadHelper::uploadLocalStoragePDFToS3(response()->download($pdfPath), 'certificate');
+                }
+
+                return config('site-settings.aws_url').$s3BackUrl;
             }
 
             return false;
