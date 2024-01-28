@@ -827,5 +827,6 @@
     "responses.pinned_achievement": "The Achievement added in featured list!",
     "responses.unpinned_achievement": "The Achievement removed in featured list!",
     "responses.already_pinned_achievement": "The Achievement is already being pinned by you!",
-    "responses.already_unpinned_achievement": "The Achievement is already being un-pinned by you!"
+    "responses.already_unpinned_achievement": "The Achievement is already being un-pinned by you!",
+    "responses.download_successfull": "Achievement download successfull"
 }
