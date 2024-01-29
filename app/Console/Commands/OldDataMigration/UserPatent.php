@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
@@ -19,7 +20,7 @@ class UserPatent extends Command
      *
      * @var string
      */
-    protected $description = 'This command will migrate all users patent data';
+    protected $description = 'This command will migrate all users patents';
 
     /**
      * Execute the console command.
@@ -27,34 +28,35 @@ class UserPatent extends Command
     public function handle()
     {
         try {
-            $this->info('Migrating old data for users patent table.');
+            $this->info('Migrating old data for users patents table.');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('user_patents')->chunkById(1000, function ($userPatents) {
-                foreach ($userPatents as $userPatent) {
-                    $checkUsers = \App\Models\User::find($userPatent->user_id);
-                    if ($checkUsers == null) {
+            DB::connection('mysql2')->table('user_patents')->chunkById(1000, function ($userPatents, $key) {
+                foreach ($userPatents as $single_user_patents) {
+                    // Check if the user exists
+                    $checkUser = \App\Models\User::find($single_user_patents->user_id);
+                    if ($checkUser === null) {
                         continue;
                     }
-                    $userPatentExistsOrNot = \App\Models\UserCertificate::where('id', $userPatent->id)->first();
-                    if ($userPatentExistsOrNot) {
-                        $patent = $userPatentExistsOrNot;
-                    } else {
-                        $patent = new \App\Models\UserPatent();
-                    }
-                    $patent->user_id = $userPatent->user_id;
-                    $patent->title = $userPatent->title;
-                    $patent->name = $userPatent->name;
-                    $patent->patent_date = $userPatent->patent_date;
-                    $patent->description = $userPatent->description;
-                    $patent->save();
+                    // Find an existing UserPatent or create a new one
+                    $userPatent = \App\Models\UserPatent::findOrNew($single_user_patents->id);
+                    $userPatent->fill([
+                        'user_id'      => $single_user_patents->user_id,
+                        'title'        => $single_user_patents->title,
+                        'name'         => $single_user_patents->name,
+                        'patent_date'  => $single_user_patents->patent_date,
+                        'description'  => $single_user_patents->description,
+                        'created_at'   => !empty($single_user_patents->created_at) ? Carbon::createFromTimestamp($single_user_patents->created_at) : null,
+                        'updated_at'   => !empty($single_user_patents->updated_at) ? Carbon::createFromTimestamp($single_user_patents->updated_at) : null,
+                        'deleted_at'   => !empty($single_user_patents->deleted_at) ? Carbon::createFromTimestamp($single_user_patents->deleted_at) : null,
+                    ]);
+                    $userPatent->save();
                 }
             });
             DB::commit();
             $this->info('Migrating of old data for users patents table completed.');
-        } catch(\Exception $e) {
+        }catch(\Exception $e){
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

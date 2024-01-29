@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
@@ -19,7 +20,7 @@ class UserCertificate extends Command
      *
      * @var string
      */
-    protected $description = 'This command will migrate all users certificates';
+    protected $description = 'This command will migrate all users achievements';
 
     /**
      * Execute the console command.
@@ -29,33 +30,42 @@ class UserCertificate extends Command
         try {
             $this->info('Migrating old data for users certificate table.');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('user_certificates')->chunkById(1000, function ($userCertificates) {
-                foreach ($userCertificates as $userCertificate) {
-                    $checkUsers = \App\Models\User::find($userCertificate->user_id);
-                    if ($checkUsers == null) {
+            DB::connection('mysql2')->table('user_certificates')->chunkById(1000, function ($userCertificate, $key){
+                foreach ($userCertificate as $single_user_certificate) {
+                    // Check if the user exists
+                    $checkUser = \App\Models\User::find($single_user_certificate->user_id);
+                    if ($checkUser === null) {
                         continue;
                     }
-                    $userCertificateDetails = \App\Models\UserCertificate::where('id', $userCertificate->id)->first();
-                    if ($userCertificateDetails) {
-                        $certificates = $userCertificateDetails;
-                    } else {
-                        $certificates = new \App\Models\UserCertificate();
-                    }
-                    $certificates->user_id = $userCertificate->user_id;
-                    $certificates->company = $userCertificate->company;
-                    $certificates->name = $userCertificate->name;
-                    $certificates->start_date = $userCertificate->start_date;
-                    $certificates->end_date = $userCertificate->end_date;
-                    $certificates->description = $userCertificate->description;
-                    $certificates->save();
+                    // Retrieve an existing UserCertificate or create a new one
+                    $userCertificate = \App\Models\UserCertificate::firstOrNew(['id' => $single_user_certificate->id]);
+
+                    // Parse date fields with Carbon or set them to null if empty
+                    $createdAt = !empty($single_user_certificate->created_at) ? Carbon::createFromTimestamp($single_user_certificate->created_at) : null;
+                    $updateAt = !empty($single_user_certificate->updated_at) ? Carbon::createFromTimestamp($single_user_certificate->updated_at) : null;
+                    $deletedAt = !empty($single_user_certificate->deleted_at) ? Carbon::createFromTimestamp($single_user_certificate->deleted_at) : null;
+
+                    // Fill the model attributes
+                    $userCertificate->fill([
+                        'user_id'     => $single_user_certificate->user_id,
+                        'company'     => $single_user_certificate->company,
+                        'name'        => $single_user_certificate->name,
+                        'start_date'  => $single_user_certificate->start_date,
+                        'end_date'    => $single_user_certificate->end_date,
+                        'description' => $single_user_certificate->description,
+                        'created_at'  => $createdAt,
+                        'updated_at'  => $updateAt,
+                        'deleted_at'  => $deletedAt,
+                    ]);
+                    // Save the model
+                    $userCertificate->save();
                 }
             });
             DB::commit();
-            $this->info('Migrating of old data for users certificate table completed.');
-        } catch(\Exception $e) {
+            $this->info('Migrating of old data for users  certificate table completed.');
+        }catch(\Exception $e){
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }

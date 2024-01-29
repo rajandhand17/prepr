@@ -33,5 +33,8 @@ php artisan migrate-old-data:users-patent
 php artisan migrate-old-data:users-experiences
 php artisan migrate-old-data:users-education
 php artisan migrate-old-data:users-certificate
+php artisan migrate-old-data:users-address
+php artisan migrate-old-data:users-friends
+php artisan migrate-old-data:users-tags
 
 
