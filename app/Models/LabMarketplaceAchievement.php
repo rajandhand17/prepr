@@ -20,4 +20,13 @@ class LabMarketplaceAchievement extends Model
         'achievement_condition',
         'achievement_image',
     ];
+
+    protected $casts = [
+        'achievement_condition' => 'json',
+    ];
+
+    public function getAchievementImageAttribute($value)
+    {
+        return config('site-settings.aws_url') . $value;
+    }
 }
