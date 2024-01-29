@@ -10,8 +10,6 @@ use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
 use App\Services\UserService;
-use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceExternalLinkResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabMarketplaceResource extends JsonResource

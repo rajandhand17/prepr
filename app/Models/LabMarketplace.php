@@ -36,10 +36,9 @@ class LabMarketplace extends Model
         'is_verified',
     ];
 
-
     public function getMediaAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 
     public function address()
