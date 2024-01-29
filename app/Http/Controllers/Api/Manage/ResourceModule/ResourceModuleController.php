@@ -198,7 +198,7 @@ class ResourceModuleController extends AppBaseController
             if (!auth()->user()->isAbleTo('create_resource_module')) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
-            $insertData = $this->resourceModuleRepository->fileUpload($request, $checkResourceModuleSlugExistsOrNot->id, $type);
+            $insertData = $this->resourceModuleRepository->fileUpload($request, $checkResourceModuleSlugExistsOrNot->id);
             if ($insertData) {
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleSlugExistsOrNot), __('responses.file_upload_success'), 200);
             }
