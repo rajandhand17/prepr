@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\LabExternalLinks;
 use App\Models\LabMarketplaceExternalLink;
+use Exception;
 
 class LabMarketplaceExternalLinksService
 {
@@ -22,7 +23,7 @@ class LabMarketplaceExternalLinksService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -39,7 +40,7 @@ class LabMarketplaceExternalLinksService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

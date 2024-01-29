@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\LabAddress;
 use App\Models\LabMarketplaceAddress;
+use Exception;
 
 class LabMarketplaceAddressService
 {
@@ -23,7 +24,7 @@ class LabMarketplaceAddressService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -40,7 +41,7 @@ class LabMarketplaceAddressService
 
                 return true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

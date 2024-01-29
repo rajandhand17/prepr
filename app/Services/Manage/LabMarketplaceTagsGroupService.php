@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\LabMarketplaceTagsGroups;
 use App\Models\LabTagsGroups;
+use Exception;
 
 class LabMarketplaceTagsGroupService
 {
@@ -23,7 +24,7 @@ class LabMarketplaceTagsGroupService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -40,7 +41,7 @@ class LabMarketplaceTagsGroupService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

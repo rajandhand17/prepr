@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\LabMarketplaceSkillsGroupsStack;
 use App\Models\LabSkillsGroupsStack;
+use Exception;
 
 class LabMarketplaceSkillsGroupStackService
 {
@@ -22,7 +23,7 @@ class LabMarketplaceSkillsGroupStackService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -39,7 +40,7 @@ class LabMarketplaceSkillsGroupStackService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
 use App\Models\Lab;
 use App\Models\LabMarketplace;
+use Exception;
 
 class LabMarketplaceService
 {
@@ -43,7 +44,7 @@ class LabMarketplaceService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -52,7 +53,7 @@ class LabMarketplaceService
     {
         try {
             return LabMarketplace::where('uuid', $uuid)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -61,7 +62,7 @@ class LabMarketplaceService
     {
         try {
             return LabMarketplace::where('slug', $slug)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -77,7 +78,7 @@ class LabMarketplaceService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

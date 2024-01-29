@@ -8,6 +8,7 @@ use App\Models\ChallengePathTemplate;
 use App\Models\ComponentAssociation;
 use App\Models\LabMarketplaceComponentAssociations;
 use App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateRepository;
+use Exception;
 
 class LabMarketplaceComponentAssociationService
 {
@@ -63,7 +64,7 @@ class LabMarketplaceComponentAssociationService
             }
 
             return true;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
@@ -80,7 +81,7 @@ class LabMarketplaceComponentAssociationService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

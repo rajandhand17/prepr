@@ -12,6 +12,7 @@ use App\Services\Manage\LabMarketplaceTagsGroupService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
 use DB;
+use Exception;
 
 class LabMarketplaceRepository implements LabMarketplaceInterface
 {
@@ -50,7 +51,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
     {
         try {
             return $this->labService->getLabBasedOnSlug($slug);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -59,7 +60,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
     {
         try {
             return $this->labMarketplaceService->getCheckLabUuid($uuid);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -68,7 +69,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
     {
         try {
             return $this->organizationService->getOrganizationExistBasedOnUuid($uuid);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -77,7 +78,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
     {
         try {
             return $this->labMarketplaceService->getLabMarketplaceBasedOnSlug($slug);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -121,7 +122,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             DB::rollback();
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
 
             return false;
@@ -132,7 +133,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
     {
         try {
             return $this->labMarketplaceService->deleteLabMarketplace($slug, $labMarketplaceId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

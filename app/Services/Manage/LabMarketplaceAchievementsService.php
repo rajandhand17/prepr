@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\LabAcheivement;
 use App\Models\LabMarketplaceAchievement;
+use Exception;
 
 class LabMarketplaceAchievementsService
 {
@@ -22,7 +23,7 @@ class LabMarketplaceAchievementsService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -39,7 +40,7 @@ class LabMarketplaceAchievementsService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
