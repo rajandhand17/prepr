@@ -17,6 +17,7 @@ class ResourceModuleDetailService
             $resourceModuleDetailed->path = $path;
             $resourceModuleDetailed->social_link_id = $social_link_id;
             $resourceModuleDetailed->save();
+
             return $resourceModuleDetailed;
         } catch (\Exception $e) {
             return false;
@@ -44,6 +45,7 @@ class ResourceModuleDetailService
                     }
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
