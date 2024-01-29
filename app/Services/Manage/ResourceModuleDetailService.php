@@ -31,17 +31,14 @@ class ResourceModuleDetailService
                     if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
                         $file_type = config('constants.file_type.image');
                         $uploaded_file_path = FileUploadHelper::uploadImageToS3($file_upload, 'resource_module');
-                    } elseif (false !== mb_strpos($file_upload->getMimeType(), 'video')) {
-                        $file_type = config('constants.file_type.video');
-                        $uploaded_file_path = FileUploadHelper::uploadVideoToS3($file_upload, 'resource_module');
                     } else {
-                        $file_type = config('constants.file_type.docs');
-                        $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'resource_module');
+                        $file_type=(mb_strpos($file_upload->getMimeType(), 'video')!==false)?config('constants.file_type.video'):config('constants.file_type.document');
+                        $uploaded_file_path = FileUploadHelper::UploadVideoDocToS3($file_upload, 'resource_module');
                     }
                     if ($uploaded_file_path == false) {
                         return false;
                     }
-                    $storeData = self::insertRecords($resource_module_id, $uploaded_file_path, $file_type, $file_upload, null);
+                    $storeData = self::insertRecords($resource_module_id, $uploaded_file_path, $file_type, $uploaded_file_path, null);
                     if (!$storeData) {
                         return false;
                     }
