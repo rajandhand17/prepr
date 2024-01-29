@@ -27,6 +27,6 @@ class LabMarketplaceAchievement extends Model
 
     public function getAchievementImageAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 }
