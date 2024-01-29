@@ -202,6 +202,7 @@ class ResourceModuleController extends AppBaseController
             if ($insertData) {
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleSlugExistsOrNot), __('responses.file_upload_success'), 200);
             }
+
             return $this->sendError(__('responses.file_upload_failed'), 500);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

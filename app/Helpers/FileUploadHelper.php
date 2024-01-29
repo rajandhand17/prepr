@@ -99,6 +99,7 @@ class FileUploadHelper
             return false;
         }
     }
+
     public static function uploadDocToS3($request, $type)
     {
         try {
@@ -110,5 +111,4 @@ class FileUploadHelper
             return false;
         }
     }
-
 }
