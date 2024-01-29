@@ -17,6 +17,7 @@ class ResourceModuleDetailService
             $resourceModuleDetailed->path = $path;
             $resourceModuleDetailed->social_link_id = $social_link_id;
             $resourceModuleDetailed->save();
+
             return $resourceModuleDetailed;
         } catch (\Exception $e) {
             return false;
@@ -32,14 +33,14 @@ class ResourceModuleDetailService
                         $file_type = config('constants.file_type.image');
                         $uploaded_file_path = FileUploadHelper::uploadImageToS3($file_upload, 'resource_file');
                     } else {
-                        $file_type=(mb_strpos($file_upload->getMimeType(), 'video')!==false)?config('constants.file_type.video'):config('constants.file_type.document');
+                        $file_type = (mb_strpos($file_upload->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
                         $uploaded_file_path = FileUploadHelper::UploadVideoDocToS3($file_upload, 'resource_file');
                     }
 
                     if ($uploaded_file_path == false) {
                         return false;
                     }
-                    $storeData = self::insertRecords($resource_module_id,$file_upload->getClientOriginalName(), $file_type, $uploaded_file_path, null);
+                    $storeData = self::insertRecords($resource_module_id, $file_upload->getClientOriginalName(), $file_type, $uploaded_file_path, null);
                     if (!$storeData) {
                         return false;
                     }
