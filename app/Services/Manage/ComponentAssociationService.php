@@ -698,6 +698,7 @@ class ComponentAssociationService
             }
             if ($request->has('resource_collection_ids') && count($request->resource_collection_ids) > 0) {
                 $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnUUIDArray($request->resource_collection_ids);
+
                 $request->merge(['resource_collection_ids' => $getResourceCollection]);
                 if (count($request->resource_collection_ids) > 0) {
                     $existComponentAssociation = ComponentAssociation::where([
@@ -706,7 +707,7 @@ class ComponentAssociationService
                     ])->pluck('resource_collection_id')->all();
                     $nonExistingIds = array_diff($existComponentAssociation, $request->resource_collection_ids);
                     $deleteNonExistingComponentAssociation = ComponentAssociation::where('resource_group_id', $resourceGroupId)->whereIn('resource_collection_id', $nonExistingIds)->delete();
-                    $newComponentAssociation = array_diff($request->resource_ids, $existComponentAssociation);
+                    $newComponentAssociation = array_diff($request->resource_collection_ids, $existComponentAssociation);
                     $sequence = ComponentAssociation::where([
                         ['resource_group_id', '=', $resourceGroupId],
                         ['resource_collection_id', '!=', null],

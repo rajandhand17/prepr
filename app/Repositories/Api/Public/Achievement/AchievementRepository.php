@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Public\Achievement;
 
 use App\Services\Public\AchievementService;
+use Exception;
 
 class AchievementRepository implements AchievementInterface
 {
@@ -17,25 +18,61 @@ class AchievementRepository implements AchievementInterface
     {
         try {
             return $this->achievementService->getList($request);
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
 
-    public function getAchievementBasedOnCertificateNumber($certificateNumber)
+    public function getAchievementBasedOnCertificateNumber($certificate_id)
     {
         try {
-            return $this->achievementService->getAchievementBasedOnCertificateNumber($certificateNumber);
-        } catch(\Exception $e) {
+            return $this->achievementService->getAchievementBasedOnCertificateNumber($certificate_id);
+        } catch(Exception $e) {
             return false;
         }
     }
 
-    public function downloadCertificate($certificate_number, $type)
+    public function downloadCertificate($certificate_id, $format)
     {
         try {
-            return $this->achievementService->downloadCertificate($certificate_number, $type);
-        } catch(\Exception $e) {
+            return $this->achievementService->downloadCertificate($certificate_id, $format);
+        } catch(Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAchievementList($userId, $request)
+    {
+        try {
+            return $this->achievementService->getAchievementList($userId, $request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getColumnValue($request)
+    {
+        try {
+            return $this->achievementService->getColumnValue($request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkachievementActivity($certificate_id, $action)
+    {
+        try {
+            return $this->achievementService->checkachievementActivity($certificate_id, $action);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function achievementActivity($certificate_id, $action)
+    {
+        try {
+            return $this->achievementService->achievementActivity($certificate_id, $action);
+        } catch (Exception $e) {
             return false;
         }
     }
