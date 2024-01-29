@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabMarketPlace\LabMarketplaceRequest;
 use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
 use App\Repositories\Api\Manage\LabMarketplace\LabMarketplaceRepository;
+use Exception;
 
 class LabMarketplaceController extends AppBaseController
 {
@@ -21,7 +22,7 @@ class LabMarketplaceController extends AppBaseController
         try {
             $checkLabExistsOrNot = $this->labMarketplaceRepository->getLabBasedOnSlug($slug);
             if (!$checkLabExistsOrNot) {
-                return $this->sendError(__('responses.lab_slug_not_found'), 404);
+                return $this->sendError(__('responses.lab_not_found'), 404);
             }
             $checkLabMarketplace = $this->labMarketplaceRepository->getCheckLabUuid($checkLabExistsOrNot->uuid);
             if ($checkLabMarketplace) {
@@ -29,15 +30,15 @@ class LabMarketplaceController extends AppBaseController
             }
             $getOrganizationId = $this->labMarketplaceRepository->getOrganizationIdBasedOnUuid($request->organization_id);
             if (!$getOrganizationId) {
-                return $this->sendError(__('responses.lab_slug_not_found'), 404);
+                return $this->sendError(__('responses.organization_not_exists'), 404);
             }
             $labMarketplace = $this->labMarketplaceRepository->createLabMarketplace($slug, $checkLabExistsOrNot->id, $getOrganizationId->id);
             if ($labMarketplace) {
-                return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.template_lab_stored_success'), 200);
+                return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.lab_marketplace_stored_success'), 200);
             }
 
-            return $this->sendError(__('responses.template_lab_stored_failed'), 400);
-        } catch(\Exception $e) {
+            return $this->sendError(__('responses.lab_marketplace_stored_failed'), 400);
+        } catch(Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -47,11 +48,11 @@ class LabMarketplaceController extends AppBaseController
         try {
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketplaceBasedOnSlug($slug);
             if ($labMarketplace) {
-                return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.found_lab_program_view'));
+                return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.lab_marketplace_found'));
             }
 
-            return $this->sendError(__('responses.not_found_lab_program_view'), 404);
-        } catch(\Exception $e) {
+            return $this->sendError(__('responses.lab_marketplace_not_found'), 404);
+        } catch(Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -69,7 +70,7 @@ class LabMarketplaceController extends AppBaseController
             }
 
             return $this->sendError(__('responses.lab_marketplace_deleted_failed'), 402);
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

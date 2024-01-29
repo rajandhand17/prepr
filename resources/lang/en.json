@@ -236,9 +236,9 @@
     "responses.subject_line_max":"The subject line have Maximum character limit is 250.",
     "responses.email_body_max":"The email body have Maximum character limit is 2000.",
     "responses.lab_stored_success":"Congratulations! You have successfully created a Lab.",
-    "responses.template_lab_stored_success":"Congratulations! You have successfully created a Lab Template.",
+    "responses.lab_marketplace_stored_success":"You have successfully added a Lab in Marketplace.",
     "responses.lab_stored_failed":"Oops! The Creation Lab has failed.",
-    "responses.template_lab_stored_failed":"Oops! The Creation of Lab Template has failed.",
+    "responses.lab_marketplace_stored_failed":"Oops! Something went wrong while adding the Lab in Marketplace.",
     "responses.lab_update_successfully":"The Lab has been updated successfully",
     "responses.lab_not_update":"There were some issues being encountered while updating the lab!",
     "responses.lab_not_found": "The Lab(s) which you are looking doesn't exist in our system.",
@@ -831,8 +831,10 @@
     "responses.download_successfull": "Achievement download successfull",
     "responses.organization_id": "The Organization id field is required",
     "responses.organization_exists": "This Organization id is not exists",
-    "responses.already_cloned": "This already cloned Lab Marketplace",
+    "responses.already_cloned": "This Lab already cloned in Lab Marketplace",
     "responses.lab_marketplace_not_exists": "This Lab Marketplace is not available",
     "responses.lab_marketplace_deleted_successfully": "This Lab Marketplace has been deleted successfully",
-    "responses.lab_marketplace_deleted_failed": "Oops!,This Lab Marketplace has been failed to deleted"
+    "responses.lab_marketplace_deleted_failed": "Oops!,This Lab Marketplace has been failed to deleted",
+    "responses.lab_marketplace_found": "The Lab has been successfully retrieved.",
+    "responses.lab_marketplace_not_found": "The Lab(s) which you are looking from Marketplace doesn't exist in our system."
 }
