@@ -92,7 +92,7 @@ class FileUploadHelper
     {
         try {
             $pathsarray = config('s3-upload-path');
-            $videoData = $request->store($pathsarray[$type].time(), 's3');
+            $videoData = $request->store($pathsarray[$type], 's3');
             return $videoData;
         } catch (\Exception $e) {
             return false;
