@@ -35,7 +35,6 @@ class LabMarketplaceController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_lab_marketplace_list'), 400);
-            
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

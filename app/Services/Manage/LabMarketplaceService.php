@@ -26,7 +26,7 @@ class LabMarketplaceService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_marketplace_list = $lab_marketplace_list->where('labs.title', 'like', '%' . $request->search . '%');
+                $lab_marketplace_list = $lab_marketplace_list->where('labs.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
