@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\ChallengeAssessment;
-use App\Models\TemplateChallengeAssessment;
 use App\Services\UserService;
 use Exception;
 
@@ -202,25 +201,6 @@ class ChallengeAssessmentService
                     $cloneAssessment->save();
                 }
             });
-
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public function createTemplateChallengeAssessment($challengeId, $templateChallengeId)
-    {
-        try {
-            $originalChallengeAssessment = ChallengeAssessment::where('challenge_id', $challengeId)->get();
-            foreach ($originalChallengeAssessment as $challengeAssessment) {
-                $templateChallengeAssessment = new TemplateChallengeAssessment();
-                $templateChallengeAssessment->template_challenge_id = $templateChallengeId;
-                $templateChallengeAssessment->title = $challengeAssessment->title;
-                $templateChallengeAssessment->score = $challengeAssessment->score;
-                $templateChallengeAssessment->weight = $challengeAssessment->weight;
-                $templateChallengeAssessment->save();
-            }
 
             return true;
         } catch (Exception $e) {

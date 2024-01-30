@@ -4,22 +4,23 @@ namespace App\Services\Manage;
 
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTemplateSponsor;
+use Exception;
 
 class ChallengeTemplateSponsorService
 {
-    public function createChallengeTemplateSponsor($challengeId, $templateChallengeId)
+    public function addChallengeTemplateSponsor($challengeId, $templateChallengeId)
     {
         try {
             $getChallengeSponsor = ChallengeSponsor::where('challenge_id', $challengeId)->get();
             foreach ($getChallengeSponsor as $getSponsor) {
                 $createChallengeSponsor = new ChallengeTemplateSponsor();
-                $createChallengeSponsor->template_challenge_id = $templateChallengeId;
+                $createChallengeSponsor->challenge_template_id = $templateChallengeId;
                 $createChallengeSponsor->host_id = $getSponsor->host_id;
                 $createChallengeSponsor->save();
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

@@ -11,7 +11,7 @@ class ChallengePathTemplate extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_challenge_paths';
+    protected $table = 'challenge_path_templates';
 
     protected $fillable = [
         'uuid',

@@ -3,22 +3,22 @@
 namespace App\Services\Manage;
 
 use App\Models\ChallengeAssessmentCriteria;
-use App\Models\TemplateChallengeAssessmentCriterias;
+use App\Models\ChallengeTemplateAssessmentCriterias;
 use Exception;
 
 class ChallengeTemplateAssessmentCriteriaService
 {
-    public function createChallengeTemplateAssessmentCriteria($challengeId, $templateChallengeId)
+    public function addChallengeTemplateAssessmentCriteria($challengeId, $templateChallengeId)
     {
         try {
             $challengeAssessmentCriteria = ChallengeAssessmentCriteria::where('challenge_id', $challengeId)->get();
             foreach ($challengeAssessmentCriteria as $challengeAssessmentCriterion) {
-                $templateChallengeAssessmentCriteria = new TemplateChallengeAssessmentCriterias();
-                $templateChallengeAssessmentCriteria->template_challenge_id = $templateChallengeId;
-                $templateChallengeAssessmentCriteria->title = $challengeAssessmentCriterion->title;
-                $templateChallengeAssessmentCriteria->score = $challengeAssessmentCriterion->score;
-                $templateChallengeAssessmentCriteria->weight = $challengeAssessmentCriterion->weight;
-                $templateChallengeAssessmentCriteria->save();
+                $challengeTemplateAssessmentCriteria = new ChallengeTemplateAssessmentCriterias();
+                $challengeTemplateAssessmentCriteria->challenge_template_id = $templateChallengeId;
+                $challengeTemplateAssessmentCriteria->title = $challengeAssessmentCriterion->title;
+                $challengeTemplateAssessmentCriteria->score = $challengeAssessmentCriterion->score;
+                $challengeTemplateAssessmentCriteria->weight = $challengeAssessmentCriterion->weight;
+                $challengeTemplateAssessmentCriteria->save();
             }
 
             return true;

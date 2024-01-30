@@ -6,19 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class LabTemplateAddress extends Model
+class ChallengeTemplateAssessmentCriterias extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_lab_address';
-
+    protected $table = 'challenge_template_assessment_criterias';
     protected $fillable = [
-        'template_lab_id',
-        'latitude',
-        'longitude',
-        'address',
-        'city',
-        'country',
+        'challenge_template_id',
+        'title',
+        'score',
+        'weight',
     ];
 }

@@ -10,7 +10,7 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenges', function (Blueprint $table) {
+        Schema::create('challenge_templates', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
             $table->string('language')->default('en');
@@ -45,6 +45,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenges');
+        Schema::dropIfExists('challenge_templates');
     }
 };

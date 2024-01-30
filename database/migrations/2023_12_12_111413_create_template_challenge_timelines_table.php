@@ -10,9 +10,9 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_timelines', function (Blueprint $table) {
+        Schema::create('challenge_template_timelines', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('template_challenge_id');
+            $table->unsignedBigInteger('challenge_template_id');
             $table->enum('timeline_type', ['0', '1'])->comment('0 -> flexible, 1 -> restricted');
             $table->string('open_call_date', 255)->nullable()->comment('Date of restricted challenge, start challenge');
             $table->longText('open_call_date_description')->nullable();
@@ -27,7 +27,7 @@ return new class() extends Migration {
             $table->enum('flexible_date_duration', ['days', 'weeks', 'months'])->comment('Number of days, week or month, from start to end')->default('days')->nullable();
             $table->enum('automatic_alert', ['0', '1'])->comment('0 -> Day before submission deadline reminder, 1 -> Week before submission deadline reminder')->default('0');
             $table->string('flexible_expire_deadline', 255)->nullable()->comment('Date of flexible challenge expiration if any');
-            $table->foreign('template_challenge_id')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('challenge_template_id')->references('id')->on('challenge_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -38,6 +38,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_timelines');
+        Schema::dropIfExists('challenge_template_timelines');
     }
 };

@@ -10,15 +10,15 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_assessments', function (Blueprint $table) {
+        Schema::create('challenge_template_assessments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('template_challenge_id');
+            $table->unsignedBigInteger('challenge_template_id');
             $table->enum('assessment_type', ['0', '1', '2'])->comment('0->none assessment, 1->open assessment,2->closed assessment');
             $table->enum('visibility', ['0', '1', '2'])->comment('0->visible to non, 1->visible to users,2->hidden visibility');
             $table->string('members_email')->nullable()->comment('for closed assessment type email is mandatory else it can be nullable');
             $table->text('guidelines')->nullable()->comment('Guidelines for assessment');
             $table->text('attachments')->nullable()->comment('Attachments if available for assessment');
-            $table->foreign('template_challenge_id')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('challenge_template_id')->references('id')->on('challenge_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +29,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_assessments');
+        Schema::dropIfExists('challenge_template_assessments');
     }
 };

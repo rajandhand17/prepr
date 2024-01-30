@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class LabTemplateTagsGroups extends Model
+class ChallengePathTemplateTagsGroups extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
 
-    protected $table = 'template_lab_tags_groups';
-
+    protected $table = 'challenge_path_template_tags_groups';
     protected $fillable = [
-        'template_lab_id',
+        'challenge_path_template_id',
         'foreign_id',
         'type',
     ];

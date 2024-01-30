@@ -2,35 +2,35 @@
 
 namespace App\Services\Manage;
 
+use App\Models\ChallengeTemplateTimeLine;
 use App\Models\ChallengeTimelines;
-use App\Models\TemplateChallengeTimeLine;
 use Exception;
 
 class ChallengeTemplateTimelinesService
 {
-    public function createChallengeTemplateTimelines($challengeId, $templateChallengeId)
+    public function addChallengeTemplateTimelines($challengeId, $templateChallengeId)
     {
         try {
             $challengeTimelines = ChallengeTimelines::where('challenge_id', $challengeId)->get();
             if ($challengeTimelines) {
                 foreach ($challengeTimelines as $challengeTimeline) {
-                    $templateChallengeTimeline = new TemplateChallengeTimeLine();
-                    $templateChallengeTimeline->Template_challenge_id = $templateChallengeId;
-                    $templateChallengeTimeline->timeline_type = $challengeTimeline->timeline_type;
-                    $templateChallengeTimeline->open_call_date = $challengeTimeline->open_call_date;
-                    $templateChallengeTimeline->open_call_date_description = $challengeTimeline->open_call_date_description;
-                    $templateChallengeTimeline->last_call_date = $challengeTimeline->last_call_date;
-                    $templateChallengeTimeline->last_call_date_description = $challengeTimeline->last_call_date_description;
-                    $templateChallengeTimeline->application_deadline_date = $challengeTimeline->application_deadline_date;
-                    $templateChallengeTimeline->application_deadline_date_description = $challengeTimeline->application_deadline_date_description;
-                    $templateChallengeTimeline->submission_deadline_date = $challengeTimeline->submission_deadline_date;
-                    $templateChallengeTimeline->submission_deadline_date_description = $challengeTimeline->submission_deadline_date_description;
-                    $templateChallengeTimeline->challenge_duration = $challengeTimeline->challenge_duration;
-                    $templateChallengeTimeline->flexible_date_number = $challengeTimeline->flexible_date_number;
-                    $templateChallengeTimeline->flexible_date_duration = $challengeTimeline->flexible_date_duration;
-                    $templateChallengeTimeline->automatic_alert = $challengeTimeline->automatic_alert;
-                    $templateChallengeTimeline->flexible_expire_deadline = $challengeTimeline->flexible_expire_deadline;
-                    $templateChallengeTimeline->save();
+                    $challengeTemplateTimeline = new ChallengeTemplateTimeLine();
+                    $challengeTemplateTimeline->challenge_template_id = $templateChallengeId;
+                    $challengeTemplateTimeline->timeline_type = $challengeTimeline->timeline_type;
+                    $challengeTemplateTimeline->open_call_date = $challengeTimeline->open_call_date;
+                    $challengeTemplateTimeline->open_call_date_description = $challengeTimeline->open_call_date_description;
+                    $challengeTemplateTimeline->last_call_date = $challengeTimeline->last_call_date;
+                    $challengeTemplateTimeline->last_call_date_description = $challengeTimeline->last_call_date_description;
+                    $challengeTemplateTimeline->application_deadline_date = $challengeTimeline->application_deadline_date;
+                    $challengeTemplateTimeline->application_deadline_date_description = $challengeTimeline->application_deadline_date_description;
+                    $challengeTemplateTimeline->submission_deadline_date = $challengeTimeline->submission_deadline_date;
+                    $challengeTemplateTimeline->submission_deadline_date_description = $challengeTimeline->submission_deadline_date_description;
+                    $challengeTemplateTimeline->challenge_duration = $challengeTimeline->challenge_duration;
+                    $challengeTemplateTimeline->flexible_date_number = $challengeTimeline->flexible_date_number;
+                    $challengeTemplateTimeline->flexible_date_duration = $challengeTimeline->flexible_date_duration;
+                    $challengeTemplateTimeline->automatic_alert = $challengeTimeline->automatic_alert;
+                    $challengeTemplateTimeline->flexible_expire_deadline = $challengeTimeline->flexible_expire_deadline;
+                    $challengeTemplateTimeline->save();
                 }
             }
 

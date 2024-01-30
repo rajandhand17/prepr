@@ -10,15 +10,15 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_assessment_criterias', function (Blueprint $table) {
+        Schema::create('challenge_template_assessment_criterias', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('template_challenge_id');
+            $table->unsignedBigInteger('challenge_template_id');
             $table->string('title');
             $table->integer('score');
             $table->integer('weight');
-            $table->foreign('template_challenge_id', 'fk_template_challenge_criterias')
+            $table->foreign('challenge_template_id', 'fk_challenge_template_assessment_criterias')
                 ->references('id')
-                ->on('template_challenges')
+                ->on('challenge_templates')
                 ->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
@@ -30,6 +30,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_assessment_criterias');
+        Schema::dropIfExists('challenge_template_assessment_criterias');
     }
 };

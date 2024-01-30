@@ -6,17 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class LabTemplateExternalLink extends Model
+class ChallengePathTemplateSkillsGroupsStack extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_lab_external_links';
-
+    protected $table = 'challenge_path_template_skills_groups_stacks';
     protected $fillable = [
-        'template_lab_id',
-        'social_media_link',
-        'social_link_id',
-
+        'challenge_path_template_id',
+        'foreign_id',
+        'type',
     ];
 }

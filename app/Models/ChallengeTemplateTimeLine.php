@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TemplateChallengeTimeLine extends Model
+class ChallengeTemplateTimeLine extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_challenge_timelines';
+    protected $table = 'challenge_template_timelines';
 
     protected $fillable = [
-        'template_challenge_id',
+        'challenge_template_id',
         'timeline_type',
         'open_call_date',
         'open_call_date_description',

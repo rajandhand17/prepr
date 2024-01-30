@@ -10,7 +10,7 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_tasks', function (Blueprint $table) {
+        Schema::create('challenge_template_tasks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('template_id');
             $table->longText('title')->comment('English pitch question');
@@ -26,6 +26,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_tasks');
+        Schema::dropIfExists('challenge_template_tasks');
     }
 };

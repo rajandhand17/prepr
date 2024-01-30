@@ -3,20 +3,20 @@
 namespace App\Services\Manage;
 
 use App\Models\ChallengeProjectTemplate;
-use App\Models\TemplateChallengeProjectTemplate;
+use App\Models\ChallengeTemplateProjectTemplate;
 use Exception;
 
 class ChallengeTemplateProjectTemplateService
 {
-    public function createChallengeTemplateProjectTemplate($challengeId, $templateChallengeId)
+    public function addChallengeTemplateProjectTemplate($challengeId, $templateChallengeId)
     {
         try {
             $getChallengeProjectTemplate = ChallengeProjectTemplate::where('challenge_id', $challengeId)->get();
             foreach ($getChallengeProjectTemplate as $challengeProjectTemplate) {
-                $templateChallengeProjectTemplate = new TemplateChallengeProjectTemplate();
-                $templateChallengeProjectTemplate->template_challenge_id = $templateChallengeId;
-                $templateChallengeProjectTemplate->template_id = $challengeProjectTemplate->template_id;
-                $templateChallengeProjectTemplate->save();
+                $challengeTemplateProjectTemplate = new ChallengeTemplateProjectTemplate();
+                $challengeTemplateProjectTemplate->challenge_template_id = $templateChallengeId;
+                $challengeTemplateProjectTemplate->template_id = $challengeProjectTemplate->template_id;
+                $challengeTemplateProjectTemplate->save();
             }
 
             return true;
