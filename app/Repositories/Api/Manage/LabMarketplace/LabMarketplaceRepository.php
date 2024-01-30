@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\LabMarketplace;
 
+use App\Models\LabChallengeRedeem;
 use App\Services\Manage\LabMarketplaceAchievementsService;
 use App\Services\Manage\LabMarketplaceAddressService;
 use App\Services\Manage\LabMarketplaceComponentAssociationService;
@@ -124,6 +125,8 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                 $addLabMarketplace['addLabMarketplaceAchievement'] &&
                 $addLabMarketplace['addLabMarketplaceAssociations'] &&
                 $addLabMarketplace['updateLab']) {
+                    
+                self::addLabRedeemData($labId, $addLabMarketplace['labMarketplace']->organization_id, $addLabMarketplace['labMarketplace']->id);
                 DB::commit();
 
                 return $addLabMarketplace['labMarketplace'];
@@ -142,6 +145,26 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
     {
         try {
             return $this->labMarketplaceService->deleteLabMarketplace($slug, $labMarketplaceId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function addLabRedeemData($labId, $organizationId, $labMarketplaceId)
+    {
+        try {
+
+            $labRedeem = new LabChallengeRedeem();
+            $labRedeem->user_id = auth()->user()->id;
+            $labRedeem->organization_id = $organizationId;
+            $labRedeem->lab_id = $labId;
+            $labRedeem->lab_marketplace_id = $labMarketplaceId;
+            $labRedeem->challenge_id = null;
+            $labRedeem->challenge_template_id = null;
+            $labRedeem->is_redeemed = '0';
+            $labRedeem->save();
+
+            return true;
         } catch (Exception $e) {
             return false;
         }

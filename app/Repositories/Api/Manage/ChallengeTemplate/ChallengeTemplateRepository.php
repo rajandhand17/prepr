@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ChallengeTemplate;
 
+use App\Models\LabChallengeRedeem;
 use App\Services\Manage\ChallengeTemplateAchievementService;
 use App\Services\Manage\ChallengeTemplateAssessmentCriteriaService;
 use App\Services\Manage\ChallengeTemplateAssessmentService;
@@ -115,6 +116,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeToTemplate['addChallengeTemplateCustomTimelines'] &&
                 $addChallengeToTemplate['addChallengeTemplateExternalLink']
             ) {
+                self::addChallengeRedeemData($challengeId, $addChallengeToTemplate['addChallengeTemplate']->organization_id, $addChallengeToTemplate['addChallengeTemplate']->id);
                 DB::commit();
 
                 return $addChallengeToTemplate['addChallengeTemplate'];
@@ -132,6 +134,26 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
     {
         try {
             return $this->challengeTemplateService->getChallengeTemplateBasedOnSlug($slug);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function addChallengeRedeemData($challengeId, $organizationId, $challengeTemplateId)
+    {
+        try {
+
+            $labRedeem = new LabChallengeRedeem();
+            $labRedeem->user_id = auth()->user()->id;
+            $labRedeem->organization_id = $organizationId;
+            $labRedeem->lab_id = null;
+            $labRedeem->lab_marketplace_id = null;
+            $labRedeem->challenge_id = $challengeId;
+            $labRedeem->challenge_template_id = $challengeTemplateId;
+            $labRedeem->is_redeemed = '0';
+            $labRedeem->save();
+
+            return true;
         } catch (Exception $e) {
             return false;
         }
