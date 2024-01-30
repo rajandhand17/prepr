@@ -8,7 +8,7 @@ use Exception;
 
 class LabMarketplaceSkillsGroupStackService
 {
-    public function createLabMarketplaceSkillsGroupsStack($labMarketplaceId, $labId)
+    public function addLabMarketplaceSkillsGroupsStack($labMarketplaceId, $labId)
     {
         try {
             $exisingLabSkillsGroupsStack = LabSkillsGroupsStack::where('lab_id', $labId)->get();

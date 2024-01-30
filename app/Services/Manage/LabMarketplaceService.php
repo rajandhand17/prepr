@@ -9,7 +9,7 @@ use Exception;
 
 class LabMarketplaceService
 {
-    public static function createLabMarketplace($slug, $organizationId)
+    public static function addLabToMarketplace($slug)
     {
         try {
             $existsLabs = Lab::where('slug', $slug)->first();
@@ -19,7 +19,7 @@ class LabMarketplaceService
                 $labTemplate->uuid = $existsLabs->uuid;
                 $labTemplate->language = $existsLabs->language;
                 $labTemplate->user_id = auth()->user()->id;
-                $labTemplate->organization_id = $organizationId;
+                $labTemplate->organization_id = $existsLabs->organization_id;
                 $labTemplate->category_id = $existsLabs->category_id;
                 $labTemplate->duration_id = $existsLabs->duration_id;
                 $labTemplate->level_id = $existsLabs->level_id;

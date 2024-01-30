@@ -8,7 +8,7 @@ use Exception;
 
 class LabMarketplaceTagsGroupService
 {
-    public function createLabMarketplaceTagsGroupsStack($labTemplateId, $labId)
+    public function addLabMarketplaceTagsGroupsStack($labTemplateId, $labId)
     {
         try {
             $existingLabTagsGroupsStack = LabTagsGroups::where('lab_id', $labId)->get();

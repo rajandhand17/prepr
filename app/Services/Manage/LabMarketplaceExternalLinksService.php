@@ -8,7 +8,7 @@ use Exception;
 
 class LabMarketplaceExternalLinksService
 {
-    public function createLabMarketplaceExternalLinks($labMarketplaceId, $labId)
+    public function addLabMarketplaceExternalLinks($labMarketplaceId, $labId)
     {
         try {
             $existsLabExternalLink = LabExternalLinks::where('lab_id', $labId)->get();
@@ -16,7 +16,7 @@ class LabMarketplaceExternalLinksService
                 foreach ($existsLabExternalLink as $externalLinks) {
                     $labMarketplaceExternalLink = new LabMarketplaceExternalLink();
                     $labMarketplaceExternalLink->lab_marketplace_id = $labMarketplaceId;
-                    $labMarketplaceExternalLink->social_media_link = $externalLinks->external_links;
+                    $labMarketplaceExternalLink->social_media_link = $externalLinks->social_media_link;
                     $labMarketplaceExternalLink->social_link_id = $externalLinks->social_link_id;
                     $labMarketplaceExternalLink->save();
                 }

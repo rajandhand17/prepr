@@ -8,7 +8,7 @@ use Exception;
 
 class LabMarketplaceAchievementsService
 {
-    public function createLabMarketplaceAchievements($labMarketplaceId, $labId)
+    public function addLabMarketplaceAchievements($labMarketplaceId, $labId)
     {
         try {
             $existingLabAchievements = LabAcheivement::where('lab_id', $labId)->first();

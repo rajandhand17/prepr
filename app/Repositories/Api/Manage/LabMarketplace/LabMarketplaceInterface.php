@@ -12,7 +12,7 @@ interface LabMarketplaceInterface
 
     public function getLabMarketplaceBasedOnSlug($slug);
 
-    public function createLabMarketplace($slug, $labId, $organizationId);
+    public function addLabToMarketplace($slug, $labId);
 
     public function deleteLabMarketplace($slug, $labMarketplaceId);
 }

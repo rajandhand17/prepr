@@ -8,7 +8,7 @@ use Exception;
 
 class LabMarketplaceAddressService
 {
-    public static function createLabMarketplaceAddress($labMarketplace, $labId)
+    public static function addLabMarketplaceAddress($labMarketplace, $labId)
     {
         try {
             $labTemplate = LabAddress::where('lab_id', $labId)->get();

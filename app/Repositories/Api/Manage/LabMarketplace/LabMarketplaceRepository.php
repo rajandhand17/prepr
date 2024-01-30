@@ -83,41 +83,41 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
         }
     }
 
-    public function createLabMarketplace($slug, $labId, $organizationId)
+    public function addLabToMarketplace($slug, $labId)
     {
         try {
-            $createLabMarketplace = DB::transaction(function () use ($slug, $labId, $organizationId) {
-                $createLabMarketplace = $this->labMarketplaceService->createLabMarketplace($slug, $organizationId);
-                $createLabMarketplaceAddress = $this->labMarketplaceAddressService->createLabMarketplaceAddress($createLabMarketplace->id, $labId);
-                $createdLabMarketplaceSkillAssociations = $this->labMarketplaceSkillsGroupStackService->createLabMarketplaceSkillsGroupsStack($createLabMarketplace->id, $labId);
-                $createdLabMarketplaceTagAssociations = $this->labMarketplaceTagsGroupsService->createLabMarketplaceTagsGroupsStack($createLabMarketplace->id, $labId);
-                $createdLabMarketplaceExternalLinks = $this->labMarketplaceExternalLinksService->createLabMarketplaceExternalLinks($createLabMarketplace->id, $labId);
-                $createdLabMarketplaceAchievement = $this->labMarketplaceAchievementsService->createLabMarketplaceAchievements($createLabMarketplace->id, $labId);
-                $createdLabMarketplaceAssociations = $this->labMarketplaceComponentAssociationService->createMarketplaceComponentAssociation($createLabMarketplace->id, $labId);
+            $addLabMarketplace = DB::transaction(function () use ($slug, $labId) {
+                $addLabToMarketplace = $this->labMarketplaceService->addLabToMarketplace($slug);
+                $addLabMarketplaceAddress = $this->labMarketplaceAddressService->addLabMarketplaceAddress($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceSkillAssociations = $this->labMarketplaceSkillsGroupStackService->addLabMarketplaceSkillsGroupsStack($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceTagAssociations = $this->labMarketplaceTagsGroupsService->addLabMarketplaceTagsGroupsStack($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceExternalLinks = $this->labMarketplaceExternalLinksService->addLabMarketplaceExternalLinks($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceAchievement = $this->labMarketplaceAchievementsService->addLabMarketplaceAchievements($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceAssociations = $this->labMarketplaceComponentAssociationService->addLabMarketplaceComponentAssociation($addLabToMarketplace->id, $labId);
                 $updateLab = $this->labService->updatePreBuilt($labId, '1');
 
                 return[
-                    'labMarketplace'                        => $createLabMarketplace,
-                    'createLabMarketplaceAddress'           => $createLabMarketplaceAddress,
-                    'createdLabMarketplaceSkillAssociations'=> $createdLabMarketplaceSkillAssociations,
-                    'createdLabMarketplaceTagAssociations'  => $createdLabMarketplaceTagAssociations,
-                    'createdLabMarketplaceExternalLinks'    => $createdLabMarketplaceExternalLinks,
-                    'createdLabMarketplaceAchievement'      => $createdLabMarketplaceAchievement,
-                    'createdLabMarketplaceAssociations'     => $createdLabMarketplaceAssociations,
-                    'updateLab'                             => $updateLab,
+                    'labMarketplace'                            => $addLabToMarketplace,
+                    'addLabMarketplaceAddress'              => $addLabMarketplaceAddress,
+                    'addLabMarketplaceSkillAssociations'    => $addLabMarketplaceSkillAssociations,
+                    'addLabMarketplaceTagAssociations'      => $addLabMarketplaceTagAssociations,
+                    'addLabMarketplaceExternalLinks'        => $addLabMarketplaceExternalLinks,
+                    'addLabMarketplaceAchievement'          => $addLabMarketplaceAchievement,
+                    'addLabMarketplaceAssociations'         => $addLabMarketplaceAssociations,
+                    'updateLab'                                 => $updateLab,
                 ];
             });
-            if ($createLabMarketplace['labMarketplace'] &&
-                $createLabMarketplace['createLabMarketplaceAddress'] &&
-                $createLabMarketplace['createdLabMarketplaceSkillAssociations'] &&
-                $createLabMarketplace['createdLabMarketplaceTagAssociations'] &&
-                $createLabMarketplace['createdLabMarketplaceExternalLinks'] &&
-                $createLabMarketplace['createdLabMarketplaceAchievement'] &&
-                $createLabMarketplace['createdLabMarketplaceAssociations'] &&
-                $createLabMarketplace['updateLab']) {
+            if ($addLabMarketplace['labMarketplace'] &&
+                $addLabMarketplace['addLabMarketplaceAddress'] &&
+                $addLabMarketplace['addLabMarketplaceSkillAssociations'] &&
+                $addLabMarketplace['addLabMarketplaceTagAssociations'] &&
+                $addLabMarketplace['addLabMarketplaceExternalLinks'] &&
+                $addLabMarketplace['addLabMarketplaceAchievement'] &&
+                $addLabMarketplace['addLabMarketplaceAssociations'] &&
+                $addLabMarketplace['updateLab']) {
                 DB::commit();
 
-                return $createLabMarketplace['labMarketplace'];
+                return $addLabMarketplace['labMarketplace'];
             }
             DB::rollback();
 

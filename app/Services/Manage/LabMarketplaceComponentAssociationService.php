@@ -19,18 +19,18 @@ class LabMarketplaceComponentAssociationService
         $this->challengeTemplateRepository = $challengeTemplateRepository;
     }
 
-    public function createMarketplaceComponentAssociation($labMarketplaceId, $labId)
+    public function addLabMarketplaceComponentAssociation($labMarketplaceId, $labId)
     {
         try {
             $componentAssociations = ComponentAssociation::where('lab_id', $labId)->get();
             foreach ($componentAssociations as $componentAssociation) {
-                if ($componentAssociation->challenge_id !== '') {
+                if ($componentAssociation->challenge_id !== null) {
                     $getChallenges = Challenge::where('id', $componentAssociation->challenge_id)->first();
                     $challengesTemplate = $this->challengeTemplateRepository->createTemplateChallenge($getChallenges->id, $getChallenges->organization_id);
                 }
 
-                if ($componentAssociation->challenge_path_id !== '') {
-                    $chllengePath = ChallengePath::where('id', $componentAssociation->id)->first();
+                if ($componentAssociation->challenge_path_id !== null) {
+                    $chllengePath = ChallengePath::where('id', $componentAssociation->challenge_path_id)->first();
                     $challengesPathTemplate = new ChallengePathTemplate();
                     $challengesPathTemplate->uuid = $chllengePath->uuid;
                     $challengesPathTemplate->language = $chllengePath->language;
@@ -52,10 +52,10 @@ class LabMarketplaceComponentAssociationService
                     $challengesPathTemplate->save();
                 }
                 $labSkillsGroupsStack = new LabMarketplaceComponentAssociations();
-                $labSkillsGroupsStack->template_lab_id = $componentAssociation->lab_program_id;
+                $labSkillsGroupsStack->template_lab_id = $labId;
                 $labSkillsGroupsStack->lab_marketplace_id = $labMarketplaceId;
-                $labSkillsGroupsStack->template_challenge_id = $challengesTemplate->id;
-                $labSkillsGroupsStack->template_challenge_path_id = $challengesPathTemplate->challenge_path_id;
+                $labSkillsGroupsStack->template_challenge_id = $challengesTemplate->id ?? null;
+                $labSkillsGroupsStack->template_challenge_path_id = $challengesPathTemplate-> challenge_path_id ?? null;
                 $labSkillsGroupsStack->template_resource_module_id = $componentAssociation->resource_module_id;
                 $labSkillsGroupsStack->template_resource_collection_id = $componentAssociation->resource_collection_id;
                 $labSkillsGroupsStack->template_resource_group_id = $componentAssociation->resource_group_id;

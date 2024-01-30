@@ -16,7 +16,7 @@ return new class() extends Migration {
             $table->string('social_media_link');
             $table->unsignedBigInteger('social_link_id');
             $table->foreign('lab_marketplace_id')->references('id')->on('lab_marketplace')->onDelete('cascade');
-            $table->foreign('social_link_id')->references('id')->on('lab_marketplace_social_activities')->onDelete('cascade');
+            $table->foreign('social_link_id')->references('id')->on('social_links')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
