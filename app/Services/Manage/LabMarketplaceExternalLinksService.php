@@ -3,26 +3,44 @@
 namespace App\Services\Manage;
 
 use App\Models\LabExternalLinks;
-use App\Models\LabTemplateExternalLink;
+use App\Models\LabMarketplaceExternalLink;
+use Exception;
 
 class LabMarketplaceExternalLinksService
 {
-    public function createLabMarketplaceExternalLinks($labMarketplaceId, $lab)
+    public function addLabMarketplaceExternalLinks($labMarketplaceId, $labId)
     {
         try {
-            $existsLabExternalLink = LabExternalLinks::where('lab_id', $lab->id)->get();
+            $existsLabExternalLink = LabExternalLinks::where('lab_id', $labId)->get();
             if ($existsLabExternalLink) {
                 foreach ($existsLabExternalLink as $externalLinks) {
-                    $labMarketplaceExternalLink = new LabTemplateExternalLink();
-                    $labMarketplaceExternalLink->template_lab_id = $labMarketplaceId->id;
-                    $labMarketplaceExternalLink->social_media_link = $externalLinks->external_links;
+                    $labMarketplaceExternalLink = new LabMarketplaceExternalLink();
+                    $labMarketplaceExternalLink->lab_marketplace_id = $labMarketplaceId;
+                    $labMarketplaceExternalLink->social_media_link = $externalLinks->social_media_link;
                     $labMarketplaceExternalLink->social_link_id = $externalLinks->social_link_id;
                     $labMarketplaceExternalLink->save();
                 }
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteLabMarketplaceExternalLink($labMarketplaceId)
+    {
+        try {
+            $labMarketplaceExternalLink = LabMarketplaceExternalLink::where('lab_marketplace_id', $labMarketplaceId)->first();
+            if ($labMarketplaceExternalLink) {
+                $labMarketplaceExternalLink = LabMarketplaceExternalLink::where('lab_marketplace_id', $labMarketplaceId)->first();
+                if (!$labMarketplaceExternalLink) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

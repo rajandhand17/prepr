@@ -61,8 +61,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
     public function createTemplateChallenge($challengeId, $organization)
     {
         try {
-            $createTemplateChallenge = DB::transaction(function () use ($challengeId, $organization) {
-                $createTemplateChallenge = $this->challengeTemplateService->createTemplateChallenge($challengeId, $organization);
+            $createTemplateChallenge = DB::transaction(function () use ($challengeId) {
+                $createTemplateChallenge = $this->challengeTemplateService->createTemplateChallenge($challengeId);
                 $createTemplateChallengeParticipationAchievement = $this->challengeTemplateAchievementService->createChallengeTemplateAchievement($challengeId, $createTemplateChallenge->id);
                 $createTemplateChallengeSkills = $this->challengeTemplateSkillsGroupsStackService->createChallengeTemplateSkills($challengeId, $createTemplateChallenge->id);
                 $createTemplateChallengeSponsor = $this->challengeTemplateSponsorService->createChallengeTemplateSponsor($challengeId, $createTemplateChallenge->id);
@@ -114,8 +114,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return false;
         } catch (\Exception $e) {
-            dd($e);
-
             return false;
         }
     }

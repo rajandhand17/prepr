@@ -7,12 +7,10 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('labs', function (Blueprint $table) {
+        Schema::create('lab_marketplace', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
             $table->string('language')->default('en');
@@ -38,6 +36,9 @@ return new class() extends Migration {
             $table->enum('is_verified', ['0', '1'])->default('0')->comment('0-> not-verified ,1-> verified');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('level_id')->references('id')->on('levels')->onDelete('cascade');
+            $table->foreign('duration_id')->references('id')->on('durations')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -45,11 +46,9 @@ return new class() extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('labs');
+        Schema::dropIfExists('lab_marketplace');
     }
 };

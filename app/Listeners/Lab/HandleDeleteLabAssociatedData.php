@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Lab;
 
-use App\Events\Labs\DeleteLabAssociatedData;
+use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
@@ -25,11 +25,11 @@ class HandleDeleteLabAssociatedData
     /**
      * Handle the event.
      *
-     * @param \App\Events\Labs\DeleteLabAssociatedData $event
+     * @param
      *
      * @return void
      */
-    public function handle(DeleteLabAssociatedData $event)
+    public function handle(DeleteLabMarketplaceAssociatedData $event)
     {
         try {
             $lab_id = $event->labId;
