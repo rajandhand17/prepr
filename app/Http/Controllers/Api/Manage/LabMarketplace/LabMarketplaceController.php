@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Manage\LabMarketplace;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Manage\LabMarketPlace\LabMarketplaceRequest;
 use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
 use App\Repositories\Api\Manage\LabMarketplace\LabMarketplaceRepository;
 use Exception;
