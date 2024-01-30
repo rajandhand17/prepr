@@ -98,12 +98,12 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
 
                 return[
                     'labMarketplace'                            => $addLabToMarketplace,
-                    'addLabMarketplaceAddress'              => $addLabMarketplaceAddress,
-                    'addLabMarketplaceSkillAssociations'    => $addLabMarketplaceSkillAssociations,
-                    'addLabMarketplaceTagAssociations'      => $addLabMarketplaceTagAssociations,
-                    'addLabMarketplaceExternalLinks'        => $addLabMarketplaceExternalLinks,
-                    'addLabMarketplaceAchievement'          => $addLabMarketplaceAchievement,
-                    'addLabMarketplaceAssociations'         => $addLabMarketplaceAssociations,
+                    'addLabMarketplaceAddress'                  => $addLabMarketplaceAddress,
+                    'addLabMarketplaceSkillAssociations'        => $addLabMarketplaceSkillAssociations,
+                    'addLabMarketplaceTagAssociations'          => $addLabMarketplaceTagAssociations,
+                    'addLabMarketplaceExternalLinks'            => $addLabMarketplaceExternalLinks,
+                    'addLabMarketplaceAchievement'              => $addLabMarketplaceAchievement,
+                    'addLabMarketplaceAssociations'             => $addLabMarketplaceAssociations,
                     'updateLab'                                 => $updateLab,
                 ];
             });

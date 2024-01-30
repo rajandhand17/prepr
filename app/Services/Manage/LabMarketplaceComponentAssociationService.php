@@ -55,7 +55,7 @@ class LabMarketplaceComponentAssociationService
                 $labSkillsGroupsStack->template_lab_id = $labId;
                 $labSkillsGroupsStack->lab_marketplace_id = $labMarketplaceId;
                 $labSkillsGroupsStack->template_challenge_id = $challengesTemplate->id ?? null;
-                $labSkillsGroupsStack->template_challenge_path_id = $challengesPathTemplate-> challenge_path_id ?? null;
+                $labSkillsGroupsStack->template_challenge_path_id = $challengesPathTemplate->challenge_path_id ?? null;
                 $labSkillsGroupsStack->template_resource_module_id = $componentAssociation->resource_module_id;
                 $labSkillsGroupsStack->template_resource_collection_id = $componentAssociation->resource_collection_id;
                 $labSkillsGroupsStack->template_resource_group_id = $componentAssociation->resource_group_id;
