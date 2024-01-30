@@ -4,6 +4,8 @@ namespace App\Repositories\Api\Manage\LabMarketplace;
 
 interface LabMarketplaceInterface
 {
+    public function getLabMarketPlaceList($request);
+
     public function getLabBasedOnSlug($slug);
 
     public function getCheckLabUuid($uuid);
