@@ -25,7 +25,7 @@ class ChallengeTemplateService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challenge_template_list = $challenge_template_list->where('challenge_templates.title', 'like', '%' . $request->search . '%');
+                $challenge_template_list = $challenge_template_list->where('challenge_templates.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
