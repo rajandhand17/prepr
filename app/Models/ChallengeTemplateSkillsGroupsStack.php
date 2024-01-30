@@ -17,7 +17,7 @@ class ChallengeTemplateSkillsGroupsStack extends Model
     protected $fillable = [
         'challenge_template_id',
         'foreign_id',
-        'type'
+        'type',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

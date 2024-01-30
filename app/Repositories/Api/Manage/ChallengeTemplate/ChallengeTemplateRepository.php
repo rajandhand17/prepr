@@ -67,6 +67,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return false;
         }
     }
+
     public function addChallengeToTemplate($challengeId)
     {
         try {

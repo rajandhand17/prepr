@@ -22,5 +22,4 @@ class ChallengeTemplateAnnouncement extends Model
         'status',
         'sent_status',
     ];
-
 }
