@@ -87,4 +87,16 @@ class FileUploadHelper
             return false;
         }
     }
+
+    public static function UploadVideoDocToS3($request, $type)
+    {
+        try {
+            $pathsarray = config('s3-upload-path');
+            $videoData = $request->store($pathsarray[$type], 's3');
+
+            return $videoData;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
