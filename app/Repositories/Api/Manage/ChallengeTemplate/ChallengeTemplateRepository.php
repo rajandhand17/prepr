@@ -142,7 +142,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
     public function addChallengeRedeemData($challengeId, $organizationId, $challengeTemplateId)
     {
         try {
-
             $labRedeem = new LabChallengeRedeem();
             $labRedeem->user_id = auth()->user()->id;
             $labRedeem->organization_id = $organizationId;
