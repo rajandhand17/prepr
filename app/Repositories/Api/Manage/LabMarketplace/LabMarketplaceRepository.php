@@ -47,6 +47,15 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
         $this->organizationService = $organizationService;
     }
 
+    public function getLabMarketPlaceList($request)
+    {
+        try {
+            return $this->labMarketplaceService->getLabMarketPlaceList($request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getLabBasedOnSlug($slug)
     {
         try {

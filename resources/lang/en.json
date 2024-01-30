@@ -836,5 +836,7 @@
     "responses.lab_marketplace_deleted_successfully": "This Lab Marketplace has been deleted successfully",
     "responses.lab_marketplace_deleted_failed": "Oops!,This Lab Marketplace has been failed to deleted",
     "responses.lab_marketplace_found": "The Lab has been successfully retrieved.",
-    "responses.lab_marketplace_not_found": "The Lab(s) which you are looking from Marketplace doesn't exist in our system."
+    "responses.lab_marketplace_not_found": "The Lab(s) which you are looking from Marketplace doesn't exist in our system.",
+    "responses.found_lab_marketplace_list": "The Lab Marketplace list has been successfully retrieved",
+    "responses.not_found_lab_marketplace_list": "The list of Lab Marketplace has not been retrieved with success."
 }
