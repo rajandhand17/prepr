@@ -26,7 +26,7 @@ class LabMarketplaceService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_marketplace_list = $lab_marketplace_list->where('labs.title', 'like', '%'.$request->search.'%');
+                $lab_marketplace_list = $lab_marketplace_list->where('lab_marketplace.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
@@ -57,16 +57,16 @@ class LabMarketplaceService
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
-                        $lab_marketplace_list = $lab_marketplace_list->orderBy('labs.title', 'ASC');
+                        $lab_marketplace_list = $lab_marketplace_list->orderBy('lab_marketplace.title', 'ASC');
                         break;
                     case 'name-z-to-a':
-                        $lab_marketplace_list = $lab_marketplace_list->orderBy('labs.title', 'DESC');
+                        $lab_marketplace_list = $lab_marketplace_list->orderBy('lab_marketplace.title', 'DESC');
                         break;
                     case 'creation_date':
-                        $lab_marketplace_list = $lab_marketplace_list->orderBy('labs.created_at', 'ASC');
+                        $lab_marketplace_list = $lab_marketplace_list->orderBy('lab_marketplace.created_at', 'ASC');
                         break;
                     default:
-                        $lab_marketplace_list = $lab_marketplace_list->orderBy('labs.id', 'ASC');
+                        $lab_marketplace_list = $lab_marketplace_list->orderBy('lab_marketplace.id', 'ASC');
                 }
             }
 
