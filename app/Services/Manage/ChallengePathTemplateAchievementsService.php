@@ -20,7 +20,7 @@ class ChallengePathTemplateAchievementsService
                 $challengePathAchievement->achievement_image = $challengePathTemplateAchievement->achievement_image;
                 $challengePathAchievement->save();
             }
-            
+
             return true;
         } catch (Exception $e) {
             return false;

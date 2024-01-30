@@ -19,7 +19,7 @@ class ChallengePathTemplateTagsGroupsService
                 $templateChallengeTags->type = $value->type;
                 $templateChallengeTags->save();
             }
-            
+
             return true;
         } catch (Exception $e) {
             return false;

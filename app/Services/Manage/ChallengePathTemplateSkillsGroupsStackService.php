@@ -19,7 +19,7 @@ class ChallengePathTemplateSkillsGroupsStackService
                 $challengeTemplateSkillsGroupsStack->type = $getSkillsGroupStack->type;
                 $challengeTemplateSkillsGroupsStack->save();
             }
-            
+
             return true;
         } catch (Exception $e) {
             return false;

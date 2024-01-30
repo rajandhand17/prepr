@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\Challenge;
 use App\Models\ChallengePath;
-use App\Models\ChallengePathTemplate;
 use App\Models\ComponentAssociation;
 use App\Models\LabMarketplaceComponentAssociations;
 use App\Repositories\Api\Manage\ChallengePathTemplate\ChallengePathTemplateRepository;
