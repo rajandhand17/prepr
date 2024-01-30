@@ -8,13 +8,13 @@ use Exception;
 
 class ChallengeTemplateAssessmentCriteriaService
 {
-    public function createChallengeTemplateAssessmentCriteria($challengeId, $templateChallengeId)
+    public function addChallengeTemplateAssessmentCriteria($challengeId, $templateChallengeId)
     {
         try {
             $challengeAssessmentCriteria = ChallengeAssessmentCriteria::where('challenge_id', $challengeId)->get();
             foreach ($challengeAssessmentCriteria as $challengeAssessmentCriterion) {
                 $challengeTemplateAssessmentCriteria = new ChallengeTemplateAssessmentCriterias();
-                $challengeTemplateAssessmentCriteria->template_challenge_id = $templateChallengeId;
+                $challengeTemplateAssessmentCriteria->challenge_template_id = $templateChallengeId;
                 $challengeTemplateAssessmentCriteria->title = $challengeAssessmentCriterion->title;
                 $challengeTemplateAssessmentCriteria->score = $challengeAssessmentCriterion->score;
                 $challengeTemplateAssessmentCriteria->weight = $challengeAssessmentCriterion->weight;

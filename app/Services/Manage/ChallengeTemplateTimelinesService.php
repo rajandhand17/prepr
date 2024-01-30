@@ -8,14 +8,14 @@ use Exception;
 
 class ChallengeTemplateTimelinesService
 {
-    public function createChallengeTemplateTimelines($challengeId, $templateChallengeId)
+    public function addChallengeTemplateTimelines($challengeId, $templateChallengeId)
     {
         try {
             $challengeTimelines = ChallengeTimelines::where('challenge_id', $challengeId)->get();
             if ($challengeTimelines) {
                 foreach ($challengeTimelines as $challengeTimeline) {
                     $challengeTemplateTimeline = new ChallengeTemplateTimeLine();
-                    $challengeTemplateTimeline->Template_challenge_id = $templateChallengeId;
+                    $challengeTemplateTimeline->challenge_template_id = $templateChallengeId;
                     $challengeTemplateTimeline->timeline_type = $challengeTimeline->timeline_type;
                     $challengeTemplateTimeline->open_call_date = $challengeTimeline->open_call_date;
                     $challengeTemplateTimeline->open_call_date_description = $challengeTimeline->open_call_date_description;

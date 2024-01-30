@@ -26,7 +26,7 @@ class LabMarketplaceComponentAssociationService
             foreach ($componentAssociations as $componentAssociation) {
                 if ($componentAssociation->challenge_id !== null) {
                     $getChallenges = Challenge::where('id', $componentAssociation->challenge_id)->first();
-                    $challengesTemplate = $this->challengeTemplateRepository->createTemplateChallenge($getChallenges->id, $getChallenges->organization_id);
+                    $challengesTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($getChallenges->id);
                 }
 
                 if ($componentAssociation->challenge_path_id !== null) {
@@ -52,13 +52,13 @@ class LabMarketplaceComponentAssociationService
                     $challengesPathTemplate->save();
                 }
                 $labSkillsGroupsStack = new LabMarketplaceComponentAssociations();
-                $labSkillsGroupsStack->template_lab_id = $labId;
                 $labSkillsGroupsStack->lab_marketplace_id = $labMarketplaceId;
-                $labSkillsGroupsStack->template_challenge_id = $challengesTemplate->id ?? null;
-                $labSkillsGroupsStack->template_challenge_path_id = $challengesPathTemplate->challenge_path_id ?? null;
-                $labSkillsGroupsStack->template_resource_module_id = $componentAssociation->resource_module_id;
-                $labSkillsGroupsStack->template_resource_collection_id = $componentAssociation->resource_collection_id;
-                $labSkillsGroupsStack->template_resource_group_id = $componentAssociation->resource_group_id;
+                $labSkillsGroupsStack->lab_program_id = $componentAssociation->lab_program_id ?? null;
+                $labSkillsGroupsStack->challenge_template_id = $challengesTemplate->id ?? null;
+                $labSkillsGroupsStack->challenge_path_template_id = $challengesPathTemplate->challenge_path_id ?? null;
+                $labSkillsGroupsStack->resource_module_id = $componentAssociation->resource_module_id;
+                $labSkillsGroupsStack->resource_collection_id = $componentAssociation->resource_collection_id;
+                $labSkillsGroupsStack->resource_group_id = $componentAssociation->resource_group_id;
                 $labSkillsGroupsStack->sequence = $componentAssociation->sequence;
                 $labSkillsGroupsStack->save();
             }

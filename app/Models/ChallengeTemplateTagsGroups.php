@@ -11,10 +11,10 @@ class ChallengeTemplateTagsGroups extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_challenge_tags_groups';
+    protected $table = 'challenge_template_tags_groups';
 
     protected $fillable = [
-        'template_challenge_id',
+        'challenge_template_id',
         'foreign_id',
         'type',
     ];

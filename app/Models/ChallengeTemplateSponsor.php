@@ -11,10 +11,10 @@ class ChallengeTemplateSponsor extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_challenge_sponsors';
+    protected $table = 'challenge_template_sponsors';
 
     protected $fillable = [
-        'template_challenge_id',
+        'challenge_template_id',
         'host_id',
     ];
 }

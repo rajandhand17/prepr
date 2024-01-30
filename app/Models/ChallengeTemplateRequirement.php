@@ -11,10 +11,10 @@ class ChallengeTemplateRequirement extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_challenge_requirements';
+    protected $table = 'challenge_template_requirements';
 
     protected $fillable = [
-        'template_challenge_id',
+        'challenge_template_id',
         'min_rank',
         'min_points',
         'project_submission_requirement_ids',
@@ -28,5 +28,14 @@ class ChallengeTemplateRequirement extends Model
         'complete_education_program',
         'complete_experience',
         'additional_requirements',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'project_submission_requirement_ids' => 'json',
     ];
 }

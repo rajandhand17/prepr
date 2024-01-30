@@ -10,12 +10,12 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_skills_groups_stacks', function (Blueprint $table) {
+        Schema::create('challenge_template_skills_groups_stacks', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('template_challenge_id');
+            $table->unsignedBigInteger('challenge_template_id');
             $table->integer('foreign_id');
             $table->enum('type', ['0', '1', '2'])->comment('0->skills, 1->group,2->stack');
-            $table->foreign('template_challenge_id', 'fk_template_challenge_skills_groups_stacks')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('challenge_template_id', 'fk_challenge_template_skills_groups_stacks')->references('id')->on('challenge_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +26,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_skills_groups_stacks');
+        Schema::dropIfExists('challenge_template_skills_groups_stacks');
     }
 };

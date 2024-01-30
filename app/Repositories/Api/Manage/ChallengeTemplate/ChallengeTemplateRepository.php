@@ -14,6 +14,7 @@ use App\Services\Manage\ChallengeTemplateSkillsGroupsStackService;
 use App\Services\Manage\ChallengeTemplateSponsorService;
 use App\Services\Manage\ChallengeTemplateTagsGroupsService;
 use App\Services\Manage\ChallengeTemplateTimelinesService;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class ChallengeTemplateRepository implements ChallengeTemplateInterface
@@ -58,62 +59,70 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         $this->challengeTemplateExternalLinkService = $challengeTemplateExternalLinkService;
     }
 
-    public function createTemplateChallenge($challengeId, $organization)
+    public function getChallengeTemplateList($request)
     {
         try {
-            $createTemplateChallenge = DB::transaction(function () use ($challengeId) {
-                $createTemplateChallenge = $this->challengeTemplateService->createTemplateChallenge($challengeId);
-                $createTemplateChallengeParticipationAchievement = $this->challengeTemplateAchievementService->createChallengeTemplateAchievement($challengeId, $createTemplateChallenge->id);
-                $createTemplateChallengeSkills = $this->challengeTemplateSkillsGroupsStackService->createChallengeTemplateSkills($challengeId, $createTemplateChallenge->id);
-                $createTemplateChallengeSponsor = $this->challengeTemplateSponsorService->createChallengeTemplateSponsor($challengeId, $createTemplateChallenge->id);
-                $createTemplateChallengeTags = $this->challengeTemplateTagsGroupsService->createChallengeTemplateTagsGroups($challengeId, $createTemplateChallenge->id);
-                $createTemplateChallengeRequirement = $this->challengeTemplateRequirementService->createChallengeTemplateRequirement($challengeId, $createTemplateChallenge->id);
-                $createTemplateChallengeAssessmentCriteria = $this->challengeTemplateAssessmentCriteriaService->createChallengeTemplateAssessmentCriteria($challengeId, $createTemplateChallenge->id);
-                $createTemplateChallengeAssessment = $this->challengeTemplateAssessmentService->createChallengeTemplateAssessment($challengeId, $createTemplateChallenge->id);
-                $createTemplateChallengeProjectTemplate = $this->challengeTemplateProjectTemplateService->createChallengeTemplateProjectTemplate($challengeId, $createTemplateChallenge->id);
-                $createChallengeTimelines = $this->challengeTemplateTimelinesService->createChallengeTemplateTimelines($challengeId, $createTemplateChallenge->id);
-                $createChallengeCustomTimelines = $this->challengeTemplateCustomTimelinesService->createChallengeTemplateCustomTimeLines($challengeId, $createTemplateChallenge->id);
-                $createChallengeExternalLink = $this->challengeTemplateExternalLinkService->createChallengeTemplateExternalLink($challengeId, $createTemplateChallenge->id);
+            return $this->challengeTemplateService->getChallengeTemplateList($request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function addChallengeToTemplate($challengeId)
+    {
+        try {
+            $addChallengeToTemplate = DB::transaction(function () use ($challengeId) {
+                $addChallengeTemplate = $this->challengeTemplateService->addChallengeTemplate($challengeId);
+                $addChallengeTemplateParticipationAchievement = $this->challengeTemplateAchievementService->addChallengeTemplateAchievement($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateSkills = $this->challengeTemplateSkillsGroupsStackService->addChallengeTemplateSkills($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateSponsor = $this->challengeTemplateSponsorService->addChallengeTemplateSponsor($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateTags = $this->challengeTemplateTagsGroupsService->addChallengeTemplateTagsGroups($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateRequirement = $this->challengeTemplateRequirementService->addChallengeTemplateRequirement($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateAssessmentCriteria = $this->challengeTemplateAssessmentCriteriaService->addChallengeTemplateAssessmentCriteria($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateAssessment = $this->challengeTemplateAssessmentService->addChallengeTemplateAssessment($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateProjectTemplate = $this->challengeTemplateProjectTemplateService->addChallengeTemplateProjectTemplate($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateTimelines = $this->challengeTemplateTimelinesService->addChallengeTemplateTimelines($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateCustomTimelines = $this->challengeTemplateCustomTimelinesService->addChallengeTemplateCustomTimeLines($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateExternalLink = $this->challengeTemplateExternalLinkService->addChallengeTemplateExternalLink($challengeId, $addChallengeTemplate->id);
 
                 return [
-                    'createTemplateChallenge'                           => $createTemplateChallenge,
-                    'createTemplateChallengeParticipationAchievement'   => $createTemplateChallengeParticipationAchievement,
-                    'createTemplateChallengeSkills'                     => $createTemplateChallengeSkills,
-                    'createTemplateChallengeSponsor'                    => $createTemplateChallengeSponsor,
-                    'createTemplateChallengeTags'                       => $createTemplateChallengeTags,
-                    'createTemplateChallengeRequirement'                => $createTemplateChallengeRequirement,
-                    'createTemplateChallengeAssessmentCriteria'         => $createTemplateChallengeAssessmentCriteria,
-                    'createTemplateChallengeAssessment'                 => $createTemplateChallengeAssessment,
-                    'createTemplateChallengeProjectTemplate'            => $createTemplateChallengeProjectTemplate,
-                    'createChallengeTimelines'                          => $createChallengeTimelines,
-                    'createChallengeCustomTimelines'                    => $createChallengeCustomTimelines,
-                    'createChallengeExternalLink'                       => $createChallengeExternalLink,
+                    'addChallengeTemplate'                              => $addChallengeTemplate,
+                    'addChallengeTemplateParticipationAchievement'      => $addChallengeTemplateParticipationAchievement,
+                    'addChallengeTemplateSkills'                        => $addChallengeTemplateSkills,
+                    'addChallengeTemplateSponsor'                       => $addChallengeTemplateSponsor,
+                    'addChallengeTemplateTags'                          => $addChallengeTemplateTags,
+                    'addChallengeTemplateRequirement'                   => $addChallengeTemplateRequirement,
+                    'addChallengeTemplateAssessmentCriteria'            => $addChallengeTemplateAssessmentCriteria,
+                    'addChallengeTemplateAssessment'                    => $addChallengeTemplateAssessment,
+                    'addChallengeTemplateProjectTemplate'               => $addChallengeTemplateProjectTemplate,
+                    'addChallengeTemplateTimelines'                     => $addChallengeTemplateTimelines,
+                    'addChallengeTemplateCustomTimelines'               => $addChallengeTemplateCustomTimelines,
+                    'addChallengeTemplateExternalLink'                  => $addChallengeTemplateExternalLink,
                 ];
             });
 
             if (
-                $createTemplateChallenge['createTemplateChallenge'] &&
-                $createTemplateChallenge['createTemplateChallengeParticipationAchievement'] &&
-                $createTemplateChallenge['createTemplateChallengeSkills'] &&
-                $createTemplateChallenge['createTemplateChallengeSponsor'] &&
-                $createTemplateChallenge['createTemplateChallengeTags'] &&
-                $createTemplateChallenge['createTemplateChallengeRequirement'] &&
-                $createTemplateChallenge['createTemplateChallengeAssessmentCriteria'] &&
-                $createTemplateChallenge['createTemplateChallengeAssessment'] &&
-                $createTemplateChallenge['createTemplateChallengeProjectTemplate'] &&
-                $createTemplateChallenge['createChallengeTimelines'] &&
-                $createTemplateChallenge['createChallengeCustomTimelines'] &&
-                $createTemplateChallenge['createChallengeExternalLink']
+                $addChallengeToTemplate['addChallengeTemplate'] &&
+                $addChallengeToTemplate['addChallengeTemplateParticipationAchievement'] &&
+                $addChallengeToTemplate['addChallengeTemplateSkills'] &&
+                $addChallengeToTemplate['addChallengeTemplateSponsor'] &&
+                $addChallengeToTemplate['addChallengeTemplateTags'] &&
+                $addChallengeToTemplate['addChallengeTemplateRequirement'] &&
+                $addChallengeToTemplate['addChallengeTemplateAssessmentCriteria'] &&
+                $addChallengeToTemplate['addChallengeTemplateAssessment'] &&
+                $addChallengeToTemplate['addChallengeTemplateProjectTemplate'] &&
+                $addChallengeToTemplate['addChallengeTemplateTimelines'] &&
+                $addChallengeToTemplate['addChallengeTemplateCustomTimelines'] &&
+                $addChallengeToTemplate['addChallengeTemplateExternalLink']
             ) {
                 DB::commit();
 
-                return $createTemplateChallenge['createTemplateChallenge'];
+                return $addChallengeToTemplate['addChallengeTemplate'];
             }
 
             DB::rollback();
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -122,7 +131,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
     {
         try {
             return $this->challengeTemplateService->getChallengeTemplateBasedOnSlug($slug);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

@@ -11,10 +11,10 @@ class ChallengeTemplate extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_challenges';
+    protected $table = 'challenge_templates';
 
     protected $fillable = [
-        'preferred_language',
+        'language',
         'first_name',
         'last_name',
         'full_name',
@@ -62,27 +62,27 @@ class ChallengeTemplate extends Model
 
     public function skills()
     {
-        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'template_challenge_id', 'id')->where('type', '0');
+        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'challenge_template_id', 'id')->where('type', '0');
     }
 
     public function skill_groups()
     {
-        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'template_challenge_id', 'id')->where('type', '1');
+        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'challenge_template_id', 'id')->where('type', '1');
     }
 
     public function skill_stacks()
     {
-        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'template_challenge_id', 'id')->where('type', '2');
+        return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'challenge_template_id', 'id')->where('type', '2');
     }
 
     public function tags()
     {
-        return $this->hasMany(ChallengeTemplateTagsGroups::class, 'template_challenge_id', 'id')->where('type', '0');
+        return $this->hasMany(ChallengeTemplateTagsGroups::class, 'challenge_template_id', 'id')->where('type', '0');
     }
 
     public function tag_groups()
     {
-        return $this->hasMany(ChallengeTemplateTagsGroups::class, 'template_challenge_id', 'id')->where('type', '1');
+        return $this->hasMany(ChallengeTemplateTagsGroups::class, 'challenge_template_id', 'id')->where('type', '1');
     }
 
     public function durations()
@@ -97,89 +97,56 @@ class ChallengeTemplate extends Model
 
     public function participation_achievement()
     {
-        return $this->hasOne(ChallengeTemplateAchievement::class, 'template_challenge_id', 'id')->where('achievement_type', '0');
+        return $this->hasOne(ChallengeTemplateAchievement::class, 'challenge_template_id', 'id')->where('achievement_type', '0');
     }
 
     public function incentive_achievement()
     {
-        return $this->hasMany(ChallengeTemplateAchievement::class, 'template_challenge_id', 'id')->where('achievement_type', '1');
+        return $this->hasMany(ChallengeTemplateAchievement::class, 'challenge_template_id', 'id')->where('achievement_type', '1');
     }
 
     public function challenge_requirements()
     {
-        return $this->hasOne(ChallengeTemplateRequirement::class, 'template_challenge_id', 'id');
+        return $this->hasOne(ChallengeTemplateRequirement::class, 'challenge_template_id', 'id');
     }
 
     public function hosts()
     {
-        return $this->hasMany(ChallengeTemplateRequirement::class, 'template_challenge_id', 'id');
+        return $this->hasMany(ChallengeTemplateSponsor::class, 'challenge_template_id', 'id');
     }
 
     public function challenge_assessment_criteria()
     {
-        return $this->hasMany(ChallengeTemplateAssessmentCriteria::class, 'challenge_id', 'id');
+        return $this->hasMany(ChallengeTemplateAssessmentCriterias::class, 'challenge_template_id', 'id');
     }
 
     public function challenge_assessment()
     {
-        return $this->hasMany(ChallengeAssessment::class, 'challenge_id', 'id');
+        return $this->hasMany(ChallengeTemplateAssessment::class, 'challenge_template_id', 'id');
     }
 
     public function challenge_timelines()
     {
-        return $this->hasOne(ChallengeTimelines::class, 'challenge_id', 'id');
+        return $this->hasOne(ChallengeTemplateTimeLine::class, 'challenge_template_id', 'id');
     }
 
     public function challenge_custom_timelines()
     {
-        return $this->hasMany(ChallengeCustomTimelines::class, 'challenge_id', 'id');
+        return $this->hasMany(ChallengeTemplateCustomTimeLine::class, 'challenge_template_id', 'id');
     }
 
     public function challenge_project_template()
     {
-        return $this->hasOne(ChallengeProjectTemplate::class, 'challenge_id', 'id');
-    }
-
-    public function likes()
-    {
-        return $this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('like_dislike', '1');
-    }
-
-    public function shares()
-    {
-        return $this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('share', '1');
-    }
-
-    public function members()
-    {
-        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1']);
-    }
-
-    public function liked()
-    {
-        if (auth('api')->check()) {
-            return ($this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
-        }
-
-        return 'NA';
-    }
-
-    public function favourite()
-    {
-        if (auth('api')->check()) {
-            return ($this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
-        }
-
-        return 'NA';
+        return $this->hasOne(ChallengeTemplateProjectTemplate::class, 'challenge_template_id', 'id');
     }
 
     public function external_links()
     {
-        return $this->hasMany(ChallengeExternalLink::class, 'challenge_id', 'id');
+        return $this->hasMany(ChallengeTemplateExternalLink::class, 'challenge_template_id', 'id');
     }
 
     public function challenge_announcement()
     {
-        return $this->hasMany(ChallengeAnnouncement::class, 'challenge_id', 'id');
+        return $this->hasMany(ChallengeTemplateAnnouncement::class, 'challenge_template_id', 'id');
     }
 }

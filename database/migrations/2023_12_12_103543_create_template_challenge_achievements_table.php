@@ -10,15 +10,15 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_achievements', function (Blueprint $table) {
+        Schema::create('challenge_template_achievements', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('template_challenge_id');
+            $table->unsignedBigInteger('challenge_template_id');
             $table->enum('achievement_type', ['0', '1'])->comment('0->participation, 1->incentive')->default('0');
             $table->string('achievement_name', 255)->nullable();
             $table->string('achievement_prize', 255)->nullable();
             $table->string('achievement_points', 255)->nullable();
             $table->text('achievement_image')->nullable();
-            $table->foreign('template_challenge_id')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('challenge_template_id')->references('id')->on('challenge_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +29,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_achievements');
+        Schema::dropIfExists('challenge_template_achievements');
     }
 };

@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\ChallengeSponsor;
+use App\Models\ChallengeTemplateSponsor;
 use App\Models\Host;
 use Exception;
 
@@ -90,8 +91,8 @@ class ChallengeSponsorService
         try {
             $getChallengeSponsor = ChallengeSponsor::where('challenge_id', $challengeId)->get();
             foreach ($getChallengeSponsor as $getSponsor) {
-                $createChallengeSponsor = new ChallengeSponsor();
-                $createChallengeSponsor->template_challenge_id = $templateChallengeId;
+                $createChallengeSponsor = new ChallengeTemplateSponsor();
+                $createChallengeSponsor->challenge_template_id = $templateChallengeId;
                 $createChallengeSponsor->foreign_id = $getSponsor->foreign_id;
                 $createChallengeSponsor->type = $getSponsor->type;
                 $createChallengeSponsor->save();

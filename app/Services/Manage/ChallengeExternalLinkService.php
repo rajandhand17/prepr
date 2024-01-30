@@ -3,7 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Models\ChallengeExternalLink;
-use App\Models\TemplateChallengeExternalLink;
+use App\Models\ChallengeTemplateExternalLink;
 use Exception;
 
 class ChallengeExternalLinkService
@@ -109,8 +109,8 @@ class ChallengeExternalLinkService
             $challengeExternalLinks = ChallengeExternalLink::where('challenge_id', $challengeId)->get();
             if ($challengeExternalLinks) {
                 foreach ($challengeExternalLinks as $challengeExternalLink) {
-                    $templateChallengeExternalLink = new TemplateChallengeExternalLink();
-                    $templateChallengeExternalLink->template_challenge_id = $templateChallengeId;
+                    $templateChallengeExternalLink = new ChallengeTemplateExternalLink();
+                    $templateChallengeExternalLink->challenge_template_id = $templateChallengeId;
                     $templateChallengeExternalLink->custom_timelines_title = $challengeExternalLink->custom_timelines_title;
                     $templateChallengeExternalLink->custom_timelines_description = $challengeExternalLink->custom_timelines_description;
                     $templateChallengeExternalLink->custom_timelines_duration = $challengeExternalLink->custom_timelines_duration;

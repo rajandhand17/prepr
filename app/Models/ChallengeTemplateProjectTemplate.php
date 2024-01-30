@@ -11,9 +11,9 @@ class ChallengeTemplateProjectTemplate extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'template_challenge_project_templates';
+    protected $table = 'challenge_template_project_templates';
     protected $fillable = [
-        'template_challenge_id',
+        'challenge_template_id',
         'template_id',
     ];
 }

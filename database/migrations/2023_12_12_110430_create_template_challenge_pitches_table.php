@@ -10,14 +10,14 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_pitches', function (Blueprint $table) {
+        Schema::create('challenge_template_pitches', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('template_id');
             $table->longText('title')->comment('English pitch question');
             $table->longText('fr_CA_title')->comment('French pitch question');
             $table->text('description')->comment('English pitch description')->nullable();
             $table->text('fr_CA_description')->comment('French pitch description')->nullable();
-            $table->foreign('template_id', 'fk_template_challenge_pitches')->references('id')->on('pitch_templates')->onDelete('cascade');
+            $table->foreign('template_id', 'fk_challenge_template_pitches')->references('id')->on('pitch_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +28,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_pitches');
+        Schema::dropIfExists('challenge_template_pitches');
     }
 };

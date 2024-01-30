@@ -8,13 +8,13 @@ use Exception;
 
 class ChallengeTemplateAssessmentService
 {
-    public function createChallengeTemplateAssessment($challengeId, $templateChallengeId)
+    public function addChallengeTemplateAssessment($challengeId, $templateChallengeId)
     {
         try {
             $challengeAssessments = ChallengeAssessment::where('challenge_id', $challengeId)->get();
             foreach ($challengeAssessments as $challengeAssessment) {
                 $challengeTemplateAssessment = new ChallengeTemplateAssessment();
-                $challengeTemplateAssessment->template_challenge_id = $templateChallengeId;
+                $challengeTemplateAssessment->challenge_template_id = $templateChallengeId;
                 $challengeTemplateAssessment->assessment_type = $challengeAssessment->assessment_type;
                 $challengeTemplateAssessment->visibility = $challengeAssessment->visibility;
                 $challengeTemplateAssessment->members_email = $challengeAssessment->members_email;

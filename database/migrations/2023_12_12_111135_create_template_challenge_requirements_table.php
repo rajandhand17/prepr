@@ -10,8 +10,8 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_requirements', function (Blueprint $table) {
-            $table->unsignedBigInteger('template_challenge_id');
+        Schema::create('challenge_template_requirements', function (Blueprint $table) {
+            $table->unsignedBigInteger('challenge_template_id');
             $table->integer('min_rank')->comment('minimum rank needed to start challenge')->nullable();
             $table->integer('min_points')->comment('minimum points needed to start challenge')->nullable();
             $table->json('project_submission_requirement_ids')->comment('requirements needed to complete challenge');
@@ -25,7 +25,7 @@ return new class() extends Migration {
             $table->enum('complete_education_program', ['0', '1'])->default('0')->comment('0->no,1->yes');
             $table->enum('complete_experience', ['0', '1'])->default('0')->comment('0->no,1->yes');
             $table->text('additional_requirements')->comment('Additional requirements if any')->nullable();
-            $table->foreign('template_challenge_id', 'fk_template_challenge_requirements')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('challenge_template_id', 'fk_challenge_template_requirements')->references('id')->on('challenge_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -36,6 +36,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_requirements');
+        Schema::dropIfExists('challenge_template_requirements');
     }
 };

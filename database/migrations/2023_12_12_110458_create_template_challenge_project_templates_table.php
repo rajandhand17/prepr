@@ -10,11 +10,11 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('template_challenge_project_templates', function (Blueprint $table) {
+        Schema::create('challenge_template_project_templates', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('template_challenge_id');
+            $table->unsignedBigInteger('challenge_template_id');
             $table->integer('template_id')->nullable();
-            $table->foreign('template_challenge_id', 'fk_template_challenge_project_templates')->references('id')->on('template_challenges')->onDelete('cascade');
+            $table->foreign('challenge_template_id', 'fk_challenge_template_project_templates')->references('id')->on('challenge_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +25,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_challenge_project_templates');
+        Schema::dropIfExists('challenge_template_project_templates');
     }
 };

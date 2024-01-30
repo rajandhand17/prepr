@@ -8,13 +8,13 @@ use Exception;
 
 class ChallengeTemplateAchievementService
 {
-    public function createChallengeTemplateAchievement($createChallengeId, $templateChallengeId)
+    public function addChallengeTemplateAchievement($createChallengeId, $templateChallengeId)
     {
         try {
             $challengeParticipation = ChallengeAchievement::where('challenge_id', $createChallengeId)->get();
             foreach ($challengeParticipation as $challengeParticipationData) {
                 $challengeParticipation = new ChallengeTemplateAchievement();
-                $challengeParticipation->template_challenge_id = $templateChallengeId;
+                $challengeParticipation->challenge_template_id = $templateChallengeId;
                 $challengeParticipation->achievement_type = $challengeParticipationData->achievement_type;
                 $challengeParticipation->achievement_name = $challengeParticipationData->achievement_name;
                 $challengeParticipation->achievement_prize = $challengeParticipationData->achievement_prize;

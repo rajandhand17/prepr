@@ -12,13 +12,13 @@ return new class() extends Migration {
     {
         Schema::create('lab_marketplace_component_associations', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('template_lab_id')->nullable();
             $table->bigInteger('lab_marketplace_id')->nullable();
-            $table->bigInteger('template_challenge_id')->nullable();
-            $table->bigInteger('template_challenge_path_id')->nullable();
-            $table->bigInteger('template_resource_module_id')->nullable();
-            $table->bigInteger('template_resource_collection_id')->nullable();
-            $table->bigInteger('template_resource_group_id')->nullable();
+            $table->bigInteger('lab_program_id')->nullable();
+            $table->bigInteger('challenge_template_id')->nullable();
+            $table->bigInteger('challenge_path_template_id')->nullable();
+            $table->bigInteger('resource_module_id')->nullable();
+            $table->bigInteger('resource_collection_id')->nullable();
+            $table->bigInteger('resource_group_id')->nullable();
             $table->integer('sequence')->nullable();
             $table->timestamps();
             $table->softDeletes();

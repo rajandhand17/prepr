@@ -8,16 +8,16 @@ use Exception;
 
 class ChallengeTemplateRequirementService
 {
-    public function createChallengeTemplateRequirement($challenge_id, $templateChallengeId)
+    public function addChallengeTemplateRequirement($challenge_id, $templateChallengeId)
     {
         try {
             $challengeRequirement = ChallengeRequirement::where('challenge_id', $challenge_id)->get();
             if ($challengeRequirement) {
                 foreach ($challengeRequirement as $challenge) {
                     $ChallengeTemplateRequirement = new ChallengeTemplateRequirement();
-                    $ChallengeTemplateRequirement->template_challenge_id = $templateChallengeId;
+                    $ChallengeTemplateRequirement->challenge_template_id = $templateChallengeId;
                     $ChallengeTemplateRequirement->min_rank = $challenge->min_rank;
-                    $ChallengeTemplateRequirement->project_submission_requirement_ids = json_encode($challenge->project_submission_requirement_ids);
+                    $ChallengeTemplateRequirement->project_submission_requirement_ids = $challenge->project_submission_requirement_ids;
                     $ChallengeTemplateRequirement->max_project_submission = $challenge->max_project_submission;
                     $ChallengeTemplateRequirement->max_project_associate = $challenge->max_project_associate;
                     $ChallengeTemplateRequirement->min_experience = $challenge->min_experience;

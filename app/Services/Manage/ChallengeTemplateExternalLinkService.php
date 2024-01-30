@@ -8,14 +8,14 @@ use Exception;
 
 class ChallengeTemplateExternalLinkService
 {
-    public function createChallengeTemplateExternalLink($challengeId, $templateChallengeId)
+    public function addChallengeTemplateExternalLink($challengeId, $templateChallengeId)
     {
         try {
             $challengeExternalLinks = ChallengeExternalLink::where('challenge_id', $challengeId)->get();
             if ($challengeExternalLinks) {
                 foreach ($challengeExternalLinks as $challengeExternalLink) {
                     $challengeTemplateExternalLink = new ChallengeTemplateExternalLink();
-                    $challengeTemplateExternalLink->template_challenge_id = $templateChallengeId;
+                    $challengeTemplateExternalLink->challenge_template_id = $templateChallengeId;
                     $challengeTemplateExternalLink->custom_timelines_title = $challengeExternalLink->custom_timelines_title;
                     $challengeTemplateExternalLink->custom_timelines_description = $challengeExternalLink->custom_timelines_description;
                     $challengeTemplateExternalLink->custom_timelines_duration = $challengeExternalLink->custom_timelines_duration;
