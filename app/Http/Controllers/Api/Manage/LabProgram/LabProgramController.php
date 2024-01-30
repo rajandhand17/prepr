@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\LabProgram;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
 use App\Http\Requests\Manage\LabProgram\UpdateLabProgramRequest;
+use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
 use App\Repositories\Api\Manage\LabProgram\LabProgramRepository;
 use App\Repositories\Api\Manage\LabProgramAchievement\LabProgramAchievementRepository;
@@ -54,9 +55,9 @@ class LabProgramController extends AppBaseController
     public function show($slug)
     {
         try {
-            $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
-            if ($labProgram) {
-                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
+            $labMarketplaceResource = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labMarketplaceResource) {
+                return $this->sendResponse(LabMarketplaceResource::make($labMarketplaceResource), __('responses.found_lab_program_view'));
             }
 
             return $this->sendError(__('responses.not_found_lab_program_view'), 404);

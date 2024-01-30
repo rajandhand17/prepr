@@ -7,7 +7,7 @@ use App\Models\ChallengeTemplate;
 
 class ChallengeTemplateService
 {
-    public function createTemplateChallenge($challengeId, $organization)
+    public function createTemplateChallenge($challengeId)
     {
         try {
             $originalChallenge = Challenge::find($challengeId);
