@@ -17,10 +17,16 @@ class FriendService
                 case 'follow':
                     $value = '2';
                     break;
+                case 'un-follow':
+                    $value = '3';
+                    break;
                 case 'accept':
                     $value = '1';
                     break;
                 case 'reject':
+                    $value = '2';
+                    break;
+                case 'un-friend':
                     $value = '2';
                     break;
                 default:
