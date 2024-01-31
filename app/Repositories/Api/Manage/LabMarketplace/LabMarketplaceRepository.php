@@ -125,7 +125,6 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                 $addLabMarketplace['addLabMarketplaceAchievement'] &&
                 $addLabMarketplace['addLabMarketplaceAssociations'] &&
                 $addLabMarketplace['updateLab']) {
-                    
                 self::addLabRedeemData($labId, $addLabMarketplace['labMarketplace']->organization_id, $addLabMarketplace['labMarketplace']->id);
                 DB::commit();
 
@@ -153,7 +152,6 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
     public function addLabRedeemData($labId, $organizationId, $labMarketplaceId)
     {
         try {
-
             $labRedeem = new LabChallengeRedeem();
             $labRedeem->user_id = auth()->user()->id;
             $labRedeem->organization_id = $organizationId;
