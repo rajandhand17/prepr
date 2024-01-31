@@ -1,0 +1,119 @@
+<?php
+
+namespace App\Services\Manage;
+
+use App\Models\Challenge;
+use App\Models\ChallengeTemplate;
+use Exception;
+
+class ChallengeTemplateService
+{
+    public static function getChallengeTemplateList($request)
+    {
+        try {
+            $challenge_template_list = ChallengeTemplate::select();
+
+            $challenge_template_list = self::filterChallengeTemplateList($challenge_template_list, $request);
+
+            return $challenge_template_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function filterChallengeTemplateList($challenge_template_list, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $challenge_template_list = $challenge_template_list->where('challenge_templates.title', 'like', '%'.$request->search.'%');
+            }
+
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $challenge_template_list = $challenge_template_list->orderBy('challenge_templates.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $challenge_template_list = $challenge_template_list->orderBy('challenge_templates.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $challenge_template_list = $challenge_template_list->orderBy('challenge_templates.created_at', 'ASC');
+                        break;
+                    default:
+                        $challenge_template_list = $challenge_template_list->orderBy('challenge_templates.id', 'ASC');
+                }
+            }
+
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $challenge_template_list = $challenge_template_list->whereIn('duration_id', $request->duration_id);
+            }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $challenge_template_list = $challenge_template_list->whereIn('level_id', $request->level_id);
+            }
+
+            if ($request->has('organization_id') && !empty($request->organization_id) && is_array($request->organization_id)) {
+                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                if (!empty($getOrganizationIds)) {
+                    $challenge_template_list = $challenge_template_list->whereIn('organization_id', $getOrganizationIds);
+                }
+            }
+
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
+                $challenge_template_list = $challenge_template_list->whereIn('challenge_templates.id', function ($query) use ($request) {
+                    $query->select('challenge_template_skills_groups_stacks.challenge_template_id')
+                    ->from('challenge_template_skills_groups_stacks')
+                    ->whereIn('challenge_template_skills_groups_stacks.foreign_id', $request->skills)
+                        ->where('challenge_template_skills_groups_stacks.type', '0')
+                        ->whereNull('challenge_template_skills_groups_stacks.deleted_at')
+                        ->distinct();
+                })->distinct('challenge_templates.uuid');
+            }
+
+            return $challenge_template_list;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function addChallengeTemplate($challengeId)
+    {
+        try {
+            $originalChallenge = Challenge::find($challengeId);
+            $templateChallenge = new ChallengeTemplate();
+            $templateChallenge->language = $originalChallenge->language;
+            $templateChallenge->uuid = $originalChallenge->uuid;
+            $templateChallenge->title = $originalChallenge->title;
+            $templateChallenge->slug = $originalChallenge->slug;
+            $templateChallenge->user_id = auth()->user()->id;
+            $templateChallenge->organization_id = $originalChallenge->organization_id;
+            $templateChallenge->category_id = $originalChallenge->category_id;
+            $templateChallenge->duration_id = $originalChallenge->duration_id;
+            $templateChallenge->level_id = $originalChallenge->level_id;
+            $templateChallenge->description = $originalChallenge->description;
+            $templateChallenge->privacy = $originalChallenge->privacy;
+            $templateChallenge->media_type = $originalChallenge->media_type;
+            $templateChallenge->media = $originalChallenge->media;
+            $templateChallenge->status = $originalChallenge->status;
+            $templateChallenge->source_link = $originalChallenge->source_link;
+            $templateChallenge->agreement = $originalChallenge->agreement;
+            $templateChallenge->is_notification_enabled = $originalChallenge->is_notification_enabled;
+            $templateChallenge->project_privacy = $originalChallenge->project_privacy;
+            $templateChallenge->is_open = $originalChallenge->is_open;
+            $templateChallenge->is_auto_created = $originalChallenge->is_auto_created;
+            $templateChallenge->save();
+
+            return $templateChallenge;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getChallengeTemplateBasedOnSlug($slug)
+    {
+        try {
+            return ChallengeTemplate::where('slug', $slug)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+}

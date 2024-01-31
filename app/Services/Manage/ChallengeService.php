@@ -364,7 +364,6 @@ class ChallengeService
                             break;
                     }
                 }
-
                 $challenge->language = ($request->has('language')) ? $request->language : $challenge->language;
                 $challenge->organization_id = $organization->id;
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;

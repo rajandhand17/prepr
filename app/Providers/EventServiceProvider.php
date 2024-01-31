@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
+use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
 use App\Events\Labs\DeleteLabAssociatedData;
 use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
@@ -41,6 +42,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         DeleteResourceGroupAssociatedData::class=> [
             HandleDeleteResourceGroupAssociatedData::class,
+        ],
+
+        DeleteLabMarketplaceAssociatedData::class=> [
+            HandleDeleteLabAssociatedData::class,
         ],
     ];
 
