@@ -17,7 +17,7 @@ class LabMarketplaceAchievementsService
                 $labAchievement->lab_marketplace_id = $labMarketplaceId;
                 $labAchievement->achievement_name = $existingLabAchievements->achievement_name;
                 $labAchievement->achievement_points = $existingLabAchievements->achievement_points;
-                $labAchievement->achievement_condition = json_encode($existingLabAchievements->achievement_condition);
+                $labAchievement->achievement_condition = $existingLabAchievements->achievement_condition;
                 $labAchievement->achievement_image = $existingLabAchievements->achievement_image;
                 $labAchievement->save();
             }
@@ -28,6 +28,25 @@ class LabMarketplaceAchievementsService
         }
     }
 
+    public function redeemLabMarketplaceAchievement($redeemLabId, $labMarketplaceId)
+    {
+        try {
+            $labMarketplaceAchievementData = LabMarketplaceAchievement::where('lab_marketplace_id', $labMarketplaceId)->first();
+            if ($labMarketplaceAchievementData) {
+                $newLabAchievement = new LabAcheivement();
+                $newLabAchievement->lab_id = $redeemLabId;
+                $newLabAchievement->achievement_name = $labMarketplaceAchievementData->achievement_name;
+                $newLabAchievement->achievement_points = $labMarketplaceAchievementData->achievement_points;
+                $newLabAchievement->achievement_condition = $labMarketplaceAchievementData->achievement_condition;
+                $newLabAchievement->achievement_image = $labMarketplaceAchievementData->achievement_image;
+                $newLabAchievement->save();
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function deleteLabMarketplaceAchievement($labMarketplaceId)
     {
         try {

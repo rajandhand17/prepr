@@ -17,4 +17,13 @@ interface LabMarketplaceInterface
     public function addLabToMarketplace($slug, $labId);
 
     public function deleteLabMarketplace($slug, $labMarketplaceId);
+
+    public function addLabRedeemData($labId, $organizationId, $labMarketplaceId);
+
+    public function checkLabRedeemedOrNot($labMarketplaceId, $organizationId);
+
+    public function labRedeem($labMarketplaceId, $organizationId);
+
+    public function addLabRedeemed($labMarketplaceId, $organizationId, $labId);
+    
 }

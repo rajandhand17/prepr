@@ -29,6 +29,25 @@ class LabMarketplaceAddressService
         }
     }
 
+    public function redeemLabMarketplaceAddress($redeemLabId, $labMarketplaceId)
+    {
+        try {
+            $labMarketplaceAddressData = LabMarketplaceAddress::where('lab_marketplace_id', $labMarketplaceId)->first();
+
+            $newLabAddress = new LabAddress();
+            $newLabAddress->lab_id = $redeemLabId;
+            $newLabAddress->latitude = $labMarketplaceAddressData->latitude;
+            $newLabAddress->longitude = $labMarketplaceAddressData->longitude;
+            $newLabAddress->address = $labMarketplaceAddressData->address;
+            $newLabAddress->city = $labMarketplaceAddressData->city;
+            $newLabAddress->country = $labMarketplaceAddressData->country;
+            $newLabAddress->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function deleteLabMarketplaceAddress($labMarketplaceId)
     {
         try {

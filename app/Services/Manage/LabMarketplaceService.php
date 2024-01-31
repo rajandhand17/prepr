@@ -3,9 +3,13 @@
 namespace App\Services\Manage;
 
 use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Models\Lab;
+use App\Models\LabChallengeRedeem;
 use App\Models\LabMarketplace;
+use App\Models\Organization;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
 
 class LabMarketplaceService
 {
@@ -145,6 +149,66 @@ class LabMarketplaceService
             }
 
             return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkLabRedeemedOrNot($labMarketplaceId, $organizationId)
+    {
+        try {
+            $checkLabRedeemed = LabChallengeRedeem::where(['lab_marketplace_id' => $labMarketplaceId, 'organization_id' => $organizationId, 'is_redeemed' => '1'])->exists();
+            if (!$checkLabRedeemed) {
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+    public function redeemLabMarketplaceToLab($labMarketplaceId, $organizationId)
+    {
+        try {
+            $labMarketplaceData = LabMarketplace::find($labMarketplaceId);
+            $organisationName = Organization::where('id', $organizationId)->pluck('title')->first();
+
+            $model = new Lab();
+            $slug = UtilityHelper::generateSlug(($organisationName) . '-' . $labMarketplaceData->slug, $model);
+
+            $title = $title_format = $organisationName . ' ' . $labMarketplaceData->title;
+            $next = 1;
+            while (Lab::where('title', '=', $title)->first()) {
+                $title = "{$title_format} {$next}";
+                $next++;
+            }
+
+            $newLab = new Lab();
+            $newLab->type = $labMarketplaceData->type;
+            $newLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $newLab->language = $labMarketplaceData->language;
+            $newLab->user_id = auth()->user()->id;
+            $newLab->organization_id = $organizationId;
+            $newLab->category_id = $labMarketplaceData->category_id;
+            $newLab->duration_id = $labMarketplaceData->duration_id;
+            $newLab->level_id = $labMarketplaceData->level_id;
+            $newLab->slug = $slug;
+            $newLab->title = $title;
+            $newLab->description = $labMarketplaceData->description;
+            $newLab->privacy = $labMarketplaceData->privacy;
+            $newLab->media_type = $labMarketplaceData->media_type;
+            $newLab->media = $labMarketplaceData->media;
+            $newLab->status = $labMarketplaceData->status;
+            $newLab->total_share = '0';
+            $newLab->is_auto_created = $labMarketplaceData->is_auto_created;
+            $newLab->is_resource_sequential = $labMarketplaceData->is_resource_sequential;
+            $newLab->is_sequential = $labMarketplaceData->is_sequential;
+            $newLab->is_achievement_enabled = $labMarketplaceData->is_achievement_enabled;
+            $newLab->is_notification_enabled = $labMarketplaceData->is_notification_enabled;
+            $newLab->is_verified = $labMarketplaceData->is_verified;
+            $newLab->save();
+
+            return $newLab;
         } catch (Exception $e) {
             return false;
         }

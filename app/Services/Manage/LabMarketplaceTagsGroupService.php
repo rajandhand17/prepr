@@ -8,7 +8,7 @@ use Exception;
 
 class LabMarketplaceTagsGroupService
 {
-    public function addLabMarketplaceTagsGroupsStack($labTemplateId, $labId)
+    public function addLabMarketplaceTagsGroup($labTemplateId, $labId)
     {
         try {
             $existingLabTagsGroupsStack = LabTagsGroups::where('lab_id', $labId)->get();
@@ -20,6 +20,26 @@ class LabMarketplaceTagsGroupService
                     $labMarketplaceTagsGroupStack->foreign_id = $existingLabTagGroup->foreign_id;
                     $labMarketplaceTagsGroupStack->type = $existingLabTagGroup->type;
                     $labMarketplaceTagsGroupStack->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function redeemLabMarketplaceTagsGroup($redeemLabId, $labMarketplaceId)
+    {
+        try {
+            $labMarketplaceTagsGroupData = LabMarketplaceTagsGroups::where('lab_marketplace_id', $labMarketplaceId)->get();
+            if (!empty($labMarketplaceTagsGroupData)) {
+                foreach ($labMarketplaceTagsGroupData as $labMarketplaceTagsGroup) {
+                    $newLabTagsGroup = new LabTagsGroups();
+                    $newLabTagsGroup->lab_id = $redeemLabId;
+                    $newLabTagsGroup->foreign_id = $labMarketplaceTagsGroup->foreign_id;
+                    $newLabTagsGroup->type = $labMarketplaceTagsGroup->type;
+                    $newLabTagsGroup->save();
                 }
             }
 

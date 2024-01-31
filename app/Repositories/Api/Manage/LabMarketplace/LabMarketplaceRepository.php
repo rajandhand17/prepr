@@ -100,7 +100,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                 $addLabToMarketplace = $this->labMarketplaceService->addLabToMarketplace($slug);
                 $addLabMarketplaceAddress = $this->labMarketplaceAddressService->addLabMarketplaceAddress($addLabToMarketplace->id, $labId);
                 $addLabMarketplaceSkillAssociations = $this->labMarketplaceSkillsGroupStackService->addLabMarketplaceSkillsGroupsStack($addLabToMarketplace->id, $labId);
-                $addLabMarketplaceTagAssociations = $this->labMarketplaceTagsGroupsService->addLabMarketplaceTagsGroupsStack($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceTagAssociations = $this->labMarketplaceTagsGroupsService->addLabMarketplaceTagsGroup($addLabToMarketplace->id, $labId);
                 $addLabMarketplaceExternalLinks = $this->labMarketplaceExternalLinksService->addLabMarketplaceExternalLinks($addLabToMarketplace->id, $labId);
                 $addLabMarketplaceAchievement = $this->labMarketplaceAchievementsService->addLabMarketplaceAchievements($addLabToMarketplace->id, $labId);
                 $addLabMarketplaceAssociations = $this->labMarketplaceComponentAssociationService->addLabMarketplaceComponentAssociation($addLabToMarketplace->id, $labId);
@@ -162,6 +162,78 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             $labRedeem->challenge_id = null;
             $labRedeem->challenge_template_id = null;
             $labRedeem->is_redeemed = '0';
+            $labRedeem->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkLabRedeemedOrNot($labMarketplaceId, $organizationId)
+    {
+        try {
+            return $this->labMarketplaceService->checkLabRedeemedOrNot($labMarketplaceId, $organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public function labRedeem($labMarketplaceId, $organizationId)
+    {
+        try {
+            $redeemLabMarketplace = DB::transaction(function () use ($labMarketplaceId, $organizationId) {
+                $redeemLabMarketplaceToLab = $this->labMarketplaceService->redeemLabMarketplaceToLab($labMarketplaceId, $organizationId);
+                $redeemLabMarketplaceAddress = $this->labMarketplaceAddressService->redeemLabMarketplaceAddress($redeemLabMarketplaceToLab->id, $labMarketplaceId);
+                $redeemLabMarketplaceSkillAssociations = $this->labMarketplaceSkillsGroupStackService->redeemLabMarketplaceSkillsGroupsStack($redeemLabMarketplaceToLab->id, $labMarketplaceId);
+                $redeemLabMarketplaceTagsGroup = $this->labMarketplaceTagsGroupsService->redeemLabMarketplaceTagsGroup($redeemLabMarketplaceToLab->id, $labMarketplaceId);
+                $redeemLabMarketplaceExternalLinks = $this->labMarketplaceExternalLinksService->redeemLabMarketplaceExternalLinks($redeemLabMarketplaceToLab->id, $labMarketplaceId);
+                $redeemLabMarketplaceAchievement = $this->labMarketplaceAchievementsService->redeemLabMarketplaceAchievement($redeemLabMarketplaceToLab->id, $labMarketplaceId);
+
+                return [
+                    'redeemLabMarketplaceToLab' => $redeemLabMarketplaceToLab,
+                    'redeemLabMarketplaceAddress' => $redeemLabMarketplaceAddress,
+                    'redeemLabMarketplaceSkillAssociations' => $redeemLabMarketplaceSkillAssociations,
+                    'redeemLabMarketplaceTagsGroup' => $redeemLabMarketplaceTagsGroup,
+                    'redeemLabMarketplaceExternalLinks' => $redeemLabMarketplaceExternalLinks,
+                    'redeemLabMarketplaceAchievement' => $redeemLabMarketplaceAchievement,
+                ];
+            });
+
+            if (
+                $redeemLabMarketplace['redeemLabMarketplaceToLab'] &&
+                $redeemLabMarketplace['redeemLabMarketplaceAddress'] &&
+                $redeemLabMarketplace['redeemLabMarketplaceSkillAssociations'] &&
+                $redeemLabMarketplace['redeemLabMarketplaceTagsGroup'] &&
+                $redeemLabMarketplace['redeemLabMarketplaceExternalLinks'] &&
+                $redeemLabMarketplace['redeemLabMarketplaceAchievement']) {
+
+                self::addLabRedeemed($labMarketplaceId, $redeemLabMarketplace['redeemLabMarketplaceToLab']->organization_id, $redeemLabMarketplace['redeemLabMarketplaceToLab']->id);
+                DB::commit();
+                return $redeemLabMarketplace['redeemLabMarketplaceToLab'];
+            }
+
+            DB::rollback();
+
+            return false;
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return false;
+        }
+    }
+
+    public function addLabRedeemed($labMarketplaceId, $organizationId, $labId)
+    {
+        try {
+
+            $labRedeem = new LabChallengeRedeem();
+            $labRedeem->user_id = auth()->user()->id;
+            $labRedeem->organization_id = $organizationId;
+            $labRedeem->lab_id = $labId;
+            $labRedeem->lab_marketplace_id = $labMarketplaceId;
+            $labRedeem->challenge_id = null;
+            $labRedeem->challenge_template_id = null;
+            $labRedeem->is_redeemed = '1';
             $labRedeem->save();
 
             return true;
