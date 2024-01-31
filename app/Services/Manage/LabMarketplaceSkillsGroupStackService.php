@@ -47,7 +47,7 @@ class LabMarketplaceSkillsGroupStackService
             return false;
         }
     }
-    
+
     public static function deleteLabMarketplaceSkillsGroupStackService($labMarketplaceId)
     {
         try {

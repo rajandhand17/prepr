@@ -176,6 +176,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return false;
         }
     }
+
     public function labRedeem($labMarketplaceId, $organizationId)
     {
         try {
@@ -188,12 +189,12 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                 $redeemLabMarketplaceAchievement = $this->labMarketplaceAchievementsService->redeemLabMarketplaceAchievement($redeemLabMarketplaceToLab->id, $labMarketplaceId);
 
                 return [
-                    'redeemLabMarketplaceToLab' => $redeemLabMarketplaceToLab,
-                    'redeemLabMarketplaceAddress' => $redeemLabMarketplaceAddress,
+                    'redeemLabMarketplaceToLab'             => $redeemLabMarketplaceToLab,
+                    'redeemLabMarketplaceAddress'           => $redeemLabMarketplaceAddress,
                     'redeemLabMarketplaceSkillAssociations' => $redeemLabMarketplaceSkillAssociations,
-                    'redeemLabMarketplaceTagsGroup' => $redeemLabMarketplaceTagsGroup,
-                    'redeemLabMarketplaceExternalLinks' => $redeemLabMarketplaceExternalLinks,
-                    'redeemLabMarketplaceAchievement' => $redeemLabMarketplaceAchievement,
+                    'redeemLabMarketplaceTagsGroup'         => $redeemLabMarketplaceTagsGroup,
+                    'redeemLabMarketplaceExternalLinks'     => $redeemLabMarketplaceExternalLinks,
+                    'redeemLabMarketplaceAchievement'       => $redeemLabMarketplaceAchievement,
                 ];
             });
 
@@ -204,9 +205,9 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                 $redeemLabMarketplace['redeemLabMarketplaceTagsGroup'] &&
                 $redeemLabMarketplace['redeemLabMarketplaceExternalLinks'] &&
                 $redeemLabMarketplace['redeemLabMarketplaceAchievement']) {
-
                 self::addLabRedeemed($labMarketplaceId, $redeemLabMarketplace['redeemLabMarketplaceToLab']->organization_id, $redeemLabMarketplace['redeemLabMarketplaceToLab']->id);
                 DB::commit();
+
                 return $redeemLabMarketplace['redeemLabMarketplaceToLab'];
             }
 
@@ -223,7 +224,6 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
     public function addLabRedeemed($labMarketplaceId, $organizationId, $labId)
     {
         try {
-
             $labRedeem = new LabChallengeRedeem();
             $labRedeem->user_id = auth()->user()->id;
             $labRedeem->organization_id = $organizationId;

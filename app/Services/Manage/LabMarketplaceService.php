@@ -161,12 +161,13 @@ class LabMarketplaceService
             if (!$checkLabRedeemed) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
-    
+
     public function redeemLabMarketplaceToLab($labMarketplaceId, $organizationId)
     {
         try {
@@ -174,9 +175,9 @@ class LabMarketplaceService
             $organisationName = Organization::where('id', $organizationId)->pluck('title')->first();
 
             $model = new Lab();
-            $slug = UtilityHelper::generateSlug(($organisationName) . '-' . $labMarketplaceData->slug, $model);
+            $slug = UtilityHelper::generateSlug($organisationName.'-'.$labMarketplaceData->slug, $model);
 
-            $title = $title_format = $organisationName . ' ' . $labMarketplaceData->title;
+            $title = $title_format = $organisationName.' '.$labMarketplaceData->title;
             $next = 1;
             while (Lab::where('title', '=', $title)->first()) {
                 $title = "{$title_format} {$next}";

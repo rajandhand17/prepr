@@ -41,12 +41,13 @@ class LabMarketplaceExternalLinksService
                     $newLabExternalLink->save();
                 }
             }
-            
+
             return true;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function deleteLabMarketplaceExternalLink($labMarketplaceId)
     {
         try {

@@ -41,12 +41,13 @@ class LabMarketplaceAchievementsService
                 $newLabAchievement->achievement_image = $labMarketplaceAchievementData->achievement_image;
                 $newLabAchievement->save();
             }
-            
+
             return true;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function deleteLabMarketplaceAchievement($labMarketplaceId)
     {
         try {
