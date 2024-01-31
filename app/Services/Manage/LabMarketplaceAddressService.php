@@ -48,6 +48,7 @@ class LabMarketplaceAddressService
             return false;
         }
     }
+
     public static function deleteLabMarketplaceAddress($labMarketplaceId)
     {
         try {

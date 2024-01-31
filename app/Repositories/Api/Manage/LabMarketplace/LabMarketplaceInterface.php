@@ -25,5 +25,4 @@ interface LabMarketplaceInterface
     public function labRedeem($labMarketplaceId, $organizationId);
 
     public function addLabRedeemed($labMarketplaceId, $organizationId, $labId);
-    
 }
