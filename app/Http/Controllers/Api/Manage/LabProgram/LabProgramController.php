@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Manage\LabProgram;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
 use App\Http\Requests\Manage\LabProgram\UpdateLabProgramRequest;
-use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
 use App\Repositories\Api\Manage\LabProgram\LabProgramRepository;
 use App\Repositories\Api\Manage\LabProgramAchievement\LabProgramAchievementRepository;
