@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\ChallengeSponsor;
-use App\Models\ChallengeTemplateSponsor;
 use App\Models\Host;
 use Exception;
 
@@ -79,24 +78,6 @@ class ChallengeSponsorService
                     $cloneChallengeSponsor->save();
                 }
             });
-
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public function createTemplateChallengeSponsor($challengeId, $templateChallengeId)
-    {
-        try {
-            $getChallengeSponsor = ChallengeSponsor::where('challenge_id', $challengeId)->get();
-            foreach ($getChallengeSponsor as $getSponsor) {
-                $createChallengeSponsor = new ChallengeTemplateSponsor();
-                $createChallengeSponsor->challenge_template_id = $templateChallengeId;
-                $createChallengeSponsor->foreign_id = $getSponsor->foreign_id;
-                $createChallengeSponsor->type = $getSponsor->type;
-                $createChallengeSponsor->save();
-            }
 
             return true;
         } catch (Exception $e) {

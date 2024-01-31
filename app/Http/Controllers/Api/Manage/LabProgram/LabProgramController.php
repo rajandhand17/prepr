@@ -55,9 +55,9 @@ class LabProgramController extends AppBaseController
     public function show($slug)
     {
         try {
-            $labMarketplaceResource = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
-            if ($labMarketplaceResource) {
-                return $this->sendResponse(LabMarketplaceResource::make($labMarketplaceResource), __('responses.found_lab_program_view'));
+            $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labProgram) {
+                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
 
             return $this->sendError(__('responses.not_found_lab_program_view'), 404);

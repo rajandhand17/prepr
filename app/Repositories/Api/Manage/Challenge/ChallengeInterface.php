@@ -49,6 +49,4 @@ interface ChallengeInterface
     public function createChallengeAnnouncement($challengeId, $request);
 
     public function deleteChallengeAnnouncement($challengeAnnouncementId);
-
-    public function createTemplateChallenge($challengeId, $organization);
 }
