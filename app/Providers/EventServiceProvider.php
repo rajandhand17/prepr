@@ -10,6 +10,7 @@ use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Listeners\ChallengePath\HandleDeleteChallengePathAssociatedData;
 use App\Listeners\Lab\HandleDeleteLabAssociatedData;
+use App\Listeners\LabMarketplace\HandleDeleteLabMarketplaceAssociatedData;
 use App\Listeners\ResourceCollection\HandleDeleteResourceCollectionAssociatedData;
 use App\Listeners\ResourceGroup\HandleDeleteResourceGroupAssociatedData;
 use App\Listeners\ResourceModule\HandleDeleteResourceModuleAssociatedData;
@@ -45,7 +46,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         DeleteLabMarketplaceAssociatedData::class=> [
-            HandleDeleteLabAssociatedData::class,
+            HandleDeleteLabMarketplaceAssociatedData::class,
         ],
     ];
 
