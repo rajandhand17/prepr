@@ -26,9 +26,9 @@ class UpdateNotificationRequest extends FormRequest
         $baseRules=[
             'communication'              =>'required|in:subscribed,unsubscribed',
             'network_summary'            =>'required|in:subscribed,unsubscribed',
-            'lab_summary'                =>'required|in:unsubscribed,monthly, weekly',
-            'challenge_summary'          =>'required|in:unsubscribed,monthly, weekly',
-            'challenge_recommendation'   =>'required|in:unsubscribed,monthly, weekly',
+            'lab_summary'                =>'required|in:unsubscribed,monthly,weekly',
+            'challenge_summary'          =>'required|in:unsubscribed,monthly,weekly',
+            'challenge_recommendation'   =>'required|in:unsubscribed,monthly,weekly',
         ];
         return $baseRules;
     }

@@ -31,6 +31,7 @@ return new class() extends Migration {
             $table->enum('display_org_minionboarding', ['0', '1'])->comment('0 -> unsubscribed, 1 -> monthly, 2 -> weekly')->default('0');
             $table->enum('fcm_notification_permission', ['0', '1'])->comment('0 -> no, 1 -> yes')->default('0');
             $table->string('fcm_device_token')->nullable();
+            $table->enum('challenge_recommends', ['0', '1','2'])->comment('0 -> unsubscribed, 1 -> monthly, 2 -> weekly')->default('0');
             $table->timestamps();
             $table->softDeletes();
         });

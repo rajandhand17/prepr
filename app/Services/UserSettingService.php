@@ -23,7 +23,7 @@ class UserSettingService
                 [
                     'profile_privacy'           => $profilePrivacy,
                     'project_privacy'           => ($request->project_visibility == 'public') ? '0' : '1',
-                    'friend_request_privacy'    => ($request->friend_request == 'friend') ? '0' : '1',
+                    'friend_request_privacy'    => ($request->friend_request == 'any-one') ? '0' : '1',
                 ]
             );
             return $user;
@@ -47,11 +47,11 @@ class UserSettingService
             UserSetting::updateOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'email_subscription_notification' => ($request->communication == 'subscribed') ? '0' : '1',
-                    'email_subscription_network_summary' => ($request->network_summary == 'subscribed') ? '0' : '1',
+                    'manage_alerts' => ($request->communication == 'unsubscribed') ? '0' : '1',
+                    'email_subscription_network_summary' => ($request->network_summary == 'unsubscribed') ? '0' : '1',
                     'email_subscription_challenge_summary' => $challengeSummary,
                     'email_subscription_lab_summary' => $labSummary,
-                    'display_challenge_minionboarding' => $challengeRecommendation,
+                    'challenge_recommends' => $challengeRecommendation,
                 ]
             );
             return $user;

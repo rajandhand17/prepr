@@ -25,7 +25,7 @@ class SettingController extends AppBaseController
         try {
             $removeProfile=$this->settingRepository->removeProfile();
             if($removeProfile){
-                return $this->sendResponse([],__('responses.remove_profile_successfully'));
+                return $this->sendResponse(AccountResource::make($removeProfile),__('responses.remove_profile_successfully'));
             }
             return $this->sendError(__('responses.remove_profile_failed'),400);
         }catch(\Exception $e){

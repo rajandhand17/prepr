@@ -26,7 +26,7 @@ class UpdatePrivacyRequest extends FormRequest
         $baseRules=[
             'profile_visibility'    =>'required|in:public,private,signed-in',
             'project_visibility'    =>'required|in:public,private',
-            'friend_request'        =>'required|in:public,private',
+            'friend_request'        =>'required|in:any-one,no-one',
         ];
         return $baseRules;
     }
@@ -38,7 +38,7 @@ class UpdatePrivacyRequest extends FormRequest
             'project_visibility.required'   => __('responses.public_or_private'),
             'project_visibility.in'         => __('responses.public_or_private'),
             'friend_request.required'       => __('responses.required_fields'),
-            'friend_request.in'             => __('responses.public_or_private'),
+            'friend_request.in'             => __('responses.any_or_no_one'),
         ];
     }
 

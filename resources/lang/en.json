@@ -833,7 +833,7 @@
     "responses.public_or_private": "You have allowed only public and private",
     "responses.subscribed_or_unsubscribed_in": "You have allowed only subscribed and unsubscribed",
     "responses.subscribed_monthly_weekly_in": "You have allowed only unsubscribed,monthly and weekly",
-    "responses.any_or_no_one": "You have allowed only any and no-one",
+    "responses.any_or_no_one": "You have allowed only any-one and no-one",
     "responses.update_privacy_successfully": "You have successfully updated your privacy",
     "responses.update_privacy_failed": "You have failed to update your privacy",
     "responses.update_notification_successfully": "You have successfully updated your notification settings",
