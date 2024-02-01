@@ -22,6 +22,11 @@ class LabMarketplaceController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketPlaceList($request);
             if ($labMarketplace) {
                 $response = [
@@ -64,9 +69,14 @@ class LabMarketplaceController extends AppBaseController
         }
     }
 
-    public function show($slug)
+    public function show($slug, Request $request)
     {
         try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketplaceBasedOnSlug($slug);
             if ($labMarketplace) {
                 return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.lab_marketplace_found'));

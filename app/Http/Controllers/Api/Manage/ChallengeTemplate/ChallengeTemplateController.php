@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\Manage\ChallengeTemplate;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateRepository;
+use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -23,6 +25,11 @@ class ChallengeTemplateController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateList($request);
             if ($challengeTemplate) {
                 $response = [
@@ -61,15 +68,49 @@ class ChallengeTemplateController extends AppBaseController
         }
     }
 
-    public function show($slug)
+    public function show($slug, Request $request)
     {
         try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);
             if ($challengeTemplate) {
                 return $this->sendResponse(ChallengeTemplateResource::make($challengeTemplate), __('responses.found_challenge_detail'), 200);
             }
 
             return $this->sendError(__('responses.found_not_challenge_detail'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function redeemChallenge($slug, Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
+            $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);
+            if (!$challengeTemplate) {
+                return $this->sendError(__('responses.challenge_template_not_found'), 404);
+            }
+
+            $checkChallengeRedeemedOrNot = $this->challengeTemplateRepository->checkChallengeRedeemedOrNot($challengeTemplate->id, $organization->id);
+            if (!$checkChallengeRedeemedOrNot) {
+                return $this->sendError(__('responses.challenge_template_already_redeemed'), 404);
+            }
+
+            $challengeRedeem = $this->challengeTemplateRepository->challengeRedeem($challengeTemplate->id, $organization->id);
+            if ($challengeRedeem) {
+                return $this->sendResponse(ChallengeResource::make($challengeRedeem), __('responses.challenge_template_redeemed'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_template_not_redeemed'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

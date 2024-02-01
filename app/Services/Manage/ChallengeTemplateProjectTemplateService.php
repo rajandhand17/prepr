@@ -24,4 +24,23 @@ class ChallengeTemplateProjectTemplateService
             return false;
         }
     }
+
+    public function redeemChallengeTemplateProjectTemplate($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $checkChallengeTemplateProjectTemplates = ChallengeTemplateProjectTemplate::where('challenge_template_id', $challengeTemplateId)->get();
+            if (!empty($checkChallengeTemplateProjectTemplates)) {
+                foreach ($checkChallengeTemplateProjectTemplates as $challengeTemplateProjectTemplate) {
+                    $newChallengeProjectTemplate = new ChallengeProjectTemplate();
+                    $newChallengeProjectTemplate->challenge_id = $redeemChallengeId;
+                    $newChallengeProjectTemplate->template_id = $challengeTemplateProjectTemplate->template_id;
+                    $newChallengeProjectTemplate->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -843,5 +843,9 @@
     "responses.not_found_challenge_templates_list": "The list of Challenge Template has not been retrieved with success.",
     "responses.lab_marketplace_already_redeemed": "The Lab(s) which you are looking from Marketplace is already redeemed.",
     "responses.lab_marketplace_redeemed": "The Lab(s) from Marketplace has been redeemed.",
-    "responses.lab_marketplace_not_redeemed": "Sorry, The Lab(s) from Marketplace has not been redeemed successfully."
+    "responses.lab_marketplace_not_redeemed": "Sorry, The Lab(s) from Marketplace has not been redeemed successfully.",
+    "responses.challenge_template_not_found": "The Challenge(s) which you are looking doesn't exist in our system.",
+    "responses.challenge_template_already_redeemed": "The Challenge(s) which you are looking from Template is already redeemed.",
+    "responses.challenge_template_redeemed": "The Challenge(s) from Template has been redeemed.",
+    "responses.challenge_template_not_redeemed": "Sorry, The Challenge(s) from Template has not been redeemed successfully."
 }

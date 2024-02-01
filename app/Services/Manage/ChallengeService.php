@@ -494,4 +494,17 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function updatePreBuilt($challengeId, $is_pre_built)
+    {
+        try {
+            $challengeUpdate = Challenge::find($challengeId);
+            $challengeUpdate->is_pre_built = $is_pre_built;
+            $challengeUpdate->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

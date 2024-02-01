@@ -16,6 +16,7 @@ class Lab extends Model
         'type',
         'uuid',
         'language',
+        'is_pre_built',
         'user_id',
         'organization_id',
         'category_id',

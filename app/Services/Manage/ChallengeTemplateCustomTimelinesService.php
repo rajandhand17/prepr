@@ -30,4 +30,27 @@ class ChallengeTemplateCustomTimelinesService
             return false;
         }
     }
+
+    public function redeemChallengeTemplateCustomTimelines($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $checkChallengeTemplateTimelines = ChallengeTemplateCustomTimeLine::where('challenge_template_id', $challengeTemplateId)->get();
+            if (!empty($checkChallengeTemplateTimelines)) {
+                foreach ($checkChallengeTemplateTimelines as $challengeTimeline) {
+                    $newChallengeCustomTimeline = new ChallengeCustomTimeLines();
+                    $newChallengeCustomTimeline->challenge_id = $redeemChallengeId;
+                    $newChallengeCustomTimeline->custom_timelines_title = $challengeTimeline->custom_timelines_title;
+                    $newChallengeCustomTimeline->custom_timelines_date = $challengeTimeline->custom_timelines_date;
+                    $newChallengeCustomTimeline->custom_timelines_description = $challengeTimeline->custom_timelines_description;
+                    $newChallengeCustomTimeline->custom_timelines_duration = $challengeTimeline->custom_timelines_duration;
+                    $newChallengeCustomTimeline->schedule_custom_notify = $challengeTimeline->schedule_custom_notify;
+                    $newChallengeCustomTimeline->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
