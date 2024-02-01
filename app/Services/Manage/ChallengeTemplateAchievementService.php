@@ -28,4 +28,26 @@ class ChallengeTemplateAchievementService
             return false;
         }
     }
+
+    public function redeemChallengeTemplateAchievement($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $challengeTemplateDatas = ChallengeTemplateAchievement::where('challenge_template_id', $challengeTemplateId)->get();
+            if (!empty($challengeTemplateDatas)) {
+                foreach ($challengeTemplateDatas as $challengeTemplate) {
+                    $newChallengeAchievement = new ChallengeAchievement();
+                    $newChallengeAchievement->challenge_id = $redeemChallengeId;
+                    $newChallengeAchievement->achievement_type = $challengeTemplate->achievement_type;
+                    $newChallengeAchievement->achievement_name = $challengeTemplate->achievement_name;
+                    $newChallengeAchievement->achievement_prize = $challengeTemplate->achievement_prize;
+                    $newChallengeAchievement->achievement_points = $challengeTemplate->achievement_points;
+                    $newChallengeAchievement->achievement_image = $challengeTemplate->achievement_image;
+                    $newChallengeAchievement->save();
+                }
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

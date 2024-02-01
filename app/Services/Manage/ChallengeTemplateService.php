@@ -2,9 +2,13 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengeTemplate;
+use App\Models\LabChallengeRedeem;
+use App\Models\Organization;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
 
 class ChallengeTemplateService
 {
@@ -112,6 +116,65 @@ class ChallengeTemplateService
     {
         try {
             return ChallengeTemplate::where('slug', $slug)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkChallengeRedeemedOrNot($challengeTemplateId, $organizationId)
+    {
+        try {
+            $checkChallengeRedeemed = LabChallengeRedeem::where(['challenge_template_id' => $challengeTemplateId, 'organization_id' => $organizationId, 'is_redeemed' => '1'])->exists();
+            if (!$checkChallengeRedeemed) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function redeemChallengeTemplateToChallenge($challengeTemplateId, $organizationId)
+    {
+        try {
+            $challengeTemplateData = ChallengeTemplate::find($challengeTemplateId);
+            $organisationName = Organization::where('id', $organizationId)->pluck('title')->first();
+
+            $model = new Challenge();
+            $slug = UtilityHelper::generateSlug($organisationName . '-' . $challengeTemplateData->slug, $model);
+
+            $title = $title_format = $organisationName . ' ' . $challengeTemplateData->title;
+            $next = 1;
+            while (Challenge::where('title', '=', $title)->first()) {
+                $title = "{$title_format} {$next}";
+                $next++;
+            }
+
+            $newChallenge = new Challenge();
+            $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $newChallenge->language = $challengeTemplateData->language;
+            $newChallenge->user_id = auth()->user()->id;
+            $newChallenge->organization_id = $organizationId;
+            $newChallenge->category_id = $challengeTemplateData->category_id;
+            $newChallenge->duration_id = $challengeTemplateData->duration_id;
+            $newChallenge->level_id = $challengeTemplateData->level_id;
+            $newChallenge->slug = $slug;
+            $newChallenge->title = $title;
+            $newChallenge->description = $challengeTemplateData->description;
+            $newChallenge->privacy = $challengeTemplateData->privacy;
+            $newChallenge->media_type = $challengeTemplateData->media_type;
+            $newChallenge->media = $challengeTemplateData->media;
+            $newChallenge->status = $challengeTemplateData->status;
+            $newChallenge->source_link = $challengeTemplateData->source_link;
+            $newChallenge->agreement = $challengeTemplateData->agreement;
+            $newChallenge->is_notification_enabled = $challengeTemplateData->is_notification_enabled;
+            $newChallenge->project_privacy = $challengeTemplateData->project_privacy;
+            $newChallenge->is_open = $challengeTemplateData->is_open;
+            $newChallenge->is_auto_created = $challengeTemplateData->is_auto_created;
+            $newChallenge->save();
+
+            return $newChallenge;
         } catch (Exception $e) {
             return false;
         }

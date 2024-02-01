@@ -39,4 +39,36 @@ class ChallengeTemplateTimelinesService
             return false;
         }
     }
+
+    public function redeemChallengeTemplateTimeline($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $checkChallengeTemplateTimelines = ChallengeTemplateTimeLine::where('challenge_template_id', $challengeTemplateId)->get();
+            if (!empty($checkChallengeTemplateTimelines)) {
+                foreach ($checkChallengeTemplateTimelines as $challengeTimeline) {
+                    $newChallengeTimeline = new ChallengeTimelines();
+                    $newChallengeTimeline->challenge_id = $redeemChallengeId;
+                    $newChallengeTimeline->timeline_type = $challengeTimeline->timeline_type;
+                    $newChallengeTimeline->open_call_date = $challengeTimeline->open_call_date;
+                    $newChallengeTimeline->open_call_date_description = $challengeTimeline->open_call_date_description;
+                    $newChallengeTimeline->last_call_date = $challengeTimeline->last_call_date;
+                    $newChallengeTimeline->last_call_date_description = $challengeTimeline->last_call_date_description;
+                    $newChallengeTimeline->application_deadline_date = $challengeTimeline->application_deadline_date;
+                    $newChallengeTimeline->application_deadline_date_description = $challengeTimeline->application_deadline_date_description;
+                    $newChallengeTimeline->submission_deadline_date = $challengeTimeline->submission_deadline_date;
+                    $newChallengeTimeline->submission_deadline_date_description = $challengeTimeline->submission_deadline_date_description;
+                    $newChallengeTimeline->challenge_duration = $challengeTimeline->challenge_duration;
+                    $newChallengeTimeline->flexible_date_number = $challengeTimeline->flexible_date_number;
+                    $newChallengeTimeline->flexible_date_duration = $challengeTimeline->flexible_date_duration;
+                    $newChallengeTimeline->automatic_alert = $challengeTimeline->automatic_alert;
+                    $newChallengeTimeline->flexible_expire_deadline = $challengeTimeline->flexible_expire_deadline;
+                    $newChallengeTimeline->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

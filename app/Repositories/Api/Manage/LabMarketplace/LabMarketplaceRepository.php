@@ -187,14 +187,16 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                 $redeemLabMarketplaceTagsGroup = $this->labMarketplaceTagsGroupsService->redeemLabMarketplaceTagsGroup($redeemLabMarketplaceToLab->id, $labMarketplaceId);
                 $redeemLabMarketplaceExternalLinks = $this->labMarketplaceExternalLinksService->redeemLabMarketplaceExternalLinks($redeemLabMarketplaceToLab->id, $labMarketplaceId);
                 $redeemLabMarketplaceAchievement = $this->labMarketplaceAchievementsService->redeemLabMarketplaceAchievement($redeemLabMarketplaceToLab->id, $labMarketplaceId);
+                $redeemLabMarketplaceComponentAssociation = $this->labMarketplaceComponentAssociationService->redeemLabMarketplaceComponentAssociation($redeemLabMarketplaceToLab->id, $labMarketplaceId, $organizationId);
 
                 return [
-                    'redeemLabMarketplaceToLab'             => $redeemLabMarketplaceToLab,
-                    'redeemLabMarketplaceAddress'           => $redeemLabMarketplaceAddress,
-                    'redeemLabMarketplaceSkillAssociations' => $redeemLabMarketplaceSkillAssociations,
-                    'redeemLabMarketplaceTagsGroup'         => $redeemLabMarketplaceTagsGroup,
-                    'redeemLabMarketplaceExternalLinks'     => $redeemLabMarketplaceExternalLinks,
-                    'redeemLabMarketplaceAchievement'       => $redeemLabMarketplaceAchievement,
+                    'redeemLabMarketplaceToLab'                 => $redeemLabMarketplaceToLab,
+                    'redeemLabMarketplaceAddress'               => $redeemLabMarketplaceAddress,
+                    'redeemLabMarketplaceSkillAssociations'     => $redeemLabMarketplaceSkillAssociations,
+                    'redeemLabMarketplaceTagsGroup'             => $redeemLabMarketplaceTagsGroup,
+                    'redeemLabMarketplaceExternalLinks'         => $redeemLabMarketplaceExternalLinks,
+                    'redeemLabMarketplaceAchievement'           => $redeemLabMarketplaceAchievement,
+                    'redeemLabMarketplaceComponentAssociation'  => $redeemLabMarketplaceComponentAssociation,
                 ];
             });
 
@@ -204,7 +206,8 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
                 $redeemLabMarketplace['redeemLabMarketplaceSkillAssociations'] &&
                 $redeemLabMarketplace['redeemLabMarketplaceTagsGroup'] &&
                 $redeemLabMarketplace['redeemLabMarketplaceExternalLinks'] &&
-                $redeemLabMarketplace['redeemLabMarketplaceAchievement']) {
+                $redeemLabMarketplace['redeemLabMarketplaceAchievement'] &&
+                $redeemLabMarketplace['redeemLabMarketplaceComponentAssociation']) {
                 self::addLabRedeemed($labMarketplaceId, $redeemLabMarketplace['redeemLabMarketplaceToLab']->organization_id, $redeemLabMarketplace['redeemLabMarketplaceToLab']->id);
                 DB::commit();
 

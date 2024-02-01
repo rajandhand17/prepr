@@ -26,4 +26,25 @@ class ChallengeTemplateAssessmentCriteriaService
             return false;
         }
     }
+
+    public function redeemChallengeTemplateAssessmentCriteria($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $checkChallengeTemplateAssessmentCriterias = ChallengeTemplateAssessmentCriterias::where('challenge_template_id', $challengeTemplateId)->get();
+            if (!empty($checkChallengeTemplateAssessmentCriterias)) {
+                foreach ($checkChallengeTemplateAssessmentCriterias as $challengeTemplateAssessmentCriteria) {
+                    $newChallengeAssessmentCriterias = new ChallengeAssessmentCriteria();
+                    $newChallengeAssessmentCriterias->challenge_id = $redeemChallengeId;
+                    $newChallengeAssessmentCriterias->title = $challengeTemplateAssessmentCriteria->title;
+                    $newChallengeAssessmentCriterias->score = $challengeTemplateAssessmentCriteria->score;
+                    $newChallengeAssessmentCriterias->weight = $challengeTemplateAssessmentCriteria->weight;
+                    $newChallengeAssessmentCriterias->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

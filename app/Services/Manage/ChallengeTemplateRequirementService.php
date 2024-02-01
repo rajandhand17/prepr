@@ -39,4 +39,35 @@ class ChallengeTemplateRequirementService
             return false;
         }
     }
+
+    public function redeemChallengeTemplateRequirement($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $checkChallengeTemplateRequirements = ChallengeTemplateRequirement::where('challenge_template_id', $challengeTemplateId)->get();
+            if (!empty($checkChallengeTemplateRequirements)) {
+                foreach ($checkChallengeTemplateRequirements as $challengeTemplateRequirement) {
+                    $newChallengeRequirements = new ChallengeRequirement();
+                    $newChallengeRequirements->challenge_id = $redeemChallengeId;
+                    $newChallengeRequirements->min_rank = $challengeTemplateRequirement->min_rank;
+                    $newChallengeRequirements->min_points = $challengeTemplateRequirement->min_points;
+                    $newChallengeRequirements->project_submission_requirement_ids = $challengeTemplateRequirement->project_submission_requirement_ids;
+                    $newChallengeRequirements->max_project_submission = $challengeTemplateRequirement->max_project_submission;
+                    $newChallengeRequirements->max_project_associate = $challengeTemplateRequirement->max_project_associate;
+                    $newChallengeRequirements->min_experience = $challengeTemplateRequirement->min_experience;
+                    $newChallengeRequirements->min_imported_badges = $challengeTemplateRequirement->min_imported_badges;
+                    $newChallengeRequirements->min_achievement_counts = $challengeTemplateRequirement->min_achievement_counts;
+                    $newChallengeRequirements->allow_submit_project = $challengeTemplateRequirement->allow_submit_project;
+                    $newChallengeRequirements->requirement_program = $challengeTemplateRequirement->requirement_program;
+                    $newChallengeRequirements->complete_education_program = $challengeTemplateRequirement->complete_education_program;
+                    $newChallengeRequirements->complete_experience = $challengeTemplateRequirement->complete_experience;
+                    $newChallengeRequirements->additional_requirements = $challengeTemplateRequirement->additional_requirements;
+                    $newChallengeRequirements->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\Challenge;
 use App\Models\ChallengePath;
+use App\Models\ChallengeTemplate;
 use App\Models\ComponentAssociation;
 use App\Models\LabMarketplaceComponentAssociations;
 use App\Repositories\Api\Manage\ChallengePathTemplate\ChallengePathTemplateRepository;
@@ -42,6 +43,24 @@ class LabMarketplaceComponentAssociationService
 
             return true;
         } catch(Exception $e) {
+            return false;
+        }
+    }
+
+    public function redeemLabMarketplaceComponentAssociation($redeemLabId, $labMarketplaceId, $organizationId)
+    {
+        try {
+            $labMarketplaceComponentAssociationData = LabMarketplaceComponentAssociations::where('lab_marketplace_id', $labMarketplaceId)->get();
+            if (!empty($labMarketplaceComponentAssociationData)) {
+                foreach ($labMarketplaceComponentAssociationData as $labMarketplaceComponentAssociation) {
+                    $getChallenge = ChallengeTemplate::where('id', $labMarketplaceComponentAssociation->challenge_template_id)->first();
+                    if ($getChallenge) {
+                        $challengeTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($getChallenge->id, $organizationId);
+                    }
+                }
+            }
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

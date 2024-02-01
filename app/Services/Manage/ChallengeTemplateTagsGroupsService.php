@@ -25,4 +25,24 @@ class ChallengeTemplateTagsGroupsService
             return false;
         }
     }
+
+    public function redeemChallengeTemplateTagGroup($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $checkChallengeTemplateTagGroups = ChallengeTemplateTagsGroups::where('challenge_template_id', $challengeTemplateId)->get();
+            if (!empty($checkChallengeTemplateTagGroups)) {
+                foreach ($checkChallengeTemplateTagGroups as $challengeTemplateTagGroup) {
+                    $newChallengeTagGroups = new ChallengeTagsGroups();
+                    $newChallengeTagGroups->challenge_id = $redeemChallengeId;
+                    $newChallengeTagGroups->foreign_id = $challengeTemplateTagGroup->foreign_id;
+                    $newChallengeTagGroups->type = $challengeTemplateTagGroup->type;
+                    $newChallengeTagGroups->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

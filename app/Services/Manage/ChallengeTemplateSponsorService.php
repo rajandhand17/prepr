@@ -24,4 +24,23 @@ class ChallengeTemplateSponsorService
             return false;
         }
     }
+
+    public function redeemChallengeTemplateSponsor($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $checkChallengeTemplateSponsors = ChallengeTemplateSponsor::where('challenge_template_id', $challengeTemplateId)->get();
+            if (!empty($checkChallengeTemplateSponsors)) {
+                foreach ($checkChallengeTemplateSponsors as $challengeTemplateSponsor) {
+                    $newChallengeSponsors = new ChallengeSponsor();
+                    $newChallengeSponsors->challenge_id = $redeemChallengeId;
+                    $newChallengeSponsors->host_id = $challengeTemplateSponsor->host_id;
+                    $newChallengeSponsors->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

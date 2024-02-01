@@ -142,6 +142,96 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
     public function addChallengeRedeemData($challengeId, $organizationId, $challengeTemplateId)
     {
         try {
+            $challengeRedeem = new LabChallengeRedeem();
+            $challengeRedeem->user_id = auth()->user()->id;
+            $challengeRedeem->organization_id = $organizationId;
+            $challengeRedeem->lab_id = null;
+            $challengeRedeem->lab_marketplace_id = null;
+            $challengeRedeem->challenge_id = $challengeId;
+            $challengeRedeem->challenge_template_id = $challengeTemplateId;
+            $challengeRedeem->is_redeemed = '0';
+            $challengeRedeem->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkChallengeRedeemedOrNot($challengeTemplateId, $organizationId)
+    {
+        try {
+            return $this->challengeTemplateService->checkChallengeRedeemedOrNot($challengeTemplateId, $organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function challengeRedeem($challengeTemplateId, $organizationId)
+    {
+        try {
+            $redeemChallengeTemplate = DB::transaction(function() use ($challengeTemplateId, $organizationId){
+                $redeemChallengeTemplateToChallenge = $this->challengeTemplateService->redeemChallengeTemplateToChallenge($challengeTemplateId, $organizationId);
+                $redeemChallengeTemplateAchievement = $this->challengeTemplateAchievementService->redeemChallengeTemplateAchievement($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateSkillGroupStack = $this->challengeTemplateSkillsGroupsStackService->redeemChallengeTemplateSkillGroupStack($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateTagGroup = $this->challengeTemplateTagsGroupsService->redeemChallengeTemplateTagGroup($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateSponsor = $this->challengeTemplateSponsorService->redeemChallengeTemplateSponsor($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateRequirement = $this->challengeTemplateRequirementService->redeemChallengeTemplateRequirement($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateAssessmentCriteria = $this->challengeTemplateAssessmentCriteriaService->redeemChallengeTemplateAssessmentCriteria($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateAssessment = $this->challengeTemplateAssessmentService->redeemChallengeTemplateAssessment($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateProjectTemplate = $this->challengeTemplateProjectTemplateService->redeemChallengeTemplateProjectTemplate($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateTimeline = $this->challengeTemplateTimelinesService->redeemChallengeTemplateTimeline($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateCustomTimelines = $this->challengeTemplateCustomTimelinesService->redeemChallengeTemplateCustomTimelines($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateExternalLink = $this->challengeTemplateExternalLinkService->redeemChallengeTemplateExternalLink($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+
+                return [
+                    'redeemChallengeTemplateToChallenge' => $redeemChallengeTemplateToChallenge,
+                    'redeemChallengeTemplateAchievement' => $redeemChallengeTemplateAchievement,
+                    'redeemChallengeTemplateSkillGroupStack' => $redeemChallengeTemplateSkillGroupStack,
+                    'redeemChallengeTemplateTagGroup' => $redeemChallengeTemplateTagGroup,
+                    'redeemChallengeTemplateSponsor' => $redeemChallengeTemplateSponsor,
+                    'redeemChallengeTemplateRequirement' => $redeemChallengeTemplateRequirement,
+                    'redeemChallengeTemplateAssessmentCriteria' => $redeemChallengeTemplateAssessmentCriteria,
+                    'redeemChallengeTemplateAssessment' => $redeemChallengeTemplateAssessment,
+                    'redeemChallengeTemplateProjectTemplate' => $redeemChallengeTemplateProjectTemplate,
+                    'redeemChallengeTemplateTimeline' => $redeemChallengeTemplateTimeline,
+                    'redeemChallengeTemplateCustomTimelines' => $redeemChallengeTemplateCustomTimelines,
+                    'redeemChallengeTemplateExternalLink' => $redeemChallengeTemplateExternalLink,
+                ];
+            });
+            if (
+                $redeemChallengeTemplate['redeemChallengeTemplateToChallenge'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateAchievement'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateSkillGroupStack'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateTagGroup'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateSponsor'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateRequirement'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateAssessmentCriteria'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateAssessment'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateProjectTemplate'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateTimeline'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateCustomTimelines'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateExternalLink']
+            ) {
+                self::addChallengeRedeemed($challengeTemplateId, $redeemChallengeTemplate['redeemChallengeTemplateToChallenge']->organization_id, $redeemChallengeTemplate['redeemChallengeTemplateToChallenge']->id);
+                DB::commit();
+
+                return $redeemChallengeTemplate['redeemChallengeTemplateToChallenge'];
+            }
+
+            DB::rollback();
+
+            return false;
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return false;
+        }
+    }
+
+    public function addChallengeRedeemed($challengeTemplateId, $organizationId, $challengeId)
+    {
+        try {
             $labRedeem = new LabChallengeRedeem();
             $labRedeem->user_id = auth()->user()->id;
             $labRedeem->organization_id = $organizationId;
@@ -149,7 +239,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             $labRedeem->lab_marketplace_id = null;
             $labRedeem->challenge_id = $challengeId;
             $labRedeem->challenge_template_id = $challengeTemplateId;
-            $labRedeem->is_redeemed = '0';
+            $labRedeem->is_redeemed = '1';
             $labRedeem->save();
 
             return true;

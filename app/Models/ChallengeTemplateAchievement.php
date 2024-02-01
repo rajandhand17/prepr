@@ -14,7 +14,12 @@ class ChallengeTemplateAchievement extends Model
     protected $table = 'challenge_template_achievements';
 
     protected $fillable = [
-        'challenge_template_id', 'achievement_type', 'achievement_name', 'achievement_prize', 'achievement_points', 'achievement_image',
+        'challenge_template_id',
+        'achievement_type',
+        'achievement_name',
+        'achievement_prize',
+        'achievement_points',
+        'achievement_image',
     ];
 
     protected $hidden = [
