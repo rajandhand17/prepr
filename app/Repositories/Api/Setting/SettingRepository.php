@@ -3,22 +3,59 @@
 namespace App\Repositories\Api\Setting;
 
 use App\Services\SettingService;
+use App\Services\UserService;
+use App\Services\UserSettingService;
 use DB;
 
 class SettingRepository implements SettingInterface
 {
-    private $settingService;
-    public function __construct(SettingService $settingService)
+    private $userSettingService;
+
+    private $userService;
+    public function __construct(UserSettingService $userSettingService,UserService $userService)
     {
-        $this->settingService = $settingService;
+        $this->userSettingService = $userSettingService;
+        $this->userService=$userService;
     }
 
-    public function updataUserAccount($request){
+    public function removeProfile(){
         try {
-            $settingService=$this->settingService->updataUserAccount($request);
-            if($settingService){
+            return $this->userService->removeProfile();
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function updataUserAccount($request)
+    {
+        try {
+           return $this->userService->updataUserAccount($request);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
 
-            }
+    public function changePassword($request)
+    {
+        try{
+            return $this->userService->changePassword($request);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
+    public function updatePrivacy($request)
+    {
+        try{
+            return $this->userSettingService->updatePrivacy($request);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
+    public function updateNotification($request)
+    {
+        try{
+            return $this->userSettingService->updateNotification($request);
         }catch(\Exception $e){
             return false;
         }

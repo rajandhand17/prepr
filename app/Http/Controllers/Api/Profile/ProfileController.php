@@ -53,7 +53,6 @@ class ProfileController extends AppBaseController
             if ($createProfile) {
                 return $this->sendResponse(ProfileResource::make($createProfile), __('responses.add_user_personal_created'));
             }
-
             return $this->sendError(__('responses.add_user_personal_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

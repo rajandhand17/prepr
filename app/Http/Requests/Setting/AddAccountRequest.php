@@ -30,11 +30,10 @@ class AddAccountRequest extends FormRequest
             'username'                 => 'required',
             'email'                    => 'required|email',
             'phone_number'             => 'required',
-            'timezone'                 => 'required',
-            'preference_language'      => 'required',
-            'two_factor_authentication'=> 'required',
+            'preferred_timezone'       => 'required',
+            'preferred_language'       => 'required',
+            'two_factor_verification'  => 'required|in:true,false',
         ];
-
         return $base_rules;
     }
 
@@ -44,15 +43,14 @@ class AddAccountRequest extends FormRequest
             'first_name.required'           => __('responses.first_name_field_required'),
             'last_name.required'            => __('responses.last_name_field_required'),
             'purpose.numeric'               => __('responses.numeric_allowed_only'),
-            'purpose.between'               => __('responses.between_allowed_purpose'),
-            'gender.required'               => __('responses.gender_required'),
-            'gender.in'                     => __('responses.gender_between'),
-            'date_of_birth.required'        => __('responses.user_date_of_birth'),
-            'date_of_birth.before_or_equal' => __('responses.date_of_birth_date'),
-            'recent_immigrant.in'           => __('responses.true_or_false'),
-            'indigenous_group.in'           => __('responses.true_or_false'),
-            'visible_minority.in'           => __('responses.true_or_false'),
-            'disability.in'                 => __('responses.true_or_false'),
+            'username.required'             => __('responses.required_field'),
+            'email.required'                => __('responses.email_field_required'),
+            'email.email'                   => __('responses.valid_email_pattern'),
+            'phone_number.required'         => __('responses.required_field'),
+            'preferred_timezone.required'   => __('responses.required_field'),
+            'preferred_language.required'   => __('responses.required_field'),
+            'two_factor_verification.required'=> __('responses.required_field'),
+            'two_factor_verification.in'    => __('responses.true_or_false'),
         ];
     }
 

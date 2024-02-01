@@ -16,7 +16,8 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->enum('profile_privacy', ['0', '1'])->comment('0 -> public, 1 -> private')->default('0');
+            $table->enum('profile_privacy', ['0', '1','2'])->comment('0 -> public(anyone),1->private(no-one),2->signed-user')->default('0');
+            $table->enum('friend_request_privacy', ['0', '1'])->comment('0->any-one,1->no-one')->default('0');
             $table->enum('project_privacy', ['0', '1'])->comment('0 -> public, 1 -> private')->default('0');
             $table->enum('manage_alerts', ['0', '1'])->comment('0 -> no, 1 -> yes')->default('0');
             $table->enum('is_subscribe', ['0', '1'])->comment('0 -> unsubscribed, 1 -> subscribed')->default('0');

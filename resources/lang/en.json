@@ -826,5 +826,18 @@
     "responses.unpinned_achievement": "The Achievement removed in featured list!",
     "responses.already_pinned_achievement": "The Achievement is already being pinned by you!",
     "responses.already_unpinned_achievement": "The Achievement is already being un-pinned by you!",
-    "responses.download_successfull": "Achievement download successfull"
+    "responses.download_successfull": "Achievement download successfully",
+    "responses.update_user_account_successful": "The user account was successfully updated",
+    "responses.update_user_account_failed": "The user account has failed to updated",
+    "responses.profile_privacy_in": "The user profile visibility should between public,signed-in, and private",
+    "responses.public_or_private": "You have allowed only public and private",
+    "responses.subscribed_or_unsubscribed_in": "You have allowed only subscribed and unsubscribed",
+    "responses.subscribed_monthly_weekly_in": "You have allowed only subscribed,monthly and weekly",
+    "responses.any_or_no_one": "You have allowed only any and no-one",
+    "responses.update_privacy_successfully": "You have successfully updated your privacy",
+    "responses.update_privacy_failed": "You have failed to update your privacy",
+    "responses.update_notification_successfully": "You have successfully updated your notification settings",
+    "responses.update_notification_failed": "You have failed to update your notification settings",
+    "responses.remove_profile_successfully": "You have successfully removed your profile",
+    "responses.remove_profile_failed": "You have failed to removed your profile"
 }
