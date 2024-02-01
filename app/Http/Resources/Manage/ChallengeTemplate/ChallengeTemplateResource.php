@@ -5,7 +5,6 @@ namespace App\Http\Resources\Manage\ChallengeTemplate;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTemplateService;
-use App\Services\Manage\LabMarketplaceService;
 use App\Services\Manage\OrganizationService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;

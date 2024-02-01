@@ -62,7 +62,6 @@ class LabMarketplaceService
                             $lab_marketplace_list = $lab_marketplace_list;
                             break;
                     }
-                    
                 }
             }
 
