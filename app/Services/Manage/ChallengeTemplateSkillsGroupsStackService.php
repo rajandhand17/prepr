@@ -39,7 +39,7 @@ class ChallengeTemplateSkillsGroupsStackService
                     $newChallengeSkillGroupStacks->save();
                 }
             }
-            
+
             return true;
         } catch (Exception $e) {
             return false;

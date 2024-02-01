@@ -51,5 +51,4 @@ class ChallengeTemplateExternalLinkService
             return false;
         }
     }
-
 }
