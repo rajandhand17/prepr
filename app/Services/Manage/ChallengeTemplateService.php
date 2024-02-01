@@ -15,7 +15,7 @@ class ChallengeTemplateService
     public static function getChallengeTemplateList($request)
     {
         try {
-            $challenge_template_list = ChallengeTemplate::select();
+            $challenge_template_list = ChallengeTemplate::select()->where('language', $request->language);
 
             $challenge_template_list = self::filterChallengeTemplateList($challenge_template_list, $request);
 
