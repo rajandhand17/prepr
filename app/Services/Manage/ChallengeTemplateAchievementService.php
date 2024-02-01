@@ -45,6 +45,7 @@ class ChallengeTemplateAchievementService
                     $newChallengeAchievement->save();
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;

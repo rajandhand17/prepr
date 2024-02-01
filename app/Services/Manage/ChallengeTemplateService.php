@@ -142,9 +142,9 @@ class ChallengeTemplateService
             $organisationName = Organization::where('id', $organizationId)->pluck('title')->first();
 
             $model = new Challenge();
-            $slug = UtilityHelper::generateSlug($organisationName . '-' . $challengeTemplateData->slug, $model);
+            $slug = UtilityHelper::generateSlug($organisationName.'-'.$challengeTemplateData->slug, $model);
 
-            $title = $title_format = $organisationName . ' ' . $challengeTemplateData->title;
+            $title = $title_format = $organisationName.' '.$challengeTemplateData->title;
             $next = 1;
             while (Challenge::where('title', '=', $title)->first()) {
                 $title = "{$title_format} {$next}";

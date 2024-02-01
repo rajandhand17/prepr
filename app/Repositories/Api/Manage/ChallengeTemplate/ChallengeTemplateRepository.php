@@ -170,7 +170,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
     public function challengeRedeem($challengeTemplateId, $organizationId)
     {
         try {
-            $redeemChallengeTemplate = DB::transaction(function() use ($challengeTemplateId, $organizationId){
+            $redeemChallengeTemplate = DB::transaction(function () use ($challengeTemplateId, $organizationId) {
                 $redeemChallengeTemplateToChallenge = $this->challengeTemplateService->redeemChallengeTemplateToChallenge($challengeTemplateId, $organizationId);
                 $redeemChallengeTemplateAchievement = $this->challengeTemplateAchievementService->redeemChallengeTemplateAchievement($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateSkillGroupStack = $this->challengeTemplateSkillsGroupsStackService->redeemChallengeTemplateSkillGroupStack($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
@@ -185,18 +185,18 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $redeemChallengeTemplateExternalLink = $this->challengeTemplateExternalLinkService->redeemChallengeTemplateExternalLink($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
 
                 return [
-                    'redeemChallengeTemplateToChallenge' => $redeemChallengeTemplateToChallenge,
-                    'redeemChallengeTemplateAchievement' => $redeemChallengeTemplateAchievement,
-                    'redeemChallengeTemplateSkillGroupStack' => $redeemChallengeTemplateSkillGroupStack,
-                    'redeemChallengeTemplateTagGroup' => $redeemChallengeTemplateTagGroup,
-                    'redeemChallengeTemplateSponsor' => $redeemChallengeTemplateSponsor,
-                    'redeemChallengeTemplateRequirement' => $redeemChallengeTemplateRequirement,
+                    'redeemChallengeTemplateToChallenge'        => $redeemChallengeTemplateToChallenge,
+                    'redeemChallengeTemplateAchievement'        => $redeemChallengeTemplateAchievement,
+                    'redeemChallengeTemplateSkillGroupStack'    => $redeemChallengeTemplateSkillGroupStack,
+                    'redeemChallengeTemplateTagGroup'           => $redeemChallengeTemplateTagGroup,
+                    'redeemChallengeTemplateSponsor'            => $redeemChallengeTemplateSponsor,
+                    'redeemChallengeTemplateRequirement'        => $redeemChallengeTemplateRequirement,
                     'redeemChallengeTemplateAssessmentCriteria' => $redeemChallengeTemplateAssessmentCriteria,
-                    'redeemChallengeTemplateAssessment' => $redeemChallengeTemplateAssessment,
-                    'redeemChallengeTemplateProjectTemplate' => $redeemChallengeTemplateProjectTemplate,
-                    'redeemChallengeTemplateTimeline' => $redeemChallengeTemplateTimeline,
-                    'redeemChallengeTemplateCustomTimelines' => $redeemChallengeTemplateCustomTimelines,
-                    'redeemChallengeTemplateExternalLink' => $redeemChallengeTemplateExternalLink,
+                    'redeemChallengeTemplateAssessment'         => $redeemChallengeTemplateAssessment,
+                    'redeemChallengeTemplateProjectTemplate'    => $redeemChallengeTemplateProjectTemplate,
+                    'redeemChallengeTemplateTimeline'           => $redeemChallengeTemplateTimeline,
+                    'redeemChallengeTemplateCustomTimelines'    => $redeemChallengeTemplateCustomTimelines,
+                    'redeemChallengeTemplateExternalLink'       => $redeemChallengeTemplateExternalLink,
                 ];
             });
             if (
