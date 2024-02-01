@@ -60,4 +60,12 @@ class SettingRepository implements SettingInterface
             return false;
         }
     }
+
+    public function getDetails(){
+        try{
+            return $this->userSettingService->getDetails();
+        }catch(\Exception $e){
+            return false;
+        }
+    }
 }

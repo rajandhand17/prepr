@@ -60,7 +60,7 @@ class SettingController extends AppBaseController
         try {
             $updatePrivacy=$this->settingRepository->updatePrivacy($request);
             if($updatePrivacy){
-                return $this->sendResponse([],__('responses.update_privacy_successfully'));
+                return $this->sendResponse(AccountResource::make($updatePrivacy),__('responses.update_privacy_successfully'));
             }
             return $this->sendError(__('responses.update_privacy_failed'), 400);
         }catch(\Exception $e){
@@ -72,7 +72,7 @@ class SettingController extends AppBaseController
         try {
             $updateNotification=$this->settingRepository->updateNotification($request);
             if($updateNotification){
-                return $this->sendResponse([],__('responses.update_notification_successfully'));
+                return $this->sendResponse(AccountResource::make($updateNotification),__('responses.update_notification_successfully'));
             }
             return $this->sendError(__('responses.update_notification_failed'),400);
 
@@ -85,7 +85,7 @@ class SettingController extends AppBaseController
         try {
             $getdetails=$this->settingRepository->getDetails();
             if($getdetails){
-                return $this->sendResponse($getdetails,__('responses.get_details'));
+                return $this->sendResponse(AccountResource::make($getdetails),__('responses.get_details'));
             }
             return $this->sendError(__('responses.update_notification_failed'),400);
         }catch(\Exception $e){
