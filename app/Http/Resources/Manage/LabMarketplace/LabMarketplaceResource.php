@@ -138,7 +138,11 @@ class LabMarketplaceResource extends JsonResource
         }
 
         $is_redeemed = 'yes';
-        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+        $organizationCheck = $this->organization->uuid;
+        if ($request->has('organization_id')) {
+            $organizationCheck = $request->organization_id;
+        }
+        $organization = OrganizationService::getOrganizationExistBasedOnUuid($organizationCheck);
         $checkLabRedeem = LabMarketplaceService::checkLabRedeemedOrNot($this->id, $organization->id);
         if ($checkLabRedeem) {
             $is_redeemed = 'no';
