@@ -4,6 +4,9 @@ namespace App\Http\Resources\Manage\ChallengeTemplate;
 
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
+use App\Services\Manage\ChallengeTemplateService;
+use App\Services\Manage\LabMarketplaceService;
+use App\Services\Manage\OrganizationService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -247,6 +250,13 @@ class ChallengeTemplateResource extends JsonResource
                 break;
         }
 
+        $is_redeemed = 'yes';
+        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+        $checkChallengeRedeem = ChallengeTemplateService::checkChallengeRedeemedOrNot($this->id, $organization->id);
+        if ($checkChallengeRedeem) {
+            $is_redeemed = 'no';
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -287,6 +297,8 @@ class ChallengeTemplateResource extends JsonResource
             'challenge_custom_timelines'    => $challenge_custom_timelines,
             'challenge_template'            => $this->challenge_project_template,
             'external_links'                => ChallengeTemplateExternalLinkResource::collection($this->external_links),
+            'is_redeemed'                   => $is_redeemed,
+            'credit_score'                  => '1',
         ];
     }
 }

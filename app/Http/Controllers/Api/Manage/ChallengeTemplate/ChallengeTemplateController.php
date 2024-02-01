@@ -25,6 +25,11 @@ class ChallengeTemplateController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateList($request);
             if ($challengeTemplate) {
                 $response = [
@@ -63,9 +68,14 @@ class ChallengeTemplateController extends AppBaseController
         }
     }
 
-    public function show($slug)
+    public function show($slug, Request $request)
     {
         try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);
             if ($challengeTemplate) {
                 return $this->sendResponse(ChallengeTemplateResource::make($challengeTemplate), __('responses.found_challenge_detail'), 200);

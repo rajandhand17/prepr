@@ -4,6 +4,8 @@ namespace App\Http\Resources\Manage\LabMarketplace;
 
 use App\Helpers\UtilityHelper;
 use App\Services\AchievementConditionListService;
+use App\Services\Manage\LabMarketplaceService;
+use App\Services\Manage\OrganizationService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -135,6 +137,13 @@ class LabMarketplaceResource extends JsonResource
                 break;
         }
 
+        $is_redeemed = 'yes';
+        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+        $checkLabRedeem = LabMarketplaceService::checkLabRedeemedOrNot($this->id, $organization->id);
+        if ($checkLabRedeem) {
+            $is_redeemed = 'no';
+        }
+
         return [
             'id'                            => $this->uuid,
             'type'                          => $type,
@@ -176,6 +185,8 @@ class LabMarketplaceResource extends JsonResource
             'resource_collection_count'     => 0,
             'resource_group_count'          => 0,
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
+            'is_redeemed'                   => $is_redeemed,
+            'credit_score'                  => '1',
         ];
     }
 }

@@ -12,15 +12,17 @@ class LabMarketplaceAddressService
     {
         try {
             $labTemplate = LabAddress::where('lab_id', $labId)->get();
-            foreach ($labTemplate as $template) {
-                $labTemplateAddress = new LabMarketplaceAddress();
-                $labTemplateAddress->lab_marketplace_id = $labMarketplace;
-                $labTemplateAddress->latitude = $template->latitude;
-                $labTemplateAddress->longitude = $template->longitude;
-                $labTemplateAddress->address = $template->address;
-                $labTemplateAddress->city = $template->city;
-                $labTemplateAddress->country = $template->country;
-                $labTemplateAddress->save();
+            if (!empty($labTemplate)) {
+                foreach ($labTemplate as $template) {
+                    $labTemplateAddress = new LabMarketplaceAddress();
+                    $labTemplateAddress->lab_marketplace_id = $labMarketplace;
+                    $labTemplateAddress->latitude = $template->latitude;
+                    $labTemplateAddress->longitude = $template->longitude;
+                    $labTemplateAddress->address = $template->address;
+                    $labTemplateAddress->city = $template->city;
+                    $labTemplateAddress->country = $template->country;
+                    $labTemplateAddress->save();
+                }
             }
 
             return true;
@@ -33,15 +35,16 @@ class LabMarketplaceAddressService
     {
         try {
             $labMarketplaceAddressData = LabMarketplaceAddress::where('lab_marketplace_id', $labMarketplaceId)->first();
-
-            $newLabAddress = new LabAddress();
-            $newLabAddress->lab_id = $redeemLabId;
-            $newLabAddress->latitude = $labMarketplaceAddressData->latitude;
-            $newLabAddress->longitude = $labMarketplaceAddressData->longitude;
-            $newLabAddress->address = $labMarketplaceAddressData->address;
-            $newLabAddress->city = $labMarketplaceAddressData->city;
-            $newLabAddress->country = $labMarketplaceAddressData->country;
-            $newLabAddress->save();
+            if ($labMarketplaceAddressData) {
+                $newLabAddress = new LabAddress();
+                $newLabAddress->lab_id = $redeemLabId;
+                $newLabAddress->latitude = $labMarketplaceAddressData->latitude;
+                $newLabAddress->longitude = $labMarketplaceAddressData->longitude;
+                $newLabAddress->address = $labMarketplaceAddressData->address;
+                $newLabAddress->city = $labMarketplaceAddressData->city;
+                $newLabAddress->country = $labMarketplaceAddressData->country;
+                $newLabAddress->save();
+            }
 
             return true;
         } catch (Exception $e) {

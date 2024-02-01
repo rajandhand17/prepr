@@ -48,6 +48,24 @@ class ChallengeTemplateService
                 }
             }
 
+            if ($request->has('status') && !empty($request->status)) {
+                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+                $getChallengeRedeemedIds = LabChallengeRedeem::where(['organization_id' => $organization->id, 'is_redeemed' => '1'])->whereNotNull('challenge_id')->pluck('challenge_template_id');
+                if (!empty($getChallengeRedeemedIds)) {
+                    switch ($request->status) {
+                        case 'redeemed':
+                            $challenge_template_list = $challenge_template_list->whereIn('id', $getChallengeRedeemedIds);
+                            break;
+                        case 'not_redeem':
+                            $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
+                            break;
+                        default:
+                            $challenge_template_list = $challenge_template_list;
+                            break;
+                    }
+                }
+            }
+
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $challenge_template_list = $challenge_template_list->whereIn('duration_id', $request->duration_id);
             }
@@ -121,7 +139,7 @@ class ChallengeTemplateService
         }
     }
 
-    public function checkChallengeRedeemedOrNot($challengeTemplateId, $organizationId)
+    public static function checkChallengeRedeemedOrNot($challengeTemplateId, $organizationId)
     {
         try {
             $checkChallengeRedeemed = LabChallengeRedeem::where(['challenge_template_id' => $challengeTemplateId, 'organization_id' => $organizationId, 'is_redeemed' => '1'])->exists();

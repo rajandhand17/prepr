@@ -141,6 +141,7 @@ class LabResource extends JsonResource
             'id'                            => $this->uuid,
             'type'                          => $type,
             'language'                      => $this->language,
+            'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'               => $this->organization->uuid,
             'organization'                  => $this->organization->title,

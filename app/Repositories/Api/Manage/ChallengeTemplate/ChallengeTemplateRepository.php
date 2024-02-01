@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Manage\ChallengeTemplate;
 
 use App\Models\LabChallengeRedeem;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeTemplateAchievementService;
 use App\Services\Manage\ChallengeTemplateAssessmentCriteriaService;
 use App\Services\Manage\ChallengeTemplateAssessmentService;
@@ -44,7 +45,9 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
     private $challengeTemplateExternalLinkService;
 
-    public function __construct(ChallengeTemplateExternalLinkService $challengeTemplateExternalLinkService, ChallengeTemplateCustomTimelinesService $challengeTemplateCustomTimelinesService, ChallengeTemplateTimelinesService $challengeTemplateTimelinesService, ChallengeTemplateProjectTemplateService $challengeTemplateProjectTemplateService, ChallengeTemplateAssessmentService $challengeTemplateAssessmentService, ChallengeTemplateAssessmentCriteriaService $challengeTemplateAssessmentCriteriaService, ChallengeTemplateRequirementService $challengeTemplateRequirementService, ChallengeTemplateTagsGroupsService $challengeTemplateTagsGroupsService, ChallengeTemplateSponsorService $challengeTemplateSponsorService, ChallengeTemplateSkillsGroupsStackService $challengeTemplateSkillsGroupsStackService, ChallengeTemplateService $challengeTemplateService, ChallengeTemplateAchievementService $challengeTemplateAchievementService)
+    private $challengeService;
+
+    public function __construct(ChallengeTemplateExternalLinkService $challengeTemplateExternalLinkService, ChallengeTemplateCustomTimelinesService $challengeTemplateCustomTimelinesService, ChallengeTemplateTimelinesService $challengeTemplateTimelinesService, ChallengeTemplateProjectTemplateService $challengeTemplateProjectTemplateService, ChallengeTemplateAssessmentService $challengeTemplateAssessmentService, ChallengeTemplateAssessmentCriteriaService $challengeTemplateAssessmentCriteriaService, ChallengeTemplateRequirementService $challengeTemplateRequirementService, ChallengeTemplateTagsGroupsService $challengeTemplateTagsGroupsService, ChallengeTemplateSponsorService $challengeTemplateSponsorService, ChallengeTemplateSkillsGroupsStackService $challengeTemplateSkillsGroupsStackService, ChallengeTemplateService $challengeTemplateService, ChallengeTemplateAchievementService $challengeTemplateAchievementService, ChallengeService $challengeService)
     {
         $this->challengeTemplateService = $challengeTemplateService;
         $this->challengeTemplateAchievementService = $challengeTemplateAchievementService;
@@ -58,6 +61,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         $this->challengeTemplateTimelinesService = $challengeTemplateTimelinesService;
         $this->challengeTemplateCustomTimelinesService = $challengeTemplateCustomTimelinesService;
         $this->challengeTemplateExternalLinkService = $challengeTemplateExternalLinkService;
+        $this->challengeService = $challengeService;
     }
 
     public function getChallengeTemplateList($request)
@@ -85,6 +89,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeTemplateTimelines = $this->challengeTemplateTimelinesService->addChallengeTemplateTimelines($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateCustomTimelines = $this->challengeTemplateCustomTimelinesService->addChallengeTemplateCustomTimeLines($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateExternalLink = $this->challengeTemplateExternalLinkService->addChallengeTemplateExternalLink($challengeId, $addChallengeTemplate->id);
+                $updateChallenge = $this->challengeService->updatePreBuilt($challengeId, '1');
 
                 return [
                     'addChallengeTemplate'                              => $addChallengeTemplate,
@@ -99,6 +104,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                     'addChallengeTemplateTimelines'                     => $addChallengeTemplateTimelines,
                     'addChallengeTemplateCustomTimelines'               => $addChallengeTemplateCustomTimelines,
                     'addChallengeTemplateExternalLink'                  => $addChallengeTemplateExternalLink,
+                    'updateChallenge'                                   => $updateChallenge,
                 ];
             });
 
@@ -114,7 +120,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeToTemplate['addChallengeTemplateProjectTemplate'] &&
                 $addChallengeToTemplate['addChallengeTemplateTimelines'] &&
                 $addChallengeToTemplate['addChallengeTemplateCustomTimelines'] &&
-                $addChallengeToTemplate['addChallengeTemplateExternalLink']
+                $addChallengeToTemplate['addChallengeTemplateExternalLink'] &&
+                $addChallengeTemplate['updateChallenge']
             ) {
                 self::addChallengeRedeemData($challengeId, $addChallengeToTemplate['addChallengeTemplate']->organization_id, $addChallengeToTemplate['addChallengeTemplate']->id);
                 DB::commit();

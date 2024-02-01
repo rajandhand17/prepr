@@ -16,7 +16,7 @@ class LabMarketplaceService
     public static function getLabMarketPlaceList($request)
     {
         try {
-            $lab_marketplace_list = LabMarketplace::select();
+            $lab_marketplace_list = LabMarketplace::select()->where('language', $request->language);
 
             $lab_marketplace_list = self::filterLabList($lab_marketplace_list, $request);
 
@@ -40,10 +40,29 @@ class LabMarketplaceService
                 $lab_marketplace_list = $lab_marketplace_list->whereIn('level_id', $request->level_id);
             }
 
-            if ($request->has('organization_id') && !empty($request->organization_id) && is_array($request->organization_id)) {
-                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+            if ($request->has('organization_ids') && !empty($request->organization_ids) && is_array($request->organization_ids)) {
+                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_ids)->pluck('id');
                 if (!empty($getOrganizationIds)) {
                     $lab_marketplace_list = $lab_marketplace_list->whereIn('organization_id', $getOrganizationIds);
+                }
+            }
+
+            if ($request->has('status') && !empty($request->status)) {
+                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+                $getLabRedeemedIds = LabChallengeRedeem::where(['organization_id' => $organization->id, 'is_redeemed' => '1'])->whereNotNull('lab_id')->pluck('lab_marketplace_id');
+                if (!empty($getLabRedeemedIds)) {
+                    switch ($request->status) {
+                        case 'redeemed':
+                            $lab_marketplace_list = $lab_marketplace_list->whereIn('id', $getLabRedeemedIds);
+                            break;
+                        case 'not_redeem':
+                            $lab_marketplace_list = $lab_marketplace_list->whereNotIn('id', $getLabRedeemedIds);
+                            break;
+                        default:
+                            $lab_marketplace_list = $lab_marketplace_list;
+                            break;
+                    }
+                    
                 }
             }
 
@@ -154,7 +173,7 @@ class LabMarketplaceService
         }
     }
 
-    public function checkLabRedeemedOrNot($labMarketplaceId, $organizationId)
+    public static function checkLabRedeemedOrNot($labMarketplaceId, $organizationId)
     {
         try {
             $checkLabRedeemed = LabChallengeRedeem::where(['lab_marketplace_id' => $labMarketplaceId, 'organization_id' => $organizationId, 'is_redeemed' => '1'])->exists();
