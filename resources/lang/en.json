@@ -847,5 +847,7 @@
     "responses.challenge_template_not_found": "The Challenge(s) which you are looking doesn't exist in our system.",
     "responses.challenge_template_already_redeemed": "The Challenge(s) which you are looking from Template is already redeemed.",
     "responses.challenge_template_redeemed": "The Challenge(s) from Template has been redeemed.",
-    "responses.challenge_template_not_redeemed": "Sorry, The Challenge(s) from Template has not been redeemed successfully."
+    "responses.challenge_template_not_redeemed": "Sorry, The Challenge(s) from Template has not been redeemed successfully.",
+    "responses.challenge_template_deleted_successfully": "This Challenge Template has been deleted successfully",
+    "responses.challenge_template_deleted_failed": "Oops!,This Challenge Template has been failed to deleted"
 }
