@@ -27,6 +27,10 @@ class ResourceCollectionService
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
             }
 
+            if ($request->has('organization_id') && !empty($request->organization_id)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('organization_id', $request->organization_id);
+            }
+
             if ($request->has('status') && !empty($request->status)) {
                 $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', $status);

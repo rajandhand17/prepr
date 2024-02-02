@@ -91,7 +91,9 @@ class ChallengeService
                         ->distinct();
                 })->distinct('challenges.uuid');
             }
-
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $challenge_list = $challenge_list->whereIn('duration_id', $request->duration_id);
+            }
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
                     $status_array = ['accepted', 'pending', 'declined'];
