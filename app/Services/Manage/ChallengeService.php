@@ -5,6 +5,8 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
+use App\Models\ChallengeTemplate;
+use App\Models\LabChallengeRedeem;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -502,6 +504,26 @@ class ChallengeService
             $challengeUpdate->is_pre_built = $is_pre_built;
             $challengeUpdate->save();
 
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function challengeTemplateUpdatePreBuilt($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateData = LabChallengeRedeem::where(['challenge_template_id' => $challengeTemplateId, 'is_redeemed' => '0'])->first();
+            if ($challengeTemplateData) {
+                $challengeUpdate = Challenge::find($challengeTemplateData->challenge_id);
+                if ($challengeUpdate) {
+                    $challengeUpdate->is_pre_built = '0';
+                    $challengeUpdate->save();
+                    if ($challengeTemplateData->delete()) {
+                        return true;
+                    }
+                }
+            }
             return true;
         } catch (Exception $e) {
             return false;

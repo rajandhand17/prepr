@@ -47,4 +47,20 @@ class ChallengeTemplateAssessmentCriteriaService
             return false;
         }
     }
+
+    public static function deleteChallengeTemplateAssessmentCriteria($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateAssessmentCriteria = ChallengeTemplateAssessmentCriterias::where('challenge_template_id', $challengeTemplateId)->get();
+            if ($challengeTemplateAssessmentCriteria->isNotEmpty()) {
+                $deleteChallengeTemplateAssessmentCriteria = ChallengeTemplateAssessmentCriterias::where('challenge_template_id', $challengeTemplateId)->delete();
+                if (!$deleteChallengeTemplateAssessmentCriteria) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

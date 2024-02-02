@@ -54,10 +54,12 @@ class LabMarketplaceController extends AppBaseController
             if (!$checkLabExistsOrNot) {
                 return $this->sendError(__('responses.lab_not_found'), 404);
             }
+            
             $checkLabMarketplace = $this->labMarketplaceRepository->getCheckLabUuid($checkLabExistsOrNot->uuid);
             if ($checkLabMarketplace) {
-                return $this->sendError(__('responses.already_cloned'), 200);
+                return $this->sendError(__('responses.lab_already_cloned'), 422);
             }
+
             $labMarketplace = $this->labMarketplaceRepository->addLabToMarketplace($slug, $checkLabExistsOrNot->id);
             if ($labMarketplace) {
                 return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.lab_marketplace_stored_success'), 200);
@@ -82,7 +84,7 @@ class LabMarketplaceController extends AppBaseController
                 return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.lab_marketplace_found'));
             }
 
-            return $this->sendError(__('responses.lab_marketplace_not_found'), 404);
+            return $this->sendError(__('responses.lab_marketplace_not_exists'), 404);
         } catch(Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -116,7 +118,7 @@ class LabMarketplaceController extends AppBaseController
 
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketplaceBasedOnSlug($slug);
             if (!$labMarketplace) {
-                return $this->sendError(__('responses.lab_marketplace_not_found'), 404);
+                return $this->sendError(__('responses.lab_marketplace_not_exists'), 404);
             }
 
             $checkLabRedeemedOrNot = $this->labMarketplaceRepository->checkLabRedeemedOrNot($labMarketplace->id, $organization->id);

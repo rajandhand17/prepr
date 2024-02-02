@@ -45,4 +45,20 @@ class ChallengeTemplateTagsGroupsService
             return false;
         }
     }
+
+    public static function deleteChallengeTemplateTagsGroups($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateTagsGroups = ChallengeTemplateTagsGroups::where('challenge_template_id', $challengeTemplateId)->get();
+            if ($challengeTemplateTagsGroups->isNotEmpty()) {
+                $deleteChallengeTemplateTagsGroups = ChallengeTemplateTagsGroups::where('challenge_template_id', $challengeTemplateId)->delete();
+                if (!$deleteChallengeTemplateTagsGroups) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
