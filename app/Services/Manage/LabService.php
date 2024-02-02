@@ -378,6 +378,7 @@ class LabService
                     }
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;
