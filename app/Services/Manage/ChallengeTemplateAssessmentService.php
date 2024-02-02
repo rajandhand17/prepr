@@ -62,6 +62,7 @@ class ChallengeTemplateAssessmentService
                     return false;
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;

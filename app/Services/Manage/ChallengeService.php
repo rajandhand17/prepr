@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
-use App\Models\ChallengeTemplate;
 use App\Models\LabChallengeRedeem;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use Exception;
@@ -524,6 +523,7 @@ class ChallengeService
                     }
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;

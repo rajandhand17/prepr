@@ -56,6 +56,7 @@ class ChallengeTemplateTagsGroupsService
                     return false;
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;

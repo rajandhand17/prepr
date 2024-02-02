@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Events;
 
-use App\Events\DeleteChallengeTemplateAssociatedData;
 use Tests\TestCase;
 
 /**

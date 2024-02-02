@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Listeners\ChallengeTemplate;
 
-use App\Listeners\ChallengeTemplate\HandleDeleteChallengeTemplateAssociatedData;
 use Tests\TestCase;
 
 /**

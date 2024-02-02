@@ -4,9 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Response;
 use InfyOm\Generator\Utils\ResponseUtil;
 use League\Container\Exception\NotFoundException;
+use Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
 

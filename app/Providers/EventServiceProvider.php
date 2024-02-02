@@ -50,7 +50,7 @@ class EventServiceProvider extends ServiceProvider
             HandleDeleteLabMarketplaceAssociatedData::class,
         ],
         DeleteChallengeTemplateAssociatedData::class=> [
-            HandleDeleteChallengeTemplateAssociatedData::class
+            HandleDeleteChallengeTemplateAssociatedData::class,
         ],
     ];
 
