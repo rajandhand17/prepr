@@ -73,6 +73,15 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         }
     }
 
+    public function getCheckChallengeUuid($uuid)
+    {
+        try {
+            return $this->challengeTemplateService->getCheckChallengeUuid($uuid);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function addChallengeToTemplate($challengeId)
     {
         try {
@@ -121,7 +130,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeToTemplate['addChallengeTemplateTimelines'] &&
                 $addChallengeToTemplate['addChallengeTemplateCustomTimelines'] &&
                 $addChallengeToTemplate['addChallengeTemplateExternalLink'] &&
-                $addChallengeTemplate['updateChallenge']
+                $addChallengeToTemplate['updateChallenge']
             ) {
                 self::addChallengeRedeemData($challengeId, $addChallengeToTemplate['addChallengeTemplate']->organization_id, $addChallengeToTemplate['addChallengeTemplate']->id);
                 DB::commit();
@@ -250,6 +259,15 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             $labRedeem->save();
 
             return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteChallengeTemplate($slug, $challengeTemplateId)
+    {
+        try {
+            return $this->challengeTemplateService->deleteChallengeTemplate($slug, $challengeTemplateId);
         } catch (Exception $e) {
             return false;
         }

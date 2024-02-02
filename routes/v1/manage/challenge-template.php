@@ -8,4 +8,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/add', [ChallengeTemplateController::class, 'addChallengeToTemplate']);
     Route::post('/{slug}/redeem', [ChallengeTemplateController::class, 'redeemChallenge']);
     Route::get('/{slug}', [ChallengeTemplateController::class, 'show']);
+    Route::delete('/{slug}/delete', [ChallengeTemplateController::class, 'deleteChallengeTemplate']);
 });

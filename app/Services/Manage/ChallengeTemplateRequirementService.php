@@ -34,8 +34,6 @@ class ChallengeTemplateRequirementService
 
             return true;
         } catch (Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -62,6 +60,23 @@ class ChallengeTemplateRequirementService
                     $newChallengeRequirements->complete_experience = $challengeTemplateRequirement->complete_experience;
                     $newChallengeRequirements->additional_requirements = $challengeTemplateRequirement->additional_requirements;
                     $newChallengeRequirements->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteChallengeTemplateRequirement($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateRequirement = ChallengeTemplateRequirement::where('challenge_template_id', $challengeTemplateId)->get();
+            if ($challengeTemplateRequirement->isNotEmpty()) {
+                $deleteChallengeTemplateRequirement = ChallengeTemplateRequirement::where('challenge_template_id', $challengeTemplateId)->delete();
+                if (!$deleteChallengeTemplateRequirement) {
+                    return false;
                 }
             }
 

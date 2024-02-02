@@ -45,4 +45,21 @@ class ChallengeTemplateSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function deleteChallengeTemplateSkillsGroupsStacks($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateSkillsGroupsStacks = ChallengeTemplateSkillsGroupsStack::where('challenge_template_id', $challengeTemplateId)->get();
+            if ($challengeTemplateSkillsGroupsStacks->isNotEmpty()) {
+                $deleteChallengeTemplateSkillsGroupsStacks = ChallengeTemplateSkillsGroupsStack::where('challenge_template_id', $challengeTemplateId)->delete();
+                if (!$deleteChallengeTemplateSkillsGroupsStacks) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

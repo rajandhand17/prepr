@@ -71,4 +71,21 @@ class ChallengeTemplateTimelinesService
             return false;
         }
     }
+
+    public static function deleteChallengeTemplateTimelines($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateTimelines = ChallengeTemplateTimeline::where('challenge_template_id', $challengeTemplateId)->get();
+            if ($challengeTemplateTimelines->isNotEmpty()) {
+                $deleteChallengeTemplateTimelines = ChallengeTemplateTimeline::where('challenge_template_id', $challengeTemplateId)->delete();
+                if (!$deleteChallengeTemplateTimelines) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

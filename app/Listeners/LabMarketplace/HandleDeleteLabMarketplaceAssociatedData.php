@@ -9,6 +9,7 @@ use App\Services\Manage\LabMarketplaceComponentAssociationService;
 use App\Services\Manage\LabMarketplaceExternalLinksService;
 use App\Services\Manage\LabMarketplaceSkillsGroupStackService;
 use App\Services\Manage\LabMarketplaceTagsGroupService;
+use App\Services\Manage\LabService;
 
 class HandleDeleteLabMarketplaceAssociatedData
 {
@@ -35,24 +36,34 @@ class HandleDeleteLabMarketplaceAssociatedData
             if (!$deleteLabMarketplace) {
                 return false;
             }
+
             $deleteLabMarketplaceSkillsGroupsStack = LabMarketplaceSkillsGroupStackService::deleteLabMarketplaceSkillsGroupStackService($labMarketplaceId);
             if (!$deleteLabMarketplaceSkillsGroupsStack) {
                 return false;
             }
+
             $deleteLabMarketplaceTagsGroupsStack = LabMarketplaceTagsGroupService::deleteLabMarketplaceTagsGroup($labMarketplaceId);
             if (!$deleteLabMarketplaceTagsGroupsStack) {
                 return false;
             }
+
             $deleteLabMarketplaceExternalLinks = LabMarketplaceExternalLinksService::deleteLabMarketplaceExternalLink($labMarketplaceId);
             if (!$deleteLabMarketplaceExternalLinks) {
                 return false;
             }
+
             $deleteLabMarketplaceAchievement = LabMarketplaceAchievementsService::deleteLabMarketplaceAchievement($labMarketplaceId);
             if (!$deleteLabMarketplaceExternalLinks) {
                 return false;
             }
+
             $deleteLabMarketplaceComponentAssociation = LabMarketplaceComponentAssociationService::deleteLabMarketplaceComponentAssociation($labMarketplaceId);
             if (!$deleteLabMarketplaceComponentAssociation) {
+                return false;
+            }
+
+            $labMarketplaceUpdatePreBuilt = LabService::labMarketplaceUpdatePreBuilt($labMarketplaceId);
+            if (!$labMarketplaceUpdatePreBuilt) {
                 return false;
             }
 
