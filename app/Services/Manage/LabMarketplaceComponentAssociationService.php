@@ -39,15 +39,15 @@ class LabMarketplaceComponentAssociationService
                     self::createLabMarkeplaceChallengePath($labMarketplaceId, $challengesPathTemplate->id, $componentAssociation->sequence);
                 }
 
-                if ($componentAssociation->resource_module_id !==  null) {
+                if ($componentAssociation->resource_module_id !== null) {
                     self::createLabMarkeplaceModule($labMarketplaceId, $componentAssociation->resource_module_id, $componentAssociation->sequence);
                 }
 
-                if ($componentAssociation->resource_collection_id !==  null) {
+                if ($componentAssociation->resource_collection_id !== null) {
                     self::createLabMarkeplaceCollection($labMarketplaceId, $componentAssociation->resource_collection_id, $componentAssociation->sequence);
                 }
 
-                if ($componentAssociation->resource_group_id !==  null) {
+                if ($componentAssociation->resource_group_id !== null) {
                     self::createLabMarkeplaceGroup($labMarketplaceId, $componentAssociation->resource_group_id, $componentAssociation->sequence);
                 }
             }
@@ -97,7 +97,6 @@ class LabMarketplaceComponentAssociationService
             return false;
         }
     }
-
 
     public static function createLabMarkeplaceChallenge($labMarketplaceId, $challengeTemplateId, $sequenceNumber)
     {
