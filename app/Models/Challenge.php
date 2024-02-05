@@ -31,6 +31,7 @@ class Challenge extends Model
         'agreement',
         'is_notification_enabled',
         'project_privacy',
+        'is_pre_build',
         'is_open',
         'is_auto_created',
     ];

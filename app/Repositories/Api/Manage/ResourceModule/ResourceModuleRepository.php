@@ -137,10 +137,10 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function fileUpload($request, $resource_module_id, $type)
+    public function fileUpload($request, $resource_module_id)
     {
         try {
-            return $this->resourceModuleDetailsService->fileUpload($request, $resource_module_id, $type);
+            return $this->resourceModuleDetailsService->fileUpload($request, $resource_module_id);
         } catch(\Exception $e) {
             return false;
         }

@@ -2,22 +2,37 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\FileUploadHelper;
 use App\Models\Challenge;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\UserAchievement;
 use Dompdf\Dompdf;
+use Exception;
+use Spatie\PdfToImage\Pdf;
 
 class AchievementService
 {
     public function getList($request)
     {
         try {
-            $achievement_list = UserAchievement::select();
+            $achievement_list = UserAchievement::select()->where('user_id', auth()->user()->id);
             $achievement_list = self::filterAchievementList($request, $achievement_list);
 
             return $achievement_list->paginate(config('site-settings.pagination_per_page'));
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAchievementList($userId, $request)
+    {
+        try {
+            $achievement_list = UserAchievement::select()->where('user_id', $userId);
+            $achievement_list = self::filterAchievementList($request, $achievement_list);
+
+            return $achievement_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -31,17 +46,17 @@ class AchievementService
 
             if ($request->has('type') && !empty($request->type)) {
                 $typesMapping = [
-                    'lab'           => '0',
-                    'labprogram'    => '1',
-                    'challenge'     => ['9', '10'],
-                    'challengepath' => '3',
-                    'resourcegroup' => '4',
-                    'appreciation'  => '5',
-                    'activity'      => '6',
-                    'skillactivity' => '7',
-                    'imported'      => '8',
-                    'winner'        => '9',
-                    'participation' => '10',
+                    'lab'            => '0',
+                    'lab-program'    => '1',
+                    'challenge'      => ['9', '10'],
+                    'challenge-path' => '3',
+                    'resource-group' => '4',
+                    'appreciation'   => '5',
+                    'activity'       => '6',
+                    'skill-activity' => '7',
+                    'imported'       => '8',
+                    'winner'         => '9',
+                    'participation'  => '10',
                 ];
                 $achievementTypeMap = array_map(function ($type) use ($typesMapping) {
                     return $typesMapping[$type] ?? null;
@@ -71,7 +86,7 @@ class AchievementService
             }
 
             return $achievement_list;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
@@ -80,12 +95,12 @@ class AchievementService
     {
         try {
             return UserAchievement::where(['certificate_number' => $certificate_id])->first();
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
 
-    public function downloadCertificate($certificate_id)
+    public function downloadCertificate($certificate_id, $format)
     {
         try {
             $userAchievement = UserAchievement::where('certificate_number', $certificate_id)->first();
@@ -108,12 +123,80 @@ class AchievementService
                 $dompdf->loadHtml($html);
                 $dompdf->setPaper('legal', 'landscape');
                 $dompdf->render();
-                $dompdf->stream($userAchievement->certificate_number.'.pdf');
-                exit;
+                $pdfPath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.pdf');
+                if ($format === 'image') {
+                    file_put_contents($pdfPath, $dompdf->output());
+                    $pdf = new Pdf($pdfPath);
+                    $pdf->setOutputFormat('jpeg');
+                    $imagePath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.jpeg');
+                    $pdf->saveImage($imagePath);
+                    $fileName = $userAchievement->certificate_number.'.jpeg';
+                    $s3BackUrl = FileUploadHelper::uploadLocalStorageImageToS3(response()->download($imagePath), 'certificate');
+                } elseif ($format === 'pdf') {
+                    file_put_contents($pdfPath, $dompdf->output());
+                    $s3BackUrl = FileUploadHelper::uploadLocalStoragePDFToS3(response()->download($pdfPath), 'certificate');
+                }
+
+                return config('site-settings.aws_url').$s3BackUrl;
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getColumnValue($request)
+    {
+        try {
+            $value = null;
+            switch ($request->is_featured) {
+                case 'no':
+                    $value = '0';
+                    break;
+                case 'yes':
+                    $value = '1';
+                    break;
+                default:
+                    $value = null;
+                    break;
+            }
+            if ($value != null) {
+                return ['action' => $value];
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkachievementActivity($certificate_id, $action)
+    {
+        try {
+            $checkActivity = UserAchievement::where(
+                [
+                    'certificate_number'    => $certificate_id,
+                    'is_featured'           => $action,
+                ]
+            )->first();
+            if ($checkActivity != null) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function achievementActivity($certificate_id, $action)
+    {
+        try {
+            UserAchievement::where('certificate_number', $certificate_id)->update(['is_featured' => $action]);
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

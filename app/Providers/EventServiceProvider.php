@@ -3,12 +3,16 @@
 namespace App\Providers;
 
 use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
+use App\Events\ChallengeTemplate\DeleteChallengeTemplateAssociatedData;
+use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
 use App\Events\Labs\DeleteLabAssociatedData;
 use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Listeners\ChallengePath\HandleDeleteChallengePathAssociatedData;
+use App\Listeners\ChallengeTemplate\HandleDeleteChallengeTemplateAssociatedData;
 use App\Listeners\Lab\HandleDeleteLabAssociatedData;
+use App\Listeners\LabMarketplace\HandleDeleteLabMarketplaceAssociatedData;
 use App\Listeners\ResourceCollection\HandleDeleteResourceCollectionAssociatedData;
 use App\Listeners\ResourceGroup\HandleDeleteResourceGroupAssociatedData;
 use App\Listeners\ResourceModule\HandleDeleteResourceModuleAssociatedData;
@@ -41,6 +45,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         DeleteResourceGroupAssociatedData::class=> [
             HandleDeleteResourceGroupAssociatedData::class,
+        ],
+        DeleteLabMarketplaceAssociatedData::class=> [
+            HandleDeleteLabMarketplaceAssociatedData::class,
+        ],
+        DeleteChallengeTemplateAssociatedData::class=> [
+            HandleDeleteChallengeTemplateAssociatedData::class,
         ],
     ];
 
