@@ -67,7 +67,6 @@ class UserExperiences extends Command
                     // Save the model
                     $userExperience->save();
                 }
-
             });
             DB::commit();
             $this->info('Migrating of old data for users experience table completed.');

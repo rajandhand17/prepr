@@ -63,13 +63,13 @@ class UserFriends extends Command
                     // Save the model
                     $userFriends->save();
                 }
-
             });
             DB::commit();
             $this->info('Migrating of old data for users friends table completed.');
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

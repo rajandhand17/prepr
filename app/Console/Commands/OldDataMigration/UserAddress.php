@@ -68,9 +68,10 @@ class UserAddress extends Command
             });
             DB::commit();
             $this->info('Migrating of old data for users table completed.');
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

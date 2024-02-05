@@ -41,8 +41,8 @@ class UserPersonal extends Command
 
                     // Map status
                     $statusMap = [
-                        'looking_team' => '0',
-                        'currently_mentor' => '1',
+                        'looking_team'      => '0',
+                        'currently_mentor'  => '1',
                         'looking_employers' => '2',
                         // ... (add other cases)
                         'looking_to_build_skills' => '12',
@@ -64,9 +64,9 @@ class UserPersonal extends Command
 
                     // Map gender
                     $genderMap = [
-                        'male' => '0',
-                        'female' => '1',
-                        'other' => '2',
+                        'male'    => '0',
+                        'female'  => '1',
+                        'other'   => '2',
                         'decline' => '3',
                         // Default
                         'default' => '3',
@@ -86,7 +86,6 @@ class UserPersonal extends Command
                     $userPersonal->disability = $userPersonalDetail->disability == '1' ? '2' : '1';
                     $userPersonal->save();
                 }
-
             });
             DB::commit();
             $this->info('Migrating of old data for users personal table completed.');
