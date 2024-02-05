@@ -30,7 +30,7 @@ class UserCertificate extends Command
         try {
             $this->info('Migrating old data for users certificate table.');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('user_certificates')->chunkById(1000, function ($userCertificate, $key){
+            DB::connection('mysql2')->table('user_certificates')->chunkById(1000, function ($userCertificate, $key) {
                 foreach ($userCertificate as $single_user_certificate) {
                     // Check if the user exists
                     $checkUser = \App\Models\User::find($single_user_certificate->user_id);
@@ -63,9 +63,10 @@ class UserCertificate extends Command
             });
             DB::commit();
             $this->info('Migrating of old data for users  certificate table completed.');
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

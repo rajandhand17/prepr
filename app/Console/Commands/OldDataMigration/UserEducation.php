@@ -64,9 +64,10 @@ class UserEducation extends Command
             });
             DB::commit();
             $this->info('Migrating of old data for users educations table completed.');
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
