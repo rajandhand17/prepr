@@ -24,18 +24,26 @@ class ResourceModuleDetailService
         }
     }
 
-    public function fileUpload($request, $resource_module_id, $type)
+    public function fileUpload($request, $resource_module_id)
     {
         try {
-            foreach ($request->file_upload as $file) {
-                $upload_resource_module_cover_image = FileUploadHelper::uploadImageToS3($file, 'resource_module');
-                if ($upload_resource_module_cover_image == false) {
-                    return false;
-                }
-                $imagePath = explode('/', $upload_resource_module_cover_image);
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $imagePath[count($imagePath) - 1], $type, $upload_resource_module_cover_image, null);
-                if (!$resourceModuleDetailed) {
-                    return false;
+            if (isset($request->file_upload) && !empty($request->file_upload)) {
+                foreach ($request->file_upload as $file_upload) {
+                    if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
+                        $file_type = config('constants.file_type.image');
+                        $uploaded_file_path = FileUploadHelper::uploadImageToS3($file_upload, 'resource_file');
+                    } else {
+                        $file_type = (mb_strpos($file_upload->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
+                        $uploaded_file_path = FileUploadHelper::UploadVideoDocToS3($file_upload, 'resource_file');
+                    }
+
+                    if ($uploaded_file_path == false) {
+                        return false;
+                    }
+                    $storeData = self::insertRecords($resource_module_id, $file_upload->getClientOriginalName(), $file_type, $uploaded_file_path, null);
+                    if (!$storeData) {
+                        return false;
+                    }
                 }
             }
 

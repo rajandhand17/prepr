@@ -25,7 +25,7 @@ class HandleDeleteLabAssociatedData
     /**
      * Handle the event.
      *
-     * @param \App\Events\Labs\DeleteLabAssociatedData $event
+     * @param
      *
      * @return void
      */

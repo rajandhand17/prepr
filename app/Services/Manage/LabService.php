@@ -8,6 +8,8 @@ use App\Helpers\UtilityHelper;
 use App\Models\ComponentAssociation;
 use App\Models\Lab;
 use App\Models\MemberManagement;
+use App\Models\LabChallengeRedeem;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class LabService
@@ -20,7 +22,7 @@ class LabService
             $lab_list = self::filterLabList($lab_list, $request);
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -77,7 +79,7 @@ class LabService
             }
 
             return $lab_list;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -86,7 +88,7 @@ class LabService
     {
         try {
             return Lab::where('slug', $slug)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -95,7 +97,7 @@ class LabService
     {
         try {
             return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -109,7 +111,7 @@ class LabService
             }
 
             return $upload_lab_cover_image;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -261,7 +263,7 @@ class LabService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -277,7 +279,7 @@ class LabService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -291,7 +293,7 @@ class LabService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -305,7 +307,7 @@ class LabService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -318,7 +320,7 @@ class LabService
             $limit = config('site-settings.listing_limit');
 
             return $lab_list->limit($limit)->get();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -332,7 +334,7 @@ class LabService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -346,7 +348,41 @@ class LabService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updatePreBuilt($id, $is_pre_built)
+    {
+        try {
+            $lab = Lab::find($id);
+            $lab->is_pre_built = $is_pre_built;
+            $lab->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function labMarketplaceUpdatePreBuilt($labMarketplaceId)
+    {
+        try {
+            $labMarketplaceData = LabChallengeRedeem::where(['lab_marketplace_id' => $labMarketplaceId, 'is_redeemed' => '0'])->first();
+            if ($labMarketplaceData) {
+                $labUpdate = Lab::find($labMarketplaceData->lab_id);
+                if ($labUpdate) {
+                    $labUpdate->is_pre_built = '0';
+                    $labUpdate->save();
+                    if ($labMarketplaceData->delete()) {
+                        return true;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

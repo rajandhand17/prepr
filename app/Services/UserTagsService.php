@@ -30,7 +30,7 @@ class UserTagsService
         }
     }
 
-    public static function deleteTag($id)
+    public static function deleteProfileTag($id)
     {
         try {
             $deleteTag = UserTag::where(['tag_id'=>$id, 'user_id'=>auth()->user()->id])->delete();
