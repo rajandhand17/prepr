@@ -56,6 +56,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         DeleteProjectAssociatedData::class => [
             HandleDeleteProjectAssociatedData::class,
+        ],
     ];
 
     /**
