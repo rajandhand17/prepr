@@ -57,6 +57,12 @@ class ChallengeTemplateController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+
+            $checkChallengeTemplate = $this->challengeTemplateRepository->getCheckChallengeUuid($checkComponentBasedOnSlug->uuid);
+            if ($checkChallengeTemplate) {
+                return $this->sendError(__('responses.challenge_already_cloned'), 422);
+            }
+
             $addChallengeTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($checkComponentBasedOnSlug->id);
             if ($addChallengeTemplate != false) {
                 return $this->sendResponse(ChallengeTemplateResource::make($addChallengeTemplate), __('responses.challenge_clone_success'), 200);
@@ -111,6 +117,25 @@ class ChallengeTemplateController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_template_not_redeemed'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function deleteChallengeTemplate($slug)
+    {
+        try {
+            $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);
+            if (!$challengeTemplate) {
+                return $this->sendError(__('responses.challenge_template_not_found'), 404);
+            }
+
+            $deleteChallengeTemplate = $this->challengeTemplateRepository->deleteChallengeTemplate($slug, $challengeTemplate->id);
+            if ($deleteChallengeTemplate) {
+                return $this->sendResponse(null, __('responses.challenge_template_deleted_successfully'));
+            }
+
+            return $this->sendError(__('responses.challenge_template_deleted_failed'), 402);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

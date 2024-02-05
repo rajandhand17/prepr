@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Events\ChallengeTemplate\DeleteChallengeTemplateAssociatedData;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengeTemplate;
@@ -56,7 +57,7 @@ class ChallengeTemplateService
                         case 'redeemed':
                             $challenge_template_list = $challenge_template_list->whereIn('id', $getChallengeRedeemedIds);
                             break;
-                        case 'not_redeem':
+                        case 'not_redeemed':
                             $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
                             break;
                         default:
@@ -114,7 +115,7 @@ class ChallengeTemplateService
             $templateChallenge->description = $originalChallenge->description;
             $templateChallenge->privacy = $originalChallenge->privacy;
             $templateChallenge->media_type = $originalChallenge->media_type;
-            $templateChallenge->media = $originalChallenge->media;
+            $templateChallenge->media = $originalChallenge->getRawOriginal('media');
             $templateChallenge->status = $originalChallenge->status;
             $templateChallenge->source_link = $originalChallenge->source_link;
             $templateChallenge->agreement = $originalChallenge->agreement;
@@ -182,7 +183,7 @@ class ChallengeTemplateService
             $newChallenge->description = $challengeTemplateData->description;
             $newChallenge->privacy = $challengeTemplateData->privacy;
             $newChallenge->media_type = $challengeTemplateData->media_type;
-            $newChallenge->media = $challengeTemplateData->media;
+            $newChallenge->media = $challengeTemplateData->getRawOriginal('media');
             $newChallenge->status = $challengeTemplateData->status;
             $newChallenge->source_link = $challengeTemplateData->source_link;
             $newChallenge->agreement = $challengeTemplateData->agreement;
@@ -193,6 +194,31 @@ class ChallengeTemplateService
             $newChallenge->save();
 
             return $newChallenge;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteChallengeTemplate($slug, $challengeTemplateId)
+    {
+        try {
+            $challengeTemplate = ChallengeTemplate::where('slug', $slug)->delete();
+            if ($challengeTemplate) {
+                $associatedChallengeTemplate = event(new DeleteChallengeTemplateAssociatedData($challengeTemplateId));
+
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getCheckChallengeUuid($uuid)
+    {
+        try {
+            return ChallengeTemplate::where('uuid', $uuid)->first();
         } catch (Exception $e) {
             return false;
         }

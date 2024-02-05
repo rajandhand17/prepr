@@ -43,4 +43,21 @@ class ChallengeTemplateProjectTemplateService
             return false;
         }
     }
+
+    public static function deleteChallengeTemplateProjectTemplate($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateProjectTemplate = ChallengeTemplateProjectTemplate::where('challenge_template_id', $challengeTemplateId)->get();
+            if ($challengeTemplateProjectTemplate->isNotEmpty()) {
+                $deleteChallengeTemplateProjectTemplate = ChallengeTemplateProjectTemplate::where('challenge_template_id', $challengeTemplateId)->delete();
+                if (!$deleteChallengeTemplateProjectTemplate) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
