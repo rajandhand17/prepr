@@ -23,13 +23,15 @@ class UpdatePrivacyRequest extends FormRequest
      */
     public function rules(): array
     {
-        $baseRules=[
-            'profile_visibility'    =>'required|in:public,private,signed-in',
-            'project_visibility'    =>'required|in:public,private',
-            'friend_request'        =>'required|in:any-one,no-one',
+        $baseRules = [
+            'profile_visibility'    => 'required|in:public,private,signed-in',
+            'project_visibility'    => 'required|in:public,private',
+            'friend_request'        => 'required|in:any-one,no-one',
         ];
+
         return $baseRules;
     }
+
     public function messages()
     {
         return [

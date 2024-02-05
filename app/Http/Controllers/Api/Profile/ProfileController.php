@@ -40,6 +40,7 @@ class ProfileController extends AppBaseController
             if ($getUserDetails) {
                 return $this->sendResponse(ProfileResource::make($getUserDetails), __('responses.found_user_profile_detail'));
             }
+
             return $this->sendError(__('responses.not_found_user_profile_detail'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -53,6 +54,7 @@ class ProfileController extends AppBaseController
             if ($createProfile) {
                 return $this->sendResponse(ProfileResource::make($createProfile), __('responses.add_user_personal_created'));
             }
+
             return $this->sendError(__('responses.add_user_personal_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

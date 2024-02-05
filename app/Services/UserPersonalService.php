@@ -109,6 +109,7 @@ class UserPersonalService
             $updateProfile = User::where('id', auth()->user()->id)->first();
             $updateProfile->profile_image = $profilePath;
             $updateProfile->save();
+
             return $updateProfile;
         } catch(\Exception $e) {
             return false;

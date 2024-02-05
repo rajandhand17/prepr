@@ -91,35 +91,39 @@ class UserService
         }
     }
 
-    public static function updataUserAccount($request){
+    public static function updataUserAccount($request)
+    {
         try {
-            $user=User::find(auth()->user()->id);
-            $user->first_name=$request->first_name;
-            $user->last_name=$request->last_name;
-            $user->username=$request->username;
-            $user->email=$request->email;
-            $user->phone_number=$request->phone_number;
-            $user->preferred_language=$request->preferred_language;
-            $user->preferred_timezone=$request->preferred_timezone;
-            $user->two_factor_verification=($request->two_factor_verification==true) ? '1' : '0';
-            if($user->save()){
+            $user = User::find(auth()->user()->id);
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->username = $request->username;
+            $user->email = $request->email;
+            $user->phone_number = $request->phone_number;
+            $user->preferred_language = $request->preferred_language;
+            $user->preferred_timezone = $request->preferred_timezone;
+            $user->two_factor_verification = ($request->two_factor_verification == true) ? '1' : '0';
+            if ($user->save()) {
                 return $user;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function changePassword($request){
+    public function changePassword($request)
+    {
         try {
-            $user=User::find(auth()->user()->id);
+            $user = User::find(auth()->user()->id);
             $user->password = Hash::make($request->password);
             if ($user->save()) {
                 return $user;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -131,12 +135,13 @@ class UserService
             if ($user) {
                 $user->profile_image = config('site-settings.default_user_profile_image');
                 $user->save();
+
                 return $user;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
-
 }
