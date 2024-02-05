@@ -23,15 +23,17 @@ class UpdateNotificationRequest extends FormRequest
      */
     public function rules(): array
     {
-        $baseRules=[
-            'communication'              =>'required|in:subscribed,unsubscribed',
-            'network_summary'            =>'required|in:subscribed,unsubscribed',
-            'lab_summary'                =>'required|in:unsubscribed,monthly,weekly',
-            'challenge_summary'          =>'required|in:unsubscribed,monthly,weekly',
-            'challenge_recommendation'   =>'required|in:unsubscribed,monthly,weekly',
+        $baseRules = [
+            'communication'              => 'required|in:subscribed,unsubscribed',
+            'network_summary'            => 'required|in:subscribed,unsubscribed',
+            'lab_summary'                => 'required|in:unsubscribed,monthly,weekly',
+            'challenge_summary'          => 'required|in:unsubscribed,monthly,weekly',
+            'challenge_recommendation'   => 'required|in:unsubscribed,monthly,weekly',
         ];
+
         return $baseRules;
     }
+
     public function messages()
     {
         return [

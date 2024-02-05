@@ -91,7 +91,8 @@ class UserService
         }
     }
 
-    public static function updataUserAccount($request){
+    public static function updataUserAccount($request)
+    {
         try {
             $user=User::find(auth()->user()->id);
             $user->first_name=$request->first_name;
@@ -109,15 +110,17 @@ class UserService
         }
     }
 
-    public function changePassword($request){
+    public function changePassword($request)
+    {
         try {
-            $user=User::find(auth()->user()->id);
+            $user = User::find(auth()->user()->id);
             $user->password = Hash::make($request->password);
             if ($user->save()) {
                 return $user;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -129,8 +132,10 @@ class UserService
             if ($user) {
                 $user->profile_image = config('site-settings.default_user_profile_image');
                 $user->save();
+
                 return $user;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
