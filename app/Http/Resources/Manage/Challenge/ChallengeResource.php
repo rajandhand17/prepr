@@ -259,6 +259,7 @@ class ChallengeResource extends JsonResource
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
+            'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'slug'                          => $this->slug,
             'title'                         => $this->title,
             'description'                   => $this->description,

@@ -11,8 +11,7 @@ return new class() extends Migration {
     public function up(): void
     {
         Schema::table('labs', function (Blueprint $table) {
-            $table->unsignedBigInteger('duration_id')->nullable()->after('category_id');
-            $table->foreign('duration_id')->references('id')->on('durations')->onDelete('cascade');
+            $table->enum('is_pre_built', ['0', '1'])->after('language')->comment('0 -> no, 1 -> yes')->default('0');
         });
     }
 
@@ -22,7 +21,7 @@ return new class() extends Migration {
     public function down(): void
     {
         Schema::table('labs', function (Blueprint $table) {
-            $table->dropColumn('duration_id');
+            $table->dropColumn('is_pre_built');
         });
     }
 };

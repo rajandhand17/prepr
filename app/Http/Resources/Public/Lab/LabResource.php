@@ -141,6 +141,7 @@ class LabResource extends JsonResource
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
+            'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'description'                   => $this->description,

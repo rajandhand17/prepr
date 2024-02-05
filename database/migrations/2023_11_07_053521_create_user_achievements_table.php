@@ -27,6 +27,7 @@ return new class() extends Migration {
             $table->dateTime('issue_date')->nullable();
             $table->dateTime('valid_date')->nullable();
             $table->string('user_notified')->nullable();
+            $table->enum('is_featured', ['0', '1'])->comment('0->no, 1->yes')->default('0');
             $table->string('promo_code')->nullable();
             $table->timestamps();
             $table->softDeletes();
