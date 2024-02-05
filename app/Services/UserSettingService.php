@@ -15,13 +15,13 @@ class UserSettingService
                 'private'   => '1',
                 'public'    => '0',
             ];
-            $friendRequestParameters=[
+            $friendRequestParameters = [
                 'any-one' => '0',
-                'no-one'=>'1',
+                'no-one'  => '1',
             ];
             $profilePrivacy = $profileVisibilityMap[$request->profile_visibility];
-            $projectVisibility=$profileVisibilityMap[$request->project_visibility];
-            $friendRequest=$friendRequestParameters[$request->friend_request];
+            $projectVisibility = $profileVisibilityMap[$request->project_visibility];
+            $friendRequest = $friendRequestParameters[$request->friend_request];
 
             UserSetting::updateOrCreate(
                 ['user_id' => $user->id],
@@ -47,20 +47,20 @@ class UserSettingService
                 'monthly'      => '1',
                 'weekly'       => '2',
             ];
-            $subscriptionOrUnsubscribe=[
-                "unsubscribed" => "0",
-                "subscribed" => "1",
+            $subscriptionOrUnsubscribe = [
+                'unsubscribed' => '0',
+                'subscribed'   => '1',
             ];
             $labSummary = $option[$request->lab_summary];
             $challengeSummary = $option[$request->challenge_summary];
             $challengeRecommendation = $option[$request->challenge_recommendation];
-            $manageAlerts=$subscriptionOrUnsubscribe[$request->communication];
-            $emailSubscriptionNetworkSummary=$subscriptionOrUnsubscribe[$request->communication];
+            $manageAlerts = $subscriptionOrUnsubscribe[$request->communication];
+            $emailSubscriptionNetworkSummary = $subscriptionOrUnsubscribe[$request->communication];
             UserSetting::updateOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'manage_alerts' => $manageAlerts,
-                    'email_subscription_network_summary'   =>$emailSubscriptionNetworkSummary,
+                    'manage_alerts'                        => $manageAlerts,
+                    'email_subscription_network_summary'   => $emailSubscriptionNetworkSummary,
                     'email_subscription_challenge_summary' => $challengeSummary,
                     'email_subscription_lab_summary'       => $labSummary,
                     'challenge_recommends'                 => $challengeRecommendation,
