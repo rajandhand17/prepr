@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\UserSetting;
-use Illuminate\Support\Facades\Hash;
 
 class UserSettingService
 {
@@ -15,7 +13,7 @@ class UserSettingService
             $profileVisibilityMap = [
                 'signed-in' => '2',
                 'private'   => '1',
-                'public'   => '0',
+                'public'    => '0',
             ];
             $profilePrivacy = $profileVisibilityMap[$request->profile_visibility];
             UserSetting::updateOrCreate(
@@ -26,6 +24,7 @@ class UserSettingService
                     'friend_request_privacy'    => ($request->friend_request == 'any-one') ? '0' : '1',
                 ]
             );
+
             return $user;
         } catch (\Exception $e) {
             return false;
@@ -35,11 +34,11 @@ class UserSettingService
     public static function updateNotification($request)
     {
         try {
-            $user= auth()->user();
+            $user = auth()->user();
             $option = [
-                "unsubscribed" => "0",
-                "monthly" => "1",
-                "weekly" => "2"
+                'unsubscribed' => '0',
+                'monthly'      => '1',
+                'weekly'       => '2',
             ];
             $labSummary = $option[$request->lab_summary];
             $challengeSummary = $option[$request->challenge_summary];
@@ -47,24 +46,27 @@ class UserSettingService
             UserSetting::updateOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'manage_alerts' => ($request->communication == 'unsubscribed') ? '0' : '1',
-                    'email_subscription_network_summary' => ($request->network_summary == 'unsubscribed') ? '0' : '1',
+                    'manage_alerts'                        => ($request->communication == 'unsubscribed') ? '0' : '1',
+                    'email_subscription_network_summary'   => ($request->network_summary == 'unsubscribed') ? '0' : '1',
                     'email_subscription_challenge_summary' => $challengeSummary,
-                    'email_subscription_lab_summary' => $labSummary,
-                    'challenge_recommends' => $challengeRecommendation,
+                    'email_subscription_lab_summary'       => $labSummary,
+                    'challenge_recommends'                 => $challengeRecommendation,
                 ]
             );
+
             return $user;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getDetails(){
+    public static function getDetails()
+    {
         try {
-            $user =auth()->user();
+            $user = auth()->user();
+
             return $user;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
