@@ -289,16 +289,16 @@ return [
     ],
 
     'file_type' => [
-        'document'            => '0',
-        'video'               => '1',
-        'audio'               => '2',
-        'embedded'            => '3',
-        'embedded_audio'      => '4',
-        'url'                 => '5',
-        'image'               => '6',
+        'document'             => '0',
+        'video'                => '1',
+        'audio'                => '2',
+        'embedded'             => '3',
+        'embedded_audio'       => '4',
+        'url'                  => '5',
+        'image'                => '6',
         'embedded_Cover_Video' => '7',
     ],
-    
+
     'project_view_enabled' => [
         'yes'       => 'yes',
         'no'        => 'no',
