@@ -211,12 +211,14 @@ return [
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
         App\Repositories\Api\Manage\MemberManagement\MemberManagementServiceProvider::class,
         App\Repositories\Api\Manage\Lab\LabServiceProvider::class,
+        App\Repositories\Api\Manage\LabMarketplace\LabMarketplaceServiceProvider::class,
         App\Repositories\Api\Manage\LabProgram\LabProgramServiceProvider::class,
         App\Repositories\Api\Manage\ResourceModule\ResourceModuleServiceProvider::class,
         App\Repositories\Api\Manage\Challenge\ChallengeServiceProvider::class,
         App\Repositories\Api\Manage\ChallengePath\ChallengePathServiceProvider::class,
         App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
+        App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,

@@ -65,7 +65,8 @@ class FileUploadHelper
             $image_cover = Image::make($request->getFile()->getRealPath());
             $image_cover->encode('webp', 75);
             $image_contents_cover = $image_cover->__toString();
-            $webp_path_cover = $pathsarray[$type].time().'.png';
+            $fileOriginalName = $request->getFile()->getFileName();
+            $webp_path_cover = $pathsarray[$type].$fileOriginalName;
             Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
 
             return $webp_path_cover;
@@ -79,7 +80,8 @@ class FileUploadHelper
         try {
             $pathsarray = config('s3-upload-path');
             $filePath = $request->getFile()->getRealPath();
-            $webp_path_cover = $pathsarray[$type].time().'.pdf';
+            $fileOriginalName = $request->getFile()->getFileName();
+            $webp_path_cover = $pathsarray[$type].$fileOriginalName;
             Storage::disk('s3')->put($webp_path_cover, file_get_contents($filePath));
 
             return $webp_path_cover;

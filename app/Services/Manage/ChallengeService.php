@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
+use App\Models\LabChallengeRedeem;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -364,7 +365,6 @@ class ChallengeService
                             break;
                     }
                 }
-
                 $challenge->language = ($request->has('language')) ? $request->language : $challenge->language;
                 $challenge->organization_id = $organization->id;
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
@@ -491,6 +491,40 @@ class ChallengeService
             $limit = config('site-settings.listing_limit');
 
             return $challenge_list->limit($limit)->get();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updatePreBuilt($challengeId, $is_pre_built)
+    {
+        try {
+            $challengeUpdate = Challenge::find($challengeId);
+            $challengeUpdate->is_pre_built = $is_pre_built;
+            $challengeUpdate->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function challengeTemplateUpdatePreBuilt($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateData = LabChallengeRedeem::where(['challenge_template_id' => $challengeTemplateId, 'is_redeemed' => '0'])->first();
+            if ($challengeTemplateData) {
+                $challengeUpdate = Challenge::find($challengeTemplateData->challenge_id);
+                if ($challengeUpdate) {
+                    $challengeUpdate->is_pre_built = '0';
+                    $challengeUpdate->save();
+                    if ($challengeTemplateData->delete()) {
+                        return true;
+                    }
+                }
+            }
+
+            return true;
         } catch (Exception $e) {
             return false;
         }
