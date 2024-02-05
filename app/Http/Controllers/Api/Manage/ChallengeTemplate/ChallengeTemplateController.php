@@ -65,7 +65,7 @@ class ChallengeTemplateController extends AppBaseController
 
             $addChallengeTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($checkComponentBasedOnSlug->id);
             if ($addChallengeTemplate != false) {
-                return $this->sendResponse(ChallengeTemplateResource::make($addChallengeTemplate), __('responses.challenge_clone_success'), 200);
+                return $this->sendResponse(ChallengeTemplateResource::make($addChallengeTemplate), __('responses.challenge_add_template_success'), 200);
             }
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
