@@ -35,6 +35,7 @@ return new class() extends Migration {
             $table->string('referral_code')->nullable();
             $table->enum('is_profile_completed', ['0', '1'])->comment('0 -> incomplete, 1 -> complete')->default('0');
             $table->rememberToken();
+            $table->enum('is_deactivated', ['0', '1'])->comment('0->activated, 1->deactivated')->default('0');
             $table->timestamps();
             $table->softDeletes();
         });

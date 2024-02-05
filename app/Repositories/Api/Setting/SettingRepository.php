@@ -18,14 +18,23 @@ class SettingRepository implements SettingInterface
         $this->userService=$userService;
     }
 
-    public function removeProfile(){
+    public function getUserById($id)
+    {
         try {
-            return $this->userService->removeProfile();
+            return $this->userService->getUserById($id);
         }catch (\Exception $e) {
             return false;
         }
     }
-    public function updataUserAccount($request)
+    public function removeProfileImage()
+    {
+        try {
+            return $this->userService->removeProfileImage();
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function updateUserAccount($request)
     {
         try {
            return $this->userService->updataUserAccount($request);
@@ -43,6 +52,19 @@ class SettingRepository implements SettingInterface
         }
     }
 
+    public function deleteOrDeactivateUserAccount($action)
+    {
+        try{
+            if(isset($action) && $action=='delete'){
+                return $this->userService->deleteUserAccount();
+            }
+            if(isset($action) && $action=='deactivate'){
+                return $this->userService->deactivateUserAccount();
+            }
+        }catch (\Exception $e){
+            return false;
+        }
+    }
     public function updatePrivacy($request)
     {
         try{

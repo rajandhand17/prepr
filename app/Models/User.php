@@ -48,6 +48,7 @@ class User extends Authenticatable
         'referral_code',
         'is_profile_completed',
         'remember_token',
+        'is_deactivated',
     ];
     /**
      * The attributes that should be hidden for serialization.

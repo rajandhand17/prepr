@@ -34,7 +34,7 @@ class UserService
         try {
             $user = User::select([
                 'id', 'preferred_language', 'first_name', 'last_name', 'full_name', 'username', 'email', 'country_code', 'phone_number',
-                'profile_image', 'user_points', 'user_rank', 'verified_user', 'is_profile_completed', 'created_at',
+                'profile_image', 'user_points', 'user_rank', 'verified_user', 'is_profile_completed', 'created_at','is_deactivated'
             ])->find($id);
             if ($user != null) {
                 return $user;
@@ -102,10 +102,8 @@ class UserService
             $user->preferred_language=$request->preferred_language;
             $user->preferred_timezone=$request->preferred_timezone;
             $user->two_factor_verification=($request->two_factor_verification==true) ? '1' : '0';
-            if($user->save()){
-                return $user;
-            }
-            return false;
+            $user->save();
+            return $user;
         }catch(\Exception $e){
             return false;
         }
@@ -124,7 +122,7 @@ class UserService
         }
     }
 
-    public function removeProfile()
+    public function removeProfileImage()
     {
         try {
             $user = User::find(auth()->user()->id);
@@ -139,4 +137,22 @@ class UserService
         }
     }
 
+    public function deleteUserAccount(){
+        try {
+            return User::find(auth()->user()->id)->softDeletes();
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deactivateUserAccount(){
+        try {
+            $user = User::find(auth()->user()->id);
+            $user->is_deactivated = '1';
+            $user->save();
+            return $user;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -4,11 +4,16 @@ namespace App\Repositories\Api\Setting;
 
 interface SettingInterface
 {
-    public function updataUserAccount($request);
+    public function updateUserAccount($request);
     public function changePassword($request);
 
     public function updatePrivacy($request);
 
     public function updateNotification($request);
 
+    public function removeProfileImage();
+
+    public function deleteOrDeactivateUserAccount($action);
+
+    public function getUserById($id);
 }
