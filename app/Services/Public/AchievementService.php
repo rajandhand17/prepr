@@ -127,10 +127,10 @@ class AchievementService
                 if ($format === 'image') {
                     file_put_contents($pdfPath, $dompdf->output());
                     $pdf = new Pdf($pdfPath);
-                    $pdf->setOutputFormat('png');
-                    $imagePath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.png');
+                    $pdf->setOutputFormat('jpeg');
+                    $imagePath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.jpeg');
                     $pdf->saveImage($imagePath);
-                    $fileName = $userAchievement->certificate_number.'.png';
+                    $fileName = $userAchievement->certificate_number.'.jpeg';
                     $s3BackUrl = FileUploadHelper::uploadLocalStorageImageToS3(response()->download($imagePath), 'certificate');
                 } elseif ($format === 'pdf') {
                     file_put_contents($pdfPath, $dompdf->output());

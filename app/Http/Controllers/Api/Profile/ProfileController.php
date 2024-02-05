@@ -292,6 +292,7 @@ class ProfileController extends AppBaseController
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $getFriendsRecords = $this->profileRepository->getRecordsBasedOnId($request);
+
             switch ($action) {
                 case 'send':
                     if ($getFriendsRecords !== null && $getFriendsRecords->status == '0') {
@@ -358,6 +359,7 @@ class ProfileController extends AppBaseController
                     }
                     break;
                 default:
+
                     return $this->sendError(__('responses.handler_bad_request'), 400);
             }
 
@@ -370,10 +372,9 @@ class ProfileController extends AppBaseController
     public function getFriendListingBasedOnActivity($username, $activity = null)
     {
         try {
-            if (!in_array($activity, ['follow', 'pending', 'followers'])) {
+            if (!in_array($activity, ['follow', 'pending', 'followers', null])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-
             switch ($activity) {
                 case 'pending':
                     $friendsListing = $this->profileRepository->getFriendRequestList();
@@ -388,8 +389,11 @@ class ProfileController extends AppBaseController
                     $friendsListing = $this->profileRepository->getFriendsListing();
                     break;
             }
+            if ($friendsListing) {
+                return $this->sendResponse(FriendsResource::collection($friendsListing), __('responses.friends_listing'));
+            }
 
-            return $this->sendResponse(FriendsResource::collection($friendsListing), __('responses.friends_listing'));
+            return $this->sendError(__('responses.friends_listing_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
