@@ -43,4 +43,21 @@ class ChallengeTemplateSponsorService
             return false;
         }
     }
+
+    public static function deleteChallengeTemplateSponsor($challengeTemplateId)
+    {
+        try {
+            $challengeTemplateSponsor = ChallengeTemplateSponsor::where('challenge_template_id', $challengeTemplateId)->get();
+            if ($challengeTemplateSponsor->isNotEmpty()) {
+                $deleteChallengeTemplateSponsor = ChallengeTemplateSponsor::where('challenge_template_id', $challengeTemplateId)->delete();
+                if (!$deleteChallengeTemplateSponsor) {
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

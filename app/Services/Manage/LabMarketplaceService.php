@@ -55,7 +55,7 @@ class LabMarketplaceService
                         case 'redeemed':
                             $lab_marketplace_list = $lab_marketplace_list->whereIn('id', $getLabRedeemedIds);
                             break;
-                        case 'not_redeem':
+                        case 'not_redeemed':
                             $lab_marketplace_list = $lab_marketplace_list->whereNotIn('id', $getLabRedeemedIds);
                             break;
                         default:
@@ -118,7 +118,7 @@ class LabMarketplaceService
                 $labTemplate->description = $existsLabs->description;
                 $labTemplate->privacy = $existsLabs->privacy;
                 $labTemplate->media_type = $existsLabs->media_type;
-                $labTemplate->media = $existsLabs->media;
+                $labTemplate->media = $existsLabs->getRawOriginal('media');
                 $labTemplate->status = $existsLabs->status;
                 $labTemplate->total_share = $existsLabs->total_share;
                 $labTemplate->is_auto_created = $existsLabs->is_auto_created;
@@ -216,7 +216,7 @@ class LabMarketplaceService
             $newLab->description = $labMarketplaceData->description;
             $newLab->privacy = $labMarketplaceData->privacy;
             $newLab->media_type = $labMarketplaceData->media_type;
-            $newLab->media = $labMarketplaceData->media;
+            $newLab->media = $labMarketplaceData->getRawOriginal('media');
             $newLab->status = $labMarketplaceData->status;
             $newLab->total_share = '0';
             $newLab->is_auto_created = $labMarketplaceData->is_auto_created;

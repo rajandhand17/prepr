@@ -18,7 +18,7 @@ class LabMarketplaceAchievementsService
                 $labAchievement->achievement_name = $existingLabAchievements->achievement_name;
                 $labAchievement->achievement_points = $existingLabAchievements->achievement_points;
                 $labAchievement->achievement_condition = $existingLabAchievements->achievement_condition;
-                $labAchievement->achievement_image = $existingLabAchievements->achievement_image;
+                $labAchievement->achievement_image = $existingLabAchievements->getRawOriginal('achievement_image');
                 $labAchievement->save();
             }
 
@@ -38,7 +38,7 @@ class LabMarketplaceAchievementsService
                 $newLabAchievement->achievement_name = $labMarketplaceAchievementData->achievement_name;
                 $newLabAchievement->achievement_points = $labMarketplaceAchievementData->achievement_points;
                 $newLabAchievement->achievement_condition = $labMarketplaceAchievementData->achievement_condition;
-                $newLabAchievement->achievement_image = $labMarketplaceAchievementData->achievement_image;
+                $newLabAchievement->achievement_image = $labMarketplaceAchievementData->getRawOriginal('achievement_image');
                 $newLabAchievement->save();
             }
 
