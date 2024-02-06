@@ -26,4 +26,21 @@ class UserAddressService
             return false;
         }
     }
+
+    public static function deleteUserAddressBasedOnUserId($userId)
+    {
+        try {
+            $getUserAddressId=UserAddress::where('user_id',$userId)->pluck('id');
+            if($getUserAddressId->isNotEmpty()){
+                $deleteUserAddress=UserAddress::whereIn('id',$getUserAddressId)->delete();
+                if(!$deleteUserAddress){
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

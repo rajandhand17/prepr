@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\CampusConnectStudentInformation;
+use App\Models\UserCertificate;
 use App\Models\UserEducation;
 
 class UserEducationService
@@ -74,6 +75,22 @@ class UserEducationService
         try {
             return UserEducation::where('id', '=', $id)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteUserEducationBasedOnUserId(){
+        try {
+            $getUserEducationId=UserEducation::where('user_id',auth()->user()->id)->pluck('id');
+            if($getUserEducationId->isNotEmpty()){
+                $deleteUserEducation=UserEducation::whereIn('id',$getUserEducationId)->delete();
+                if(!$deleteUserEducation){
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        }catch (\Exception $e) {
             return false;
         }
     }

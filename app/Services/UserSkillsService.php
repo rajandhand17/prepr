@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\UserPatent;
 use App\Models\UserSkills;
 
 class UserSkillsService
@@ -49,6 +50,22 @@ class UserSkillsService
         try {
             return UserSkills::where(['skill'=>$id, 'user_id'=>auth()->user()->id])->first();
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteUserPatentBasedOnUserId(){
+        try {
+            $getUserPatentId=UserPatent::where('user_id',auth()->user()->id)->pluck('id');
+            if($getUserPatentId->isNotEmpty()){
+                $deleteUserPatentId=UserPatent::whereIn('id',$getUserPatentId)->delete();
+                if(!$deleteUserPatentId){
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        }catch (\Exception $e) {
             return false;
         }
     }

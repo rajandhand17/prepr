@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\UserEducation;
 use App\Models\UserExperience;
 use App\Models\UserPersonalFile;
 use Illuminate\Support\Facades\Storage;
@@ -69,6 +70,22 @@ class UserExperienceService
 
             return $storeData;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteUserExperienceBasedOnUserId($userId){
+        try {
+            $getUserExperienceId=UserExperience::where('user_id',$userId)->pluck('id');
+            if($getUserExperienceId->isNotEmpty()){
+                $deleteUserExperience=UserExperience::whereIn('id',$getUserExperienceId)->delete();
+                if(!$deleteUserExperience){
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        }catch (\Exception $e) {
             return false;
         }
     }

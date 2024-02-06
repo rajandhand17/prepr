@@ -97,6 +97,7 @@ class UserService
             $user=User::find(auth()->user()->id);
             $user->first_name=$request->first_name;
             $user->last_name=$request->last_name;
+            $user->full_name=$request->first_name.' '.$request->last_name;
             $user->username=$request->username;
             $user->email=$request->email;
             $user->phone_number=$request->phone_number;
@@ -144,7 +145,8 @@ class UserService
 
     public function deleteUserAccount(){
         try {
-            return User::find(auth()->user()->id)->softDeletes();
+            $user= User::find(auth()->user()->id)->softDeletes();
+            return true;
         }catch (\Exception $e) {
             return false;
         }

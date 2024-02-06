@@ -47,7 +47,6 @@ class SettingController extends AppBaseController
             if($account){
                 return $this->sendResponse(AccountResource::make($account), __('responses.update_user_account_successful'));
             }
-
             return $this->sendError(__('responses.update_user_account_failed'));
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -79,7 +78,7 @@ class SettingController extends AppBaseController
                 return $this->sendError(__('responses.user_not_found'));
             }
             $allowedActions = ['delete', 'deactivate'];
-            if (isset($request->action) && in_array($request->action, $allowedActions)) {
+            if (isset($request->action) && in_array($request->action, $allowedActions)){
                 $updatePrivacy = $this->settingRepository->deleteOrDeactivateUserAccount($request->action);
                 if ($updatePrivacy) {
                     return $this->sendResponse([], __('responses.account_' . $request->action . '_successfully'));
@@ -107,7 +106,6 @@ class SettingController extends AppBaseController
             if($updateNotification){
                 return $this->sendResponse(AccountResource::make($updateNotification),__('responses.update_notification_successfully'));
             }
-
             return $this->sendError(__('responses.update_notification_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
