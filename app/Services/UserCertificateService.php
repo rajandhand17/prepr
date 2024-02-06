@@ -47,20 +47,4 @@ class UserCertificateService
             return false;
         }
     }
-
-    public static function deleteCertificateBasedOnUserId($userId){
-        try {
-            $getUserCertificateId=UserCertificate::where('user_id',$userId)->pluck('id');
-            if($getUserCertificateId->isNotEmpty()){
-                $deleteUserCertificate=UserCertificate::whereIn('id',$getUserCertificateId)->delete();
-                if(!$deleteUserCertificate){
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }catch(\Exception $e) {
-            return false;
-        }
-    }
 }

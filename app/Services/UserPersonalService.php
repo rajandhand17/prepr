@@ -116,20 +116,4 @@ class UserPersonalService
             return false;
         }
     }
-
-    public function deleteUserPersonalBasedOnUserId($userId){
-        try {
-            $userPersonalIds=UserPersonal::where('user_id',$userId)->pluck('id');
-            if($userPersonalIds->isNotEmpty()){
-                $userPersonalDelete=UserPersonal::whereIn('id', $userPersonalIds)->delete();
-                if(!$userPersonalDelete){
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
 }

@@ -53,21 +53,4 @@ class UserTagsService
             return false;
         }
     }
-
-    public static function deleteUserPatentBasedOnUserId()
-    {
-        try {
-            $getUserTagId=UserTag::where('user_id',auth()->user()->id)->pluck('id');
-            if($getUserTagId->isNotEmpty()){
-                $deleteUserTagId=UserTag::whereIn('id',$getUserTagId)->delete();
-                if(!$deleteUserTagId){
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
 }

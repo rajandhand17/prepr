@@ -73,20 +73,4 @@ class UserExperienceService
             return false;
         }
     }
-
-    public static function deleteUserExperienceBasedOnUserId($userId){
-        try {
-            $getUserExperienceId=UserExperience::where('user_id',$userId)->pluck('id');
-            if($getUserExperienceId->isNotEmpty()){
-                $deleteUserExperience=UserExperience::whereIn('id',$getUserExperienceId)->delete();
-                if(!$deleteUserExperience){
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
 }

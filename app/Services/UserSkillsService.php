@@ -53,20 +53,4 @@ class UserSkillsService
             return false;
         }
     }
-
-    public static function deleteUserPatentBasedOnUserId(){
-        try {
-            $getUserPatentId=UserPatent::where('user_id',auth()->user()->id)->pluck('id');
-            if($getUserPatentId->isNotEmpty()){
-                $deleteUserPatentId=UserPatent::whereIn('id',$getUserPatentId)->delete();
-                if(!$deleteUserPatentId){
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
 }
