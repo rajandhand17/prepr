@@ -19,7 +19,7 @@ class ProjectMemberManagementService
             $module_type = null;
             $projectParticipantCollectionObject = ProjectMemberManagement::select();
             $projectParticipantCollectionObject = self::filterUserList($projectParticipantCollectionObject, $request);
-            
+
             return $projectParticipantCollectionObject->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
             return false;
@@ -31,8 +31,8 @@ class ProjectMemberManagementService
         try {
             if ($request->has('search') && !empty($request->search)) {
                 $projectParticipantCollectionObject = $projectParticipantCollectionObject->where(function ($query) use ($request) {
-                    $query->where('invitee_name', 'like', '%' . $request->search . '%')
-                        ->orWhere('email', 'like', '%' . $request->search . '%');
+                    $query->where('invitee_name', 'like', '%'.$request->search.'%')
+                        ->orWhere('email', 'like', '%'.$request->search.'%');
                 });
             }
 
@@ -47,7 +47,7 @@ class ProjectMemberManagementService
                         break;
                     case 'editor':
                         $access_level = config('constants.project_access_level.editor');
-                        break;                    
+                        break;
                     default:
                         $access_level = null;
                         break;
@@ -125,6 +125,7 @@ class ProjectMemberManagementService
     {
         try {
             $module_type = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), '5', $requestLang);
+
             return $module_type;
         } catch (Exception $e) {
             return false;
