@@ -66,6 +66,7 @@ class ProjectMemberManagementController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function downloadSample()
     {
         try {
