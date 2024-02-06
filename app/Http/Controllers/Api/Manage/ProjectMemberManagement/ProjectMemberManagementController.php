@@ -26,9 +26,9 @@ class ProjectMemberManagementController extends AppBaseController
             }
             $participatesList = $this->projectMemberManagementRepository->addParticipates($checkProjectExistsOrNot, $request);
             if ((count($participatesList['invalid_emails']) > 0 || count($participatesList['already_members']) > 0) && count($participatesList['invited_emails']) < 1) {
-                return $this->sendError($participatesList['add_member_response'], 403);
+                return $this->sendError($participatesList['add_participant_response'], 403);
             } elseif ($participatesList) {
-                return $this->sendResponse($participatesList, $participatesList['add_member_response']);
+                return $this->sendResponse($participatesList, $participatesList['add_participant_response']);
             }
 
             return $this->sendError(__('responses.create_member_manger_failed'), 403);

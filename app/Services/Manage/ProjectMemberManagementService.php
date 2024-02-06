@@ -62,13 +62,46 @@ class ProjectMemberManagementService
         }
     }
 
+    public static function fetchDataFromEmailArray($request)
+    {
+        try {
+            $participantList = [];
+            if (is_array($request->invite_email) && is_array($request->access_level)) {
+                foreach ($request->invite_email as $key => $email) {
+                    $access_level = $request->access_level[$key] ?? null;
+                    
+                    $user = UserService::getUserByEmail($email);
+                    $name = null;
+                    if ($user) {
+                        $name = $user->first_name . ' ' . $user->last_name;
+                    }
+                    $participantList[] = [
+                        'invite_type'   => config('constants.project_member_management_invite_type.email'),
+                        'invitee_name'  => $name,
+                        'invitee_email' => $email,
+                        'access_level'  => $access_level,
+                    ];
+                }
+                if (!empty($participantList)) {
+                    return $participantList;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function addParticipates($projectData, $request, $pariticipateLists)
     {
         try {
             $already_members = [];
             $invalid_emails = [];
             $invited_emails = [];
-            $addedMemberResponse = null;
+            $addedMemberResponse = __('responses.create_member_manger_success_prjt');
 
             DB::beginTransaction();
             foreach ($pariticipateLists as $pariticipateData) {
@@ -79,10 +112,10 @@ class ProjectMemberManagementService
                         $email_status = config('constants.project_member_management_email_status.scheduled');
 
                         switch ($pariticipateData['access_level']) {
-                            case 'Editor':
+                            case 'editor':
                                 $access_level = config('constants.project_access_level.editor');
                                 break;
-                            case 'Viewer':
+                            case 'viewer':
                                 $access_level = config('constants.project_access_level.viewer');
                                 break;
                             default:
@@ -143,10 +176,10 @@ class ProjectMemberManagementService
                 $addedMemberResponse = $addedMemberResponse;
             }
             $data = [
-                'invalid_emails'        => $invalid_emails,
-                'invited_emails'        => $invited_emails,
-                'already_members'       => $already_members,
-                'add_member_response'   => $addedMemberResponse,
+                'invalid_emails'            => $invalid_emails,
+                'invited_emails'            => $invited_emails,
+                'already_members'           => $already_members,
+                'add_participant_response'  => $addedMemberResponse,
             ];
 
             return $data;

@@ -27,6 +27,15 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
                 }
             }
 
+            if ($request->invite_type == 'email') {
+                $participatesList = $this->projectMemberManagementService->fetchDataFromEmailArray($request);
+                if ($participatesList) {
+                    if (!$participatesList && !count($participatesList) > 0) {
+                        return false;
+                    }
+                }
+            }
+
             if (is_array($participatesList) && count($participatesList) > 0) {
                 $addParticipates = $this->projectMemberManagementService->addParticipates($projectData, $request, $participatesList);
                 if ($addParticipates) {
