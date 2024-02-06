@@ -143,17 +143,6 @@ class UserService
             return false;
         }
     }
-
-    public function deleteUserAccount()
-    {
-        try {
-            $user= User::find(auth()->user()->id)->delete();
-            return true;
-        }catch (\Exception $e){
-            return false;
-        }
-    }
-
     public function deactivateUserAccount()
     {
         try {

@@ -56,12 +56,10 @@ class SettingRepository implements SettingInterface
     public function deleteOrDeactivateUserAccount($action)
     {
         try {
-            if (isset($action) && $action == 'delete') {
-                return $this->userService->deleteUserAccount();
-            }
             if (isset($action) && $action == 'deactivate') {
                 return $this->userService->deactivateUserAccount();
             }
+            return true;
         } catch (\Exception $e) {
             return false;
         }

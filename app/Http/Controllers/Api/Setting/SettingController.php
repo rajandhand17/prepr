@@ -79,7 +79,7 @@ class SettingController extends AppBaseController
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $allowedActions = ['delete', 'deactivate'];
+            $allowedActions = ['deactivate'];
             if (isset($request->action) && in_array($request->action, $allowedActions)){
                 $updatePrivacy = $this->settingRepository->deleteOrDeactivateUserAccount($request->action);
                 if ($updatePrivacy) {
