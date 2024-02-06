@@ -147,14 +147,9 @@ class UserService
     public function deleteUserAccount()
     {
         try {
-<<<<<<< HEAD
             $user= User::find(auth()->user()->id)->softDeletes();
             return true;
         }catch (\Exception $e) {
-=======
-            return User::find(auth()->user()->id)->softDeletes();
-        } catch (\Exception $e) {
->>>>>>> c5759e8eb3f29c8a1931e932d46e438e915e4ccb
             return false;
         }
     }
