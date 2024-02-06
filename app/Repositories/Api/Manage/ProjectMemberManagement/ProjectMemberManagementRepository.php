@@ -15,6 +15,23 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         $this->projectMemberManagementService = $projectMemberManagementService;
     }
 
+    public function getProjectBasedParticipants($projectData, $request)
+    {
+        try {
+            return $this->projectMemberManagementService->getProjectBasedParticipants($projectData, $request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getTemplate($requestLang)
+    {
+        try {
+            return $this->projectMemberManagementService->getTemplate($requestLang);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public function downloadSample()
     {
         try {

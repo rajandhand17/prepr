@@ -346,7 +346,8 @@ return [
     ],
 
     'project_access_level' => [
-        'editor'    => '0',
-        'viewer'    => '1',
+        'editor'        => '0',
+        'viewer'        => '1',
+        'team_leader'   => '2',
     ],
 ];

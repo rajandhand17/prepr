@@ -13,6 +13,124 @@ use Illuminate\Support\Facades\Notification;
 
 class ProjectMemberManagementService
 {
+    public function getProjectBasedParticipants($projectData, $request)
+    {
+        try {
+            $module_type = null;
+            $projectParticipantCollectionObject = ProjectMemberManagement::select();
+            $projectParticipantCollectionObject = self::filterUserList($projectParticipantCollectionObject, $request);
+            
+            return $projectParticipantCollectionObject->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function filterUserList($projectParticipantCollectionObject, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $projectParticipantCollectionObject = $projectParticipantCollectionObject->where(function ($query) use ($request) {
+                    $query->where('invitee_name', 'like', '%' . $request->search . '%')
+                        ->orWhere('email', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            if ($request->has('access_level') && !empty($request->access_level)) {
+                $access_level = null;
+                switch ($request->access_level) {
+                    case 'team_leader':
+                        $access_level = config('constants.project_access_level.team_leader');
+                        break;
+                    case 'viewer':
+                        $access_level = config('constants.project_access_level.viewer');
+                        break;
+                    case 'editor':
+                        $access_level = config('constants.project_access_level.editor');
+                        break;                    
+                    default:
+                        $access_level = null;
+                        break;
+                }
+                $projectParticipantCollectionObject = $projectParticipantCollectionObject->where('inviter_access_level', $access_level);
+            }
+
+            if ($request->has('invite_status') && !empty($request->invite_status)) {
+                $invite_status = null;
+                switch ($request->invite_status) {
+                    case 'invited':
+                        $invite_status = config('constants.project_member_management_invite_status.invited');
+                        break;
+                    case 'accepted':
+                        $invite_status = config('constants.project_member_management_invite_status.accepted');
+                        break;
+                    case 'pending':
+                        $invite_status = config('constants.project_member_management_invite_status.pending');
+                        break;
+                    case 'declined':
+                        $invite_status = config('constants.project_member_management_invite_status.declined');
+                        break;
+                    default:
+                        $invite_status = null;
+                }
+                $projectParticipantCollectionObject = $projectParticipantCollectionObject->where('invite_status', $invite_status);
+            }
+
+            if ($request->has('invite_type') && !empty($request->invite_type)) {
+                $invite_type = null;
+                switch ($request->invite_type) {
+                    case 'email':
+                        $invite_type = config('constants.project_member_management_invite_type.email');
+                        break;
+                    case 'network':
+                        $invite_type = config('constants.project_member_management_invite_type.network');
+                        break;
+                    case 'csv':
+                        $invite_type = config('constants.project_member_management_invite_type.csv');
+                        break;
+                    default:
+                        $invite_type = null;
+                }
+                $projectParticipantCollectionObject = $projectParticipantCollectionObject->where('invite_type', $invite_type);
+            }
+
+            if ($request->has('email_status') && !empty($request->email_status)) {
+                $email_status = null;
+                switch ($request->email_status) {
+                    case 'scheduled':
+                        $email_status = config('constants.project_member_management_email_status.scheduled');
+                        break;
+                    case 'sent':
+                        $email_status = config('constants.project_member_management_email_status.sent');
+                        break;
+                    case 'fail':
+                        $email_status = config('constants.project_member_management_email_status.fail');
+                        break;
+                    case 'NA':
+                        $email_status = config('constants.project_member_management_email_status.na');
+                        break;
+                    default:
+                        $email_status = null;
+                }
+                $projectParticipantCollectionObject = $projectParticipantCollectionObject->where('email_status', $email_status);
+            }
+
+            return $projectParticipantCollectionObject;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTemplate($requestLang)
+    {
+        try {
+            $module_type = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), '5', $requestLang);
+            return $module_type;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function fetchDataFromCSV($request)
     {
         try {
