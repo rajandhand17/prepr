@@ -90,7 +90,6 @@ class SettingController extends AppBaseController
             if ($updatePrivacy) {
                 return $this->sendResponse(AccountResource::make($updatePrivacy), __('responses.update_privacy_successfully'));
             }
-
             return $this->sendError(__('responses.update_privacy_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
