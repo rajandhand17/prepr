@@ -5,6 +5,7 @@ namespace App\Repositories\Api\Setting;
 interface SettingInterface
 {
     public function updateUserAccount($request);
+
     public function changePassword($request);
 
     public function updatePrivacy($request);
