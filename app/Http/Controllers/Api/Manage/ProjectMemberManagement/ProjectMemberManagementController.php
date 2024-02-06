@@ -7,7 +7,6 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ProjectMemberManagement\CreateProjectMemberManagementRequest;
 use App\Repositories\Api\Manage\ProjectMemberManagement\ProjectMemberManagementRepository;
 use Exception;
-use Illuminate\Http\Request;
 
 class ProjectMemberManagementController extends AppBaseController
 {
