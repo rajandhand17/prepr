@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\Manage\ProjectMemberManagement;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ProjectMemberManagement\CreateProjectMemberManagementRequest;
+use App\Http\Requests\Manage\ProjectMemberManagement\DeleteProjectMemberManagementRequest;
 use App\Http\Resources\EmailTemplate\EmailTemplateResource;
 use App\Http\Resources\Manage\ProjectMemberManagement\ProjectMemberManagementResource;
 use App\Repositories\Api\Manage\ProjectMemberManagement\ProjectMemberManagementRepository;
 use App\Services\UserService;
 use Exception;
+use Illuminate\Http\Request;
 
 class ProjectMemberManagementController extends AppBaseController
 {
@@ -91,6 +93,25 @@ class ProjectMemberManagementController extends AppBaseController
             }
 
             return $this->sendError(__('responses.create_member_manger_failed'), 403);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function delete($slug, DeleteProjectMemberManagementRequest $request)
+    {
+        try {
+            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
+            if ($checkProjectExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.project_not_found'), 403);
+            }
+
+            $participant_management = $this->projectMemberManagementRepository->deleteParticipates($checkProjectExistsOrNot, $request);
+            if ($participant_management) {
+                return $this->sendResponse(null, __('responses.participant_delete'));
+            }
+
+            return $this->sendError(__('responses.participant_not_delete'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

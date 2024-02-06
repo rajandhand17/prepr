@@ -308,4 +308,18 @@ class ProjectMemberManagementService
             return false;
         }
     }
+
+    public static function deleteParticipates($projectData, $request)
+    {
+        try {
+            $member_manger = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id])->delete();
+            if ($member_manger) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

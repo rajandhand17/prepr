@@ -894,5 +894,7 @@
     "responses.create_member_manger_success_prjt": "Congratulations! You have successfully added member(s) to an Project.",
     "responses.create_member_manger_error_prjt": "The members(s) you're trying to invite already exist in the Project",
     "responses.participant_list_found": "The Project's participant list has been successfully retrieved.",
-    "responses.participant_list_not_found": "The Project's participant list has not been successfully retrieved."
+    "responses.participant_list_not_found": "The Project's participant list has not been successfully retrieved.",
+    "responses.participant_delete": "The Project's participant has been deleted successfully!",
+    "responses.participant_not_delete": "The Project's participant has been not deleted!"
 }

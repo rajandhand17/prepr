@@ -97,4 +97,13 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return false;
         }
     }
+
+    public function deleteParticipates($projectData, $request)
+    {
+        try {
+            return $this->projectMemberManagementService->deleteParticipates($projectData, $request);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
