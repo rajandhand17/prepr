@@ -69,11 +69,11 @@ class ProjectMemberManagementService
             if (is_array($request->invite_email) && is_array($request->access_level)) {
                 foreach ($request->invite_email as $key => $email) {
                     $access_level = $request->access_level[$key] ?? null;
-                    
+
                     $user = UserService::getUserByEmail($email);
                     $name = null;
                     if ($user) {
-                        $name = $user->first_name . ' ' . $user->last_name;
+                        $name = $user->first_name.' '.$user->last_name;
                     }
                     $participantList[] = [
                         'invite_type'   => config('constants.project_member_management_invite_type.email'),
