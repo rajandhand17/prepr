@@ -124,7 +124,7 @@ class ChallengeController extends AppBaseController
             }
             $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             $update_participation_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->participation_achievement->achievement_image);
-            $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments);
+            $update_assessment_attachment = ($checkComponentBasedOnSlug->challenge_assessment !== null && is_array($checkComponentBasedOnSlug->challenge_assessment) && count($checkComponentBasedOnSlug->challenge_assessment) > 0) ? str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments) : null;
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
                 if ($uploaded_cover_image == false) {
