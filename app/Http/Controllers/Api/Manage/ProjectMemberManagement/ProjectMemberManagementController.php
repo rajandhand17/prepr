@@ -10,7 +10,6 @@ use App\Http\Resources\Manage\ProjectMemberManagement\ProjectMemberManagementRes
 use App\Repositories\Api\Manage\ProjectMemberManagement\ProjectMemberManagementRepository;
 use App\Services\UserService;
 use Exception;
-use Illuminate\Http\Request;
 
 class ProjectMemberManagementController extends AppBaseController
 {
