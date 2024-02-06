@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Manage\ProjectMemberManagement;
 
 use App\Services\Manage\ProjectMemberManagementService;
 use Exception;
+use Response;
 
 class ProjectMemberManagementRepository implements ProjectMemberManagementInterface
 {
@@ -12,6 +13,34 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
     public function __construct(ProjectMemberManagementService $projectMemberManagementService)
     {
         $this->projectMemberManagementService = $projectMemberManagementService;
+    }
+
+    public function downloadSample()
+    {
+        try {
+            $headers = [
+                'Content-type'        => 'text/csv',
+                'Content-Disposition' => 'attachment; filename=project-member-management.csv',
+                'Pragma'              => 'no-cache',
+                'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires'             => '0',
+            ];
+            $columns = ['Name', 'Email', 'Access (viewer/editor)'];
+            $callback = function () use ($columns) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+                $dropdownOptions = ["viewer", "editor"];
+                foreach ($dropdownOptions as $option) {
+                    fputcsv($file, ["", "", $option]);
+                }
+            
+                fclose($file);
+            };
+
+            return Response::stream($callback, 200, $headers);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function addParticipates($projectData, $request)

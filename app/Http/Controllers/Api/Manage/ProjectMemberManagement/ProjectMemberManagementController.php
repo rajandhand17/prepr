@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ProjectMemberManagement;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\ProjectMemberManagement\CreateProjectMemberManagementRequest;
 use App\Repositories\Api\Manage\ProjectMemberManagement\ProjectMemberManagementRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,10 +18,19 @@ class ProjectMemberManagementController extends AppBaseController
         $this->projectMemberManagementRepository = $projectMemberManagementRepository;
     }
 
-    public function create(Request $request)
+    public function downloadSample()
     {
         try {
-            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $request->slug);
+            return $this->projectMemberManagementRepository->downloadSample();
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function create($slug, CreateProjectMemberManagementRequest $request)
+    {
+        try {
+            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
             if ($checkProjectExistsOrNot == false) {
                 return $this->sendResponse([], __('responses.project_not_found'), 403);
             }
