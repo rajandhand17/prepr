@@ -29,11 +29,11 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             $callback = function () use ($columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
-                $dropdownOptions = ["viewer", "editor"];
+                $dropdownOptions = ['viewer', 'editor'];
                 foreach ($dropdownOptions as $option) {
-                    fputcsv($file, ["", "", $option]);
+                    fputcsv($file, ['', '', $option]);
                 }
-            
+
                 fclose($file);
             };
 
