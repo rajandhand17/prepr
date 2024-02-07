@@ -88,7 +88,7 @@ class UserService
         }
     }
 
-    public static function updataUserAccount($request,$userId)
+    public static function updataUserAccount($request, $userId)
     {
         try {
             $user = User::find($userId);
@@ -109,7 +109,7 @@ class UserService
         }
     }
 
-    public function changePassword($request,$userId)
+    public function changePassword($request, $userId)
     {
         try {
             $user = User::find($userId);
@@ -131,8 +131,10 @@ class UserService
             if ($user) {
                 $user->profile_image = config('site-settings.default_user_profile_image');
                 $user->save();
+
                 return $user;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -145,6 +147,7 @@ class UserService
             $user = User::find($userId);
             $user->is_deactivated = '1';
             $user->save();
+
             return $user;
         } catch (\Exception $e) {
             return false;

@@ -6,7 +6,7 @@ use App\Models\UserSetting;
 
 class UserSettingService
 {
-    public static function updatePrivacy($request,$userDetails)
+    public static function updatePrivacy($request, $userDetails)
     {
         try {
             $profileVisibilityMap = [
@@ -37,7 +37,7 @@ class UserSettingService
         }
     }
 
-    public static function updateNotification($request,$userDetails)
+    public static function updateNotification($request, $userDetails)
     {
         try {
             $option = [
