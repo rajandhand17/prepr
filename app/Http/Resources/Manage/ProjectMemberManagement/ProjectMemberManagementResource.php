@@ -23,22 +23,97 @@ class ProjectMemberManagementResource extends JsonResource
             $username = $user->username;
         }
         $invtee_user = UserService::getUserById($this->inviter_id);
-        $invite_type = ($this->invite_type == '0') ? 'Email' : (($this->invite_type == '1') ? 'Network' : (($this->invite_type == '2') ? 'CSV Upload' : (($this->invite_type == '3') ? 'Link' : 'CSV Upload')));
-        $invite_status = ($this->invite_status == '0') ? 'Invited' : (($this->invite_status == '1') ? 'Accepted' : (($this->invite_status == '2') ? 'Pending' : (($this->invite_status == '3') ? 'Declined' : 'Auto Created')));
-        $email_status = ($this->email_status == '0') ? 'Scheduled' : (($this->email_status == '1') ? 'Sent' : (($this->email_status == '2') ? 'Failed' : 'NA'));
+        $invite_type = 'CSV Upload';
+        if ($this->invite_type) {
+            switch ($this->invite_type) {
+                case '0':
+                    $invite_type = 'Email';
+                    break;
+                case '1':
+                    $invite_type = 'Network';
+                    break;
+                case '2':
+                    $invite_type = 'CSV Upload';
+                    break;
+                case '3':
+                    $invite_type = 'Link';
+                    break;                
+                default:
+                    $invite_type = 'CSV Upload';
+                    break;
+            }
+        }
 
+        $invite_status = 'Pending';
+        if ($this->invite_status) {
+            switch ($this->invite_status) {
+                case '0':
+                    $invite_status = 'Invited';
+                    break;
+                case '1':
+                    $invite_status = 'Accepted';
+                    break;
+                case '2':
+                    $invite_status = 'Pending';
+                    break;
+                case '3':
+                    $invite_status = 'Declined';
+                    break;                
+                default:
+                    $invite_status = 'Pending';
+                    break;
+            }
+        }
+
+        $email_status = 'NA';
+        if ($this->email_status) {
+            switch ($this->email_status) {
+                case '0':
+                    $email_status = 'Scheduled';
+                    break;
+                case '1':
+                    $email_status = 'Sent';
+                    break;
+                case '2':
+                    $email_status = 'Failed';
+                    break;                
+                default:
+                    $email_status = 'NA';
+                    break;
+            }
+        }
+
+        $inviter_access_level = 'Viewer';
+        if ($this->inviter_access_level) {
+            switch ($this->inviter_access_level) {
+                case '0':
+                    $inviter_access_level = 'Viewer';
+                    break;
+                case '1':
+                    $inviter_access_level = 'Editor';
+                    break;
+                case '2':
+                    $inviter_access_level = 'Team Leader';
+                    break;                
+                default:
+                    $inviter_access_level = 'Viewer';
+                    break;
+            }
+        }
+        
         return [
-            'id'            => $this->uuid,
-            'invite_type'   => $invite_type,
-            'name'          => $this->invitee_name,
-            'email'         => $this->email,
-            'username'      => $username,
-            'invited_by'    => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
-            'role'          => $this->role,
-            'invite_status' => $invite_status,
-            'email_status'  => $email_status,
-            'subject'       => $this->subject_line,
-            'email_content' => $this->email_body,
+            'id'                    => $this->uuid,
+            'invite_type'           => $invite_type,
+            'name'                  => $this->invitee_name,
+            'email'                 => $this->email,
+            'username'              => $username,
+            'invited_by'            => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
+            'role'                  => $this->role,
+            'inviter_access_level'  => $inviter_access_level,
+            'invite_status'         => $invite_status,
+            'email_status'          => $email_status,
+            'subject'               => $this->subject_line,
+            'email_content'         => $this->email_body,
         ];
     }
 }

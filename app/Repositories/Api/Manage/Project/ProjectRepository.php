@@ -7,6 +7,7 @@ use App\Services\Manage\LabService;
 use App\Services\Manage\ProjectAdditionalInfoService;
 use App\Services\Manage\ProjectExternalLinksService;
 use App\Services\Manage\ProjectFileService;
+use App\Services\Manage\ProjectMemberManagementService;
 use App\Services\Manage\ProjectPitchService;
 use App\Services\Manage\ProjectService;
 use Exception;
@@ -21,8 +22,9 @@ class ProjectRepository implements ProjectInterface
     private $projectFileService;
     private $projectExternalLinksService;
     private $projectAdditionalInfoService;
+    private $projectMemberManagementService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -31,6 +33,7 @@ class ProjectRepository implements ProjectInterface
         $this->projectFileService = $projectFileService;
         $this->projectExternalLinksService = $projectExternalLinksService;
         $this->projectAdditionalInfoService = $projectAdditionalInfoService;
+        $this->projectMemberManagementService = $projectMemberManagementService;
     }
 
     public function uploadCoverImage($coverImage)
@@ -45,14 +48,24 @@ class ProjectRepository implements ProjectInterface
     public function createProject($request, $uploadedCoverMedia)
     {
         try {
-            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia) {
+            //field entry for owner's data entry in project member management
+            $userId = auth()->user()->id;
+            $userEmail = auth()->user()->email;
+            $inviteType = '1';
+            $inviteStatus = '1';
+            $emailStatus = '1';
+            $accessLevel = '2';
+
+            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId ,$userEmail ,$inviteType ,$inviteStatus ,$emailStatus ,$accessLevel) {
                 $createProject = $this->projectService->createProject($request, $uploadedCoverMedia);
+                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId ,$userEmail ,$inviteType ,$inviteStatus ,$emailStatus ,$accessLevel);
 
                 return [
-                    'createProject' => $createProject,
+                    'createProject'         => $createProject,
+                    'createProjectMember'   => $createProjectMember
                 ];
             });
-            if ($createProject['createProject']) {
+            if ($createProject['createProject'] && $createProject['createProjectMember']) {
                 DB::commit();
 
                 return $createProject['createProject'];

@@ -17,7 +17,7 @@ class ProjectMemberManagementService
     {
         try {
             $module_type = null;
-            $projectParticipantCollectionObject = ProjectMemberManagement::select();
+            $projectParticipantCollectionObject = ProjectMemberManagement::where('project_id', $projectData->id);
             $projectParticipantCollectionObject = self::filterUserList($projectParticipantCollectionObject, $request);
 
             return $projectParticipantCollectionObject->paginate(config('site-settings.pagination_per_page'));
@@ -261,17 +261,8 @@ class ProjectMemberManagementService
                             }
                         }
 
-                        ProjectMemberManagement::create([
-                            'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-                            'project_id'                => $projectData->id,
-                            'inviter_id'                => auth()->user()->id,
-                            'invitee_id'                => null,
-                            'email'                     => $pariticipateData['invitee_email'],
-                            'invite_type'               => $pariticipateData['invite_type'],
-                            'invite_status'             => $invite_status,
-                            'email_status'              => $email_status,
-                            'inviter_access_level'      => $access_level,
-                        ]);
+                        // feeding in project member management table 
+                        self::feedParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level);
 
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
                         $email_detail = ['invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
@@ -305,6 +296,27 @@ class ProjectMemberManagementService
         } catch (Exception $e) {
             DB::rollBack();
 
+            return false;
+        }
+    }
+
+    public static function feedParticipatesData($projectDataId, $inviterId, $inviteeEmail, $inviteType, $inviteStatus, $emailStatus, $accessLevel)
+    {
+        try {
+            ProjectMemberManagement::create([
+                'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'project_id'                => $projectDataId,
+                'inviter_id'                => $inviterId,
+                'invitee_id'                => null,
+                'email'                     => $inviteeEmail,
+                'invite_type'               => $inviteType,
+                'invite_status'             => $inviteStatus,
+                'email_status'              => $emailStatus,
+                'inviter_access_level'      => $accessLevel,
+            ]);
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }
