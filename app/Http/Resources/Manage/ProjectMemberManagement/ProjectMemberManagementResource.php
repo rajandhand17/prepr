@@ -37,7 +37,7 @@ class ProjectMemberManagementResource extends JsonResource
                     break;
                 case '3':
                     $invite_type = 'Link';
-                    break;                
+                    break;
                 default:
                     $invite_type = 'CSV Upload';
                     break;
@@ -58,7 +58,7 @@ class ProjectMemberManagementResource extends JsonResource
                     break;
                 case '3':
                     $invite_status = 'Declined';
-                    break;                
+                    break;
                 default:
                     $invite_status = 'Pending';
                     break;
@@ -76,7 +76,7 @@ class ProjectMemberManagementResource extends JsonResource
                     break;
                 case '2':
                     $email_status = 'Failed';
-                    break;                
+                    break;
                 default:
                     $email_status = 'NA';
                     break;
@@ -94,13 +94,13 @@ class ProjectMemberManagementResource extends JsonResource
                     break;
                 case '2':
                     $inviter_access_level = 'Team Leader';
-                    break;                
+                    break;
                 default:
                     $inviter_access_level = 'Viewer';
                     break;
             }
         }
-        
+
         return [
             'id'                    => $this->uuid,
             'invite_type'           => $invite_type,
