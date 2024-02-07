@@ -194,6 +194,10 @@ class User extends Authenticatable
 
                 return $response;
             }
+            if ($user->is_deactivated == 1) {
+                $response = ['success' => false, 'message' => __('responses.deactivated_account')];
+                return $response;
+            }
             if ($user) {
                 /**check password same or not */
                 if (Hash::check($request->password, $user->password)) {

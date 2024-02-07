@@ -869,5 +869,6 @@
     "responses.password_change_successfully": "You have successfully changed your password",
     "responses.password_change_failed": "You have failed to change your password",
     "responses.get_details": "You have successfully retrieved your details",
-    "responses.failed_get_details": "You have failed to retrieve your details"
+    "responses.failed_get_details": "You have failed to retrieve your details",
+    "responses.deactivated_account": "This account has been deactivated, please contact with administrator"
 }

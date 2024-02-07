@@ -88,10 +88,10 @@ class UserService
         }
     }
 
-    public static function updataUserAccount($request, $userId)
+    public static function updateUserAccount($request)
     {
         try {
-            $user = User::find($userId);
+            $user = auth()->user();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->full_name = $request->first_name.' '.$request->last_name;
@@ -102,17 +102,16 @@ class UserService
             $user->preferred_timezone = $request->preferred_timezone;
             $user->two_factor_verification = ($request->two_factor_verification == true) ? '1' : '0';
             $user->save();
-
             return $user;
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function changePassword($request, $userId)
+    public function changePassword($request)
     {
         try {
-            $user = User::find($userId);
+            $user =auth()->user();
             $user->password = Hash::make($request->password);
             if ($user->save()) {
                 return $user;
@@ -124,31 +123,31 @@ class UserService
         }
     }
 
-    public function removeProfileImage($checkUserExistsOrNot)
+    public function removeProfileImage()
     {
         try {
-            $user = User::find($checkUserExistsOrNot->id);
+            $user = auth()->user();
             if ($user) {
                 $user->profile_image = config('site-settings.default_user_profile_image');
                 $user->save();
-
                 return $user;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deactivateUserAccount($userId)
+    public function deactivateUserAccount()
     {
         try {
-            $user = User::find($userId);
+            $user = auth()->user();
             $user->is_deactivated = '1';
             $user->save();
-
-            return $user;
+            $user->tokens->each(function ($token) {
+                $token->delete();
+            });
+            return true;
         } catch (\Exception $e) {
             return false;
         }
