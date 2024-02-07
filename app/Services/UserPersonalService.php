@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\ChallengePathSkillGroupStack;
 use App\Models\User;
 use App\Models\UserPersonal;
 use Carbon\Carbon;

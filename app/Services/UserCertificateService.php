@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\UserAddress;
 use App\Models\UserCertificate;
 
 class UserCertificateService
@@ -24,6 +23,7 @@ class UserCertificateService
                 ]);
                 $allCertificates[] = $certificate;
             }
+
             return $allCertificates;
         } catch(\Exception $e) {
             return false;

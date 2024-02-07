@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\UserEducation;
 use App\Models\UserExperience;
 use App\Models\UserPersonalFile;
 use Illuminate\Support\Facades\Storage;

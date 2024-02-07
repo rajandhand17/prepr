@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\UserExperience;
 use App\Models\UserPatent;
 
 class UserPatentService
