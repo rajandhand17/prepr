@@ -261,7 +261,7 @@ class ProjectMemberManagementService
                             }
                         }
 
-                        // feeding in project member management table 
+                        // feeding in project member management table
                         self::feedParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level);
 
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';

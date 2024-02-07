@@ -56,13 +56,13 @@ class ProjectRepository implements ProjectInterface
             $emailStatus = '1';
             $accessLevel = '2';
 
-            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId ,$userEmail ,$inviteType ,$inviteStatus ,$emailStatus ,$accessLevel) {
+            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId, $userEmail, $inviteType, $inviteStatus, $emailStatus, $accessLevel) {
                 $createProject = $this->projectService->createProject($request, $uploadedCoverMedia);
-                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId ,$userEmail ,$inviteType ,$inviteStatus ,$emailStatus ,$accessLevel);
+                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $inviteType, $inviteStatus, $emailStatus, $accessLevel);
 
                 return [
                     'createProject'         => $createProject,
-                    'createProjectMember'   => $createProjectMember
+                    'createProjectMember'   => $createProjectMember,
                 ];
             });
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
