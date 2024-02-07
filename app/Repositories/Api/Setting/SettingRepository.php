@@ -26,25 +26,25 @@ class SettingRepository implements SettingInterface
         }
     }
 
-    public function updateUserAccount($request,$userId)
+    public function updateUserAccount($request, $userId)
     {
         try {
-            return $this->userService->updataUserAccount($request,$userId);
+            return $this->userService->updataUserAccount($request, $userId);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function changePassword($request,$userId)
+    public function changePassword($request, $userId)
     {
         try {
-            return $this->userService->changePassword($request,$userId);
+            return $this->userService->changePassword($request, $userId);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function deactivateUserAccount($action,$userId)
+    public function deactivateUserAccount($action, $userId)
     {
         try {
             if (isset($action) && $action == 'deactivate') {
@@ -57,19 +57,19 @@ class SettingRepository implements SettingInterface
         }
     }
 
-    public function updatePrivacy($request,$userDetails)
+    public function updatePrivacy($request, $userDetails)
     {
         try {
-            return $this->userSettingService->updatePrivacy($request,$userDetails);
+            return $this->userSettingService->updatePrivacy($request, $userDetails);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function updateNotification($request,$userDetails)
+    public function updateNotification($request, $userDetails)
     {
         try {
-            return $this->userSettingService->updateNotification($request,$userDetails);
+            return $this->userSettingService->updateNotification($request, $userDetails);
         } catch(\Exception $e) {
             return false;
         }

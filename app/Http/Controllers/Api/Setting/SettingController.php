@@ -31,6 +31,7 @@ class SettingController extends AppBaseController
             if ($removeProfile) {
                 return $this->sendResponse(AccountResource::make($removeProfile), __('responses.remove_profile_successfully'));
             }
+
             return $this->sendError(__('responses.remove_profile_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -44,7 +45,7 @@ class SettingController extends AppBaseController
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $account = $this->settingRepository->updateUserAccount($request,$checkUserExistsOrNot->id);
+            $account = $this->settingRepository->updateUserAccount($request, $checkUserExistsOrNot->id);
             if ($account) {
                 return $this->sendResponse(AccountResource::make($account), __('responses.update_user_account_successful'));
             }
@@ -62,7 +63,7 @@ class SettingController extends AppBaseController
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $changePassword = $this->settingRepository->changePassword($request,$checkUserExistsOrNot->id);
+            $changePassword = $this->settingRepository->changePassword($request, $checkUserExistsOrNot->id);
             if ($changePassword) {
                 return $this->sendResponse(AccountResource::make($changePassword), __('responses.password_change_successfully'));
             }
@@ -82,12 +83,12 @@ class SettingController extends AppBaseController
             }
             $allowedActions = ['deactivate'];
             if (isset($request->action) && in_array($request->action, $allowedActions)) {
-                $updatePrivacy = $this->settingRepository->deactivateUserAccount($request->action,$checkUserExistsOrNot->id);
+                $updatePrivacy = $this->settingRepository->deactivateUserAccount($request->action, $checkUserExistsOrNot->id);
                 if ($updatePrivacy) {
                     return $this->sendResponse([], __('responses.account_'.$request->action.'_successfully'));
                 }
             }
-            $updatePrivacy = $this->settingRepository->updatePrivacy($request,$checkUserExistsOrNot);
+            $updatePrivacy = $this->settingRepository->updatePrivacy($request, $checkUserExistsOrNot);
             if ($updatePrivacy) {
                 return $this->sendResponse(AccountResource::make($updatePrivacy), __('responses.update_privacy_successfully'));
             }
@@ -105,7 +106,7 @@ class SettingController extends AppBaseController
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $updateNotification = $this->settingRepository->updateNotification($request,$checkUserExistsOrNot);
+            $updateNotification = $this->settingRepository->updateNotification($request, $checkUserExistsOrNot);
             if ($updateNotification) {
                 return $this->sendResponse(AccountResource::make($updateNotification), __('responses.update_notification_successfully'));
             }
@@ -123,6 +124,7 @@ class SettingController extends AppBaseController
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
+
             return $this->sendResponse(AccountResource::make($checkUserExistsOrNot), __('responses.get_details'));
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
