@@ -42,7 +42,7 @@ class HandleDeleteLabAssociatedData
                 return false;
             }
             $labExternalLinks = LabExternalLinksService::deleteLabExternalLinks($lab_id);
-            if (!$labExternalLinks){
+            if (!$labExternalLinks) {
                 return false;
             }
             $labTagGroups = LabTagsGroupsService::deleteLabTagsGroups($lab_id);
@@ -57,6 +57,7 @@ class HandleDeleteLabAssociatedData
             if (!$labAddress) {
                 return false;
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

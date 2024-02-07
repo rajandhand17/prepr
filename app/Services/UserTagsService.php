@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\UserPatent;
 use App\Models\UserTag;
 
 class UserTagsService

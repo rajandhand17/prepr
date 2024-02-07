@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\CampusConnectStudentInformation;
-use App\Models\UserCertificate;
 use App\Models\UserEducation;
 
 class UserEducationService

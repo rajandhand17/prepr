@@ -59,6 +59,7 @@ class SettingRepository implements SettingInterface
             if (isset($action) && $action == 'deactivate') {
                 return $this->userService->deactivateUserAccount();
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
