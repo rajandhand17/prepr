@@ -9,6 +9,7 @@ use App\Http\Requests\Setting\UpdateNotificationRequest;
 use App\Http\Requests\Setting\UpdatePrivacyRequest;
 use App\Http\Resources\Settings\AccountResource;
 use App\Repositories\Api\Setting\SettingRepository;
+use App\Services\UserService;
 
 class SettingController extends AppBaseController
 {
@@ -22,15 +23,14 @@ class SettingController extends AppBaseController
     public function removeProfileImage()
     {
         try {
-            $checkUserExistsOrNot = $this->settingRepository->getUserById(auth()->user()->id);
+            $checkUserExistsOrNot = UserService::getUserById(auth()->user()->id);
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $removeProfile = $this->settingRepository->removeProfileImage();
+            $removeProfile = $this->settingRepository->removeProfileImage($checkUserExistsOrNot);
             if ($removeProfile) {
                 return $this->sendResponse(AccountResource::make($removeProfile), __('responses.remove_profile_successfully'));
             }
-
             return $this->sendError(__('responses.remove_profile_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -40,11 +40,11 @@ class SettingController extends AppBaseController
     public function updateAccount(AddAccountRequest $request)
     {
         try {
-            $checkUserExistsOrNot = $this->settingRepository->getUserById(auth()->user()->id);
+            $checkUserExistsOrNot = UserService::getUserById(auth()->user()->id);
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $account = $this->settingRepository->updateUserAccount($request);
+            $account = $this->settingRepository->updateUserAccount($request,$checkUserExistsOrNot->id);
             if ($account) {
                 return $this->sendResponse(AccountResource::make($account), __('responses.update_user_account_successful'));
             }
@@ -58,11 +58,11 @@ class SettingController extends AppBaseController
     public function changePassword(ChangePasswordRequest $request)
     {
         try {
-            $checkUserExistsOrNot = $this->settingRepository->getUserById(auth()->user()->id);
+            $checkUserExistsOrNot = UserService::getUserById(auth()->user()->id);
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $changePassword = $this->settingRepository->changePassword($request);
+            $changePassword = $this->settingRepository->changePassword($request,$checkUserExistsOrNot->id);
             if ($changePassword) {
                 return $this->sendResponse(AccountResource::make($changePassword), __('responses.password_change_successfully'));
             }
@@ -76,18 +76,18 @@ class SettingController extends AppBaseController
     public function updatePrivacy(UpdatePrivacyRequest $request)
     {
         try {
-            $checkUserExistsOrNot = $this->settingRepository->getUserById(auth()->user()->id);
+            $checkUserExistsOrNot = UserService::getUserById(auth()->user()->id);
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
             $allowedActions = ['deactivate'];
             if (isset($request->action) && in_array($request->action, $allowedActions)) {
-                $updatePrivacy = $this->settingRepository->deleteOrDeactivateUserAccount($request->action);
+                $updatePrivacy = $this->settingRepository->deactivateUserAccount($request->action,$checkUserExistsOrNot->id);
                 if ($updatePrivacy) {
                     return $this->sendResponse([], __('responses.account_'.$request->action.'_successfully'));
                 }
             }
-            $updatePrivacy = $this->settingRepository->updatePrivacy($request);
+            $updatePrivacy = $this->settingRepository->updatePrivacy($request,$checkUserExistsOrNot);
             if ($updatePrivacy) {
                 return $this->sendResponse(AccountResource::make($updatePrivacy), __('responses.update_privacy_successfully'));
             }
@@ -101,11 +101,11 @@ class SettingController extends AppBaseController
     public function updateNotification(UpdateNotificationRequest $request)
     {
         try {
-            $checkUserExistsOrNot = $this->settingRepository->getUserById(auth()->user()->id);
+            $checkUserExistsOrNot = UserService::getUserById(auth()->user()->id);
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $updateNotification = $this->settingRepository->updateNotification($request);
+            $updateNotification = $this->settingRepository->updateNotification($request,$checkUserExistsOrNot);
             if ($updateNotification) {
                 return $this->sendResponse(AccountResource::make($updateNotification), __('responses.update_notification_successfully'));
             }
@@ -119,16 +119,11 @@ class SettingController extends AppBaseController
     public function getDetails()
     {
         try {
-            $checkUserExistsOrNot = $this->settingRepository->getUserById(auth()->user()->id);
+            $checkUserExistsOrNot = UserService::getUserById(auth()->user()->id);
             if (!$checkUserExistsOrNot || $checkUserExistsOrNot->is_deactivated == '1') {
                 return $this->sendError(__('responses.user_not_found'));
             }
-            $getdetails = $this->settingRepository->getDetails();
-            if ($getdetails) {
-                return $this->sendResponse(AccountResource::make($getdetails), __('responses.get_details'));
-            }
-
-            return $this->sendError(__('responses.update_notification_failed'), 400);
+            return $this->sendResponse(AccountResource::make($checkUserExistsOrNot), __('responses.get_details'));
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

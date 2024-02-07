@@ -39,11 +39,11 @@ class AccountResource extends JsonResource
             'profile_visibility'                  => $profilePrivacy[$this->userSetting->profile_privacy],
             'project_visibility'                  => ($this->userSetting->project_privacy == 0) ? 'public' : 'private',
             'friend_request_privacy'              => ($this->userSetting->friend_request_privacy == 0) ? 'any-one' : 'no-one',
-            'communication'                       => ($this->userSetting->email_subscription_notification == 0) ? 'unsubscribed' : 'subscribed',
+            'communication'                       => ($this->userSetting->manageAlerts == 0) ? 'unsubscribed' : 'subscribed',
             'network_summary'                     => ($this->userSetting->email_subscription_network_summary == 0) ? 'unsubscribed' : 'subscribed',
             'email_subscription_challenge_summary'=> $options[$this->userSetting->email_subscription_challenge_summary],
             'email_subscription_lab_summary'      => $options[$this->userSetting->email_subscription_lab_summary],
-            'display_challenge_minionboarding'    => $options[$this->userSetting->display_challenge_minionboarding],
+            'challenge_recommends'                => $options[$this->userSetting->challenge_recommends],
 
         ];
     }

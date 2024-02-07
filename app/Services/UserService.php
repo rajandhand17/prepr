@@ -32,10 +32,7 @@ class UserService
     public static function getUserById($id)
     {
         try {
-            $user = User::select([
-                'id', 'preferred_language', 'first_name', 'last_name', 'full_name', 'username', 'email', 'country_code', 'phone_number',
-                'profile_image', 'user_points', 'user_rank', 'verified_user', 'is_profile_completed', 'created_at', 'is_deactivated',
-            ])->find($id);
+            $user = User::find($id);
             if ($user != null) {
                 return $user;
             }
@@ -91,10 +88,10 @@ class UserService
         }
     }
 
-    public static function updataUserAccount($request)
+    public static function updataUserAccount($request,$userId)
     {
         try {
-            $user = User::find(auth()->user()->id);
+            $user = User::find($userId);
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->full_name = $request->first_name.' '.$request->last_name;
@@ -112,10 +109,10 @@ class UserService
         }
     }
 
-    public function changePassword($request)
+    public function changePassword($request,$userId)
     {
         try {
-            $user = User::find(auth()->user()->id);
+            $user = User::find($userId);
             $user->password = Hash::make($request->password);
             if ($user->save()) {
                 return $user;
@@ -127,30 +124,27 @@ class UserService
         }
     }
 
-    public function removeProfileImage()
+    public function removeProfileImage($checkUserExistsOrNot)
     {
         try {
-            $user = User::find(auth()->user()->id);
+            $user = User::find($checkUserExistsOrNot->id);
             if ($user) {
                 $user->profile_image = config('site-settings.default_user_profile_image');
                 $user->save();
-
                 return $user;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function deactivateUserAccount()
+    public function deactivateUserAccount($userId)
     {
         try {
-            $user = User::find(auth()->user()->id);
+            $user = User::find($userId);
             $user->is_deactivated = '1';
             $user->save();
-
             return $user;
         } catch (\Exception $e) {
             return false;

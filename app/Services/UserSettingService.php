@@ -6,10 +6,9 @@ use App\Models\UserSetting;
 
 class UserSettingService
 {
-    public static function updatePrivacy($request)
+    public static function updatePrivacy($request,$userDetails)
     {
         try {
-            $user = auth()->user();
             $profileVisibilityMap = [
                 'signed-in' => '2',
                 'private'   => '1',
@@ -24,7 +23,7 @@ class UserSettingService
             $friendRequest = $friendRequestParameters[$request->friend_request];
 
             UserSetting::updateOrCreate(
-                ['user_id' => $user->id],
+                ['user_id' => $userDetails->id],
                 [
                     'profile_privacy'           => $profilePrivacy,
                     'project_privacy'           => $projectVisibility,
@@ -32,16 +31,15 @@ class UserSettingService
                 ]
             );
 
-            return $user;
+            return $userDetails;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function updateNotification($request)
+    public static function updateNotification($request,$userDetails)
     {
         try {
-            $user = auth()->user();
             $option = [
                 'unsubscribed' => '0',
                 'monthly'      => '1',
@@ -57,7 +55,7 @@ class UserSettingService
             $manageAlerts = $subscriptionOrUnsubscribe[$request->communication];
             $emailSubscriptionNetworkSummary = $subscriptionOrUnsubscribe[$request->communication];
             UserSetting::updateOrCreate(
-                ['user_id' => $user->id],
+                ['user_id' => $userDetails->id],
                 [
                     'manage_alerts'                        => $manageAlerts,
                     'email_subscription_network_summary'   => $emailSubscriptionNetworkSummary,
@@ -67,7 +65,7 @@ class UserSettingService
                 ]
             );
 
-            return $user;
+            return $userDetails;
         } catch (\Exception $e) {
             return false;
         }

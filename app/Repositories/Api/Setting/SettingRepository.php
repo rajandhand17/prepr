@@ -17,47 +17,38 @@ class SettingRepository implements SettingInterface
         $this->userService = $userService;
     }
 
-    public function getUserById($id)
+    public function removeProfileImage($checkUserExistsOrNot)
     {
         try {
-            return $this->userService->getUserById($id);
+            return $this->userService->removeProfileImage($checkUserExistsOrNot);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function removeProfileImage()
+    public function updateUserAccount($request,$userId)
     {
         try {
-            return $this->userService->removeProfileImage();
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function updateUserAccount($request)
-    {
-        try {
-            return $this->userService->updataUserAccount($request);
+            return $this->userService->updataUserAccount($request,$userId);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function changePassword($request)
+    public function changePassword($request,$userId)
     {
         try {
-            return $this->userService->changePassword($request);
+            return $this->userService->changePassword($request,$userId);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function deleteOrDeactivateUserAccount($action)
+    public function deactivateUserAccount($action,$userId)
     {
         try {
             if (isset($action) && $action == 'deactivate') {
-                return $this->userService->deactivateUserAccount();
+                return $this->userService->deactivateUserAccount($userId);
             }
 
             return true;
@@ -66,19 +57,19 @@ class SettingRepository implements SettingInterface
         }
     }
 
-    public function updatePrivacy($request)
+    public function updatePrivacy($request,$userDetails)
     {
         try {
-            return $this->userSettingService->updatePrivacy($request);
+            return $this->userSettingService->updatePrivacy($request,$userDetails);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function updateNotification($request)
+    public function updateNotification($request,$userDetails)
     {
         try {
-            return $this->userSettingService->updateNotification($request);
+            return $this->userSettingService->updateNotification($request,$userDetails);
         } catch(\Exception $e) {
             return false;
         }
