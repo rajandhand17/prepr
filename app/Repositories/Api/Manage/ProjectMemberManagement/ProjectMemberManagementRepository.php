@@ -116,6 +116,24 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         }
     }
 
+    public function checkCurrentProjectRole($projectId, $uuid, $role)
+    {
+        try {
+            return $this->projectMemberManagementService->checkCurrentProjectRole($projectId, $uuid, $role);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateProjectRole($projectId, $uuid, $role)
+    {
+        try {
+            return $this->projectMemberManagementService->updateProjectRole($projectId, $uuid, $role);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function deleteParticipates($projectData, $request)
     {
         try {

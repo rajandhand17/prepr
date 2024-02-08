@@ -360,6 +360,60 @@ class ProjectMemberManagementService
         }
     }
 
+    public function checkCurrentProjectRole($projectId, $uuid, $role)
+    {
+        try {
+            switch ($role) {
+                case 'team_leader':
+                    $currentRole = '2';
+                    break;
+                case 'editor';
+                    $currentRole = '1';
+                    break;
+                case 'viewer';
+                    $currentRole = '0';
+                    break;
+                default:
+                    $currentRole = '0';
+                    break;
+            }
+
+            $checkCurrentRole = ProjectMemberManagement::where(['uuid' => $uuid, 'project_id' => $projectId, 'inviter_access_level' => $currentRole])->exists();
+            if (!$checkCurrentRole) {
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateProjectRole($projectId, $uuid, $role)
+    {
+        try {
+            switch ($role) {
+                case 'team_leader':
+                    $newtRole = '2';
+                    break;
+                case 'editor';
+                    $newtRole = '1';
+                    break;
+                case 'viewer';
+                    $newtRole = '0';
+                    break;
+                default:
+                    $newtRole = '0';
+                    break;
+            }
+
+            $updateNewRole = ProjectMemberManagement::where(['uuid' => $uuid, 'project_id' => $projectId])->update(['inviter_access_level' => $newtRole]);
+            
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function deleteParticipates($projectData, $request)
     {
         try {

@@ -27,7 +27,7 @@ class ProjectMemberManagementController extends AppBaseController
         try {
             $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
             if ($checkProjectExistsOrNot == false) {
-                return $this->sendResponse([], __('responses.project_not_found'), 403);
+                return $this->sendError(__('responses.project_not_found'), 403);
             }
 
             $projectMemberManagementListing = $this->projectMemberManagementRepository->getProjectBasedParticipants($checkProjectExistsOrNot, $request);
@@ -83,7 +83,7 @@ class ProjectMemberManagementController extends AppBaseController
         try {
             $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
             if ($checkProjectExistsOrNot == false) {
-                return $this->sendResponse([], __('responses.project_not_found'), 403);
+                return $this->sendError(__('responses.project_not_found'), 403);
             }
             $participatesList = $this->projectMemberManagementRepository->addParticipates($checkProjectExistsOrNot, $request);
             if ((count($participatesList['invalid_emails']) > 0 || count($participatesList['already_members']) > 0) && count($participatesList['invited_emails']) < 1) {
@@ -103,7 +103,7 @@ class ProjectMemberManagementController extends AppBaseController
         try {
             $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
             if ($checkProjectExistsOrNot == false) {
-                return $this->sendResponse([], __('responses.project_not_found'), 403);
+                return $this->sendError(__('responses.project_not_found'), 403);
             }
 
             $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request, $checkProjectExistsOrNot);
@@ -120,12 +120,36 @@ class ProjectMemberManagementController extends AppBaseController
         }
     }
 
+    public function changeRole($slug, $uuid, $role)
+    {
+        try {
+            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
+            if ($checkProjectExistsOrNot == false) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $checkCurrentProjectRole = $this->projectMemberManagementRepository->checkCurrentProjectRole($checkProjectExistsOrNot->id, $uuid, $role);
+            if ($checkCurrentProjectRole == false) {
+                return $this->sendError(__('responses.project_already_same_role'), 400);
+            }
+
+            $updateProjectRole = $this->projectMemberManagementRepository->updateProjectRole($checkProjectExistsOrNot->id, $uuid, $role);
+            if ($updateProjectRole) {
+                return $this->sendResponse(null, __('responses.project_role_update'), 200);
+            }
+
+            return $this->sendError(__('responses.request_not_exist'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function delete($slug, DeleteProjectMemberManagementRequest $request)
     {
         try {
             $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
             if ($checkProjectExistsOrNot == false) {
-                return $this->sendResponse([], __('responses.project_not_found'), 403);
+                return $this->sendError(__('responses.project_not_found'), 403);
             }
 
             $participant_management = $this->projectMemberManagementRepository->deleteParticipates($checkProjectExistsOrNot, $request);

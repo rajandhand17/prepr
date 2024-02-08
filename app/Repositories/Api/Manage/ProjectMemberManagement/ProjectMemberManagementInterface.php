@@ -16,5 +16,9 @@ interface ProjectMemberManagementInterface
 
     public function acceptOrRejectProjectJoinRequest($request, $projectData, $action);
 
+    public function checkCurrentProjectRole($projectId, $uuid, $role);
+
+    public function updateProjectRole($projectId, $uuid, $role);
+
     public function deleteParticipates($projectData, $request);
 }
