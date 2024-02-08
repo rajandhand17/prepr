@@ -104,12 +104,12 @@ class CreateChallengeRequest extends FormRequest
         }
 
         if ($this->request->has('assessment_type')) {
-            $base_rules['assessment_type'] = 'in:open,close';
+            $base_rules['assessment_type'] = 'in:open,closed';
             $base_rules['visibility'] = 'required_if:assessment_type,open|in:users,hidden';
             $base_rules['guidelines'] = 'required_if:assessment_type,open';
             $base_rules['attachments'] = 'required_if:assessment_type,open|mimes:jpeg,jpg,png,webp|max:1024';
 
-            if ($this->request->get('assessment_type') == 'close') {
+            if ($this->request->get('assessment_type') == 'closed') {
                 $base_rules['members_email'] = 'array|required';
                 $base_rules['members_email.*'] = 'email';
             }
