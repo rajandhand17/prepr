@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('comment_social_activities', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('comment_id');
+            $table->enum('comment_type',['0','1'])->comment('0->comment,1->comment_reply');
+            $table->unsignedBigInteger('user_id');
+            $table->enum('like_dislikes',['0','1','2'])->comment('0->none,1->like,2->unlike')->default('0');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('comment_social_activities');
+    }
+};
