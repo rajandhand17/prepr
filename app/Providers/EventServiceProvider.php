@@ -9,6 +9,7 @@ use App\Events\Labs\DeleteLabAssociatedData;
 use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
+use App\Jobs\ProcessMessageSent;
 use App\Listeners\ChallengePath\HandleDeleteChallengePathAssociatedData;
 use App\Listeners\ChallengeTemplate\HandleDeleteChallengeTemplateAssociatedData;
 use App\Listeners\Lab\HandleDeleteLabAssociatedData;
@@ -34,22 +35,22 @@ class EventServiceProvider extends ServiceProvider
         DeleteLabAssociatedData::class => [
             HandleDeleteLabAssociatedData::class,
         ],
-        DeleteResourceModuleAssociatedData::class=> [
+        DeleteResourceModuleAssociatedData::class => [
             HandleDeleteResourceModuleAssociatedData::class,
         ],
         DeleteChallengePathAssociatedData::class => [
             HandleDeleteChallengePathAssociatedData::class,
         ],
-        DeleteResourceCollectionAssociatedData::class=> [
+        DeleteResourceCollectionAssociatedData::class => [
             HandleDeleteResourceCollectionAssociatedData::class,
         ],
-        DeleteResourceGroupAssociatedData::class=> [
+        DeleteResourceGroupAssociatedData::class => [
             HandleDeleteResourceGroupAssociatedData::class,
         ],
-        DeleteLabMarketplaceAssociatedData::class=> [
+        DeleteLabMarketplaceAssociatedData::class => [
             HandleDeleteLabMarketplaceAssociatedData::class,
         ],
-        DeleteChallengeTemplateAssociatedData::class=> [
+        DeleteChallengeTemplateAssociatedData::class => [
             HandleDeleteChallengeTemplateAssociatedData::class,
         ],
     ];

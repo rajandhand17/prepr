@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -235,6 +235,10 @@ return [
         App\Repositories\Api\Setting\SettingServiceProvider::class,
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
 
+        /* Chat */
+        App\Repositories\Api\Chat\Conversation\ConversationServiceProvider::class,
+        App\Repositories\Api\Chat\Message\MessageServiceProvider::class
+
     ],
 
     /*
@@ -251,7 +255,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'PDF'   => Barryvdh\DomPDF\Facade::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ])->toArray(),
 

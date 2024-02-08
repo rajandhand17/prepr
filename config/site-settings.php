@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'pagination_per_page'                           => '15',
+        'pagination_per_page'                           => '15',
     'listing_limit'                                 => '20',
     'dropdown_listing_limit'                        => '20',
     'aws_url'                                       => env('CDN_URL'),

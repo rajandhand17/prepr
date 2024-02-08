@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+
+class Message extends Model
+{
+    use HasFactory;
+
+    protected $table = 'messages';
+
+    protected $casts = ['attachments' => 'object'];
+
+    protected $fillable = [
+        'uuid',
+        'conversation_id',
+        'message',
+        'attachments',
+        'status',
+        'sender_id',
+        'deleted_at'
+    ];
+
+    public function conversation(): BelongsTo
+    {
+        return $this->belongsTo(Conversation::class, 'conversation_id', 'id');
+    }
+
+    public function sender(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sender_id', 'id');
+    }
+
+    public function seenUsers(): HasMany
+    {
+        return $this->hasMany(UserMessageSeen::class, 'message_id', 'id')->with('user');
+    }
+
+    public function getChatSeenUserAttribute()
+    {
+        return collect($this->seenUsers)->map(function ($item) {
+            return $item->user;
+        });
+    }
+    public function getAttachmentsAttribute($value)
+    {
+        $attachments = $this->castAttribute('attachments', $value);
+        return collect($attachments)->map(function ($item) {
+            return Storage::disk('s3')->url($item);
+        });
+    }
+}

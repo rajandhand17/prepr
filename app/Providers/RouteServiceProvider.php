@@ -40,6 +40,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapSettingRoutes();
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
+            $this->mapChatRoutes();
         });
     }
 
@@ -73,6 +74,11 @@ class RouteServiceProvider extends ServiceProvider
     public function mapDiscussionsRoute()
     {
         Route::prefix('api/v1/discussion/')->middleware('api')->group(base_path('routes/v1/discussion.php'));
+    }
+    
+    protected function mapChatRoutes()
+    {
+        Route::prefix('api/v1/chat/')->middleware('api')->group(base_path('routes/v1/chat.php'));
     }
 
     protected function mapSettingRoutes()
