@@ -19,7 +19,7 @@ class SettingController extends AppBaseController
 
     public function updateBasedOnActivity($activity,UpdateSettingRequest $request){
         try {
-            if (!in_array($activity, ['image', 'account', 'password','privacy','notification'])) {
+            if (!in_array($activity, ['image', 'account', 'password','privacy','notification','deactivate'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             switch ($activity){
@@ -41,14 +41,13 @@ class SettingController extends AppBaseController
                         return $this->sendResponse(UserResource::make($changePassword), __('responses.password_change_successfully'));
                     }
                     break;
-                case 'privacy':
-                    $allowedActions = ['deactivate'];
-                    if (isset($request->action) && in_array($request->action, $allowedActions)) {
-                        $updatePrivacy = $this->settingRepository->deactivateUserAccount($request->action);
-                        if ($updatePrivacy) {
-                            return $this->sendResponse([], __('responses.account_'.$request->action.'_successfully'));
-                        }
+                case 'deactivate':
+                    $updatePrivacy = $this->settingRepository->deactivateUserAccount();
+                    if ($updatePrivacy) {
+                        return $this->sendResponse([], __('responses.account_deactivate_successfully'));
                     }
+                    break;
+                case 'privacy':
                     $updatePrivacy = $this->settingRepository->updatePrivacy($request);
                     if ($updatePrivacy) {
                         return $this->sendResponse(UserResource::make($updatePrivacy), __('responses.update_privacy_successfully'));

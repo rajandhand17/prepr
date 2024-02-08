@@ -14,5 +14,5 @@ interface SettingInterface
 
     public function removeProfileImage();
 
-    public function deactivateUserAccount($action);
+    public function deactivateUserAccount();
 }
