@@ -367,12 +367,12 @@ class ProjectMemberManagementService
                 case 'team_leader':
                     $currentRole = '2';
                     break;
-                case 'editor';
-                    $currentRole = '1';
-                    break;
-                case 'viewer';
-                    $currentRole = '0';
-                    break;
+                case 'editor':
+                $currentRole = '1';
+                break;
+                case 'viewer':
+                $currentRole = '0';
+                break;
                 default:
                     $currentRole = '0';
                     break;
@@ -382,6 +382,7 @@ class ProjectMemberManagementService
             if (!$checkCurrentRole) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -395,19 +396,19 @@ class ProjectMemberManagementService
                 case 'team_leader':
                     $newtRole = '2';
                     break;
-                case 'editor';
-                    $newtRole = '1';
-                    break;
-                case 'viewer';
-                    $newtRole = '0';
-                    break;
+                case 'editor':
+                $newtRole = '1';
+                break;
+                case 'viewer':
+                $newtRole = '0';
+                break;
                 default:
                     $newtRole = '0';
                     break;
             }
 
             $updateNewRole = ProjectMemberManagement::where(['uuid' => $uuid, 'project_id' => $projectId])->update(['inviter_access_level' => $newtRole]);
-            
+
             return true;
         } catch (Exception $e) {
             return false;
