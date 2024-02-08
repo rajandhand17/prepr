@@ -102,6 +102,7 @@ class UserService
             $user->preferred_timezone = $request->preferred_timezone;
             $user->two_factor_verification = ($request->two_factor_verification == true) ? '1' : '0';
             $user->save();
+
             return $user;
         } catch(\Exception $e) {
             return false;
@@ -111,7 +112,7 @@ class UserService
     public function changePassword($request)
     {
         try {
-            $user =auth()->user();
+            $user = auth()->user();
             $user->password = Hash::make($request->password);
             if ($user->save()) {
                 return $user;
@@ -130,8 +131,10 @@ class UserService
             if ($user) {
                 $user->profile_image = config('site-settings.default_user_profile_image');
                 $user->save();
+
                 return $user;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -147,6 +150,7 @@ class UserService
             $user->tokens->each(function ($token) {
                 $token->delete();
             });
+
             return true;
         } catch (\Exception $e) {
             return false;
