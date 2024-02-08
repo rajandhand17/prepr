@@ -866,6 +866,7 @@
     "responses.remove_profile_failed": "You have failed to remove your profile image.",
     "responses.account_delete_successfully": "You have successfully deleted your account",
     "responses.account_deactivate_successfully": "You have successfully deactivated your account.",
+    "responses.account_deactivated_failed": "You have failed to deactivated your account",
     "responses.password_change_successfully": "You have successfully changed your password",
     "responses.password_change_failed": "You have failed to change your password",
     "responses.get_details": "You have successfully retrieved your details",
