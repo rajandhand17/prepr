@@ -28,7 +28,10 @@ class ResourceCollectionService
             }
 
             if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $resourceCollectionList = $resourceCollectionList->whereIn('organization_id', $request->organization_id);
+                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                if (!empty($getOrganizationIds)) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('organization_id', $getOrganizationIds);
+                }
             }
 
             if ($request->has('status') && !empty($request->status)) {
