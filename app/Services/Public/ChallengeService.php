@@ -36,7 +36,10 @@ class ChallengeService
                 $challenge_list = $challenge_list->whereIn('challenges.category_id', $request->category);
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $challenge_list = $challenge_list->whereIn('organization_id', $request->organization_id);
+                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                if (!empty($getOrganizationIds)) {
+                    $challenge_list = $challenge_list->whereIn('organization_id', $getOrganizationIds);
+                }
             }
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
@@ -91,7 +94,9 @@ class ChallengeService
                         ->distinct();
                 })->distinct('challenges.uuid');
             }
-
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $challenge_list = $challenge_list->whereIn('duration_id', $request->duration_id);
+            }
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
                     $status_array = ['accepted', 'pending', 'declined'];
