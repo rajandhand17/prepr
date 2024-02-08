@@ -196,6 +196,7 @@ class User extends Authenticatable
             }
             if ($user->is_deactivated == 1) {
                 $response = ['success' => false, 'message' => __('responses.deactivated_account')];
+
                 return $response;
             }
             if ($user) {

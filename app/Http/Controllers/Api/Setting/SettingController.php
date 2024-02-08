@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api\Setting;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Setting\UpdateSettingRequest;
-use App\Http\Resources\Profile\ProfileResource;
-use \App\Http\Resources\User\UserResource;
+use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Setting\SettingRepository;
 
 class SettingController extends AppBaseController
@@ -17,12 +16,13 @@ class SettingController extends AppBaseController
         $this->settingRepository = $settingRepository;
     }
 
-    public function updateBasedOnActivity($activity,UpdateSettingRequest $request){
+    public function updateBasedOnActivity($activity, UpdateSettingRequest $request)
+    {
         try {
             if (!in_array($activity, ['image', 'account', 'password','privacy','notification'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            switch ($activity){
+            switch ($activity) {
                 case 'image':
                     $removeProfile = $this->settingRepository->removeProfileImage();
                     if ($removeProfile) {
@@ -56,8 +56,9 @@ class SettingController extends AppBaseController
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
             }
+
             return $this->sendError(__('responses.send_error'), 403);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
