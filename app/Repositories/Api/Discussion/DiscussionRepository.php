@@ -26,9 +26,10 @@ class DiscussionRepository implements DiscussionInterface
         $this->commentSocialActivitiesService=$commentSocialActivitiesService;
     }
 
-    public function addComment($request){
+    public function addComment($component,$request){
         try {
-            return $this->commentService->addComment($request);
+
+            return $this->commentService->addComment($component,$request);
         }catch (\Exception $e){
             return false;
         }
@@ -37,6 +38,14 @@ class DiscussionRepository implements DiscussionInterface
     public function deleteComment($request){
         try {
             return $this->commentService->deleteComment($request);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function likeDislike($component,$request){
+        try {
+            return $this->commentSocialActivitiesService->likeOrDislikeComment($component,$request);
         }catch (\Exception $e){
             return false;
         }
