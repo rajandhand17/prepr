@@ -19,7 +19,7 @@ class SettingController extends AppBaseController
     public function updateBasedOnActivity($activity, UpdateSettingRequest $request)
     {
         try {
-            if (!in_array($activity, ['image', 'account', 'password','privacy','notification'])) {
+            if (!in_array($activity, ['image', 'account', 'password', 'privacy', 'notification'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             switch ($activity) {
@@ -63,14 +63,16 @@ class SettingController extends AppBaseController
         }
     }
 
-    public function deactivateAccount(){
+    public function deactivateAccount()
+    {
         try {
             $updatePrivacy = $this->settingRepository->deactivateUserAccount();
             if ($updatePrivacy) {
                 return $this->sendResponse([], __('responses.account_deactivate_successfully'));
             }
+
             return $this->sendError(__('responses.account_deactivated_failed'), 400);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
