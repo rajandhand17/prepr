@@ -314,7 +314,7 @@ class ProjectMemberManagementService
                 'email_status'              => $emailStatus,
                 'inviter_access_level'      => $accessLevel,
             ]);
-            
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -346,7 +346,7 @@ class ProjectMemberManagementService
                     $invite_status = config('constants.project_member_management_invite_status.declined');
                     break;
             }
-            
+
             $projectMemberData = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id, 'invite_status' => '2'])->get();
             foreach ($projectMemberData as $projectMember) {
                 $projectMember->invite_status = $invite_status;
