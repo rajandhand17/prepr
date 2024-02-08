@@ -98,6 +98,28 @@ class ProjectMemberManagementController extends AppBaseController
         }
     }
 
+    public function acceptOrRejectJoinRequest(Request $request, $slug, $action)
+    {
+        try {
+            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
+            if ($checkProjectExistsOrNot == false) {
+                return $this->sendResponse([], __('responses.project_not_found'), 403);
+            }
+
+            $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request, $checkProjectExistsOrNot);
+            if ($checkProjectStatus) {
+                $projectMemberManagement = $this->projectMemberManagementRepository->acceptOrRejectProjectJoinRequest($request, $checkProjectExistsOrNot, $action);
+                if ($projectMemberManagement) {
+                    return $this->sendResponse(null, __('responses.join_request_' . $action . '_successfully'));
+                }
+            }
+
+            return $this->sendError(__('responses.request_not_exist'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function delete($slug, DeleteProjectMemberManagementRequest $request)
     {
         try {

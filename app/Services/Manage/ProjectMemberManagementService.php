@@ -303,7 +303,7 @@ class ProjectMemberManagementService
     public static function feedParticipatesData($projectDataId, $inviterId, $inviteeEmail, $inviteType, $inviteStatus, $emailStatus, $accessLevel)
     {
         try {
-            ProjectMemberManagement::create([
+            $participatesData = ProjectMemberManagement::create([
                 'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 'project_id'                => $projectDataId,
                 'inviter_id'                => $inviterId,
@@ -314,6 +314,45 @@ class ProjectMemberManagementService
                 'email_status'              => $emailStatus,
                 'inviter_access_level'      => $accessLevel,
             ]);
+            
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkProjectJoinUnjoinStatus($request, $projectData)
+    {
+        try {
+            $projectMemberData = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id, 'invite_status' => '2'])->get();
+            if ($projectMemberData) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function acceptOrRejectProjectJoinRequest($request, $projectData, $action)
+    {
+        try {
+            switch ($action) {
+                case 'accept':
+                    $invite_status = config('constants.project_member_management_invite_status.accepted');
+                    break;
+                case 'decline':
+                    $invite_status = config('constants.project_member_management_invite_status.declined');
+                    break;
+            }
+            
+            $projectMemberData = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id, 'invite_status' => '2'])->get();
+            foreach ($projectMemberData as $projectMember) {
+                $projectMember->invite_status = $invite_status;
+                $projectMember->inviter_id = auth()->user()->id;
+                $projectMember->save();
+            }
 
             return true;
         } catch (Exception $e) {
@@ -324,8 +363,8 @@ class ProjectMemberManagementService
     public static function deleteParticipates($projectData, $request)
     {
         try {
-            $member_manger = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id])->delete();
-            if ($member_manger) {
+            $projectMemberData = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id])->delete();
+            if ($projectMemberData) {
                 return true;
             }
 

@@ -98,6 +98,24 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         }
     }
 
+    public function checkProjectJoinUnjoinStatus($request, $projectData)
+    {
+        try {
+            return $this->projectMemberManagementService->checkProjectJoinUnjoinStatus($request, $projectData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function acceptOrRejectProjectJoinRequest($request, $projectData, $action)
+    {
+        try {
+            return $this->projectMemberManagementService->acceptOrRejectProjectJoinRequest($request, $projectData, $action);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function deleteParticipates($projectData, $request)
     {
         try {
