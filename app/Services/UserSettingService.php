@@ -39,6 +39,7 @@ class UserSettingService
                     'challenge_recommends'                 => config('constants.notification_options.'.$request->challenge_recommendation),
                 ]
             );
+
             return $user;
         } catch (\Exception $e) {
             return false;
