@@ -29,7 +29,7 @@ class ChallengeAssessmentService
             if ($request->assessment_type !== null) {
                 $challenge_assessment_type = config('constants.challenge_assessment_type.null');
                 switch ($request->assessment_type) {
-                    case 'close':
+                    case 'closed':
                         $challenge_assessment_type = config('constants.challenge_assessment_type.close');
                         break;
                     case 'open':
@@ -41,19 +41,21 @@ class ChallengeAssessmentService
                 }
 
                 $challenge_visibility_type = config('constants.challenge_visibility_type.users');
-                switch ($request->visibility == 'close') {
-                    case 'hidden':
-                        $challenge_visibility_type = config('constants.challenge_visibility_type.hidden');
-                        break;
-                    case 'users':
-                        $challenge_visibility_type = config('constants.challenge_visibility_type.users');
-                        break;
-                    default:
-                        $challenge_visibility_type = config('constants.challenge_visibility_type.users');
-                        break;
+                if ($request->assessment_type == 'closed') {
+                    switch ($request->visibility) {
+                        case 'hidden':
+                            $challenge_visibility_type = config('constants.challenge_visibility_type.hidden');
+                            break;
+                        case 'users':
+                            $challenge_visibility_type = config('constants.challenge_visibility_type.users');
+                            break;
+                        default:
+                            $challenge_visibility_type = config('constants.challenge_visibility_type.users');
+                            break;
+                    }
                 }
 
-                if ($request->assessment_type == 'close' && $request->members_email !== null) {
+                if ($request->assessment_type == 'closed' && $request->members_email !== null) {
                     foreach ($request->members_email as $key => $value) {
                         $challengeAssessment = new ChallengeAssessment();
                         $challengeAssessment->challenge_id = $challenge;
@@ -90,7 +92,7 @@ class ChallengeAssessmentService
             if ($request->assessment_type !== null && $request->assessment_type !== 'null') {
                 $challenge_assessment_type = config('constants.challenge_assessment_type.null');
                 switch ($request->assessment_type) {
-                    case 'close':
+                    case 'closed':
                         $challenge_assessment_type = config('constants.challenge_assessment_type.close');
                         break;
                     case 'open':
@@ -102,19 +104,21 @@ class ChallengeAssessmentService
                 }
 
                 $challenge_visibility_type = config('constants.challenge_visibility_type.users');
-                switch ($request->visibility == 'close') {
-                    case 'hidden':
-                        $challenge_visibility_type = config('constants.challenge_visibility_type.hidden');
-                        break;
-                    case 'users':
-                        $challenge_visibility_type = config('constants.challenge_visibility_type.users');
-                        break;
-                    default:
-                        $challenge_visibility_type = config('constants.challenge_visibility_type.users');
-                        break;
+                if ($request->assessment_type == 'closed') {
+                    switch ($request->visibility) {
+                        case 'hidden':
+                            $challenge_visibility_type = config('constants.challenge_visibility_type.hidden');
+                            break;
+                        case 'users':
+                            $challenge_visibility_type = config('constants.challenge_visibility_type.users');
+                            break;
+                        default:
+                            $challenge_visibility_type = config('constants.challenge_visibility_type.users');
+                            break;
+                    }
                 }
 
-                if ($request->assessment_type == 'close' && $request->members_email !== null) {
+                if ($request->assessment_type == 'closed' && $request->members_email !== null) {
                     foreach ($request->members_email as $key => $value) {
                         $challengeAssessment = new ChallengeAssessment();
                         $challengeAssessment->challenge_id = $challenge_id;
@@ -150,7 +154,7 @@ class ChallengeAssessmentService
             $assessmentTypeMapping = [
                 '0' => 'none',
                 '1' => 'open',
-                '2' => 'close',
+                '2' => 'closed',
             ];
 
             $visibilityMapping = [
