@@ -5,6 +5,7 @@ namespace App\Http\Resources\User;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Settings\UserNotificationResource;
 use App\Http\Resources\Settings\UserPrivacyResource;
+use App\Http\Resources\Settings\UserSSOIntegrationResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -44,6 +45,13 @@ class UserResource extends JsonResource
             'roles'                      => $roles,
             'notification'               => UserNotificationResource::make($this->userSetting),
             'privacy'                    => UserPrivacyResource::make($this->userSetting),
+            'sso_integrations'            => [
+                'linked-in'     => 'in-active',
+                'google'        => 'in-active',
+                'magnet'        => 'in-active',
+                'microsoft'     => 'in-active',
+                'apple'         => 'in-active',
+            ],
         ];
     }
 }
