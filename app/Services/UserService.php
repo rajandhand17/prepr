@@ -131,7 +131,6 @@ class UserService
             if ($user) {
                 $user->profile_image = config('site-settings.default_user_profile_image');
                 $user->save();
-
                 return $user;
             }
 

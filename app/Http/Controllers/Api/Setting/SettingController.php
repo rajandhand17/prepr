@@ -76,4 +76,16 @@ class SettingController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function deleteImage(){
+        try {
+            $removeProfile = $this->settingRepository->removeProfileImage();
+            if ($removeProfile) {
+                return $this->sendResponse(UserResource::make($removeProfile), __('responses.remove_profile_successfully'));
+            }
+            return $this->sendError(__('responses.remove_profile_failed'),400);
+        }catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'),500);
+        }
+    }
 }
