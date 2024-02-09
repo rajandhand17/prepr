@@ -368,11 +368,11 @@ class ProjectMemberManagementService
                     $currentRole = '2';
                     break;
                 case 'editor':
-                $currentRole = '1';
-                break;
+                    $currentRole = '1';
+                    break;
                 case 'viewer':
-                $currentRole = '0';
-                break;
+                    $currentRole = '0';
+                    break;
                 default:
                     $currentRole = '0';
                     break;
@@ -397,11 +397,11 @@ class ProjectMemberManagementService
                     $newtRole = '2';
                     break;
                 case 'editor':
-                $newtRole = '1';
-                break;
+                    $newtRole = '1';
+                    break;
                 case 'viewer':
-                $newtRole = '0';
-                break;
+                    $newtRole = '0';
+                    break;
                 default:
                     $newtRole = '0';
                     break;
