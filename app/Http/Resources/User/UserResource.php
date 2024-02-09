@@ -5,7 +5,6 @@ namespace App\Http\Resources\User;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Settings\UserNotificationResource;
 use App\Http\Resources\Settings\UserPrivacyResource;
-use App\Http\Resources\Settings\UserSSOIntegrationResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -27,24 +26,24 @@ class UserResource extends JsonResource
         }
 
         return [
-            'id'                         => $this->id,
-            'preferred_language'         => $this->preferred_language,
-            'first_name'                 => $this->first_name,
-            'last_name'                  => $this->last_name,
-            'full_name'                  => $this->full_name,
-            'username'                   => $this->username,
-            'email'                      => $this->email,
-            'profile_image'              => $this->profile_image,
-            'two_factor_verification'    => ($this->two_factor_verification == 0) ? 'false' : 'true',
-            'user_points'                => $this->user_points,
-            'user_rank'                  => $this->verified_user,
-            'verified_user'              => $this->verified_user,
-            'referral_code'              => $this->referal_code,
-            'is_profile_completed'       => $this->is_profile_completed,
-            'member_since'               => UtilityHelper::formatDateTime($this->created_at),
-            'roles'                      => $roles,
-            'notification'               => UserNotificationResource::make($this->userSetting),
-            'privacy'                    => UserPrivacyResource::make($this->userSetting),
+            'id'                          => $this->id,
+            'preferred_language'          => $this->preferred_language,
+            'first_name'                  => $this->first_name,
+            'last_name'                   => $this->last_name,
+            'full_name'                   => $this->full_name,
+            'username'                    => $this->username,
+            'email'                       => $this->email,
+            'profile_image'               => $this->profile_image,
+            'two_factor_verification'     => ($this->two_factor_verification == 0) ? 'false' : 'true',
+            'user_points'                 => $this->user_points,
+            'user_rank'                   => $this->verified_user,
+            'verified_user'               => $this->verified_user,
+            'referral_code'               => $this->referal_code,
+            'is_profile_completed'        => $this->is_profile_completed,
+            'member_since'                => UtilityHelper::formatDateTime($this->created_at),
+            'roles'                       => $roles,
+            'notification'                => UserNotificationResource::make($this->userSetting),
+            'privacy'                     => UserPrivacyResource::make($this->userSetting),
             'sso_integrations'            => [
                 'linked-in'     => 'in-active',
                 'google'        => 'in-active',

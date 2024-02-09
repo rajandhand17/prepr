@@ -31,7 +31,8 @@ class UserController extends AppBaseController
         }
     }
 
-    public function getLoggedinUser(){
+    public function getLoggedinUser()
+    {
         try {
             return $this->sendResponse(UserResource::make(auth()->user()), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
