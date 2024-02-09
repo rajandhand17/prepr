@@ -323,4 +323,43 @@ return [
         'video' => 'video',
         'docs'  => 'docs',
     ],
+
+    'subscription_options'=> [
+        '0'=> 'unsubscribed',
+        '1'=> 'monthly',
+        '2'=> 'weekly',
+    ],
+
+    'privacy_options'=> [
+        '0'=> 'public',
+        '1'=> 'private',
+        '2'=> 'signed-in',
+    ],
+
+    'friend_request_options'=> [
+        '0'=> 'any-one',
+        '1'=> 'no-one',
+    ],
+
+    'notification_options'=> [
+        'unsubscribed'=> '0',
+        'monthly'     => '1',
+        'weekly'      => '2',
+    ],
+
+    'subscribe_unsubscribe'=> [
+        'unsubscribed'=> '0',
+        'subscribed'  => '1',
+    ],
+
+    'profile_visibility'=> [
+        'signed-in' => '2',
+        'private'   => '1',
+        'public'    => '0',
+    ],
+
+    'privacy_friend_request'=> [
+        'any-one' => '0',
+        'no-one'  => '1',
+    ],
 ];
