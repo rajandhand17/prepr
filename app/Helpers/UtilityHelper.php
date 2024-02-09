@@ -6,6 +6,7 @@ use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
+use App\Services\Manage\ProjectService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -40,6 +41,9 @@ class UtilityHelper
                     break;
                 case 'challenge':
                     $checkComponentSlugExistOrNot = ChallengeService::getChallengeBasedOnSlug($slug);
+                    break;
+                case 'project':
+                    $checkComponentSlugExistOrNot = ProjectService::getProjectBasedOnSlug($slug);
                     break;
                 default:
                     $checkComponentSlugExistOrNot = false;

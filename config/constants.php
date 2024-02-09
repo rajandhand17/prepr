@@ -32,7 +32,7 @@ return [
         'organization' => '0',
         'lab'          => '1',
         'challenge'    => '2',
-        'project'      => '3',
+        'project'      => '5',
     ],
 
     'member_management_invite_status' => [
@@ -318,6 +318,7 @@ return [
         'public'       => '0',
         'private'      => '1',
     ],
+
     'file_type' => [
         'image' => 'image',
         'video' => 'video',
@@ -361,5 +362,31 @@ return [
     'privacy_friend_request'=> [
         'any-one' => '0',
         'no-one'  => '1',
+    ],
+
+    'project_member_management_invite_type' => [
+        'email'        => '0',
+        'network'      => '1',
+        'csv'          => '2',
+    ],
+
+    'project_member_management_invite_status' => [
+        'invited'      => '0',
+        'accepted'     => '1',
+        'pending'      => '2',
+        'declined'     => '3',
+    ],
+
+    'project_member_management_email_status' => [
+        'scheduled' => '0',
+        'sent'      => '1',
+        'fail'      => '2',
+        'na'        => '3',
+    ],
+
+    'project_access_level' => [
+        'editor'        => '0',
+        'viewer'        => '1',
+        'team_leader'   => '2',
     ],
 ];
