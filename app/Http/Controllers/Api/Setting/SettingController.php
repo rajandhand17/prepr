@@ -19,16 +19,10 @@ class SettingController extends AppBaseController
     public function updateBasedOnActivity($activity, UpdateSettingRequest $request)
     {
         try {
-            if (!in_array($activity, ['image', 'account', 'password', 'privacy', 'notification'])) {
+            if (!in_array($activity, ['account', 'password', 'privacy', 'notification'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             switch ($activity) {
-                case 'image':
-                    $removeProfile = $this->settingRepository->removeProfileImage();
-                    if ($removeProfile) {
-                        return $this->sendResponse(UserResource::make($removeProfile), __('responses.remove_profile_successfully'));
-                    }
-                    break;
                 case 'account':
                     $account = $this->settingRepository->updateUserAccount($request);
                     if ($account) {
@@ -72,6 +66,20 @@ class SettingController extends AppBaseController
             }
 
             return $this->sendError(__('responses.account_deactivated_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function deleteImage()
+    {
+        try {
+            $removeProfile = $this->settingRepository->removeProfileImage();
+            if ($removeProfile) {
+                return $this->sendResponse(UserResource::make($removeProfile), __('responses.remove_profile_successfully'));
+            }
+
+            return $this->sendError(__('responses.remove_profile_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
