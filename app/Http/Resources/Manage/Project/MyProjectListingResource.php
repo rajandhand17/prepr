@@ -21,7 +21,7 @@ class MyProjectListingResource extends JsonResource
         $view_enabled = null;
         $challengeData = null;
         $status = 'yes';
-        $liked = 'No';
+        $liked = 'no';
 
         switch ($this->view_enabled) {
             case 'yes':
@@ -76,7 +76,7 @@ class MyProjectListingResource extends JsonResource
         }
 
         if ($this->likes()) {
-            $liked = $this->likes() > 0 ? 'Yes' : 'No';
+            $liked = $this->likes() > 0 ? 'yes' : 'no';
         }
 
         return [

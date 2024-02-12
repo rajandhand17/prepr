@@ -83,6 +83,6 @@ class Project extends Model
 
     public function favourite()
     {
-        return ($this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'favourite' => '1'])->count() > 0) ? 'Yes' : 'No';
+        return ($this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'favourite' => '1'])->count() > 0) ? 'yes' : 'no';
     }
 }

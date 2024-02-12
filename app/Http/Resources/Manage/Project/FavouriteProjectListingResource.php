@@ -21,7 +21,7 @@ class FavouriteProjectListingResource extends JsonResource
         $view_enabled = null;
         $challengeData = null;
         $status = 'yes';
-        $liked = 'No';
+        $liked = 'no';
 
         switch ($this->view_enabled) {
             case 'yes':
@@ -63,23 +63,23 @@ class FavouriteProjectListingResource extends JsonResource
             }
         }
 
-        $joinedStatus = 'No';
+        $joinedStatus = 'no';
         if ($this->getJoinedStatus()) {
             switch ($this->getJoinedStatus() !== null) {
                 case '0':
-                    $joinedStatus = 'Invited';
+                    $joinedStatus = 'invited';
                     break;
                 case '1':
-                    $joinedStatus = 'Yes';
+                    $joinedStatus = 'yes';
                     break;
                 case '2':
-                    $joinedStatus = 'Pending';
+                    $joinedStatus = 'pending';
                     break;
                 case '3':
-                    $joinedStatus = 'No';
+                    $joinedStatus = 'no';
                     break;
                 default:
-                    $joinedStatus = 'No';
+                    $joinedStatus = 'no';
                     break;
             }
         }
@@ -97,7 +97,7 @@ class FavouriteProjectListingResource extends JsonResource
         }
 
         if ($this->likes()) {
-            $liked = $this->likes() > 0 ? 'Yes' : 'No';
+            $liked = $this->likes() > 0 ? 'yes' : 'no';
         }
 
         return [

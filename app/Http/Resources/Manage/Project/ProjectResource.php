@@ -25,7 +25,7 @@ class ProjectResource extends JsonResource
         $challenge_pitch = null;
         $challenge_task = null;
         $status = 'yes';
-        $liked = 'No';
+        $liked = 'no';
 
         if ($this->getProjectTemplate) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
@@ -104,23 +104,23 @@ class ProjectResource extends JsonResource
             }
         }
 
-        $joinedStatus = 'No';
+        $joinedStatus = 'no';
         if ($this->getJoinedStatus()) {
             switch ($this->getJoinedStatus() !== null) {
                 case '0':
-                    $joinedStatus = 'Invited';
+                    $joinedStatus = 'invited';
                     break;
                 case '1':
-                    $joinedStatus = 'Yes';
+                    $joinedStatus = 'yes';
                     break;
                 case '2':
-                    $joinedStatus = 'Pending';
+                    $joinedStatus = 'pending';
                     break;
                 case '3':
-                    $joinedStatus = 'No';
+                    $joinedStatus = 'no';
                     break;
                 default:
-                    $joinedStatus = 'No';
+                    $joinedStatus = 'no';
                     break;
             }
         }
@@ -142,7 +142,7 @@ class ProjectResource extends JsonResource
         }
 
         if ($this->likes()) {
-            $liked = $this->likes() > 0 ? 'Yes' : 'No';
+            $liked = $this->likes() > 0 ? 'yes' : 'no';
         }
 
         return [
