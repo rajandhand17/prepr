@@ -28,6 +28,7 @@ class CommentService
             $addComment->save();
             return true;
         }catch(\Exception $e){
+            dd($e);
             return false;
         }
     }

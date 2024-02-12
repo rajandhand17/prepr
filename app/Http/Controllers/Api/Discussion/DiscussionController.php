@@ -35,13 +35,18 @@ class DiscussionController extends AppBaseController
                     }
                     break;
                 case 'like':
-                    $like=$this->discussionRepository->likeComment($component,$request);
+                    $like=$this->discussionRepository->likeDislike($component,$request);
                     if($like){
                         return $this->sendResponse([],__('responses.like_successfully'));
                     }
                     break;
-                case 'dislike':
-                    $dislike = $this->discussionRepository->likeDislike($component);
+                case 'dislikes':
+                    $dislike = $this->discussionRepository->likeDislike($component,$request);
+                    if($dislike){
+                        return $this->sendResponse([],__('responses.like_successfully'));
+                    }
+                default:
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
             }
         }catch(\Exception $e){
             return false;
