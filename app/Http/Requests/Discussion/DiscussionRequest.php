@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Discussion;
 
+use Carbon\Carbon;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class DiscussionRequest extends FormRequest
 {
@@ -21,8 +24,30 @@ class DiscussionRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $base_rules = [
+            'module_id'      => 'required|integer',
+            'comment'        => 'required|string',
+            'comment_id'     => 'exists:comments,id',
         ];
+
+        return $base_rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'module_id.required' => __('responses.module_id_required'),
+            'comment.required'   => __('responses.reference_id_required'),
+            'user_id.exists'     => __('responses.reference_id_exists'),
+        ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors(),
+        ], 422));
     }
 }
