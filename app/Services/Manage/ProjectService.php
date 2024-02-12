@@ -12,6 +12,59 @@ use HiFolks\RandoPhp\Randomize;
 
 class ProjectService
 {
+    public static function getMyProjectIds($userId)
+    {
+        try {
+            $getMyProjects = Project::where('user_id', $userId)->pluck('id');
+
+            return $getMyProjects;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectList($getProjectIds, $request)
+    {
+        try {
+            $project_list = Project::select()->whereIn('id', $getProjectIds);
+
+            $project_list = self::filterProjectList($project_list, $request);
+
+            return $project_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function filterProjectList($project_list, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $project_list = $project_list->where('projects.title', 'like', '%' . $request->search . '%');
+            }
+
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $project_list = $project_list->orderBy('projects.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $project_list = $project_list->orderBy('projects.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $project_list = $project_list->orderBy('projects.created_at', 'ASC');
+                        break;
+                    default:
+                        $project_list = $project_list->orderBy('projects.id', 'ASC');
+                }
+            }
+
+            return $project_list;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function uploadCoverImage($coverImage)
     {
         try {

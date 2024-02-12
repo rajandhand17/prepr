@@ -10,6 +10,7 @@ use App\Services\Manage\ProjectFileService;
 use App\Services\Manage\ProjectMemberManagementService;
 use App\Services\Manage\ProjectPitchService;
 use App\Services\Manage\ProjectService;
+use App\Services\Public\ProjectSocialActivitiesService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -23,8 +24,9 @@ class ProjectRepository implements ProjectInterface
     private $projectExternalLinksService;
     private $projectAdditionalInfoService;
     private $projectMemberManagementService;
+    private $projectSocialActivitiesService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -34,6 +36,43 @@ class ProjectRepository implements ProjectInterface
         $this->projectExternalLinksService = $projectExternalLinksService;
         $this->projectAdditionalInfoService = $projectAdditionalInfoService;
         $this->projectMemberManagementService = $projectMemberManagementService;
+        $this->projectSocialActivitiesService = $projectSocialActivitiesService;
+    }
+
+    public function getMyProjectIds($userId)
+    {
+        try {
+            return $this->projectService->getMyProjectIds($userId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFavouriteProjectIds($userId)
+    {
+        try {
+            return $this->projectSocialActivitiesService->getFavouriteProjectIds($userId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getInvitedProjectIds($userData)
+    {
+        try {
+            return $this->projectMemberManagementService->getInvitedProjectIds($userData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectList($getProjectIds, $request)
+    {
+        try {
+            return $this->projectService->getProjectList($getProjectIds, $request);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function uploadCoverImage($coverImage)
