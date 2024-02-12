@@ -576,12 +576,12 @@ class ChallengeService
                             break;
                         case 'months':
                             $dateCount = $challengeData->challenge_timelines->flexible_date_number * 30;
-                            break;                        
+                            break;
                         default:
                             $dateCount = $challengeData->challenge_timelines->flexible_date_number;
                             break;
                     }
-                    $durationDate = date_create(date('Y-m-d', strtotime($projectCreatedDate . ' + ' . $dateCount . 'days')));
+                    $durationDate = date_create(date('Y-m-d', strtotime($projectCreatedDate.' + '.$dateCount.'days')));
                     $formatData = UtilityHelper::formatDateTime($durationDate);
                     $challenge_timelines = [
                         'timeline_type'                 => 'flexible',

@@ -22,7 +22,7 @@ class MyProjectListingResource extends JsonResource
         $challengeData = null;
         $status = 'yes';
         $liked = 'No';
-        
+
         switch ($this->view_enabled) {
             case 'yes':
                 $view_enabled = 'yes';

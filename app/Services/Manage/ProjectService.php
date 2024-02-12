@@ -40,7 +40,7 @@ class ProjectService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $project_list = $project_list->where('projects.title', 'like', '%' . $request->search . '%');
+                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {

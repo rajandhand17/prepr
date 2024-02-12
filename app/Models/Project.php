@@ -73,12 +73,12 @@ class Project extends Model
 
     public function likes()
     {
-        return ($this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'like_dislike' => '1'])->count());
+        return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'like_dislike' => '1'])->count();
     }
 
     public function shares()
     {
-        return ($this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'share' => '1'])->count());
+        return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'share' => '1'])->count();
     }
 
     public function favourite()

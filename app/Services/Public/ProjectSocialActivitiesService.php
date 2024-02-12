@@ -4,7 +4,6 @@ namespace App\Services\Public;
 
 use App\Models\ProjectSocialActivity;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 
 class ProjectSocialActivitiesService
 {

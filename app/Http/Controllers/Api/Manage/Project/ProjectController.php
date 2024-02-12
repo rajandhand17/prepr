@@ -75,6 +75,7 @@ class ProjectController extends AppBaseController
 
                     return $this->sendResponse($response, __('responses.found_projects_list'));
                 }
+
                 return $this->sendError(__('responses.not_found_projects_list'), 400);
             }
 

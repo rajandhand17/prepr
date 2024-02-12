@@ -135,7 +135,7 @@ class ProjectResource extends JsonResource
                 break;
             case '1':
                 $status = 'yes';
-                break;            
+                break;
             default:
                 $status = 'yes';
                 break;
