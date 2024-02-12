@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{type}-projects', [ProjectController::class, 'index']);
     Route::post('/create', [ProjectController::class, 'create']);
-    Route::get('/{slug}', [ProjectController::class, 'show']);
+    Route::get('{slug}', [ProjectController::class, 'show']);
     Route::post('/{slug}/update', [ProjectController::class, 'update']);
     Route::get('{slug}/requirements', [ProjectController::class, 'projectRequirements']);
     Route::post('/pitch-task', [ProjectController::class, 'projectPitchTask']);
