@@ -100,7 +100,7 @@ class UserService
             $user->phone_number = $request->phone_number;
             $user->preferred_language = $request->preferred_language;
             $user->preferred_timezone = $request->preferred_timezone;
-            $user->two_factor_verification = ($request->two_factor_verification == true) ? '1' : '0';
+            $user->two_factor_verification = ($request->two_factor_verification == 'yes') ? '1' : '0';
             $user->save();
 
             return $user;
@@ -117,7 +117,6 @@ class UserService
             if ($user->save()) {
                 return $user;
             }
-
             return false;
         } catch(\Exception $e) {
             return false;

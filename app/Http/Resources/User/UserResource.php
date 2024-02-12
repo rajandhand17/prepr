@@ -28,13 +28,15 @@ class UserResource extends JsonResource
         return [
             'id'                          => $this->id,
             'preferred_language'          => $this->preferred_language,
+            'preferred_timezone'          =>$this->preferred_timezone ? $this->preferred_timezone:'EST',
             'first_name'                  => $this->first_name,
             'last_name'                   => $this->last_name,
             'full_name'                   => $this->full_name,
             'username'                    => $this->username,
             'email'                       => $this->email,
+            'phone_number'                => $this->phone_number,
             'profile_image'               => $this->profile_image,
-            'two_factor_verification'     => ($this->two_factor_verification == 0) ? 'false' : 'true',
+            'two_factor_verification'     => ($this->two_factor_verification == 0) ? 'no' : 'yes',
             'user_points'                 => $this->user_points,
             'user_rank'                   => $this->verified_user,
             'verified_user'               => $this->verified_user,
@@ -45,11 +47,11 @@ class UserResource extends JsonResource
             'notification'                => UserNotificationResource::make($this->userSetting),
             'privacy'                     => UserPrivacyResource::make($this->userSetting),
             'sso_integrations'            => [
-                'linked-in'     => 'in-active',
-                'google'        => 'in-active',
-                'magnet'        => 'in-active',
-                'microsoft'     => 'in-active',
-                'apple'         => 'in-active',
+                'linked-in'     => 'inactive',
+                'google'        => 'inactive',
+                'magnet'        => 'inactive',
+                'microsoft'     => 'inactive',
+                'apple'         => 'inactive',
             ],
         ];
     }
