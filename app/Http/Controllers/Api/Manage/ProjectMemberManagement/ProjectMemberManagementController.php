@@ -60,10 +60,10 @@ class ProjectMemberManagementController extends AppBaseController
                 $response['total_pages'] = 1;
                 $response['users'] = [];
 
-                return $this->sendResponse($response, __('responses.participant_list_found'));
+                return $this->sendResponse($response, __('responses.participant_list_not_found'));
             }
 
-            return $this->sendResponse($response, __('responses.participant_list_not_found'));
+            return $this->sendResponse($response, __('responses.participant_list_found'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

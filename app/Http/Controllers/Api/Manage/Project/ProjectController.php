@@ -9,6 +9,9 @@ use App\Http\Requests\Manage\Project\CreateProjectRequest;
 use App\Http\Requests\Manage\Project\UpdateProjectRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
+use App\Http\Resources\Manage\Project\FavouriteProjectListingResource;
+use App\Http\Resources\Manage\Project\InvitedProjectListingResource;
+use App\Http\Resources\Manage\Project\MyProjectListingResource;
 use App\Http\Resources\Manage\Project\ProjectAdditionalInfoResource;
 use App\Http\Resources\Manage\Project\ProjectExternalLinkResource;
 use App\Http\Resources\Manage\Project\ProjectFileResource;
@@ -27,6 +30,59 @@ class ProjectController extends AppBaseController
     public function __construct(ProjectRepository $projectRepository)
     {
         $this->projectRepository = $projectRepository;
+    }
+
+    public function index($type, Request $request)
+    {
+        try {
+            if (!in_array($type, ['my', 'favourite', 'invited'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 400);
+            }
+
+            switch ($type) {
+                case 'my':
+                    $getProjectIds = $this->projectRepository->getMyProjectIds(auth()->user()->id);
+                    $resourceClass = MyProjectListingResource::class;
+                    break;
+
+                case 'favourite':
+                    $getProjectIds = $this->projectRepository->getFavouriteProjectIds(auth()->user()->id);
+                    $resourceClass = FavouriteProjectListingResource::class;
+                    break;
+
+                case 'invited':
+                    $getProjectIds = $this->projectRepository->getInvitedProjectIds(auth()->user());
+                    $resourceClass = InvitedProjectListingResource::class;
+                    break;
+
+                default:
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
+                    break;
+            }
+
+            if (!empty($getProjectIds) && count($getProjectIds) > 0) {
+                $project = $this->projectRepository->getProjectList($getProjectIds, $request);
+                $projectResource = $resourceClass::collection($project);
+                if ($project) {
+                    $response = [
+                        'total_count'  => $project->total(),
+                        'per_page'     => $project->perPage(),
+                        'count'        => $project->count(),
+                        'current_page' => $project->currentPage(),
+                        'total_pages'  => $project->lastPage(),
+                        'list'         => $projectResource,
+                    ];
+
+                    return $this->sendResponse($response, __('responses.found_projects_list'));
+                }
+
+                return $this->sendError(__('responses.not_found_projects_list'), 400);
+            }
+
+            return $this->sendError(__('responses.project_list_type'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
 
     public function challengeList(Request $request)

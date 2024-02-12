@@ -428,4 +428,16 @@ class ProjectMemberManagementService
             return false;
         }
     }
+
+    public function getInvitedProjectIds($userData)
+    {
+        try {
+            $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
+            $getInvitedProjectIds = ProjectMemberManagement::where('invitee_id', $userData->id)->orWhere('email', $userData->email)->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
+
+            return $getInvitedProjectIds;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
