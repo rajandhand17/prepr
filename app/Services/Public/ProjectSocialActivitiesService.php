@@ -72,7 +72,7 @@ class ProjectSocialActivitiesService
         try {
             $checkActivity = ProjectSocialActivity::where(
                 [
-                    'project_id' => $projectId,
+                    'project_id'      => $projectId,
                     'user_id'         => auth()->user()->id,
                     $column           => $action,
                 ]
@@ -93,7 +93,7 @@ class ProjectSocialActivitiesService
             if (auth()->check()) {
                 ProjectSocialActivity::updateOrInsert([
                     'user_id'       => auth()->user()->id,
-                    'project_id'  => $projectId,
+                    'project_id'    => $projectId,
                 ], [
                     $column => $action,
                 ]);
