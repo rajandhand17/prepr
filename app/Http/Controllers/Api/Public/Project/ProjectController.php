@@ -43,15 +43,15 @@ class ProjectController extends AppBaseController
                 $checkActivity = $this->projectRepository->checkSocialActivity($fetchProject->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
                 if ($checkActivity === true) {
-                    return $this->sendError(__('responses.already_' . $action . '_project'), 400);
+                    return $this->sendError(__('responses.already_'.$action.'_project'), 400);
                 }
 
                 $captureActivity = $this->projectRepository->captureSocialActivity($fetchProject->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 if ($captureActivity) {
-                    return $this->sendResponse([], __('responses.' . $action . '_project_successfully'));
+                    return $this->sendResponse([], __('responses.'.$action.'_project_successfully'));
                 }
-
             }
+
             return $this->sendError(__('responses.found_not_project_detail'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
