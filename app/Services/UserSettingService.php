@@ -15,7 +15,7 @@ class UserSettingService
                 [
                     'profile_privacy'           => config('constants.profile_visibility.'.$request->profile_visibility),
                     'project_privacy'           => config('constants.profile_visibility.'.$request->project_visibility),
-                    'friend_request_privacy'    => config('constants.privacy_friend_request.'.$request->friend_request),
+                    'friend_request_privacy'    => config('constants.privacy_friend_request.'.$request->friend_request_privacy),
                 ]
             );
 

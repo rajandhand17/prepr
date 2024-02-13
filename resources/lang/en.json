@@ -74,7 +74,7 @@
     "responses.username_regex_pattern":"Username should contain letters, numbers and `-_`",
     "responses.user_type_required":"This user type field is required",
     "responses.password_confirmation_required_field":"This password confirmation field is required",
-    "responses.match_confirmed_password":"The Password do not match with confirm assword!",
+    "responses.match_confirmed_password":"The password does not match the confirmed password!",
     "responses.phone_number_numeric_allowed":"The phone number should be in numeric!",
     "responses.phone_field_required":"This phone number field is required.",
     "responses.unique_phone_number":"Please provide unique phone number,this is already registered with us!",
@@ -871,5 +871,6 @@
     "responses.password_change_failed": "You have failed to change your password",
     "responses.get_details": "You have successfully retrieved your details",
     "responses.failed_get_details": "You have failed to retrieve your details",
-    "responses.deactivated_account": "This account has been deactivated, please contact with administrator"
+    "responses.deactivated_account": "This account has been deactivated, please contact with administrator",
+    "responses.same_password": "Please choose a different password; this one is identical to your current password."
 }

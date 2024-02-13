@@ -27,26 +27,26 @@ class UpdateSettingRequest extends FormRequest
         $base_rules = [];
         if ($activity == 'account') {
             $base_rules = [
-                'first_name'               => 'required_if:request_type,account|string',
-                'last_name'                => 'required_if:request_type,account|string',
-                'username'                 => 'required_if:request_type,account',
-                'email'                    => 'required_if:request_type,account|email',
-                'phone_number'             => 'required_if:request_type,account',
-                'preferred_timezone'       => 'required_if:request_type,account',
-                'preferred_language'       => 'required_if:request_type,account',
-                'two_factor_verification'  => 'required_if:request_type,account|in:true,false',
+                'first_name'               => 'required|string',
+                'last_name'                => 'required|string',
+                'username'                 => 'required',
+                'email'                    => 'required|email',
+                'phone_number'             => 'required',
+                'preferred_timezone'       => 'required',
+                'preferred_language'       => 'required',
+                'two_factor_verification'  => 'required|in:yes,no',
 
             ];
         } elseif ($activity == 'privacy') {
             $base_rules = [
-                'profile_visibility'       => 'required_if:request_type,privacy|in:public,private,signed-in',
-                'project_visibility'       => 'required_if:request_type,privacy|in:public,private',
-                'friend_request'           => 'required_if:request_type,privacy|in:any-one,no-one',
+                'profile_visibility'       => 'required|in:public,private,signed-in',
+                'project_visibility'       => 'required|in:public,private',
+                'friend_request_privacy'   => 'required|in:public,private',
             ];
         } elseif ($activity == 'password') {
             $base_rules = [
-                'password'                 => 'required_if:request_type,password|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
-                'password_confirmation'    => 'required_if:request_type,password|same:password',
+                'password'                 => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+                'password_confirmation'    => 'required|same:password',
             ];
         } elseif ($activity == 'notification') {
             $base_rules = [
@@ -69,7 +69,7 @@ class UpdateSettingRequest extends FormRequest
             'project_visibility.required'      => __('responses.public_or_private'),
             'project_visibility.in'            => __('responses.public_or_private'),
             'friend_request.required'          => __('responses.required_fields'),
-            'friend_request.in'                => __('responses.any_or_no_one'),
+            'friend_request.in'                => __('responses.public_or_private'),
             'first_name.required'              => __('responses.first_name_field_required'),
             'last_name.required'               => __('responses.last_name_field_required'),
             'purpose.numeric'                  => __('responses.numeric_allowed_only'),
@@ -80,7 +80,7 @@ class UpdateSettingRequest extends FormRequest
             'preferred_timezone.required'      => __('responses.required_field'),
             'preferred_language.required'      => __('responses.required_field'),
             'two_factor_verification.required' => __('responses.required_field'),
-            'two_factor_verification.in'       => __('responses.true_or_false'),
+            'two_factor_verification.in'       => __('responses.choose_yes_no'),
             'password.required'                => __('responses.password_required_field'),
             'password.min'                     => __('responses.min_content_6'),
             'password_confirmation.required'   => __('responses.password_confirmation_required_field'),

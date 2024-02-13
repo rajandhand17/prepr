@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Setting\UpdateSettingRequest;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Setting\SettingRepository;
+use Illuminate\Support\Facades\Hash;
 
 class SettingController extends AppBaseController
 {
@@ -30,6 +31,9 @@ class SettingController extends AppBaseController
                     }
                     break;
                 case 'password':
+                    if (Hash::check($request->password, auth()->user()->password)) {
+                        return $this->sendError(__('responses.same_password'), 422);
+                    }
                     $changePassword = $this->settingRepository->changePassword($request);
                     if ($changePassword) {
                         return $this->sendResponse(UserResource::make($changePassword), __('responses.password_change_successfully'));
