@@ -337,4 +337,9 @@ return [
         'public'   => '0',
         'private'  => '1',
     ],
+
+    'subscribe_unsubscribe_id'=> [
+        '0' =>'unsubscribe',
+        '1' => 'subscribe',
+    ],
 ];
