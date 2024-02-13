@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Manage\Project;
+namespace App\Http\Resources\Public\Project;
 
 use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;

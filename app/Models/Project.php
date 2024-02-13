@@ -63,7 +63,11 @@ class Project extends Model
 
     public function getJoinedStatus()
     {
-        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('invite_status', '1')->where('invitee_id', auth()->user()->id)->orWhere('email', auth()->user()->email)->first();
+        if (auth('api')->check()) {
+            return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('invite_status', '1')->where('invitee_id', auth('api')->user()->id)->orWhere('email', auth('api')->user()->email)->first();
+        }
+
+        return null;
     }
 
     public function getMembersCount()
@@ -73,16 +77,37 @@ class Project extends Model
 
     public function likes()
     {
-        return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'like_dislike' => '1'])->count();
+        if (auth('api')->check()) {
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'like_dislike' => '1'])->count();
+        }
+
+        return 0;
+    }
+
+    public function votes()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'vote' => '1'])->count();
+        }
+
+        return 0;
     }
 
     public function shares()
     {
-        return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'share' => '1'])->count();
+        if (auth('api')->check()) {
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'share' => '1'])->count();
+        }
+
+        return 0;
     }
 
     public function favourite()
     {
-        return ($this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'favourite' => '1'])->count() > 0) ? 'yes' : 'no';
+        if (auth('api')->check()) {
+            return ($this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'favourite' => '1'])->count() > 0) ? 'yes' : 'no';
+        }
+
+        return 'no';
     }
 }

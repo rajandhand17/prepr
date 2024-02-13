@@ -923,5 +923,19 @@
     "responses.project_role_update": "The Project participant is successfully aligned with the requested role.",
     "responses.project_list_type": "The Project list type not found.",
     "responses.found_projects_list": "The project list has been successfully retrieved",
-    "responses.not_found_projects_list": "The list of projects has not been retrieved with success."
+    "responses.not_found_projects_list": "The list of projects has not been retrieved with success.",
+    "responses.share_project_successfully": "The Project have been shared successfully by you!",
+    "responses.favourite_project_successfully": "You have successfully saved this Project!",
+    "responses.un_favourite_project_successfully": "You have successfully un-saved this Project!",
+    "responses.like_project_successfully": "The Project have been liked successfully by you!",
+    "responses.un_like_project_successfully": "The Project have been dis-liked successfully by you!",
+    "responses.vote_project_successfully": "The Project(s) vote have been updated!",
+    "responses.remove_vote_project_successfully": "The Project(s) vote have been removed!",
+    "responses.already_vote_project": "The Project is already voted by you!",
+    "responses.already_remove_vote_project": "The Project(s) is already has been removed!",
+    "responses.already_share_project": "The Project is already being shared by you!",
+    "responses.already_favourite_project": "The Project has already been saved to your list!",
+    "responses.already_un_favourite_project": "The Project has already been removed from your list",
+    "responses.already_like_project": "The Project is already liked by you!",
+    "responses.already_un_like_project": "The Project is already being dis-liked by you!"
 }
