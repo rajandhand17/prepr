@@ -84,6 +84,15 @@ class Project extends Model
         return 0;
     }
 
+    public function votes()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'vote' => '1'])->count();
+        }
+
+        return 0;
+    }
+
     public function shares()
     {
         if (auth('api')->check()) {

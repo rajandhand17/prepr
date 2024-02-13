@@ -15,6 +15,7 @@ class ProjectSocialActivity extends Model
     protected $fillable = [
         'user_id',
         'project_id',
+        'vote',
         'like_dislike',
         'share',
         'favourite',

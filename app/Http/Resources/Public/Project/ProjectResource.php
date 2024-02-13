@@ -26,6 +26,7 @@ class ProjectResource extends JsonResource
         $challenge_task = null;
         $status = 'yes';
         $liked = 'no';
+        $voted = 'no';
 
         if ($this->getProjectTemplate) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
@@ -145,6 +146,10 @@ class ProjectResource extends JsonResource
             $liked = $this->likes() > 0 ? 'yes' : 'no';
         }
 
+        if ($this->votes()) {
+            $voted = $this->votes() > 0 ? 'yes' : 'no';
+        }
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
@@ -159,6 +164,8 @@ class ProjectResource extends JsonResource
             'status'                => $status,
             'liked'                 => $liked,
             'likes'                 => $this->likes(),
+            'voted'                 => $voted,
+            'votes'                 => $this->votes(),
             'shares'                => $this->shares(),
             'favourite'             => $this->favourite(),
             'member_count'          => $this->getMembersCount(),

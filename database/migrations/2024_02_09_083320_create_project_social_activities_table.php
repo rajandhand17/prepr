@@ -14,6 +14,7 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('project_id');
+            $table->enum('vote', ['0', '1'])->default('0')->comment('0 -> no-vote, 1 -> vote');
             $table->enum('like_dislike', ['0', '1', '2'])->default('0')->comment('0->no-activity, 1->like, 2->dislike');
             $table->enum('share', ['0', '1'])->default('0')->comment('0->no-activity, 1->share');
             $table->enum('favourite', ['0', '1', '2'])->default('0')->comment('0->no-activity, 1->favourite, 2->unfavourite');
