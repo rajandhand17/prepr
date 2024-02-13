@@ -312,8 +312,8 @@ return [
     ],
 
     'friend_request_options'=> [
-        '0'=> 'any-one',
-        '1'=> 'no-one',
+        '0'=> 'public',
+        '1'=> 'private',
     ],
 
     'notification_options'=> [

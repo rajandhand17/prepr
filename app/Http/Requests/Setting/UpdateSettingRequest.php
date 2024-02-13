@@ -50,11 +50,11 @@ class UpdateSettingRequest extends FormRequest
             ];
         } elseif ($activity == 'notification') {
             $base_rules = [
-                'communication'            => 'required|in:subscribed,unsubscribed',
-                'network_summary'          => 'required|in:subscribed,unsubscribed',
-                'lab_summary'              => 'required|in:unsubscribed,monthly,weekly',
-                'challenge_summary'        => 'required|in:unsubscribed,monthly,weekly',
-                'challenge_recommendation' => 'required|in:unsubscribed,monthly,weekly',
+                'communication'            => 'in:subscribed,unsubscribed',
+                'network_summary'          => 'in:subscribed,unsubscribed',
+                'lab_summary'              => 'in:unsubscribed,monthly,weekly',
+                'challenge_summary'        => 'in:unsubscribed,monthly,weekly',
+                'challenge_recommendation' => 'in:unsubscribed,monthly,weekly',
             ];
         }
 
