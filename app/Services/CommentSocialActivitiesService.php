@@ -24,6 +24,7 @@ class CommentSocialActivitiesService
            $userSetting->save();
            return $userSetting;
       }catch(\Exception $e){
+          dd($e);
           return false;
       }
   }

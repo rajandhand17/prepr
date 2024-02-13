@@ -24,6 +24,7 @@ class DiscussionRequest extends FormRequest
      */
     public function rules(): array
     {
+
         $base_rules = [
             'module_id'      => 'required|integer',
             'comment'        => 'required|string',
