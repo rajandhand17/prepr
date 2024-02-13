@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Api\Profile;
+namespace App\Repositories\Api\Setting;
 
 use Illuminate\Support\ServiceProvider;
 
-class ProfileServiceProvider extends ServiceProvider
+class SettingServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -22,6 +22,6 @@ class ProfileServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Profile\ProfileInterface', 'App\Repositories\Api\Profile\ProfileRepository');
+        $this->app->bind('App\Repositories\Api\Setting\SettingInterface', 'App\Repositories\Api\Setting\SettingRepository');
     }
 }
