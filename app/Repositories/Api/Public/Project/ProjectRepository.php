@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Api\Public\Project;
 
-use App\Models\Project;
 use App\Services\Public\ProjectService;
 use Exception;
 

@@ -10,7 +10,7 @@ use Exception;
 class ProjectController extends AppBaseController
 {
     private $projectRepository;
-    
+
     public function __construct(ProjectRepository $projectRepository)
     {
         $this->projectRepository = $projectRepository;
