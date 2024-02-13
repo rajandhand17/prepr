@@ -24,11 +24,18 @@ class DiscussionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $base_rules = [
-            'module_id'      => 'required|integer',
-            'comment'        => 'required|string',
-            'comment_id'     => 'exists:comments,id',
-        ];
+        $activity = $this->route('action');
+        $base_rules = [];
+        if($activity=='add'){
+            $base_rules = [
+                'module_id'      => 'required|integer',
+                'comment'        => 'required|string',
+                'comment_id'     => 'exists:comments,id',
+            ];
+        }elseif($activity){
+
+        }
+
 
         return $base_rules;
     }
