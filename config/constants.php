@@ -334,7 +334,7 @@ return [
     ],
 
     'privacy_friend_request'=> [
-        'public' => '0',
+        'public'   => '0',
         'private'  => '1',
     ],
 ];

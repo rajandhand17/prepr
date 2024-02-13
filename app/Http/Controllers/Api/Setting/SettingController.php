@@ -31,8 +31,8 @@ class SettingController extends AppBaseController
                     }
                     break;
                 case 'password':
-                    if(Hash::check($request->password, auth()->user()->password)){
-                        return $this->sendError(__('responses.same_password'),422);
+                    if (Hash::check($request->password, auth()->user()->password)) {
+                        return $this->sendError(__('responses.same_password'), 422);
                     }
                     $changePassword = $this->settingRepository->changePassword($request);
                     if ($changePassword) {

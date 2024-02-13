@@ -117,6 +117,7 @@ class UserService
             if ($user->save()) {
                 return $user;
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
