@@ -300,7 +300,7 @@ return [
     ],
 
     'subscription_options'=> [
-        '0'=> 'unsubscribed',
+        '0'=> 'unsubscribe',
         '1'=> 'monthly',
         '2'=> 'weekly',
     ],
@@ -312,19 +312,19 @@ return [
     ],
 
     'friend_request_options'=> [
-        '0'=> 'any-one',
-        '1'=> 'no-one',
+        '0'=> 'public',
+        '1'=> 'private',
     ],
 
     'notification_options'=> [
-        'unsubscribed'=> '0',
+        'unsubscribe' => '0',
         'monthly'     => '1',
         'weekly'      => '2',
     ],
 
     'subscribe_unsubscribe'=> [
-        'unsubscribed'=> '0',
-        'subscribed'  => '1',
+        'unsubscribe'=> '0',
+        'subscribe'  => '1',
     ],
 
     'profile_visibility'=> [
@@ -336,5 +336,10 @@ return [
     'privacy_friend_request'=> [
         'public'   => '0',
         'private'  => '1',
+    ],
+
+    'subscribe_unsubscribe_id'=> [
+        '0' => 'unsubscribe',
+        '1' => 'subscribe',
     ],
 ];
