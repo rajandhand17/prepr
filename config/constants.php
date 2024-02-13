@@ -300,7 +300,7 @@ return [
     ],
 
     'subscription_options'=> [
-        '0'=> 'unsubscribed',
+        '0'=> 'unsubscribe',
         '1'=> 'monthly',
         '2'=> 'weekly',
     ],
@@ -317,14 +317,14 @@ return [
     ],
 
     'notification_options'=> [
-        'unsubscribed'=> '0',
+        'unsubscribe'=> '0',
         'monthly'     => '1',
         'weekly'      => '2',
     ],
 
     'subscribe_unsubscribe'=> [
-        'unsubscribed'=> '0',
-        'subscribed'  => '1',
+        'unsubscribe'=> '0',
+        'subscribe'  => '1',
     ],
 
     'profile_visibility'=> [
