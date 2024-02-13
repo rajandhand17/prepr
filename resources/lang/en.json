@@ -828,7 +828,7 @@
     "responses.unpinned_achievement": "The Achievement removed in featured list!",
     "responses.already_pinned_achievement": "The Achievement is already being pinned by you!",
     "responses.already_unpinned_achievement": "The Achievement is already being un-pinned by you!",
-    "responses.download_successfull": "Achievement download successfull",
+    "responses.download_successfull": "Achievement download successfully",
     "responses.organization_id": "The Organization id field is required",
     "responses.organization_exists": "This Organization id is not exists",
     "responses.lab_already_cloned": "This Lab already cloned in Lab Marketplace",
