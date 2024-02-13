@@ -18,13 +18,11 @@ class CommentSocialActivitiesService
           }
            $likeOrDislike=($component=='like') ? '1' : '2';
            $userSetting->comment_id = $request->comment_id;
-           $userSetting->comment_type=$request->comment_type;
            $userSetting->user_id = auth()->user()->id;
            $userSetting->like_dislikes = $likeOrDislike;
            $userSetting->save();
            return $userSetting;
       }catch(\Exception $e){
-          dd($e);
           return false;
       }
   }

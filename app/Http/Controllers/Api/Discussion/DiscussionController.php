@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Discussion;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Discussion\DiscussionRequest;
 use App\Repositories\Api\Discussion\DiscussionRepository;
-use App\Repositories\Api\Profile\ProfileRepository;
+use Illuminate\Http\Request;
 
 class DiscussionController extends AppBaseController
 {
@@ -24,7 +24,7 @@ class DiscussionController extends AppBaseController
                 case 'add';
                 $discussionRepository=$this->discussionRepository->addComment($component,$request);
                 if($discussionRepository){
-                    return $this->sendResponse([],__('responses.add_comment_successfully'));
+                    return $this->sendResponse($discussionRepository,__('responses.add_comment_successfully'));
                 }
                 break;
                 case 'like':
@@ -46,9 +46,9 @@ class DiscussionController extends AppBaseController
         }
     }
 
-    public function deleteComment(){
+    public function deleteComment($commentId){
         try {
-            $delete=$this->discussionRepository->deleteComment($request->id);
+            $delete=$this->discussionRepository->deleteComment($commentId);
             if($delete){
                  return $this->sendResponse([],__('responses.delete_successfully'));
                     }

@@ -16,7 +16,6 @@ class CommentSocialActivity extends Model
     protected $fillable = [
         'id',
         'comment_id',
-        'comment_type',
         'user_id',
         'like_dislikes',
     ];

@@ -26,16 +26,15 @@ class CommentService
             $addComment->attachment = $attachmentPath;
             $addComment->comment_id  = isset($request->comment_id) ? $request->comment_id: null ;
             $addComment->save();
-            return true;
+            return $addComment;
         }catch(\Exception $e){
-            dd($e);
             return false;
         }
     }
 
-    public function deleteComment($id){
+    public function deleteComment($commentId){
         try{
-            $deleteComment=comment::find($id);
+            $deleteComment=comment::find($commentId);
             $deleteComment->delete();
             return true;
         }catch(\Exception $e){
