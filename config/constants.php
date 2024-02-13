@@ -317,7 +317,7 @@ return [
     ],
 
     'notification_options'=> [
-        'unsubscribe'=> '0',
+        'unsubscribe' => '0',
         'monthly'     => '1',
         'weekly'      => '2',
     ],
@@ -339,7 +339,7 @@ return [
     ],
 
     'subscribe_unsubscribe_id'=> [
-        '0' =>'unsubscribe',
+        '0' => 'unsubscribe',
         '1' => 'subscribe',
     ],
 ];
