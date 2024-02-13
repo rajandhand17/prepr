@@ -32,8 +32,10 @@ class DiscussionRequest extends FormRequest
                 'comment'        => 'required|string',
                 'comment_id'     => 'exists:comments,id',
             ];
-        }elseif($activity){
-
+        }elseif($activity=='delete'){
+            $base_rules=[
+                ''
+            ];
         }
 
 

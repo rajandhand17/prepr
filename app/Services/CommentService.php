@@ -33,9 +33,9 @@ class CommentService
         }
     }
 
-    public function deleteComment($request){
+    public function deleteComment($id){
         try{
-            $deleteComment=comment::find($request->id);
+            $deleteComment=comment::find($id);
             $deleteComment->delete();
             return true;
         }catch(\Exception $e){

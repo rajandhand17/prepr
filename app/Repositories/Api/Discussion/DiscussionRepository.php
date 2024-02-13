@@ -35,9 +35,9 @@ class DiscussionRepository implements DiscussionInterface
         }
     }
 
-    public function deleteComment($request){
+    public function deleteComment($id){
         try {
-            return $this->commentService->deleteComment($request);
+            return $this->commentService->deleteComment($id);
         }catch (\Exception $e){
             return false;
         }
