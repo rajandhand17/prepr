@@ -300,4 +300,32 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function checkProjectRequirementCompleted($projectData)
+    {
+        try {
+            return $this->projectService->checkProjectRequirementCompleted($projectData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function submitProject($projectData)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $submitProject = $this->projectService->submitProject($projectData);
+            if ($submitProject == false) {
+                DB::rollBack();
+
+                return false;
+            }
+            DB::commit();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
