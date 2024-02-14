@@ -314,7 +314,7 @@ class ProjectRepository implements ProjectInterface
     {
         try {
             DB::beginTransaction();
-            
+
             $submitProject = $this->projectService->submitProject($projectData);
             if ($submitProject == false) {
                 DB::rollBack();
