@@ -152,7 +152,7 @@ class ProjectResource extends JsonResource
         }
 
         $submitEnabled = ProjectService::checkProjectRequirementCompleted($this);
-        
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,

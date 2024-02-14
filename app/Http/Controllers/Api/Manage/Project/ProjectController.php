@@ -384,7 +384,7 @@ class ProjectController extends AppBaseController
             if (!$checkProjectRequirementCompleted) {
                 return $this->sendError(__('responses.project_requirements_pending'), 400);
             }
-            
+
             $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot);
             if ($submitProject) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_submitted'), 200);

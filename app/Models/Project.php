@@ -32,7 +32,7 @@ class Project extends Model
         'stage_id',
         'vertical_id',
         'status_id',
-        'is_submitted'
+        'is_submitted',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
