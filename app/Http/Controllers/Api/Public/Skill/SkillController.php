@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Public\Skill;
 
 use App\Http\Controllers\AppBaseController;
-use App\Repositories\Api\Skill\SkillRepository;
+use App\Repositories\Api\Public\Skill\SkillRepository;
 use Illuminate\Http\Request;
 use App\Http\Resources\Public\Skill\SkillResource;
 class SkillController extends AppBaseController
@@ -14,7 +14,7 @@ class SkillController extends AppBaseController
         $this->skillRepository = $skillRepository;
     }
 
-    public function index(Request $request){
+    public function index(Request $request,$skillId=null){
         try {
             $skillList = $this->skillRepository->index($request->language,$request->search,$skillId = null);
 
@@ -29,6 +29,8 @@ class SkillController extends AppBaseController
                 ];
                 return $this->sendResponse($response, __('responses.found_skill_list'));
             }
+            return $this->sendError(__('responses.not_found_skill_list'), 404);
+
         }catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -59,7 +61,7 @@ class SkillController extends AppBaseController
                 }
                 return $this->sendResponse($response, __('responses.skills_list'));
             }
-            return $this->sendError(__('responses.skills_list_failed'), 400);
+            return $this->sendError(__('responses.skills_list_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

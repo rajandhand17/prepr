@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Api\Skill;
+namespace App\Repositories\Api\Public\Skill;
 
 use App\Services\SkillService;
 use App\Services\UserSkillsService;

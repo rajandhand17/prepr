@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Api\Skill;
+namespace App\Repositories\Api\Public\Skill;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +22,6 @@ class SkillServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Skill\SkillInterface', 'App\Repositories\Api\Skill\SkillRepository');
+        $this->app->bind('App\Repositories\Api\Public\Skill\SkillInterface', 'App\Repositories\Api\Public\Skill\SkillRepository');
     }
 }
