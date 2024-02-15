@@ -16,8 +16,8 @@ class SkillResource extends JsonResource
     public function toArray(Request $request): array
     {
         $skillDescription =WikipediaHelper::fetchSkillDescription($this->title, $request->language);
-        $relatedSkills=WikipediaHelper::fetchRelatedSkills(config('app.jobs_recommendation_engine_url').$this->title);
-         $data = [
+        $relatedSkills=WikipediaHelper::fetchRelatedSkills(config('app.skills_recommendation_engine_url').strtolower($this->title));
+        $data = [
             'id'            => $this->id,
             'title'         => $this->title,
             'description'   => $skillDescription!==false ? $skillDescription : '',

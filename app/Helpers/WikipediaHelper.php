@@ -1,6 +1,8 @@
 <?php
 namespace App\Helpers;
 use GuzzleHttp\Client;
+
+use Illuminate\Support\Facades\Http;
 class WikipediaHelper
 {
     public static function fetchSkillDescription($skillName, $language)
@@ -47,12 +49,12 @@ class WikipediaHelper
     {
         try {
             $client = new Client();
-            $response = $client->post($url, [
+            $response = $client->post($url,[
                 'headers' => [
                     'authorizationToken' => config('app.related_skills_auth_token'),
                 ],
             ]);
-            if (!$response) {
+            if(!$response) {
                 $responseStatus = false;
             }
             $responseStatus = $response->getStatusCode() == 200 ? json_decode($response->getBody(), true) : false;
