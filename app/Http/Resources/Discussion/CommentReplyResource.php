@@ -3,11 +3,10 @@
 namespace App\Http\Resources\Discussion;
 
 use App\Http\Resources\User\UserResource;
-use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DiscussionResource extends JsonResource
+class CommentReplyResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,15 +15,12 @@ class DiscussionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data = [
+        return [
             "id"            =>$this->id,
             "module_type"   =>$this->module_type,
             "module_id"     =>$this->module_id,
             "comment"       =>$this->comments,
             "user_details"  =>UserResource::make($this->users),
-            'comments_reply'=>CommentReplyResource::collection($this->comments_reply),
         ];
-
-        return $data;
     }
 }

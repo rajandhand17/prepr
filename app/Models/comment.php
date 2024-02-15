@@ -28,4 +28,8 @@ class comment extends Model
     public function comments_reply(){
        return $this->hasMany(comment::class,'comment_id','id');
     }
+
+    public function users(){
+        return $this->hasone(User::class,'id','user_id');
+    }
 }
