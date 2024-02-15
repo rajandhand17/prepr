@@ -20,8 +20,8 @@ class SkillResource extends JsonResource
          $data = [
             'id'            => $this->id,
             'title'         => $this->title,
-            'description'   => $skillDescription ? $skillDescription : '',
-            'related_skills'=> $relatedSkills ? $relatedSkills : '',
+            'description'   => $skillDescription!==false ? $skillDescription : '',
+            'related_skills'=> $relatedSkills!==false ? $relatedSkills : '',
             'pinned'        => (isset($this->user_pinned->pinned)) ? $this->user_pinned->pinned : 'no',
         ];
 

@@ -1,14 +1,12 @@
 <?php
-
 namespace App\Helpers;
-
 use GuzzleHttp\Client;
-
 class WikipediaHelper
 {
     public static function fetchSkillDescription($skillName, $language)
     {
         try {
+
             $wikipediaUrl = ($language == 'fr-CA') ? config('app.french_wikipedia_url') : config('app.english_wikipedia_url');
             $client = new Client();
             $wikipedia_description_response = $client->request('GET', $wikipediaUrl, [
@@ -32,15 +30,19 @@ class WikipediaHelper
             }
             $job_description = isset($decodedResponse['query']['pages'])?current($decodedResponse['query']['pages'])
                 : '';
-            if($job_description['extract']){
-                return $job_description['extract'];
+            if (isset($job_description['missing'])) {
+                $job_description = $skillName;
+            } else {
+                $job_description = $job_description['extract'] ?? $skillName;
             }
-                return false;
+            if ($job_description == $skillName) {
+                $job_description = __('responses.no_description');
+            }
+            return $job_description;
         } catch (\Exception $e) {
             return false;
         }
     }
-
     public static function fetchRelatedSkills($url)
     {
         try {
@@ -54,7 +56,6 @@ class WikipediaHelper
                 $responseStatus = false;
             }
             $responseStatus = $response->getStatusCode() == 200 ? json_decode($response->getBody(), true) : false;
-
             return $responseStatus;
         } catch (\Exception $e) {
             return false;

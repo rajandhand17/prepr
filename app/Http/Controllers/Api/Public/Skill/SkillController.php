@@ -20,7 +20,6 @@ class SkillController extends AppBaseController
     {
         try {
             $skillList = $this->skillRepository->index($request->language, $request->search, $skillId = null);
-
             if ($skillList) {
                 $response = [
                     'total_count'  => $skillList->total(),
