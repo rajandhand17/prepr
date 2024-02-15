@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\Api\Public\Skill;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Public\Skill\SkillResource;
 use App\Repositories\Api\Public\Skill\SkillRepository;
 use Illuminate\Http\Request;
-use App\Http\Resources\Public\Skill\SkillResource;
+
 class SkillController extends AppBaseController
 {
     private $skillRepository;
+
     public function __construct(SkillRepository $skillRepository)
     {
         $this->skillRepository = $skillRepository;
     }
 
-    public function index(Request $request,$skillId=null){
+    public function index(Request $request, $skillId = null)
+    {
         try {
-            $skillList = $this->skillRepository->index($request->language,$request->search,$skillId = null);
+            $skillList = $this->skillRepository->index($request->language, $request->search, $skillId = null);
 
             if ($skillList) {
                 $response = [
@@ -27,23 +30,23 @@ class SkillController extends AppBaseController
                     'total_pages'  => $skillList->lastPage(),
                     'list'         => SkillResource::collection($skillList),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_skill_list'));
             }
-            return $this->sendError(__('responses.not_found_skill_list'), 404);
 
-        }catch(\Exception $e) {
+            return $this->sendError(__('responses.not_found_skill_list'), 404);
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function getMySkills(Request $request, $skillId = null)
     {
         try {
             if ($skillId !== null) {
                 $skillList = $this->skillRepository->getSkillBasedOnId($skillId);
-
             } else {
                 $skillList = $this->skillRepository->getMySkills($request->language, $request->search);
-
             }
             if ($skillList) {
                 $resourceClass = SkillResource::class;
@@ -59,8 +62,10 @@ class SkillController extends AppBaseController
                 } else {
                     $response = $resourceClass::make($skillList);
                 }
+
                 return $this->sendResponse($response, __('responses.skills_list'));
             }
+
             return $this->sendError(__('responses.skills_list_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

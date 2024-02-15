@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Helpers;
+
 use GuzzleHttp\Client;
+
 class WikipediaHelper
 {
     public static function fetchSkillDescription($skillName, $language)
@@ -37,6 +40,7 @@ class WikipediaHelper
             return false;
         }
     }
+
     public static function fetchRelatedSkills($url)
     {
         try {
