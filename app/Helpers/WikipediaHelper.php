@@ -1,14 +1,14 @@
 <?php
+
 namespace App\Helpers;
+
 use GuzzleHttp\Client;
 
-use Illuminate\Support\Facades\Http;
 class WikipediaHelper
 {
     public static function fetchSkillDescription($skillName, $language)
     {
         try {
-
             $wikipediaUrl = ($language == 'fr-CA') ? config('app.french_wikipedia_url') : config('app.english_wikipedia_url');
             $client = new Client();
             $wikipedia_description_response = $client->request('GET', $wikipediaUrl, [
@@ -30,7 +30,7 @@ class WikipediaHelper
             if (json_last_error() !== JSON_ERROR_NONE) {
                 return false; //Invalid JSON response from Wikipedia
             }
-            $job_description = isset($decodedResponse['query']['pages'])?current($decodedResponse['query']['pages'])
+            $job_description = isset($decodedResponse['query']['pages']) ? current($decodedResponse['query']['pages'])
                 : '';
             if (isset($job_description['missing'])) {
                 $job_description = $skillName;
@@ -40,24 +40,27 @@ class WikipediaHelper
             if ($job_description == $skillName) {
                 $job_description = __('responses.no_description');
             }
+
             return $job_description;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function fetchRelatedSkills($url)
     {
         try {
             $client = new Client();
-            $response = $client->post($url,[
+            $response = $client->post($url, [
                 'headers' => [
                     'authorizationToken' => config('app.related_skills_auth_token'),
                 ],
             ]);
-            if(!$response) {
+            if (!$response) {
                 $responseStatus = false;
             }
             $responseStatus = $response->getStatusCode() == 200 ? json_decode($response->getBody(), true) : false;
+
             return $responseStatus;
         } catch (\Exception $e) {
             return false;
