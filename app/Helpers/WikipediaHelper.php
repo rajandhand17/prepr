@@ -27,18 +27,12 @@ class WikipediaHelper
             if (json_last_error() !== JSON_ERROR_NONE) {
                 return false; //Invalid JSON response from Wikipedia
             }
-            $job_description = isset($decodedResponse['query']['pages'])
-                ? current($decodedResponse['query']['pages'])
+            $job_description = isset($decodedResponse['query']['pages'])?current($decodedResponse['query']['pages'])
                 : '';
-            if (isset($job_description['missing'])) {
-                $job_description = $skillName;
-            } else {
-                $job_description = $job_description['extract'] ?? $skillName;
+            if($job_description['extract']){
+                return $job_description['extract'];
             }
-            if ($job_description == $skillName) {
-                $job_description = __('placeholders.placeholders_no_description');
-            }
-            return $job_description;
+                return false;
         } catch (\Exception $e) {
             return false;
         }
@@ -56,6 +50,7 @@ class WikipediaHelper
                 $responseStatus = false;
             }
             $responseStatus = $response->getStatusCode() == 200 ? json_decode($response->getBody(), true) : false;
+
             return $responseStatus;
         } catch (\Exception $e) {
             return false;
