@@ -8,11 +8,14 @@ use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public function getSkills($language = 'en', $search = null)
+    public static function getSkills($language = 'en', $search = null,$skill_id= null)
     {
         try {
             if ($language == 'en') {
                 $skill_list = Skill::select('id', 'title');
+                if ($skill_id!==null) {
+                    $skill_list = $skill_list->whereIn('id', $skill_id);
+                }
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -23,28 +26,30 @@ class SkillService
                 }
                 $skill_list = Skill::select('id', $column_name.' as title');
             }
-
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $skill_list = $this->filterSkillList($skill_list, $column_name, $search);
+                $skill_list = self::filterSkillList($skill_list, $column_name, $search);
             }
 
             //take 20 results based from the table
-            $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'))->get();
+            $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'));
 
-            //check if there are any results
+            if (auth()->user()) {
+                $skill_list = $skill_list->paginate(config('site-settings.pagination_per_page'));
+            } else {
+                $skill_list = $skill_list->get();
+            }
             if (!$skill_list->isEmpty()) {
                 return $skill_list;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function filterSKillList($getSkillsList, $sKill_column_name, $search)
+    public static function filterSKillList($getSkillsList, $sKill_column_name, $search)
     {
         try {
             $getSkillsList = $getSkillsList->where($sKill_column_name, 'like', '%'.$search.'%');
@@ -73,15 +78,14 @@ class SkillService
         }
     }
 
-    public static function getSkillBasedOnSingleId($skill_ids)
+    public static function getSkillBasedOnId($skill_id)
     {
         try {
             $getSkillsList = Skill::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
-                ->where('id', $skill_ids)->get();
+                ->where('id', $skill_id)->first();
             if ($getSkillsList) {
                 return $getSkillsList;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;

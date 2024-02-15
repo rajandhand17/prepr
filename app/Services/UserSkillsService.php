@@ -52,4 +52,16 @@ class UserSkillsService
             return false;
         }
     }
+
+    public static function getMySkills($language, $search)
+    {
+        try {
+            $userSkills = UserSkills::where('user_id', auth()->user()->id)->pluck('skill');
+            $userSkills = SkillService::getSkills($language, $search, $userSkills);
+            return $userSkills;
+        } catch(\Exception $e) {
+            dd($e);
+            return false;
+        }
+    }
 }

@@ -58,6 +58,11 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'skills_recommendation_engine_url' => env('SKILLS_RECOMMENDATION_ENGINE_URL'),
+    'related_skills_auth_token'        => env('RELATED_SKILLS_AUTH_TOKEN'),
+    'jobs_recommendation_engine_url'   => env('JOBS_RECOMMENDATION_ENGINE_URL'),
+    'french_wikipedia_url'             => env('FRENCH_WIKKIPEDIA_URL'),
+    'english_wikipedia_url'            => env('ENGLISH_WIKIPEDIA_URL'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -232,6 +237,7 @@ return [
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
+        App\Repositories\Api\Skill\SkillServiceProvider::class,
 
     ],
 
