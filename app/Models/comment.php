@@ -24,4 +24,8 @@ class comment extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function comments_reply(){
+       return $this->hasMany(comment::class,'comment_id','id');
+    }
 }

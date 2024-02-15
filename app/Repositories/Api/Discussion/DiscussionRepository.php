@@ -4,16 +4,6 @@ namespace App\Repositories\Api\Discussion;
 
 use App\Services\CommentService;
 use App\Services\CommentSocialActivitiesService;
-use App\Services\FriendService;
-use App\Services\UserAddressService;
-use App\Services\UserCertificateService;
-use App\Services\UserEducationService;
-use App\Services\UserExperienceService;
-use App\Services\UserPatentService;
-use App\Services\UserPersonalService;
-use App\Services\UserService;
-use App\Services\UserSkillsService;
-use App\Services\UserTagsService;
 use DB;
 
 class DiscussionRepository implements DiscussionInterface
@@ -26,6 +16,13 @@ class DiscussionRepository implements DiscussionInterface
         $this->commentSocialActivitiesService=$commentSocialActivitiesService;
     }
 
+    public function index($component,$commentId){
+        try {
+            return $this->commentService->index($component,$commentId);
+        }catch(\Exception $e){
+            return false;
+        }
+    }
     public function addComment($component,$request){
         try {
 
@@ -43,9 +40,17 @@ class DiscussionRepository implements DiscussionInterface
         }
     }
 
-    public function likeDislike($component,$request){
+    public function likeDislike($action,$request){
         try {
-            return $this->commentSocialActivitiesService->likeOrDislikeComment($component,$request);
+            return $this->commentSocialActivitiesService->likeOrDislikeComment($action,$request);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function unLikeOrUnDisLikeModule($likeOrDislike,$comment_id){
+        try {
+            return $this->commentSocialActivitiesService->unLikeOrUnDisLikeModule($likeOrDislike,$comment_id);
         }catch (\Exception $e){
             return false;
         }

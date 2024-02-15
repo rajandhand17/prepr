@@ -4,12 +4,28 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\comment;
+use Composer\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CommentService
 {
+    public function index($component,$commentId){
+        try {
+            $moduleType=Config('constants.discussion_module_type.'.$component);
+            $getComments = Comment::whereNull('comment_id')
+                ->where('module_id', $commentId)
+                ->where('module_type',$moduleType)
+                ->get();
+            if($getComments){
+                return $getComments;
+            }
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public function addComment($component,$request){
         try {
             $attachmentPath=null;

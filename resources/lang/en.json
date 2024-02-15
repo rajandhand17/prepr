@@ -851,7 +851,11 @@
     "responses.challenge_template_deleted_failed": "Oops!,This Challenge Template has been failed to deleted",
     "responses.challenge_already_cloned": "This Challenge already cloned in Challenge Template",
     "responses.challenge_add_template_success": "The challenge has been successfully added to the templates.",
-    "responses.like_successfully": "You have successfully Like module",
-    "responses.dislike_successfully": "You have successfully dislike module"
+    "responses.like_successfully": "You have successfully liked the module.",
+    "responses.unlike_successfully": "You have successfully removed your like from the module",
+    "responses.dislike_successfully": "You have successfully disliked module",
+    "responses.un_dislike_successfully": "You have successfully retracted your dislike for the module.",
+    "responses.add_comment_successfully": "You have successfully added comment",
+    "responses.already_liked_comments": "You have already liked this comment"
 
 }
