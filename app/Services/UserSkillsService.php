@@ -61,8 +61,6 @@ class UserSkillsService
 
             return $userSkills;
         } catch(\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
