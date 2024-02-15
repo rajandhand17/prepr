@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources\Public\Skill;
 
+use App\Helpers\WikipediaHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Helpers\WikipediaHelper;
+
 class SkillResource extends JsonResource
 {
     /**
@@ -21,6 +22,7 @@ class SkillResource extends JsonResource
             'related_skills'=> WikipediaHelper::fetchRelatedSkills(config('app.jobs_recommendation_engine_url').$this->title),
             'pinned'        => (isset($this->user_pinned->pinned)) ? $this->user_pinned->pinned : 'no',
         ];
+
         return $data;
     }
 }

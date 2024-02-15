@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public static function getSkills($language = 'en', $search = null,$skill_id= null)
+    public static function getSkills($language = 'en', $search = null, $skill_id = null)
     {
         try {
             if ($language == 'en') {
                 $skill_list = Skill::select('id', 'title');
-                if ($skill_id!==null) {
+                if ($skill_id !== null) {
                     $skill_list = $skill_list->whereIn('id', $skill_id);
                 }
             } else {
@@ -43,6 +43,7 @@ class SkillService
             if (!$skill_list->isEmpty()) {
                 return $skill_list;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -86,6 +87,7 @@ class SkillService
             if ($getSkillsList) {
                 return $getSkillsList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

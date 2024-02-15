@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Helpers;
+
 use GuzzleHttp\Client;
+
 class WikipediaHelper
 {
     public static function fetchSkillDescription($skillName, $language)
@@ -38,11 +41,13 @@ class WikipediaHelper
             if ($job_description == $skillName) {
                 $job_description = __('placeholders.placeholders_no_description');
             }
+
             return $job_description;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function fetchRelatedSkills($url)
     {
         try {
@@ -56,6 +61,7 @@ class WikipediaHelper
                 $responseStatus = false;
             }
             $responseStatus = $response->getStatusCode() == 200 ? json_decode($response->getBody(), true) : false;
+
             return $responseStatus;
         } catch (\Exception $e) {
             return false;
