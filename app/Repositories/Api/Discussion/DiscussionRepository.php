@@ -34,7 +34,20 @@ class DiscussionRepository implements DiscussionInterface
 
     public function deleteComment($commentId){
         try {
-            return $this->commentService->deleteComment($commentId);
+            $deleteComment = DB::transaction(function () use ($commentId) {
+                 $comment= $this->commentService->deleteComment($commentId);
+                 $commentSocialActivities=$this->commentSocialActivitiesService->deleteCommentSocialActivity($comment);
+                 return [
+                     "comment" => $comment,
+                     "commentSocialActivities" => $commentSocialActivities,
+                 ];
+            });
+            if($deleteComment['comment'] && $deleteComment['commentSocialActivities']){
+                DB::commit();
+                return true;
+            }
+            DB::rollback();
+            return false;
         }catch (\Exception $e){
             return false;
         }

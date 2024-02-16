@@ -856,6 +856,7 @@
     "responses.dislike_successfully": "You have successfully disliked module",
     "responses.un_dislike_successfully": "You have successfully retracted your dislike for the module.",
     "responses.add_comment_successfully": "You have successfully added comment",
-    "responses.already_liked_comments": "You have already liked this comment"
+    "responses.already_liked_comments": "You have already liked this comment",
+    "responses.delete_successfully": "You have successfully deleted this comment"
 
 }

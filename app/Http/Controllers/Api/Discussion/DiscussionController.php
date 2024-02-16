@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Discussion;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Discussion\DiscussionRequest;
 use App\Http\Resources\Discussion\DiscussionResource;
-use App\Models\CommentSocialActivity;
 use App\Repositories\Api\Discussion\DiscussionRepository;
 use App\Services\CommentSocialActivitiesService;
 use Illuminate\Http\Request;
@@ -45,29 +44,23 @@ class DiscussionController extends AppBaseController
                 case 'like':
                     $checkLikedOrNot=CommentSocialActivitiesService::checkLikeOrDislikeComment($action,$request->comment_id);
                     if($checkLikedOrNot){
-                        $unLike=$this->discussionRepository->unLikeOrUnDisLikeModule($action,$request->comment_id);
-                        if($unLike){
-                            return $this->sendResponse([],__("responses.unlike_successfully"));
-                        }
+                        $like=$this->discussionRepository->unLikeOrUnDisLikeModule($action,$request->comment_id);
                     }else{
                         $like=$this->discussionRepository->likeDislike($action,$request);
-                        if($like){
-                            return $this->sendResponse(DiscussionResource::make($like),__('responses.like_successfully'));
-                        }
+                    }
+                    if($like){
+                        return $this->sendResponse(DiscussionResource::make($like),__('responses.like_successfully'));
                     }
                     break;
                 case 'dislikes':
                     $checkDisLikedOrNot=CommentSocialActivitiesService::checkLikeOrDislikeComment($action,$request->comment_id);
                     if($checkDisLikedOrNot){
-                        $unDisLike=$this->discussionRepository->unLikeOrUnDisLikeModule($action,$request->comment_id);
-                        if($unDisLike){
-                            return $this->sendResponse([],__("responses.un_dislike_successfully"));
-                        }
+                        $dislike=$this->discussionRepository->unLikeOrUnDisLikeModule($action,$request->comment_id);
                     }else{
                         $dislike = $this->discussionRepository->likeDislike($component,$request);
-                        if($dislike){
-                            return $this->sendResponse([],__('responses.dislike_successfully'));
-                        }
+                    }
+                    if($dislike){
+                        return $this->sendResponse(DiscussionResource::make($dislike),__('responses.like_successfully'));
                     }
 
                 default:
@@ -85,7 +78,7 @@ class DiscussionController extends AppBaseController
             $delete=$this->discussionRepository->deleteComment($commentId);
             if($delete){
                  return $this->sendResponse([],__('responses.delete_successfully'));
-                    }
+             }
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }

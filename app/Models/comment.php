@@ -32,4 +32,12 @@ class comment extends Model
     public function users(){
         return $this->hasone(User::class,'id','user_id');
     }
+
+    public function liked_by(){
+        return $this->hasMany(CommentSocialActivity::class,'comment_id','id')->where('like_dislikes','1');
+    }
+
+    public function disliked_by(){
+        return $this->hasMany(CommentSocialActivity::class,'comment_id','id')->where('like_dislikes','2');
+    }
 }

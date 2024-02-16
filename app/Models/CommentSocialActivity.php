@@ -19,4 +19,8 @@ class CommentSocialActivity extends Model
         'user_id',
         'like_dislikes',
     ];
+
+    public function users(){
+        return $this->hasone(User::class,'id','user_id');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\comment;
+use App\Models\CommentSocialActivity;
 use Composer\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -50,9 +51,12 @@ class CommentService
 
     public function deleteComment($commentId){
         try{
-            $deleteComment=comment::find($commentId);
-            $deleteComment->delete();
-            return true;
+            $deletedCommentIds = Comment::where('id', $commentId)
+                ->orWhere('comment_id', $commentId)
+                ->pluck('id');
+            $deletedComments = Comment::whereIn('id', $deletedCommentIds)
+                ->delete();
+            return $deletedCommentIds;
         }catch(\Exception $e){
             return false;
         }
