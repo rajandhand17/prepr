@@ -20,4 +20,9 @@ class Skill extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function user_pinned()
+    {
+        return $this->hasOne(UserSkills::class, 'skill', 'id');
+    }
 }
