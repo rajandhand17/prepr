@@ -183,6 +183,12 @@ class User extends Authenticatable
         return $this->hasMany(UserPersonalFile::class);
     }
 
+    public function jobs()
+    {
+        return $this->belongsToMany(Job::class, 'user_jobs', 'user_id', 'job_id')
+            ->withTimestamps();
+    }
+
     /**login apis */
     public function login($request)
     {

@@ -27,3 +27,4 @@ php artisan migrate-old-data:resource-modules
 php artisan migrate-old-data:resource-collection
 php artisan migrate-old-data:resource-groups
 php artisan migrate-old-data:users-achievement
+php artisan migrate-old-data:jobs
