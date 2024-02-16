@@ -11,11 +11,11 @@ use Illuminate\Support\Str;
 
 class CommentService
 {
-    public function index($component,$commentId){
+    public function index($component,$moduleId){
         try {
             $moduleType=Config('constants.discussion_module_type.'.$component);
             $getComments = Comment::whereNull('comment_id')
-                ->where('module_id', $commentId)
+                ->where('module_id', $moduleId)
                 ->where('module_type',$moduleType)
                 ->get();
             if($getComments){

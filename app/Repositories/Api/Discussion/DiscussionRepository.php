@@ -16,9 +16,9 @@ class DiscussionRepository implements DiscussionInterface
         $this->commentSocialActivitiesService=$commentSocialActivitiesService;
     }
 
-    public function index($component,$commentId){
+    public function index($component,$moduleId){
         try {
-            return $this->commentService->index($component,$commentId);
+            return $this->commentService->index($component,$moduleId);
         }catch(\Exception $e){
             return false;
         }

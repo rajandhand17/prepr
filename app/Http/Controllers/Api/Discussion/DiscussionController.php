@@ -21,13 +21,12 @@ class DiscussionController extends AppBaseController
 
     public function index($component,Request $request){
         try{
-            $list=$this->discussionRepository->index($component,$request->comment_id);
+            $list=$this->discussionRepository->index($component,$request->module_id);
             if($list){
                 return $this->sendResponse(DiscussionResource::collection($list),__('responses.add_comment_successfully'));
-
             }
+            return false;
         }catch (\Exception $e){
-            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Discussion;
 
 use App\Http\Resources\User\UserResource;
-use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,9 +21,8 @@ class DiscussionResource extends JsonResource
             "module_id"     =>$this->module_id,
             "comment"       =>$this->comments,
             "user_details"  =>UserResource::make($this->users),
-            'comments_reply'=>CommentReplyResource::collection($this->comments_reply),
+            'comments_reply'=>DiscussionResource::collection($this->comments_reply),
         ];
-
         return $data;
     }
 }
