@@ -15,7 +15,7 @@ class UserSkillsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $skills = SkillService::getSkillBasedOnSingleId($this->skill)->pluck('title', 'id');
+        $skills = SkillService::getSkillBasedOnId($this->skill);
 
         return [
             'id'   => $this->id,
