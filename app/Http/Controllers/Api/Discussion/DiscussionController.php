@@ -32,7 +32,7 @@ class DiscussionController extends AppBaseController
     }
     public function actionBasedOnAction($component,$action,DiscussionRequest $request){
         try {
-            if (!in_array($action, ['add','like','dislikes','list'])){
+            if (!in_array($action, ['add','like','dislikes'])){
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             switch ($action){
