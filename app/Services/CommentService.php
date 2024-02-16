@@ -61,4 +61,16 @@ class CommentService
             return false;
         }
     }
+
+    public static function checkCommentIdExistsOrNot($commentId){
+        try{
+            $checkId=Comment::where('id',$commentId)->first();
+            if($checkId){
+                return $checkId;
+            }
+                return false;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
 }

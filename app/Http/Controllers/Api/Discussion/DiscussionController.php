@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\Discussion;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Discussion\DeleteDiscussionRequest;
 use App\Http\Requests\Discussion\DiscussionRequest;
 use App\Http\Resources\Discussion\DiscussionResource;
 use App\Repositories\Api\Discussion\DiscussionRepository;
+use App\Services\CommentService;
 use App\Services\CommentSocialActivitiesService;
 use Illuminate\Http\Request;
 
@@ -18,19 +20,25 @@ class DiscussionController extends AppBaseController
         $this->discussionRepository = $discussionRepository;
     }
 
-    public function index($component,Request $request){
+    public function index($component,$moduleId){
         try{
-            $list=$this->discussionRepository->index($component,$request->module_id);
-            if($list){
-                return $this->sendResponse(DiscussionResource::collection($list),__('responses.add_comment_successfully'));
+            if (!in_array($component, ['member','lab','project','challenge'])){
+                return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            return false;
+            $list=$this->discussionRepository->index($component,$moduleId);
+            if($list->count()>0){
+                return $this->sendResponse(DiscussionResource::collection($list),__('responses.comments_lists_successfully'));
+            }
+            return $this->sendError(__('responses.comments_lists_failed'), 404);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
     public function actionBasedOnAction($component,$action,DiscussionRequest $request){
         try {
+            if (!in_array($component, ['member','lab','project','challenge'])){
+                return $this->sendError(__('responses.handler_bad_request'), 400);
+            }
             if (!in_array($action, ['add','like','dislikes'])){
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
@@ -65,9 +73,9 @@ class DiscussionController extends AppBaseController
 
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
-
                     break;
             }
+            return $this->sendError(__('responses.handler_bad_request'), 400);
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -75,10 +83,15 @@ class DiscussionController extends AppBaseController
 
     public function deleteComment($commentId){
         try {
+            $checkCommentId=CommentService::checkCommentIdExistsOrNot($commentId);
+            if (!$checkCommentId){
+                return $this->sendError(__('responses.not_exists_id'),422);
+            }
             $delete=$this->discussionRepository->deleteComment($commentId);
             if($delete){
                  return $this->sendResponse([],__('responses.delete_successfully'));
              }
+            return $this->sendError(__('responses.send_error'), 400);
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
