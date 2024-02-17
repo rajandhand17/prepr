@@ -940,5 +940,9 @@
     "responses.already_favourite_project": "The Project has already been saved to your list!",
     "responses.already_un_favourite_project": "The Project has already been removed from your list",
     "responses.already_like_project": "The Project is already liked by you!",
-    "responses.already_un_like_project": "The Project is already being dis-liked by you!"
+    "responses.already_un_like_project": "The Project is already being dis-liked by you!",
+    "responses.project_already_submitted": "The Project(s) which you are looking for submission has been already submitted.",
+    "responses.project_not_submitted": "The Project(s) which you are looking for submission has not been submitted.",
+    "responses.project_submitted": "The Project(s) has been submitted successfully.",
+    "responses.project_requirements_pending": "The Project(s) which you are looking for submission has some pending requirements."
 }

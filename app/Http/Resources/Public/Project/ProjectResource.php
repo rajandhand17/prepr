@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ProjectPitchService;
+use App\Services\Manage\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -150,6 +151,8 @@ class ProjectResource extends JsonResource
             $voted = $this->votes() > 0 ? 'yes' : 'no';
         }
 
+        $submitEnabled = ProjectService::checkProjectRequirementCompleted($this);
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
@@ -172,6 +175,8 @@ class ProjectResource extends JsonResource
             'joinedStatus'          => $joinedStatus,
             'challenge_id'          => $challengeData,
             'lab_id'                => $labData,
+            'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
+            'submitEnabled'         => $submitEnabled !== false ? 'yes' : 'no',
             'requirement_status'    => ProjectRequirementResource::make($this),
             'project_pitch'         => $challenge_pitch,
             'project_task'          => $challenge_task,

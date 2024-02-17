@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api\Manage\Project;
 
+use App\Services\Manage\AchievementService;
+use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ProjectAdditionalInfoService;
@@ -25,8 +27,10 @@ class ProjectRepository implements ProjectInterface
     private $projectAdditionalInfoService;
     private $projectMemberManagementService;
     private $projectSocialActivitiesService;
+    private $challengeAchievementService;
+    private $achievementService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -37,6 +41,8 @@ class ProjectRepository implements ProjectInterface
         $this->projectAdditionalInfoService = $projectAdditionalInfoService;
         $this->projectMemberManagementService = $projectMemberManagementService;
         $this->projectSocialActivitiesService = $projectSocialActivitiesService;
+        $this->challengeAchievementService = $challengeAchievementService;
+        $this->achievementService = $achievementService;
     }
 
     public function getMyProjectIds($userId)
@@ -297,6 +303,45 @@ class ProjectRepository implements ProjectInterface
         } catch (Exception $e) {
             DB::rollBack();
 
+            return false;
+        }
+    }
+
+    public function checkProjectRequirementCompleted($projectData)
+    {
+        try {
+            return $this->projectService->checkProjectRequirementCompleted($projectData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function submitProject($projectData)
+    {
+        try {
+            $fetchAcceptedMemberIds = $this->projectMemberManagementService->fetchAcceptedMemberIds($projectData->id);
+            $fetchChallenge = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
+            $fetchChallengeAchievement = $this->challengeAchievementService->fetchChallengeAchievement($projectData->challenge_id);
+
+            $submitProject = DB::transaction(function () use ($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData) {
+                $submitProject = $this->projectService->submitProject($projectData);
+                $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
+
+                return [
+                    'submitProject'  => $submitProject,
+                    'addAchievement' => $addAchievement,
+                ];
+            });
+
+            if ($submitProject['submitProject'] &&
+                $submitProject['addAchievement']) {
+                DB::commit();
+
+                return $submitProject['submitProject'];
+            }
+
+            return false;
+        } catch (Exception $e) {
             return false;
         }
     }

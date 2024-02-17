@@ -23,6 +23,7 @@ return new class() extends Migration {
             $table->enum('media_type', ['image', 'embedded'])->default('image')->comment('Type of media defining of media');
             $table->text('media')->nullable();
             $table->enum('status', ['0', '1'])->default('0')->comment('Privacy of Project, 0 -> Public & 1 -> Private');
+            $table->enum('is_submitted', ['0', '1'])->default('0')->comment('Project Submission Status, 0 -> Not Submitted & 1 -> Submitted');
             $table->unsignedBigInteger('challenge_id');
             $table->unsignedBigInteger('lab_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();

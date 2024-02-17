@@ -307,7 +307,6 @@ class ProjectMemberManagementService
                 'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 'project_id'                => $projectDataId,
                 'inviter_id'                => $inviterId,
-                'invitee_id'                => null,
                 'email'                     => $inviteeEmail,
                 'invite_type'               => $inviteType,
                 'invite_status'             => $inviteStatus,
@@ -347,7 +346,7 @@ class ProjectMemberManagementService
                     break;
             }
 
-            $projectMemberData = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id, 'invite_status' => '2'])->get();
+            $projectMemberData = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id, 'invite_status' => '2', 'invite_type' => '3'])->get();
             foreach ($projectMemberData as $projectMember) {
                 $projectMember->invite_status = $invite_status;
                 $projectMember->inviter_id = auth()->user()->id;
@@ -433,9 +432,25 @@ class ProjectMemberManagementService
     {
         try {
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
-            $getInvitedProjectIds = ProjectMemberManagement::where('invitee_id', $userData->id)->orWhere('email', $userData->email)->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
+            $getInvitedProjectIds = ProjectMemberManagement::where('email', $userData->email)->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
 
             return $getInvitedProjectIds;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function fetchAcceptedMemberIds($projectId)
+    {
+        try {
+            $getUserIdsBasedOnEmail = [];
+
+            $fetchAcceptedMemberIds = ProjectMemberManagement::where(['project_id' => $projectId, 'invite_status' => '1'])->pluck('email');
+            if ($fetchAcceptedMemberIds && count($fetchAcceptedMemberIds) > 0) {
+                $getUserIdsBasedOnEmail = UserService::getUserIdsByEmail($fetchAcceptedMemberIds);
+            }
+
+            return $getUserIdsBasedOnEmail;
         } catch (Exception $e) {
             return false;
         }

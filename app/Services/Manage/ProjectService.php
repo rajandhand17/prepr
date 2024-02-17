@@ -343,4 +343,35 @@ class ProjectService
             return false;
         }
     }
+
+    public static function checkProjectRequirementCompleted($projectData)
+    {
+        try {
+            $submitEnabled = true;
+            $projectRequirements = self::projectRequirements($projectData);
+            if ($projectRequirements !== []) {
+                foreach ($projectRequirements as $projectRequirement) {
+                    if ($projectRequirement['status'] === 'pending') {
+                        $submitEnabled = false;
+                    }
+                }
+            }
+
+            return $submitEnabled;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function submitProject($projectData)
+    {
+        try {
+            $projectData->is_submitted = '1';
+            $projectData->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

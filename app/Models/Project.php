@@ -32,6 +32,7 @@ class Project extends Model
         'stage_id',
         'vertical_id',
         'status_id',
+        'is_submitted',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -64,7 +65,7 @@ class Project extends Model
     public function getJoinedStatus()
     {
         if (auth('api')->check()) {
-            return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('invite_status', '1')->where('invitee_id', auth('api')->user()->id)->orWhere('email', auth('api')->user()->email)->first();
+            return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where(['invite_status' => '1', 'email' => auth('api')->user()->email])->first();
         }
 
         return null;

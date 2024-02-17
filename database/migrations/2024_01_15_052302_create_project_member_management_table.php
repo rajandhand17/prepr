@@ -15,7 +15,6 @@ return new class() extends Migration {
             $table->string('uuid');
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('inviter_id')->comment('Sender Id of inviter');
-            $table->unsignedBigInteger('invitee_id')->nullable()->comment('Updates receiver id after acceptance of invitation');
             $table->string('email')->nullable()->comment('Receiver Email ID');
             $table->enum('invite_type', ['0', '1', '2', '3'])->comment('0-> Email, 1-> Network, 2-> Csv, 3-> Link');
             $table->enum('invite_status', ['0', '1', '2', '3'])->default('2')->comment('0-> invited, 1-> accepted, 2-> pending, 3-> declined');

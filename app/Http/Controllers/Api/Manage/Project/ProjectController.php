@@ -238,7 +238,7 @@ class ProjectController extends AppBaseController
             }
 
             return $this->sendError(__('responses.found_not_project_detail'), 404);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -338,7 +338,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            $getProjectChallengeRequirement = $this->projectRepository->projectRequirements($checkProjectExistsOrNot->id);
+            $getProjectChallengeRequirement = $this->projectRepository->projectRequirements($checkProjectExistsOrNot);
             if ($getProjectChallengeRequirement) {
                 return $this->sendResponse(ProjectRequirementResource::make($checkProjectExistsOrNot), __('responses.project_requirement_found'), 200);
             }
@@ -363,6 +363,34 @@ class ProjectController extends AppBaseController
             }
 
             return $this->sendError(__('responses.project_not_delete'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function submitProject($slug)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectSlugExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            if ($checkProjectSlugExistsOrNot->is_submitted === '1') {
+                return $this->sendError(__('responses.project_already_submitted'), 400);
+            }
+
+            $checkProjectRequirementCompleted = $this->projectRepository->checkProjectRequirementCompleted($checkProjectSlugExistsOrNot);
+            if (!$checkProjectRequirementCompleted) {
+                return $this->sendError(__('responses.project_requirements_pending'), 400);
+            }
+
+            $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot);
+            if ($submitProject) {
+                return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_submitted'), 200);
+            }
+
+            return $this->sendError(__('responses.project_not_submitted'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
