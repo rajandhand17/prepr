@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
+use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
@@ -427,6 +428,21 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function challengeAICreate(CreateChallengeUsingAIRequest $request)
+    {
+        try {
+            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request);
+
+            if ($createChallengeUsingAI != false) {
+                return $this->sendResponse(ChallengeResource::make($createChallengeUsingAI), __('responses.challenge_created_success'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_stored_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

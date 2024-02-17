@@ -9,6 +9,7 @@ use App\Services\CountryService;
 use App\Services\DurationService;
 use App\Services\FlexibleExpireDateDurationService;
 use App\Services\HostService;
+use App\Services\JobService;
 use App\Services\LabConditionService;
 use App\Services\LevelService;
 use App\Services\PitchTemplateService;
@@ -55,8 +56,9 @@ class MasterRepository implements MasterInterface
     private $levelService;
     private $tagGroupService;
     private $challengeAnnouncementRecipientService;
+    private $jobService;
 
-    public function __construct(CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService)
+    public function __construct(CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService, JobService $jobService)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;
@@ -82,6 +84,7 @@ class MasterRepository implements MasterInterface
         $this->tagGroupService = $tagGroupService;
         $this->challengeAnnouncementRecipientService = $challengeAnnouncementRecipientService;
         $this->countryService = $countryService;
+        $this->jobService = $jobService;
     }
 
     public function getCategories($request)
@@ -331,6 +334,15 @@ class MasterRepository implements MasterInterface
     {
         try {
             return $this->countryService->getCountries($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getJobs($request)
+    {
+        try {
+            return $this->jobService->getJobs($request->language, $request->search);
         } catch (\Exception $e) {
             return false;
         }

@@ -875,5 +875,11 @@
     "responses.same_password": "Please choose a different password; this one is identical to your current password.",
     "responses.skills_list": "Congratulations! You have successfully retrieved your skills list",
     "responses.skills_list_failed": "There are no skills listed in your profile.",
-    "responses.no_description": "No Description Available"
+    "responses.no_description": "No Description Available",
+
+    "responses.found_job_list": "The list of jobs has been successfully retrieved!",
+    "responses.not_found_job_list": "Failed to retrieve the list of jobs!",
+    "responses.jobs_required": "This jobs field is required!",
+    "responses.job_not_found": "This job is not found!",
+    "responses.challenge_created_success": "Challenges created successfully!"
 }

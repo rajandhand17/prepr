@@ -29,7 +29,7 @@ class ChallengeService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challenge_list = $challenge_list->where('challenges.title', 'like', '%'.$request->search.'%');
+                $challenge_list = $challenge_list->where('challenges.title', 'like', '%' . $request->search . '%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -85,8 +85,8 @@ class ChallengeService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
                     $query->select('challenge_skills_groups_stacks.challenge_id')
-                    ->from('challenge_skills_groups_stacks')
-                    ->whereIn('challenge_skills_groups_stacks.foreign_id', $request->skills)
+                        ->from('challenge_skills_groups_stacks')
+                        ->whereIn('challenge_skills_groups_stacks.foreign_id', $request->skills)
                         ->where('challenge_skills_groups_stacks.type', '0')
                         ->whereNull('challenge_skills_groups_stacks.deleted_at')
                         ->distinct();
@@ -95,8 +95,8 @@ class ChallengeService
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
                     $query->select('challenge_tags_groups.challenge_id')
-                    ->from('challenge_tags_groups')
-                    ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
+                        ->from('challenge_tags_groups')
+                        ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
                         ->where('challenge_tags_groups.type', '0')
                         ->whereNull('challenge_tags_groups.deleted_at')
                         ->distinct();
@@ -108,7 +108,7 @@ class ChallengeService
                     $status_array = ['accepted', 'pending', 'declined'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
-                        ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
+                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
                         switch ($request->request_status) {
                             case 'accepted':
                                 $challenge_list->where('member_management.invite_status', '1');
@@ -467,11 +467,11 @@ class ChallengeService
         try {
             $originalChallenge = Challenge::find($challengeId);
             $model = new Challenge();
-            $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
+            $slug = UtilityHelper::generateSlug($organization->title . ' ' . $originalChallenge->title, $model);
 
             $clonedChallenge = $originalChallenge->replicate();
             $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $clonedChallenge->title = $organization->title.' '.$originalChallenge->title;
+            $clonedChallenge->title = $organization->title . ' ' . $originalChallenge->title;
             $clonedChallenge->slug = $slug;
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;

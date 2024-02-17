@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\Challenge;
 
+use App\Services\JobService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
@@ -43,6 +44,7 @@ class ChallengeResource extends JsonResource
         $challenge_assessment = null;
         $challenge_timelines = null;
         $challenge_custom_timelines = null;
+        $jobs = null;
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -62,6 +64,11 @@ class ChallengeResource extends JsonResource
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('foreign_id');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        }
+
+        if ($this->jobs) {
+            $associatedJobs = $this->jobs->pluck('foreign_id');
+            $jobs = JobService::getJobBasedOnIds($associatedJobs)->pluck('title', 'id');
         }
 
         if ($this->skill_groups) {
@@ -273,9 +280,11 @@ class ChallengeResource extends JsonResource
             'project_privacy'               => ($this->project_privacy == '1') ? 'yes' : 'no',
             'is_open'                       => ($this->is_open == '1') ? 'yes' : 'no',
             'is_auto_created'               => ($this->is_auto_created == '1') ? 'yes' : 'no',
+            'is_ai_created'                 => ($this->is_ai_created == '1') ? 'yes' : 'no',
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
+            'jobs'                          => $jobs,
             'tags'                          => $tags,
             'tag_groups'                    => $tag_groups,
             'participation_achievement'     => $achievement,

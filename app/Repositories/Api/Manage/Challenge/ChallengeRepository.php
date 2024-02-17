@@ -16,6 +16,7 @@ use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTagsGroupsService;
 use App\Services\Manage\ChallengeTimelinesService;
+use App\Services\Manage\AIService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -34,8 +35,9 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeCustomTimelinesService;
     private $challengeExternalLinkService;
     private $challengeAnnouncementService;
+    private $aiService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, AIService $aiService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
@@ -50,6 +52,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeCustomTimelinesService = $challengeCustomTimelinesService;
         $this->challengeExternalLinkService = $challengeExternalLinkService;
         $this->challengeAnnouncementService = $challengeAnnouncementService;
+        $this->aiService = $aiService;
     }
 
     public function getChallengeList($request, $organization)
@@ -131,6 +134,22 @@ class ChallengeRepository implements ChallengeInterface
                 return $createChallenge['createChallenge'];
             }
             DB::rollback();
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createChallengeUsingAI($request)
+    {
+        try {
+            $upload_cover_image = config('site-settings.default_challenge_cover_image');
+            $createChallengeUsingAI = $this->aiService->createChallengeUsingAI($request, $upload_cover_image);
+
+            if ($createChallengeUsingAI) {
+                return $createChallengeUsingAI;
+            }
 
             return false;
         } catch (Exception $e) {
