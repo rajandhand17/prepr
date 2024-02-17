@@ -439,4 +439,20 @@ class ProjectMemberManagementService
             return false;
         }
     }
+
+    public function fetchAcceptedMemberIds($projectId)
+    {
+        try {
+            $getUserIdsBasedOnEmail = [];
+            
+            $fetchAcceptedMemberIds = ProjectMemberManagement::where(['project_id' => $projectId, 'invite_status' => '1'])->pluck('email');
+            if ($fetchAcceptedMemberIds && count($fetchAcceptedMemberIds) > 0) {
+                $getUserIdsBasedOnEmail = UserService::getUserIdsByEmail($fetchAcceptedMemberIds);
+            }
+
+            return $getUserIdsBasedOnEmail;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
