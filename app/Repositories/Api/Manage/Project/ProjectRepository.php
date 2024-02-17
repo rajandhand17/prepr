@@ -319,17 +319,16 @@ class ProjectRepository implements ProjectInterface
     public function submitProject($projectData)
     {
         try {
-
             $fetchAcceptedMemberIds = $this->projectMemberManagementService->fetchAcceptedMemberIds($projectData->id);
             $fetchChallenge = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
             $fetchChallengeAchievement = $this->challengeAchievementService->fetchChallengeAchievement($projectData->challenge_id);
 
-            $submitProject = DB::transaction(function() use ($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData) {
+            $submitProject = DB::transaction(function () use ($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData) {
                 $submitProject = $this->projectService->submitProject($projectData);
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
 
                 return [
-                    'submitProject' => $submitProject,
+                    'submitProject'  => $submitProject,
                     'addAchievement' => $addAchievement,
                 ];
             });
