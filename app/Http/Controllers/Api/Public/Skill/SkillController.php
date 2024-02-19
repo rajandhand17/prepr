@@ -19,7 +19,7 @@ class SkillController extends AppBaseController
     public function index(Request $request, $skillId = null)
     {
         try {
-            $skillList = $this->skillRepository->index($request->language, $request->search, $skillId);
+            $skillList = $this->skillRepository->index($request->language, $request->search,$request->sort_by, $skillId);
             if ($skillList) {
                 $response = [
                     'total_count'  => $skillList->total(),
@@ -29,7 +29,6 @@ class SkillController extends AppBaseController
                     'total_pages'  => $skillList->lastPage(),
                     'list'         => SkillResource::collection($skillList),
                 ];
-
                 return $this->sendResponse($response, __('responses.found_skill_list'));
             }
 
@@ -45,7 +44,7 @@ class SkillController extends AppBaseController
             if ($skillId !== null) {
                 $skillList = $this->skillRepository->getSkillBasedOnId($skillId);
             } else {
-                $skillList = $this->skillRepository->getMySkills($request->language, $request->search);
+                $skillList = $this->skillRepository->getMySkills($request->language, $request->search,$request->pinned);
             }
             if ($skillList) {
                 $resourceClass = SkillResource::class;
@@ -58,11 +57,12 @@ class SkillController extends AppBaseController
                         'total_pages'  => $skillList->lastPage(),
                         'list'         => $resourceClass::collection($skillList),
                     ];
+                    $message= __('responses.skills_list');
                 } else {
                     $response = $resourceClass::make($skillList);
+                    $message= __('responses.skills_list_detailed');
                 }
-
-                return $this->sendResponse($response, __('responses.skills_list'));
+                return $this->sendResponse($response, $message);
             }
 
             return $this->sendError(__('responses.skills_list_failed'), 404);
