@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Public\Skill;
 
 use App\Helpers\WikipediaHelper;
+use App\Services\SkillService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,6 +24,7 @@ class SkillResource extends JsonResource
             'description'   => $skillDescription !== false ? $skillDescription : '',
             'related_skills'=> $relatedSkills !== false ? $relatedSkills : '',
             'pinned'        => (isset($this->user_pinned->pinned)) ? $this->user_pinned->pinned : 'no',
+            'is_saved'      =>SkillService::getMySkillBasedOnId($this->id),
         ];
 
         return $data;

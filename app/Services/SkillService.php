@@ -14,7 +14,6 @@ class SkillService
             if ($language == 'en') {
                 $skill_list = Skill::select('id', 'title');
                 if ($skill_id !== null) {
-
                     $skill_list = $skill_list->where('id', $skill_id);
                 }
             } else {
@@ -37,7 +36,6 @@ class SkillService
             $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'));
 
             if (auth()->user()) {
-
                 $skill_list = $skill_list->paginate(config('site-settings.pagination_per_page'));
             } else {
                 $skill_list = $skill_list->get();
@@ -92,6 +90,14 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getMySkillBasedOnId($skill_id){
+        try {
+            return 'yes';
+        }catch (\Exception $e) {
             return false;
         }
     }
