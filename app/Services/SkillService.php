@@ -8,15 +8,15 @@ use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public static function getSkills($language = 'en', $search = null,$sortBy=null, $skill_id)
+    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id)
     {
         try {
             if ($language == 'en') {
                 $skill_list = Skill::select('id', 'title');
                 if ($skill_id !== null) {
-                    if(gettype($skill_id)=="string"){
+                    if (gettype($skill_id) == 'string') {
                         $skill_list = $skill_list->where('id', $skill_id);
-                    }else{
+                    } else {
                         $skill_list = $skill_list->whereIn('id', $skill_id);
                     }
                 }
@@ -36,7 +36,7 @@ class SkillService
                 $skill_list = self::filterSkillList($skill_list, $column_name, $search);
             }
 
-            if ($sortBy!==null) {
+            if ($sortBy !== null) {
                 switch ($sortBy) {
                     case 'name-a-to-z':
                         $skill_list = $skill_list->orderBy('skills.title', 'ASC');
@@ -112,5 +112,4 @@ class SkillService
             return false;
         }
     }
-
 }
