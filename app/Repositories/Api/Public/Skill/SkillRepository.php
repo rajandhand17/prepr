@@ -20,7 +20,12 @@ class SkillRepository implements SkillInterface
     public function index($language, $search,$sortBy, $skillId)
     {
         try {
-            return $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
+            if ($skillId !== null) {
+                return $this->skillsService->getSkillBasedOnId($skillId);
+            } else {
+             return  $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
+            }
+           // return $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
         } catch(\Exception $e) {
             return false;
         }

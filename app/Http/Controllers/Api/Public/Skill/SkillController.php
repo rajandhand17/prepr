@@ -21,15 +21,22 @@ class SkillController extends AppBaseController
         try {
             $skillList = $this->skillRepository->index($request->language, $request->search,$request->sort_by, $skillId);
             if ($skillList) {
-                $response = [
-                    'total_count'  => $skillList->total(),
-                    'per_page'     => $skillList->perPage(),
-                    'count'        => $skillList->count(),
-                    'current_page' => $skillList->currentPage(),
-                    'total_pages'  => $skillList->lastPage(),
-                    'list'         => SkillResource::collection($skillList),
-                ];
-                return $this->sendResponse($response, __('responses.found_skill_list'));
+                $resource=SkillResource::class;
+                if($skillId==null) {
+                    $response = [
+                        'total_count'  => $skillList->total(),
+                        'per_page'     => $skillList->perPage(),
+                        'count'        => $skillList->count(),
+                        'current_page' => $skillList->currentPage(),
+                        'total_pages'  => $skillList->lastPage(),
+                        'list'         => $resource::collection($skillList),
+                    ];
+                    $message= __('responses.skills_list');
+                }else{
+                    $response=$resource::make($skillList);
+                    $message= __('responses.skills_list_detailed');
+                }
+                return $this->sendResponse($response, $message);
             }
 
             return $this->sendError(__('responses.not_found_skill_list'), 404);
