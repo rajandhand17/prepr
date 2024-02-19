@@ -69,9 +69,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/profile/')->middleware('api')->group(base_path('routes/v1/profile.php'));
     }
 
-    public function mapDiscussionsRoute(){
+    public function mapDiscussionsRoute()
+    {
         Route::prefix('api/v1/discussion/')->middleware('api')->group(base_path('routes/v1/discussion.php'));
     }
+
     protected function mapManageRoutes()
     {
         Route::prefix('api/v1/manage/organization/')->middleware('api')->group(base_path('routes/v1/manage/organization.php'));
