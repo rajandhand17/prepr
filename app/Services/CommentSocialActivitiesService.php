@@ -9,20 +9,20 @@ use Illuminate\Support\Facades\Schema;
 
 class CommentSocialActivitiesService
 {
-  public function likeOrDislikeComment($action,$request){
+  public function likeOrDislikeComment($action,$comment_id){
       try {
-          $comment=comment::where('id',$request->comment_id)->first();
+          $comment=comment::where('id',$comment_id)->first();
           if(!$comment){
               return false;
           }
-          $checkExistsLikeComment=CommentSocialActivity::where(['comment_id'=>$request->comment_id,"user_id"=>auth()->user()->id])->first();
+          $checkExistsLikeComment=CommentSocialActivity::where(['comment_id'=>$comment_id,"user_id"=>auth()->user()->id])->first();
           if (!$checkExistsLikeComment){
               $userSetting = new CommentSocialActivity();
           }else{
               $userSetting=$checkExistsLikeComment;
           }
            $likeOrDislike=($action=='like') ? "1" : "2";
-           $userSetting->comment_id = $request->comment_id;
+           $userSetting->comment_id = $comment_id;
            $userSetting->user_id = auth()->user()->id;
            $userSetting->like_dislikes = $likeOrDislike;
            $userSetting->save();

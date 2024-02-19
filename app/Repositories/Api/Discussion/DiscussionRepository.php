@@ -23,10 +23,10 @@ class DiscussionRepository implements DiscussionInterface
             return false;
         }
     }
-    public function addComment($component,$request){
+    public function addComment($component,$request,$getComponentId){
         try {
 
-            return $this->commentService->addComment($component,$request);
+            return $this->commentService->addComment($component,$request,$getComponentId);
         }catch (\Exception $e){
             return false;
         }
@@ -53,9 +53,9 @@ class DiscussionRepository implements DiscussionInterface
         }
     }
 
-    public function likeDislike($action,$request){
+    public function likeDislike($action,$comment_id){
         try {
-            return $this->commentSocialActivitiesService->likeOrDislikeComment($action,$request);
+            return $this->commentSocialActivitiesService->likeOrDislikeComment($action,$comment_id);
         }catch (\Exception $e){
             return false;
         }

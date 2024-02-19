@@ -4,29 +4,15 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\comment;
+use App\Models\Discussion;
 use App\Models\CommentSocialActivity;
 use Composer\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class CommentService
+class DiscussionService
 {
-    public function index($component,$moduleId){
-        try {
-            $moduleType=Config('constants.discussion_module_type.'.$component);
-            $getComments = Comment::whereNull('comment_id')
-                ->where('module_id', $moduleId)
-                ->where('module_type',$moduleType)
-                ->get();
-            if($getComments){
-                return $getComments;
-            }
-            return false;
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
     public function addComment($component,$request,$getComponentId){
         try {
             $attachmentPath=null;
@@ -49,28 +35,4 @@ class CommentService
         }
     }
 
-    public function deleteComment($commentId){
-        try{
-            $deletedCommentIds = Comment::where('id', $commentId)
-                ->orWhere('comment_id', $commentId)
-                ->pluck('id');
-            $deletedComments = Comment::whereIn('id', $deletedCommentIds)
-                ->delete();
-            return $deletedCommentIds;
-        }catch(\Exception $e){
-            return false;
-        }
-    }
-
-    public static function checkCommentIdExistsOrNot($commentId){
-        try{
-            $checkId=Comment::where('id',$commentId)->first();
-            if($checkId){
-                return $checkId;
-            }
-                return false;
-        }catch (\Exception $e){
-            return false;
-        }
-    }
 }

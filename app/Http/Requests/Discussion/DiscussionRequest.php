@@ -28,7 +28,7 @@ class DiscussionRequest extends FormRequest
         $base_rules = [];
         if($activity=='add'){
             $base_rules = [
-                'module_id'      => 'required|integer',
+             //   'module_id'      => 'required|integer',
                 'comment'        => 'required|string',
                 'comment_id'     => 'exists:comments,id',
             ];
