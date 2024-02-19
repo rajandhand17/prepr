@@ -17,19 +17,24 @@ class SkillRepository implements SkillInterface
         $this->userSkillsService = $userSkillsService;
     }
 
-    public function index($language, $search,$sortBy, $skillId)
+    public function index($language, $search, $sortBy, $skillId)
     {
         try {
-            return $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
+            if ($skillId !== null) {
+                return $this->skillsService->getSkillBasedOnId($skillId);
+            } else {
+                return  $this->skillsService->getSkills($language, $search, $sortBy, $skillId);
+            }
+            // return $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function getMySkills($language, $search,$pinned)
+    public function getMySkills($language, $search, $pinned)
     {
         try {
-            return $this->userSkillsService->getMySkills($language, $search,$pinned);
+            return $this->userSkillsService->getMySkills($language, $search, $pinned);
         } catch (\Exception $e) {
             return false;
         }
