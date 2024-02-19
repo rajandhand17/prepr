@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Discussion;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Discussion\DeleteDiscussionRequest;
 use App\Http\Requests\Discussion\DiscussionRequest;
 use App\Http\Resources\Discussion\DiscussionResource;
 use App\Models\Lab;
@@ -12,7 +11,6 @@ use App\Repositories\Api\Discussion\DiscussionRepository;
 use App\Services\CommentService;
 use App\Services\CommentSocialActivitiesService;
 use App\Services\Manage\LabService;
-use Illuminate\Http\Request;
 
 class DiscussionController extends AppBaseController
 {
@@ -23,23 +21,31 @@ class DiscussionController extends AppBaseController
         $this->discussionRepository = $discussionRepository;
     }
 
-    public function index($component,$moduleId){
-        try{
-            if (!in_array($component, ['member','lab','project','challenge'])){
+    public function index($component, $moduleId)
+    {
+        try {
+            if (!in_array($component, ['member', 'lab', 'project', 'challenge'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            $list=$this->discussionRepository->index($component,$moduleId);
-            if($list->count()>0){
-                return $this->sendResponse(DiscussionResource::collection($list),__('responses.comments_lists_successfully'));
+            $list = $this->discussionRepository->index($component, $moduleId);
+            if ($list->count() > 0) {
+                return $this->sendResponse(DiscussionResource::collection($list), __('responses.comments_lists_successfully'));
             }
+
             return $this->sendError(__('responses.comments_lists_failed'), 404);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+<<<<<<< HEAD
     public function componentBasedOnAction($component,$slug,DiscussionRequest $request,$activity = null){
+=======
+
+    public function actionBasedOnAction($component, $slug, DiscussionRequest $request, $activity = null)
+    {
+>>>>>>> c919be5c9b3d905ab3aaf0bc99d9c7db69f8279e
         try {
-            if (!in_array($component, ['member','lab','project','challenge'])){
+            if (!in_array($component, ['member', 'lab', 'project', 'challenge'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             if (!in_array($activity, [null,'add','like','dislikes'])){
@@ -76,43 +82,54 @@ class DiscussionController extends AppBaseController
                     }else{
                         $like=$this->discussionRepository->likeDislike($activity,$getComponentId);
                     }
-                    if($like){
-                        return $this->sendResponse(DiscussionResource::make($like),__('responses.like_successfully'));
+                    break;
+                case 'like':
+                    $checkLikedOrNot = CommentSocialActivitiesService::checkLikeOrDislikeComment($action, $request->comment_id);
+                    if ($checkLikedOrNot) {
+                        $like = $this->discussionRepository->unLikeOrUnDisLikeModule($action, $request->comment_id);
+                    } else {
+                        $like = $this->discussionRepository->likeDislike($action, $request);
+                    }
+                    if ($like) {
+                        return $this->sendResponse(DiscussionResource::make($like), __('responses.like_successfully'));
                     }
                     break;
                 case 'dislikes':
-                    $checkDisLikedOrNot=CommentSocialActivitiesService::checkLikeOrDislikeComment($action,$request->comment_id);
-                    if($checkDisLikedOrNot){
-                        $dislike=$this->discussionRepository->unLikeOrUnDisLikeModule($action,$request->comment_id);
-                    }else{
-                        $dislike = $this->discussionRepository->likeDislike($component,$request);
+                    $checkDisLikedOrNot = CommentSocialActivitiesService::checkLikeOrDislikeComment($action, $request->comment_id);
+                    if ($checkDisLikedOrNot) {
+                        $dislike = $this->discussionRepository->unLikeOrUnDisLikeModule($action, $request->comment_id);
+                    } else {
+                        $dislike = $this->discussionRepository->likeDislike($component, $request);
                     }
-                    if($dislike){
-                        return $this->sendResponse(DiscussionResource::make($dislike),__('responses.like_successfully'));
+                    if ($dislike) {
+                        return $this->sendResponse(DiscussionResource::make($dislike), __('responses.like_successfully'));
                     }
 
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                     break;
             }
+
             return $this->sendError(__('responses.handler_bad_request'), 400);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function deleteComment($commentId){
+    public function deleteComment($commentId)
+    {
         try {
-            $checkCommentId=CommentService::checkCommentIdExistsOrNot($commentId);
-            if (!$checkCommentId){
-                return $this->sendError(__('responses.not_exists_id'),422);
+            $checkCommentId = CommentService::checkCommentIdExistsOrNot($commentId);
+            if (!$checkCommentId) {
+                return $this->sendError(__('responses.not_exists_id'), 422);
             }
-            $delete=$this->discussionRepository->deleteComment($commentId);
-            if($delete){
-                 return $this->sendResponse([],__('responses.delete_successfully'));
-             }
+            $delete = $this->discussionRepository->deleteComment($commentId);
+            if ($delete) {
+                return $this->sendResponse([], __('responses.delete_successfully'));
+            }
+
             return $this->sendError(__('responses.send_error'), 400);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

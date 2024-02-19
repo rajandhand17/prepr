@@ -300,10 +300,10 @@ return [
     ],
 
     'discussion_module_type' => [
-        'member'             =>'0',
-        'lab'                =>'1',
-        'project'            =>'2',
-        'challenge'          =>'3'
+        'member'             => '0',
+        'lab'                => '1',
+        'project'            => '2',
+        'challenge'          => '3',
     ],
 
 ];

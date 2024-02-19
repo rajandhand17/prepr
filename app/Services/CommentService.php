@@ -2,26 +2,24 @@
 
 namespace App\Services;
 
-use App\Helpers\LanguageColumnHelper;
 use App\Models\comment;
-use App\Models\CommentSocialActivity;
-use Composer\Config;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CommentService
 {
-    public function index($component,$moduleId){
+    public function index($component, $moduleId)
+    {
         try {
-            $moduleType=Config('constants.discussion_module_type.'.$component);
+            $moduleType = Config('constants.discussion_module_type.'.$component);
             $getComments = Comment::whereNull('comment_id')
                 ->where('module_id', $moduleId)
-                ->where('module_type',$moduleType)
+                ->where('module_type', $moduleType)
                 ->get();
-            if($getComments){
+            if ($getComments) {
                 return $getComments;
             }
+
             return false;
         }catch (\Exception $e) {
             return false;
@@ -49,27 +47,31 @@ class CommentService
         }
     }
 
-    public function deleteComment($commentId){
-        try{
+    public function deleteComment($commentId)
+    {
+        try {
             $deletedCommentIds = Comment::where('id', $commentId)
                 ->orWhere('comment_id', $commentId)
                 ->pluck('id');
             $deletedComments = Comment::whereIn('id', $deletedCommentIds)
                 ->delete();
+
             return $deletedCommentIds;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public static function checkCommentIdExistsOrNot($commentId){
-        try{
-            $checkId=Comment::where('id',$commentId)->first();
-            if($checkId){
+    public static function checkCommentIdExistsOrNot($commentId)
+    {
+        try {
+            $checkId = Comment::where('id', $commentId)->first();
+            if ($checkId) {
                 return $checkId;
             }
-                return false;
-        }catch (\Exception $e){
+
+            return false;
+        } catch (\Exception $e) {
             return false;
         }
     }

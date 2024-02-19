@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Discussion;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,22 +25,21 @@ class DiscussionRequest extends FormRequest
     {
         $activity = $this->route('action');
         $base_rules = [];
-        if($activity=='add'){
+        if ($activity == 'add') {
             $base_rules = [
              //   'module_id'      => 'required|integer',
                 'comment'        => 'required|string',
                 'comment_id'     => 'exists:comments,id',
             ];
-        }elseif($activity=='like'){
-            $base_rules=[
-                'comment_id'=>'required|exists:comments,id',
+        } elseif ($activity == 'like') {
+            $base_rules = [
+                'comment_id'=> 'required|exists:comments,id',
             ];
-        }elseif($activity=='dislikes'){
-                $base_rules=[
-                    'comment_id'=>'required|exists:comments,id',
-                ];
+        } elseif ($activity == 'dislikes') {
+            $base_rules = [
+                'comment_id'=> 'required|exists:comments,id',
+            ];
         }
-
 
         return $base_rules;
     }
