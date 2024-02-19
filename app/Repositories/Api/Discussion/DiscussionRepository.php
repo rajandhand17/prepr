@@ -11,62 +11,71 @@ class DiscussionRepository implements DiscussionInterface
     private $commentService;
 
     private $commentSocialActivitiesService;
-    public function __construct(CommentService $commentService,CommentSocialActivitiesService $commentSocialActivitiesService){
-        $this->commentService=$commentService;
-        $this->commentSocialActivitiesService=$commentSocialActivitiesService;
+
+    public function __construct(CommentService $commentService, CommentSocialActivitiesService $commentSocialActivitiesService)
+    {
+        $this->commentService = $commentService;
+        $this->commentSocialActivitiesService = $commentSocialActivitiesService;
     }
 
-    public function index($component,$moduleId){
+    public function index($component, $moduleId)
+    {
         try {
-            return $this->commentService->index($component,$moduleId);
-        }catch(\Exception $e){
-            return false;
-        }
-    }
-    public function addComment($component,$request){
-        try {
-
-            return $this->commentService->addComment($component,$request);
-        }catch (\Exception $e){
+            return $this->commentService->index($component, $moduleId);
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function deleteComment($commentId){
+    public function addComment($component, $request)
+    {
+        try {
+            return $this->commentService->addComment($component, $request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteComment($commentId)
+    {
         try {
             $deleteComment = DB::transaction(function () use ($commentId) {
-                 $comment= $this->commentService->deleteComment($commentId);
-                 $commentSocialActivities=$this->commentSocialActivitiesService->deleteCommentSocialActivity($comment);
-                 return [
-                     "comment" => $comment,
-                     "commentSocialActivities" => $commentSocialActivities,
-                 ];
+                $comment = $this->commentService->deleteComment($commentId);
+                $commentSocialActivities = $this->commentSocialActivitiesService->deleteCommentSocialActivity($comment);
+
+                return [
+                    'comment'                 => $comment,
+                    'commentSocialActivities' => $commentSocialActivities,
+                ];
             });
-            if($deleteComment['comment'] && $deleteComment['commentSocialActivities']){
+            if ($deleteComment['comment'] && $deleteComment['commentSocialActivities']) {
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function likeDislike($action,$request){
+    public function likeDislike($action, $request)
+    {
         try {
-            return $this->commentSocialActivitiesService->likeOrDislikeComment($action,$request);
-        }catch (\Exception $e){
+            return $this->commentSocialActivitiesService->likeOrDislikeComment($action, $request);
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function unLikeOrUnDisLikeModule($likeOrDislike,$comment_id){
+    public function unLikeOrUnDisLikeModule($likeOrDislike, $comment_id)
+    {
         try {
-            return $this->commentSocialActivitiesService->unLikeOrUnDisLikeModule($likeOrDislike,$comment_id);
-        }catch (\Exception $e){
+            return $this->commentSocialActivitiesService->unLikeOrUnDisLikeModule($likeOrDislike, $comment_id);
+        } catch (\Exception $e) {
             return false;
         }
     }
-
 }

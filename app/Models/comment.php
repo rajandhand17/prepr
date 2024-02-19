@@ -25,19 +25,23 @@ class comment extends Model
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-    public function comments_reply(){
-       return $this->hasMany(comment::class,'comment_id','id');
+    public function comments_reply()
+    {
+        return $this->hasMany(comment::class, 'comment_id', 'id');
     }
 
-    public function users(){
-        return $this->hasone(User::class,'id','user_id');
+    public function users()
+    {
+        return $this->hasone(User::class, 'id', 'user_id');
     }
 
-    public function liked_by(){
-        return $this->hasMany(CommentSocialActivity::class,'comment_id','id')->where('like_dislikes','1');
+    public function liked_by()
+    {
+        return $this->hasMany(CommentSocialActivity::class, 'comment_id', 'id')->where('like_dislikes', '1');
     }
 
-    public function disliked_by(){
-        return $this->hasMany(CommentSocialActivity::class,'comment_id','id')->where('like_dislikes','2');
+    public function disliked_by()
+    {
+        return $this->hasMany(CommentSocialActivity::class, 'comment_id', 'id')->where('like_dislikes', '2');
     }
 }
