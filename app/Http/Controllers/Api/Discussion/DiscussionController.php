@@ -6,9 +6,11 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Discussion\DeleteDiscussionRequest;
 use App\Http\Requests\Discussion\DiscussionRequest;
 use App\Http\Resources\Discussion\DiscussionResource;
+use App\Models\Lab;
 use App\Repositories\Api\Discussion\DiscussionRepository;
 use App\Services\CommentService;
 use App\Services\CommentSocialActivitiesService;
+use App\Services\Manage\LabService;
 use Illuminate\Http\Request;
 
 class DiscussionController extends AppBaseController
@@ -34,15 +36,16 @@ class DiscussionController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function actionBasedOnAction($component,$action,DiscussionRequest $request){
+    public function actionBasedOnAction($component,$slug,DiscussionRequest $request,$activity = null){
         try {
             if (!in_array($component, ['member','lab','project','challenge'])){
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            if (!in_array($action, ['add','like','dislikes'])){
+            $getDetailed=LabService::getLabBasedOnSlug($slug)->id;
+            if (!in_array($activity, [null,'add','like','dislikes'])){
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            switch ($action){
+            switch ($activity) {
                 case 'add':
                 $addComment=$this->discussionRepository->addComment($component,$request);
                 if($addComment){
