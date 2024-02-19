@@ -83,6 +83,7 @@ class ProjectRepository implements ProjectInterface
             if (!empty($getAllChallengeIds)) {
                 $projectIds = $this->projectService->getAssessProjectIds($getAllChallengeIds, $userData);
             }
+
             return $projectIds;
         } catch (Exception $e) {
             return false;

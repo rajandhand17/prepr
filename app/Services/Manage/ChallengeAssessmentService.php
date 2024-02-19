@@ -219,7 +219,7 @@ class ChallengeAssessmentService
             //  Fetch Open Assessment Challenge Ids
             $getMyProjectChallengeIds = Project::where('user_id', $userData->id)->pluck('challenge_id');
             $fetchOpenChallenge = ChallengeAssessment::whereIn('challenge_id', $getMyProjectChallengeIds)->where('assessment_type', '1')->pluck('challenge_id');
-            
+
             //  Fetch Closed Assessment Challenge Ids
             $fetchClosedChallenge = ChallengeAssessment::where(['members_email' => $userData->email, 'assessment_type' => '2'])->pluck('members_email', 'challenge_id');
             $closeChallangeID = [];
@@ -230,7 +230,7 @@ class ChallengeAssessmentService
                     }
                 }
             }
-            
+
             $bothOpenClosedAssessmentChallengeIds = collect(array_filter($closeChallangeID))->merge($fetchOpenChallenge);
 
             return $bothOpenClosedAssessmentChallengeIds;
