@@ -6,6 +6,7 @@ use App\Events\Project\DeleteProjectAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Project;
+use App\Models\ProjectMemberManagement;
 use App\Services\ProjectSubmissionRequirementService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -370,6 +371,21 @@ class ProjectService
             $projectData->save();
 
             return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAssessProjectIds($getAllChallengeIds, $userData)
+    {
+        try {
+            $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
+            $getOwnProjectIds = self::getMyProjectIds($userData->id);
+
+            $collaborateProjectIds = $getOwnProjectIds->merge($getProjectIdBasedOnMember)->unique();
+            $fetchSubmittedProjectIds = Project::whereNotIn('id', $collaborateProjectIds)->whereIn('challenge_id', $getAllChallengeIds)->where('is_submitted', '1')->pluck('id');
+
+            return $fetchSubmittedProjectIds;
         } catch (Exception $e) {
             return false;
         }

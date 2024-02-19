@@ -9,6 +9,7 @@ use App\Http\Requests\Manage\Project\CreateProjectRequest;
 use App\Http\Requests\Manage\Project\UpdateProjectRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
+use App\Http\Resources\Manage\Project\AssessProjectListingResource;
 use App\Http\Resources\Manage\Project\FavouriteProjectListingResource;
 use App\Http\Resources\Manage\Project\InvitedProjectListingResource;
 use App\Http\Resources\Manage\Project\MyProjectListingResource;
@@ -35,7 +36,7 @@ class ProjectController extends AppBaseController
     public function index($type, Request $request)
     {
         try {
-            if (!in_array($type, ['my', 'favourite', 'invited'])) {
+            if (!in_array($type, ['my', 'favourite', 'invited', 'assess'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
 
@@ -55,6 +56,10 @@ class ProjectController extends AppBaseController
                     $resourceClass = InvitedProjectListingResource::class;
                     break;
 
+                case 'assess':
+                    $getProjectIds = $this->projectRepository->getAssessProjectIds(auth()->user());
+                    $resourceClass = AssessProjectListingResource::class;
+                    break;
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                     break;
@@ -81,6 +86,7 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_list_type'), 400);
         } catch (Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

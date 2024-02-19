@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Manage\Project;
 
 use App\Services\Manage\AchievementService;
 use App\Services\Manage\ChallengeAchievementService;
+use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ProjectAdditionalInfoService;
@@ -29,8 +30,9 @@ class ProjectRepository implements ProjectInterface
     private $projectSocialActivitiesService;
     private $challengeAchievementService;
     private $achievementService;
+    private $challengeAssessmentService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -43,6 +45,7 @@ class ProjectRepository implements ProjectInterface
         $this->projectSocialActivitiesService = $projectSocialActivitiesService;
         $this->challengeAchievementService = $challengeAchievementService;
         $this->achievementService = $achievementService;
+        $this->challengeAssessmentService = $challengeAssessmentService;
     }
 
     public function getMyProjectIds($userId)
@@ -67,6 +70,20 @@ class ProjectRepository implements ProjectInterface
     {
         try {
             return $this->projectMemberManagementService->getInvitedProjectIds($userData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAssessProjectIds($userData)
+    {
+        try {
+            $projectIds = [];
+            $getAllChallengeIds = $this->challengeAssessmentService->getAllChallengeIds($userData);
+            if (!empty($getAllChallengeIds)) {
+                $projectIds = $this->projectService->getAssessProjectIds($getAllChallengeIds, $userData);
+            }
+            return $projectIds;
         } catch (Exception $e) {
             return false;
         }
