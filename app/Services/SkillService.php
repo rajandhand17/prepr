@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public static function getSkills($language = 'en', $search = null, $skill_id = null)
+    public static function getSkills($language = 'en', $search = null, $skill_id)
     {
         try {
             if ($language == 'en') {
                 $skill_list = Skill::select('id', 'title');
                 if ($skill_id !== null) {
-                    $skill_list = $skill_list->whereIn('id', $skill_id);
+
+                    $skill_list = $skill_list->where('id', $skill_id);
                 }
             } else {
                 //get column name based on language
@@ -36,6 +37,7 @@ class SkillService
             $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'));
 
             if (auth()->user()) {
+
                 $skill_list = $skill_list->paginate(config('site-settings.pagination_per_page'));
             } else {
                 $skill_list = $skill_list->get();
