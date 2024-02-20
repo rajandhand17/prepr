@@ -27,17 +27,16 @@ class DiscussionRequest extends FormRequest
         $base_rules = [];
         if ($activity == 'add') {
             $base_rules = [
-             //   'module_id'      => 'required|integer',
                 'comment'        => 'required|string',
-                'comment_id'     => 'exists:comments,id',
+                'comment_id'     => 'exists:discussions,id',
             ];
         } elseif ($activity == 'like') {
             $base_rules = [
-                'comment_id'=> 'required|exists:comments,id',
+                'comment_id'=> 'required|exists:discussions,id',
             ];
         } elseif ($activity == 'dislikes') {
             $base_rules = [
-                'comment_id'=> 'required|exists:comments,id',
+                'comment_id'=> 'required|exists:discussions,id',
             ];
         }
 

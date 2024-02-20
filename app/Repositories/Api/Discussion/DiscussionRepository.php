@@ -34,16 +34,6 @@ class DiscussionRepository implements DiscussionInterface
             return false;
         }
     }
-
-    public function addComment($component, $request)
-    {
-        try {
-            return $this->commentService->addComment($component, $request);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function deleteComment($commentId)
     {
         try {

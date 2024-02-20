@@ -37,13 +37,7 @@ class DiscussionController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-<<<<<<< HEAD
     public function componentBasedOnAction($component,$slug,DiscussionRequest $request,$activity = null){
-=======
-
-    public function actionBasedOnAction($component, $slug, DiscussionRequest $request, $activity = null)
-    {
->>>>>>> c919be5c9b3d905ab3aaf0bc99d9c7db69f8279e
         try {
             if (!in_array($component, ['member', 'lab', 'project', 'challenge'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
@@ -83,17 +77,6 @@ class DiscussionController extends AppBaseController
                         $like=$this->discussionRepository->likeDislike($activity,$getComponentId);
                     }
                     break;
-                case 'like':
-                    $checkLikedOrNot = CommentSocialActivitiesService::checkLikeOrDislikeComment($action, $request->comment_id);
-                    if ($checkLikedOrNot) {
-                        $like = $this->discussionRepository->unLikeOrUnDisLikeModule($action, $request->comment_id);
-                    } else {
-                        $like = $this->discussionRepository->likeDislike($action, $request);
-                    }
-                    if ($like) {
-                        return $this->sendResponse(DiscussionResource::make($like), __('responses.like_successfully'));
-                    }
-                    break;
                 case 'dislikes':
                     $checkDisLikedOrNot = CommentSocialActivitiesService::checkLikeOrDislikeComment($action, $request->comment_id);
                     if ($checkDisLikedOrNot) {
@@ -109,7 +92,6 @@ class DiscussionController extends AppBaseController
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                     break;
             }
-
             return $this->sendError(__('responses.handler_bad_request'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

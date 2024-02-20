@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\comment;
+use App\Models\Discussion;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -33,7 +34,7 @@ class CommentService
                 $attachmentPath = 'uploads/comments/'.auth()->user()->id.Str::random(40).'.'.$attachments->extension();
                 Storage::disk('s3')->put($attachmentPath, file_get_contents($attachments));
             }
-            $addComment=new comment();
+            $addComment=new Discussion(); //comment();
             $addComment->user_id     = auth()->user()->id;
             $addComment->module_id   = $getComponentId;
             $addComment->module_type = config('constants.discussion_module_type.'.$component);
