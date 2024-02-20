@@ -4,18 +4,20 @@ namespace App\Services;
 
 use App\Models\comment;
 use App\Models\CommentSocialActivity;
+use App\Models\Discussion;
+use App\Models\DiscussionSocialActivity;
 
-class CommentSocialActivitiesService
+class DiscussionSocialActivitiesService
 {
   public function likeOrDislikeComment($action,$comment_id){
       try {
-          $comment=comment::where('id',$comment_id)->first();
+          $comment=Discussion::where('id',$comment_id)->first();
           if(!$comment){
               return false;
           }
-          $checkExistsLikeComment=CommentSocialActivity::where(['comment_id'=>$comment_id,"user_id"=>auth()->user()->id])->first();
+          $checkExistsLikeComment=DiscussionSocialActivity::where(['comment_id'=>$comment_id,"user_id"=>auth()->user()->id])->first();
           if (!$checkExistsLikeComment){
-              $userSetting = new CommentSocialActivity();
+              $userSetting = new DiscussionSocialActivity();
           }else{
               $userSetting=$checkExistsLikeComment;
           }
@@ -33,7 +35,7 @@ class CommentSocialActivitiesService
   public static function checkLikeOrDislikeComment($likeOrDislike,$comment_id){
       try{
           $likeOrDislikeModule=($likeOrDislike=='like') ? '1' : '2';
-          $checkExistsLikeComment=CommentSocialActivity::where([
+          $checkExistsLikeComment=DiscussionSocialActivity::where([
                   "comment_id"=>$comment_id,
                   "user_id"=>auth()->user()->id,
                   "like_dislikes"=>$likeOrDislikeModule,
@@ -49,12 +51,12 @@ class CommentSocialActivitiesService
 
   public static function unLikeOrUnDisLikeModule($likeOrDislike,$comment_id){
       try{
-          $comment=comment::where('id',$comment_id)->first();
+          $comment=Discussion::where('id',$comment_id)->first();
           if(!$comment){
               return false;
           }
           $likeOrDislikeModule=($likeOrDislike=='like') ? '1' : '2';
-          $checkExistsLikeComment=CommentSocialActivity::where([
+          $checkExistsLikeComment=DiscussionSocialActivity::where([
               "comment_id"=>$comment_id,
               "user_id"=>auth()->user()->id,
               "like_dislikes"=>$likeOrDislikeModule,
@@ -65,25 +67,14 @@ class CommentSocialActivitiesService
       }
   }
 
-    public static function deleteCommentSocialActivity($commentId){
+    public static function deleteDiscussionSocialActivity($commentId){
         try {
-            $comment = comment::where('id', $request->comment_id)->first();
-            if (!$comment) {
-                return false;
-            }
-            $checkExistsLikeComment = CommentSocialActivity::where(['comment_id'=>$request->comment_id, 'user_id'=>auth()->user()->id])->first();
-            if (!$checkExistsLikeComment) {
-                $userSetting = new CommentSocialActivity();
-            } else {
-                $userSetting = $checkExistsLikeComment;
-            }
-            $likeOrDislike = ($action == 'like') ? '1' : '2';
-            $userSetting->comment_id = $request->comment_id;
-            $userSetting->user_id = auth()->user()->id;
-            $userSetting->like_dislikes = $likeOrDislike;
-            $userSetting->save();
-
-            return $comment;
+            $deletedCommentIds = DiscussionSocialActivity::where('id', $commentId)
+                ->orWhere('comment_id', $commentId)
+                ->pluck('id');
+            $deletedComments = DiscussionSocialActivity::whereIn('id', $deletedCommentIds)
+                ->delete();
+            return true;
         } catch(\Exception $e) {
             return false;
         }
@@ -92,5 +83,5 @@ class CommentSocialActivitiesService
 
 
 
-    
+
 }

@@ -6,7 +6,7 @@ use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DiscussionResource extends JsonResource
+class CommentReplies extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -27,10 +27,9 @@ class DiscussionResource extends JsonResource
         $data = [
             'id'            => $this->id,
             'comment'       => $this->comments,
-            'likes'         => count($getLikedByUser),//UserDetailDiscussionResource::collection($getLikedByUser),
-            'dis-likes'     => count($getDislikedByUser),//UserDetailDiscussionResource::collection($getDislikedByUser),
+            'likes'         => count($getLikedByUser),
+            'dis-likes'     => count($getDislikedByUser),
             'user_details'  => UserDetailDiscussionResource::make($this->users),
-            'comment_replies'=> CommentReplies::collection($this->comments_reply),
         ];
         return $data;
     }

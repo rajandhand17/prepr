@@ -2,26 +2,26 @@
 
 namespace App\Repositories\Api\Discussion;
 
-use App\Services\CommentService;
-use App\Services\CommentSocialActivitiesService;
+use App\Services\DiscussionService;
+use App\Services\DiscussionSocialActivitiesService;
 use DB;
 
 class DiscussionRepository implements DiscussionInterface
 {
-    private $commentService;
+    private $discussionService;
 
-    private $commentSocialActivitiesService;
+    private $discussionSocialActivitiesService;
 
-    public function __construct(CommentService $commentService, CommentSocialActivitiesService $commentSocialActivitiesService)
+    public function __construct(DiscussionService $discussionService, DiscussionSocialActivitiesService $discussionSocialActivitiesService)
     {
-        $this->commentService = $commentService;
-        $this->commentSocialActivitiesService = $commentSocialActivitiesService;
+        $this->discussionService = $discussionService;
+        $this->discussionSocialActivitiesService = $discussionSocialActivitiesService;
     }
 
     public function index($component, $moduleId)
     {
         try {
-            return $this->commentService->index($component,$moduleId);
+            return $this->discussionService->index($component,$moduleId);
         }catch(\Exception $e){
             return false;
         }
@@ -29,7 +29,7 @@ class DiscussionRepository implements DiscussionInterface
     public function addComment($component,$request,$getComponentId){
         try {
 
-            return $this->commentService->addComment($component,$request,$getComponentId);
+            return $this->discussionService->addComment($component,$request,$getComponentId);
         }catch (\Exception $e){
             return false;
         }
@@ -38,17 +38,15 @@ class DiscussionRepository implements DiscussionInterface
     {
         try {
             $deleteComment = DB::transaction(function () use ($commentId) {
-                $comment = $this->commentService->deleteComment($commentId);
-                $commentSocialActivities = $this->commentSocialActivitiesService->deleteCommentSocialActivity($comment);
-
+                $discussion = $this->discussionService->deleteDiscussion($commentId);
+                $discussionSocialActivities = $this->discussionSocialActivitiesService->deleteDiscussionSocialActivity($discussion);
                 return [
-                    'comment'                 => $comment,
-                    'commentSocialActivities' => $commentSocialActivities,
+                    'discussion'                 => $discussion,
+                    'discussionSocialActivities' => $discussionSocialActivities,
                 ];
             });
-            if ($deleteComment['comment'] && $deleteComment['commentSocialActivities']) {
+            if ($deleteComment['discussion'] && $deleteComment['discussionSocialActivities']){
                 DB::commit();
-
                 return true;
             }
             DB::rollback();
@@ -59,9 +57,10 @@ class DiscussionRepository implements DiscussionInterface
         }
     }
 
-    public function likeDislike($action,$comment_id){
+    public function likeDislike($action,$comment_id)
+    {
         try {
-            return $this->commentSocialActivitiesService->likeOrDislikeComment($action,$comment_id);
+            return $this->discussionSocialActivitiesService->likeOrDislikeComment($action,$comment_id);
         }catch (\Exception $e){
             return false;
         }
@@ -70,7 +69,7 @@ class DiscussionRepository implements DiscussionInterface
     public function unLikeOrUnDisLikeModule($likeOrDislike, $comment_id)
     {
         try {
-            return $this->commentSocialActivitiesService->unLikeOrUnDisLikeModule($likeOrDislike, $comment_id);
+            return $this->discussionSocialActivitiesService->unLikeOrUnDisLikeModule($likeOrDislike, $comment_id);
         } catch (\Exception $e) {
             return false;
         }
