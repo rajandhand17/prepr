@@ -8,13 +8,17 @@ use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public static function getSkills($language = 'en', $search = null, $skill_id = null)
+    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id)
     {
         try {
             if ($language == 'en') {
                 $skill_list = Skill::select('id', 'title');
                 if ($skill_id !== null) {
-                    $skill_list = $skill_list->whereIn('id', $skill_id);
+                    if (gettype($skill_id) == 'string') {
+                        $skill_list = $skill_list->where('id', $skill_id);
+                    } else {
+                        $skill_list = $skill_list->whereIn('id', $skill_id);
+                    }
                 }
             } else {
                 //get column name based on language
@@ -32,6 +36,21 @@ class SkillService
                 $skill_list = self::filterSkillList($skill_list, $column_name, $search);
             }
 
+            if ($sortBy !== null) {
+                switch ($sortBy) {
+                    case 'name-a-to-z':
+                        $skill_list = $skill_list->orderBy('skills.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $skill_list = $skill_list->orderBy('skills.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $skill_list = $skill_list->orderBy('skills.created_at', 'ASC');
+                        break;
+                    default:
+                        $skill_list = $skill_list->orderBy('skills.id', 'ASC');
+                }
+            }
             //take 20 results based from the table
             $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'));
 
