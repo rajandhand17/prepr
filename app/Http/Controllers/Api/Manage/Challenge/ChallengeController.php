@@ -15,6 +15,7 @@ use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 class ChallengeController extends AppBaseController
@@ -438,12 +439,14 @@ class ChallengeController extends AppBaseController
         try {
             $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request);
 
-            if ($createChallengeUsingAI != false) {
-                return $this->sendResponse(ChallengeResource::make($createChallengeUsingAI), __('responses.challenge_created_success'), 200);
+            if (!empty($createChallengeUsingAI)) {
+                return $this->sendResponse($createChallengeUsingAI, __('responses.challenge_created_success'), 200);
+            } else {
+                return $this->sendError(__('responses.challenge_stored_failed'), 400);
             }
-
-            return $this->sendError(__('responses.challenge_stored_failed'), 400);
         } catch (Exception $e) {
+            Log::error('Challenge creation failed: ' . $e->getMessage());
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

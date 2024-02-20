@@ -7,7 +7,10 @@ use App\Services\Manage\ResourceModuleRatingService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleTagsGroupsService;
+use App\Services\Manage\AIService;
 use DB;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ResourceModuleRepository implements ResourceModuleInterface
 {
@@ -19,14 +22,16 @@ class ResourceModuleRepository implements ResourceModuleInterface
     protected $resourceModuleRatingService;
 
     protected $resourceModuleTagsGroupsService;
+    private $aiService;
 
-    public function __construct(ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService)
+    public function __construct(ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService,  AIService $aiService)
     {
         $this->resourceModuleService = $resourceModuleService;
         $this->resourceModuleDetailsService = $resourceModuleDetailsService;
         $this->resouceModuleSkillsGroupStackService = $resouceModuleSkillsGroupStackService;
         $this->resourceModuleTagsGroupsService = $resourceModuleTagsGroupsService;
         $this->resourceModuleRatingService = $resourceModuleRatingService;
+        $this->aiService = $aiService;
     }
 
     public function getResourceModuleList($request, $organization)
@@ -61,6 +66,22 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return false;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createResourceModuleUsingAI($request)
+    {
+        try {
+            $startTimeOverall = microtime(true);
+
+            $createResourceModuleUsingAI = $this->aiService->createResourceModuleUsingAI($request);
+
+            $endTimeOverall = microtime(true);
+            Log::info('Overall duration for RM: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
+
+            return $createResourceModuleUsingAI;
+        } catch (Exception $e) {
             return false;
         }
     }

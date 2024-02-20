@@ -25,16 +25,14 @@ class CreateChallengeUsingAIRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'organization_id'                       => 'required|exists:organizations,uuid',
-            'duration_id'                           => 'required|exists:durations,id',
-            'level_id'                              => 'required|exists:levels,id',
-            'additional_information'                => 'nullable',
-            'resource_modules_types'                => 'nullable',
-            'is_ai_created'                         => 'in:yes,no',
-            'skills'                                => 'required|array',
-            // 'skills.*'                              => 'numeric|exists:jobs,id',
-            'jobs'                                  => 'required|array',
-            // 'jobs.*'                                => 'numeric|exists:jobs,id',
+            // 'organization_id'                       => 'required|exists:organizations,uuid',
+            // 'duration_id'                           => 'required|exists:durations,id',
+            // 'level_id'                              => 'required|exists:levels,id',
+            // 'additional_information'                => 'nullable',
+            // 'resource_modules_types'                => 'nullable',
+            // 'is_ai_created'                         => 'in:yes,no',
+            // 'skills'                                => 'required|array',
+            // 'jobs'                                  => 'required|array',
         ];
 
         return $base_rules;
@@ -52,17 +50,17 @@ class CreateChallengeUsingAIRequest extends FormRequest
     public function message()
     {
         return [
-            'organization_id.required'                    => __('responses.organization_id_required'),
-            'organization_id.exists'                      => __('responses.organization_not_found'),
-            'duration_id.required'                        => __('responses.duration_id_required'),
-            'duration_id.exists'                          => __('responses.duration_id_exists'),
-            'level_id.required'                           => __('responses.level_id_required'),
-            'level_id.exists'                             => __('responses.level_id_exists'),
-            'is_ai_created'                               => __('responses.choose_yes_no'),
-            'skills.required'                             => __('responses.skills_required'),
-            'skills.required_if'                          => __('responses.skill_not_found'),
-            'jobs.required'                               => __('responses.jobs_required'),
-            'jobs.required_if'                            => __('responses.job_not_found'),
+            // 'organization_id.required'                    => __('responses.organization_id_required'),
+            // 'organization_id.exists'                      => __('responses.organization_not_found'),
+            // 'duration_id.required'                        => __('responses.duration_id_required'),
+            // 'duration_id.exists'                          => __('responses.duration_id_exists'),
+            // 'level_id.required'                           => __('responses.level_id_required'),
+            // 'level_id.exists'                             => __('responses.level_id_exists'),
+            // 'is_ai_created'                               => __('responses.choose_yes_no'),
+            // 'skills.required'                             => __('responses.skills_required'),
+            // 'skills.required_if'                          => __('responses.skill_not_found'),
+            // 'jobs.required'                               => __('responses.jobs_required'),
+            // 'jobs.required_if'                            => __('responses.job_not_found'),
         ];
     }
 }
