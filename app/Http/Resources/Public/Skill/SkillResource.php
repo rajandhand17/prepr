@@ -24,7 +24,7 @@ class SkillResource extends JsonResource
             'id'            => $this->id,
             'title'         => $this->title,
             'description'   => $skillDescription !== false ? $skillDescription : '',
-            'related_skills'=> $relatedSkills !== false ? $relatedSkills : '',
+            'related_skills'=> $relatedSkills !== false ? $relatedSkills : [],
             'is_saved'      => (!empty(UserSkillsService::checkUserSkillExists($this->id))) ? "yes":"no",
             "related_jobs"=>[],
         ];

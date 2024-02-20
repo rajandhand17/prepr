@@ -60,7 +60,6 @@ class WikipediaHelper
                 $responseStatus = false;
             }
             $responseStatus = $response->getStatusCode() == 200 ? json_decode($response->getBody(), true) : false;
-
             return $responseStatus;
         } catch (\Exception $e) {
             return false;
