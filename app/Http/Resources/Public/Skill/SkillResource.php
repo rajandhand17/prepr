@@ -18,12 +18,15 @@ class SkillResource extends JsonResource
     {
         $skillDescription = WikipediaHelper::fetchSkillDescription($this->title, $request->language);
         $relatedSkills = WikipediaHelper::fetchRelatedSkills(config('app.skills_recommendation_engine_url').strtolower($this->title));
+        $key=gettype($relatedSkills)=='array' ? array_keys($relatedSkills) : [];
+        $relatedKeyUrl=isset($key[0])? "https://en.wikipedia.org/wiki/".str_replace(" ","_",$key[0]):[];
 
         $data = [
             'id'            => $this->id,
             'title'         => $this->title,
             'description'   => $skillDescription !== false ? $skillDescription : '',
-            'related_skills'=> $relatedSkills !== false ? $relatedSkills : [],
+            'related_skills'=> $key !== false ? $key : [],
+            'related_skill_show_more'=> $relatedKeyUrl,
             'is_saved'      => (!empty(UserSkillsService::checkUserSkillExists($this->id))) ? 'yes' : 'no',
             'related_jobs'  => [],
         ];
