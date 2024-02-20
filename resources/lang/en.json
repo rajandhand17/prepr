@@ -876,5 +876,8 @@
     "responses.skills_list": "Congratulations! You have successfully retrieved your skills list",
     "responses.skills_list_failed": "There are no skills listed in your profile.",
     "responses.skills_list_detailed": "Congratulations! You've successfully retrieved the details of your skills.",
-    "responses.no_description": "No Description Available"
+    "responses.no_description": "No Description Available",
+    "responses.already_added_skills": "You have already added this skills",
+    "responses.pinned_skills_successfully": "You have successfully pinned this skill",
+    "responses.pinned_skills_failed": "You have failed pinned this skill"
 }
