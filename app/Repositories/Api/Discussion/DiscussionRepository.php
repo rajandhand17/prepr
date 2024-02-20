@@ -28,7 +28,6 @@ class DiscussionRepository implements DiscussionInterface
     }
     public function addComment($component,$request,$getComponentId){
         try {
-
             return $this->discussionService->addComment($component,$request,$getComponentId);
         }catch (\Exception $e){
             return false;

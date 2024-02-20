@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Discussion;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Discussion\AddCommentRequest;
 use App\Http\Requests\Discussion\DiscussionRequest;
 use App\Http\Resources\Discussion\DiscussionResource;
 use App\Repositories\Api\Discussion\DiscussionRepository;
@@ -51,60 +52,72 @@ class DiscussionController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    public function componentBasedOnAction($component,$slug,DiscussionRequest $request,$activity = null){
+
+    public function addComment($component,$slug,AddCommentRequest $request){
         try {
             if (!in_array($component, ['member', 'lab', 'project', 'challenge'])) {
-                return $this->sendError(__('responses.handler_bad_request'), 400);
-            }
-            if (!in_array($activity, ['add','like','un-like'])){
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             switch ($component){
                 case 'member':
                     $getComponentId=[];
-                   break;
+                    break;
                 case 'lab':
-                   $getComponentId=LabService::getLabBasedOnSlug($slug)->id;
-                   break;
+                    $getComponentId=LabService::getLabBasedOnSlug($slug)->id;
+                    break;
                 case 'project':
                     $getComponentId=[];
-                   break;
+                    break;
                 case 'challenge':
                     $getComponentId=[];
-                   break;
+                    break;
                 default:
-                 return $this->sendError(__('responses.handler_bad_request'), 400);
-                 break;
+                    return $this->sendError(__('responses.handler_bad_request'), 400);
+                    break;
+            }
+            $addComment=$this->discussionRepository->addComment($component,$request,$getComponentId);
+            if($addComment){
+                return $this->sendResponse(DiscussionResource::make($addComment),__('responses.add_comment_successfully'));
+            }
+            return $this->sendError(__('responses.add_comment_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+    public function socialActivity($component,$slug,$id,$activity = null){
+        try {
+            if (!in_array($component, ['member', 'lab', 'project', 'challenge'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 400);
+            }
+            if (!in_array($activity, ['like','un-like'])){
+                return $this->sendError(__('responses.handler_bad_request'), 400);
+            }
+            $checkCommentIdExistsOrNot=DiscussionService::checkCommentIdExistsOrNot($id);
+            if(!$checkCommentIdExistsOrNot){
+                return $this->sendError(__('responses.not_exists_id'),422);
             }
             switch ($activity) {
-                case 'add':
-                $addComment=$this->discussionRepository->addComment($component,$request,$getComponentId);
-                if($addComment){
-                    return $this->sendResponse(DiscussionResource::make($addComment),__('responses.add_comment_successfully'));
-                }
-                break;
                 case 'like':
-                    $checkLikedOrNot=DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity,$getComponentId);
+                    $checkLikedOrNot=DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity,$id);
                     if($checkLikedOrNot){
-                        $like=$this->discussionRepository->unLikeOrUnDisLikeModule($activity,$getComponentId);
+                        $like=$this->discussionRepository->unLikeOrUnDisLikeModule($activity,$id);
                     }else{
-                        $like=$this->discussionRepository->likeDislike($activity,$getComponentId);
+                        $like=$this->discussionRepository->likeDislike($activity,$id);
                     }
                     if ($like) {
                         return $this->sendResponse(DiscussionResource::make($like), __('responses.like_successfully'));
                     }
                     break;
                 case 'un-like':
-                    $checkDisLikedOrNot = DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity, $request->comment_id);
+                    $checkDisLikedOrNot = DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity, $id);
                     if ($checkDisLikedOrNot) {
-                        $dislike = $this->discussionRepository->unLikeOrUnDisLikeModule($activity, $request->comment_id);
+                        $dislike = $this->discussionRepository->unLikeOrUnDisLikeModule($activity,$id);
                     } else {
-                        $dislike = $this->discussionRepository->likeDislike($component, $request->comment_id);
+                        $dislike = $this->discussionRepository->likeDislike($component,$id);
                     }
                     if ($dislike) {
                         return $this->sendResponse(DiscussionResource::make($dislike), __('responses.like_successfully'));
                     }
-
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                     break;

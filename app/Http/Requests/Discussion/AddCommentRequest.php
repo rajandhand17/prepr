@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class DiscussionRequest extends FormRequest
+class AddCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,18 +23,10 @@ class DiscussionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $activity = $this->route('action');
-        $base_rules = [];
-        if ($activity == 'like') {
-            $base_rules = [
-                'comment_id'=> 'required|exists:discussions,id',
-            ];
-        } elseif ($activity == 'dislikes') {
-            $base_rules = [
-                'comment_id'=> 'required|exists:discussions,id',
-            ];
-        }
-
+        $base_rules = [
+            'comment'        => 'required|string',
+            'comment_id'     => 'exists:discussions,id',
+        ];
         return $base_rules;
     }
 
