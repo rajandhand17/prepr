@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\UserSkills;
-use function Symfony\Component\Translation\t;
 
 class UserSkillsService
 {
@@ -71,7 +70,8 @@ class UserSkillsService
         }
     }
 
-    public function addSingleSkill($request){
+    public function addSingleSkill($request)
+    {
         try {
             $checkExisitngSKills = UserSkills::where(['user_id' => auth()->user()->id, 'skill'=>$request->skill_id])->first();
             if (!$checkExisitngSKills) {
@@ -79,32 +79,36 @@ class UserSkillsService
                     'user_id' => auth()->user()->id,
                     'skill'   => $request->skill_id,
                 ]);
-                    return $addSkill;
-            }else{
-                return "already";
+
+                return $addSkill;
+            } else {
+                return 'already';
             }
+
             return false;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    Public function addSkillPinned($request){
+    public function addSkillPinned($request)
+    {
         try {
-            $pinned=$request->pinned=='yes'?'1':'0';
-            $userSkill=UserSkills::where(['user_id'=>auth()->user()->id,'skill'=>$request->skill_id])->first();
-            if($userSkill){
-                $userSkill->pinned=$pinned;
+            $pinned = $request->pinned == 'yes' ? '1' : '0';
+            $userSkill = UserSkills::where(['user_id'=>auth()->user()->id, 'skill'=>$request->skill_id])->first();
+            if ($userSkill) {
+                $userSkill->pinned = $pinned;
                 $userSkill->save();
-            }else{
+            } else {
                 $userSkill = UserSkills::create([
                     'user_id' => auth()->user()->id,
                     'skill'   => $request->skill_id,
-                    'pinned' => $pinned,
+                    'pinned'  => $pinned,
                 ]);
             }
+
             return $userSkill;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

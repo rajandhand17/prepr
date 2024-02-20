@@ -18,9 +18,9 @@ class AddSkillResource extends JsonResource
         $skills = SkillService::getSkillBasedOnId($this->skill);
 
         return [
-            'id'   => $this->id,
-            'skill'=> $skills,
-            'pinned' => $this->pinned=='1'?'yes':'no',
+            'id'     => $this->id,
+            'skill'  => $skills,
+            'pinned' => $this->pinned == '1' ? 'yes' : 'no',
         ];
     }
 }

@@ -164,6 +164,7 @@ class ProfileController extends AppBaseController
             if ($addSkills) {
                 return $this->sendResponse(UserSkillsResource::collection($addSkills), __('responses.add_skills_create'));
             }
+
             return $this->sendError(__('responses.add_skills_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
