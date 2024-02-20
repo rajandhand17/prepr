@@ -8,5 +8,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{id?}', [SkillController::class, 'index']);
     Route::post('/add', [SkillController::class, 'addSkillsWithPinned']);
     Route::post('/pinned', [SkillController::class, 'addSKillPinned']);
-
 });

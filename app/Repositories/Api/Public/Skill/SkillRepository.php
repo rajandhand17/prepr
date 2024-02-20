@@ -49,19 +49,20 @@ class SkillRepository implements SkillInterface
         }
     }
 
-    public function addSkills($request){
+    public function addSkills($request)
+    {
         try {
             return $this->userSkillsService->addSingleSkill($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function addSkillPinned($request){
+    public function addSkillPinned($request)
+    {
         try {
             return $this->userSkillsService->addSkillPinned($request);
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
