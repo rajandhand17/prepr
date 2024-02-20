@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Public\Skill;
 
 use App\Helpers\WikipediaHelper;
-use App\Services\SkillService;
 use App\Services\UserSkillsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -28,9 +27,10 @@ class SkillResource extends JsonResource
             'is_saved'      => (!empty(UserSkillsService::checkUserSkillExists($this->id))) ? "yes":"no",
             "related_jobs"=>[],
         ];
-        if (isset($this->user_pinned->pinned)){
-            $data['pinned']= $this->user_pinned->pinned==1 ? 'yes':'no';
+        if (isset($this->user_pinned->pinned)) {
+            $data['pinned'] = $this->user_pinned->pinned == 1 ? 'yes' : 'no';
         }
+
         return $data;
     }
 }
