@@ -157,11 +157,6 @@ return [
         'yes' => '1',
     ],
 
-    'project_privacy' => [
-        'no'  => '0',
-        'yes' => '1',
-    ],
-
     'challenge_notification_enabled' => [
         'no'  => '0',
         'yes' => '1',
@@ -300,21 +295,22 @@ return [
     ],
 
     'project_view_enabled' => [
-        'yes'       => 'yes',
-        'no'        => 'no',
+        'no'        => '0',
+        'yes'       => '1',
     ],
 
     'project_download_enabled' => [
-        'yes'       => 'yes',
-        'no'        => 'no',
+        'no'        => '0',
+        'yes'       => '1',
     ],
 
     'project_media_type' => [
-        'image'         => 'image',
-        'embedded'      => 'embedded',
+        'image'         => '0',
+        'embedded'      => '1',
+        'video'         => '2',
     ],
 
-    'project_status' => [
+    'project_privacy' => [
         'public'       => '0',
         'private'      => '1',
     ],

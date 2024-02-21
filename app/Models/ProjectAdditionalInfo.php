@@ -11,7 +11,7 @@ class ProjectAdditionalInfo extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'project_additional_infos';
+    protected $table = 'project_additional_info';
     protected $fillable = [
         'project_id',
         'category_id',

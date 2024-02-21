@@ -6,7 +6,7 @@ use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
-use App\Services\Manage\ProjectService;
+use App\Services\ProjectService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 

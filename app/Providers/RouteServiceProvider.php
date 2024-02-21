@@ -39,6 +39,8 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapSettingRoutes();
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
+            $this->mapProjectRoutes();
+            $this->mapProjectMemberManagementRoutes();
         });
     }
 
@@ -74,6 +76,16 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/setting/')->middleware('api')->group(base_path('routes/v1/setting.php'));
     }
 
+    protected function mapProjectRoutes()
+    {
+        Route::prefix('api/v1/project/')->middleware('api')->group(base_path('routes/v1/project.php'));
+    }
+
+    protected function mapProjectMemberManagementRoutes()
+    {
+        Route::prefix('api/v1/project-member-management/')->middleware('api')->group(base_path('routes/v1/project-member-management.php'));
+    }
+
     protected function mapManageRoutes()
     {
         Route::prefix('api/v1/manage/organization/')->middleware('api')->group(base_path('routes/v1/manage/organization.php'));
@@ -87,8 +99,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/resource-group/')->middleware('api')->group(base_path('routes/v1/manage/resource-group.php'));
         Route::prefix('api/v1/manage/lab-marketplace/')->middleware('api')->group(base_path('routes/v1/manage/lab-marketplace.php'));
         Route::prefix('api/v1/manage/challenge-template/')->middleware('api')->group(base_path('routes/v1/manage/challenge-template.php'));
-        Route::prefix('api/v1/manage/project/')->middleware('api')->group(base_path('routes/v1/manage/project.php'));
-        Route::prefix('api/v1/manage/project-member-management/')->middleware('api')->group(base_path('routes/v1/manage/project-member-management.php'));
     }
 
     protected function mapPublicRoutes()
@@ -104,7 +114,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
         Route::prefix('api/v1/public/skills/')->middleware('api')->group(base_path('routes/v1/public/skills.php'));
-        Route::prefix('api/v1/public/project/')->middleware('api')->group(base_path('routes/v1/public/project.php'));
         Route::prefix('api/v1/public/project-invitation-management/')->middleware('api')->group(base_path('routes/v1/public/project-invitation-management.php'));
     }
 }

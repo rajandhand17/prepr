@@ -58,11 +58,6 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
-    'skills_recommendation_engine_url' => env('SKILLS_RECOMMENDATION_ENGINE_URL'),
-    'related_skills_auth_token'        => env('RELATED_SKILLS_AUTH_TOKEN'),
-    'jobs_recommendation_engine_url'   => env('JOBS_RECOMMENDATION_ENGINE_URL'),
-    'french_wikipedia_url'             => env('FRENCH_WIKKIPEDIA_URL'),
-    'english_wikipedia_url'            => env('ENGLISH_WIKIPEDIA_URL'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -211,6 +206,8 @@ return [
 
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
+        App\Repositories\Api\Project\ProjectServiceProvider::class,
+        App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
@@ -224,7 +221,6 @@ return [
         App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
-        App\Repositories\Api\Manage\Project\ProjectServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
@@ -239,7 +235,6 @@ return [
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
-        App\Repositories\Api\Public\Project\ProjectServiceProvider::class,
     ],
 
     /*

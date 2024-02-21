@@ -4,17 +4,22 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Skill;
+use DB;
 use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public static function getSkills($language = 'en', $search = null, $skill_id = null)
+    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id, $pagination = null)
     {
         try {
             if ($language == 'en') {
                 $skill_list = Skill::select('id', 'title');
                 if ($skill_id !== null) {
-                    $skill_list = $skill_list->whereIn('id', $skill_id);
+                    if (gettype($skill_id) == 'string') {
+                        $skill_list = $skill_list->where('id', $skill_id);
+                    } else {
+                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
+                    }
                 }
             } else {
                 //get column name based on language
@@ -26,16 +31,31 @@ class SkillService
                 }
                 $skill_list = Skill::select('id', $column_name.' as title');
             }
+
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
                 $skill_list = self::filterSkillList($skill_list, $column_name, $search);
             }
 
+            if ($sortBy !== null) {
+                switch ($sortBy) {
+                    case 'name-a-to-z':
+                        $skill_list = $skill_list->orderBy('skills.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $skill_list = $skill_list->orderBy('skills.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $skill_list = $skill_list->orderBy('skills.created_at', 'ASC');
+                        break;
+                    default:
+                        $skill_list = $skill_list->orderBy('skills.id', 'ASC');
+                }
+            }
             //take 20 results based from the table
             $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'));
-
-            if (auth()->user()) {
+            if (auth()->user() || $pagination == true) {
                 $skill_list = $skill_list->paginate(config('site-settings.pagination_per_page'));
             } else {
                 $skill_list = $skill_list->get();
