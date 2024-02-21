@@ -56,7 +56,7 @@ class UserSkillsService
     public static function getMySkills($language, $search, $pinned)
     {
         try {
-            $userSkills = UserSkills::where('user_id', auth()->user()->id);
+            $userSkills = UserSkills::where('user_id', auth()->user()->id)->orderBy('user_skills.pinned', 'desc');
             if (isset($pinned) && $pinned !== null) {
                 $checkPinned = ($pinned == 'yes') ? 1 : 0;
                 $userSkills = $userSkills->where('pinned', $checkPinned);
@@ -65,6 +65,49 @@ class UserSkillsService
             $userSkills = SkillService::getSkills($language, $search, $sortBy = null, $userSkills);
 
             return $userSkills;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addSingleSkill($request)
+    {
+        try {
+            $checkExisitngSKills = UserSkills::where(['user_id' => auth()->user()->id, 'skill'=>$request->skill_id])->first();
+            if (!$checkExisitngSKills) {
+                $addSkill = UserSkills::create([
+                    'user_id' => auth()->user()->id,
+                    'skill'   => $request->skill_id,
+                ]);
+
+                return $addSkill;
+            } else {
+                return 'already';
+            }
+
+            return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addSkillPinned($request)
+    {
+        try {
+            $pinned = $request->pinned == 'yes' ? '1' : '0';
+            $userSkill = UserSkills::where(['user_id'=>auth()->user()->id, 'skill'=>$request->skill_id])->first();
+            if ($userSkill) {
+                $userSkill->pinned = $pinned;
+                $userSkill->save();
+            } else {
+                $userSkill = UserSkills::create([
+                    'user_id' => auth()->user()->id,
+                    'skill'   => $request->skill_id,
+                    'pinned'  => $pinned,
+                ]);
+            }
+
+            return $userSkill;
         } catch(\Exception $e) {
             return false;
         }

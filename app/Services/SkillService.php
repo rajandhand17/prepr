@@ -4,11 +4,12 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Skill;
+use DB;
 use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id)
+    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id, $pagination = null)
     {
         try {
             if ($language == 'en') {
@@ -17,7 +18,7 @@ class SkillService
                     if (gettype($skill_id) == 'string') {
                         $skill_list = $skill_list->where('id', $skill_id);
                     } else {
-                        $skill_list = $skill_list->whereIn('id', $skill_id);
+                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
                     }
                 }
             } else {
@@ -30,6 +31,7 @@ class SkillService
                 }
                 $skill_list = Skill::select('id', $column_name.' as title');
             }
+
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
@@ -53,8 +55,7 @@ class SkillService
             }
             //take 20 results based from the table
             $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'));
-
-            if (auth()->user()) {
+            if (auth()->user() || $pagination == true) {
                 $skill_list = $skill_list->paginate(config('site-settings.pagination_per_page'));
             } else {
                 $skill_list = $skill_list->get();

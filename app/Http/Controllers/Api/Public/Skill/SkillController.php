@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\Public\Skill;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Public\Skill\AddSkillPinnedRequest;
+use App\Http\Requests\Public\Skill\AddSkillRequest;
+use App\Http\Resources\Public\Skill\AddSkillResource;
 use App\Http\Resources\Public\Skill\SkillResource;
 use App\Repositories\Api\Public\Skill\SkillRepository;
 use Illuminate\Http\Request;
@@ -46,6 +49,39 @@ class SkillController extends AppBaseController
         }
     }
 
+    public function addSkillsWithPinned(AddSkillRequest $request)
+    {
+        try {
+            $addSkills = $this->skillRepository->addSkills($request);
+            if ($addSkills === 'already') {
+                return $this->sendError(__('responses.already_added_skills'), 422);
+            }
+            if ($addSkills) {
+                return $this->sendResponse(AddSkillResource::make($addSkills), __('responses.add_skills_create'));
+            }
+
+            return $this->sendError(__('responses.add_skills_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function addSKillPinned(AddSkillPinnedRequest $request)
+    {
+        try {
+            $addPinnedSKills = $this->skillRepository->addSkillPinned($request);
+            if ($addPinnedSKills) {
+                $message = $request->pinned == 'yes' ? __('responses.pinned_skills_successfully') : __('responses.pinned_skills_successfully_removed');
+
+                return $this->sendResponse(AddSkillResource::make($addPinnedSKills), $message);
+            }
+
+            return $this->sendError(__('responses.pinned_skills_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function getMySkills(Request $request, $skillId = null)
     {
         try {
@@ -74,7 +110,7 @@ class SkillController extends AppBaseController
                 return $this->sendResponse($response, $message);
             }
 
-            return $this->sendError(__('responses.skills_list_failed'), 404);
+            return $this->sendResponse([], __('responses.skills_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
