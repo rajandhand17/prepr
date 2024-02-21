@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Skill;
 use Illuminate\Support\Facades\Schema;
-
+use DB;
 class SkillService
 {
     public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id)
@@ -17,7 +17,7 @@ class SkillService
                     if (gettype($skill_id) == 'string') {
                         $skill_list = $skill_list->where('id', $skill_id);
                     } else {
-                        $skill_list = $skill_list->whereIn('id', $skill_id);
+                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw("FIELD(id, " . $skill_id->implode(',') . ")");
                     }
                 }
             } else {
@@ -30,6 +30,7 @@ class SkillService
                 }
                 $skill_list = Skill::select('id', $column_name.' as title');
             }
+
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
@@ -48,7 +49,7 @@ class SkillService
                         $skill_list = $skill_list->orderBy('skills.created_at', 'ASC');
                         break;
                     default:
-                        $skill_list = $skill_list->orderBy('skills.id', 'ASC');
+                       $skill_list = $skill_list->orderBy('skills.id', 'ASC');
                 }
             }
             //take 20 results based from the table
@@ -62,7 +63,6 @@ class SkillService
             if (!$skill_list->isEmpty()) {
                 return $skill_list;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;

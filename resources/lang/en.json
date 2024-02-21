@@ -705,7 +705,7 @@
     "responses.add_tags_failed": "Oops! You have failed to add your tags",
     "responses.country_list_fetched_successfully": "Congratulations! You have successfully fetched countries",
     "responses.countries_fetched_failed": "Oops! The fetching countries list has failed",
-    "responses.delete_skills": "You have successfully deleted your Skill",
+    "responses.delete_skills": "The skills have been successfully removed",
     "responses.failed_delete_skills": "Oops! You have failed to delete your Skill",
     "responses.delete_tags": "The tag has been deleted successfully.",
     "responses.failed_delete_tags": "Oops! You have failed to delete your tag",
@@ -879,5 +879,6 @@
     "responses.no_description": "No Description Available",
     "responses.already_added_skills": "You have already added this skills",
     "responses.pinned_skills_successfully": "You have successfully pinned this skill",
+    "responses.pinned_skills_successfully_removed": "You have successfully removed pinned skill",
     "responses.pinned_skills_failed": "You have failed pinned this skill"
 }
