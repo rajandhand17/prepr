@@ -541,26 +541,6 @@ class ChallengeService
         }
     }
 
-    public function getProjectChallenges($request)
-    {
-        try {
-            $userID = auth()->user()->id;
-            $userEmail = auth()->user()->email;
-            $challengeUsedIds = Project::where('user_id', $userID)->pluck('challenge_id');
-            $challengeMemberIds = MemberManagement::where(['module_type' => '2', 'invite_status' => '1', 'email' => $userEmail])->pluck('module_id');
-            $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
-            $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
-
-            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->whereIn('id', $challengesDiffIds);
-            $challenge_list = self::filterChallengeList($challenge_list, $request);
-            $limit = config('site-settings.listing_limit');
-
-            return $challenge_list->limit($limit)->get();
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function fetchChallengeDueDate($challengeData, $projectCreatedDate)
     {
         try {

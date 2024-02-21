@@ -211,6 +211,8 @@ return [
 
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
+        App\Repositories\Api\Project\ProjectServiceProvider::class,
+        App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
@@ -224,7 +226,6 @@ return [
         App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
-        App\Repositories\Api\Manage\Project\ProjectServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
@@ -239,7 +240,6 @@ return [
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
-        App\Repositories\Api\Public\Project\ProjectServiceProvider::class,
     ],
 
     /*

@@ -395,21 +395,4 @@ class LabService
             return false;
         }
     }
-
-    public function getProjectLabs($request, $challengeId)
-    {
-        try {
-            $getLabList = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_id')->get()->pluck('lab_id');
-
-            $userEmail = auth()->user()->email;
-            $labMemberIds = MemberManagement::whereIn('module_id', $getLabList)->where(['module_type' => '1', 'invite_status' => '1', 'email' => $userEmail])->pluck('module_id');
-            $lab_list = Lab::select('uuid', 'title', 'media')->whereIn('id', $labMemberIds);
-            $lab_list = self::filterLabList($lab_list, $request);
-            $limit = config('site-settings.listing_limit');
-
-            return $lab_list->limit($limit)->get();
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 }
