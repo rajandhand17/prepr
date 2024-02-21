@@ -19,7 +19,7 @@ class SkillResource extends JsonResource
         $skillDescription = WikipediaHelper::fetchSkillDescription($this->title, $request->language);
         $relatedSkills = WikipediaHelper::fetchRelatedSkills(config('app.skills_recommendation_engine_url').strtolower($this->title));
         $key=gettype($relatedSkills)=='array' ? array_keys($relatedSkills) : [];
-        $relatedKeyUrl=isset($key[0])? "https://en.wikipedia.org/wiki/".str_replace(" ","_",$key[0]):[];
+        $relatedKeyUrl=isset($key[0])? config('app.wikipedia_url').str_replace(" ","_",$key[0]):[];
 
         $data = [
             'id'            => $this->id,
