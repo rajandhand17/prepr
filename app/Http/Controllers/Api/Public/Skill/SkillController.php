@@ -89,6 +89,7 @@ class SkillController extends AppBaseController
             } else {
                 $skillList = $this->skillRepository->getMySkills($request->language, $request->search, $request->pinned);
             }
+
             if ($skillList) {
                 $resourceClass = SkillResource::class;
                 if ($skillId == null) {
@@ -110,8 +111,6 @@ class SkillController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.skills_list'));
-
-        //    return $this->sendError(__('responses.skills_list_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
