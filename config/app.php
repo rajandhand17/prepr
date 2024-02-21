@@ -63,6 +63,7 @@ return [
     'jobs_recommendation_engine_url'   => env('JOBS_RECOMMENDATION_ENGINE_URL'),
     'french_wikipedia_url'             => env('FRENCH_WIKKIPEDIA_URL'),
     'english_wikipedia_url'            => env('ENGLISH_WIKIPEDIA_URL'),
+    'wikipedia_url'                    => env('WIKIPEDIA_URL'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
