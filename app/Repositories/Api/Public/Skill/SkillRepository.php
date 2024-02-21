@@ -23,8 +23,9 @@ class SkillRepository implements SkillInterface
             if ($skillId !== null) {
                 return $this->skillsService->getSkillBasedOnId($skillId);
             } else {
-                $pagination=true;
-                return  $this->skillsService->getSkills($language, $search, $sortBy, $skillId,$pagination);
+                $pagination = true;
+
+                return  $this->skillsService->getSkills($language, $search, $sortBy, $skillId, $pagination);
             }
             // return $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
         } catch(\Exception $e) {

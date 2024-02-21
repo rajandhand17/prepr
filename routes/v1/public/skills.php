@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\Public\Skill\SkillController;
 use Illuminate\Support\Facades\Route;
 
-
 $middleware = ['language'];
 
 Route::middleware(['language', 'auth:api'])->group(function () {
