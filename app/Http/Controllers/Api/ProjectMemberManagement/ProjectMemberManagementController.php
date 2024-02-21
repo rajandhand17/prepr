@@ -175,7 +175,7 @@ class ProjectMemberManagementController extends AppBaseController
             if ($checkProjectStatus) {
                 $projectMemberManagement = $this->projectMemberManagementRepository->participantAcceptOrRejectJoinRequest($request, $checkProjectExistsOrNot, $action);
                 if ($projectMemberManagement) {
-                    return $this->sendResponse(null, __('responses.join_request_' . $action . '_successfully'));
+                    return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }
             }
 

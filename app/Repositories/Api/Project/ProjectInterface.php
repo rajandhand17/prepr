@@ -43,5 +43,4 @@ interface ProjectInterface
     public function checkSocialActivity($projectId, $column, $action);
 
     public function captureSocialActivity($projectId, $column, $action);
-    
 }

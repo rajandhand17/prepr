@@ -6,8 +6,6 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\LabChallengeRedeem;
-use App\Models\MemberManagement;
-use App\Models\Project;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
