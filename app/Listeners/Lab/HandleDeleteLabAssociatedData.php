@@ -46,7 +46,6 @@ class HandleDeleteLabAssociatedData
                 return false;
             }
             $labTagGroups = LabTagsGroupsService::deleteLabTagsGroups($lab_id);
-
             if (!$labTagGroups) {
                 return false;
             }
@@ -55,7 +54,6 @@ class HandleDeleteLabAssociatedData
                 return false;
             }
             $labAddress = LabAddressService::deleteLabAddress($lab_id);
-
             if (!$labAddress) {
                 return false;
             }

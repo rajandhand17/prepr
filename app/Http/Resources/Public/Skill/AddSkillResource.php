@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Profile;
+namespace App\Http\Resources\Public\Skill;
 
 use App\Services\SkillService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserSkillsResource extends JsonResource
+class AddSkillResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,8 +18,9 @@ class UserSkillsResource extends JsonResource
         $skills = SkillService::getSkillBasedOnId($this->skill);
 
         return [
-            'id'   => $this->id,
-            'skill'=> $skills,
+            'id'     => $this->id,
+            'skill'  => $skills,
+            'pinned' => $this->pinned == '1' ? 'yes' : 'no',
         ];
     }
 }

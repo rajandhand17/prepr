@@ -298,4 +298,48 @@ return [
         'image'               => '6',
         'embedded_Cover_Video'=> '7',
     ],
+
+    'subscription_options'=> [
+        '0'=> 'unsubscribe',
+        '1'=> 'monthly',
+        '2'=> 'weekly',
+    ],
+
+    'privacy_options'=> [
+        '0'=> 'public',
+        '1'=> 'private',
+        '2'=> 'signed-in',
+    ],
+
+    'friend_request_options'=> [
+        '0'=> 'public',
+        '1'=> 'private',
+    ],
+
+    'notification_options'=> [
+        'unsubscribe' => '0',
+        'monthly'     => '1',
+        'weekly'      => '2',
+    ],
+
+    'subscribe_unsubscribe'=> [
+        'unsubscribe'=> '0',
+        'subscribe'  => '1',
+    ],
+
+    'profile_visibility'=> [
+        'signed-in' => '2',
+        'private'   => '1',
+        'public'    => '0',
+    ],
+
+    'privacy_friend_request'=> [
+        'public'   => '0',
+        'private'  => '1',
+    ],
+
+    'subscribe_unsubscribe_id'=> [
+        '0' => 'unsubscribe',
+        '1' => 'subscribe',
+    ],
 ];

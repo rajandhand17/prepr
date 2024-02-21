@@ -231,6 +231,8 @@ return [
         App\Repositories\Api\Public\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
+        App\Repositories\Api\Setting\SettingServiceProvider::class,
+        App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
 
     ],
 
