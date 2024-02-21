@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Api\Chat;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateConversationRequest;
 use App\Http\Resources\Chat\ConversationResource;
-use App\Repositories\Api\Chat\Conversation\ConversationRepository;
+use App\Repositories\Api\Chat\Conversation\ConversationInterface;
 use Illuminate\Http\JsonResponse;
 
 class ConversationController extends AppBaseController
 {
-    public function __construct(private readonly ConversationRepository $conversationRepository)
+    public function __construct(private readonly ConversationInterface $conversationRepository)
     {
     }
 

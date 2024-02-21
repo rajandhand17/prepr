@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Api\Chat;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateChatRequest;
 use App\Http\Resources\Chat\ChatResource;
-use App\Repositories\Api\Chat\Conversation\ConversationRepository;
-use App\Repositories\Api\Chat\Message\MessageRepository;
+use App\Repositories\Api\Chat\Conversation\ConversationInterface;
+use App\Repositories\Api\Chat\Message\MessageInterface;
 
 class MessageController extends AppBaseController
 {
-    public function __construct(private readonly MessageRepository $inboxRepository, private readonly ConversationRepository $conversationRepository)
+    public function __construct(private readonly MessageInterface $inboxRepository, private readonly ConversationInterface $conversationRepository)
     {
     }
 
