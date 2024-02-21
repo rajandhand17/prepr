@@ -8,7 +8,6 @@ use App\Helpers\UtilityHelper;
 use App\Models\Project;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
-use App\Services\ProjectSubmissionRequirementService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 

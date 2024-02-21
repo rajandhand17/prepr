@@ -6,7 +6,6 @@ use App\Helpers\UtilityHelper;
 use App\Models\ProjectMemberManagement;
 use App\Notifications\InviteMemberNotification;
 use App\Services\Manage\EmailTemplateService;
-use App\Services\UserService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\DB;

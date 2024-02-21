@@ -7,8 +7,6 @@ use App\Http\Requests\Project\AddAdditionalInfoProjectRequest;
 use App\Http\Requests\Project\AddLinksProjectRequest;
 use App\Http\Requests\Project\CreateProjectRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
-use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
-use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Project\FavouriteProjectListingResource;
 use App\Http\Resources\Project\InvitedProjectListingResource;
 use App\Http\Resources\Project\MyProjectListingResource;
@@ -380,12 +378,12 @@ class ProjectController extends AppBaseController
                 $checkActivity = $this->projectRepository->checkSocialActivity($fetchProject->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
                 if ($checkActivity === true) {
-                    return $this->sendError(__('responses.already_' . $action . '_project'), 400);
+                    return $this->sendError(__('responses.already_'.$action.'_project'), 400);
                 }
 
                 $captureActivity = $this->projectRepository->captureSocialActivity($fetchProject->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 if ($captureActivity) {
-                    return $this->sendResponse([], __('responses.' . $action . '_project_successfully'));
+                    return $this->sendResponse([], __('responses.'.$action.'_project_successfully'));
                 }
             }
 

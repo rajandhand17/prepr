@@ -5,10 +5,8 @@ namespace App\Services\Manage;
 use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\ComponentAssociation;
 use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
-use App\Models\MemberManagement;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
