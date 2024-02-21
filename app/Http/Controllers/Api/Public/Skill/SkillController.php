@@ -71,7 +71,9 @@ class SkillController extends AppBaseController
         try {
             $addPinnedSKills = $this->skillRepository->addSkillPinned($request);
             if ($addPinnedSKills) {
-                return $this->sendResponse(AddSkillResource::make($addPinnedSKills), __('responses.pinned_skills_successfully'));
+                $message = $request->pinned == 'yes' ? __('responses.pinned_skills_successfully') : __('responses.pinned_skills_successfully_removed');
+
+                return $this->sendResponse(AddSkillResource::make($addPinnedSKills), $message);
             }
 
             return $this->sendError(__('responses.pinned_skills_failed'), 400);
@@ -88,6 +90,7 @@ class SkillController extends AppBaseController
             } else {
                 $skillList = $this->skillRepository->getMySkills($request->language, $request->search, $request->pinned);
             }
+
             if ($skillList) {
                 $resourceClass = SkillResource::class;
                 if ($skillId == null) {
@@ -109,8 +112,6 @@ class SkillController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.skills_list'));
-
-        //    return $this->sendError(__('responses.skills_list_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

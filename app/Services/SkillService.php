@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Skill;
+use DB;
 use Illuminate\Support\Facades\Schema;
 
 class SkillService
@@ -17,7 +18,7 @@ class SkillService
                     if (gettype($skill_id) == 'string') {
                         $skill_list = $skill_list->where('id', $skill_id);
                     } else {
-                        $skill_list = $skill_list->whereIn('id', $skill_id);
+                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
                     }
                 }
             } else {
@@ -30,6 +31,7 @@ class SkillService
                 }
                 $skill_list = Skill::select('id', $column_name.' as title');
             }
+
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
