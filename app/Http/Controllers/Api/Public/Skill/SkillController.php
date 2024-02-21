@@ -42,7 +42,6 @@ class SkillController extends AppBaseController
 
                 return $this->sendResponse($response, $message);
             }
-
             return $this->sendError(__('responses.not_found_skill_list'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -89,7 +88,6 @@ class SkillController extends AppBaseController
             } else {
                 $skillList = $this->skillRepository->getMySkills($request->language, $request->search, $request->pinned);
             }
-
             if ($skillList) {
                 $resourceClass = SkillResource::class;
                 if ($skillId == null) {
@@ -106,10 +104,8 @@ class SkillController extends AppBaseController
                     $response = $resourceClass::make($skillList);
                     $message = __('responses.skills_list_detailed');
                 }
-
                 return $this->sendResponse($response, $message);
             }
-
             return $this->sendResponse([], __('responses.skills_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
