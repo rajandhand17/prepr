@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id)
+    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id, $pagination = null)
     {
         try {
             if ($language == 'en') {
@@ -55,8 +55,7 @@ class SkillService
             }
             //take 20 results based from the table
             $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'));
-
-            if (auth()->user()) {
+            if (auth()->user() || $pagination == true) {
                 $skill_list = $skill_list->paginate(config('site-settings.pagination_per_page'));
             } else {
                 $skill_list = $skill_list->get();
