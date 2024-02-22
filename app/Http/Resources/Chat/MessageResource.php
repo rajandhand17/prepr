@@ -3,10 +3,11 @@
 namespace App\Http\Resources\Chat;
 
 use App\Http\Resources\User\UserResource;
+use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ChatResource extends JsonResource
+class MessageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,8 +21,8 @@ class ChatResource extends JsonResource
             'uuid' => $this->uuid,
             'message' => $this->message,
             'attachment' => $this->attachment,
-            'sender' => ChatUserResource::make($this->sender),
-            "seen_users" => ChatUserResource::collection($this->chat_seen_user),
+            'sender' => UserSearchResource::make($this->sender),
+            "seen_users" => UserSearchResource::collection($this->chat_seen_user),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

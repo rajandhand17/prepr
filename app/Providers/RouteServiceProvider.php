@@ -78,7 +78,9 @@ class RouteServiceProvider extends ServiceProvider
     
     protected function mapChatRoutes()
     {
-        Route::prefix('api/v1/chat/')->middleware('api')->group(base_path('routes/v1/chat.php'));
+        Route::prefix('api/v1/chat/conversation')->middleware('api')->group(base_path('routes/v1/chat/conversation.php'));
+        Route::prefix('api/v1/chat/conversation')->middleware('api')->group(base_path('routes/v1/chat/message.php'));
+        Route::prefix('api/v1/chat/websocket')->middleware('api')->group(base_path('routes/v1/chat/websocket.php'));
     }
 
     protected function mapSettingRoutes()

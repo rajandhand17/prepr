@@ -84,4 +84,9 @@ class Conversation extends Model
 
         return null;
     }
+
+    public function getTypeAttribute($value)
+    {
+        return config('constants.conversation_type_id.' . $value);
+    }
 }

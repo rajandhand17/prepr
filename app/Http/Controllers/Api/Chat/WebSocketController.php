@@ -8,7 +8,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Pusher\Pusher;
 use Pusher\PusherException;
 
-class PusherController extends AppBaseController
+class WebSocketController extends AppBaseController
 {
 
     /**

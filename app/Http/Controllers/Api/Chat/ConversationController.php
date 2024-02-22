@@ -53,6 +53,10 @@ class ConversationController extends AppBaseController
 
         $lastMessage = $conversation->lastMessage()->first();
 
+        if (!$lastMessage) {
+            return $this->sendError("there is not messages in the conversations.", 403);
+        }
+
         $data = $this->conversationRepository->markAsSeen($conversation->id, auth()->user()->id, $lastMessage->id);
 
         return $this->sendResponse($data, "marked conversation as seen");

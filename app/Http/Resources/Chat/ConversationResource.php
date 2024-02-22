@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Chat;
 
+use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,16 +19,16 @@ class ConversationResource extends JsonResource
             "id" => $this->id,
             "uuid" => $this->uuid,
             "name" => $this->name,
-            "is_archived" => $this->is_archived ? true : false,
+            "is_archived" => $this->is_archived ? 'yes' : 'no',
             "type" => $this->type,
-            "last_message" => ChatResource::make($this->lastMessage),
+            "last_message" => MessageResource::make($this->lastMessage),
             "is_conversation_seen" => $this->is_conversation_seen,
             "default_conversation_name" => $this->default_conversation_name,
-            "last_seen_message" => ChatResource::make(data_get($this->lastSeenMessage, 'chat')),
+            "last_seen_message" => MessageResource::make(data_get($this->lastSeenMessage, 'chat')),
             "group_photo" => $this->group_photo,
             "is_private" => $this->is_private ? true : false,
             "users" => collect($this->users)->map(function ($item) {
-                return ChatUserResource::make($item);
+                return UserSearchResource::make($item);
             }),
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at

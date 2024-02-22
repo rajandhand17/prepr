@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Chat;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateMessageRequest;
-use App\Http\Resources\Chat\ChatResource;
+use App\Http\Resources\Chat\MessageResource;
 use App\Repositories\Api\Chat\Conversation\ConversationInterface;
 use App\Repositories\Api\Chat\Message\MessageInterface;
 
@@ -25,7 +25,7 @@ class MessageController extends AppBaseController
             'count' => $chat->count(),
             'current_page' => $chat->currentPage(),
             'total_pages' => $chat->lastPage(),
-            'list' => ChatResource::collection($chat->items())
+            'list' => MessageResource::collection($chat->items())
         ];
 
         return $this->sendResponse($responseData, "Chat fetched successfully");
