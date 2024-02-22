@@ -84,7 +84,7 @@ class ChatService
             DB::beginTransaction();
             $chat = $this->storeChat($data);
             // the message you sent is seen by you.
-            $this->conversationService->markConversationAsSeen($data['conversation_id'], auth()->user()->id, $chat->id);
+            $this->conversationService->markAsSeen($data['conversation_id'], auth()->user()->id, $chat->id);
             dispatch(new ProcessMessageSent($chat, $data['conversation_id']))->onQueue('chat');
 
             DB::commit();

@@ -14,9 +14,9 @@ class ConversationController extends AppBaseController
     {
     }
 
-    public function index(): JsonResponse
+    public function index($type): JsonResponse
     {
-        $conversations = $this->conversationRepository->listConversation();
+        $conversations = $this->conversationRepository->list($type);
 
         $responseData = [
             'total_count' => $conversations->total(),
@@ -47,7 +47,7 @@ class ConversationController extends AppBaseController
         return $this->sendResponse(null, 'Archived successfully');
     }
 
-    public function markAsSeen(string $uuid)
+    public function seen(string $uuid)
     {
         $conversation = $this->conversationRepository->getConversationByUUID($uuid);
 
@@ -62,11 +62,11 @@ class ConversationController extends AppBaseController
         return $this->sendResponse($data, "marked conversation as seen");
     }
 
-    public function destroy($uuid)
+    public function archiveOrSeenOrDelete(string $uuid, string $action)
     {
-        $this->conversationRepository->deleteConversation($uuid);
+        $message = $this->conversationRepository->archiveOrSeenOrDelete($uuid, $action);
 
-        return $this->sendResponse(null, 'Conversation Deleted');
+        return $this->sendResponse(null, $message);
     }
 
 }

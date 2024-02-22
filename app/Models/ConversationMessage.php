@@ -47,11 +47,21 @@ class ConversationMessage extends Model
             return $item->user;
         });
     }
+
     public function getAttachmentsAttribute($value)
     {
         $attachments = $this->castAttribute('attachments', $value);
         return collect($attachments)->map(function ($item) {
             return Storage::disk('s3')->url($item);
         });
+    }
+
+    public function getIsSenderAttribute()
+    {
+        if ($this->sender_id === auth()->user()->id) {
+            return 'yes';
+        }
+
+        return 'no';
     }
 }

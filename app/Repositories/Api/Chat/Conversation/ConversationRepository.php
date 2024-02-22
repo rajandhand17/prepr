@@ -35,21 +35,14 @@ readonly class ConversationRepository implements ConversationInterface
         return $conversation;
     }
 
-    public function listConversation(): LengthAwarePaginator
+    public function list(string $type): LengthAwarePaginator
     {
-        return $this->conversationService->listConversation();
+        return $this->conversationService->listConversation($type);
     }
 
-    public function archiveConversation(string $uuid): int
+    public function archiveOrSeenOrDelete(string $uuid, string $action)
     {
-        $conversation = $this->getConversationByUUID($uuid);
-        return Conversation::where('id', $conversation->id)->update(['is_archived' => true]);
-    }
-
-    public function deleteConversation(string $uuid): void
-    {
-        $conversation = $this->getConversationByUUID($uuid);
-        Conversation::where('id', $conversation->id)->delete();
+        return $this->conversationService->archiveOrSeenOrDelete($uuid, $action);
     }
 
     public function markAsSeen($conversationId, $userId, $messageId): Model|Builder

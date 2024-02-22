@@ -13,6 +13,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class ConversationService
@@ -123,11 +124,10 @@ class ConversationService
         return $this->createNewConversation($preparedData);
     }
 
-    public function listConversation(): LengthAwarePaginator
+    public function listConversation(string $type): LengthAwarePaginator
     {
         $conversation = Conversation::query()
             ->with(['lastMessage', 'lastSeenMessage', 'users'])
-            ->where('is_archived', false)
             ->whereHas('users', function ($query) {
                 $query->where('user_id', auth()->user()->id);
             })->orderByDesc(
@@ -136,9 +136,12 @@ class ConversationService
                     ->orderByDesc('created_at')
                     ->limit(1)
             );
-
-        if (request()->has('is_archived') && request()->is_archived == 'true') {
-            $conversation->where('is_archived', true);
+        switch ($type) {
+            case 'archive':
+                $conversation->where('is_archived', true);
+                break;
+            case 'non-archive':
+                $conversation->where('is_archived', false);
         }
 
         if (request()->has('search')) {
@@ -154,8 +157,56 @@ class ConversationService
         return $conversation->paginate(config('site-settings.pagination_per_page'));
     }
 
-    public function markConversationAsSeen($conversationId, $userId, $messageId): Model|Builder
+    public function markAsSeen($conversationId, $userId, $messageId): Model|Builder
     {
         return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
+    }
+
+    public function getConversationByUUID(string $uuid)
+    {
+        $conversation = Conversation::where('uuid', $uuid)->first();
+
+        if (!$conversation) {
+            throw (new ModelNotFoundException())->setModel(Conversation::class);
+        }
+
+        return $conversation;
+    }
+
+    private function archive(int $id): int
+    {
+        return Conversation::where('id', $id)->update(['is_archived' => true]);
+    }
+
+    private function delete(string $uuid): void
+    {
+        Conversation::where('uuid', $uuid)->delete();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function archiveOrSeenOrDelete(string $uuid, $action)
+    {
+        $conversation = $this->getConversationByUUID($uuid);
+        $message = '';
+        switch ($action) {
+            case "archive":
+                $this->archive($conversation->id);
+                $message = "Conversation successfully archived";
+                break;
+            case 'seen':
+                $this->markAsSeen($conversation->id, auth()->user()->id, data_get($conversation->lastMessage()->first(), 'id'));
+                $message = "conversation is marked as seen";
+                break;
+            case 'delete':
+                $this->delete($uuid);
+                $message = "conversation is marked as delete";
+                break;
+            default:
+                throw new Exception('action can be either archive, seen or delete');
+        }
+
+        return $message;
     }
 }
