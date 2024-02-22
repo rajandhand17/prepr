@@ -21,7 +21,7 @@ class ConversationService
     /**
      * @throws InsufficientConversationMember
      */
-    private function prepareConversationData(array $data): array
+    private function prepareConversationData(array $data)
     {
         $userIds = collect([...$data['users'], auth()->user()->id])->unique()->map(function ($item) {
             return (int)$item;
@@ -57,7 +57,7 @@ class ConversationService
         return data_get($conversationIds, 'conversation_id');
     }
 
-    private function isConversationAlreadyExists(array $userIds): bool
+    private function isConversationAlreadyExists(array $userIds)
     {
         if ($this->getConversationIdHavingUsers($userIds)) {
             return true;
@@ -66,7 +66,7 @@ class ConversationService
         return false;
     }
 
-    private function getConversationByUsers(array $userIds): Model|Collection|Builder|array|null
+    private function getConversationByUsers(array $userIds)
     {
         $conversationId = $this->getConversationIdHavingUsers($userIds);
 
@@ -77,7 +77,7 @@ class ConversationService
         return null;
     }
 
-    private function getConversationById(int $id): Model|Collection|Builder|array|null
+    private function getConversationById(int $id)
     {
         return Conversation::find($id);
     }
@@ -85,7 +85,7 @@ class ConversationService
     /**
      * @throws Exception
      */
-    private function createNewConversation(array $data): Model|Builder
+    private function createNewConversation(array $data)
     {
         try {
             DB::beginTransaction();
@@ -110,17 +110,17 @@ class ConversationService
         }
     }
 
-    public function markAsSeen($conversationId, $userId, $messageId): Model|Builder
+    public function markAsSeen($conversationId, $userId, $messageId)
     {
         return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
     }
 
-    private function archive(int $id): int
+    private function archive(int $id)
     {
         return Conversation::where('id', $id)->update(['is_archived' => true]);
     }
 
-    private function delete(string $uuid): void
+    private function delete(string $uuid)
     {
         Conversation::where('uuid', $uuid)->delete();
     }
@@ -128,7 +128,7 @@ class ConversationService
     /**
      * @throws Exception
      */
-    public function create(array $data): Model|Collection|Builder|array|null
+    public function create(array $data)
     {
         $preparedData = $this->prepareConversationData($data);
 
@@ -139,7 +139,7 @@ class ConversationService
         return $this->createNewConversation($preparedData);
     }
 
-    public function list(string $type): LengthAwarePaginator
+    public function list(string $type)
     {
         $conversation = Conversation::query()
             ->with(['lastMessage', 'lastSeenMessage', 'users'])
@@ -186,7 +186,7 @@ class ConversationService
     /**
      * @throws Exception
      */
-    public function archiveOrSeenOrDelete(string $uuid, $action): string
+    public function archiveOrSeenOrDelete(string $uuid, $action)
     {
         $conversation = $this->getByUUID($uuid);
         $message = '';

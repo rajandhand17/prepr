@@ -15,14 +15,14 @@ use Illuminate\Support\Facades\DB;
 class MessageService
 {
 
-    public function __construct(private ConversationService $conversationService)
+    public function __construct(private readonly ConversationService $conversationService)
     {
     }
 
     /**
      * @throws Exception
      */
-    private function storeFiles(): array
+    private function storeFiles()
     {
         $chatFiles = [];
 
@@ -46,7 +46,7 @@ class MessageService
     /**
      * @throws Exception
      */
-    private function store(array $data): Model|Builder
+    private function store(array $data)
     {
         try {
             DB::beginTransaction();
@@ -68,7 +68,7 @@ class MessageService
         }
     }
 
-    public function list(int $conversationId): LengthAwarePaginator
+    public function list(int $conversationId)
     {
         return ConversationMessage::with('sender', 'seenUsers')
             ->where('conversation_id', $conversationId)
@@ -78,7 +78,7 @@ class MessageService
     /**
      * @throws Exception
      */
-    public function send(array $data): Model|Builder
+    public function send(array $data)
     {
         try {
             DB::beginTransaction();

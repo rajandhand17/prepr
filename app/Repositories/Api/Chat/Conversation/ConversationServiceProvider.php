@@ -17,7 +17,7 @@ class ConversationServiceProvider extends ServiceProvider
     /**
      * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->app->bind(ConversationInterface::class, ConversationRepository::class);
     }

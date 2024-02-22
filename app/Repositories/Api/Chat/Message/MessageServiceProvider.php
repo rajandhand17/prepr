@@ -17,7 +17,7 @@ class MessageServiceProvider extends ServiceProvider
     /**
      * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->app->bind(MessageInterface::class, MessageRepository::class);
     }

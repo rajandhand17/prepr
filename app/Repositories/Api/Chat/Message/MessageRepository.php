@@ -14,12 +14,12 @@ readonly class MessageRepository implements MessageInterface
     {
     }
 
-    public function list(int $conversationId): LengthAwarePaginator
+    public function list(int $conversationId)
     {
         return $this->messageService->list($conversationId);
     }
 
-    public function send(array $data, $conversationId): Model|Builder
+    public function send(array $data, $conversationId)
     {
         $payload = [
             "conversation_id" => $conversationId,

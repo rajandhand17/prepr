@@ -19,7 +19,7 @@ readonly class ConversationRepository implements ConversationInterface
     /**
      * @throws \Exception
      */
-    public function create(array $data): Model|Collection|Builder|array|null
+    public function create(array $data)
     {
         return $this->conversationService->create($data);
     }
@@ -29,15 +29,13 @@ readonly class ConversationRepository implements ConversationInterface
         return $this->conversationService->getByUUID($uuid);
     }
 
-    public function list(string $type): LengthAwarePaginator
+    public function list(string $type)
     {
         return $this->conversationService->list($type);
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function archiveOrSeenOrDelete(string $uuid, string $action): string
+
+    public function archiveOrSeenOrDelete(string $uuid, string $action)
     {
         return $this->conversationService->archiveOrSeenOrDelete($uuid, $action);
     }
