@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Explore\ExploreController;
-Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::get('/explore',ExploreController::class, 'explore');
+use Illuminate\Support\Facades\Route;
 
+Route::middleware(['language'])->group(function () {
+    Route::get('/', [ExploreController::class, 'index']);
 });
