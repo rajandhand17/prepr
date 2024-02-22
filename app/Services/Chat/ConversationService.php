@@ -2,10 +2,11 @@
 
 namespace App\Services\Chat;
 
+use App\Exceptions\Chat\InsufficientConversationMember;
 use App\Jobs\ProcessConversationCreated;
 use App\Models\Conversation;
-use App\Models\Message;
-use App\Models\UserMessageSeen;
+use App\Models\ConversationMessage;
+use App\Models\ConversationSeenMessage;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -16,7 +17,29 @@ use Illuminate\Support\Facades\DB;
 
 class ConversationService
 {
-    use  ConversationHelper;
+    /**
+     * @throws InsufficientConversationMember
+     */
+    private function prepareConversationData(array $data): array
+    {
+        $userIds = collect([...$data['users'], auth()->user()->id])->unique()->map(function ($item) {
+            return (int)$item;
+        });
+        $data['users'] = $userIds->toArray();
+
+
+        if (count($userIds) < 2) {
+            throw new InsufficientConversationMember("Conversation should contains at least 2 members");
+        }
+
+        if ($data['type'] === 'message' && count($userIds) > 2) {
+            $data['type'] = config('constants.conversation_type.groupMessage');
+        } else if ($data['type'] === 'message' && count($userIds) == 2) {
+            $data['type'] = config('constants.conversation_type.directMessage');
+        }
+
+        return $data;
+    }
 
     private function getConversationIdHavingUsers(array $userIds)
     {
@@ -24,10 +47,10 @@ class ConversationService
 
         $conversationIds = Conversation::select('conversations.id as conversation_id')
             ->where('is_archived', false)
-            ->join('conversation_user', 'conversation_user.conversation_id', '=', 'conversations.id')
+            ->join('conversation_users', 'conversation_users.conversation_id', '=', 'conversations.id')
             ->groupBy('conversation_id')
-            ->havingRaw("COUNT(DISTINCT conversation_user.user_id) = ?", [count($userIds)])
-            ->havingRaw("SUM(CASE WHEN conversation_user.user_id NOT IN ($userIdsTuple) THEN 1 ELSE 0 END) = 0")
+            ->havingRaw("COUNT(DISTINCT conversation_users.user_id) = ?", [count($userIds)])
+            ->havingRaw("SUM(CASE WHEN conversation_users.user_id NOT IN ($userIdsTuple) THEN 1 ELSE 0 END) = 0")
             ->first();
 
         return data_get($conversationIds, 'conversation_id');
@@ -92,6 +115,7 @@ class ConversationService
     public function start(array $data): Model|Collection|Builder|array|null
     {
         $preparedData = $this->prepareConversationData($data);
+
         if ($this->isConversationAlreadyExists($preparedData['users'])) {
             return $this->getConversationByUsers($preparedData['users']);
         }
@@ -107,7 +131,7 @@ class ConversationService
             ->whereHas('users', function ($query) {
                 $query->where('user_id', auth()->user()->id);
             })->orderByDesc(
-                Message::select('created_at')
+                ConversationMessage::select('created_at')
                     ->whereColumn('conversation_id', 'conversations.id')
                     ->orderByDesc('created_at')
                     ->limit(1)
@@ -132,6 +156,6 @@ class ConversationService
 
     public function markConversationAsSeen($conversationId, $userId, $messageId): Model|Builder
     {
-        return UserMessageSeen::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
+        return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
     }
 }

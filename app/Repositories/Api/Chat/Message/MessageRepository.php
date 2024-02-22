@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Api\Chat\Message;
 
-use App\Models\Message;
+use App\Models\ConversationMessage;
 use App\Services\Chat\ChatService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,10 +23,10 @@ readonly class MessageRepository implements MessageInterface
 
     public function getMessageByUUID($uuid)
     {
-        $message = Message::where('uuid', $uuid)->first();
+        $message = ConversationMessage::where('uuid', $uuid)->first();
 
         if (!$message) {
-            throw (new ModelNotFoundException())->setModel(Message::class);
+            throw (new ModelNotFoundException())->setModel(ConversationMessage::class);
         }
 
         return $message;

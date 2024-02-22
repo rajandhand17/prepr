@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
-class Message extends Model
+class ConversationMessage extends Model
 {
     use HasFactory;
 
-    protected $table = 'messages';
+    protected $table = 'conversation_messages';
 
     protected $casts = ['attachments' => 'object'];
 
@@ -38,7 +38,7 @@ class Message extends Model
 
     public function seenUsers(): HasMany
     {
-        return $this->hasMany(UserMessageSeen::class, 'message_id', 'id')->with('user');
+        return $this->hasMany(ConversationSeenMessage::class, 'message_id', 'id')->with('user');
     }
 
     public function getChatSeenUserAttribute()

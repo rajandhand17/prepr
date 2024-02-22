@@ -6,7 +6,7 @@ namespace App\Http\Requests\Chat;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class CreateChatRequest extends BaseRequest
+class CreateMessageRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.

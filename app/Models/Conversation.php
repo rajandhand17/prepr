@@ -15,7 +15,6 @@ class Conversation extends Model
 
     protected $fillable = [
         'uuid',
-        'name',
         'is_archived',
         'type',
         'group_photo',
@@ -25,29 +24,28 @@ class Conversation extends Model
 
     public function chats()
     {
-        return $this->hasMany(Message::class, 'conversation_id', 'id');
+        return $this->hasMany(ConversationMessage::class, 'conversation_id', 'id');
     }
 
     public function lastMessage()
     {
-        return $this->hasOne(Message::class, 'conversation_id', 'id')->orderBy('created_at', 'DESC');
+        return $this->hasOne(ConversationMessage::class, 'conversation_id', 'id')->orderBy('created_at', 'DESC');
     }
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'conversation_user', 'conversation_id', 'user_id');
+        return $this->belongsToMany(User::class, 'conversation_users', 'conversation_id', 'user_id');
     }
 
     public function lastSeenMessage()
     {
-        return $this->hasOne(UserMessageSeen::class, 'conversation_id', 'id')
+        return $this->hasOne(ConversationSeenMessage::class, 'conversation_id', 'id')
             ->with('chat')
             ->where('user_id', auth()->user()->id);
     }
 
     public function getIsConversationSeenAttribute()
     {
-
         $lastMessageInConversation = $this->lastMessage()->first();
         $lastSeenMessage = $this->lastSeenMessage()->first();
 
@@ -86,5 +84,4 @@ class Conversation extends Model
 
         return null;
     }
-
 }

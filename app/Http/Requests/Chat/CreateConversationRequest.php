@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests\Chat;
 
-use App\Enum\ConversationType;
 use App\Http\Requests\BaseRequest;
-use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class CreateConversationRequest extends BaseRequest
 {
@@ -19,13 +18,13 @@ class CreateConversationRequest extends BaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
             'users' => 'required|exists:App\Models\User,id',
-            'type' => ['required', Rule::enum(ConversationType::class)]
+            'type' => 'required|in:announcement,message'
         ];
     }
 }

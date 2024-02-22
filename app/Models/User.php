@@ -670,13 +670,6 @@ class User extends Authenticatable
 
     public function conversations()
     {
-        return $this->belongsToMany(Conversation::class, 'conversation_user', 'user_id', 'conversation_id');
+        return $this->belongsToMany(Conversation::class, 'conversation_users', 'user_id', 'conversation_id');
     }
-
-//    protected function fullName(): Attribute
-//    {
-//        return Attribute::make(
-//            get: fn(mixed $value, array $attribute) => $this->first_name . ' ' . $this->lastName,
-//        );
-//    }
 }

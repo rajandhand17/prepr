@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('conversation_user', function (Blueprint $table) {
+        Schema::create('conversation_users', function (Blueprint $table) {
             $table->foreignId('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
@@ -23,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('conversation_user');
+        Schema::dropIfExists('conversation_users');
     }
 };

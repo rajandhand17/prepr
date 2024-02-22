@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,9 +13,8 @@ return new class extends Migration
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
-            $table->string('name')->nullable();
             $table->boolean('is_archived')->default(false);
-            $table->enum('type', ['directMessage', 'groupMessage', 'announcement']);
+            $table->enum('type', ['0', '1', '2'])->comment('0->directMessage, 1->groupMessage, 2->announcement');
             $table->string('group_photo')->nullable();
             $table->boolean('is_private')->default(true);
             $table->foreignId('created_by')->references('id')->on('users')->onDelete('cascade');

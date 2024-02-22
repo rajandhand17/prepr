@@ -343,8 +343,13 @@ return [
         '1' => 'subscribe',
     ],
     "conversation_type" => [
-        'directMessage' => 'directMessage',
-        'groupMessage' => 'groupMessage',
-        'announcement' => 'announcement'
-    ]
+        'directMessage' => '0',
+        'groupMessage' => '1',
+        'announcement' => '2'
+    ],
+    "conversation_type_id" => [
+        '0' => 'directMessage',
+        '1' => 'groupMessage',
+        '2' => 'announcement'
+    ],
 ];

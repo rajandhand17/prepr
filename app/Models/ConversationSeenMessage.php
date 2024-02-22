@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class UserMessageSeen extends Model
+class ConversationSeenMessage extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_message_seen';
+    protected $table = 'conversation_seen_messages';
 
     protected $fillable = [
         'conversation_id',
@@ -30,6 +30,6 @@ class UserMessageSeen extends Model
 
     public function chat(): BelongsTo
     {
-        return $this->belongsTo(Message::class, 'message_id', 'id');
+        return $this->belongsTo(ConversationMessage::class, 'message_id', 'id');
     }
 }

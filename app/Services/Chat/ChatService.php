@@ -4,7 +4,7 @@ namespace App\Services\Chat;
 
 use App\Helpers\FileUploadHelper;
 use App\Jobs\ProcessMessageSent;
-use App\Models\Message;
+use App\Models\ConversationMessage;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -52,7 +52,7 @@ class ChatService
             DB::beginTransaction();
             $chatFiles = $this->storeChatFiles();
 
-            $chat = Message::create([
+            $chat = ConversationMessage::create([
                 'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 "conversation_id" => $data['conversation_id'],
                 "message" => $data['message'],
@@ -70,7 +70,7 @@ class ChatService
 
     public function listChat(int $conversationId): LengthAwarePaginator
     {
-        return Message::with('sender', 'seenUsers')
+        return ConversationMessage::with('sender', 'seenUsers')
             ->where('conversation_id', $conversationId)
             ->paginate(30);
     }

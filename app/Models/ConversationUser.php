@@ -9,7 +9,7 @@ class ConversationUser extends Model
 {
     use HasFactory;
 
-    protected $table = 'conversation_user';
+    protected $table = 'conversation_users';
 
     protected $primaryKey = ['conversation_id', 'user_id'];
 

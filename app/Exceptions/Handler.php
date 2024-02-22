@@ -56,8 +56,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        Log::error($e);
-        if ($e instanceof NotFoundException || $e instanceof ModelNotFoundException) {
+        if ($e instanceof NotFoundException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_not_found_404')), 404);
         }
 
