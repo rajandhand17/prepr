@@ -90,7 +90,6 @@ class SkillController extends AppBaseController
             } else {
                 $skillList = $this->skillRepository->getMySkills($request->language, $request->search, $request->pinned);
             }
-
             if ($skillList) {
                 $resourceClass = SkillResource::class;
                 if ($skillId == null) {
