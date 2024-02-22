@@ -19,34 +19,26 @@ readonly class ConversationRepository implements ConversationInterface
     /**
      * @throws \Exception
      */
-    public function createConversation(array $data): Model|Collection|Builder|array|null
+    public function create(array $data): Model|Collection|Builder|array|null
     {
-        return $this->conversationService->start($data);
+        return $this->conversationService->create($data);
     }
 
-    public function getConversationByUUID(string $uuid)
+    public function getByUUID(string $uuid)
     {
-        $conversation = Conversation::where('uuid', $uuid)->first();
-
-        if (!$conversation) {
-            throw (new ModelNotFoundException())->setModel(Conversation::class);
-        }
-
-        return $conversation;
+        return $this->conversationService->getByUUID($uuid);
     }
 
     public function list(string $type): LengthAwarePaginator
     {
-        return $this->conversationService->listConversation($type);
+        return $this->conversationService->list($type);
     }
 
-    public function archiveOrSeenOrDelete(string $uuid, string $action)
+    /**
+     * @throws \Exception
+     */
+    public function archiveOrSeenOrDelete(string $uuid, string $action): string
     {
         return $this->conversationService->archiveOrSeenOrDelete($uuid, $action);
-    }
-
-    public function markAsSeen($conversationId, $userId, $messageId): Model|Builder
-    {
-        return $this->conversationService->markConversationAsSeen($conversationId, $userId, $messageId);
     }
 }

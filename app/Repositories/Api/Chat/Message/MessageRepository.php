@@ -2,43 +2,30 @@
 
 namespace App\Repositories\Api\Chat\Message;
 
-use App\Models\ConversationMessage;
-use App\Services\Chat\ChatService;
+use App\Services\Chat\MessageService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 readonly class MessageRepository implements MessageInterface
 {
 
-    public function __construct(private ChatService $chatService)
+    public function __construct(private MessageService $messageService)
     {
     }
 
-    public function listMessage(int $conversationId): LengthAwarePaginator
+    public function list(int $conversationId): LengthAwarePaginator
     {
-        return $this->chatService->listChat($conversationId);
+        return $this->messageService->list($conversationId);
     }
 
-    public function getMessageByUUID($uuid)
-    {
-        $message = ConversationMessage::where('uuid', $uuid)->first();
-
-        if (!$message) {
-            throw (new ModelNotFoundException())->setModel(ConversationMessage::class);
-        }
-
-        return $message;
-    }
-
-    public function sendChat(array $data, $conversationId): Model|Builder
+    public function send(array $data, $conversationId): Model|Builder
     {
         $payload = [
             "conversation_id" => $conversationId,
             "message" => $data['message']
         ];
 
-        return $this->chatService->sendChat($payload);
+        return $this->messageService->send($payload);
     }
 }

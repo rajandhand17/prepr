@@ -16,8 +16,8 @@ class MessageController extends AppBaseController
 
     public function index(string $conversation_uuid)
     {
-        $conversation = $this->conversationRepository->getConversationByUUID($conversation_uuid);
-        $chat = $this->messageRepository->listMessage($conversation->id);
+        $conversation = $this->conversationRepository->getByUUID($conversation_uuid);
+        $chat = $this->messageRepository->list($conversation->id);
 
         $responseData = [
             'total_count' => $chat->total(),
@@ -33,7 +33,7 @@ class MessageController extends AppBaseController
 
     public function store(string $conversation_uuid, CreateMessageRequest $request)
     {
-        $conversation = $this->conversationRepository->getConversationByUUID($conversation_uuid);
-        return $this->messageRepository->sendChat($request->validated(), $conversation->id);
+        $conversation = $this->conversationRepository->getByUUID($conversation_uuid);
+        return $this->messageRepository->send($request->validated(), $conversation->id);
     }
 }

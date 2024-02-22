@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateConversationRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Repositories\Api\Chat\Conversation\ConversationInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 class ConversationController extends AppBaseController
@@ -31,36 +32,15 @@ class ConversationController extends AppBaseController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(CreateConversationRequest $request): JsonResponse
     {
-        $conversation = $this->conversationRepository->createConversation($request->validated());
+        $conversation = $this->conversationRepository->create($request->validated());
 
         return $this->sendResponse(new ConversationResource($conversation), "Conversation created");
     }
 
-    public function archive($uuid)
-    {
-        $this->conversationRepository->archiveConversation($uuid);
-
-        return $this->sendResponse(null, 'Archived successfully');
-    }
-
-    public function seen(string $uuid)
-    {
-        $conversation = $this->conversationRepository->getConversationByUUID($uuid);
-
-        $lastMessage = $conversation->lastMessage()->first();
-
-        if (!$lastMessage) {
-            return $this->sendError("there is not messages in the conversations.", 403);
-        }
-
-        $data = $this->conversationRepository->markAsSeen($conversation->id, auth()->user()->id, $lastMessage->id);
-
-        return $this->sendResponse($data, "marked conversation as seen");
-    }
 
     public function archiveOrSeenOrDelete(string $uuid, string $action)
     {

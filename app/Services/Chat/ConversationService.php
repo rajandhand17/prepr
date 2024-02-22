@@ -110,10 +110,25 @@ class ConversationService
         }
     }
 
+    public function markAsSeen($conversationId, $userId, $messageId): Model|Builder
+    {
+        return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
+    }
+
+    private function archive(int $id): int
+    {
+        return Conversation::where('id', $id)->update(['is_archived' => true]);
+    }
+
+    private function delete(string $uuid): void
+    {
+        Conversation::where('uuid', $uuid)->delete();
+    }
+
     /**
      * @throws Exception
      */
-    public function start(array $data): Model|Collection|Builder|array|null
+    public function create(array $data): Model|Collection|Builder|array|null
     {
         $preparedData = $this->prepareConversationData($data);
 
@@ -124,7 +139,7 @@ class ConversationService
         return $this->createNewConversation($preparedData);
     }
 
-    public function listConversation(string $type): LengthAwarePaginator
+    public function list(string $type): LengthAwarePaginator
     {
         $conversation = Conversation::query()
             ->with(['lastMessage', 'lastSeenMessage', 'users'])
@@ -157,12 +172,7 @@ class ConversationService
         return $conversation->paginate(config('site-settings.pagination_per_page'));
     }
 
-    public function markAsSeen($conversationId, $userId, $messageId): Model|Builder
-    {
-        return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
-    }
-
-    public function getConversationByUUID(string $uuid)
+    public function getByUUID(string $uuid)
     {
         $conversation = Conversation::where('uuid', $uuid)->first();
 
@@ -173,22 +183,12 @@ class ConversationService
         return $conversation;
     }
 
-    private function archive(int $id): int
-    {
-        return Conversation::where('id', $id)->update(['is_archived' => true]);
-    }
-
-    private function delete(string $uuid): void
-    {
-        Conversation::where('uuid', $uuid)->delete();
-    }
-
     /**
      * @throws Exception
      */
-    public function archiveOrSeenOrDelete(string $uuid, $action)
+    public function archiveOrSeenOrDelete(string $uuid, $action): string
     {
-        $conversation = $this->getConversationByUUID($uuid);
+        $conversation = $this->getByUUID($uuid);
         $message = '';
         switch ($action) {
             case "archive":

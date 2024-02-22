@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class ChatService
+class MessageService
 {
 
     public function __construct(private ConversationService $conversationService)
@@ -22,7 +22,7 @@ class ChatService
     /**
      * @throws Exception
      */
-    private function storeChatFiles(): array
+    private function storeFiles(): array
     {
         $chatFiles = [];
 
@@ -46,11 +46,11 @@ class ChatService
     /**
      * @throws Exception
      */
-    private function storeChat(array $data): Model|Builder
+    private function store(array $data): Model|Builder
     {
         try {
             DB::beginTransaction();
-            $chatFiles = $this->storeChatFiles();
+            $chatFiles = $this->storeFiles();
 
             $chat = ConversationMessage::create([
                 'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
@@ -68,7 +68,7 @@ class ChatService
         }
     }
 
-    public function listChat(int $conversationId): LengthAwarePaginator
+    public function list(int $conversationId): LengthAwarePaginator
     {
         return ConversationMessage::with('sender', 'seenUsers')
             ->where('conversation_id', $conversationId)
@@ -78,11 +78,11 @@ class ChatService
     /**
      * @throws Exception
      */
-    public function sendChat(array $data): Model|Builder
+    public function send(array $data): Model|Builder
     {
         try {
             DB::beginTransaction();
-            $chat = $this->storeChat($data);
+            $chat = $this->store($data);
             // the message you sent is seen by you.
             $this->conversationService->markAsSeen($data['conversation_id'], auth()->user()->id, $chat->id);
             dispatch(new ProcessMessageSent($chat, $data['conversation_id']))->onQueue('chat');
