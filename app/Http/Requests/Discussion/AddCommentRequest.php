@@ -27,6 +27,7 @@ class AddCommentRequest extends FormRequest
             'comment'        => 'required|string',
             'comment_id'     => 'exists:discussions,id',
         ];
+
         return $base_rules;
     }
 
