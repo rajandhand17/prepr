@@ -32,7 +32,11 @@ class ExploreController extends AppBaseController
 
                     ];
                 }else{
-
+                    $response=[
+                        'labs'  =>LabResource::collection($explore['labs']),
+                        'skills'=>SkillResource::collection($explore['skills']),
+                        'tags'  =>TagResource::collection($explore['tags']),
+                    ];
                 }
 
                 return $this->sendResponse($response, __('responses.found_user_profile_detail'));
