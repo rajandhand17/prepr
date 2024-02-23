@@ -18,8 +18,8 @@ class CommentReplies extends JsonResource
     public function toArray(Request $request): array
     {
         $discussionModuleType = array_search($this->module_type, config('constants.discussion_module_type'));
-        $getLikedByUser=0;
-        $getDislikedByUser=0;
+        $getLikedByUser = 0;
+        $getDislikedByUser = 0;
         if ($this->liked_by) {
             $getLikedById = $this->liked_by->pluck('user_id');
             $getLikedByUser = UserService::getUserById($getLikedById)->count();
@@ -31,12 +31,12 @@ class CommentReplies extends JsonResource
         $byMe = DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id, auth()->user()->id);
 
         $data = [
-            'id'            => $this->id,
-            'comment'       => $this->comments,
-            'likes'         => $getLikedByUser,
+            'id'             => $this->id,
+            'comment'        => $this->comments,
+            'likes'          => $getLikedByUser,
             'dislikes'       => $getDislikedByUser,
-            'by_me'         => $byMe,
-            'user_details'  => UserSearchResource::make($this->users),
+            'by_me'          => $byMe,
+            'user_details'   => UserSearchResource::make($this->users),
         ];
 
         return $data;

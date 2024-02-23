@@ -66,7 +66,7 @@ class DiscussionController extends AppBaseController
             if (!in_array($component, ['lab', 'project', 'challenge'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            if (!in_array($activity, ['like','dislike'])){
+            if (!in_array($activity, ['like', 'dislike'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);

@@ -30,12 +30,12 @@ class DiscussionResource extends JsonResource
         }
         $byMe = DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id, auth()->user()->id);
         $data = [
-            'id'            => $this->id,
-            'comment'       => $this->comments,
-            'likes'         => $getLikedByUser,
-            'dislikes'      => $getDislikedByUser,
-            'by_me'         => $byMe,
-            'user_details'  => UserSearchResource::make($this->users),
+            'id'             => $this->id,
+            'comment'        => $this->comments,
+            'likes'          => $getLikedByUser,
+            'dislikes'       => $getDislikedByUser,
+            'by_me'          => $byMe,
+            'user_details'   => UserSearchResource::make($this->users),
             'comment_replies'=> CommentReplies::collection($this->comments_reply),
         ];
 
