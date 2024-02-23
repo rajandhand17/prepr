@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api\Discussion;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Discussion\AddCommentRequest;
-use App\Http\Requests\Discussion\DiscussionRequest;
 use App\Http\Resources\Discussion\DiscussionResource;
 use App\Repositories\Api\Discussion\DiscussionRepository;
 use App\Services\DiscussionService;
 use App\Services\DiscussionSocialActivitiesService;
-use App\Services\Manage\LabService;
 
 class DiscussionController extends AppBaseController
 {
@@ -23,26 +22,11 @@ class DiscussionController extends AppBaseController
     public function index($component, $slug)
     {
         try {
-            if (!in_array($component, ['member', 'lab', 'project', 'challenge'])) {
+            if (!in_array($component, ['lab', 'project', 'challenge'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            switch ($component){
-                case 'member':
-                    $getComponentId=[];
-                    break;
-                case 'lab':
-                    $getComponentId=LabService::getLabBasedOnSlug($slug)->id;
-                    break;
-                case 'project':
-                    $getComponentId=[];
-                    break;
-                case 'challenge':
-                    $getComponentId=[];
-                    break;
-                default:
-                    return $this->sendError(__('responses.handler_bad_request'), 400);
-                    break;
-            }
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component,$slug);
+            $getComponentId=$checkComponentBasedOnSlug->id;
             $list = $this->discussionRepository->index($component, $getComponentId);
             if ($list->count() > 0) {
                 return $this->sendResponse(DiscussionResource::collection($list), __('responses.comments_lists_successfully'));
@@ -55,26 +39,11 @@ class DiscussionController extends AppBaseController
 
     public function addComment($component,$slug,AddCommentRequest $request){
         try {
-            if (!in_array($component, ['member', 'lab', 'project', 'challenge'])) {
+            if (!in_array($component, ['lab', 'project', 'challenge'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            switch ($component){
-                case 'member':
-                    $getComponentId=[];
-                    break;
-                case 'lab':
-                    $getComponentId=LabService::getLabBasedOnSlug($slug)->id;
-                    break;
-                case 'project':
-                    $getComponentId=[];
-                    break;
-                case 'challenge':
-                    $getComponentId=[];
-                    break;
-                default:
-                    return $this->sendError(__('responses.handler_bad_request'), 400);
-                    break;
-            }
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component,$slug);
+            $getComponentId=$checkComponentBasedOnSlug->id;
             $addComment=$this->discussionRepository->addComment($component,$request,$getComponentId);
             if($addComment){
                 return $this->sendResponse(DiscussionResource::make($addComment),__('responses.add_comment_successfully'));
@@ -86,13 +55,15 @@ class DiscussionController extends AppBaseController
     }
     public function socialActivity($component,$slug,$id,$activity = null){
         try {
-            if (!in_array($component, ['member', 'lab', 'project', 'challenge'])) {
+            if (!in_array($component, ['lab', 'project', 'challenge'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             if (!in_array($activity, ['like','un-like'])){
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            $checkCommentIdExistsOrNot=DiscussionService::checkCommentIdExistsOrNot($id);
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component,$slug);
+            $getComponentId=$checkComponentBasedOnSlug->id;
+            $checkCommentIdExistsOrNot=DiscussionService::checkCommentIdExistsOrNot($id,$getComponentId);
             if(!$checkCommentIdExistsOrNot){
                 return $this->sendError(__('responses.not_exists_id'),422);
             }
@@ -100,7 +71,7 @@ class DiscussionController extends AppBaseController
                 case 'like':
                     $checkLikedOrNot=DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity,$id);
                     if($checkLikedOrNot){
-                        $like=$this->discussionRepository->unLikeOrUnDisLikeModule($activity,$id);
+                        $like=$this->discussionRepository->unLikeOrUnDisLikeComponent($activity,$id);
                     }else{
                         $like=$this->discussionRepository->likeDislike($activity,$id);
                     }
@@ -111,7 +82,7 @@ class DiscussionController extends AppBaseController
                 case 'un-like':
                     $checkDisLikedOrNot = DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity, $id);
                     if ($checkDisLikedOrNot) {
-                        $dislike = $this->discussionRepository->unLikeOrUnDisLikeModule($activity,$id);
+                        $dislike = $this->discussionRepository->unLikeOrUnDisLikeComponent($activity,$id);
                     } else {
                         $dislike = $this->discussionRepository->likeDislike($component,$id);
                     }
@@ -128,31 +99,16 @@ class DiscussionController extends AppBaseController
         }
     }
 
-    public function deleteComment($component,$slug)
+    public function deleteComment($component,$slug,$id)
     {
         try {
-            switch ($component){
-                case 'member':
-                    $discussionId=[];
-                    break;
-                case 'lab':
-                    $discussionId=LabService::getLabBasedOnSlug($slug)->id;
-                    break;
-                case 'project':
-                    $discussionId=[];
-                    break;
-                case 'challenge':
-                    $discussionId=[];
-                    break;
-                default:
-                    return $this->sendError(__('responses.handler_bad_request'), 400);
-                    break;
-            }
-            $checkCommentId = DiscussionService::checkCommentIdExistsOrNot($discussionId);
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component,$slug);
+            $getComponentId=$checkComponentBasedOnSlug->id;
+            $checkCommentId = DiscussionService::checkCommentIdExistsOrNot($id,$getComponentId);
             if (!$checkCommentId) {
                 return $this->sendError(__('responses.not_exists_id'), 422);
             }
-            $delete = $this->discussionRepository->deleteComment($discussionId);
+            $delete = $this->discussionRepository->deleteComment($id);
             if ($delete){
                 return $this->sendResponse([], __('responses.delete_successfully'));
             }

@@ -3,10 +3,10 @@
 namespace App\Repositories\Api\Master;
 
 use App\Services\AchievementConditionListService;
+use App\Services\CategoryService;
 use App\Services\ChallengeAnnouncementRecipientService;
 use App\Services\DiscussionService;
 use App\Services\CountryService;
-use App\Services\DiscussionService;
 use App\Services\FlexibleExpireDateDurationService;
 use App\Services\HostService;
 use App\Services\LabConditionService;
@@ -56,7 +56,7 @@ class MasterRepository implements MasterInterface
     private $tagGroupService;
     private $challengeAnnouncementRecipientService;
 
-    public function __construct(CountryService $countryService, DiscussionService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DiscussionService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService)
+    public function __construct(CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DiscussionService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;

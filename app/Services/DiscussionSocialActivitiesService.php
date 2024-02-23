@@ -49,7 +49,7 @@ class DiscussionSocialActivitiesService
       }
   }
 
-  public static function unLikeOrUnDisLikeModule($likeOrDislike,$comment_id){
+  public static function unLikeOrUnDisLikeComponent($likeOrDislike,$comment_id){
       try{
           $comment=Discussion::where('id',$comment_id)->first();
           if(!$comment){
@@ -80,8 +80,18 @@ class DiscussionSocialActivitiesService
         }
     }
 
-
-
-
-
+    public static function checkLikedOrUnlikedBasedOnUser($commentId,$userId)
+    {
+        try {
+            $comments=DiscussionSocialActivity::where(['comment_id'=>$commentId,'user_id'=>$userId])->first();
+            if($comments){
+                $response=$comments->like_dislikes=='1'?'like':'un-like';
+            }else{
+                $response='no-action';
+            }
+            return $response;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

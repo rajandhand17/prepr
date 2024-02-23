@@ -18,17 +18,17 @@ class CommentReplies extends JsonResource
         $discussionModuleType = array_search($this->module_type, config('constants.discussion_module_type'));
         if ($this->liked_by) {
             $getLikedById = $this->liked_by->pluck('user_id');
-            $getLikedByUser = UserService::getUserById($getLikedById);
+            $getLikedByUser = UserService::getUserById($getLikedById)->count();
         }
         if ($this->disliked_by) {
             $getDisLikedByUser = $this->disliked_by->pluck('user_id');
-            $getDislikedByUser = UserService::getUserById($getDisLikedByUser);
+            $getDislikedByUser = UserService::getUserById($getDisLikedByUser)->count();
         }
         $data = [
             'id'            => $this->id,
             'comment'       => $this->comments,
-            'likes'         => count($getLikedByUser),
-            'dis-likes'     => count($getDislikedByUser),
+            'likes'         => $getLikedByUser,
+            'un-like'       => $getDislikedByUser,
             'user_details'  => UserDetailDiscussionResource::make($this->users),
         ];
         return $data;

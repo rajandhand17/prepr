@@ -65,10 +65,10 @@ class DiscussionRepository implements DiscussionInterface
         }
     }
 
-    public function unLikeOrUnDisLikeModule($likeOrDislike, $comment_id)
+    public function unLikeOrUnDisLikeComponent($likeOrDislike, $comment_id)
     {
         try {
-            return $this->discussionSocialActivitiesService->unLikeOrUnDisLikeModule($likeOrDislike, $comment_id);
+            return $this->discussionSocialActivitiesService->unLikeOrUnDisLikeComponent($likeOrDislike, $comment_id);
         } catch (\Exception $e) {
             return false;
         }

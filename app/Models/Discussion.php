@@ -33,7 +33,7 @@ class Discussion extends Model
 
     public function users()
     {
-        return $this->hasone(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function liked_by()
@@ -45,4 +45,5 @@ class Discussion extends Model
     {
         return $this->hasMany(DiscussionSocialActivity::class, 'comment_id', 'id')->where('like_dislikes', '2');
     }
+
 }

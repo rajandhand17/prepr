@@ -20,12 +20,12 @@ class DiscussionService
             if ($getComments) {
                 return $getComments;
             }
-
             return false;
         }catch (\Exception $e) {
             return false;
         }
     }
+
     public function addComment($component,$request,$getComponentId){
         try {
             $attachmentPath=null;
@@ -62,10 +62,10 @@ class DiscussionService
         }
     }
 
-    public static function checkCommentIdExistsOrNot($commentId)
+    public static function checkCommentIdExistsOrNot($id,$commentId)
     {
         try {
-            $checkId = Discussion::where('id', $commentId)->first();
+            $checkId = Discussion::where(['id'=>$id,'module_id'=>$commentId])->first();
             if ($checkId) {
                 return $checkId;
             }
