@@ -3,11 +3,9 @@
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
-use App\Models\comment;
 use App\Models\Discussion;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use DB;
+
 class DiscussionService
 {
     public function index($component, $moduleId)
@@ -34,24 +32,26 @@ class DiscussionService
             $attachmentPath = null;
             if ($request->file('attachments') && $request->file('attachments') !== null) {
                 $attachments = $request->file('attachments');
-                $attachmentPath=FileUploadHelper::uploadImageToS3($attachments,'discussion');
+                $attachmentPath = FileUploadHelper::uploadImageToS3($attachments, 'discussion');
                 if ($attachmentPath == false) {
                     return false;
                 }
             }
             DB::beginTransaction();
-            $addComment=new Discussion();
-            $addComment->user_id     = auth()->user()->id;
-            $addComment->module_id   = $getComponentId;
+            $addComment = new Discussion();
+            $addComment->user_id = auth()->user()->id;
+            $addComment->module_id = $getComponentId;
             $addComment->module_type = config('constants.discussion_module_type.'.$component);
             $addComment->comments = $request->comment ? $request->comment : null;
             $addComment->attachment = $attachmentPath;
             $addComment->comment_id = isset($request->comment_id) ? $request->comment_id : null;
             $addComment->save();
             DB::commit();
+
             return $addComment;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
