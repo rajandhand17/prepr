@@ -28,4 +28,12 @@ class CreateMessageRequest extends BaseRequest
             'attachment' => 'required_without:message'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'message.required_without' => __('responses.message_without_attachment'),
+            'attachment.required_without' => __('responses.attachment_without_message')
+        ];
+    }
 }

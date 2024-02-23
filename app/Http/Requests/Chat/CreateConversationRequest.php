@@ -23,8 +23,17 @@ class CreateConversationRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'users' => 'required|exists:App\Models\User,id',
+            'users' => 'required|exists:users,id',
             'type' => 'required|in:announcement,message'
+        ];
+    }
+    public function messages()
+    {
+        return[
+            'users.required' => __('responses.conversation_users_required'),
+            'type.required'   => __('responses.conversation_type_required'),
+            "users.exists" => __("responses.conversation_user_exists"),
+            "type.in" => __("responses.type_in_announcement_or_message")
         ];
     }
 }

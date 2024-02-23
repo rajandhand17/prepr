@@ -878,5 +878,11 @@
     "responses.conversation_archive_successfully": "Conversation is archived successfully",
     "responses.conversation_seen_failed": "Conversation has not been seen successfully",
     "responses.conversation_delete_failed": "Deletion of Conversation failed.",
-    "responses.conversation_archive_failed": "Conversation archived is failed"
+    "responses.conversation_archive_failed": "Conversation archived is failed",
+    "responses.conversation_users_required": "Users field is required",
+    "responses.conversation_type_required": "Type field is required",
+    "responses.conversation_user_exists": "Please make sure all the users exists for given user ids.",
+    "responses.type_in_announcement_or_message": "Type can be either announcement or message",
+    "responses.message_without_attachment": "The message field is required when attachment is not present.",
+    "responses.attachment_without_message": "The attachment field is required when message is not present."
 }
