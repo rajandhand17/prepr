@@ -45,5 +45,4 @@ class Discussion extends Model
     {
         return $this->hasMany(DiscussionSocialActivity::class, 'comment_id', 'id')->where('like_dislikes', '2');
     }
-
 }
