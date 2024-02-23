@@ -61,7 +61,7 @@ class DiscussionController extends AppBaseController
             if (!in_array($component, ['lab', 'project', 'challenge'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            if (!in_array($activity, ['like','un-like'])){
+            if (!in_array($activity, ['like','dislike'])){
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component,$slug);
@@ -82,7 +82,7 @@ class DiscussionController extends AppBaseController
                         return $this->sendResponse(DiscussionResource::make($like), __('responses.like_successfully'));
                     }
                     break;
-                case 'un-like':
+                case 'dislike':
                     $checkDisLikedOrNot = DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity, $id);
                     if ($checkDisLikedOrNot) {
                         $dislike = $this->discussionRepository->unLikeOrUnDisLikeComponent($activity,$id);

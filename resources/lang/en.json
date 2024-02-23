@@ -862,6 +862,7 @@
     "responses.not_exists_id": "This comment id is not exists in our system",
     "responses.comments_lists_successfully": "You have successfully retrieved comments lists",
     "responses.comments_lists_failed": "There are no comments that related to this module",
-    "responses.slug_not_found": "This slug doesn't exist in our system."
+    "responses.slug_not_found": "This slug doesn't exist in our system.",
+    "responses.comments_field": "The Comment field is required"
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\FileUploadHelper;
 use App\Models\comment;
 use App\Models\Discussion;
 use Illuminate\Support\Facades\Storage;
@@ -31,9 +32,12 @@ class DiscussionService
             $attachmentPath=null;
             if($request->file('attachments') && $request->file('attachments') !== null){
                 $attachments = $request->file('attachments');
-                $attachmentPath = 'uploads/comments/'.auth()->user()->id.Str::random(40).'.'.$attachments->extension();
-                Storage::disk('s3')->put($attachmentPath, file_get_contents($attachments));
+                $attachmentPath=FileUploadHelper::uploadImageToS3($attachments,'discussion');
+                if ($attachmentPath == false) {
+                    return false;
+                }
             }
+            DB::beginTransaction();
             $addComment=new Discussion();
             $addComment->user_id     = auth()->user()->id;
             $addComment->module_id   = $getComponentId;
@@ -42,8 +46,10 @@ class DiscussionService
             $addComment->attachment = $attachmentPath;
             $addComment->comment_id  = isset($request->comment_id) ? $request->comment_id: null ;
             $addComment->save();
+            DB::commit();
             return $addComment;
         }catch(\Exception $e){
+            DB::rollback();
             return false;
         }
     }

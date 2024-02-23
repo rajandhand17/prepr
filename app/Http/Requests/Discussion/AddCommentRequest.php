@@ -34,7 +34,7 @@ class AddCommentRequest extends FormRequest
     {
         return [
             'module_id.required' => __('responses.module_id_required'),
-            'comment.required'   => __('responses.reference_id_required'),
+            'comment.required'   => __('responses.comments_field'),
             'user_id.exists'     => __('responses.reference_id_exists'),
         ];
     }

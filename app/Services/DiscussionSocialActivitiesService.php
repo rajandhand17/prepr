@@ -85,7 +85,7 @@ class DiscussionSocialActivitiesService
         try {
             $comments=DiscussionSocialActivity::where(['comment_id'=>$commentId,'user_id'=>$userId])->first();
             if($comments){
-                $response=$comments->like_dislikes=='1'?'like':'un-like';
+                $response=$comments->like_dislikes=='1'?'like':'dislike';
             }else{
                 $response='no-action';
             }

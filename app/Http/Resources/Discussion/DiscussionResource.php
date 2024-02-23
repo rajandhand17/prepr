@@ -34,7 +34,7 @@ class DiscussionResource extends JsonResource
             'id'            => $this->id,
             'comment'       => $this->comments,
             'likes'         => $getLikedByUser,
-            'un-likes'      => $getDislikedByUser,
+            'dislikes'      => $getDislikedByUser,
             'by_me'         => $byMe,
             'user_details'  => UserSearchResource::make($this->users),
             'comment_replies'=> CommentReplies::collection($this->comments_reply),
