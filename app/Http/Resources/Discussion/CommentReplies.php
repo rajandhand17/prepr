@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Discussion;
 
+use App\Services\DiscussionSocialActivitiesService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,11 +25,14 @@ class CommentReplies extends JsonResource
             $getDisLikedByUser = $this->disliked_by->pluck('user_id');
             $getDislikedByUser = UserService::getUserById($getDisLikedByUser)->count();
         }
+        $byMe=DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id,auth()->user()->id);
+
         $data = [
             'id'            => $this->id,
             'comment'       => $this->comments,
             'likes'         => $getLikedByUser,
             'un-like'       => $getDislikedByUser,
+            'by_me'         => $byMe,
             'user_details'  => UserDetailDiscussionResource::make($this->users),
         ];
         return $data;

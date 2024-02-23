@@ -22,6 +22,6 @@ class DiscussionServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Profile\ProfileInterface', 'App\Repositories\Api\Profile\ProfileRepository');
+        $this->app->bind('App\Repositories\Api\Discussion\DiscussionRepository', 'App\Repositories\Api\Discussion\DiscussionRepository');
     }
 }

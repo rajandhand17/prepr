@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('module_id');
-            $table->enum('module_type',['0','1','2',])->comment('0->labs,1->project,2->challenge');
+            $table->enum('module_type',['0','1','2'])->comment('0->labs,1->project,2->challenge');
             $table->text('comments')->nullable();
             $table->string('attachment')->nullable();
             $table->unsignedBigInteger('comment_id')->nullable();
