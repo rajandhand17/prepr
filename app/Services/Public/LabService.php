@@ -133,4 +133,25 @@ class LabService
             return false;
         }
     }
+
+    public function getTrendingLab($request){
+        try {
+            $lab_list = Lab::select()->where('labs.status', '1')->limit(20);
+            if(isset($request->search)){
+                $lab_list = $lab_list->where('labs.title','like', '%'.$request->search.'%');
+            }
+            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+        }catch(\Exception $e){
+            return false;
+        }
+    }
+
+    public function recommendedLab($request){
+        try {
+            $lab_list = Lab::select()->where('labs.status', '1')->limit(20);
+            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+        }catch(\Exception $e){
+            return false;
+        }
+    }
 }

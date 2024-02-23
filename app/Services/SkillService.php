@@ -113,4 +113,14 @@ class SkillService
             return false;
         }
     }
+
+    public static function getTrendingSkillsList(){
+        try {
+            $skill_list= Skill::select('id', 'title')->limit(14);
+            return $skill_list->paginate(config('site-settings.pagination_per_page'));
+
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }
