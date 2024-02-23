@@ -26,6 +26,9 @@ class DiscussionController extends AppBaseController
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component,$slug);
+            if(!$checkComponentBasedOnSlug){
+                return $this->sendError(__('responses.slug_not_found'),404);
+            }
             $getComponentId=$checkComponentBasedOnSlug->id;
             $list = $this->discussionRepository->index($component, $getComponentId);
             if ($list->count() > 0) {
