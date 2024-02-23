@@ -6,8 +6,8 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateConversationRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Repositories\Api\Chat\Conversation\ConversationInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
+use Exception;
 
 class ConversationController extends AppBaseController
 {
@@ -28,7 +28,7 @@ class ConversationController extends AppBaseController
             'list' => ConversationResource::collection($conversations->items())
         ];
 
-        return $this->sendResponse($responseData, "Conversation list");
+        return $this->sendResponse($responseData, __("response.list_conversation"));
     }
 
     /**
@@ -38,7 +38,7 @@ class ConversationController extends AppBaseController
     {
         $conversation = $this->conversationRepository->create($request->validated());
 
-        return $this->sendResponse(new ConversationResource($conversation), "Conversation created");
+        return $this->sendResponse(new ConversationResource($conversation), __("response.conversation_created"));
     }
 
 

@@ -2,24 +2,19 @@
 
 namespace App\Services\Chat;
 
-use App\Exceptions\Chat\InsufficientConversationMember;
+use Exception;
+use HiFolks\RandoPhp\Randomize;
 use App\Jobs\ProcessConversationCreated;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\ConversationSeenMessage;
-use Exception;
-use HiFolks\RandoPhp\Randomize;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class ConversationService
 {
     /**
-     * @throws InsufficientConversationMember
+     * @throws Exception
      */
     private function prepareConversationData(array $data)
     {
@@ -30,7 +25,7 @@ class ConversationService
 
 
         if (count($userIds) < 2) {
-            throw new InsufficientConversationMember("Conversation should contains at least 2 members");
+            throw new Exception("Conversation should contains at least 2 members");
         }
 
         if ($data['type'] === 'message' && count($userIds) > 2) {
@@ -151,6 +146,7 @@ class ConversationService
                     ->orderByDesc('created_at')
                     ->limit(1)
             );
+
         switch ($type) {
             case 'archive':
                 $conversation->where('is_archived', true);
@@ -189,24 +185,18 @@ class ConversationService
     public function archiveOrSeenOrDelete(string $uuid, $action)
     {
         $conversation = $this->getByUUID($uuid);
-        $message = '';
         switch ($action) {
             case "archive":
                 $this->archive($conversation->id);
-                $message = "Conversation successfully archived";
-                break;
+                return "Conversation successfully archived";
             case 'seen':
                 $this->markAsSeen($conversation->id, auth()->user()->id, data_get($conversation->lastMessage()->first(), 'id'));
-                $message = "conversation is marked as seen";
-                break;
+                return "conversation is marked as seen";
             case 'delete':
                 $this->delete($uuid);
-                $message = "conversation is marked as delete";
-                break;
+                return "conversation is marked as delete";
             default:
                 throw new Exception('action can be either archive, seen or delete');
         }
-
-        return $message;
     }
 }
