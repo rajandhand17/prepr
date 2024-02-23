@@ -7,6 +7,7 @@ use App\Http\Requests\Chat\CreateMessageRequest;
 use App\Http\Resources\Chat\MessageResource;
 use App\Repositories\Api\Chat\Conversation\ConversationInterface;
 use App\Repositories\Api\Chat\Message\MessageInterface;
+use Exception;
 
 class MessageController extends AppBaseController
 {
@@ -16,24 +17,46 @@ class MessageController extends AppBaseController
 
     public function index(string $conversation_uuid)
     {
-        $conversation = $this->conversationRepository->getByUUID($conversation_uuid);
-        $chat = $this->messageRepository->list($conversation->id);
+        try {
+            $conversation = $this->conversationRepository->getByUUID($conversation_uuid);
+            if (!$conversation) {
+                return $this->sendError(__('responses.conversation_not_found'), 404);
+            }
 
-        $responseData = [
-            'total_count' => $chat->total(),
-            'per_page' => $chat->perPage(),
-            'count' => $chat->count(),
-            'current_page' => $chat->currentPage(),
-            'total_pages' => $chat->lastPage(),
-            'list' => MessageResource::collection($chat->items())
-        ];
+            $chat = $this->messageRepository->list($conversation->id);
 
-        return $this->sendResponse($responseData, "Chat fetched successfully");
+            if ($chat) {
+                $responseData = [
+                    'total_count' => $chat->total(),
+                    'per_page' => $chat->perPage(),
+                    'count' => $chat->count(),
+                    'current_page' => $chat->currentPage(),
+                    'total_pages' => $chat->lastPage(),
+                    'list' => MessageResource::collection($chat->items())
+                ];
+
+                return $this->sendResponse($responseData, __("response.found_message_list"));
+            }
+
+            return $this->sendError(__('responses.not_found_message_list'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
 
     public function store(string $conversation_uuid, CreateMessageRequest $request)
     {
-        $conversation = $this->conversationRepository->getByUUID($conversation_uuid);
-        return $this->messageRepository->send($request->validated(), $conversation->id);
+        try {
+            $conversation = $this->conversationRepository->getByUUID($conversation_uuid);
+
+            if (!$conversation) {
+                return $this->sendError(__('responses.conversation_not_found'), 404);
+            }
+
+            return  $this->messageRepository->send($request->validated(), $conversation->id);
+
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
 }

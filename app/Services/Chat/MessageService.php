@@ -7,10 +7,8 @@ use App\Jobs\ProcessMessageSent;
 use App\Models\ConversationMessage;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MessageService
 {
@@ -19,79 +17,87 @@ class MessageService
     {
     }
 
-    /**
-     * @throws Exception
-     */
     private function storeFiles()
     {
-        $chatFiles = [];
+        try {
+            $chatFiles = [];
 
-        if (!request()->has('attachment')) {
-            return [];
-        }
-
-        $files = request()->file('attachment');
-
-        foreach ($files as $item) {
-            $files = FileUploadHelper::uploadImageToS3($item, 'chat');
-            if (!$files) {
-                throw new Exception("Upload failed");
+            if (!request()->has('attachment')) {
+                return [];
             }
-            $chatFiles[] = $files;
-        }
 
-        return $chatFiles;
+            $files = request()->file('attachment');
+
+            foreach ($files as $item) {
+                $files = FileUploadHelper::uploadImageToS3($item, 'chat');
+                if (!$files) {
+                    return false;
+                }
+                $chatFiles[] = $files;
+            }
+
+            return $chatFiles;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
-    /**
-     * @throws Exception
-     */
     private function store(array $data)
     {
         try {
             DB::beginTransaction();
-            $chatFiles = $this->storeFiles();
+            $messageFiles = $this->storeFiles();
 
-            $chat = ConversationMessage::create([
+            if (!$messageFiles) {
+                DB::rollBack();
+                return false;
+            }
+
+            $message = ConversationMessage::create([
                 'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 "conversation_id" => $data['conversation_id'],
                 "message" => $data['message'],
-                "attachments" => $chatFiles,
+                "attachments" => $messageFiles,
                 "sender_id" => auth()->user()->id,
             ]);
             DB::commit();
 
-            return $chat;
-        } catch (Exception $exception) {
+            return $message;
+        } catch (Exception $e) {
             DB::rollBack();
-            throw $exception;
+            Log::error($e);
+            return false;
         }
     }
 
     public function list(int $conversationId)
     {
-        return ConversationMessage::with('sender', 'seenUsers')
-            ->where('conversation_id', $conversationId)
-            ->paginate(30);
+        try {
+            return ConversationMessage::with('sender', 'seenUsers')
+                ->where('conversation_id', $conversationId)
+                ->paginate(30);
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
-    /**
-     * @throws Exception
-     */
     public function send(array $data)
     {
         try {
             DB::beginTransaction();
-            $chat = $this->store($data);
+            $message = $this->store($data);
             // the message you sent is seen by you.
-            $this->conversationService->markAsSeen($data['conversation_id'], auth()->user()->id, $chat->id);
-            dispatch(new ProcessMessageSent($chat, $data['conversation_id']))->onQueue('chat');
+            $this->conversationService->markAsSeen($data['conversation_id'], auth()->user()->id, $message->id);
+            dispatch(new ProcessMessageSent($message, $data['conversation_id']))->onQueue('chat');
 
             DB::commit();
-            return $chat;
+            return $message;
         } catch (Exception $exception) {
             DB::rollBack();
-            throw new Exception($exception);
+            Log::error($exception);
+            return false;
         }
     }
 }

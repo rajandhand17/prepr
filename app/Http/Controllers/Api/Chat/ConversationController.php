@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\Chat;
 
+use Exception;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateConversationRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Repositories\Api\Chat\Conversation\ConversationInterface;
 use Illuminate\Http\JsonResponse;
-use Exception;
 
 class ConversationController extends AppBaseController
 {
@@ -15,38 +15,58 @@ class ConversationController extends AppBaseController
     {
     }
 
-    public function index($type): JsonResponse
+    public function index($type)
     {
-        $conversations = $this->conversationRepository->list($type);
+        try {
+            $conversations = $this->conversationRepository->list($type);
 
-        $responseData = [
-            'total_count' => $conversations->total(),
-            'per_page' => $conversations->perPage(),
-            'count' => $conversations->count(),
-            'current_page' => $conversations->currentPage(),
-            'total_pages' => $conversations->lastPage(),
-            'list' => ConversationResource::collection($conversations->items())
-        ];
+            if ($conversations) {
+                $responseData = [
+                    'total_count' => $conversations->total(),
+                    'per_page' => $conversations->perPage(),
+                    'count' => $conversations->count(),
+                    'current_page' => $conversations->currentPage(),
+                    'total_pages' => $conversations->lastPage(),
+                    'list' => ConversationResource::collection($conversations->items())
+                ];
 
-        return $this->sendResponse($responseData, __("response.list_conversation"));
+                return $this->sendResponse($responseData, __("response.list_conversation"));
+            }
+            return $this->sendError(__('responses.not_found_conversation_list'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
-
-    /**
-     * @throws Exception
-     */
+    
     public function create(CreateConversationRequest $request): JsonResponse
     {
-        $conversation = $this->conversationRepository->create($request->validated());
+        try {
+            $conversation = $this->conversationRepository->create($request->validated());
 
-        return $this->sendResponse(new ConversationResource($conversation), __("response.conversation_created"));
+            if ($conversation) {
+                return $this->sendResponse(new ConversationResource($conversation), __("response.conversation_created"));
+            }
+            return $this->sendError(__('responses.conversation_stored_failed'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+
     }
 
 
     public function archiveOrSeenOrDelete(string $uuid, string $action)
     {
-        $message = $this->conversationRepository->archiveOrSeenOrDelete($uuid, $action);
+        try {
+            $message = $this->conversationRepository->archiveOrSeenOrDelete($uuid, $action);
 
-        return $this->sendResponse(null, $message);
+            if ($message) {
+                return $this->sendResponse(null, __("responses.conversation_" . $action . "_successfully"));
+            }
+
+            return $this->sendError(__("responses.conversation_" . $action . "_failed"), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
 
 }

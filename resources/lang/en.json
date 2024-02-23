@@ -867,5 +867,16 @@
     "responses.pinned_skills_successfully_removed": "You have successfully removed pinned skill",
     "responses.pinned_skills_failed": "You have failed pinned this skill",
     "response.list_conversation": "You have successfully retrieved conversations",
-    "response.conversation_created": "you have successfully created conversation"
+    "response.conversation_created": "you have successfully created conversation",
+    "response.not_found_conversation_list": "The list of conversation has not been retrieved with success.",
+    "response.conversation_stored_failed": "Oops! The creation conversation has failed.",
+    "responses.conversation_not_found": "Conversation not found",
+    "responses.found_message_list": "The list of messages is retrieved with success",
+    "responses.not_found_message_list": "The list of messages has not been retrieved with success.",
+    "responses.conversation_seen_successfully": "Conversation is marked as seen successfully",
+    "responses.conversation_delete_successfully": "Conversation is deleted successfully",
+    "responses.conversation_archive_successfully": "Conversation is archived successfully",
+    "responses.conversation_seen_failed": "Conversation has not been seen successfully",
+    "responses.conversation_delete_failed": "Deletion of Conversation failed.",
+    "responses.conversation_archive_failed": "Conversation archived is failed"
 }

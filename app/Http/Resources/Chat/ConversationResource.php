@@ -18,7 +18,6 @@ class ConversationResource extends JsonResource
         return [
             "id" => $this->id,
             "uuid" => $this->uuid,
-            "name" => $this->name,
             "is_archived" => $this->is_archived ? 'yes' : 'no',
             "type" => $this->type,
             "last_message" => MessageResource::make($this->lastMessage),
@@ -26,10 +25,7 @@ class ConversationResource extends JsonResource
             "default_conversation_name" => $this->default_conversation_name,
             "last_seen_message" => MessageResource::make(data_get($this->lastSeenMessage, 'chat')),
             "group_photo" => $this->group_photo,
-            "is_private" => $this->is_private ? true : false,
-            "users" => collect($this->users)->map(function ($item) {
-                return UserSearchResource::make($item);
-            }),
+            "is_private" => $this->is_private ? 'yes' : 'no',
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at
         ];

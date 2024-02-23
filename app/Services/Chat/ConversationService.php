@@ -8,73 +8,107 @@ use App\Jobs\ProcessConversationCreated;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\ConversationSeenMessage;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ConversationService
 {
-    /**
-     * @throws Exception
-     */
+
     private function prepareConversationData(array $data)
     {
-        $userIds = collect([...$data['users'], auth()->user()->id])->unique()->map(function ($item) {
-            return (int)$item;
-        });
-        $data['users'] = $userIds->toArray();
+        try {
+            $userIds = collect([...$data['users'], auth()->user()->id])->unique()->map(function ($item) {
+                return (int)$item;
+            });
+            $data['users'] = $userIds->toArray();
 
 
-        if (count($userIds) < 2) {
-            throw new Exception("Conversation should contains at least 2 members");
+            if (count($userIds) < 2) {
+                return false;
+            }
+
+            if ($data['type'] === 'message' && count($userIds) > 2) {
+                $data['type'] = config('constants.conversation_type.groupMessage');
+            } else if ($data['type'] === 'message' && count($userIds) == 2) {
+                $data['type'] = config('constants.conversation_type.directMessage');
+            }
+
+            return $data;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
         }
-
-        if ($data['type'] === 'message' && count($userIds) > 2) {
-            $data['type'] = config('constants.conversation_type.groupMessage');
-        } else if ($data['type'] === 'message' && count($userIds) == 2) {
-            $data['type'] = config('constants.conversation_type.directMessage');
-        }
-
-        return $data;
     }
 
     private function getConversationIdHavingUsers(array $userIds)
     {
-        $userIdsTuple = implode(',', $userIds);
+        try {
+            $userIdsTuple = implode(',', $userIds);
 
-        $conversationIds = Conversation::select('conversations.id as conversation_id')
-            ->where('is_archived', false)
-            ->join('conversation_users', 'conversation_users.conversation_id', '=', 'conversations.id')
-            ->groupBy('conversation_id')
-            ->havingRaw("COUNT(DISTINCT conversation_users.user_id) = ?", [count($userIds)])
-            ->havingRaw("SUM(CASE WHEN conversation_users.user_id NOT IN ($userIdsTuple) THEN 1 ELSE 0 END) = 0")
-            ->first();
+            $conversationIds = Conversation::select('conversations.id as conversation_id')
+                ->where('is_archived', false)
+                ->join('conversation_users', 'conversation_users.conversation_id', '=', 'conversations.id')
+                ->groupBy('conversation_id')
+                ->havingRaw("COUNT(DISTINCT conversation_users.user_id) = ?", [count($userIds)])
+                ->havingRaw("SUM(CASE WHEN conversation_users.user_id NOT IN ($userIdsTuple) THEN 1 ELSE 0 END) = 0")
+                ->first();
 
-        return data_get($conversationIds, 'conversation_id');
+            return data_get($conversationIds, 'conversation_id');
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
     private function isConversationAlreadyExists(array $userIds)
     {
-        if ($this->getConversationIdHavingUsers($userIds)) {
-            return true;
-        }
+        try {
+            if ($this->getConversationIdHavingUsers($userIds)) {
+                return true;
+            }
 
-        return false;
+            return false;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
     private function getConversationByUsers(array $userIds)
     {
-        $conversationId = $this->getConversationIdHavingUsers($userIds);
+        try {
+            $conversationId = $this->getConversationIdHavingUsers($userIds);
 
-        if ($conversationId) {
-            return $this->getConversationById($conversationId);
+            if ($conversationId) {
+                return $this->getById($conversationId);
+            }
+
+            return null;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
         }
-
-        return null;
     }
 
-    private function getConversationById(int $id)
+    private function getById(int $id)
     {
-        return Conversation::find($id);
+        try {
+            return Conversation::find($id);
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
+    }
+
+    private function addMemberToConversation($conversation, $users)
+    {
+        try {
+            $conversation->users()->attach($users);
+            return true;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
     /**
@@ -92,7 +126,13 @@ class ConversationService
                 'group_photo' => $data['group_photo'] ?? null,
                 'created_by' => auth()->user()->id
             ]);
-            $conversation->users()->attach($data['users']);
+            $conversationUsers = $this->addMemberToConversation($conversation, $data['users']);
+            
+            if (!$conversationUsers) {
+                DB::rollBack();
+                return false;
+            }
+
             foreach ($data['users'] as $id) {
                 dispatch(new ProcessConversationCreated($conversation, $id))->onQueue('chat');
             }
@@ -101,23 +141,39 @@ class ConversationService
             return $conversation;
         } catch (Exception $exception) {
             DB::rollBack();
-            throw $exception;
+            Log::error($exception);
+            return false;
         }
     }
 
     public function markAsSeen($conversationId, $userId, $messageId)
     {
-        return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
+        try {
+            return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
     private function archive(int $id)
     {
-        return Conversation::where('id', $id)->update(['is_archived' => true]);
+        try {
+            return Conversation::where('id', $id)->update(['is_archived' => true]);
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
-    private function delete(string $uuid)
+    private function delete(int $id)
     {
-        Conversation::where('uuid', $uuid)->delete();
+        try {
+            return Conversation::where('id', $id)->delete();
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
     /**
@@ -125,78 +181,103 @@ class ConversationService
      */
     public function create(array $data)
     {
-        $preparedData = $this->prepareConversationData($data);
+        try {
+            $preparedData = $this->prepareConversationData($data);
 
-        if ($this->isConversationAlreadyExists($preparedData['users'])) {
-            return $this->getConversationByUsers($preparedData['users']);
+            if ($this->isConversationAlreadyExists($preparedData['users'])) {
+                return $this->getConversationByUsers($preparedData['users']);
+            }
+
+            return $this->createNewConversation($preparedData);
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
         }
-
-        return $this->createNewConversation($preparedData);
     }
 
     public function list(string $type)
     {
-        $conversation = Conversation::query()
-            ->with(['lastMessage', 'lastSeenMessage', 'users'])
-            ->whereHas('users', function ($query) {
-                $query->where('user_id', auth()->user()->id);
-            })->orderByDesc(
-                ConversationMessage::select('created_at')
-                    ->whereColumn('conversation_id', 'conversations.id')
-                    ->orderByDesc('created_at')
-                    ->limit(1)
-            );
+        try {
+            $conversation = Conversation::query()
+                ->with(['lastMessage', 'lastSeenMessage', 'users'])
+                ->whereHas('users', function ($query) {
+                    $query->where('user_id', auth()->user()->id);
+                })->orderByDesc(
+                    ConversationMessage::select('created_at')
+                        ->whereColumn('conversation_id', 'conversations.id')
+                        ->orderByDesc('created_at')
+                        ->limit(1)
+                );
 
-        switch ($type) {
-            case 'archive':
-                $conversation->where('is_archived', true);
-                break;
-            case 'non-archive':
-                $conversation->where('is_archived', false);
+            switch ($type) {
+                case 'archive':
+                    $conversation->where('is_archived', true);
+                    break;
+                case 'non-archive':
+                    $conversation->where('is_archived', false);
+            }
+
+            if (request()->has('search')) {
+                $searchText = request()->search;
+                $conversation->where(function ($query) use ($searchText) {
+                    $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($searchText) . '%'])
+                        ->orWhereHas('users', function ($query) use ($searchText) {
+                            $query->whereRaw('LOWER(first_name) LIKE ?', ['%' . strtolower($searchText) . '%']);
+                        });
+                });
+            }
+
+            return $conversation->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
         }
-
-        if (request()->has('search')) {
-            $searchText = request()->search;
-            $conversation->where(function ($query) use ($searchText) {
-                $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($searchText) . '%'])
-                    ->orWhereHas('users', function ($query) use ($searchText) {
-                        $query->whereRaw('LOWER(first_name) LIKE ?', ['%' . strtolower($searchText) . '%']);
-                    });
-            });
-        }
-
-        return $conversation->paginate(config('site-settings.pagination_per_page'));
     }
 
     public function getByUUID(string $uuid)
     {
-        $conversation = Conversation::where('uuid', $uuid)->first();
+        try {
+            $conversation = Conversation::where('uuid', $uuid)->first();
 
-        if (!$conversation) {
-            throw (new ModelNotFoundException())->setModel(Conversation::class);
+            if (!$conversation) {
+                return false;
+            }
+
+            return $conversation;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
         }
-
-        return $conversation;
     }
 
-    /**
-     * @throws Exception
-     */
+
     public function archiveOrSeenOrDelete(string $uuid, $action)
     {
-        $conversation = $this->getByUUID($uuid);
-        switch ($action) {
-            case "archive":
-                $this->archive($conversation->id);
-                return "Conversation successfully archived";
-            case 'seen':
-                $this->markAsSeen($conversation->id, auth()->user()->id, data_get($conversation->lastMessage()->first(), 'id'));
-                return "conversation is marked as seen";
-            case 'delete':
-                $this->delete($uuid);
-                return "conversation is marked as delete";
-            default:
-                throw new Exception('action can be either archive, seen or delete');
+        try {
+            $conversation = $this->getByUUID($uuid);
+
+            if (!$conversation) {
+                return false;
+            }
+
+            switch ($action) {
+                case "archive":
+                    $this->archive($conversation->id);
+                    break;
+                case 'seen':
+                    $this->markAsSeen($conversation->id, auth()->user()->id, data_get($conversation->lastMessage()->first(), 'id'));
+                    break;
+                case 'delete':
+                    $this->delete($conversation->id);
+                    break;
+                default:
+                    return false;
+            }
+
+            return true;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
         }
     }
 }
