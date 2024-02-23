@@ -21,31 +21,36 @@ class DiscussionRepository implements DiscussionInterface
     public function index($component, $moduleId)
     {
         try {
-            return $this->discussionService->index($component,$moduleId);
-        }catch(\Exception $e){
+            return $this->discussionService->index($component, $moduleId);
+        } catch(\Exception $e) {
             return false;
         }
     }
-    public function addComment($component,$request,$getComponentId){
+
+    public function addComment($component, $request, $getComponentId)
+    {
         try {
-            return $this->discussionService->addComment($component,$request,$getComponentId);
-        }catch (\Exception $e){
+            return $this->discussionService->addComment($component, $request, $getComponentId);
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function deleteComment($commentId)
     {
         try {
             $deleteComment = DB::transaction(function () use ($commentId) {
                 $discussion = $this->discussionService->deleteDiscussion($commentId);
                 $discussionSocialActivities = $this->discussionSocialActivitiesService->deleteDiscussionSocialActivity($discussion);
+
                 return [
                     'discussion'                 => $discussion,
                     'discussionSocialActivities' => $discussionSocialActivities,
                 ];
             });
-            if ($deleteComment['discussion'] && $deleteComment['discussionSocialActivities']){
+            if ($deleteComment['discussion'] && $deleteComment['discussionSocialActivities']) {
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
@@ -56,11 +61,11 @@ class DiscussionRepository implements DiscussionInterface
         }
     }
 
-    public function likeDislike($action,$comment_id)
+    public function likeDislike($action, $comment_id)
     {
         try {
-            return $this->discussionSocialActivitiesService->likeOrDislikeComment($action,$comment_id);
-        }catch (\Exception $e){
+            return $this->discussionSocialActivitiesService->likeOrDislikeComment($action, $comment_id);
+        } catch (\Exception $e) {
             return false;
         }
     }

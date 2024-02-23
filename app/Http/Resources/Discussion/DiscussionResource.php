@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Discussion;
 
 use App\Http\Resources\User\UserSearchResource;
-use App\Models\DiscussionSocialActivity;
 use App\Services\DiscussionSocialActivitiesService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -19,8 +18,8 @@ class DiscussionResource extends JsonResource
     public function toArray(Request $request): array
     {
         $discussionModuleType = array_search($this->module_type, config('constants.discussion_module_type'));
-        $getLikedByUser=0;
-        $getDislikedByUser=0;
+        $getLikedByUser = 0;
+        $getDislikedByUser = 0;
         if ($this->liked_by) {
             $getLikedById = $this->liked_by->pluck('user_id');
             $getLikedByUser = UserService::getUserById($getLikedById)->count();
@@ -29,16 +28,17 @@ class DiscussionResource extends JsonResource
             $getDisLikedByUser = $this->disliked_by->pluck('user_id');
             $getDislikedByUser = UserService::getUserById($getDisLikedByUser)->count();
         }
-        $byMe=DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id,auth()->user()->id);
+        $byMe = DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id, auth()->user()->id);
         $data = [
-            'id'            => $this->id,
-            'comment'       => $this->comments,
-            'likes'         => $getLikedByUser,
-            'un-likes'      => $getDislikedByUser,
-            'by_me'         => $byMe,
-            'user_details'  => UserSearchResource::make($this->users),
+            'id'             => $this->id,
+            'comment'        => $this->comments,
+            'likes'          => $getLikedByUser,
+            'un-likes'       => $getDislikedByUser,
+            'by_me'          => $byMe,
+            'user_details'   => UserSearchResource::make($this->users),
             'comment_replies'=> CommentReplies::collection($this->comments_reply),
         ];
+
         return $data;
     }
 }

@@ -25,7 +25,7 @@ class CommentReplies extends JsonResource
             $getDisLikedByUser = $this->disliked_by->pluck('user_id');
             $getDislikedByUser = UserService::getUserById($getDisLikedByUser)->count();
         }
-        $byMe=DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id,auth()->user()->id);
+        $byMe = DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id, auth()->user()->id);
 
         $data = [
             'id'            => $this->id,
@@ -35,6 +35,7 @@ class CommentReplies extends JsonResource
             'by_me'         => $byMe,
             'user_details'  => UserDetailDiscussionResource::make($this->users),
         ];
+
         return $data;
     }
 }
