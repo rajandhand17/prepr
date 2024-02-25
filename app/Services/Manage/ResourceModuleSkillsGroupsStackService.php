@@ -3,6 +3,8 @@
 namespace App\Services\Manage;
 
 use App\Models\ResourceModuleSkillsGroupsStack;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ResourceModuleSkillsGroupsStackService
 {
@@ -124,7 +126,7 @@ class ResourceModuleSkillsGroupsStackService
             ResourceModuleSkillsGroupsStack::where('resource_module_id', $resource_module_id)->delete();
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

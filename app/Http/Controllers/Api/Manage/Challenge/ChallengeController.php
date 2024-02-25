@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
-use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
+use App\Http\Requests\Manage\Challenge\createChallengeAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
@@ -434,19 +434,38 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function challengeAICreate(CreateChallengeUsingAIRequest $request)
+    public function challengeAICreatePreview(createChallengeAIPreviewRequest $request)
     {
         try {
-            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request);
+            $createChallengeAIPreview = $this->challengeRepository->createChallengeAIPreview($request);
 
-            if (!empty($createChallengeUsingAI)) {
-                return $this->sendResponse($createChallengeUsingAI, __('responses.challenge_created_success'), 200);
+            if (!empty($createChallengeAIPreview)) {
+                return $this->sendResponse($createChallengeAIPreview, __('responses.challenge_created_success'), 200);
             } else {
                 return $this->sendError(__('responses.challenge_stored_failed'), 400);
             }
         } catch (Exception $e) {
             Log::error('Challenge creation failed: ' . $e->getMessage());
 
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function challengeAICreate(createChallengeAIPreviewRequest $request)
+    {
+        try {
+            $upload_cover_image = config('site-settings.default_challenge_cover_image');
+            $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
+            $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
+
+            $createChallengeAIPreview = $this->challengeRepository->createChallengeAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
+
+            if ($createChallengeAIPreview != false) {
+                return $this->sendResponse(ChallengeResource::make($createChallengeAIPreview), __('responses.challenge_stored_success'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_stored_failed'), 400);
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

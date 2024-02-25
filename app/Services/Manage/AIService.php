@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\RecommendationEngineHelper;
 use App\Models\Category;
+use App\Models\Challenge;
 use App\Models\Duration;
 use App\Models\Job;
 use App\Models\Levels;
@@ -56,7 +57,7 @@ class AIService
         ]);
     }
 
-    public function createChallengeUsingAI($request)
+    public function createChallengeAIPreview($request)
     {
         try {
             $attempt = 0;
@@ -78,7 +79,7 @@ class AIService
             $categoryTitles = Category::pluck('title')->implode(', ');
 
             while ($attempt < 3 && count($validChallenges) < 2) {
-                Log::info('Attempt: ' . $attempt + 1);
+                // Log::info('Attempt: ' . $attempt + 1);
                 $attempt++;
 
                 $startTimeAPI = microtime(true);
@@ -86,7 +87,7 @@ class AIService
                 $openAIResponse = $this->fetchChallengesFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
 
                 $endTimeAPI = microtime(true);
-                Log::info('API call duration: ' . ($endTimeAPI - $startTimeAPI) . ' seconds');
+                // Log::info('API call duration: ' . ($endTimeAPI - $startTimeAPI) . ' seconds');
 
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
@@ -97,6 +98,22 @@ class AIService
 
                 foreach ($openAIResponse['choices'] as $choice) {
                     $content = json_decode($choice['message']['content'], true);
+
+                    // Ensure $content is an array and has the 'title' key before proceeding
+                    if (is_array($content) && isset($content['title'])) {
+                        // Check for title duplication
+                        if (Challenge::whereRaw('LOWER(title) = ?', [strtolower($content['title'])])->exists()) {
+                            continue; // Skip this iteration if a duplicate title exists
+                        }
+                        // Proceed with your logic here as no duplicate title exists
+                    } else {
+                        // Log the error with appropriate details
+                        Log::error('Invalid content structure or missing title key in $content.', [
+                            'content' => $content // Be cautious with logging sensitive data
+                        ]);
+                        // Handle the error (e.g., skip this iteration, throw an exception, return an error response)
+                    }
+
 
                     // Validate the challenge content
                     if ($content === "Irrelevant given data!" || empty($content['skills'])) {
@@ -110,29 +127,38 @@ class AIService
                     $updatedSkills = $this->processSkills($content['skills']);
 
                     $endTimeValidatingSkills = microtime(true);
-                    Log::info('Validating skills duration: ' . ($endTimeValidatingSkills - $startTimeValidatingSkills) . ' seconds');
+                    // Log::info('Validating skills duration: ' . ($endTimeValidatingSkills - $startTimeValidatingSkills) . ' seconds');
 
-                    if (count($updatedSkills) < 6 || !$content['title']) {
+                    if (count($updatedSkills) < 6 || !isset($content['title'])) {
                         Log::error('Challenge Failed!');
                         continue; // Skip this challenge if it has less than 6 valid skills after processing
                     }
 
+                    $skillIds = Skill::whereIn('title', $updatedSkills)
+                        ->get(['id'])
+                        ->pluck('id')
+                        ->toArray();
+
                     $content['level'] = $levelTitle;
+                    $content['level_id'] = Levels::where('title', $content['level'])->pluck('id')->first();
                     $content['duration'] = $durationTitle;
+                    $content['duration_id'] = Duration::where('title', $content['duration'])->pluck('id')->first();
                     $content['is_ai_created'] = $request->is_ai_created;
-                    $content['skills'] = $updatedSkills;
+                    $content['skill_titles'] = $updatedSkills;
+                    $content['skills'] = $skillIds;
                     $content['resource_modules'] = $request->resource_modules;
                     $content['resource_module_prepr'] = $request->resource_module_prepr;
                     $content['resource_module_openai'] = $request->resource_module_openai;
                     $content['resource_module_go1'] = $request->resource_module_go1;
                     $content['openai_resource_module_types'] = $request->openai_resource_module_types;
                     $content['go1_resource_module_types'] = $request->go1_resource_module_types;
+                    $content['category_id'] = Category::where('title', $content['category'])->pluck('id')->first();
 
                     $validChallenges[] = $content;
                 }
 
                 $endTimeValidatingChallenges = microtime(true);
-                Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
+                // Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
             }
 
             if (count($validChallenges) < 2 || $irrelevantDataCount > 4) {
@@ -151,7 +177,7 @@ class AIService
         try {
             $payload = [
                 'model' => 'gpt-3.5-turbo',
-                'n' => 7,
+                'n' => 10,
                 'messages' => [
                     [
                         'role' => 'user',
@@ -451,6 +477,12 @@ class AIService
                         $group['title'] = 'No title generated';
                         $group['description'] = 'No description generated';
                     }
+                    $group['skills'] = $request->skills;
+                    $group['level'] = Levels::find($request->level_id)->title;
+                    $group['level_id'] = Levels::where('title', $group['level'])->pluck('id')->first();
+                    $group['duration'] = Duration::find($request->duration_id)->title;;
+                    $group['duration_id'] = Duration::where('title', $group['duration'])->pluck('id')->first();
+                    $group['is_ai_created'] = $request->is_ai_created;
                 }
                 unset($group); // Break the reference with the last element
             } catch (Exception $e) {

@@ -8,7 +8,7 @@ use App\Services\Manage\ResourceModuleService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleTagsGroupsService;
 use App\Services\Manage\AIService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -70,6 +70,17 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
+    public function createResourceModuleDetailsAI($request, $resource_module_id)
+    {
+        try {
+            $createResourceModuleUsingAI = $this->resourceModuleDetailsService->createResourceModuleDetailsAI($request, $resource_module_id);
+
+            return $createResourceModuleUsingAI;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function createResourceModuleUsingAI($request)
     {
         try {
@@ -78,7 +89,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $createResourceModuleUsingAI = $this->aiService->createResourceModuleUsingAI($request);
 
             $endTimeOverall = microtime(true);
-            Log::info('Overall duration for RM: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
+            // Log::info('Overall duration for RM: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
             return $createResourceModuleUsingAI;
         } catch (Exception $e) {

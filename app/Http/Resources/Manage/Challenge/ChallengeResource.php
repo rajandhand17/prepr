@@ -13,6 +13,7 @@ use App\Services\TagGroupService;
 use App\Services\TagService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeResource extends JsonResource
 {
@@ -117,9 +118,11 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_requirements) {
             $challenge_conditions = [];
-            foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
-                $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
-                $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+            if ($this->challenge_requirements->project_submission_requirement_ids !== ['false'] && is_array($this->challenge_requirements->project_submission_requirement_ids) && count($this->challenge_requirements->project_submission_requirement_ids) > 0) {
+                foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
+                    $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
+                    $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                }
             }
             switch ($this->challenge_requirements->allow_submit_project) {
                 case '0':

@@ -4,6 +4,9 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\ResourceModuleDetail;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ResourceModuleDetailService
 {
@@ -59,7 +62,7 @@ class ResourceModuleDetailService
             ResourceModuleDetail::where('resource_module_id', $resource_module_id)->delete();
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -103,7 +106,7 @@ class ResourceModuleDetailService
             ])->delete();
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -150,6 +153,58 @@ class ResourceModuleDetailService
             return true;
         } catch (\Exception $e) {
             return false;
+        }
+    }
+
+    public function createResourceModuleDetailsAI($request, $resource_module_id)
+    {
+        try {
+            // Log the entire request data for inspection
+            Log::info('Logging entire request:', (array) $request);
+
+            // If $request is an instance of Request, convert to array, else assume it's already an array
+            $requestData = $request instanceof Request ? $request->all() : $request;
+
+            // Log the converted/request data to ensure it's in expected format
+            Log::info('Converted/Original request data:', $requestData);
+
+            if (is_array($requestData)) {
+                foreach ($requestData as $key => $item) {
+                    // Log each key to verify we're iterating correctly
+                    Log::info("Processing key: {$key}");
+
+                    // Check if the current item is an array and has a numeric key
+                    if (is_numeric($key) && is_array($item)) {
+                        // Log the item to be processed
+                        Log::info("Current item:", $item);
+
+                        // Proceed with processing
+                        $resourceDetail = new ResourceModuleDetail([
+                            'title' => $item['title'], // Set the title from the item
+                            'path' => $item['url'], // Set the path (URL) from the item
+                            'resource_module_id' => $resource_module_id, // Use the provided $resource_module_id
+                        ]);
+
+                        if (isset($item['embedHTML']) && !empty($item['embedHTML'])) {
+                            $resourceDetail->type = "3"; // Set type to 3 if embedHTML exists
+                        }
+
+                        // Log the model instance before saving
+                        Log::info("ResourceModuleDetail instance:", $resourceDetail->getAttributes());
+
+                        $resourceDetail->save(); // Insert the record into the database
+                    }
+                }
+            } else {
+                // Log an error if the request data is not an array
+                Log::error('Request data is not an array.');
+                return false;
+            }
+
+            return true; // Return true if everything was processed successfully
+        } catch (Exception $e) {
+            Log::error('Exception caught in createResourceModuleDetailsAI:', ['message' => $e->getMessage()]);
+            return false; // Return false in case of any errors
         }
     }
 }

@@ -138,74 +138,83 @@ class ChallengeRepository implements ChallengeInterface
 
             return false;
         } catch (Exception $e) {
+            Log::error($e);
             return false;
         }
     }
 
-    public function createChallengeUsingAI($request)
+    public function createChallengeAIPreview($request)
     {
         try {
             $startTimeOverall = microtime(true);
 
-            $createChallengeUsingAI = $this->aiService->createChallengeUsingAI($request);
+            $createChallengeAIPreview = $this->aiService->createChallengeAIPreview($request);
 
             $endTimeOverall = microtime(true);
-            Log::info('Overall duration: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
+            // Log::info('Overall duration: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
-            // $createChallengeUsingAI = [
-            //     [
-            //         'title' => 'Designing a .NET Architecture for UI Development',
-            //         'description' => '<p>This challenge involves crafting a .NET architecture for UI development. Follow the steps below to complete the challenge:</p><p>1. Analyze the UI design requirements.</p><p>2. Identify the components and functionalities needed.</p><p>3. Determine the data flow and interactions between components.</p>',
-            //         'category' => 'Education',
-            //         'steps' => [
-            //             'Analyze the UI design requirements',
-            //             'Identify the components and functionalities needed',
-            //             'Determine the data flow and interactions between components',
-            //         ],
-            //         'skills' => [
-            //             'critical thinking',
-            //             'software architectural design',
-            //             'knowledge sharing',
-            //             'system of systems',
-            //             'communication skills',
-            //             'right first time',
-            //         ],
-            //         'reflections' => [
-            //             'How did your critical thinking skills help in designing the architecture?',
-            //             'What challenges did you face during the process and how did you overcome them?',
-            //             'What improvements would you make to your architecture based on your experience?',
-            //         ],
-            //         'cover_image' => 'default_images/challenge.webp',
-            //     ],
-            //     [
-            //         'title' => 'Designing a .NET Architect\'s UI',
-            //         'description' => '<p>Create a user-friendly UI for a .NET Architect role.</p><br /><p>1. Understand user requirements.</p><p>2. Design wireframes.</p><p>3. Develop UI using .NET technologies.</p>',
-            //         'category' => 'Technology & Science Park',
-            //         'steps' => [
-            //             'Understand user requirements',
-            //             'Design wireframes',
-            //             'Develop UI using .NET technologies',
-            //         ],
-            //         'skills' => [
-            //             'critical thinking',
-            //             'graphical user interface (gui)',
-            //             'children\'s programming',
-            //             'software architecture',
-            //             'cross-team communication',
-            //             'right first time',
-            //             'creativity',
-            //         ],
-            //         'reflections' => [
-            //             'What challenges did you encounter while understanding user requirements?',
-            //             'How did you approach designing wireframes for the UI?',
-            //             'What innovative features did you incorporate in the UI design?',
-            //         ],
-            //         'cover_image' => 'default_images/challenge.webp',
-            //     ],
-            // ];
-
-            return $createChallengeUsingAI;
+            return $createChallengeAIPreview;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createChallengeAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment)
+    {
+        try {
+            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
+                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
+                $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
+                $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
+                $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
+                $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
+                $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
+                $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id);
+                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $upload_assessment_attachment);
+                $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
+                // $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
+                $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
+                $createChallengeExternalLink = $this->challengeExternalLinkService->createChallengeExternalLink($request, $createChallenge->id);
+
+                return [
+                    'createChallenge'                   => $createChallenge,
+                    'createChallengeAchievement'        => $createChallengeAchievement,
+                    'createChallengeSponsor'            => $createChallengeSponsor,
+                    'createChallengeSkillsGroupsStack'  => $createChallengeSkillsGroupsStack,
+                    'createChallengeTagsGroups'         => $createChallengeTagsGroups,
+                    'createChallengeRequirement'        => $createChallengeRequirement,
+                    'createChallengeAssessmentCriteria' => $createChallengeAssessmentCriteria,
+                    'createChallengeAssessment'         => $createChallengeAssessment,
+                    'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
+                    // 'createChallengeTimelines'          => $createChallengeTimelines,
+                    'createChallengeCustomTimelines'    => $createChallengeCustomTimelines,
+                    'createChallengeExternalLink'       => $createChallengeExternalLink,
+                ];
+            });
+
+            if (
+                $createChallenge['createChallenge'] &&
+                $createChallenge['createChallengeAchievement'] &&
+                $createChallenge['createChallengeSponsor'] &&
+                $createChallenge['createChallengeSkillsGroupsStack'] &&
+                $createChallenge['createChallengeTagsGroups'] &&
+                $createChallenge['createChallengeRequirement'] &&
+                $createChallenge['createChallengeAssessmentCriteria'] &&
+                $createChallenge['createChallengeAssessment'] &&
+                $createChallenge['createChallengeProjectTemplate'] &&
+                // $createChallenge['createChallengeTimelines'] &&
+                $createChallenge['createChallengeCustomTimelines'] &&
+                $createChallenge['createChallengeExternalLink']
+            ) {
+                DB::commit();
+
+                return $createChallenge['createChallenge'];
+            }
+            DB::rollback();
+
+            return false;
+        } catch (Exception $e) {
+            Log::error($e);
             return false;
         }
     }
@@ -267,7 +276,7 @@ class ChallengeRepository implements ChallengeInterface
     public function createChallengeAssessment($request, $challenge)
     {
         try {
-            return $this->challengeAssessmentService->createChallengeAssessment($request, $challenge);
+            return $this->challengeAssessmentService->createChallengeAssessment($request, $challenge, null);
         } catch (Exception $e) {
             return false;
         }

@@ -9,6 +9,7 @@ use App\Models\LabChallengeRedeem;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeService
 {
@@ -231,6 +232,19 @@ class ChallengeService
                     break;
             }
 
+            $is_ai_created = config('constants.challenge_ai_created.no');
+            switch ($request->is_ai_created) {
+                case 'yes':
+                    $is_ai_created = config('constants.challenge_ai_created.yes');
+                    break;
+                case 'no':
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+                default:
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+            }
+
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($request->title, $model);
 
@@ -255,6 +269,7 @@ class ChallengeService
             $challenge->project_privacy = $project_privacy;
             $challenge->is_open = $is_open;
             $challenge->is_auto_created = $is_auto_created;
+            $challenge->is_ai_created = $is_ai_created;
             $challenge->save();
 
             return $challenge;
