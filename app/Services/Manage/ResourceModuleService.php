@@ -165,6 +165,7 @@ class ResourceModuleService
     {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+
             $status = config('constants.resource_module_status.draft');
             switch ($request->status) {
                 case 'publish':
@@ -177,6 +178,8 @@ class ResourceModuleService
                     $status = config('constants.resource_module_status.draft');
                     break;
             }
+
+            $is_global = config('constants.resource_module_is_global.no');
             switch ($request->is_global) {
                 case 'no':
                     $is_global = config('constants.resource_module_is_global.no');
@@ -187,6 +190,8 @@ class ResourceModuleService
                 default:
                     $is_global = config('constants.resource_module_is_global.no');
             }
+
+            $privacy = null;
             switch ($request->privacy) {
                 case 'no':
                     $privacy = config('constants.resource_module_privacy.no');
@@ -210,6 +215,7 @@ class ResourceModuleService
                     $is_ai_created = config('constants.challenge_ai_created.no');
                     break;
             }
+            
             $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $resourceModule = new ResourceModule();
@@ -231,7 +237,8 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error("Error in createResourceModule in ResourceModuleService.php: " . $e->getMessage());
+
             return false;
         }
     }

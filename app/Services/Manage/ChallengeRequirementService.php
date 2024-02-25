@@ -7,7 +7,7 @@ use Exception;
 
 class ChallengeRequirementService
 {
-    public function createChallengeRequirement($request, $challenge)
+    public function createChallengeRequirement($request, $challenge_id)
     {
         try {
             $allowSubmitProject = config('constants.challenge_requirement_common.no');
@@ -19,7 +19,7 @@ class ChallengeRequirementService
                     $allowSubmitProject = config('constants.challenge_requirement_common.no');
                     break;
                 default:
-                    $allowSubmitProject = config('constants.challenge_requirement_common.yes');
+                    $allowSubmitProject = config('constants.challenge_requirement_common.no');
                     break;
             }
 
@@ -32,7 +32,7 @@ class ChallengeRequirementService
                     $requirementProgram = config('constants.challenge_requirement_common.no');
                     break;
                 default:
-                    $requirementProgram = config('constants.challenge_requirement_common.yes');
+                    $requirementProgram = config('constants.challenge_requirement_common.no');
                     break;
             }
 
@@ -45,7 +45,7 @@ class ChallengeRequirementService
                     $completeEducationProgram = config('constants.challenge_requirement_common.no');
                     break;
                 default:
-                    $completeEducationProgram = config('constants.challenge_requirement_common.yes');
+                    $completeEducationProgram = config('constants.challenge_requirement_common.no');
                     break;
             }
 
@@ -58,25 +58,35 @@ class ChallengeRequirementService
                     $completeExperience = config('constants.challenge_requirement_common.no');
                     break;
                 default:
-                    $completeExperience = config('constants.challenge_requirement_common.yes');
+                    $completeExperience = config('constants.challenge_requirement_common.no');
                     break;
             }
 
+            $min_rank = $request->min_rank || 0;
+            $min_points = $request->min_points || null;
+            $project_submission_requirement_ids = $request->project_submission_requirement_ids || ["false"];
+            $max_project_submission = $request->max_project_submission || 5;
+            $max_project_associated = $request->max_project_associated || 5;
+            $min_experience = $request->min_experience || null;
+            $min_imported_badges = $request->min_imported_badges || null;
+            $min_achievement_counts = $request->min_achievement_counts || null;
+            $additional_requirements = $request->additional_requirements || null;
+
             $challengeRequirement = new ChallengeRequirement();
-            $challengeRequirement->challenge_id = $challenge;
-            $challengeRequirement->min_rank = $request->min_rank;
-            $challengeRequirement->min_points = $request->min_points;
-            $challengeRequirement->project_submission_requirement_ids = $request->project_submission_requirement_ids;
-            $challengeRequirement->max_project_submission = $request->max_project_submission;
-            $challengeRequirement->max_project_associate = $request->max_project_associated;
-            $challengeRequirement->min_experience = $request->min_experience;
-            $challengeRequirement->min_imported_badges = $request->min_imported_badges;
-            $challengeRequirement->min_achievement_counts = $request->min_achievement_counts;
+            $challengeRequirement->challenge_id = $challenge_id;
+            $challengeRequirement->min_rank = $min_rank;
+            $challengeRequirement->min_points = $min_points;
+            $challengeRequirement->project_submission_requirement_ids = $project_submission_requirement_ids;
+            $challengeRequirement->max_project_submission = $max_project_submission;
+            $challengeRequirement->max_project_associate = $max_project_associated;
+            $challengeRequirement->min_experience = $min_experience;
+            $challengeRequirement->min_imported_badges = $min_imported_badges;
+            $challengeRequirement->min_achievement_counts = $min_achievement_counts;
             $challengeRequirement->allow_submit_project = $allowSubmitProject;
             $challengeRequirement->requirement_program = $requirementProgram;
             $challengeRequirement->complete_education_program = $completeEducationProgram;
             $challengeRequirement->complete_experience = $completeExperience;
-            $challengeRequirement->additional_requirements = $request->additional_requirements;
+            $challengeRequirement->additional_requirements = $additional_requirements;
             $challengeRequirement->save();
 
             return true;

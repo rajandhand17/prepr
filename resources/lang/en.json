@@ -881,6 +881,9 @@
     "responses.not_found_job_list": "Failed to retrieve the list of jobs!",
     "responses.jobs_required": "This jobs field is required!",
     "responses.job_not_found": "This job is not found!",
-    "responses.challenge_created_success": "Challenges created successfully!",
-    "responses.resource_module_created_success": "Resource Modules created successfully!"
+    "responses.challenges_previews_created_successfully": "Challenges' previews created successfully!",
+    "responses.challenge_created_successfully": "Challenge created successfully!",
+    "responses.resource_module_previews_created_successfully": "Resource Modules' previews created successfully!",
+    "responses.resource_module_created_successfully": "Resource Module created successfully!",
+    "responses.server_failed": "There was an error from our end. Please try again later!"
 }

@@ -23,7 +23,6 @@ class ChallengeResourceModule extends Model
      */
     public function challenge()
     {
-        // assumes your Challenge model is also within App\Models
         return $this->belongsTo(Challenge::class, 'challenge_id');
     }
 
@@ -34,7 +33,6 @@ class ChallengeResourceModule extends Model
      */
     public function resourceModule()
     {
-        // assumes your ResourceModule model is also within App\Models
         return $this->belongsTo(ResourceModule::class, 'resource_module_id');
     }
 }

@@ -7,11 +7,11 @@ use Exception;
 
 class ChallengeProjectTemplateService
 {
-    public function createChallengeProjectTemplate($request, $challenge)
+    public function createChallengeProjectTemplate($request, $challenge_id)
     {
         try {
             $challengeProjectTemplate = new ChallengeProjectTemplate();
-            $challengeProjectTemplate->challenge_id = $challenge;
+            $challengeProjectTemplate->challenge_id = $challenge_id;
             $challengeProjectTemplate->template_id = $request->template_id;
             $challengeProjectTemplate->save();
 

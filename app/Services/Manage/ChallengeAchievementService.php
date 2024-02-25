@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Models\ChallengeAchievement;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeAchievementService
 {
@@ -50,6 +51,8 @@ class ChallengeAchievementService
 
             return true;
         } catch (Exception $e) {
+            Log::error("Error in createChallengeAchievement in ChallengeAchievementService.php: " . $e->getMessage());
+
             return false;
         }
     }

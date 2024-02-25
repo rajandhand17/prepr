@@ -7,7 +7,6 @@ use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleAIPreviewRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleAIRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
-use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleUsingAIRequest;
 use App\Http\Requests\Manage\ResourceModule\DeleteMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
@@ -78,9 +77,9 @@ class ResourceModuleController extends AppBaseController
     public function create(CreateResourceModuleRequest $request)
     {
         try {
-            // if (!auth()->user()->isAbleTo('create_resource_module')) {
-            //     return $this->sendError(__('responses.permission_forbidden'), 403);
-            // }
+            if (!auth()->user()->isAbleTo('create_resource_module')) {
+                return $this->sendError(__('responses.permission_forbidden'), 403);
+            }
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
@@ -91,15 +90,11 @@ class ResourceModuleController extends AppBaseController
             }
             $createResourceModule = $this->resourceModuleRepository->createResourceModule($request, $upload_cover_image);
 
-            if ($request->is_ai_created === "yes") {
-                $this->resourceModuleRepository->createResourceModuleDetailsAI($request, $createResourceModule->id);
-            }
-
             if ($createResourceModule) {
                 return $this->sendResponse(ResourceModuleResource::make($createResourceModule), __('responses.resource_module_stored_success'), 200);
             }
 
-            return $this->sendError(__('responses.resource_module_stored_failed'), 400);
+            return $this->sendError(__('responses.resource_module_stored_failed'), 403);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -128,7 +123,7 @@ class ResourceModuleController extends AppBaseController
                 return $this->sendResponse(ResourceModuleResource::make($updateResourceModule), __('responses.resource_module_update_success'), 200);
             }
 
-            return $this->sendError(__('responses.resource_module_stored_failed'), 400);
+            return $this->sendError(__('responses.resource_module_stored_failed'), 403);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -282,47 +277,42 @@ class ResourceModuleController extends AppBaseController
     public function resourceModuleAICreatePreview(CreateResourceModuleAIPreviewRequest $request)
     {
         try {
-            $createResourceModuleUsingAI = $this->resourceModuleRepository->createResourceModuleUsingAI($request);
+            $createResourceModuleAIPreview = $this->resourceModuleRepository->createResourceModuleAIPreview($request);
 
-            if (!empty($createResourceModuleUsingAI)) {
-                return $this->sendResponse($createResourceModuleUsingAI, __('responses.resource_module_created_success'), 200);
+            if ($createResourceModuleAIPreview) {
+                return $this->sendResponse($createResourceModuleAIPreview, __("responses.resource_module_previews_created_successfully"), 200);
             } else {
-                return $this->sendError(__('responses.resource_module_stored_failed'), 400);
+                throw new Exception("createResourceModuleAIPreview has no value!");
             }
         } catch (Exception $e) {
-            Log::error('Resource Module creation failed: ' . $e->getMessage());
+            Log::error("Error in resourceModuleAICreatePreview in ResourceModuleController.php: " . $e->getMessage());
 
-            return $this->sendError(__('responses.send_error'), 500);
+            return $this->sendError(__("responses.server_failed"), 500);
         }
     }
 
     public function resourceModuleAICreate(CreateResourceModuleAIRequest $request)
     {
         try {
-            // if (!auth()->user()->isAbleTo('create_resource_module')) {
-            //     return $this->sendError(__('responses.permission_forbidden'), 403);
-            // }
-            $upload_cover_image = config('site-settings.default_resource_module_cover_image');
-            if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
-                }
-                $upload_cover_image = $uploaded_cover_image;
-            }
-            $createResourceModule = $this->resourceModuleRepository->createResourceModule($request, $upload_cover_image);
+            $upload_cover_image = config("site-settings.default_resource_module_cover_image");
+            $createResourceModuleAI = $this->resourceModuleRepository->createResourceModuleAI($request, $upload_cover_image);
 
             if ($request->is_ai_created === "yes") {
-                $this->resourceModuleRepository->createResourceModuleDetailsAI($request, $createResourceModule->id);
+                $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $createResourceModuleAI->id);
+                if (!$createResourceModuleDetailsAI) {
+                    throw new Exception("createResourceModuleDetailsAI has no value!");
+                }
             }
 
-            if ($createResourceModule) {
-                return $this->sendResponse(ResourceModuleResource::make($createResourceModule), __('responses.resource_module_stored_success'), 200);
+            if ($createResourceModuleAI) {
+                return $this->sendResponse(ResourceModuleResource::make($createResourceModuleAI), __("responses.resource_module_created_successfully"), 200);
+            } else {
+                throw new Exception("createResourceModuleAI has no value!");
             }
+        } catch (Exception $e) {
+            Log::error("Error in resourceModuleAICreate in ResourceModuleController.php: " . $e->getMessage());
 
-            return $this->sendError(__('responses.resource_module_stored_failed'), 400);
-        } catch (\Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
+            return $this->sendError(__("responses.server_failed"), 500);
         }
     }
 }

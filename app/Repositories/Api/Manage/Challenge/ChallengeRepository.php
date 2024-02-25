@@ -138,7 +138,8 @@ class ChallengeRepository implements ChallengeInterface
 
             return false;
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error("Error in createChallenge in ChallengeRepository.php: " . $e->getMessage());
+
             return false;
         }
     }
@@ -146,75 +147,48 @@ class ChallengeRepository implements ChallengeInterface
     public function createChallengeAIPreview($request)
     {
         try {
-            $startTimeOverall = microtime(true);
+            // $startTimeOverall = microtime(true);
 
             $createChallengeAIPreview = $this->aiService->createChallengeAIPreview($request);
 
-            $endTimeOverall = microtime(true);
+            // $endTimeOverall = microtime(true);
             // Log::info('Overall duration: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
             return $createChallengeAIPreview;
         } catch (Exception $e) {
+            Log::error("Error in createChallengeAIPreview in ChallengeRepository.php: " . $e->getMessage());
+
             return false;
         }
     }
 
-    public function createChallengeAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment)
+    public function createChallengeAI($request, $upload_cover_image, $upload_achievement_image)
     {
         try {
-            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
+            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image) {
                 $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
-                $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
-                $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
                 $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
-                $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id);
-                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $upload_assessment_attachment);
-                $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
+                // FIXTHIS What is a template id?
+                // $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
+                // FIXTHIS find out about the timeline of the challenge
                 // $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
-                $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
-                $createChallengeExternalLink = $this->challengeExternalLinkService->createChallengeExternalLink($request, $createChallenge->id);
 
                 return [
                     'createChallenge'                   => $createChallenge,
                     'createChallengeAchievement'        => $createChallengeAchievement,
-                    'createChallengeSponsor'            => $createChallengeSponsor,
                     'createChallengeSkillsGroupsStack'  => $createChallengeSkillsGroupsStack,
-                    'createChallengeTagsGroups'         => $createChallengeTagsGroups,
                     'createChallengeRequirement'        => $createChallengeRequirement,
-                    'createChallengeAssessmentCriteria' => $createChallengeAssessmentCriteria,
-                    'createChallengeAssessment'         => $createChallengeAssessment,
-                    'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
+                    // 'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
                     // 'createChallengeTimelines'          => $createChallengeTimelines,
-                    'createChallengeCustomTimelines'    => $createChallengeCustomTimelines,
-                    'createChallengeExternalLink'       => $createChallengeExternalLink,
                 ];
             });
 
-            if (
-                $createChallenge['createChallenge'] &&
-                $createChallenge['createChallengeAchievement'] &&
-                $createChallenge['createChallengeSponsor'] &&
-                $createChallenge['createChallengeSkillsGroupsStack'] &&
-                $createChallenge['createChallengeTagsGroups'] &&
-                $createChallenge['createChallengeRequirement'] &&
-                $createChallenge['createChallengeAssessmentCriteria'] &&
-                $createChallenge['createChallengeAssessment'] &&
-                $createChallenge['createChallengeProjectTemplate'] &&
-                // $createChallenge['createChallengeTimelines'] &&
-                $createChallenge['createChallengeCustomTimelines'] &&
-                $createChallenge['createChallengeExternalLink']
-            ) {
-                DB::commit();
-
-                return $createChallenge['createChallenge'];
-            }
-            DB::rollback();
-
-            return false;
+            return $createChallenge['createChallenge'];
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error("Error in createChallengeAI in ChallengeRepository.php: " . $e->getMessage());
+
             return false;
         }
     }

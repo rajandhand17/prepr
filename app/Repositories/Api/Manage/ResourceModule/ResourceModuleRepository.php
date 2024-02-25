@@ -38,7 +38,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return  $this->resourceModuleService->getResourceModuleList($request, $organization);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -53,7 +53,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
                 return [
                     'createResourceModule'                 => $createResourceModule,
-                    'resourceModuleSkillsGroupStackService'=> $resourceModuleSkillsGroupStackService,
+                    'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
                     'resourceModuleTagsGroupsService'      => $resourceModuleTagsGroupsService,
                 ];
             });
@@ -65,7 +65,28 @@ class ResourceModuleRepository implements ResourceModuleInterface
             DB::rollback();
 
             return false;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createResourceModuleAI($request, $upload_cover_image)
+    {
+        try {
+            $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image) {
+                $createResourceModuleAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModuleAI->id);
+
+                return [
+                    'createResourceModuleAI'                 => $createResourceModuleAI,
+                    'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
+                ];
+            });
+
+            return $createLabProgram['createResourceModuleAI'];
+        } catch (Exception $e) {
+            Log::error("Error in createResourceModuleAI in ResourceModuleRepository.php: " . $e->getMessage());
+
             return false;
         }
     }
@@ -77,21 +98,23 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return $createResourceModuleUsingAI;
         } catch (Exception $e) {
+            Log::error("Error in createResourceModuleDetailsAI in ResourceModuleRepository.php: " . $e->getMessage());
+
             return false;
         }
     }
 
-    public function createResourceModuleUsingAI($request)
+    public function createResourceModuleAIPreview($request)
     {
         try {
             $startTimeOverall = microtime(true);
 
-            $createResourceModuleUsingAI = $this->aiService->createResourceModuleUsingAI($request);
+            $createResourceModuleAIPreview = $this->aiService->createResourceModuleAIPreview($request);
 
             $endTimeOverall = microtime(true);
             // Log::info('Overall duration for RM: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
-            return $createResourceModuleUsingAI;
+            return $createResourceModuleAIPreview;
         } catch (Exception $e) {
             return false;
         }
@@ -101,7 +124,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return $this->resourceModuleService->uploadResourceModuleCoverImage($cover_image);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -137,7 +160,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return $this->resourceModuleService->checkName($title);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -152,8 +175,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
                 return [
                     'updateResourceModule'           => $updateResourceModule,
-                    'resourceModuleSkillsGroupsStack'=> $resourceModuleSkillsGroupStackService,
-                    'resourceModuleTagsGroupsService'=> $resourceModuleTagsGroupsService,
+                    'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,
+                    'resourceModuleTagsGroupsService' => $resourceModuleTagsGroupsService,
                 ];
             });
             if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
@@ -164,7 +187,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             DB::rollback();
 
             return false;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -173,7 +196,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return $this->resourceModuleDetailsService->fileUpload($request, $resource_module_id);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -182,7 +205,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return $this->resourceModuleDetailsService->deleteResourceModuleMedia($request, $resource_module_id);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -191,7 +214,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return $this->resourceModuleDetailsService->addLinks($request, $resource_module_id);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -200,7 +223,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return $this->resourceModuleDetailsService->addEmbeddedMedia($request, $resource_module_id);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -209,7 +232,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return  $this->resourceModuleService->getListName($request, $organization);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

@@ -17,12 +17,10 @@ return new class extends Migration
             $table->bigInteger('resource_module_id')->unsigned();
             $table->timestamps();
 
-            // Foreign key constraint for 'challenge_id' referencing 'id' in 'challenges'
             $table->foreign('challenge_id')
                 ->references('id')->on('challenges')
                 ->onDelete('cascade');
 
-            // Foreign key constraint for 'resource_module_id' referencing 'id' in 'resource_modules'
             $table->foreign('resource_module_id')
                 ->references('id')->on('resource_modules')
                 ->onDelete('cascade');

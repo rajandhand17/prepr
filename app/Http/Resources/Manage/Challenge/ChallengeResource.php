@@ -33,6 +33,7 @@ class ChallengeResource extends JsonResource
         $level = null;
         $level_id = null;
         $skills = null;
+        $jobs = null;
         $skill_groups = null;
         $skill_stacks = null;
         $tags = null;
@@ -45,7 +46,6 @@ class ChallengeResource extends JsonResource
         $challenge_assessment = null;
         $challenge_timelines = null;
         $challenge_custom_timelines = null;
-        $jobs = null;
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;

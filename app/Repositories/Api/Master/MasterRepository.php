@@ -28,6 +28,7 @@ use App\Services\SocialLinkService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class MasterRepository implements MasterInterface
 {
@@ -343,7 +344,9 @@ class MasterRepository implements MasterInterface
     {
         try {
             return $this->jobService->getJobs($request->language, $request->search);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            Log::error("Error in getJobs in MasterRepository.php: " . $e->getMessage());
+
             return false;
         }
     }

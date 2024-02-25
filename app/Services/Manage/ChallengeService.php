@@ -176,7 +176,7 @@ class ChallengeService
                     $challenge_privacy = config('constants.challenge_privacy.no');
                     break;
                 default:
-                    $challenge_privacy = config('constants.challenge_privacy.yes');
+                    $challenge_privacy = config('constants.challenge_privacy.no');
                     break;
             }
 
@@ -189,7 +189,7 @@ class ChallengeService
                     $project_privacy = config('constants.challenge_privacy.no');
                     break;
                 default:
-                    $project_privacy = config('constants.challenge_privacy.yes');
+                    $project_privacy = config('constants.challenge_privacy.no');
                     break;
             }
 
@@ -202,7 +202,7 @@ class ChallengeService
                     $is_notification_enabled = config('constants.challenge_notification_enabled.no');
                     break;
                 default:
-                    $is_notification_enabled = config('constants.challenge_notification_enabled.yes');
+                    $is_notification_enabled = config('constants.challenge_notification_enabled.no');
                     break;
             }
 
@@ -215,7 +215,7 @@ class ChallengeService
                     $is_open = config('constants.challenge_open_close.no');
                     break;
                 default:
-                    $is_open = config('constants.challenge_open_close.yes');
+                    $is_open = config('constants.challenge_open_close.no');
                     break;
             }
 
@@ -228,7 +228,7 @@ class ChallengeService
                     $is_auto_created = config('constants.challenge_auto_created.no');
                     break;
                 default:
-                    $is_auto_created = config('constants.challenge_auto_created.yes');
+                    $is_auto_created = config('constants.challenge_auto_created.no');
                     break;
             }
 
@@ -244,6 +244,8 @@ class ChallengeService
                     $is_ai_created = config('constants.challenge_ai_created.no');
                     break;
             }
+
+            $source_link = $request->source_link || null;
 
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($request->title, $model);
@@ -263,7 +265,7 @@ class ChallengeService
             $challenge->media_type = 'image';
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
-            $challenge->source_link = $request->source_link;
+            $challenge->source_link = $source_link;
             $challenge->agreement = $request->agreement;
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;
@@ -274,6 +276,8 @@ class ChallengeService
 
             return $challenge;
         } catch (Exception $e) {
+            Log::error("Error in createChallenge in ChallengeService.php: " . $e->getMessage());
+
             return false;
         }
     }

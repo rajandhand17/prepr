@@ -168,7 +168,7 @@ class AIService
 
             return (object)$validChallenges;
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage());
         }
     }
 
@@ -236,7 +236,7 @@ class AIService
     protected function fetchSkillRecommendation($skill)
     {
         try {
-            $response = RecommendationEngineHelper::getRelatedPreprSkills(Config::get('app.skills_recommendation_engine_url') . "/" . strtolower($skill));
+            $response = RecommendationEngineHelper::getRelatedPreprSkills(config('app.skills_recommendation_engine_url') . "/" . strtolower($skill));
             return $response;
         } catch (Exception $e) {
             // Log error or handle exception
@@ -258,7 +258,7 @@ class AIService
     }
 
     // Create resource modules from challenges
-    public function createResourceModuleUsingAI($request)
+    public function createResourceModuleAIPreview($request)
     {
         // $language = $this->language;
         $bingArticleClient = $this->bingArticleClient;
@@ -486,7 +486,7 @@ class AIService
                 }
                 unset($group); // Break the reference with the last element
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error($e->getMessage());
             }
         }
 

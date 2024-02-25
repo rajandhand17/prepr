@@ -7,7 +7,7 @@ use Exception;
 
 class ChallengeCustomTimelinesService
 {
-    public function createChallengeCustomTimelines($request, $challenge)
+    public function createChallengeCustomTimelines($request, $challenge_id)
     {
         try {
             if ($request->timeline_type == 'flexible') {
@@ -15,7 +15,7 @@ class ChallengeCustomTimelinesService
                     foreach ($request->custom_timelines_title as $key => $value) {
                         $custom_date = date('Y-m-d H:i:s', strtotime($request->custom_timelines_date[$key]));
                         $challengeCustomTimeline = new ChallengeCustomTimelines();
-                        $challengeCustomTimeline->challenge_id = $challenge;
+                        $challengeCustomTimeline->challenge_id = $challenge_id;
                         $challengeCustomTimeline->custom_timelines_title = $request->custom_timelines_title[$key];
                         $challengeCustomTimeline->custom_timelines_date = $custom_date;
                         $challengeCustomTimeline->custom_timelines_description = $request->custom_timelines_description[$key];

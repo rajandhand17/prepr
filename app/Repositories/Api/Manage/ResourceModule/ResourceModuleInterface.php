@@ -27,4 +27,8 @@ interface ResourceModuleInterface
     public function deleteResourceModuleMedia($request, $resource_module_id);
 
     public function getListName($request, $organization);
+
+    public function createResourceModuleDetailsAI($request, $resource_module_id);
+
+    public function createResourceModuleAIPreview($request);
 }

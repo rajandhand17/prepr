@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Http;
 use Exception;
-use Config;
+use Illuminate\Support\Facades\Log;
 
 class RecommendationEngineHelper
 {
@@ -15,7 +15,7 @@ class RecommendationEngineHelper
     {
         try {
             $response = Http::withHeaders([
-                'authorizationToken' => Config::get('app.related_skills_auth_token')
+                'authorizationToken' => config('app.related_skills_auth_token')
             ])->post($url);
 
             if ($response->failed()) {
@@ -31,6 +31,7 @@ class RecommendationEngineHelper
 
             return $responseStatus;
         } catch (Exception $e) {
+            Log::error("Error in getRelatedPreprSkills in RecommendationEngineHelper.php: " . $e->getMessage());
             return false;
         }
     }

@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Job;
 use Illuminate\Support\Facades\Schema;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class JobService
 {
@@ -17,22 +19,19 @@ class JobService
                     $job_list = $job_list->whereIn('id', $job_id);
                 }
             } else {
-                //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
 
-                //check whether the column exist in the db or not
                 if (!$column_name || !Schema::hasColumn('jobs', $column_name)) {
                     return false;
                 }
-                $job_list = Job::select('id', $column_name.' as title');
+                $job_list = Job::select('id', $column_name . ' as title');
             }
-            //Search categories based on user input
+
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
                 $job_list = self::filterJobList($job_list, $column_name, $search);
             }
 
-            //take 20 results based from the table
             $job_list = $job_list->take(config('site-settings.dropdown_listing_limit'));
 
             if (auth()->user()) {
@@ -40,12 +39,11 @@ class JobService
             } else {
                 $job_list = $job_list->get();
             }
-            if (!$job_list->isEmpty()) {
-                return $job_list;
-            }
 
-            return false;
-        } catch (\Exception $e) {
+            return $job_list;
+        } catch (Exception $e) {
+            Log::error("Error in getJobs in JobService.php: " . $e->getMessage());
+
             return false;
         }
     }
@@ -53,13 +51,12 @@ class JobService
     public static function filterJobList($getJobsList, $job_column_name, $search)
     {
         try {
-            $getJobsList = $getJobsList->where($job_column_name, 'like', '%'.$search.'%');
-            if ($getJobsList) {
-                return $getJobsList;
-            }
+            $getJobsList = $getJobsList->where($job_column_name, 'like', '%' . $search . '%');
 
-            return false;
-        } catch (\Exception $e) {
+            return $getJobsList;
+        } catch (Exception $e) {
+            Log::error("Error in filterJobList in JobService.php: " . $e->getMessage());
+
             return false;
         }
     }
@@ -67,14 +64,13 @@ class JobService
     public static function getJobBasedOnIds($job_ids)
     {
         try {
-            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title') . ' as title')
                 ->whereIn('id', $job_ids)->get();
-            if ($getJobsList) {
-                return $getJobsList;
-            }
 
-            return false;
-        } catch (\Exception $e) {
+            return $getJobsList;
+        } catch (Exception $e) {
+            Log::error("Error in getJobBasedOnIds in JobService.php: " . $e->getMessage());
+
             return false;
         }
     }
@@ -82,14 +78,13 @@ class JobService
     public static function getJobBasedOnId($job_id)
     {
         try {
-            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title') . ' as title')
                 ->where('id', $job_id)->first();
-            if ($getJobsList) {
-                return $getJobsList;
-            }
 
-            return false;
-        } catch (\Exception $e) {
+            return $getJobsList;
+        } catch (Exception $e) {
+            Log::error("Error in getJobBasedOnId in JobService.php: " . $e->getMessage());
+
             return false;
         }
     }
