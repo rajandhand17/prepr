@@ -17,19 +17,26 @@ class SkillRepository implements SkillInterface
         $this->userSkillsService = $userSkillsService;
     }
 
-    public function index($language, $search, $skillId)
+    public function index($language, $search, $sortBy, $skillId)
     {
         try {
-            return $this->skillsService->getSkills($language, $search, $skillId);
+            if ($skillId !== null) {
+                return $this->skillsService->getSkillBasedOnId($skillId);
+            } else {
+                $pagination = true;
+
+                return  $this->skillsService->getSkills($language, $search, $sortBy, $skillId, $pagination);
+            }
+            // return $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function getMySkills($language, $search)
+    public function getMySkills($language, $search, $pinned)
     {
         try {
-            return $this->userSkillsService->getMySkills($language, $search);
+            return $this->userSkillsService->getMySkills($language, $search, $pinned);
         } catch (\Exception $e) {
             return false;
         }
@@ -39,6 +46,24 @@ class SkillRepository implements SkillInterface
     {
         try {
             return $this->skillsService->getSkillBasedOnId($skillId);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addSkills($request)
+    {
+        try {
+            return $this->userSkillsService->addSingleSkill($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addSkillPinned($request)
+    {
+        try {
+            return $this->userSkillsService->addSkillPinned($request);
         } catch (\Exception $e) {
             return false;
         }

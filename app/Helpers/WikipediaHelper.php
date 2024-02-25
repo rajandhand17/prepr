@@ -9,7 +9,7 @@ class WikipediaHelper
     public static function fetchSkillDescription($skillName, $language)
     {
         try {
-            $wikipediaUrl = ($language == 'fr-CA') ? config('app.french_wikipedia_url') : config('app.english_wikipedia_url');
+            $wikipediaUrl = ($language == 'fr-CA') ? config('wikipedia.FRENCH_WIKIPEDIA_URL') : config('wikipedia.ENGLISH_WIKIPEDIA_URL');
             $client = new Client();
             $wikipedia_description_response = $client->request('GET', $wikipediaUrl, [
                 'query' => [
@@ -53,7 +53,7 @@ class WikipediaHelper
             $client = new Client();
             $response = $client->post($url, [
                 'headers' => [
-                    'authorizationToken' => config('app.related_skills_auth_token'),
+                    'authorizationToken' => config('wikipedia.RELATED_SKILLS_AUTH_TOKEN'),
                 ],
             ]);
             if (!$response) {
