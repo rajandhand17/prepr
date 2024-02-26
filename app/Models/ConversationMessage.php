@@ -58,9 +58,9 @@ class ConversationMessage extends Model
     public function getIsSenderAttribute()
     {
         if ($this->sender_id === auth()->user()->id) {
-            return 'yes';
+            return true;
         }
 
-        return 'no';
+        return false;
     }
 }

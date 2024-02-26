@@ -23,7 +23,7 @@ class MessageResource extends JsonResource
             'message' => $this->message,
             'attachment' => $this->attachment,
             'sender' => UserSearchResource::make($this->sender),
-            'is_sender' => $this->is_sender,
+            'is_sender' => $this->is_sender ? 'yes' : 'no',
             "seen_users" => UserSearchResource::collection($this->chat_seen_user),
             'sent_at' => UtilityHelper::formatDateTime($this->created_at)
         ];
