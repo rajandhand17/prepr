@@ -85,7 +85,7 @@ class ConversationService
                 return $this->getById($conversationId);
             }
 
-            return null;
+            return false;
         } catch (Exception $e) {
             Log::error($e);
             return false;
@@ -123,9 +123,6 @@ class ConversationService
         Notification::send($users, new ConversationCreated($conversation, $userIds));
     }
 
-    /**
-     * @throws Exception
-     */
     private function store(array $data)
     {
         try {
@@ -186,9 +183,6 @@ class ConversationService
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function create(array $data)
     {
         try {
