@@ -109,8 +109,8 @@ class ConversationService
     private function NotifyConversationCreated($conversation, $userIds)
     {
         try {
-            $userIds = collect($userIds)->filter(function ($item) {
-                return auth()->user()->id !== $item;
+            $userIds = array_filter($userIds, function ($item) {
+                return $item !== auth()->user()->id;
             });
 
             $users = User::whereIn('id', $userIds)->get();

@@ -24,7 +24,6 @@ class ConversationResource extends JsonResource
             "last_message" => MessageResource::make($this->lastMessage),
             "is_conversation_seen" => $this->is_conversation_seen,
             "default_conversation_name" => $this->default_conversation_name,
-            "last_seen_message" => MessageResource::make(data_get($this->lastSeenMessage, 'chat')),
             "is_private" => $this->is_private ? 'yes' : 'no',
         ];
     }
