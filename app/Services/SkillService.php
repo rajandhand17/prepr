@@ -4,15 +4,23 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Skill;
+use DB;
 use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public function getSkills($language = 'en', $search = null)
+    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id, $pagination = null)
     {
         try {
             if ($language == 'en') {
                 $skill_list = Skill::select('id', 'title');
+                if ($skill_id !== null) {
+                    if (gettype($skill_id) == 'string') {
+                        $skill_list = $skill_list->where('id', $skill_id);
+                    } else {
+                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
+                    }
+                }
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -27,13 +35,31 @@ class SkillService
             //Search categories based on user input
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
-                $skill_list = $this->filterSkillList($skill_list, $column_name, $search);
+                $skill_list = self::filterSkillList($skill_list, $column_name, $search);
             }
 
+            if ($sortBy !== null) {
+                switch ($sortBy) {
+                    case 'name-a-to-z':
+                        $skill_list = $skill_list->orderBy('skills.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $skill_list = $skill_list->orderBy('skills.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $skill_list = $skill_list->orderBy('skills.created_at', 'ASC');
+                        break;
+                    default:
+                        $skill_list = $skill_list->orderBy('skills.id', 'ASC');
+                }
+            }
             //take 20 results based from the table
-            $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'))->get();
-
-            //check if there are any results
+            $skill_list = $skill_list->take(config('site-settings.dropdown_listing_limit'));
+            if (auth()->user() || $pagination == true) {
+                $skill_list = $skill_list->paginate(config('site-settings.pagination_per_page'));
+            } else {
+                $skill_list = $skill_list->get();
+            }
             if (!$skill_list->isEmpty()) {
                 return $skill_list;
             }
@@ -44,7 +70,7 @@ class SkillService
         }
     }
 
-    public function filterSKillList($getSkillsList, $sKill_column_name, $search)
+    public static function filterSKillList($getSkillsList, $sKill_column_name, $search)
     {
         try {
             $getSkillsList = $getSkillsList->where($sKill_column_name, 'like', '%'.$search.'%');
@@ -73,11 +99,11 @@ class SkillService
         }
     }
 
-    public static function getSkillBasedOnSingleId($skill_ids)
+    public static function getSkillBasedOnId($skill_id)
     {
         try {
             $getSkillsList = Skill::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
-                ->where('id', $skill_ids)->get();
+                ->where('id', $skill_id)->first();
             if ($getSkillsList) {
                 return $getSkillsList;
             }

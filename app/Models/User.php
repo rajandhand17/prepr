@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
-
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -48,6 +49,7 @@ class User extends Authenticatable
         'referral_code',
         'is_profile_completed',
         'remember_token',
+        'is_deactivated',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -189,6 +191,11 @@ class User extends Authenticatable
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
+
+                return $response;
+            }
+            if ($user->is_deactivated == 1) {
+                $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
                 return $response;
             }

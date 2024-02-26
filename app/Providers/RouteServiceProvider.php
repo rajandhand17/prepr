@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
 
             $this->mapProfileRoutes();
             $this->mapDiscussionsRoute();
+            $this->mapSettingRoutes();
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
         });
@@ -73,6 +74,11 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api/v1/discussion/')->middleware('api')->group(base_path('routes/v1/discussion.php'));
     }
+    
+    protected function mapSettingRoutes()
+    {
+        Route::prefix('api/v1/setting/')->middleware('api')->group(base_path('routes/v1/setting.php'));
+    }
 
     protected function mapManageRoutes()
     {
@@ -101,5 +107,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-collection/')->middleware('api')->group(base_path('routes/v1/public/resource-collection.php'));
         Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
+        Route::prefix('api/v1/public/skills/')->middleware('api')->group(base_path('routes/v1/public/skills.php'));
     }
 }
