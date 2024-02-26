@@ -8,7 +8,7 @@ use Pusher\Pusher;
 class WebSocketController extends AppBaseController
 {
 
-    public function auth(): string
+    public function auth()
     {
         try {
             $pusherConfig = config('broadcasting.connections.pusher');

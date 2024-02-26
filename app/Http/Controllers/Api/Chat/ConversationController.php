@@ -15,7 +15,7 @@ class ConversationController extends AppBaseController
     {
     }
 
-    public function index($type)
+    public function index(string $type)
     {
         try {
             $conversations = $this->conversationRepository->list($type);

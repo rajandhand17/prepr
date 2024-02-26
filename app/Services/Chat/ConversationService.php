@@ -32,6 +32,8 @@ class ConversationService
                 $data['type'] = config('constants.conversation_type.group_message');
             } else if ($data['type'] === 'message' && count($userIds) == 2) {
                 $data['type'] = config('constants.conversation_type.direct_message');
+            } else if ($data['type'] === 'announcement') {
+                $data['type'] = config('constants.conversation_type.announcement');
             }
 
             return $data;
@@ -40,13 +42,14 @@ class ConversationService
         }
     }
 
-    private function getConversationIdHavingUsers(array $userIds)
+    private function getConversationIdHavingUsers(array $userIds, $type)
     {
         try {
             $userIdsTuple = implode(',', $userIds);
 
             $conversationIds = Conversation::select('conversations.id as conversation_id')
                 ->where('is_archived', false)
+                ->where('type', $type)
                 ->join('conversation_users', 'conversation_users.conversation_id', '=', 'conversations.id')
                 ->groupBy('conversation_id')
                 ->havingRaw("COUNT(DISTINCT conversation_users.user_id) = ?", [count($userIds)])
@@ -59,10 +62,10 @@ class ConversationService
         }
     }
 
-    private function isConversationAlreadyExists(array $userIds)
+    private function isConversationAlreadyExists(array $userIds, $type)
     {
         try {
-            if ($this->getConversationIdHavingUsers($userIds)) {
+            if ($this->getConversationIdHavingUsers($userIds, $type)) {
                 return true;
             }
 
@@ -72,10 +75,10 @@ class ConversationService
         }
     }
 
-    private function getConversationByUsers(array $userIds)
+    private function getConversationByUsers(array $userIds, $type)
     {
         try {
-            $conversationId = $this->getConversationIdHavingUsers($userIds);
+            $conversationId = $this->getConversationIdHavingUsers($userIds, $type);
 
             if ($conversationId) {
                 return $this->getById($conversationId);
@@ -186,10 +189,9 @@ class ConversationService
         try {
             $preparedData = $this->prepareData($data);
 
-            if ($this->isConversationAlreadyExists($preparedData['users'])) {
-                return $this->getConversationByUsers($preparedData['users']);
+            if ($this->isConversationAlreadyExists($preparedData['users'], $preparedData['type'])) {
+                return $this->getConversationByUsers($preparedData['users'], $preparedData['type']);
             }
-
             return $this->store($preparedData);
         } catch (Exception $e) {
             return false;
@@ -210,12 +212,16 @@ class ConversationService
                         ->limit(1)
                 );
 
+
             switch ($type) {
                 case 'archive':
                     $conversation->where('is_archived', true);
                     break;
                 case 'non-archive':
                     $conversation->where('is_archived', false);
+                    break;
+                default:
+                    return false;
             }
 
             if (request()->has('search')) {
