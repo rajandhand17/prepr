@@ -114,6 +114,5 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
         Route::prefix('api/v1/public/skills/')->middleware('api')->group(base_path('routes/v1/public/skills.php'));
-        Route::prefix('api/v1/public/project-invitation-management/')->middleware('api')->group(base_path('routes/v1/public/project-invitation-management.php'));
     }
 }

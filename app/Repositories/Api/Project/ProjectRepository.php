@@ -363,4 +363,23 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function checkAssessmentChallenges($userData)
+    {
+        try {
+            return $this->challengeAssessmentService->getAllChallengeIds($userData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function captureProjectAssessment($projectData, $userData)
+    {
+        try {
+            $fetchChallengeData = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
+            dd($fetchChallengeData->challenge_assessment_criteria, $fetchChallengeData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -399,4 +399,28 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function assessProject($slug, Request $request)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectSlugExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $checkAssessmentChallenges = $this->projectRepository->checkAssessmentChallenges(auth()->user());
+            if ($checkAssessmentChallenges->contains($checkProjectSlugExistsOrNot->challenge_id) === false) {
+                return $this->sendError(__('responses.project_not_allowed_assessment'), 403);
+            }
+
+            $captureProjectAssessment = $this->projectRepository->captureProjectAssessment($checkProjectSlugExistsOrNot, auth()->user());
+            if ($captureProjectAssessment) {
+                dd("in");
+            }
+            
+            return $this->sendError(__('responses.project_not_assessment'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
