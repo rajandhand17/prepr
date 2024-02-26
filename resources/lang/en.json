@@ -869,10 +869,11 @@
     "response.list_conversation": "You have successfully retrieved conversations",
     "response.conversation_created": "you have successfully created conversation",
     "response.not_found_conversation_list": "The list of conversation has not been retrieved with success.",
-    "response.conversation_stored_failed": "Oops! The creation conversation has failed.",
+    "response.conversation_stored_failed": "Oops! The creation of conversation has failed.",
     "responses.conversation_not_found": "Conversation not found",
     "responses.found_message_list": "The list of messages is retrieved with success",
     "responses.not_found_message_list": "The list of messages has not been retrieved with success.",
+    "response.message_created": "you have successfully created message",
     "responses.conversation_seen_successfully": "Conversation is marked as seen successfully",
     "responses.conversation_delete_successfully": "Conversation is deleted successfully",
     "responses.conversation_archive_successfully": "Conversation is archived successfully",
@@ -884,5 +885,6 @@
     "responses.conversation_user_exists": "Please make sure all the users exists for given user ids.",
     "responses.type_in_announcement_or_message": "Type can be either announcement or message",
     "responses.message_without_attachment": "The message field is required when attachment is not present.",
-    "responses.attachment_without_message": "The attachment field is required when message is not present."
+    "responses.attachment_without_message": "The attachment field is required when message is not present.",
+    "responses.message_not_created": "Oops! The creation of message has failed"
 }
