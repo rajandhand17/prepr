@@ -343,13 +343,13 @@ return [
         '1' => 'subscribe',
     ],
     "conversation_type" => [
-        'directMessage' => '0',
-        'groupMessage' => '1',
+        'direct_message' => '0',
+        'group_message' => '1',
         'announcement' => '2'
     ],
     "conversation_type_id" => [
-        '0' => 'directMessage',
-        '1' => 'groupMessage',
+        '0' => 'direct_message',
+        '1' => 'group_message',
         '2' => 'announcement'
     ],
 ];

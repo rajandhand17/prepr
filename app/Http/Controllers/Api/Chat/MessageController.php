@@ -59,7 +59,7 @@ class MessageController extends AppBaseController
                 return $this->sendError(__('responses.message_not_created'), 409);
             }
 
-            return $this->sendResponse($message, __("response.message_created"));
+            return $this->sendResponse(new MessageResource($message), __("response.message_created"));
 
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

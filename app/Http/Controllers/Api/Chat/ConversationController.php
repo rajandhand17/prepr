@@ -29,7 +29,6 @@ class ConversationController extends AppBaseController
                     'total_pages' => $conversations->lastPage(),
                     'list' => ConversationResource::collection($conversations->items())
                 ];
-
                 return $this->sendResponse($responseData, __("response.list_conversation"));
             }
             return $this->sendError(__('responses.not_found_conversation_list'), 400);
@@ -37,7 +36,7 @@ class ConversationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-    
+
     public function create(CreateConversationRequest $request): JsonResponse
     {
         try {
@@ -62,7 +61,6 @@ class ConversationController extends AppBaseController
             if ($message) {
                 return $this->sendResponse(null, __("responses.conversation_" . $action . "_successfully"));
             }
-
             return $this->sendError(__("responses.conversation_" . $action . "_failed"), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

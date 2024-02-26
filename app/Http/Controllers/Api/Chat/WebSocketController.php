@@ -18,9 +18,13 @@ class WebSocketController extends AppBaseController
      */
     public function auth(): string
     {
-        $pusherConfig = config('broadcasting.connections.pusher');
-        $pusher = new Pusher($pusherConfig['key'], $pusherConfig['secret'], $pusherConfig['app_id'], $pusherConfig['options']);
+        try {
+            $pusherConfig = config('broadcasting.connections.pusher');
+            $pusher = new Pusher($pusherConfig['key'], $pusherConfig['secret'], $pusherConfig['app_id'], $pusherConfig['options']);
 
-        return $pusher->authenticateUser(request()->get('socket_id'), auth()->user()->toArray());
+            return $pusher->authenticateUser(request()->get('socket_id'), auth()->user()->toArray());
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
     }
 }

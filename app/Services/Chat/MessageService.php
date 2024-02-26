@@ -41,7 +41,6 @@ class MessageService
 
             return $chatFiles;
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -69,7 +68,6 @@ class MessageService
             return $message;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
             return false;
         }
     }
@@ -81,15 +79,19 @@ class MessageService
                 ->where('conversation_id', $conversationId)
                 ->paginate(30);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
 
     private function sendNotification($message, $conversationId)
     {
-        $conversation = Conversation::where('id', $conversationId)->first();
-        Notification::send($conversation, new MessageCreated($message, $conversationId));
+        try {
+            $conversation = Conversation::where('id', $conversationId)->first();
+            Notification::send($conversation, new MessageCreated($message, $conversationId));
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function send(array $data)
@@ -105,7 +107,6 @@ class MessageService
             return $message;
         } catch (Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
             return false;
         }
     }

@@ -26,7 +26,6 @@ readonly class ConversationRepository implements ConversationInterface
         try {
             return $this->conversationService->create($data);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -41,7 +40,6 @@ readonly class ConversationRepository implements ConversationInterface
 
             return $conversation;
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -51,7 +49,6 @@ readonly class ConversationRepository implements ConversationInterface
         try {
             return $this->conversationService->list($type);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -62,7 +59,6 @@ readonly class ConversationRepository implements ConversationInterface
         try {
             return $this->conversationService->archiveOrSeenOrDelete($uuid, $action);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }

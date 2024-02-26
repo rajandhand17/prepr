@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('uuid');
             $table->boolean('is_archived')->default(false);
-            $table->enum('type', ['0', '1', '2'])->comment('0->directMessage, 1->groupMessage, 2->announcement');
+            $table->enum('type', ['0', '1', '2'])->comment('0->direct_message, 1->group_message, 2->announcement');
             $table->string('group_photo')->nullable();
             $table->boolean('is_private')->default(true);
             $table->foreignId('created_by')->references('id')->on('users')->onDelete('cascade');

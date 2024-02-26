@@ -30,14 +30,13 @@ class ConversationService
             }
 
             if ($data['type'] === 'message' && count($userIds) > 2) {
-                $data['type'] = config('constants.conversation_type.groupMessage');
+                $data['type'] = config('constants.conversation_type.group_message');
             } else if ($data['type'] === 'message' && count($userIds) == 2) {
-                $data['type'] = config('constants.conversation_type.directMessage');
+                $data['type'] = config('constants.conversation_type.direct_message');
             }
 
             return $data;
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -57,7 +56,6 @@ class ConversationService
 
             return data_get($conversationIds, 'conversation_id');
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -71,7 +69,6 @@ class ConversationService
 
             return false;
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -87,7 +84,6 @@ class ConversationService
 
             return false;
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -97,7 +93,6 @@ class ConversationService
         try {
             return Conversation::find($id);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -108,19 +103,23 @@ class ConversationService
             $conversation->users()->attach($users);
             return true;
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
 
     private function NotifyConversationCreated($conversation, $userIds)
     {
-        $userIds = collect($userIds)->filter(function ($item) {
-            return auth()->user()->id !== $item;
-        });
+        try {
+            $userIds = collect($userIds)->filter(function ($item) {
+                return auth()->user()->id !== $item;
+            });
 
-        $users = User::whereIn('id', $userIds)->get();
-        Notification::send($users, new ConversationCreated($conversation, $userIds));
+            $users = User::whereIn('id', $userIds)->get();
+            Notification::send($users, new ConversationCreated($conversation, $userIds));
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     private function store(array $data)
@@ -142,13 +141,16 @@ class ConversationService
                 return false;
             }
 
-            $this->NotifyConversationCreated($conversation, $data['users']);
+            $notification = $this->NotifyConversationCreated($conversation, $data['users']);
+
+            if (!$notification) {
+                return false;
+            }
 
             DB::commit();
             return $conversation;
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error($exception);
             return false;
         }
     }
@@ -158,7 +160,6 @@ class ConversationService
         try {
             return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -168,7 +169,6 @@ class ConversationService
         try {
             return Conversation::where('id', $id)->update(['is_archived' => true]);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -178,7 +178,6 @@ class ConversationService
         try {
             return Conversation::where('id', $id)->delete();
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -194,7 +193,6 @@ class ConversationService
 
             return $this->store($preparedData);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -233,7 +231,6 @@ class ConversationService
 
             return $conversation->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -249,7 +246,6 @@ class ConversationService
 
             return $conversation;
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -280,7 +276,6 @@ class ConversationService
 
             return true;
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }

@@ -21,7 +21,6 @@ readonly class MessageRepository implements MessageInterface
         try {
             return $this->messageService->list($conversationId);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
@@ -33,10 +32,9 @@ readonly class MessageRepository implements MessageInterface
                 "conversation_id" => $conversationId,
                 "message" => $data['message']
             ];
-       
+
             return $this->messageService->send($payload);
         } catch (Exception $e) {
-            Log::error($e);
             return false;
         }
     }
