@@ -14,8 +14,9 @@ class RecommendationEngineHelper
     public static function getRelatedPreprSkills($url)
     {
         try {
+            $url = env('skills_recommendation_engine_url') . $url;
             $response = Http::withHeaders([
-                'authorizationToken' => config('app.related_skills_auth_token')
+                'authorizationToken' => env('related_skills_auth_token')
             ])->post($url);
 
             if ($response->failed()) {

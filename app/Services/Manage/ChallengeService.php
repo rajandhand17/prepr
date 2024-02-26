@@ -481,6 +481,19 @@ class ChallengeService
         }
     }
 
+    public static function getChallengeIdBasedOnUUID($challenge_uuid)
+    {
+        try {
+            $challengeId = Challenge::where('uuid', $challenge_uuid)->value('id');
+
+            return $challengeId ?: false;
+        } catch (Exception $e) {
+            Log::error("Error in getChallengeIdBasedOnUUID in ChallengeService.php: " . $e->getMessage());
+
+            return false;
+        }
+    }
+
     public static function cloneChallenge($challengeId, $organization)
     {
         try {

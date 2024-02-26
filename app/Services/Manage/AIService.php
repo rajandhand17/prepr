@@ -10,18 +10,14 @@ use App\Models\Job;
 use App\Models\Levels;
 use App\Models\Skill;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Config;
 
 class AIService
 {
     protected $openAIClient;
     protected $bingArticleClient;
     protected $bingVideoClient;
-    protected $skillsRecommendationEngineUrl;
-    protected $relatedSkillsAuthToken;
 
     public function __construct()
     {
@@ -35,10 +31,6 @@ class AIService
                 'Authorization' => 'Bearer ' . $openAIAPIKey,
             ],
         ]);
-
-        $this->skillsRecommendationEngineUrl = config('app.skills_recommendation_engine_url');
-        $this->relatedSkillsAuthToken = config('app.related_skills_auth_token');
-
 
         $this->bingArticleClient = new Client([
             'base_uri' => 'https://api.bing.microsoft.com/v7.0/search',
@@ -62,36 +54,28 @@ class AIService
         try {
             $attempt = 0;
             $validChallenges = [];
-            $irrelevantDataCount = 0;
 
             // $language = $request->language;
 
             $jobTitles = implode(', ', Job::whereIn('id', $request->jobs)->get()->pluck('title')->toArray());
-
             $skillTitles = implode(', ', Skill::whereIn('id', $request->skills)->get()->pluck('title')->toArray());
-
             $durationTitle = Duration::find($request->duration_id)->title;
-
             $levelTitle = Levels::find($request->level_id)->title;
-
             $additionalInformation = $request->additional_information;
-
             $categoryTitles = Category::pluck('title')->implode(', ');
 
             while ($attempt < 3 && count($validChallenges) < 2) {
-                // Log::info('Attempt: ' . $attempt + 1);
+                Log::info('Attempt: ' . $attempt + 1);
                 $attempt++;
 
                 $startTimeAPI = microtime(true);
-
                 $openAIResponse = $this->fetchChallengesFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
-
                 $endTimeAPI = microtime(true);
-                // Log::info('API call duration: ' . ($endTimeAPI - $startTimeAPI) . ' seconds');
+                Log::info('API call duration: ' . ($endTimeAPI - $startTimeAPI) . ' seconds');
 
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
-                    continue; // Skip this iteration if the response is empty or invalid
+                    continue;
                 }
 
                 $startTimeValidatingChallenges = microtime(true);
@@ -99,39 +83,25 @@ class AIService
                 foreach ($openAIResponse['choices'] as $choice) {
                     $content = json_decode($choice['message']['content'], true);
 
-                    // Ensure $content is an array and has the 'title' key before proceeding
+                    // Checks for duplicate names in all challenges so no duplicate titles would exist
                     if (is_array($content) && isset($content['title'])) {
-                        // Check for title duplication
                         if (Challenge::whereRaw('LOWER(title) = ?', [strtolower($content['title'])])->exists()) {
-                            continue; // Skip this iteration if a duplicate title exists
+                            continue;
                         }
-                        // Proceed with your logic here as no duplicate title exists
-                    } else {
-                        // Log the error with appropriate details
-                        Log::error('Invalid content structure or missing title key in $content.', [
-                            'content' => $content // Be cautious with logging sensitive data
-                        ]);
-                        // Handle the error (e.g., skip this iteration, throw an exception, return an error response)
                     }
 
-
-                    // Validate the challenge content
-                    if ($content === "Irrelevant given data!" || empty($content['skills'])) {
-                        $irrelevantDataCount++;
-                        continue; // Skip this challenge if content is irrelevant or lacks skills
+                    if (empty($content['skills'])) {
+                        continue;
                     }
 
-                    // Process and update skills based on recommendations
                     $startTimeValidatingSkills = microtime(true);
-
                     $updatedSkills = $this->processSkills($content['skills']);
-
                     $endTimeValidatingSkills = microtime(true);
-                    // Log::info('Validating skills duration: ' . ($endTimeValidatingSkills - $startTimeValidatingSkills) . ' seconds');
+                    Log::info('Validating skills duration: ' . ($endTimeValidatingSkills - $startTimeValidatingSkills) . ' seconds');
 
+                    // Making sure each challenge has more than 6 verified skill
                     if (count($updatedSkills) < 6 || !isset($content['title'])) {
-                        Log::error('Challenge Failed!');
-                        continue; // Skip this challenge if it has less than 6 valid skills after processing
+                        continue;
                     }
 
                     $skillIds = Skill::whereIn('title', $updatedSkills)
@@ -158,17 +128,18 @@ class AIService
                 }
 
                 $endTimeValidatingChallenges = microtime(true);
-                // Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
+                Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
             }
 
-            if (count($validChallenges) < 2 || $irrelevantDataCount > 4) {
-                // Handle the scenario where valid challenges are insufficient or too many irrelevant data responses were received
-                throw new Exception("Failed to generate sufficient valid challenges. Irrelevant data count: $irrelevantDataCount");
+            if (count($validChallenges) < 2) {
+                throw new Exception("Failed to generate sufficient valid challenges.");
             }
 
             return (object)$validChallenges;
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error("Error in createChallengeAIPreview in AIService.php: " . $e->getMessage());
+
+            return false;
         }
     }
 
@@ -186,10 +157,17 @@ class AIService
                 ],
             ];
 
-            $response = $this->openAIClient->post('', ['json' => $payload]);
+            try {
+                $response = $this->openAIClient->post('', ['json' => $payload]);
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
+            }
+
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            return null;
+            Log::error("Error in fetchChallengesFromOpenAI in AIService.php" . $e->getMessage());
+
+            return false;
         }
     }
 
@@ -212,35 +190,41 @@ class AIService
             "steps": ["Step 1", "Step 2", ...],
             "skills": ["Skill 1", "Skill 2", ...],
             "reflections": ["Reflection 1", "Reflection 2", ...]
-            }
-            
-            Keep in mind that if any if given data does not make sense and are irrelevant by a large range, then return the text "Irrelevant given data!"
-        ';
+            }';
     }
 
     protected function processSkills($skills)
     {
         $updatedSkills = [];
-        foreach ($skills as $skill) {
-            $recommendationResponse = $this->fetchSkillRecommendation($skill);
-            if ($recommendationResponse) {
-                $highestScoreSkill = $this->selectHighestScoreSkill($recommendationResponse);
-                if ($highestScoreSkill['score'] >= 0.92) {
-                    $updatedSkills[] = $highestScoreSkill['skill'];
+        try {
+            foreach ($skills as $skill) {
+                $recommendationResponse = $this->fetchSkillRecommendation($skill);
+                if ($recommendationResponse) {
+                    $highestScoreSkill = $this->selectHighestScoreSkill($recommendationResponse);
+                    if ($highestScoreSkill['score'] >= 0.92) {
+                        $updatedSkills[] = $highestScoreSkill['skill'];
+                    }
                 }
             }
+
+            return $updatedSkills;
+        } catch (Exception $e) {
+            Log::error("Error in processSkills in AIService.php" . $e->getMessage());
+
+            return false;
         }
-        return $updatedSkills;
     }
 
     protected function fetchSkillRecommendation($skill)
     {
         try {
-            $response = RecommendationEngineHelper::getRelatedPreprSkills(config('app.skills_recommendation_engine_url') . "/" . strtolower($skill));
+            $response = RecommendationEngineHelper::getRelatedPreprSkills("/" . strtolower($skill));
+
             return $response;
         } catch (Exception $e) {
-            // Log error or handle exception
-            return null;
+            Log::error("Error in fetchSkillRecommendation in AIService.php" . $e->getMessage());
+
+            return false;
         }
     }
 
@@ -248,114 +232,115 @@ class AIService
     {
         $highestScore = 0;
         $highestScoreSkill = null;
-        foreach ($recommendations as $skill => $score) {
-            if ($score > $highestScore) {
-                $highestScore = $score;
-                $highestScoreSkill = $skill;
+        try {
+            foreach ($recommendations as $skill => $score) {
+                if ($score > $highestScore) {
+                    $highestScore = $score;
+                    $highestScoreSkill = $skill;
+                }
             }
+
+            return ['skill' => $highestScoreSkill, 'score' => $highestScore];
+        } catch (Exception $e) {
+            Log::error("Error in selectHighestScoreSkill in AIService.php" . $e->getMessage());
+
+            return false;
         }
-        return ['skill' => $highestScoreSkill, 'score' => $highestScore];
     }
 
     // Create resource modules from challenges
     public function createResourceModuleAIPreview($request)
     {
         // $language = $this->language;
-        $bingArticleClient = $this->bingArticleClient;
-        $bingVideoClient = $this->bingVideoClient;
-
-        $title = $request->title;
-
         // $durationTitle = $request->duration;
-
+        $title = $request->title;
         $levelTitle = $request->level;
 
         $data = ['articles' => [], 'videos' => []];
 
         $maxAttempts = 3;
-        $minArticleCount = 6;
-        $minVideoCount = 6;
-        $minCombinedCount = 10;
 
         if ($request->resource_module_openai && $title) {
             $attempts = 0;
             $articlesCollected = false;
             $videosCollected = false;
+            $collectArticles = collect($request->openai_resource_module_types)->contains('links');
+            $collectVideos = collect($request->openai_resource_module_types)->contains('videos');
 
-            while ($attempts < $maxAttempts && (!$articlesCollected || !$videosCollected)) {
-                $attempts++;
-                $currentData = ['articles' => [], 'videos' => []];
+            try {
+                while ($attempts < $maxAttempts && ($collectArticles ? !$articlesCollected : true) && ($collectVideos ? !$videosCollected : true)) {
+                    $attempts++;
+                    $currentData = ['articles' => [], 'videos' => []];
 
-                if (collect($request->openai_resource_module_types)->contains('links')) {
-                    try {
-                        $articleResponse = $bingArticleClient->request('GET', '', [
-                            'query' => ['q' => 'Articles about ' . $title . ' for level ' . $levelTitle, 'count' => 15],
-                        ]);
-                        $articleResponse = json_decode($articleResponse->getBody(), true);
+                    if ($collectArticles && !$articlesCollected) {
+                        try {
+                            $articleResponse = $this->bingArticleClient->request('GET', '', [
+                                'query' => ['q' => 'Articles about ' . $title . ' for level ' . $levelTitle, 'count' => 15],
+                            ]);
+                            $articleResponse = json_decode($articleResponse->getBody(), true);
 
-                        foreach ($articleResponse['webPages']['value'] as $item) {
-                            $article = ['type' => 'link', 'title' => $item['name'] ?? '', 'description' => $item['snippet'] ?? '', 'url' => $item['url'] ?? ''];
-                            if (!empty($article['title'])) {
-                                $currentData['articles'][] = $article;
+                            foreach ($articleResponse['webPages']['value'] as $item) {
+                                $article = [
+                                    'type' => 'link',
+                                    'title' => $item['name'] ?? '',
+                                    'description' => $item['snippet'] ?? '',
+                                    'url' => $item['url'] ?? ''
+                                ];
+                                if (!empty($article['title'])) {
+                                    $currentData['articles'][] = $article;
+                                }
                             }
+
+                            $articlesCollected = count($currentData['articles']) >= 6;
+                        } catch (Exception $e) {
+                            throw new Exception($e->getMessage());
                         }
-
-                        $articlesCollected = count($currentData['articles']) >= $minArticleCount;
-                    } catch (\Exception $e) {
-                        Log::error("Article fetch attempt $attempts failed: " . $e->getMessage());
-                        // No need to explicitly do anything here, the loop will continue or end based on conditions
                     }
-                }
 
-                if (collect($request->openai_resource_module_types)->contains('videos')) {
-                    try {
-                        $videoResponse = $bingVideoClient->request('GET', '', [
-                            'query' => ['q' => 'Videos about ' . $title . ' for level ' . $levelTitle, 'count' => 15],
-                        ]);
-                        $videoResponse = json_decode($videoResponse->getBody(), true);
+                    if ($collectVideos && !$videosCollected) {
+                        try {
+                            $videoResponse = $this->bingVideoClient->request('GET', '', [
+                                'query' => ['q' => 'Videos about ' . $title . ' for level ' . $levelTitle, 'count' => 15],
+                            ]);
+                            $videoResponse = json_decode($videoResponse->getBody(), true);
 
-                        foreach ($videoResponse['value'] as $video) {
-                            $videoData = [
-                                'type' => 'video',
-                                'title' => $video['name'] ?? '',
-                                'description' => $video['description'] ?? '',
-                                'publisher' => $video['publisher'][0]['name'] ?? 'Unknown Publisher',
-                                'url' => $video['contentUrl'] ?? '',
-                                'embedHTML' => $video['embedHtml'] ?? ''
-                            ];
-                            if (!empty($videoData['title'])) {
-                                $currentData['videos'][] = $videoData;
+                            foreach ($videoResponse['value'] as $video) {
+                                $videoData = [
+                                    'type' => 'video',
+                                    'title' => $video['name'] ?? '',
+                                    'description' => $video['description'] ?? '',
+                                    'publisher' => $video['publisher'][0]['name'] ?? '',
+                                    'url' => $video['contentUrl'] ?? '',
+                                    'embedHTML' => $video['embedHtml'] ?? ''
+                                ];
+                                if (!empty($videoData['title'])) {
+                                    $currentData['videos'][] = $videoData;
+                                }
                             }
+
+                            $videosCollected = count($currentData['videos']) >= 6;
+                        } catch (Exception $e) {
+                            throw new Exception($e->getMessage());
                         }
-
-                        $videosCollected = count($currentData['videos']) >= $minVideoCount;
-                    } catch (\Exception $e) {
-                        Log::error("Video fetch attempt $attempts failed: " . $e->getMessage());
-                        // No need to explicitly do anything here, the loop will continue or end based on conditions
                     }
-                }
 
-                // Check if enough data has been collected
-                if ($articlesCollected && $videosCollected) {
-                    if (count($currentData['articles']) + count($currentData['videos']) >= $minCombinedCount) {
-                        // If enough articles and videos are collected
+                    if (($collectArticles && $collectVideos) && ($articlesCollected && $videosCollected)) {
+                        if (count($currentData['articles']) + count($currentData['videos']) >= 10) {
+                            $data = $currentData;
+                            break;
+                        }
+                    } elseif (($collectArticles && $articlesCollected) || ($collectVideos && $videosCollected)) {
                         $data = $currentData;
                         break;
                     }
-                } elseif ($articlesCollected || $videosCollected) {
-                    // If only one type is selected and enough data is collected
-                    $data = $currentData;
-                    break;
                 }
-                // If conditions are not met, loop will continue for a retry
-            }
 
-            if (!$articlesCollected || !$videosCollected) {
-                Log::error("Failed to collect sufficient articles/videos after $maxAttempts attempts.");
-                // Handle failure as appropriate, e.g., return an error response or set a flag
+                if (($collectArticles ? $articlesCollected : true) && ($collectVideos ? $videosCollected : true)) {
+                    throw new Exception("Error in gathering enough data!");
+                }
+            } catch (Exception $e) {
+                Log::error("Error in createResourceModuleAIPreview in attempt $attempts in AIService.php: " . $e->getMessage());
             }
-
-            // Proceed with $data, which now contains the collected articles and/or videos
         }
 
         function makeResourceGroups($data, $request)
@@ -418,7 +403,7 @@ class AIService
             try {
                 $chunks = array_chunk($combinedGroups, 4, true);
 
-                $allAiResults = []; // To store results from all AI calls
+                $allAiResults = [];
 
                 foreach ($chunks as $chunkIndex => $chunk) {
                     $chunkGroupDescriptions = [];
@@ -486,7 +471,7 @@ class AIService
                 }
                 unset($group); // Break the reference with the last element
             } catch (Exception $e) {
-                Log::error($e->getMessage());
+                Log::error("Error in createResourceModuleAIPreview in AIService.php: " . $e->getMessage());
             }
         }
 

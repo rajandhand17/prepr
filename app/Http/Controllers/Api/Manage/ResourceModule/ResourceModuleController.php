@@ -12,7 +12,9 @@ use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
+use App\Models\ChallengeResourceModule;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
@@ -297,11 +299,20 @@ class ResourceModuleController extends AppBaseController
             $upload_cover_image = config("site-settings.default_resource_module_cover_image");
             $createResourceModuleAI = $this->resourceModuleRepository->createResourceModuleAI($request, $upload_cover_image);
 
-            if ($request->is_ai_created === "yes") {
-                $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $createResourceModuleAI->id);
-                if (!$createResourceModuleDetailsAI) {
-                    throw new Exception("createResourceModuleDetailsAI has no value!");
-                }
+            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $createResourceModuleAI->id);
+
+            $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request["challenge_id"]);
+            $challengeResourceModule = ChallengeResourceModule::create([
+                'challenge_id' => $challengeID,
+                'resource_module_id' => $createResourceModuleAI->id,
+            ]);
+
+            if (!$challengeResourceModule) {
+                throw new Exception("challengeResourceModule has no value!");
+            }
+
+            if (!$createResourceModuleDetailsAI) {
+                throw new Exception("createResourceModuleDetailsAI has no value!");
             }
 
             if ($createResourceModuleAI) {
