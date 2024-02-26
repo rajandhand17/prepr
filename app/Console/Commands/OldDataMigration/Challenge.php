@@ -349,7 +349,7 @@ class Challenge extends Command
                             $challengeAchievement->achievement_image = $challengePrice->trophy;
                             $challengeAchievement->save();
                         }
-                    }           
+                    }
 
                     // For Challenge Assessment
                     $checkChallengeAssessments = DB::connection('mysql2')->table('challange_assessments')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
@@ -406,7 +406,7 @@ class Challenge extends Command
                                 $challengeAssessment->attachments = null;
                                 $challengeAssessment->save();
                             }
-                            
+
                             // For Challenge Assessment Criteria
                             $checkChallengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $checkChallengeAssessment->id)->whereNull('deleted_at')->get();
                             if ($checkChallengeAssessmentCriterias->isNotEmpty()) {
