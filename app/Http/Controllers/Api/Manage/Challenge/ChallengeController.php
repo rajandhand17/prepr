@@ -218,7 +218,7 @@ class ChallengeController extends AppBaseController
             }
             $getChallengeAssessment = [];
             $challenge_assessment_criteria = [];
-            if ($checkComponentBasedOnSlug->challenge_assessment->isNotEmpty()) {
+            if ($checkComponentBasedOnSlug->challenge_assessment) {
                 $getChallengeAssessment = $this->challengeRepository->getChallengeAssessmentData($checkComponentBasedOnSlug->challenge_assessment);
             }
 
@@ -251,8 +251,8 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
-            if ($checkComponentBasedOnSlug->challenge_assessment->isNotEmpty()) {
-                $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments);
+            if ($checkComponentBasedOnSlug->challenge_assessment) {
+                $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment->attachments);
             }
 
             if ($request->attachments !== null) {

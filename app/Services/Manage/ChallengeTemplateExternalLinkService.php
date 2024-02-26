@@ -16,10 +16,8 @@ class ChallengeTemplateExternalLinkService
                 foreach ($challengeExternalLinks as $challengeExternalLink) {
                     $challengeTemplateExternalLink = new ChallengeTemplateExternalLink();
                     $challengeTemplateExternalLink->challenge_template_id = $templateChallengeId;
-                    $challengeTemplateExternalLink->custom_timelines_title = $challengeExternalLink->custom_timelines_title;
-                    $challengeTemplateExternalLink->custom_timelines_description = $challengeExternalLink->custom_timelines_description;
-                    $challengeTemplateExternalLink->custom_timelines_duration = $challengeExternalLink->custom_timelines_duration;
-                    $challengeTemplateExternalLink->schedule_custom_notify = $challengeExternalLink->schedule_custom_notify;
+                    $challengeTemplateExternalLink->social_media_link = $challengeExternalLink->social_media_link;
+                    $challengeTemplateExternalLink->social_link_id = $challengeExternalLink->social_link_id;
                     $challengeTemplateExternalLink->save();
                 }
             }
@@ -38,10 +36,8 @@ class ChallengeTemplateExternalLinkService
                 foreach ($checkChallengeTemplateExternalLinks as $challengeExternalLink) {
                     $newChallengeExternalLink = new ChallengeExternalLink();
                     $newChallengeExternalLink->challenge_id = $redeemChallengeId;
-                    $newChallengeExternalLink->custom_timelines_title = $challengeExternalLink->custom_timelines_title;
-                    $newChallengeExternalLink->custom_timelines_description = $challengeExternalLink->custom_timelines_description;
-                    $newChallengeExternalLink->custom_timelines_duration = $challengeExternalLink->custom_timelines_duration;
-                    $newChallengeExternalLink->schedule_custom_notify = $challengeExternalLink->schedule_custom_notify;
+                    $newChallengeExternalLink->social_media_link = $challengeExternalLink->social_media_link;
+                    $newChallengeExternalLink->social_link_id = $challengeExternalLink->social_link_id;
                     $newChallengeExternalLink->save();
                 }
             }

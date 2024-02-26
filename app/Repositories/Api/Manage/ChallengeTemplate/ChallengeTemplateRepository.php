@@ -92,8 +92,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeTemplateSponsor = $this->challengeTemplateSponsorService->addChallengeTemplateSponsor($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateTags = $this->challengeTemplateTagsGroupsService->addChallengeTemplateTagsGroups($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateRequirement = $this->challengeTemplateRequirementService->addChallengeTemplateRequirement($challengeId, $addChallengeTemplate->id);
-                $addChallengeTemplateAssessmentCriteria = $this->challengeTemplateAssessmentCriteriaService->addChallengeTemplateAssessmentCriteria($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateAssessment = $this->challengeTemplateAssessmentService->addChallengeTemplateAssessment($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateAssessmentCriteria = $this->challengeTemplateAssessmentCriteriaService->addChallengeTemplateAssessmentCriteria($challengeId, $addChallengeTemplate->id, $addChallengeTemplateAssessment);
                 $addChallengeTemplateProjectTemplate = $this->challengeTemplateProjectTemplateService->addChallengeTemplateProjectTemplate($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateTimelines = $this->challengeTemplateTimelinesService->addChallengeTemplateTimelines($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateCustomTimelines = $this->challengeTemplateCustomTimelinesService->addChallengeTemplateCustomTimeLines($challengeId, $addChallengeTemplate->id);
@@ -193,8 +193,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $redeemChallengeTemplateTagGroup = $this->challengeTemplateTagsGroupsService->redeemChallengeTemplateTagGroup($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateSponsor = $this->challengeTemplateSponsorService->redeemChallengeTemplateSponsor($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateRequirement = $this->challengeTemplateRequirementService->redeemChallengeTemplateRequirement($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
-                $redeemChallengeTemplateAssessmentCriteria = $this->challengeTemplateAssessmentCriteriaService->redeemChallengeTemplateAssessmentCriteria($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateAssessment = $this->challengeTemplateAssessmentService->redeemChallengeTemplateAssessment($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateAssessmentCriteria = $this->challengeTemplateAssessmentCriteriaService->redeemChallengeTemplateAssessmentCriteria($redeemChallengeTemplateToChallenge->id, $challengeTemplateId, $redeemChallengeTemplateAssessment);
                 $redeemChallengeTemplateProjectTemplate = $this->challengeTemplateProjectTemplateService->redeemChallengeTemplateProjectTemplate($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateTimeline = $this->challengeTemplateTimelinesService->redeemChallengeTemplateTimeline($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateCustomTimelines = $this->challengeTemplateCustomTimelinesService->redeemChallengeTemplateCustomTimelines($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
@@ -215,6 +215,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                     'redeemChallengeTemplateExternalLink'       => $redeemChallengeTemplateExternalLink,
                 ];
             });
+
             if (
                 $redeemChallengeTemplate['redeemChallengeTemplateToChallenge'] &&
                 $redeemChallengeTemplate['redeemChallengeTemplateAchievement'] &&

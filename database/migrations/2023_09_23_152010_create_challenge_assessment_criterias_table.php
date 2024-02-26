@@ -13,10 +13,12 @@ return new class() extends Migration {
         Schema::create('challenge_assessment_criterias', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('challenge_id');
+            $table->unsignedBigInteger('assessment_id');
             $table->string('title');
             $table->integer('score');
             $table->integer('weight');
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
+            $table->foreign('assessment_id')->references('id')->on('challenge_assessments')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
