@@ -206,6 +206,7 @@ return [
 
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
+        App\Repositories\Api\Discussion\DiscussionServiceProvider::class,
         App\Repositories\Api\Project\ProjectServiceProvider::class,
         App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementServiceProvider::class,
 
