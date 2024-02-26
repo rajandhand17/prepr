@@ -298,4 +298,11 @@ return [
         'image'               => '6',
         'embedded_Cover_Video'=> '7',
     ],
+
+    'discussion_module_type' => [
+        'lab'                => '0',
+        'project'            => '1',
+        'challenge'          => '2',
+    ],
+
 ];
