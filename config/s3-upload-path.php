@@ -17,4 +17,5 @@ return [
     'project'                   => 'project/upload/',
     'project_file'              => 'project/upload_file',
     'certificate'               => 'certificate/upload/',
+    'discussion'                => 'discussion/upload',
 ];

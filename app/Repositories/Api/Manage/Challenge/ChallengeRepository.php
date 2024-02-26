@@ -89,8 +89,8 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
                 $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
                 $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
-                $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id);
                 $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $upload_assessment_attachment);
+                $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id, $createChallengeAssessment);
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
                 $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
                 $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
@@ -332,8 +332,8 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             $updatedChallengeAssessment = DB::transaction(function () use ($challengeId, $update_assessment_attachment, $request) {
-                $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $challengeId);
                 $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $challengeId, $update_assessment_attachment);
+                $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $challengeId, $updateChallengeAssessment);
 
                 return [
                     'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,

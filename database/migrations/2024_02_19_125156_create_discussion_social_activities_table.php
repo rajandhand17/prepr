@@ -10,13 +10,11 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('challenge_assessment_criterias', function (Blueprint $table) {
+        Schema::create('discussion_social_activities', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('challenge_id');
-            $table->string('title');
-            $table->integer('score');
-            $table->integer('weight');
-            $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
+            $table->unsignedBigInteger('comment_id');
+            $table->unsignedBigInteger('user_id');
+            $table->enum('like_dislikes', ['1', '2'])->comment('1->like,2->unlike');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +25,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('challenge_assessment_criterias');
+        Schema::dropIfExists('discussion_social_activities');
     }
 };

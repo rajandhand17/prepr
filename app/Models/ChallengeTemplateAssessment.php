@@ -21,6 +21,15 @@ class ChallengeTemplateAssessment extends Model
         'attachments',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'members_email' => 'json',
+    ];
+
     protected $hidden = [
         'created_at', 'deleted_at', 'updated_at',
     ];
