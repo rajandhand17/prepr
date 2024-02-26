@@ -35,13 +35,14 @@ class ExploreRepository implements ExploreInterface
         }
     }
 
-    public function recommended($request){
+    public function recommended($request)
+    {
         try {
             $recommendedData=[];
             $recommendedData['trending_labs']=$this->labService->getTrendingLab($request);
             $recommendedData['recommended_labs']=$this->labService->recommendedLab($request);
             return $recommendedData;
-        }catch (\Exception $e) {
+        }catch (\Exception $e){
             return false;
         }
     }
