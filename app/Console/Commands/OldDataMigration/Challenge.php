@@ -349,26 +349,11 @@ class Challenge extends Command
                             $challengeAchievement->achievement_image = $challengePrice->trophy;
                             $challengeAchievement->save();
                         }
-                    }
-
-                    // For Challenge Assessment Criteria
-                    $checkChallengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $challenge->id)->whereNull('deleted_at')->get();
-                    if ($checkChallengeAssessmentCriterias->isNotEmpty()) {
-                        ChallengeAssessmentCriteria::where('challenge_id', $challenge->id)->delete();
-                        foreach ($checkChallengeAssessmentCriterias as $challengeAssessmentCriteriaOld) {
-                            $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
-                            $challengeAssessmentCriteria->challenge_id = $challengeAssessmentCriteriaOld->challenge_assessment_id;
-                            $challengeAssessmentCriteria->title = $challengeAssessmentCriteriaOld->title;
-                            $challengeAssessmentCriteria->score = $challengeAssessmentCriteriaOld->score;
-                            $challengeAssessmentCriteria->weight = $challengeAssessmentCriteriaOld->weight;
-                            $challengeAssessmentCriteria->save();
-                        }
-                    }
+                    }           
 
                     // For Challenge Assessment
                     $checkChallengeAssessments = DB::connection('mysql2')->table('challange_assessments')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeAssessments->isNotEmpty()) {
-                        ChallengeAssessment::where('challenge_id', $challenge->id)->delete();
                         foreach ($checkChallengeAssessments as $checkChallengeAssessment) {
                             switch ($checkChallengeAssessment->assessment_type) {
                                 case 'closed':
@@ -400,33 +385,19 @@ class Challenge extends Command
                                     break;
                             }
 
-                            if ($challengeAssessmentType == '1') {
+                            if ($challengeAssessmentType == '1' || $challengeAssessmentType == '2') {
                                 $challengeAssessment = new ChallengeAssessment();
+                                $challengeAssessment->id = $checkChallengeAssessment->id;
                                 $challengeAssessment->challenge_id = $checkChallengeAssessment->challenge_id;
                                 $challengeAssessment->assessment_type = $challengeAssessmentType;
                                 $challengeAssessment->visibility = $challengeAssessmentVisibility;
-                                $challengeAssessment->members_email = null;
+                                $challengeAssessment->members_email = $checkChallengeAssessment->members !== null ? json_decode($checkChallengeAssessment->members) : null;
                                 $challengeAssessment->guidelines = $checkChallengeAssessment->guidline;
                                 $challengeAssessment->attachments = $checkChallengeAssessment->attachment;
                                 $challengeAssessment->save();
-                            } elseif ($challengeAssessmentType == '2') {
-                                if ($checkChallengeAssessment->members != null || $checkChallengeAssessment->members != 'null' || $checkChallengeAssessment->members != '[null]') {
-                                    $memberEmailArray = json_decode($checkChallengeAssessment->members);
-                                    if (!empty($memberEmailArray)) {
-                                        foreach (array_filter($memberEmailArray) as $memberEmail) {
-                                            $challengeAssessment = new ChallengeAssessment();
-                                            $challengeAssessment->challenge_id = $checkChallengeAssessment->challenge_id;
-                                            $challengeAssessment->assessment_type = $challengeAssessmentType;
-                                            $challengeAssessment->visibility = $challengeAssessmentVisibility;
-                                            $challengeAssessment->members_email = $memberEmail;
-                                            $challengeAssessment->guidelines = $checkChallengeAssessment->guidline;
-                                            $challengeAssessment->attachments = $checkChallengeAssessment->attachment;
-                                            $challengeAssessment->save();
-                                        }
-                                    }
-                                }
                             } elseif ($challengeAssessmentType == '0') {
                                 $challengeAssessment = new ChallengeAssessment();
+                                $challengeAssessment->id = $checkChallengeAssessment->id;
                                 $challengeAssessment->challenge_id = $checkChallengeAssessment->challenge_id;
                                 $challengeAssessment->assessment_type = $challengeAssessmentType;
                                 $challengeAssessment->visibility = '0';
@@ -434,6 +405,22 @@ class Challenge extends Command
                                 $challengeAssessment->guidelines = null;
                                 $challengeAssessment->attachments = null;
                                 $challengeAssessment->save();
+                            }
+                            
+                            // For Challenge Assessment Criteria
+                            $checkChallengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $checkChallengeAssessment->id)->whereNull('deleted_at')->get();
+                            if ($checkChallengeAssessmentCriterias->isNotEmpty()) {
+                                foreach ($checkChallengeAssessmentCriterias as $challengeAssessmentCriteriaOld) {
+                                    if ($challengeAssessmentCriteriaOld->challenge_assessment_id) {
+                                        $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
+                                        $challengeAssessmentCriteria->challenge_id = $challenge->id;
+                                        $challengeAssessmentCriteria->assessment_id = $challengeAssessmentCriteriaOld->challenge_assessment_id;
+                                        $challengeAssessmentCriteria->title = $challengeAssessmentCriteriaOld->title;
+                                        $challengeAssessmentCriteria->score = $challengeAssessmentCriteriaOld->score;
+                                        $challengeAssessmentCriteria->weight = $challengeAssessmentCriteriaOld->weight;
+                                        $challengeAssessmentCriteria->save();
+                                    }
+                                }
                             }
                         }
                     }

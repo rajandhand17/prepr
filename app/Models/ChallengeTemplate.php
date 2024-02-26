@@ -121,7 +121,7 @@ class ChallengeTemplate extends Model
 
     public function challenge_assessment()
     {
-        return $this->hasMany(ChallengeTemplateAssessment::class, 'challenge_template_id', 'id');
+        return $this->hasOne(ChallengeTemplateAssessment::class, 'challenge_template_id', 'id');
     }
 
     public function challenge_timelines()
