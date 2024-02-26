@@ -2,14 +2,16 @@
 
 namespace App\Services\Chat;
 
+use App\Models\User;
+use App\Notifications\ConversationCreated;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
-use App\Jobs\ProcessConversationCreated;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\ConversationSeenMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class ConversationService
 {
@@ -111,6 +113,16 @@ class ConversationService
         }
     }
 
+    private function NotifyConversationCreated($conversation, $userIds)
+    {
+        $userIds = collect($userIds)->filter(function ($item) {
+            return auth()->user()->id !== $item;
+        });
+
+        $users = User::whereIn('id', $userIds)->get();
+        Notification::send($users, new ConversationCreated($conversation, $userIds));
+    }
+
     /**
      * @throws Exception
      */
@@ -127,15 +139,13 @@ class ConversationService
                 'created_by' => auth()->user()->id
             ]);
             $conversationUsers = $this->addMemberToConversation($conversation, $data['users']);
-            
+
             if (!$conversationUsers) {
                 DB::rollBack();
                 return false;
             }
 
-            foreach ($data['users'] as $id) {
-                dispatch(new ProcessConversationCreated($conversation, $id))->onQueue('chat');
-            }
+            $this->NotifyConversationCreated($conversation, $data['users']);
 
             DB::commit();
             return $conversation;

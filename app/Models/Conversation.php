@@ -23,6 +23,11 @@ class Conversation extends Model
         'created_by'
     ];
 
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'message.conversation.'.$this->id;
+    }
+
     public function chats()
     {
         return $this->hasMany(ConversationMessage::class, 'conversation_id', 'id');

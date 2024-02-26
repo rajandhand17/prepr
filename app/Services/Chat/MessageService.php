@@ -4,11 +4,14 @@ namespace App\Services\Chat;
 
 use App\Helpers\FileUploadHelper;
 use App\Jobs\ProcessMessageSent;
+use App\Models\Conversation;
 use App\Models\ConversationMessage;
+use App\Notifications\MessageCreated;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class MessageService
 {
@@ -83,6 +86,12 @@ class MessageService
         }
     }
 
+    private function sendNotification($message, $conversationId)
+    {
+        $conversation = Conversation::where('id', $conversationId)->first();
+        Notification::send($conversation, new MessageCreated($message, $conversationId));
+    }
+
     public function send(array $data)
     {
         try {
@@ -90,7 +99,7 @@ class MessageService
             $message = $this->store($data);
             // the message you sent is seen by you.
             $this->conversationService->markAsSeen($data['conversation_id'], auth()->user()->id, $message->id);
-            dispatch(new ProcessMessageSent($message, $data['conversation_id']))->onQueue('chat');
+            $this->sendNotification($message, $data['conversation_id']);
 
             DB::commit();
             return $message;
