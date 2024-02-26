@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Notification;
 class ConversationService
 {
 
-    private function prepareConversationData(array $data)
+    private function prepareData(array $data)
     {
         try {
             $userIds = collect([...$data['users'], auth()->user()->id])->unique()->map(function ($item) {
@@ -102,7 +102,7 @@ class ConversationService
         }
     }
 
-    private function addMemberToConversation($conversation, $users)
+    private function addMembers($conversation, $users)
     {
         try {
             $conversation->users()->attach($users);
@@ -126,7 +126,7 @@ class ConversationService
     /**
      * @throws Exception
      */
-    private function createNewConversation(array $data)
+    private function store(array $data)
     {
         try {
             DB::beginTransaction();
@@ -138,7 +138,7 @@ class ConversationService
                 'group_photo' => $data['group_photo'] ?? null,
                 'created_by' => auth()->user()->id
             ]);
-            $conversationUsers = $this->addMemberToConversation($conversation, $data['users']);
+            $conversationUsers = $this->addMembers($conversation, $data['users']);
 
             if (!$conversationUsers) {
                 DB::rollBack();
@@ -192,13 +192,13 @@ class ConversationService
     public function create(array $data)
     {
         try {
-            $preparedData = $this->prepareConversationData($data);
+            $preparedData = $this->prepareData($data);
 
             if ($this->isConversationAlreadyExists($preparedData['users'])) {
                 return $this->getConversationByUsers($preparedData['users']);
             }
 
-            return $this->createNewConversation($preparedData);
+            return $this->store($preparedData);
         } catch (Exception $e) {
             Log::error($e);
             return false;

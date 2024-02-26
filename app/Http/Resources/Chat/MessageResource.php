@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Chat;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Http\Request;
@@ -24,8 +25,7 @@ class MessageResource extends JsonResource
             'sender' => UserSearchResource::make($this->sender),
             'is_sender' => $this->is_sender,
             "seen_users" => UserSearchResource::collection($this->chat_seen_user),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'sent_at' => UtilityHelper::formatDateTime($this->created_at)
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Chat;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -26,8 +27,6 @@ class ConversationResource extends JsonResource
             "last_seen_message" => MessageResource::make(data_get($this->lastSeenMessage, 'chat')),
             "group_photo" => $this->group_photo,
             "is_private" => $this->is_private ? 'yes' : 'no',
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at
         ];
     }
 }

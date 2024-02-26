@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 interface MessageInterface
 {
+    public function list(int $conversationId);
+
+    public function send(array $data, $conversationId);
+
 
 }
