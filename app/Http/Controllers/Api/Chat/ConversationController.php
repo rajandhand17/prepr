@@ -29,7 +29,7 @@ class ConversationController extends AppBaseController
                     'total_pages' => $conversations->lastPage(),
                     'list' => ConversationResource::collection($conversations->items())
                 ];
-                return $this->sendResponse($responseData, __("response.list_conversation"));
+                return $this->sendResponse($responseData, __("responses.list_conversation"));
             }
             return $this->sendError(__('responses.not_found_conversation_list'), 400);
         } catch (Exception $e) {
@@ -43,7 +43,7 @@ class ConversationController extends AppBaseController
             $conversation = $this->conversationRepository->create($request->validated());
 
             if ($conversation) {
-                return $this->sendResponse(new ConversationResource($conversation), __("response.conversation_created"));
+                return $this->sendResponse(new ConversationResource($conversation), __("responses.conversation_created"));
             }
             return $this->sendError(__('responses.conversation_stored_failed'), 400);
         } catch (Exception $e) {

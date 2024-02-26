@@ -35,7 +35,7 @@ class MessageController extends AppBaseController
                     'list' => MessageResource::collection($chat->items())
                 ];
 
-                return $this->sendResponse($responseData, __("response.found_message_list"));
+                return $this->sendResponse($responseData, __("responses.found_message_list"));
             }
 
             return $this->sendError(__('responses.not_found_message_list'), 404);
@@ -59,7 +59,7 @@ class MessageController extends AppBaseController
                 return $this->sendError(__('responses.message_not_created'), 409);
             }
 
-            return $this->sendResponse(new MessageResource($message), __("response.message_created"));
+            return $this->sendResponse(new MessageResource($message), __("responses.message_created"));
 
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
