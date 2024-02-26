@@ -4,12 +4,8 @@ namespace App\Repositories\Api\Chat\Message;
 
 use App\Services\Chat\MessageService;
 use Exception;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
-readonly class MessageRepository implements MessageInterface
+class MessageRepository implements MessageInterface
 {
 
     public function __construct(private MessageService $messageService)

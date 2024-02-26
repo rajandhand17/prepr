@@ -9,7 +9,6 @@ use App\Events\Labs\DeleteLabAssociatedData;
 use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
-use App\Jobs\ProcessMessageSent;
 use App\Listeners\ChallengePath\HandleDeleteChallengePathAssociatedData;
 use App\Listeners\ChallengeTemplate\HandleDeleteChallengeTemplateAssociatedData;
 use App\Listeners\Lab\HandleDeleteLabAssociatedData;

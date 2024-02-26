@@ -10,7 +10,6 @@ use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\ConversationSeenMessage;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class ConversationService

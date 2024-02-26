@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Api\Chat;
 
 use App\Http\Controllers\AppBaseController;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Pusher\Pusher;
-use Pusher\PusherException;
 
 class WebSocketController extends AppBaseController
 {

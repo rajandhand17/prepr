@@ -3,14 +3,12 @@
 namespace App\Services\Chat;
 
 use App\Helpers\FileUploadHelper;
-use App\Jobs\ProcessMessageSent;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Notifications\MessageCreated;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class MessageService
