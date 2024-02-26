@@ -206,6 +206,7 @@ return [
 
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
+        App\Repositories\Api\Discussion\DiscussionServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,

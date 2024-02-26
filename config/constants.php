@@ -304,6 +304,12 @@ return [
         'embedded_Cover_Video'=> '7',
     ],
 
+    'discussion_module_type' => [
+        'lab'                => '0',
+        'project'            => '1',
+        'challenge'          => '2',
+    ],
+
     'subscription_options'=> [
         '0'=> 'unsubscribe',
         '1'=> 'monthly',
