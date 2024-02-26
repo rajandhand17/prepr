@@ -48,6 +48,9 @@ class DiscussionController extends AppBaseController
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.slug_not_found'), 404);
+            }
             $getComponentId = $checkComponentBasedOnSlug->id;
             $addComment = $this->discussionRepository->addComment($component, $request, $getComponentId);
             if ($addComment) {
@@ -70,6 +73,9 @@ class DiscussionController extends AppBaseController
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.slug_not_found'), 404);
+            }
             $getComponentId = $checkComponentBasedOnSlug->id;
             $checkCommentIdExistsOrNot = DiscussionService::checkCommentIdExistsOrNot($id, $getComponentId);
             if (!$checkCommentIdExistsOrNot) {
@@ -112,6 +118,9 @@ class DiscussionController extends AppBaseController
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.slug_not_found'), 404);
+            }
             $getComponentId = $checkComponentBasedOnSlug->id;
             $checkCommentId = DiscussionService::checkCommentIdExistsOrNot($id, $getComponentId);
             if (!$checkCommentId) {
