@@ -45,20 +45,4 @@ class ExploreController extends AppBaseController
 
         }
     }
-
-//    public function recommended(Request $request){
-//        try {
-//            $explore = $this->exploreRepository->recommended($request);
-//            if($explore){
-//               $response=[
-//                    'trending_labs'  =>LabResource::collection($explore['trending_labs']),
-//                    'recommended_labs'  =>LabResource::collection($explore['recommended_labs']),
-//                ];
-//                return $this->sendResponse($response, __('responses.found_user_profile_detail'));
-//            }
-//            return $this->sendError(__('responses.send_error'),404);
-//        }catch (\Exception $e){
-//            return $this->sendError(__('responses.send_error'), 500);
-//        }
-//    }
 }
