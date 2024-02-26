@@ -11,11 +11,6 @@ use Pusher\PusherException;
 class WebSocketController extends AppBaseController
 {
 
-    /**
-     * @throws PusherException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function auth(): string
     {
         try {

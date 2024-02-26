@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
 
 class ConversationMessage extends Model
 {
@@ -52,7 +51,7 @@ class ConversationMessage extends Model
     {
         $attachments = $this->castAttribute('attachments', $value);
         return collect($attachments)->map(function ($item) {
-            return Storage::disk('s3')->url($item);
+            return config('site-settings.aws_url') . $item;
         });
     }
 
