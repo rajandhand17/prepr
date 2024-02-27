@@ -75,7 +75,7 @@ class MessageService
         try {
             return ConversationMessage::with('sender', 'seenUsers')
                 ->where('conversation_id', $conversationId)
-                ->paginate(30);
+                ->paginate(config('site-settings.message_per_page'));
         } catch (Exception $e) {
             return false;
         }

@@ -79,11 +79,11 @@ class Conversation extends Model
 
     public function getDefaultConversationNameAttribute()
     {
-        if ($this->type === 'groupMessage') {
+        if ($this->type === 'group_message') {
             return $this->prepareGroupName($this->users()->get());
         }
 
-        if ($this->type === 'directMessage') {
+        if ($this->type === 'direct_message') {
             $user = $this->users()->where('id', '!=', auth()->user()->id)->first();
             return $user->full_name;
         }

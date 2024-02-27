@@ -42,9 +42,7 @@ class ConversationMessage extends Model
 
     public function getChatSeenUserAttribute()
     {
-        return collect($this->seenUsers)->map(function ($item) {
-            return $item->user;
-        });
+        return $this->seenUsers->pluck('user');
     }
 
     public function getAttachmentsAttribute($value)
