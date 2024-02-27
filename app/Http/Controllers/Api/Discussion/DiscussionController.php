@@ -10,6 +10,7 @@ use App\Repositories\Api\Discussion\DiscussionRepository;
 use App\Services\DiscussionService;
 use App\Services\DiscussionSocialActivitiesService;
 use Illuminate\Http\Request;
+
 class DiscussionController extends AppBaseController
 {
     private $discussionRepository;
@@ -19,7 +20,7 @@ class DiscussionController extends AppBaseController
         $this->discussionRepository = $discussionRepository;
     }
 
-    public function index($component, $slug,Request $request)
+    public function index($component, $slug, Request $request)
     {
         try {
             if (!in_array($component, ['lab', 'project', 'challenge'])) {
@@ -30,7 +31,7 @@ class DiscussionController extends AppBaseController
                 return $this->sendError(__('responses.slug_not_found'), 404);
             }
             $getComponentId = $checkComponentBasedOnSlug->id;
-            $list = $this->discussionRepository->index($component, $getComponentId,$request->sort_by);
+            $list = $this->discussionRepository->index($component, $getComponentId, $request->sort_by);
             if ($list->count() > 0) {
                 return $this->sendResponse(DiscussionResource::collection($list), __('responses.comments_lists_successfully'));
             }
@@ -86,10 +87,10 @@ class DiscussionController extends AppBaseController
                     $checkLikedOrNot = DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity, $id);
                     if ($checkLikedOrNot) {
                         $like = $this->discussionRepository->unLikeOrUnDisLikeComponent($activity, $id);
-                        $message=__('responses.unlike_successfully');
+                        $message = __('responses.unlike_successfully');
                     } else {
                         $like = $this->discussionRepository->likeDislike($activity, $id);
-                        $message=__('responses.like_successfully');
+                        $message = __('responses.like_successfully');
                     }
                     if ($like) {
                         return $this->sendResponse(DiscussionResource::make($like), $message);
@@ -99,10 +100,10 @@ class DiscussionController extends AppBaseController
                     $checkDisLikedOrNot = DiscussionSocialActivitiesService::checkLikeOrDislikeComment($activity, $id);
                     if ($checkDisLikedOrNot) {
                         $dislike = $this->discussionRepository->unLikeOrUnDisLikeComponent($activity, $id);
-                        $message=__('responses.un_dislike_successfully');
+                        $message = __('responses.un_dislike_successfully');
                     } else {
                         $dislike = $this->discussionRepository->likeDislike($component, $id);
-                        $message=__('responses.dislike_successfully');
+                        $message = __('responses.dislike_successfully');
                     }
                     if ($dislike) {
                         return $this->sendResponse(DiscussionResource::make($dislike), $message);

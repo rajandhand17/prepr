@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Discussion;
 
 use App\Helpers\UtilityHelper;
-use App\Http\Resources\User\UserSearchResource;
 use App\Services\DiscussionSocialActivitiesService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
