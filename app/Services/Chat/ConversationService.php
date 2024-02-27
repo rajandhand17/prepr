@@ -2,11 +2,11 @@
 
 namespace App\Services\Chat;
 
+use Exception;
 use App\Models\User;
 use App\Notifications\ConversationArchived;
 use App\Notifications\ConversationCreated;
 use App\Notifications\ConversationDeleted;
-use Exception;
 use HiFolks\RandoPhp\Randomize;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
@@ -111,12 +111,18 @@ class ConversationService
         }
     }
 
-    private function notify($conversationId, $type)
+    private function notify($conversationId, $type, $deletedUserIds = [])
     {
         try {
-            $conversationUserIds = $this->getConversationUsersId($conversationId);
-            $conversation = $this->getById($conversationId);
+            if ($type === 'delete') {
+                $conversationUserIds = $deletedUserIds;
+            } else if ($type === 'archived' || $type === 'created') {
+                $conversationUserIds = $this->getConversationUsersId($conversationId);
+            } else {
+                return false;
+            }
 
+            $conversation = $this->getById($conversationId);
             $userIds = array_filter($conversationUserIds, function ($item) {
                 return $item !== auth()->user()->id;
             });
@@ -126,7 +132,7 @@ class ConversationService
                 case 'created':
                     Notification::send($users, new ConversationCreated($conversation, $userIds));
                     break;
-                case 'deleted':
+                case 'delete':
                     Notification::send($users, new ConversationDeleted($conversation, $userIds));
                     break;
                 case 'archived':
@@ -145,7 +151,7 @@ class ConversationService
     {
         try {
             $conversation = Conversation::findOrFail($conversationId);
-            return $conversation->users()->pluck('id');
+            return $conversation->users()->pluck('id')->toArray();
         } catch (Exception $e) {
             return false;
         }
@@ -207,8 +213,9 @@ class ConversationService
     private function delete(int $id)
     {
         try {
+            $userIds = $this->getConversationUsersId($id);
             Conversation::where('id', $id)->delete();
-            $this->notify($id, 'deleted');
+            $this->notify($id, 'delete', $userIds);
             return true;
         } catch (Exception $e) {
             return false;
@@ -295,7 +302,6 @@ class ConversationService
             if (!$conversation) {
                 return false;
             }
-
             switch ($action) {
                 case "archive":
                     $this->archive($conversation->id);
