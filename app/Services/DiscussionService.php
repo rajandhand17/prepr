@@ -8,24 +8,45 @@ use DB;
 
 class DiscussionService
 {
-    public function index($component, $moduleId)
+    public function index($component, $moduleId,$sortBy)
     {
         try {
             $moduleType = Config('constants.discussion_module_type.'.$component);
             $getComments = Discussion::whereNull('comment_id')
                 ->where('module_id', $moduleId)
-                ->where('module_type', $moduleType)
-                ->get();
+                ->where('module_type', $moduleType);
+            $getComments=self::filterCommentsList($getComments,$sortBy);
+            $getComments=$getComments->get();
             if ($getComments) {
                 return $getComments;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
+    public static function filterCommentsList($getComments,$sortBy){
+        try {
+
+            if($sortBy=='recent'){
+                $getComments=$getComments->orderBy('created_at','DESC');
+            }
+            if($sortBy=='top'){
+                $getComments=$getComments->withCount(['liked_by as likes_count' => function($query) {
+                   return $query;
+                }])->withCount(['disliked_by as dislikes_count' => function($query) {
+                    return $query;
+                }])->orderByDesc('likes_count')
+                    ->orderByDesc('dislikes_count');
+            }
+
+            return $getComments;
+        }catch (\Exception $e) {
+            dd($e);
+            return false;
+        }
+    }
     public function addComment($component, $request, $getComponentId)
     {
         try {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Discussion;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Resources\User\UserSearchResource;
 use App\Services\DiscussionSocialActivitiesService;
 use App\Services\UserService;
@@ -35,8 +36,9 @@ class DiscussionResource extends JsonResource
             'likes'          => $getLikedByUser,
             'dislikes'       => $getDislikedByUser,
             'by_me'          => $byMe,
-            'user_details'   => UserSearchResource::make($this->users),
+            'user_details'   => UserResource::make($this->users),
             'comment_replies'=> CommentReplies::collection($this->comments_reply),
+            'create_at'      => UtilityHelper::formatDateTime($this->created_at),
         ];
 
         return $data;
