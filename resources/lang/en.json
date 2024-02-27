@@ -893,5 +893,6 @@
     "responses.already_added_skills": "You have already added this skills",
     "responses.pinned_skills_successfully": "You have successfully pinned this skill",
     "responses.pinned_skills_successfully_removed": "You have successfully removed pinned skill",
-    "responses.pinned_skills_failed": "You have failed pinned this skill"
+    "responses.pinned_skills_failed": "You have failed pinned this skill",
+    "responses.trending_topics_successfully": "You have successfully retrieved trending topics"
 }

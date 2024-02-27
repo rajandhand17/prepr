@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Explore\LabResource;
 use App\Http\Resources\Explore\TagResource;
 use App\Http\Resources\Explore\SkillResource;
+use App\Http\Resources\Explore\TrendingTopicsResource;
 use App\Repositories\Api\Explore\ExploreRepository;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,17 @@ class ExploreController extends AppBaseController
             return $this->sendError(__('responses.send_error'),404);
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 
+    public function trendingTopics(){
+        try {
+            $explore=$this->exploreRepository->trendingTopics();
+            if($explore){
+                return $this->sendResponse(TrendingTopicsResource::collection($explore),__('responses.trending_topics_successfully'));
+            }
+        }catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }
