@@ -3,7 +3,9 @@
 namespace App\Services\Chat;
 
 use App\Models\User;
+use App\Notifications\ConversationArchived;
 use App\Notifications\ConversationCreated;
+use App\Notifications\ConversationDeleted;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use App\Models\Conversation;
@@ -109,16 +111,41 @@ class ConversationService
         }
     }
 
-    private function NotifyConversationCreated($conversation, $userIds)
+    private function notify($conversationId, $type)
     {
         try {
-            $userIds = array_filter($userIds, function ($item) {
+            $conversationUserIds = $this->getConversationUsersId($conversationId);
+            $conversation = $this->getById($conversationId);
+
+            $userIds = array_filter($conversationUserIds, function ($item) {
                 return $item !== auth()->user()->id;
             });
 
             $users = User::whereIn('id', $userIds)->get();
-            Notification::send($users, new ConversationCreated($conversation, $userIds));
+            switch ($type) {
+                case 'created':
+                    Notification::send($users, new ConversationCreated($conversation, $userIds));
+                    break;
+                case 'deleted':
+                    Notification::send($users, new ConversationDeleted($conversation, $userIds));
+                    break;
+                case 'archived':
+                    Notification::send($users, new ConversationArchived($conversation, $userIds));
+                    break;
+                default:
+                    return false;
+            }
             return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getConversationUsersId($conversationId)
+    {
+        try {
+            $conversation = Conversation::findOrFail($conversationId);
+            return $conversation->users()->pluck('id');
         } catch (Exception $e) {
             return false;
         }
@@ -143,7 +170,7 @@ class ConversationService
                 return false;
             }
 
-            $notification = $this->NotifyConversationCreated($conversation, $data['users']);
+            $notification = $this->notify($conversation->id, 'created');
 
             if (!$notification) {
                 return false;
@@ -169,7 +196,9 @@ class ConversationService
     private function archive(int $id)
     {
         try {
-            return Conversation::where('id', $id)->update(['is_archived' => true]);
+            Conversation::where('id', $id)->update(['is_archived' => true]);
+            $this->notify($id, 'archived');
+            return true;
         } catch (Exception $e) {
             return false;
         }
@@ -178,7 +207,9 @@ class ConversationService
     private function delete(int $id)
     {
         try {
-            return Conversation::where('id', $id)->delete();
+            Conversation::where('id', $id)->delete();
+            $this->notify($id, 'deleted');
+            return true;
         } catch (Exception $e) {
             return false;
         }
