@@ -52,4 +52,13 @@ class UserTagsService
             return false;
         }
     }
+
+    public static function getMyTags(){
+        try {
+            $userTags=UserTag::where('user_id', auth()->user()->id)->pluck('tag_id');
+            return $userTags;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

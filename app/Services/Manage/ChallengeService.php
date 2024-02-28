@@ -529,4 +529,14 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengeBasedOnSkillsAndTags($skills,$tags){
+        try {
+            /*get challenge id Based on Skills*/
+            $getChallengeId=ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
+            /*get challenge id based on tags*/
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

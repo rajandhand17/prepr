@@ -18,6 +18,24 @@ class ExploreController extends AppBaseController
         $this->exploreRepository=$exploreRepository;
     }
 
+    public function recommended(Request $request){
+        try {
+            $recommended = $this->exploreRepository->recommended($request);
+            if($recommended){
+                $response = [
+                    'total_count'  => $recommended->total(),
+                    'per_page'     => $recommended->perPage(),
+                    'count'        => $recommended->count(),
+                    'current_page' => $recommended->currentPage(),
+                    'total_pages'  => $recommended->lastPage(),
+                    'list'         => $recommended,
+                ];
+                return $this->sendResponse($response, __('responses.recommended'));
+            }
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
     public function index(Request $request,$action=null){
         try {
             if($action=='recommended'){

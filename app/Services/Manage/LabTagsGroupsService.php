@@ -102,4 +102,16 @@ class LabTagsGroupsService
             return false;
         }
     }
+
+    public static function getLabsIdBasedOnTagsId($tagIds){
+        try {
+         $getTags=  LabTagsGroups::whereIn('foreign_id', $tagIds)
+                ->where('type', '0')
+                ->pluck('lab_id')
+                ->toArray();
+         return $getTags;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

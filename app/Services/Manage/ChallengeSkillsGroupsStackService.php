@@ -173,4 +173,16 @@ class ChallengeSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getChallengeIdBasedOnSkills($skills){
+        try {
+            $getChallengeIds=ChallengeSkillsGroupsStack::where('type', 0)
+                ->whereIn('foreign_id', $skills)
+                ->pluck('foreign_id')
+                ->toArray();
+            return $getChallengeIds;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

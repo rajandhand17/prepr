@@ -3,7 +3,11 @@
 namespace App\Services\Public;
 
 use App\Models\Lab;
+use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTagsGroups;
+use App\Services\LabTagGroupService;
+use App\Services\Manage\LabSkillsGroupsStackService;
+use App\Services\Manage\LabTagsGroupsService;
 
 class LabService
 {
@@ -147,9 +151,14 @@ class LabService
         }
     }
 
-    public function recommendedLab($request){
+    public function getLabsBasedOnSKillsAndTags($skills,$tags){
         try {
-            $lab_list = Lab::select()->where('labs.status', '1')->limit(20);
+            /*gets Labs based on user skills*/
+            $getLabsIdsBasedOnSKills=LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($skills);
+            /*gets Tags based on user tags*/
+            $getLabsIdsBasedOnTags=LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
+            $labIds= array_unique((array)array_merge($getLabsIdsBasedOnSKills, $getLabsIdsBasedOnTags));
+            $lab_list = Lab::select()->whereIn('labs.id',$labIds)->where('user_id','!=',auth()->user()->id)->take(12);
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         }catch(\Exception $e){
             return false;
