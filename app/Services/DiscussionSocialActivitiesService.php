@@ -90,10 +90,9 @@ class DiscussionSocialActivitiesService
     {
         try {
             $comments = DiscussionSocialActivity::where(['comment_id'=>$commentId, 'user_id'=>$userId])->first();
+            $response = null;
             if ($comments) {
                 $response = $comments->like_dislikes == '1' ? 'like' : 'dislike';
-            } else {
-                $response = null;
             }
 
             return $response;
