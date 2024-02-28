@@ -11,27 +11,29 @@ class ChallengeAssessmentUserService
     public function addProjectEvaluation($challengeAssessment, $projectData, $userData, $request)
     {
         try {
-            $assessmentStatus = $request->status == 'publish' ? config('constants.challenge_status.publish') : config('constants.challenge_status.draft') ; 
+            $assessmentStatus = $request->status == 'publish' ? config('constants.challenge_status.publish') : config('constants.challenge_status.draft');
 
             if (isset($request->criteria_id) && isset($request->score) && isset($request->comment)) {
                 foreach ($request->criteria_id as $key => $criteriaId) {
                     $challengeAssessmentUser = ChallengeAssessmentUser::updateOrCreate(
                         [
                             'criteria_id' => $criteriaId,
-                            'project_id' => $projectData->id,
-                            'user_id' => $userData->id
+                            'project_id'  => $projectData->id,
+                            'user_id'     => $userData->id,
                         ],
                         [
-                            'score' => $request->score[$key],
-                            'comment' => $request->comment[$key],
+                            'score'            => $request->score[$key],
+                            'comment'          => $request->comment[$key],
                             'criteria_comment' => $request->criteria_comment,
-                            'status' => $assessmentStatus
-                        ]);
-                    }
-                    if (!$challengeAssessmentUser) {
-                        return false;
-                    }
+                            'status'           => $assessmentStatus,
+                        ]
+                    );
                 }
+                if (!$challengeAssessmentUser) {
+                    return false;
+                }
+            }
+
             return true;
         } catch (Exception $e) {
             return false;
