@@ -52,8 +52,8 @@ class DiscussionService
     {
         try {
             $attachmentPath = null;
-            if ($request->file('attachments') && $request->file('attachments') !== null) {
-                $attachments = $request->file('attachments');
+            if ($request->file('attachment') && $request->file('attachment') !== null) {
+                $attachments = $request->file('attachment');
                 $attachmentPath = FileUploadHelper::uploadImageToS3($attachments, 'discussion');
                 if ($attachmentPath == false) {
                     return false;

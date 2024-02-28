@@ -30,14 +30,15 @@ class DiscussionResource extends JsonResource
         }
         $byMe = DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id, auth()->user()->id);
         $data = [
-            'id'             => $this->id,
-            'comment'        => $this->comments,
-            'likes'          => $getLikedByUser,
-            'dislikes'       => $getDislikedByUser,
-            'by_me'          => $byMe,
-            'user_details'   => UserResource::make($this->users),
-            'comment_replies'=> CommentReplies::collection($this->comments_reply),
-            'create_at'      => UtilityHelper::formatDateTime($this->created_at),
+            'id'              => $this->id,
+            'comment'         => $this->comments,
+            'likes'           => $getLikedByUser,
+            'dislikes'        => $getDislikedByUser,
+            'by_me'           => $byMe,
+            'attachment'      => $this->attachment !== null ? config('site-settings.aws_url').$this->attachment : '',
+            'user_details'    => UserResource::make($this->users),
+            'comment_replies' => CommentReplies::collection($this->comments_reply),
+            'created_at'      => UtilityHelper::formatDateTime($this->created_at),
         ];
 
         return $data;
