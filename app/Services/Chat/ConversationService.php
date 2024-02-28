@@ -20,11 +20,11 @@ class ConversationService
     private function prepareData(array $data)
     {
         try {
-            $userIds = collect([...$data['users'], auth()->user()->id])->unique()->map(function ($item) {
+            $userIds = array_map(function ($item) {
                 return (int)$item;
-            });
-            $data['users'] = $userIds->toArray();
+            }, $data['users']);
 
+            $data['users'] = [...$userIds, auth()->user()->id];
 
             if (count($userIds) < 2) {
                 return false;
