@@ -245,7 +245,7 @@ class ChallengeService
                     break;
             }
 
-            $source_link = $request->source_link || null;
+            $source_link = $request->source_link ?? null;
 
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($request->title, $model);

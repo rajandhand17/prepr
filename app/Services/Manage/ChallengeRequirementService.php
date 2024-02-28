@@ -62,15 +62,15 @@ class ChallengeRequirementService
                     break;
             }
 
-            $min_rank = $request->min_rank || 0;
-            $min_points = $request->min_points || null;
-            $project_submission_requirement_ids = $request->project_submission_requirement_ids || ["false"];
-            $max_project_submission = $request->max_project_submission || 5;
-            $max_project_associated = $request->max_project_associated || 5;
-            $min_experience = $request->min_experience || null;
-            $min_imported_badges = $request->min_imported_badges || null;
-            $min_achievement_counts = $request->min_achievement_counts || null;
-            $additional_requirements = $request->additional_requirements || null;
+            $min_rank = $request->min_rank ?? 0;
+            $min_points = $request->min_points ?? null;
+            $project_submission_requirement_ids = $request->project_submission_requirement_ids ?? ["false"];
+            $max_project_submission = $request->max_project_submission ?? 5;
+            $max_project_associated = $request->max_project_associated ?? 5;
+            $min_experience = $request->min_experience ?? null;
+            $min_imported_badges = $request->min_imported_badges ?? null;
+            $min_achievement_counts = $request->min_achievement_counts ?? null;
+            $additional_requirements = $request->additional_requirements ?? null;
 
             $challengeRequirement = new ChallengeRequirement();
             $challengeRequirement->challenge_id = $challenge_id;

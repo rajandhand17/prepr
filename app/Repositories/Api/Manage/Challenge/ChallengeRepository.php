@@ -170,10 +170,9 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
                 $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
-                // FIXTHIS What is a template id?
+                // Challenge Pitch
                 // $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
-                // FIXTHIS find out about the timeline of the challenge
-                // $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
+                $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
 
                 return [
                     'createChallenge'                   => $createChallenge,
@@ -181,7 +180,7 @@ class ChallengeRepository implements ChallengeInterface
                     'createChallengeSkillsGroupsStack'  => $createChallengeSkillsGroupsStack,
                     'createChallengeRequirement'        => $createChallengeRequirement,
                     // 'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
-                    // 'createChallengeTimelines'          => $createChallengeTimelines,
+                    'createChallengeTimelines'          => $createChallengeTimelines,
                 ];
             });
 

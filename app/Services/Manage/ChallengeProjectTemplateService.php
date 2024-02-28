@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\ChallengeProjectTemplate;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeProjectTemplateService
 {
@@ -17,6 +18,8 @@ class ChallengeProjectTemplateService
 
             return true;
         } catch (Exception $e) {
+            Log::error("Error in createChallengeProjectTemplate in ChallengeProjectTemplateService.php: " . $e->getMessage());
+
             return false;
         }
     }

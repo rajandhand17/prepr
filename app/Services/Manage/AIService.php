@@ -8,6 +8,7 @@ use App\Models\Challenge;
 use App\Models\Duration;
 use App\Models\Job;
 use App\Models\Levels;
+use App\Models\ResourceModule;
 use App\Models\Skill;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
@@ -130,6 +131,7 @@ class AIService
                 $endTimeValidatingChallenges = microtime(true);
                 Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
             }
+
 
             if (count($validChallenges) < 2) {
                 throw new Exception("Failed to generate sufficient valid challenges.");
@@ -282,9 +284,9 @@ class AIService
                             foreach ($articleResponse['webPages']['value'] as $item) {
                                 $article = [
                                     'type' => 'link',
-                                    'title' => $item['name'] ?? '',
+                                    'title' => $item['name'],
                                     'description' => $item['snippet'] ?? '',
-                                    'url' => $item['url'] ?? ''
+                                    'url' => $item['url']
                                 ];
                                 if (!empty($article['title'])) {
                                     $currentData['articles'][] = $article;
@@ -307,10 +309,10 @@ class AIService
                             foreach ($videoResponse['value'] as $video) {
                                 $videoData = [
                                     'type' => 'video',
-                                    'title' => $video['name'] ?? '',
+                                    'title' => $video['name'],
                                     'description' => $video['description'] ?? '',
                                     'publisher' => $video['publisher'][0]['name'] ?? '',
-                                    'url' => $video['contentUrl'] ?? '',
+                                    'url' => $video['contentUrl'],
                                     'embedHTML' => $video['embedHtml'] ?? ''
                                 ];
                                 if (!empty($videoData['title'])) {
@@ -456,11 +458,29 @@ class AIService
                 // Update the original groups with the titles and descriptions from AI
                 foreach ($combinedGroups as $index => &$group) {
                     if (isset($allAiResults[$index])) {
-                        $group['title'] = $allAiResults[$index]['title'];
-                        $group['description'] = $allAiResults[$index]['description'];
+                        $content = $allAiResults[$index]; // Assuming $allAiResults[$index] is an array with 'title' and 'description'
+
+                        // Check if the content is an array and has a title
+                        if (is_array($content) && isset($content['title'])) {
+                            // Convert the title to lowercase and check if it already exists in ResourceModule
+                            if (ResourceModule::whereRaw('LOWER(title) = ?', [strtolower($content['title'])])->exists()) {
+                                // If the title already exists, set title and description to 'Resource Module'
+                                $group['title'] = 'Resource Module';
+                                $group['description'] = 'Resource Module';
+                            } else {
+                                // If the title does not exist, use the title and description from $allAiResults[$index]
+                                $group['title'] = $content['title'];
+                                $group['description'] = $content['description'];
+                            }
+                        } else {
+                            // If $content is not an array or does not have a title, use default 'Resource Module'
+                            $group['title'] = 'Resource Module';
+                            $group['description'] = 'Resource Module';
+                        }
                     } else {
-                        $group['title'] = 'No title generated';
-                        $group['description'] = 'No description generated';
+                        // If $allAiResults[$index] is not set, use default 'Resource Module'
+                        $group['title'] = 'Resource Module';
+                        $group['description'] = 'Resource Module';
                     }
                     $group['skills'] = $request->skills;
                     $group['level'] = Levels::find($request->level_id)->title;
