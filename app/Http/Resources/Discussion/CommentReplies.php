@@ -31,12 +31,12 @@ class CommentReplies extends JsonResource
         $byMe = DiscussionSocialActivitiesService::checkLikedOrUnlikedBasedOnUser($this->id, auth()->user()->id);
 
         $data = [
-            'id'             => $this->id,
-            'comment'        => $this->comments,
-            'likes'          => $getLikedByUser,
-            'dislikes'       => $getDislikedByUser,
-            'by_me'          => $byMe,
-            'user_details'   => UserResource::make($this->users),
+            'id'              => $this->id,
+            'comment'         => $this->comments,
+            'likes'           => $getLikedByUser,
+            'dislikes'        => $getDislikedByUser,
+            'by_me'           => $byMe,
+            'user_details'    => UserResource::make($this->users),
             'created_at'      => UtilityHelper::formatDateTime($this->created_at),
         ];
 
