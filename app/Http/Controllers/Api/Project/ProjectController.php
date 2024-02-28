@@ -86,8 +86,6 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_list_type'), 400);
         } catch (Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
