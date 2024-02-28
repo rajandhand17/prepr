@@ -17,6 +17,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/check-slug/{slug}', [ProjectController::class, 'checkSlug']);
     Route::get('/check-title/{slug}', [ProjectController::class, 'checkName']);
     Route::post('/{slug}/submit', [ProjectController::class, 'submitProject']);
-    Route::post('/{slug}/assess', [ProjectController::class, 'assessProject']);
+    Route::get('/{slug}/view-assessment', [ProjectController::class, 'viewAssessedProject']);
+    Route::post('/{slug}/capture-assessment', [ProjectController::class, 'captureAssessmentProject']);
     Route::post('/{slug}/{activity}', [ProjectController::class, 'socialActivity']);
 });

@@ -17,8 +17,8 @@ class ChallengeAssessmentUser extends Model
         'project_id',
         'user_id',
         'score',
-        'weight',
         'comment',
         'criteria_comment',
+        'status',
     ];
 }

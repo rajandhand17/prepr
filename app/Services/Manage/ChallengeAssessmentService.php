@@ -223,11 +223,13 @@ class ChallengeAssessmentService
             $fetchOpenChallenge = ChallengeAssessment::whereIn('challenge_id', $getMyProjectChallengeIds)->where('assessment_type', '1')->pluck('challenge_id');
 
             //  Fetch Closed Assessment Challenge Ids
-            $fetchClosedChallenge = ChallengeAssessment::where(['members_email' => $userData->email, 'assessment_type' => '2'])->pluck('members_email', 'challenge_id');
-            $closeChallangeID = [];
-            foreach ($fetchClosedChallenge as $id => $memberList) {
-                if ($memberList) {
-                    if ($userData->email === $memberList) {
+            $closeAssessment = ChallengeAssessment::where('assessment_type', '2')->pluck('members_email', 'challenge_id');
+
+            $closeChallangeID[] = '';
+            foreach ($closeAssessment as $id => $memberList) {
+                if (!empty($memberList)) {
+                    $memberList = array_map('strtolower', $memberList);
+                    if (in_array(strtolower($userData->email), $memberList)) {
                         $closeChallangeID[] = $id;
                     }
                 }

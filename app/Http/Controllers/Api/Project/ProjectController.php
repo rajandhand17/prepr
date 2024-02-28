@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\Project;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Project\AddAdditionalInfoProjectRequest;
 use App\Http\Requests\Project\AddLinksProjectRequest;
+use App\Http\Requests\Project\AddProjectAssessmentRequest;
 use App\Http\Requests\Project\CreateProjectRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
+use App\Http\Resources\Project\AssessedProjectResource;
 use App\Http\Resources\Project\AssessProjectListingResource;
 use App\Http\Resources\Project\FavouriteProjectListingResource;
 use App\Http\Resources\Project\InvitedProjectListingResource;
@@ -400,7 +402,25 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function assessProject($slug, Request $request)
+    public function viewAssessedProject($slug)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectSlugExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            if ($checkProjectSlugExistsOrNot->getProjectAssessment) {
+                return $this->sendResponse(AssessedProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_assessment_retrived'), 200);
+            }
+
+            return $this->sendError(__('responses.project_assessment_not_retrived'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function captureAssessmentProject($slug, AddProjectAssessmentRequest $request)
     {
         try {
             $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
@@ -413,12 +433,12 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_allowed_assessment'), 403);
             }
 
-            $captureProjectAssessment = $this->projectRepository->captureProjectAssessment($checkProjectSlugExistsOrNot, auth()->user());
+            $captureProjectAssessment = $this->projectRepository->captureProjectAssessment($checkProjectSlugExistsOrNot, auth()->user(), $request);
             if ($captureProjectAssessment) {
-                dd("in");
+                return $this->sendResponse(AssessedProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_assessment_submitted'), 200);
             }
             
-            return $this->sendError(__('responses.project_not_assessment'), 404);
+            return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

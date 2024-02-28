@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Project;
 
 use App\Helpers\UtilityHelper;
+use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\ProjectPitchService;
@@ -10,7 +11,7 @@ use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AssessProjectListingResource extends JsonResource
+class AssessedProjectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -27,9 +28,27 @@ class AssessProjectListingResource extends JsonResource
         $labData = null;
         $challenge_pitch = null;
         $challenge_task = null;
+        $project_assessment = null;
         $privacy = 'public';
         $liked = 'no';
         $voted = 'no';
+
+        if ($this->getProjectAssessment) {
+            $project_assessment = $this->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) {
+                $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $this->id);
+
+                return [
+                    'id'        => $criteriaData->id,
+                    'title'     => $criteriaData->title,
+                    'score'     => $criteriaData->score,
+                    'weight'    => $criteriaData->weight,
+                    'score_received' => $criteriaData->score_received,
+                    'comment'   => $criteriaData->comment,
+                    'status'    => $criteriaData->status,
+                    'criteria_comment' => $criteriaData->criteria_comment,
+                ];
+            });
+        }
 
         if ($this->getProjectTemplate) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
@@ -188,6 +207,7 @@ class AssessProjectListingResource extends JsonResource
             'project_files'         => ProjectFileResource::make($this),
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
+            'project_assessment'    => $project_assessment,
             'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }

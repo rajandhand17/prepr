@@ -964,5 +964,10 @@
     "responses.project_submitted": "The Project(s) has been submitted successfully.",
     "responses.project_requirements_pending": "The Project(s) which you are looking for submission has some pending requirements.",
     "responses.project_not_allowed_assessment": "Apologies, but it seems that assessing this project isn't permitted within the scope of this challenge.",
-    "responses.project_not_assessment_submitted": "The Project(s) which you are looking for assessment has not been submitted."
+    "responses.project_not_assessment_submitted": "The Project(s) assessment has not been submitted.",
+    "responses.project_assessment_submitted": "The Project(s) assessment has been submitted.",
+    "responses.project_assessment_retrived": "The Project(s) assessment has been retrieved.",
+    "responses.project_assessment_not_retrived": "The Project(s) assessment has not been retrieved.",
+    "responses.project_score_comment": "is required.",
+    "responses.project_score_exceeds": "exceeds the given criteria score."
 }

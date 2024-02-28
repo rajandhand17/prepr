@@ -17,9 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('user_id');
             $table->integer('score');
-            $table->integer('weight');
-            $table->longText('comment')->nullable();
+            $table->longText('comment');
             $table->longText('criteria_comment')->nullable();
+            $table->enum('status', ['0', '1'])->default('0')->comment('0-> draft, 1-> published');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('criteria_id')->references('id')->on('challenge_assessment_criterias')->onDelete('cascade');
