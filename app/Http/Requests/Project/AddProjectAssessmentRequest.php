@@ -33,7 +33,6 @@ class AddProjectAssessmentRequest extends FormRequest
         $criteriaIds = $this->input('criteria_id');
         $scores = $this->input('score');
 
-
         foreach ($criteriaIds as $key => $criteriaId) {
             $base_rules["score.$key"] = [
                 'required',
@@ -43,7 +42,7 @@ class AddProjectAssessmentRequest extends FormRequest
                     if ($scores[$key] > $checkCriteria->score) {
                         $fail("The score provided for criteria_id $criteriaId is invalid.");
                     }
-                }
+                },
             ];
         }
 
@@ -56,8 +55,8 @@ class AddProjectAssessmentRequest extends FormRequest
             'criteria_id.exists'        => __('responses.external_link_ids_not_exists'),
             'criteria_id.array'         => __('responses.external_link_ids_array'),
             'criteria_id.numeric'       => __('responses.external_link_ids_numeric'),
-            'score.*'                   => ':attribute'.' '. __('responses.project_score_exceeds'),
-            'comment.*'                 => ':attribute'.' '. __('responses.project_score_comment'),
+            'score.*'                   => ':attribute'.' '.__('responses.project_score_exceeds'),
+            'comment.*'                 => ':attribute'.' '.__('responses.project_score_comment'),
         ];
     }
 

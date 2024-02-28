@@ -38,13 +38,13 @@ class AssessedProjectResource extends JsonResource
                 $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $this->id);
 
                 return [
-                    'id'        => $criteriaData->id,
-                    'title'     => $criteriaData->title,
-                    'score'     => $criteriaData->score,
-                    'weight'    => $criteriaData->weight,
-                    'score_received' => $criteriaData->score_received,
-                    'comment'   => $criteriaData->comment,
-                    'status'    => $criteriaData->status,
+                    'id'               => $criteriaData->id,
+                    'title'            => $criteriaData->title,
+                    'score'            => $criteriaData->score,
+                    'weight'           => $criteriaData->weight,
+                    'score_received'   => $criteriaData->score_received,
+                    'comment'          => $criteriaData->comment,
+                    'status'           => $criteriaData->status,
                     'criteria_comment' => $criteriaData->criteria_comment,
                 ];
             });

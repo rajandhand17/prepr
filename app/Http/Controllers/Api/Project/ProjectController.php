@@ -437,7 +437,7 @@ class ProjectController extends AppBaseController
             if ($captureProjectAssessment) {
                 return $this->sendResponse(AssessedProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_assessment_submitted'), 200);
             }
-            
+
             return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
