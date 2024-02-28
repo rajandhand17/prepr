@@ -93,7 +93,7 @@ class DiscussionSocialActivitiesService
             if ($comments) {
                 $response = $comments->like_dislikes == '1' ? 'like' : 'dislike';
             } else {
-                $response = 'no-action';
+                $response = null;
             }
 
             return $response;

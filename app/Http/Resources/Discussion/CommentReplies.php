@@ -37,7 +37,7 @@ class CommentReplies extends JsonResource
             'dislikes'       => $getDislikedByUser,
             'by_me'          => $byMe,
             'user_details'   => UserResource::make($this->users),
-            'create_at'      => UtilityHelper::formatDateTime($this->created_at),
+            'created_at'      => UtilityHelper::formatDateTime($this->created_at),
         ];
 
         return $data;
