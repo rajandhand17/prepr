@@ -17,4 +17,6 @@ interface ConversationInterface
     public function list(string $type);
 
     public function archiveOrSeenOrDelete(string $uuid, string $action);
+
+    public function onlineOrOffline($id , $action);
 }

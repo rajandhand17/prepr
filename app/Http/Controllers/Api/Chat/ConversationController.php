@@ -67,4 +67,18 @@ class ConversationController extends AppBaseController
         }
     }
 
+
+    public function onlineOrOffline($id, $action)
+    {
+        try {
+            $onlineOrOffline = $this->conversationRepository->onlineOrOffline($id, $action);
+            if (!$onlineOrOffline) {
+                return $this->sendError(__('responses.mark_user_' . $action . '_failed'), 400);
+            }
+            return $this->sendResponse(null, __('responses.mark_user_' . $action . '_successfully'));
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

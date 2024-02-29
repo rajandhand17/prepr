@@ -24,11 +24,12 @@ class ConversationService
                 return (int)$item;
             }, $data['users']);
 
-            $data['users'] = [...$userIds, auth()->user()->id];
-
+            $userIds = [...$userIds, auth()->user()->id];
+            $data['users'] = $userIds;
             if (count($userIds) < 2) {
                 return false;
             }
+
 
             if ($data['type'] === 'message' && count($userIds) > 2) {
                 $data['type'] = config('constants.conversation_type.group_message');
@@ -311,6 +312,48 @@ class ConversationService
                     break;
                 case 'delete':
                     $this->delete($conversation->id);
+                    break;
+                default:
+                    return false;
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function makeOnline($id)
+    {
+        try {
+            $user = User::query()->findOrFail($id);
+            $user->presence()->updateOrCreate(['user_id' => $id], ['is_online' => true]);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function makeOffline($id)
+    {
+        try {
+            $user = User::query()->findOrFail($id);
+            $user->presence()->updateOrCreate(['user_id' => $id], ['is_online' => false]);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function onlineOrOffline($id, $action)
+    {
+        try {
+            switch ($action) {
+                case 'online':
+                    $this->makeOnline($id);
+                    break;
+                case 'offline':
+                    $this->makeOffline($id);
                     break;
                 default:
                     return false;

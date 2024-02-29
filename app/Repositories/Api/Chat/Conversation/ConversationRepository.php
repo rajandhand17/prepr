@@ -55,4 +55,13 @@ class ConversationRepository implements ConversationInterface
             return false;
         }
     }
+
+    public function onlineOrOffline($id, $action)
+    {
+        try {
+            return $this->conversationService->onlineOrOffline($id, $action);
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
 }

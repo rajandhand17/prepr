@@ -22,6 +22,7 @@ class ConversationResource extends JsonResource
             "is_archived" => $this->is_archived ? 'yes' : 'no',
             "type" => $this->type,
             "last_message" => MessageResource::make($this->lastMessage),
+            "is_conversation_online" => $this->is_online ? 'yes' : 'no',
             "is_conversation_seen" => $this->is_conversation_seen ? 'yes' : 'no',
             "default_conversation_name" => $this->default_conversation_name,
             "is_private" => $this->is_private ? 'yes' : 'no',

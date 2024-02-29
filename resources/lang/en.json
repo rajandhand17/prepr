@@ -886,5 +886,9 @@
     "responses.type_in_announcement_or_message": "Type can be either announcement or message",
     "responses.message_without_attachment": "The message field is required when attachment is not present.",
     "responses.attachment_without_message": "The attachment field is required when message is not present.",
-    "responses.message_not_created": "Oops! The creation of message has failed"
+    "responses.message_not_created": "Oops! The creation of message has failed",
+    "responses.mark_user_online_successfully": "Marked user status to online successfully",
+    "responses.mark_user_online_failed": "Oops! The marking user online has failed",
+    "responses.mark_user_offline_successfully": "Marked user status to offline successfully",
+    "responses.mark_user_offline_failed": "Oops! The marking user offline has failed"
 }

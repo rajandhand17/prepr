@@ -677,4 +677,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Conversation::class, 'conversation_users', 'user_id', 'conversation_id');
     }
+
+    public function presence()
+    {
+        return $this->hasOne(ConversationUserPresenceStatus::class, 'user_id', 'id');
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Conversation;
+use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -26,4 +26,8 @@ Broadcast::channel('message.conversation.{id}', function ($user, $id) {
     }
 
     return false;
+});
+
+Broadcast::channel('chat', function ($user) {
+    return ["id" => $user->id , "email" => $user->email, "full_name" => $user->full_name];
 });
