@@ -158,8 +158,8 @@ class LabService
             /*gets Tags based on user tags*/
             $getLabsIdsBasedOnTags=LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
             $labIds= array_unique((array)array_merge($getLabsIdsBasedOnSKills, $getLabsIdsBasedOnTags));
-            $lab_list = Lab::select()->whereIn('labs.id',$labIds)->where('user_id','!=',auth()->user()->id)->take(12);
-            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+            $labList = Lab::whereIn('labs.id',$labIds)->where('user_id','!=',auth()->user()->id)->take(12);
+            return $labList->get();
         }catch(\Exception $e){
             return false;
         }

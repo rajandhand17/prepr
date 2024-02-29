@@ -468,7 +468,6 @@ class ChallengeService
             $originalChallenge = Challenge::find($challengeId);
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
-
             $clonedChallenge = $originalChallenge->replicate();
             $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $clonedChallenge->title = $organization->title.' '.$originalChallenge->title;
@@ -476,7 +475,6 @@ class ChallengeService
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;
             $clonedChallenge->save();
-
             return $clonedChallenge;
         } catch (Exception $e) {
             return false;
@@ -533,8 +531,12 @@ class ChallengeService
     public static function getChallengeBasedOnSkillsAndTags($skills,$tags){
         try {
             /*get challenge id Based on Skills*/
-            $getChallengeId=ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
+            $getChallengeIdBasedOnSkill=ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
             /*get challenge id based on tags*/
+            $getChallengeIdBasedOnTags=ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($tags);
+            $challengeIds= array_unique((array)array_merge($getChallengeIdBasedOnTags, $getChallengeIdBasedOnSkill));
+            $challenges=Challenge::where('user_id','!=',auth()->user()->id)->whereIn('id',$challengeIds)->limit('12');
+            return $challenges->get();
         }catch (\Exception $e) {
             return false;
         }

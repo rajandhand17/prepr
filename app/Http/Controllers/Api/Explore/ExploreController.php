@@ -22,15 +22,19 @@ class ExploreController extends AppBaseController
         try {
             $recommended = $this->exploreRepository->recommended($request);
             if($recommended){
-                $response = [
-                    'total_count'  => $recommended->total(),
-                    'per_page'     => $recommended->perPage(),
-                    'count'        => $recommended->count(),
-                    'current_page' => $recommended->currentPage(),
-                    'total_pages'  => $recommended->lastPage(),
-                    'list'         => $recommended,
-                ];
-                return $this->sendResponse($response, __('responses.recommended'));
+                return $this->sendResponse($recommended, __('responses.recommended'));
+            }
+        }catch(\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function recommendedSkill(){
+        try {
+            $recommendedSkills=$this->exploreRepository->recommendSKills();
+            dd($recommendedSkills);
+            if($recommendedSkills){
+
             }
         }catch(\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);

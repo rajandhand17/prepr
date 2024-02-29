@@ -69,4 +69,12 @@ class SkillGroupService
             return false;
         }
     }
+
+    public static function recommendedSkillsGroup($userSkills){
+        try {
+
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }
