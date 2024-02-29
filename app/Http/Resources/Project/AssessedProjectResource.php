@@ -58,11 +58,11 @@ class AssessedProjectResource extends JsonResource
                 case true:
                     $assessmentStatus = 'draft';
                     break;
-                
+
                 case false:
                     $assessmentStatus = 'publish';
                     break;
-                    
+
                 default:
                     $assessmentStatus = 'pending';
                     break;
