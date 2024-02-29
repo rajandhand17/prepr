@@ -154,7 +154,24 @@ class AIService
                 'messages' => [
                     [
                         'role' => 'user',
-                        'content' => $this->constructUserPromptForChallengeCreation($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
+                        'content' => '
+                            Please design an educational challenge for the careers: "' . $jobTitles . '", with skills: "' . $skillTitles . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the challenge to finish. Additional information would be ("' . $additionalInformation . '")
+                            1. **Title**: Craft a brief title for the challenge.
+                            2. **Description**: Provide a brief description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
+                            3. **Steps**: Write the exact same steps mentioned in description in an array as well.
+                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge along with the provided skills.
+                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitles . '".
+                            6. **Reflections**: provide 3-5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
+                
+                            Output format (Make sure you exactly follow it):
+                            {
+                            "title": "Challenge Title",
+                            "description": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p>...",
+                            "category": "Selected Category",
+                            "steps": ["Step 1", "Step 2", ...],
+                            "skills": ["Skill 1", "Skill 2", ...],
+                            "reflections": ["Reflection 1", "Reflection 2", ...]
+                        }',
                     ]
                 ],
             ];
@@ -173,34 +190,12 @@ class AIService
         }
     }
 
-    protected function constructUserPromptForChallengeCreation($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
-    {
-        return '
-            Please design an educational challenge for the careers: "' . $jobTitles . '", with skills: "' . $skillTitles . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the challenge to finish. Additional information would be ("' . $additionalInformation . '")
-            1. **Title**: Craft a brief title for the challenge.
-            2. **Description**: Provide a brief description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
-            3. **Steps**: Write the exact same steps mentioned in description in an array as well.
-            4. **Skills**: Enumerate 10 vital skills necessary for this challenge along with the provided skills.
-            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitles . '".
-            6. **Reflections**: provide 3-5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
-
-            Output format (Make sure you exactly follow it):
-            {
-            "title": "Challenge Title",
-            "description": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p>...",
-            "category": "Selected Category",
-            "steps": ["Step 1", "Step 2", ...],
-            "skills": ["Skill 1", "Skill 2", ...],
-            "reflections": ["Reflection 1", "Reflection 2", ...]
-            }';
-    }
-
     protected function processSkills($skills)
     {
         $updatedSkills = [];
         try {
             foreach ($skills as $skill) {
-                $recommendationResponse = $this->fetchSkillRecommendation($skill);
+                $recommendationResponse = RecommendationEngineHelper::getRelatedPreprSkills("/" . strtolower($skill));
                 if ($recommendationResponse) {
                     $highestScoreSkill = $this->selectHighestScoreSkill($recommendationResponse);
                     if ($highestScoreSkill['score'] >= 0.92) {
@@ -212,19 +207,6 @@ class AIService
             return $updatedSkills;
         } catch (Exception $e) {
             Log::error("Error in processSkills in AIService.php" . $e->getMessage());
-
-            return false;
-        }
-    }
-
-    protected function fetchSkillRecommendation($skill)
-    {
-        try {
-            $response = RecommendationEngineHelper::getRelatedPreprSkills("/" . strtolower($skill));
-
-            return $response;
-        } catch (Exception $e) {
-            Log::error("Error in fetchSkillRecommendation in AIService.php" . $e->getMessage());
 
             return false;
         }
