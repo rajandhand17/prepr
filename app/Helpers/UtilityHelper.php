@@ -56,12 +56,12 @@ class UtilityHelper
 
     public static function formatDateTime($date, $time = 0)
     {
-        $formatedDate = Carbon::parse($date);
+        $desiredTimezone = isset(auth()->user()->preferred_timezone) ? auth()->user()->preferred_timezone : 'UTC';
+        $date = $date->setTimezone($desiredTimezone);
         if ($time == 0) {
-            return $formatedDate->format('M d, Y H:i:s');
+            return $date->format('M d, Y H:i:s');
         }
-
-        return $formatedDate->format('M d, Y H:i:s');
+        return $date->format('M d, Y H:i:s');
     }
 
     public static function validEmail($email)
