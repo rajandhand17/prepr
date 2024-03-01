@@ -57,9 +57,12 @@ class UtilityHelper
     public static function formatDateTime($date, $time = 0)
     {
         $carbonDate = Carbon::parse($date);
+        //getting preferred TimeZone
         $desiredTimezone = isset(auth()->user()->preferred_timezone) ? auth()->user()->preferred_timezone : 'UTC';
-            /*set default timezone is utc and convert that according to user timezone*/
-        $date= Carbon::createFromFormat('Y-m-d H:i:s', $carbonDate, 'UTC')
+        //getting server timezone
+        $defaultTimeZone=config('app.timezone');
+        /*set default timezone is utc and convert that according to user timezone*/
+        $date= Carbon::createFromFormat('Y-m-d H:i:s', $carbonDate, $defaultTimeZone)
             ->setTimezone($desiredTimezone);
         if ($time == 0) {
             return $date->format('M d, Y H:i:s');
