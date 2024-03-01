@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Api\Explore;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Explore\ChallengeResource;
+use App\Http\Resources\Explore\ExploreResource;
 use App\Http\Resources\Explore\LabResource;
 use App\Http\Resources\Explore\TagResource;
 use App\Http\Resources\Explore\SkillResource;
 use App\Http\Resources\Explore\TrendingTopicsResource;
+use App\Http\Resources\Explore\UserResource;
 use App\Repositories\Api\Explore\ExploreRepository;
 use Illuminate\Http\Request;
 
@@ -17,49 +20,33 @@ class ExploreController extends AppBaseController
     public function __construct(ExploreRepository $exploreRepository){
         $this->exploreRepository=$exploreRepository;
     }
-
-    public function recommended(Request $request){
-        try {
-            $recommended = $this->exploreRepository->recommended($request);
-            if($recommended){
-                return $this->sendResponse($recommended, __('responses.recommended'));
-            }
-        }catch(\Exception $e){
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function recommendedSkill(){
-        try {
-            $recommendedSkills=$this->exploreRepository->recommendSKills();
-            dd($recommendedSkills);
-            if($recommendedSkills){
-
-            }
-        }catch(\Exception $e){
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
     public function index(Request $request,$action=null){
         try {
-            if($action=='recommended'){
-                $explore = $this->exploreRepository->recommended($request);
-            }else{
-                $explore = $this->exploreRepository->index($request);
+            $response=[];
+            switch ($action){
+                case 'recommended':
+                    $explore = $this->exploreRepository->recommended($request);
+                    if($explore){
+                        $response=[
+                            'labs'       =>LabResource::collection($explore['labs']),
+                            'challenge'  =>ChallengeResource::collection($explore['challenge']),
+                        ];
+                    }
+                    break;
+                case 'featured':
+                    $featured = $this->exploreRepository->getFeaturedLabs();
+                    if($featured){
+                        $response=LabResource::collection($featured);
+                    }
+                    break;
+                default:
+                    $explore = $this->exploreRepository->index();
+                    if($explore){
+                        $response=LabResource::collection($explore);
+                    }
+                    break;
             }
-            if($explore){
-                if($action=='recommended'){
-                    $response=[
-                        'trending_labs'  =>LabResource::collection($explore['trending_labs']),
-                        'recommended_labs'  =>LabResource::collection($explore['recommended_labs']),
-                    ];
-                }else{
-                    $response=[
-                        'labs'  =>LabResource::collection($explore['labs']),
-                        'skills'=>SkillResource::collection($explore['skills']),
-                        'tags'  =>TagResource::collection($explore['tags']),
-                    ];
-                }
+            if($response){
                 return $this->sendResponse($response, __('responses.found_user_profile_detail'));
             }
             return $this->sendError(__('responses.send_error'),404);
@@ -68,11 +55,11 @@ class ExploreController extends AppBaseController
         }
     }
 
-    public function trendingTopics(){
-        try {
-            $explore=$this->exploreRepository->trendingTopics();
-            if($explore){
-                return $this->sendResponse(TrendingTopicsResource::collection($explore),__('responses.trending_topics_successfully'));
+    public function recommendedSkill(){
+        try{
+            $skilled=$this->exploreRepository->recommendedSkill();
+            if($skilled){
+                return $this->sendResponse($skilled,__('responses.recommended'));
             }
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);

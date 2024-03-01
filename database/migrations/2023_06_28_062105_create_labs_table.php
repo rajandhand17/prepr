@@ -36,6 +36,7 @@ return new class() extends Migration {
             $table->enum('is_achievement_enabled', ['0', '1'])->comment('0-> no,1-> yes')->default('0');
             $table->enum('is_notification_enabled', ['0', '1'])->comment('0-> no,1-> yes')->default('0');
             $table->enum('is_verified', ['0', '1'])->default('0')->comment('0-> not-verified ,1-> verified');
+            $table->enum('is_featured', ['0', '1'])->default('0')->comment('0-> no ,1->yes');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->timestamps();

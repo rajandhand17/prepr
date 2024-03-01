@@ -158,20 +158,21 @@ class LabService
             /*gets Tags based on user tags*/
             $getLabsIdsBasedOnTags=LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
             $labIds= array_unique((array)array_merge($getLabsIdsBasedOnSKills, $getLabsIdsBasedOnTags));
-            $labList = Lab::whereIn('labs.id',$labIds)->where('user_id','!=',auth()->user()->id)->take(12);
+            if(!empty($labIds)){
+                $labList = Lab::whereIn('labs.id',$labIds)->where('user_id','!=',auth()->user()->id)->take(12);
+            }else{
+                $labList = Lab::where('user_id','!=',auth()->user()->id)->take(6);
+            }
             return $labList->get();
         }catch(\Exception $e){
             return false;
         }
     }
 
-    public function getTrendingTopics($request){
-        try {
-            $lab_list = Lab::select()->where('labs.status', '1')->limit(20);
-            if(isset($request->search)){
-                $lab_list = $lab_list->where('labs.title','like', '%'.$request->search.'%');
-            }
-            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+    public static function getLabsBasedOnIds(){
+        try{
+            $labList = Lab::where('is_featured','1')->limit(6)->get();
+            return $labList;
         }catch(\Exception $e){
             return false;
         }

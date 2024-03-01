@@ -5,7 +5,7 @@ namespace App\Http\Resources\Explore;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ExploreResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,9 @@ class ExploreResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'is_resume'=>empty($this->userResumeFiles)? 'no' :'yes',
+            'is_skills'=>empty($this->userSkills)? 'no' :'yes',
+        ];
     }
 }

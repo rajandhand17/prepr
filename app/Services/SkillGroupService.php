@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Models\Skill;
 use App\Models\SkillGroup;
 use Illuminate\Support\Facades\Schema;
 
@@ -69,12 +70,5 @@ class SkillGroupService
             return false;
         }
     }
-
-    public static function recommendedSkillsGroup($userSkills){
-        try {
-
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
+    
 }

@@ -117,26 +117,16 @@ class LabSocialActivitiesService
         }
     }
 
-    public static function getLabBasedOnActivity($action)
+    public static function getFeaturedLabIds()
     {
         try {
-            if (auth()->check()) {
-                $columnValue = self::getColumnNameValue($action);
-                if ($columnValue !== false) {
-                    $lab_ids = LabSocialActivity::where(
-                        [
-                            'user_id'              => auth()->user()->id,
-                            $columnValue['column'] => $columnValue['action'],
-                        ]
-                    )->get();
+            $lab_ids = LabSocialActivity::select('lab_id')->where('user_id', '!=', auth()->user()->id)
+                ->orderBy('like_dislike', 'ASC')
+                ->orderBy('share', 'ASC')
+                ->limit(6)
+                ->get();
 
-                    return $lab_ids;
-                }
-
-                return false;
-            }
-
-            return false;
+            return $lab_ids;
         } catch(\Exception $e) {
             return false;
         }
