@@ -20,16 +20,15 @@ class ConversationService
     private function prepareData(array $data)
     {
         try {
-            $userIds = array_map(function ($item) {
-                return (int)$item;
-            }, $data['users']);
+            $data['usernames'][] = auth()->user()->username;
+            $userIds = User::whereIn('username', $data['usernames'])
+                ->pluck('id')
+                ->toArray();
 
-            $userIds = [...$userIds, auth()->user()->id];
             $data['users'] = $userIds;
             if (count($userIds) < 2) {
                 return false;
             }
-
 
             if ($data['type'] === 'message' && count($userIds) > 2) {
                 $data['type'] = config('constants.conversation_type.group_message');
