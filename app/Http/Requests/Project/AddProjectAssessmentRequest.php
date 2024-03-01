@@ -29,7 +29,7 @@ class AddProjectAssessmentRequest extends FormRequest
             'criteria_id.*'     => 'numeric',
             'score.*'           => 'array|required|numeric',
             'status'            => 'required|in:draft,publish',
-            'criteria_comment'  => 'required|string|min:1'
+            'criteria_comment'  => 'required|string|min:1',
         ];
 
         $criteriaIds = $this->input('criteria_id');
@@ -49,7 +49,6 @@ class AddProjectAssessmentRequest extends FormRequest
             ];
         }
 
-
         foreach ($criteriaIds as $key => $criteriaId) {
             $base_rules["comment.$key"] = [
                 'required',
@@ -62,8 +61,6 @@ class AddProjectAssessmentRequest extends FormRequest
                 },
             ];
         }
-
-
 
         return $base_rules;
     }
