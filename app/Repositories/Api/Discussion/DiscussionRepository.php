@@ -18,10 +18,10 @@ class DiscussionRepository implements DiscussionInterface
         $this->discussionSocialActivitiesService = $discussionSocialActivitiesService;
     }
 
-    public function index($component, $moduleId)
+    public function index($component, $moduleId, $sortBy)
     {
         try {
-            return $this->discussionService->index($component, $moduleId);
+            return $this->discussionService->index($component, $moduleId, $sortBy);
         } catch(\Exception $e) {
             return false;
         }
