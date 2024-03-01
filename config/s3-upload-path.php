@@ -16,5 +16,5 @@ return [
     'resource_group_achievement'=> 'resource_group_achievement/upload/',
     'certificate'               => 'certificate/upload/',
     'discussion'                => 'discussion/upload',
-    'chat'                      => 'chat/upload/'
+    'chat'                      => 'chat/upload/',
 ];

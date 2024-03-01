@@ -24,16 +24,17 @@ class CreateConversationRequest extends BaseRequest
     {
         return [
             'usernames' => 'required|exists:users,username',
-            'type' => 'required|in:announcement,message'
+            'type'      => 'required|in:announcement,message',
         ];
     }
+
     public function messages()
     {
         return[
             'usernames.required' => __('responses.conversation_users_required'),
-            'type.required'   => __('responses.conversation_type_required'),
-            "usernames.exists" => __("responses.conversation_user_exists"),
-            "type.in" => __("responses.type_in_announcement_or_message")
+            'type.required'      => __('responses.conversation_type_required'),
+            'usernames.exists'   => __('responses.conversation_user_exists'),
+            'type.in'            => __('responses.type_in_announcement_or_message'),
         ];
     }
 }

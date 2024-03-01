@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -15,7 +14,7 @@ use Illuminate\Support\Facades\Broadcast;
 */
 
 Broadcast::channel('users.{id}', function ($user, $id) {
-    return (int)$user->id === (int)$id;
+    return (int) $user->id === (int) $id;
 });
 
 Broadcast::channel('message.conversation.{id}', function ($user, $id) {
@@ -29,5 +28,5 @@ Broadcast::channel('message.conversation.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('chat', function ($user) {
-    return ["id" => $user->id , "email" => $user->email, "full_name" => $user->full_name];
+    return ['id' => $user->id, 'email' => $user->email, 'full_name' => $user->full_name];
 });

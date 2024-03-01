@@ -38,7 +38,7 @@ class ConversationCreated extends Notification
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'conversation' => $this->conversation
+            'conversation' => $this->conversation,
         ]);
     }
 
@@ -55,14 +55,14 @@ class ConversationCreated extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            "conversation" => $this->conversation
+            'conversation' => $this->conversation,
         ];
     }
 
     public function toDatabase()
     {
         return [
-            "conversation" => $this->conversation
+            'conversation' => $this->conversation,
         ];
     }
 }

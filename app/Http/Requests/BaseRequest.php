@@ -10,15 +10,16 @@ class BaseRequest extends FormRequest
 {
     /**
      * @param Validator $validator
+     *
      * @return mixed
-     * Common place to format validation Message
+     *               Common place to format validation Message
      */
     public function failedValidation(Validator $validator): mixed
     {
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation errors',
-            'data' => $validator->errors(),
+            'data'    => $validator->errors(),
         ], 422));
     }
 }

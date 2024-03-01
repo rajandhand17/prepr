@@ -22,7 +22,7 @@ class ConversationMessage extends Model
         'attachments',
         'status',
         'sender_id',
-        'deleted_at'
+        'deleted_at',
     ];
 
     public function conversation(): BelongsTo
@@ -48,8 +48,9 @@ class ConversationMessage extends Model
     public function getAttachmentsAttribute($value)
     {
         $attachments = $this->castAttribute('attachments', $value);
+
         return collect($attachments)->map(function ($item) {
-            return config('site-settings.aws_url') . $item;
+            return config('site-settings.aws_url').$item;
         });
     }
 

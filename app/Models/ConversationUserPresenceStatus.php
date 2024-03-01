@@ -12,5 +12,4 @@ class ConversationUserPresenceStatus extends Model
     protected $table = 'conversation_user_presence_status';
 
     protected $fillable = ['is_online', 'user_id'];
-
 }

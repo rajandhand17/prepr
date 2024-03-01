@@ -11,7 +11,6 @@ class MessageServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
 
     /**

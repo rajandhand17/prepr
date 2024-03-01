@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Chat;
 
-
 use App\Http\Requests\BaseRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -24,16 +23,16 @@ class CreateMessageRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'message' => 'required_without:attachment',
-            'attachment' => 'required_without:message'
+            'message'    => 'required_without:attachment',
+            'attachment' => 'required_without:message',
         ];
     }
 
     public function messages()
     {
         return [
-            'message.required_without' => __('responses.message_without_attachment'),
-            'attachment.required_without' => __('responses.attachment_without_message')
+            'message.required_without'    => __('responses.message_without_attachment'),
+            'attachment.required_without' => __('responses.attachment_without_message'),
         ];
     }
 }

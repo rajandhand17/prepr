@@ -38,7 +38,7 @@ class MessageCreated extends Notification
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'message' => $this->message
+            'message' => $this->message,
         ]);
     }
 
@@ -55,14 +55,14 @@ class MessageCreated extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            "message" => $this->message
+            'message' => $this->message,
         ];
     }
 
     public function toDatabase()
     {
         return [
-            "message" => $this->message
+            'message' => $this->message,
         ];
     }
 }

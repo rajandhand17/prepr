@@ -27,15 +27,15 @@ class MessageController extends AppBaseController
 
             if ($chat) {
                 $responseData = [
-                    'total_count' => $chat->total(),
-                    'per_page' => $chat->perPage(),
-                    'count' => $chat->count(),
+                    'total_count'  => $chat->total(),
+                    'per_page'     => $chat->perPage(),
+                    'count'        => $chat->count(),
                     'current_page' => $chat->currentPage(),
-                    'total_pages' => $chat->lastPage(),
-                    'list' => MessageResource::collection($chat->items())
+                    'total_pages'  => $chat->lastPage(),
+                    'list'         => MessageResource::collection($chat->items()),
                 ];
 
-                return $this->sendResponse($responseData, __("responses.found_message_list"));
+                return $this->sendResponse($responseData, __('responses.found_message_list'));
             }
 
             return $this->sendError(__('responses.not_found_message_list'), 404);
@@ -59,8 +59,7 @@ class MessageController extends AppBaseController
                 return $this->sendError(__('responses.message_not_created'), 409);
             }
 
-            return $this->sendResponse(new MessageResource($message), __("responses.message_created"));
-
+            return $this->sendResponse(new MessageResource($message), __('responses.message_created'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

@@ -2,21 +2,20 @@
 
 namespace App\Services\Chat;
 
-use Exception;
+use App\Models\Conversation;
+use App\Models\ConversationMessage;
+use App\Models\ConversationSeenMessage;
 use App\Models\User;
 use App\Notifications\ConversationArchived;
 use App\Notifications\ConversationCreated;
 use App\Notifications\ConversationDeleted;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
-use App\Models\Conversation;
-use App\Models\ConversationMessage;
-use App\Models\ConversationSeenMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
 class ConversationService
 {
-
     private function prepareData(array $data)
     {
         try {
@@ -32,9 +31,9 @@ class ConversationService
 
             if ($data['type'] === 'message' && count($userIds) > 2) {
                 $data['type'] = config('constants.conversation_type.group_message');
-            } else if ($data['type'] === 'message' && count($userIds) == 2) {
+            } elseif ($data['type'] === 'message' && count($userIds) == 2) {
                 $data['type'] = config('constants.conversation_type.direct_message');
-            } else if ($data['type'] === 'announcement') {
+            } elseif ($data['type'] === 'announcement') {
                 $data['type'] = config('constants.conversation_type.announcement');
             }
 
@@ -54,7 +53,7 @@ class ConversationService
                 ->where('type', $type)
                 ->join('conversation_users', 'conversation_users.conversation_id', '=', 'conversations.id')
                 ->groupBy('conversation_id')
-                ->havingRaw("COUNT(DISTINCT conversation_users.user_id) = ?", [count($userIds)])
+                ->havingRaw('COUNT(DISTINCT conversation_users.user_id) = ?', [count($userIds)])
                 ->havingRaw("SUM(CASE WHEN conversation_users.user_id NOT IN ($userIdsTuple) THEN 1 ELSE 0 END) = 0")
                 ->first();
 
@@ -105,6 +104,7 @@ class ConversationService
     {
         try {
             $conversation->users()->attach($users);
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -116,7 +116,7 @@ class ConversationService
         try {
             if ($type === 'delete') {
                 $conversationUserIds = $deletedUserIds;
-            } else if ($type === 'archived' || $type === 'created') {
+            } elseif ($type === 'archived' || $type === 'created') {
                 $conversationUserIds = $this->getConversationUsersId($conversationId);
             } else {
                 return false;
@@ -141,6 +141,7 @@ class ConversationService
                 default:
                     return false;
             }
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -151,6 +152,7 @@ class ConversationService
     {
         try {
             $conversation = Conversation::findOrFail($conversationId);
+
             return $conversation->users()->pluck('id')->toArray();
         } catch (Exception $e) {
             return false;
@@ -163,16 +165,17 @@ class ConversationService
             DB::beginTransaction();
             $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $conversation = Conversation::create([
-                'uuid' => $uuid,
-                'name' => null,
-                'type' => $data['type'],
+                'uuid'        => $uuid,
+                'name'        => null,
+                'type'        => $data['type'],
                 'group_photo' => $data['group_photo'] ?? null,
-                'created_by' => auth()->user()->id
+                'created_by'  => auth()->user()->id,
             ]);
             $conversationUsers = $this->addMembers($conversation, $data['users']);
 
             if (!$conversationUsers) {
                 DB::rollBack();
+
                 return false;
             }
 
@@ -183,9 +186,11 @@ class ConversationService
             }
 
             DB::commit();
+
             return $conversation;
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
@@ -193,7 +198,7 @@ class ConversationService
     public function markAsSeen($conversationId, $userId, $messageId)
     {
         try {
-            return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, "user_id" => $userId], ['message_id' => $messageId]);
+            return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, 'user_id' => $userId], ['message_id' => $messageId]);
         } catch (Exception $e) {
             return false;
         }
@@ -204,6 +209,7 @@ class ConversationService
         try {
             Conversation::where('id', $id)->update(['is_archived' => true]);
             $this->notify($id, 'archived');
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -216,6 +222,7 @@ class ConversationService
             $userIds = $this->getConversationUsersId($id);
             Conversation::where('id', $id)->delete();
             $this->notify($id, 'delete', $userIds);
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -230,6 +237,7 @@ class ConversationService
             if ($this->isConversationAlreadyExists($preparedData['users'], $preparedData['type'])) {
                 return $this->getConversationByUsers($preparedData['users'], $preparedData['type']);
             }
+
             return $this->store($preparedData);
         } catch (Exception $e) {
             return false;
@@ -250,7 +258,6 @@ class ConversationService
                         ->limit(1)
                 );
 
-
             switch ($type) {
                 case 'archive':
                     $conversation->where('is_archived', true);
@@ -265,9 +272,9 @@ class ConversationService
             if (request()->has('search')) {
                 $searchText = request()->search;
                 $conversation->where(function ($query) use ($searchText) {
-                    $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($searchText) . '%'])
+                    $query->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($searchText).'%'])
                         ->orWhereHas('users', function ($query) use ($searchText) {
-                            $query->whereRaw('LOWER(first_name) LIKE ?', ['%' . strtolower($searchText) . '%']);
+                            $query->whereRaw('LOWER(first_name) LIKE ?', ['%'.strtolower($searchText).'%']);
                         });
                 });
             }
@@ -293,7 +300,6 @@ class ConversationService
         }
     }
 
-
     public function archiveOrSeenOrDelete(string $uuid, $action)
     {
         try {
@@ -303,7 +309,7 @@ class ConversationService
                 return false;
             }
             switch ($action) {
-                case "archive":
+                case 'archive':
                     $this->archive($conversation->id);
                     break;
                 case 'seen':
@@ -327,6 +333,7 @@ class ConversationService
         try {
             $user = User::query()->findOrFail($id);
             $user->presence()->updateOrCreate(['user_id' => $id], ['is_online' => true]);
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -338,6 +345,7 @@ class ConversationService
         try {
             $user = User::query()->findOrFail($id);
             $user->presence()->updateOrCreate(['user_id' => $id], ['is_online' => false]);
+
             return true;
         } catch (Exception $e) {
             return false;

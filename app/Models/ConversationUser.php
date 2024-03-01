@@ -14,5 +14,4 @@ class ConversationUser extends Model
     protected $primaryKey = ['conversation_id', 'user_id'];
 
     protected $fillable = ['conversation_id', 'user_id'];
-
 }
