@@ -36,7 +36,6 @@ class Lab extends Model
         'is_achievement_enabled',
         'is_notification_enabled',
         'is_verified',
-        'is_featured',
     ];
 
     public function getMediaAttribute($value)

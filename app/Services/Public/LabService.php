@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Models\FeaturedModule;
 use App\Models\Lab;
 use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTagsGroups;
@@ -171,7 +172,7 @@ class LabService
 
     public static function getLabsBasedOnIds(){
         try{
-            $labList = Lab::where('is_featured','1')->limit(6)->get();
+            $labList =FeaturedModule::where('module_type','0')->get();
             return $labList;
         }catch(\Exception $e){
             return false;

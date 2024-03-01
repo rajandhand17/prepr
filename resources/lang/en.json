@@ -894,5 +894,9 @@
     "responses.pinned_skills_successfully": "You have successfully pinned this skill",
     "responses.pinned_skills_successfully_removed": "You have successfully removed pinned skill",
     "responses.pinned_skills_failed": "You have failed pinned this skill",
-    "responses.trending_topics_successfully": "You have successfully retrieved trending topics"
+    "responses.trending_topics_successfully": "You have successfully retrieved trending topics",
+    "responses.recommended_labs_challenges_successfully": "The recommended labs and challenges have been successfully retrieved",
+    "responses.recommended_labs_challenges_failed": "The list of recommended labs and challenges has not been retrieved with success.",
+    "responses.featured_labs_successfully": "The featured labs list has been successfully retrieved",
+    "responses.featured_labs_failed": "The list of featured labs has not been retrieved with success."
 }

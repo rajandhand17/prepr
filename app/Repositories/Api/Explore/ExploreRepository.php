@@ -10,17 +10,16 @@ use App\Services\UserService;
 use App\Services\UserSkillsService;
 use App\Services\UserTagsService;
 use \Illuminate\Support\Facades\DB;
+
 class ExploreRepository implements ExploreInterface
 {
     private $labService;
-
     private $userService;
     private $userSkillsService;
     private $userTagsService;
     private $labSocialActivitiesService;
-    private $skillGroupsService;
     private $challengeService;
-    public function __construct(LabSocialActivitiesService $labSocialActivitiesService, UserService $userService,LabService $labService,SkillGroupService $skillGroupsService,ChallengeService $challengeService,UserSkillsService $userSkillsService,UserTagsService $userTagsService)
+    public function __construct(LabSocialActivitiesService $labSocialActivitiesService, UserService $userService,LabService $labService,ChallengeService $challengeService,UserSkillsService $userSkillsService,UserTagsService $userTagsService)
     {
         $this->labSocialActivitiesService = $labSocialActivitiesService;
         $this->userService = $userService;
@@ -28,17 +27,8 @@ class ExploreRepository implements ExploreInterface
         $this->userSkillsService=$userSkillsService;
         $this->userTagsService=$userTagsService;
         $this->challengeService=$challengeService;
-        $this->skillGroupsService=$skillGroupsService;
     }
-
-    public function index(){
-        try {
-
-        }catch (\Exception $e){
-            return false;
-        }
-    }
-    public function recommended($request)
+    public function recommended()
     {
         try {
             DB::beginTransaction();
@@ -54,7 +44,8 @@ class ExploreRepository implements ExploreInterface
         }
     }
 
-    public function getFeaturedLabs(){
+    public function getFeaturedLabs()
+    {
         try {
             $getLabs= $this->labService->getLabsBasedOnIds();
             if($getLabs){
@@ -62,18 +53,6 @@ class ExploreRepository implements ExploreInterface
             }
             return false;
         }catch(\Exception $e){
-            return false;
-        }
-    }
-    public function recommendedSkill(){
-        try {
-            $userSkills=$this->userSkillsService->getUserSkills();
-            if($userSkills){
-                $recommendedSkills=$this->skillGroupsService->recommendedSkillsGroup($userSkills);
-               // return $recommendedSkills;
-                dd($recommendedSkills);
-            }
-        }catch (\Exception $e){
             return false;
         }
     }
