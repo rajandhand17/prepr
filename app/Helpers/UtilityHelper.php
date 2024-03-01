@@ -6,6 +6,7 @@ use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class UtilityHelper
@@ -55,12 +56,14 @@ class UtilityHelper
 
     public static function formatDateTime($date, $time = 0)
     {
+        $carbonDate = Carbon::parse($date);
         $desiredTimezone = isset(auth()->user()->preferred_timezone) ? auth()->user()->preferred_timezone : 'UTC';
-        $date = $date->setTimezone($desiredTimezone);
+            /*set default timezone is utc and convert that according to user timezone*/
+        $date= Carbon::createFromFormat('Y-m-d H:i:s', $carbonDate, 'UTC')
+            ->setTimezone($desiredTimezone);
         if ($time == 0) {
             return $date->format('M d, Y H:i:s');
         }
-
         return $date->format('M d, Y H:i:s');
     }
 

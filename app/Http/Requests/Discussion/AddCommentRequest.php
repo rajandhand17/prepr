@@ -26,6 +26,7 @@ class AddCommentRequest extends FormRequest
         $base_rules = [
             'comment'        => 'required|string',
             'comment_id'     => 'exists:discussions,id',
+            'attachments'    => 'mimes:pdf,doc,docx|max:1024'
         ];
 
         return $base_rules;
