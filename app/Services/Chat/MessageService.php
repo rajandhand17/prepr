@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Notification;
 
 class MessageService
 {
-
     public function __construct(private readonly ConversationService $conversationService)
     {
     }
@@ -51,21 +50,23 @@ class MessageService
 
             if (!$messageFiles) {
                 DB::rollBack();
+
                 return false;
             }
 
             $message = ConversationMessage::create([
-                'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-                "conversation_id" => $data['conversation_id'],
-                "message" => $data['message'],
-                "attachments" => $messageFiles,
-                "sender_id" => auth()->user()->id,
+                'uuid'            => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'conversation_id' => $data['conversation_id'],
+                'message'         => $data['message'],
+                'attachments'     => $messageFiles,
+                'sender_id'       => auth()->user()->id,
             ]);
             DB::commit();
 
             return $message;
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
@@ -86,6 +87,7 @@ class MessageService
         try {
             $conversation = Conversation::where('id', $conversationId)->first();
             Notification::send($conversation, new MessageCreated($message, $conversationId));
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -102,9 +104,11 @@ class MessageService
             $this->sendNotification($message, $data['conversation_id']);
 
             DB::commit();
+
             return $message;
         } catch (Exception $exception) {
             DB::rollBack();
+
             return false;
         }
     }

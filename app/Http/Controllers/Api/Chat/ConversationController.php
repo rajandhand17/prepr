@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\Chat;
 
-use Exception;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateConversationRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Repositories\Api\Chat\Conversation\ConversationInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 class ConversationController extends AppBaseController
@@ -22,15 +22,17 @@ class ConversationController extends AppBaseController
 
             if ($conversations) {
                 $responseData = [
-                    'total_count' => $conversations->total(),
-                    'per_page' => $conversations->perPage(),
-                    'count' => $conversations->count(),
+                    'total_count'  => $conversations->total(),
+                    'per_page'     => $conversations->perPage(),
+                    'count'        => $conversations->count(),
                     'current_page' => $conversations->currentPage(),
-                    'total_pages' => $conversations->lastPage(),
-                    'list' => ConversationResource::collection($conversations->items())
+                    'total_pages'  => $conversations->lastPage(),
+                    'list'         => ConversationResource::collection($conversations->items()),
                 ];
-                return $this->sendResponse($responseData, __("responses.list_conversation"));
+
+                return $this->sendResponse($responseData, __('responses.list_conversation'));
             }
+
             return $this->sendError(__('responses.not_found_conversation_list'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -43,15 +45,14 @@ class ConversationController extends AppBaseController
             $conversation = $this->conversationRepository->create($request->validated());
 
             if ($conversation) {
-                return $this->sendResponse(new ConversationResource($conversation), __("responses.conversation_created"));
+                return $this->sendResponse(new ConversationResource($conversation), __('responses.conversation_created'));
             }
+
             return $this->sendError(__('responses.conversation_stored_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
-
     }
-
 
     public function archiveOrSeenOrDelete(string $uuid, string $action)
     {
@@ -59,26 +60,26 @@ class ConversationController extends AppBaseController
             $message = $this->conversationRepository->archiveOrSeenOrDelete($uuid, $action);
 
             if ($message) {
-                return $this->sendResponse(null, __("responses.conversation_" . $action . "_successfully"));
+                return $this->sendResponse(null, __('responses.conversation_'.$action.'_successfully'));
             }
-            return $this->sendError(__("responses.conversation_" . $action . "_failed"), 400);
+
+            return $this->sendError(__('responses.conversation_'.$action.'_failed'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
 
     public function onlineOrOffline($id, $action)
     {
         try {
             $onlineOrOffline = $this->conversationRepository->onlineOrOffline($id, $action);
             if (!$onlineOrOffline) {
-                return $this->sendError(__('responses.mark_user_' . $action . '_failed'), 400);
+                return $this->sendError(__('responses.mark_user_'.$action.'_failed'), 400);
             }
-            return $this->sendResponse(null, __('responses.mark_user_' . $action . '_successfully'));
+
+            return $this->sendResponse(null, __('responses.mark_user_'.$action.'_successfully'));
         } catch (Exception $e) {
             return false;
         }
     }
-
 }

@@ -16,7 +16,6 @@ use Illuminate\Support\Str;
 use Laratrust\Traits\LaratrustUserTrait;
 use Laravel\Passport\HasApiTokens;
 
-
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -70,7 +69,7 @@ class User extends Authenticatable
 
     public function getProfileImageAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 
     public function userPersonal()
@@ -272,10 +271,10 @@ class User extends Authenticatable
     {
         try {
             DB::beginTransaction();
-            $name = $request->first_name . ' ' . $request->last_name;
+            $name = $request->first_name.' '.$request->last_name;
             $otp = random_int(1000, 9999);
             $string = Str::random(30);
-            $referencecode = $request->username . Carbon::now()->format('Y');
+            $referencecode = $request->username.Carbon::now()->format('Y');
             $user = new User();
             $user->preferred_language = $request->language;
             $user->first_name = $request->first_name;
@@ -645,7 +644,7 @@ class User extends Authenticatable
                 return $response;
             } else {
                 $userData = [
-                    'user' => $magnetUserDetails['data'],
+                    'user'         => $magnetUserDetails['data'],
                     'access_token' => $magnetUserDetails['access_token'],
                 ];
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData, 'code' => 5];

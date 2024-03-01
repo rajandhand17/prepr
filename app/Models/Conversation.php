@@ -10,7 +10,8 @@ use Illuminate\Notifications\Notifiable;
 
 class Conversation extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     protected $table = 'conversations';
 
@@ -20,12 +21,12 @@ class Conversation extends Model
         'type',
         'group_photo',
         'is_private',
-        'created_by'
+        'created_by',
     ];
 
     public function receivesBroadcastNotificationsOn(): string
     {
-        return 'message.conversation.' . $this->id;
+        return 'message.conversation.'.$this->id;
     }
 
     public function chats()
@@ -85,6 +86,7 @@ class Conversation extends Model
 
         if ($this->type === 'direct_message') {
             $user = $this->users()->where('id', '!=', auth()->user()->id)->first();
+
             return $user->full_name;
         }
 
@@ -93,16 +95,16 @@ class Conversation extends Model
 
     public function getTypeAttribute($value)
     {
-        return config('constants.conversation_type_id.' . $value);
+        return config('constants.conversation_type_id.'.$value);
     }
 
     public function getIsOnlineAttribute()
     {
-        $users =  $this->users()->whereHas('presence', function ($query){
+        $users = $this->users()->whereHas('presence', function ($query) {
             $query->where('is_online', true);
         })->where('id', '!=', auth()->user()->id)->get();
 
-        if(count($users)) {
+        if (count($users)) {
             return true;
         }
 

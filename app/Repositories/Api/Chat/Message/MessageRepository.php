@@ -7,7 +7,6 @@ use Exception;
 
 class MessageRepository implements MessageInterface
 {
-
     public function __construct(private MessageService $messageService)
     {
     }
@@ -25,8 +24,8 @@ class MessageRepository implements MessageInterface
     {
         try {
             $payload = [
-                "conversation_id" => $conversationId,
-                "message" => $data['message']
+                'conversation_id' => $conversationId,
+                'message'         => $data['message'],
             ];
 
             return $this->messageService->send($payload);

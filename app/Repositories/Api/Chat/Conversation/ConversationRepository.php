@@ -46,7 +46,6 @@ class ConversationRepository implements ConversationInterface
         }
     }
 
-
     public function archiveOrSeenOrDelete(string $uuid, string $action)
     {
         try {

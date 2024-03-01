@@ -11,7 +11,6 @@ class ConversationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
 
     /**
