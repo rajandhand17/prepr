@@ -186,6 +186,7 @@ class ProjectResource extends JsonResource
             'project_files'         => ProjectFileResource::make($this),
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
+            'assessment_data'       => AssessedProjectResource::make($this),
             'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }

@@ -28,10 +28,13 @@ class AddProjectAssessmentRequest extends FormRequest
             'criteria_id'       => 'array|exists:challenge_assessment_criterias,id|required',
             'criteria_id.*'     => 'numeric',
             'score.*'           => 'array|required|numeric',
+            'status'            => 'required|in:draft,publish',
+            'criteria_comment'  => 'required|string|min:1'
         ];
 
         $criteriaIds = $this->input('criteria_id');
         $scores = $this->input('score');
+        $comments = $this->input('comment');
 
         foreach ($criteriaIds as $key => $criteriaId) {
             $base_rules["score.$key"] = [
@@ -45,6 +48,22 @@ class AddProjectAssessmentRequest extends FormRequest
                 },
             ];
         }
+
+
+        foreach ($criteriaIds as $key => $criteriaId) {
+            $base_rules["comment.$key"] = [
+                'required',
+                'string',
+                'min:1',
+                function ($attribute, $value, $fail) use ($criteriaId, $comments, $key) {
+                    if (!isset($comments[$key]) || empty($comments[$key])) {
+                        $fail("The comment for criteria_id $criteriaId is missing or empty.");
+                    }
+                },
+            ];
+        }
+
+
 
         return $base_rules;
     }
