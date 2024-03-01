@@ -194,7 +194,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
@@ -234,6 +234,10 @@ return [
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
+
+        /* Chat */
+        App\Repositories\Api\Chat\Conversation\ConversationServiceProvider::class,
+        App\Repositories\Api\Chat\Message\MessageServiceProvider::class,
 
     ],
 

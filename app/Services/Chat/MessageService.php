@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Services\Chat;
+
+use App\Helpers\FileUploadHelper;
+use App\Models\Conversation;
+use App\Models\ConversationMessage;
+use App\Notifications\MessageCreated;
+use Exception;
+use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
+
+class MessageService
+{
+    public function __construct(private readonly ConversationService $conversationService)
+    {
+    }
+
+    private function storeFiles()
+    {
+        try {
+            $chatFiles = [];
+
+            if (!request()->has('attachment')) {
+                return [];
+            }
+
+            $files = request()->file('attachment');
+
+            foreach ($files as $item) {
+                $files = FileUploadHelper::uploadImageToS3($item, 'chat');
+                if (!$files) {
+                    return false;
+                }
+                $chatFiles[] = $files;
+            }
+
+            return $chatFiles;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function store(array $data)
+    {
+        try {
+            DB::beginTransaction();
+            $messageFiles = $this->storeFiles();
+
+            if (!$messageFiles) {
+                DB::rollBack();
+
+                return false;
+            }
+
+            $message = ConversationMessage::create([
+                'uuid'            => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'conversation_id' => $data['conversation_id'],
+                'message'         => $data['message'],
+                'attachments'     => $messageFiles,
+                'sender_id'       => auth()->user()->id,
+            ]);
+            DB::commit();
+
+            return $message;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    public function list(int $conversationId)
+    {
+        try {
+            return ConversationMessage::with('sender', 'seenUsers')
+                ->where('conversation_id', $conversationId)
+                ->paginate(config('site-settings.message_per_page'));
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function sendNotification($message, $conversationId)
+    {
+        try {
+            $conversation = Conversation::where('id', $conversationId)->first();
+            Notification::send($conversation, new MessageCreated($message, $conversationId));
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function send(array $data)
+    {
+        try {
+            DB::beginTransaction();
+            $message = $this->store($data);
+            // the message you sent is seen by you.
+            $this->conversationService->markAsSeen($data['conversation_id'], auth()->user()->id, $message->id);
+            $this->sendNotification($message, $data['conversation_id']);
+
+            DB::commit();
+
+            return $message;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+}
