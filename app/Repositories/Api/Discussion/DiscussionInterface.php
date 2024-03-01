@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Discussion;
 
 interface DiscussionInterface
 {
-    public function index($component, $moduleId);
+    public function index($component, $moduleId, $sortBy);
 
     public function addComment($component, $request, $getComponentId);
 
