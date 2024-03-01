@@ -52,7 +52,7 @@ class DiscussionService
     {
         try {
             $attachmentPath = null;
-            $file_upload=$request->file('attachment');
+            $file_upload = $request->file('attachment');
             if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
                 $file_type = config('constants.file_type.image');
                 $attachmentPath = FileUploadHelper::uploadImageToS3($file_upload, 'discussion');
