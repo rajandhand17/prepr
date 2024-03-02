@@ -17,7 +17,7 @@ return new class() extends Migration
             $table->id();
             $table->string('title')->unique();
             $table->string('fr_CA_title');
-            $table->string('lc_id')->unique()->nullable();
+            $table->string('lightcast_id')->unique()->nullable();
             $table->timestamps();
         });
 

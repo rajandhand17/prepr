@@ -22,8 +22,8 @@ class AIService
 
     public function __construct()
     {
-        $openAIAPIKey = env('OPENAI_API_KEY');
-        $bingAPIKey = env('BING_API_KEY');
+        $openAIAPIKey = config('ai.openai_api_key');
+        $bingAPIKey = config('ai.bing_api_key');
 
         $this->openAIClient = new Client([
             'base_uri' => 'https://api.openai.com/v1/chat/completions',
@@ -50,7 +50,7 @@ class AIService
         ]);
     }
 
-    public function createChallengeAIPreview($request)
+    public function createChallengeUsingAIPreview($request)
     {
         try {
             $attempt = 0;
@@ -139,7 +139,7 @@ class AIService
 
             return (object)$validChallenges;
         } catch (Exception $e) {
-            Log::error("Error in createChallengeAIPreview in AIService.php: " . $e->getMessage());
+            Log::error("Error in createChallengeUsingAIPreview in AIService.php: " . $e->getMessage());
 
             return false;
         }
@@ -184,7 +184,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error("Error in fetchChallengesFromOpenAI in AIService.php" . $e->getMessage());
+            Log::error("Error in fetchChallengesFromOpenAI in AIService.php: " . $e->getMessage());
 
             return false;
         }
@@ -206,7 +206,7 @@ class AIService
 
             return $updatedSkills;
         } catch (Exception $e) {
-            Log::error("Error in processSkills in AIService.php" . $e->getMessage());
+            Log::error("Error in processSkills in AIService.php: " . $e->getMessage());
 
             return false;
         }
@@ -226,14 +226,14 @@ class AIService
 
             return ['skill' => $highestScoreSkill, 'score' => $highestScore];
         } catch (Exception $e) {
-            Log::error("Error in selectHighestScoreSkill in AIService.php" . $e->getMessage());
+            Log::error("Error in selectHighestScoreSkill in AIService.php: " . $e->getMessage());
 
             return false;
         }
     }
 
     // Create resource modules from challenges
-    public function createResourceModuleAIPreview($request)
+    public function createResourceModuleUsingAIPreview($request)
     {
         // $language = $this->language;
         // $durationTitle = $request->duration;
@@ -323,7 +323,7 @@ class AIService
                     throw new Exception("Error in gathering enough data!");
                 }
             } catch (Exception $e) {
-                Log::error("Error in createResourceModuleAIPreview in attempt $attempts in AIService.php: " . $e->getMessage());
+                Log::error("Error in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: " . $e->getMessage());
             }
         }
 
@@ -473,7 +473,7 @@ class AIService
                 }
                 unset($group); // Break the reference with the last element
             } catch (Exception $e) {
-                Log::error("Error in createResourceModuleAIPreview in AIService.php: " . $e->getMessage());
+                Log::error("Error in createResourceModuleUsingAIPreview in AIService.php: " . $e->getMessage());
             }
         }
 

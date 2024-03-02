@@ -144,25 +144,25 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function createChallengeAIPreview($request)
+    public function createChallengeUsingAIPreview($request)
     {
         try {
             // $startTimeOverall = microtime(true);
 
-            $createChallengeAIPreview = $this->aiService->createChallengeAIPreview($request);
+            $createChallengeUsingAIPreview = $this->aiService->createChallengeUsingAIPreview($request);
 
             // $endTimeOverall = microtime(true);
             // Log::info('Overall duration: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
-            return $createChallengeAIPreview;
+            return $createChallengeUsingAIPreview;
         } catch (Exception $e) {
-            Log::error("Error in createChallengeAIPreview in ChallengeRepository.php: " . $e->getMessage());
+            Log::error("Error in createChallengeUsingAIPreview in ChallengeRepository.php: " . $e->getMessage());
 
             return false;
         }
     }
 
-    public function createChallengeAI($request, $upload_cover_image, $upload_achievement_image)
+    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image)
     {
         try {
             $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image) {
@@ -186,7 +186,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return $createChallenge['createChallenge'];
         } catch (Exception $e) {
-            Log::error("Error in createChallengeAI in ChallengeRepository.php: " . $e->getMessage());
+            Log::error("Error in createChallengeUsingAI in ChallengeRepository.php: " . $e->getMessage());
 
             return false;
         }

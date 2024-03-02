@@ -9,6 +9,7 @@ use App\Models\UserJob;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Command;
+use Exception;
 
 class Jobs extends Command
 {
@@ -17,7 +18,7 @@ class Jobs extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:jobs';
+    protected $signature = 'migrate-old-data:jobs-titles';
 
     /**
      * The console command description.
@@ -50,12 +51,12 @@ class Jobs extends Command
             DB::connection('mysql2')->table('titles')->chunkById(1000, function ($jobs) use ($insertArr) {
                 foreach ($jobs as $job) {
                     $jobs_details = [
-                        'id'          => $job->id,
-                        'title'       => $job->name,
-                        'fr_CA_title' => $job->fr_CA_name,
-                        'lc_id'       => $job->lc_id,
-                        'created_at'  => Carbon::now(),
-                        'updated_at'  => Carbon::now(),
+                        'id'                => $job->id,
+                        'title'             => $job->name,
+                        'fr_CA_title'       => $job->fr_CA_name,
+                        'lightcast_id'      => $job->lc_id,
+                        'created_at'        => Carbon::now(),
+                        'updated_at'        => Carbon::now(),
                     ];
                     $check_jobs = Job::find($job->id);
                     if (!$check_jobs) {
@@ -66,7 +67,7 @@ class Jobs extends Command
             });
             DB::commit();
             $this->info('Migrating of old data for table (titles) completed.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();
             return;
@@ -83,8 +84,8 @@ class Jobs extends Command
                         'user_id'     => $userJob->user_id,
                         'job_id'      => $userJob->title_id,
                         'pinned'      => $userJob->pinned,
-                        'created_at'  => Carbon::now(),
-                        'updated_at'  => Carbon::now(),
+                        'created_at'  => $userJob->created_at,
+                        'updated_at'  => $userJob->updated_at,
                     ];
 
                     $check_userJobs = UserJob::find($userJob->id);
@@ -97,7 +98,7 @@ class Jobs extends Command
             });
             DB::commit();
             $this->info('Migrating of old data for table (user_job_titles) completed.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();
             return;
@@ -126,7 +127,7 @@ class Jobs extends Command
             });
             DB::commit();
             $this->info('Migrating of old data for table (related_titles) completed.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();
             return;
@@ -155,7 +156,7 @@ class Jobs extends Command
             });
             DB::commit();
             $this->info('Migrating of old data for table (title_skills) completed.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();
             return;

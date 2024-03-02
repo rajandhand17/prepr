@@ -70,22 +70,22 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function createResourceModuleAI($request, $upload_cover_image)
+    public function CreateResourceModuleUsingAI($request, $upload_cover_image)
     {
         try {
             $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image) {
-                $createResourceModuleAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
-                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModuleAI->id);
+                $CreateResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $CreateResourceModuleUsingAI->id);
 
                 return [
-                    'createResourceModuleAI'                 => $createResourceModuleAI,
+                    'CreateResourceModuleUsingAI'                 => $CreateResourceModuleUsingAI,
                     'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
                 ];
             });
 
-            return $createLabProgram['createResourceModuleAI'];
+            return $createLabProgram['CreateResourceModuleUsingAI'];
         } catch (Exception $e) {
-            Log::error("Error in createResourceModuleAI in ResourceModuleRepository.php: " . $e->getMessage());
+            Log::error("Error in CreateResourceModuleUsingAI in ResourceModuleRepository.php: " . $e->getMessage());
 
             return false;
         }
@@ -104,17 +104,17 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function createResourceModuleAIPreview($request)
+    public function createResourceModuleUsingAIPreview($request)
     {
         try {
             $startTimeOverall = microtime(true);
 
-            $createResourceModuleAIPreview = $this->aiService->createResourceModuleAIPreview($request);
+            $createResourceModuleUsingAIPreview = $this->aiService->createResourceModuleUsingAIPreview($request);
 
             $endTimeOverall = microtime(true);
             // Log::info('Overall duration for RM: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
-            return $createResourceModuleAIPreview;
+            return $createResourceModuleUsingAIPreview;
         } catch (Exception $e) {
             return false;
         }

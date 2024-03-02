@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
-use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleAIPreviewRequest;
-use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleAIRequest;
+use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleUsingAIPreviewRequest;
+use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleUsingAIRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\DeleteMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
@@ -276,35 +276,35 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function resourceModuleAICreatePreview(CreateResourceModuleAIPreviewRequest $request)
+    public function CreateResourceModuleUsingAIPreview(CreateResourceModuleUsingAIPreviewRequest $request)
     {
         try {
-            $createResourceModuleAIPreview = $this->resourceModuleRepository->createResourceModuleAIPreview($request);
+            $createResourceModuleUsingAIPreview = $this->resourceModuleRepository->createResourceModuleUsingAIPreview($request);
 
-            if ($createResourceModuleAIPreview) {
-                return $this->sendResponse($createResourceModuleAIPreview, __("responses.resource_module_previews_created_successfully"), 200);
+            if ($createResourceModuleUsingAIPreview) {
+                return $this->sendResponse($createResourceModuleUsingAIPreview, __("responses.resource_module_previews_created_successfully"), 200);
             } else {
-                throw new Exception("createResourceModuleAIPreview has no value!");
+                throw new Exception("createResourceModuleUsingAIPreview has no value!");
             }
         } catch (Exception $e) {
-            Log::error("Error in resourceModuleAICreatePreview in ResourceModuleController.php: " . $e->getMessage());
+            Log::error("Error in CreateResourceModuleUsingAIPreview in ResourceModuleController.php: " . $e->getMessage());
 
             return $this->sendError(__("responses.server_failed"), 500);
         }
     }
 
-    public function resourceModuleAICreate(CreateResourceModuleAIRequest $request)
+    public function CreateResourceModuleUsingAI(CreateResourceModuleUsingAIRequest $request)
     {
         try {
             $upload_cover_image = config("site-settings.default_resource_module_cover_image");
-            $createResourceModuleAI = $this->resourceModuleRepository->createResourceModuleAI($request, $upload_cover_image);
+            $CreateResourceModuleUsingAI = $this->resourceModuleRepository->CreateResourceModuleUsingAI($request, $upload_cover_image);
 
-            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $createResourceModuleAI->id);
+            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $CreateResourceModuleUsingAI->id);
 
             $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request["challenge_id"]);
             $challengeResourceModule = ChallengeResourceModule::create([
                 'challenge_id' => $challengeID,
-                'resource_module_id' => $createResourceModuleAI->id,
+                'resource_module_id' => $CreateResourceModuleUsingAI->id,
             ]);
 
             if (!$challengeResourceModule) {
@@ -315,13 +315,13 @@ class ResourceModuleController extends AppBaseController
                 throw new Exception("createResourceModuleDetailsAI has no value!");
             }
 
-            if ($createResourceModuleAI) {
-                return $this->sendResponse(ResourceModuleResource::make($createResourceModuleAI), __("responses.resource_module_created_successfully"), 200);
+            if ($CreateResourceModuleUsingAI) {
+                return $this->sendResponse(ResourceModuleResource::make($CreateResourceModuleUsingAI), __("responses.resource_module_created_successfully"), 200);
             } else {
-                throw new Exception("createResourceModuleAI has no value!");
+                throw new Exception("CreateResourceModuleUsingAI has no value!");
             }
         } catch (Exception $e) {
-            Log::error("Error in resourceModuleAICreate in ResourceModuleController.php: " . $e->getMessage());
+            Log::error("Error in CreateResourceModuleUsingAI in ResourceModuleController.php: " . $e->getMessage());
 
             return $this->sendError(__("responses.server_failed"), 500);
         }

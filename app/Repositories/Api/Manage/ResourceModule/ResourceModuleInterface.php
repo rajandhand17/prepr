@@ -30,5 +30,5 @@ interface ResourceModuleInterface
 
     public function createResourceModuleDetailsAI($request, $resource_module_id);
 
-    public function createResourceModuleAIPreview($request);
+    public function createResourceModuleUsingAIPreview($request);
 }
