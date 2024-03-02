@@ -61,67 +61,67 @@ return [
     ],
 
     'email_template_module_type' => [
-        'organization'      => '0',
-        'lab'               => '1',
-        'lab_program'       => '2',
-        'challenge'         => '3',
-        'challenge_path'    => '4',
-        'project'           => '5',
+        'organization'   => '0',
+        'lab'            => '1',
+        'lab_program'    => '2',
+        'challenge'      => '3',
+        'challenge_path' => '4',
+        'project'        => '5',
     ],
 
-    'lab_status'=> [
+    'lab_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
     ],
 
-    'lab_type'=> [
-        'assess'   => '0',
-        'onboard'  => '1',
-        'engage'   => '2',
-        'grow'     => '3',
-        'na'       => '4',
+    'lab_type' => [
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+        'na'      => '4',
     ],
 
-    'lab_privacy'=> [
+    'lab_privacy' => [
         'no'  => '0',
         'yes' => '1',
     ],
 
-    'lab_social_activity_is_like'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'lab_social_activity_is_like' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'lab_social_activity_is_follow'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'lab_social_activity_is_follow' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'lab_social_activity_favourite'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'lab_social_activity_favourite' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'lab_social_activity_share'=> [
-        'yes'    => '1',
-        'no'     => '0',
+    'lab_social_activity_share' => [
+        'yes' => '1',
+        'no'  => '0',
     ],
-    'lab_social_activity_refence_type'=> [
-        'lab'            => '0',
-        'project'        => '1',
-        'user'           => '2',
-        'challenge'      => '3',
-        'challenge-group'=> '4',
-        'lab-group'      => '5',
-    ],
-
-    'lab_component'=> [
-        'lab'            => 'lab',
-        'organization'   => 'organization',
+    'lab_social_activity_refence_type' => [
+        'lab'             => '0',
+        'project'         => '1',
+        'user'            => '2',
+        'challenge'       => '3',
+        'challenge-group' => '4',
+        'lab-group'       => '5',
     ],
 
-    'resource_module_status'=> [
+    'lab_component' => [
+        'lab'          => 'lab',
+        'organization' => 'organization',
+    ],
+
+    'resource_module_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
@@ -133,7 +133,7 @@ return [
         'archive' => '2',
     ],
 
-    'resource_module_type'=> [
+    'resource_module_type' => [
         'document'             => '0',
         'video'                => '1',
         'audio'                => '2',
@@ -144,11 +144,11 @@ return [
         'Embedded_Cover_Video' => '7',
     ],
 
-    'resource_module_privacy'=> [
+    'resource_module_privacy' => [
         'no'  => '0',
         'yes' => '1',
     ],
-    'resource_module_is_global'=> [
+    'resource_module_is_global' => [
         'no'  => '0',
         'yes' => '1',
     ],
@@ -189,9 +189,9 @@ return [
     ],
 
     'challenge_visibility_type' => [
-        'null'    => '0',
-        'users'   => '1',
-        'hidden'  => '2',
+        'null'   => '0',
+        'users'  => '1',
+        'hidden' => '2',
     ],
 
     'challenge_timeline_type' => [
@@ -214,23 +214,23 @@ return [
         'yes' => '1',
     ],
 
-    'resource_collection_status'=> [
+    'resource_collection_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
     ],
 
-    'resource_collection_privacy'=> [
+    'resource_collection_privacy' => [
         'no'  => '0',
         'yes' => '1',
     ],
 
-    'resource_collection_is_accessible'=> [
+    'resource_collection_is_accessible' => [
         'no'  => '0',
         'yes' => '1',
     ],
 
-    'resource_group_status'=> [
+    'resource_group_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
@@ -242,9 +242,9 @@ return [
     ],
 
     'challenge_announcement_by' => [
-        'email'     => '0',
-        'inbox'     => '1',
-        'both'      => '2',
+        'email' => '0',
+        'inbox' => '1',
+        'both'  => '2',
     ],
 
     'challenge_announcement_send_status' => [
@@ -253,104 +253,108 @@ return [
         'scheduled' => '2',
     ],
 
-    'gender'=> [
-        'male'             => '0',
-        'female'           => '1',
-        'other'            => '2',
-        'decline_to_answer'=> '3',
+    'gender' => [
+        'male'              => '0',
+        'female'            => '1',
+        'other'             => '2',
+        'decline_to_answer' => '3',
     ],
 
-    'user_achievement_type'=> [
-        'lab'                => '0',
-        'lab_program'        => '1',
-        'challenge'          => '2',
-        'challenge_path'     => '3',
-        'resource_group'     => '4',
-        'appreciation_award' => '5',
-        'activity_award'     => '6',
-        'skill_activity'     => '7',
-        'imported_award'     => '8',
-        'winner_award'       => '9',
-        'participation_award'=> '10',
+    'user_achievement_type' => [
+        'lab'                 => '0',
+        'lab_program'         => '1',
+        'challenge'           => '2',
+        'challenge_path'      => '3',
+        'resource_group'      => '4',
+        'appreciation_award'  => '5',
+        'activity_award'      => '6',
+        'skill_activity'      => '7',
+        'imported_award'      => '8',
+        'winner_award'        => '9',
+        'participation_award' => '10',
     ],
 
-    'recent_immigrant'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'recent_immigrant' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'indigenous_group'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'indigenous_group' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'visible_minority'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'visible_minority' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
-    'disability'=> [
-        'yes'    => '1',
-        'no'     => '2',
-    ],
-
-    'file_type'=> [
-        'document'            => '0',
-        'video'               => '1',
-        'audio'               => '2',
-        'embedded'            => '3',
-        'embedded_audio'      => '4',
-        'url'                 => '5',
-        'image'               => '6',
-        'embedded_Cover_Video'=> '7',
+    'disability' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'discussion_module_type' => [
-        'lab'                => '0',
-        'project'            => '1',
-        'challenge'          => '2',
+    'file_type' => [
+        'document'             => '0',
+        'video'                => '1',
+        'audio'                => '2',
+        'embedded'             => '3',
+        'embedded_audio'       => '4',
+        'url'                  => '5',
+        'image'                => '6',
+        'embedded_Cover_Video' => '7',
     ],
 
-    'subscription_options'=> [
-        '0'=> 'unsubscribe',
-        '1'=> 'monthly',
-        '2'=> 'weekly',
+    'subscription_options' => [
+        '0' => 'unsubscribe',
+        '1' => 'monthly',
+        '2' => 'weekly',
     ],
 
-    'privacy_options'=> [
-        '0'=> 'public',
-        '1'=> 'private',
-        '2'=> 'signed-in',
+    'privacy_options' => [
+        '0' => 'public',
+        '1' => 'private',
+        '2' => 'signed-in',
     ],
 
-    'friend_request_options'=> [
-        '0'=> 'public',
-        '1'=> 'private',
+    'friend_request_options' => [
+        '0' => 'public',
+        '1' => 'private',
     ],
 
-    'notification_options'=> [
+    'notification_options' => [
         'unsubscribe' => '0',
         'monthly'     => '1',
         'weekly'      => '2',
     ],
 
-    'subscribe_unsubscribe'=> [
-        'unsubscribe'=> '0',
-        'subscribe'  => '1',
+    'subscribe_unsubscribe' => [
+        'unsubscribe' => '0',
+        'subscribe'   => '1',
     ],
 
-    'profile_visibility'=> [
+    'profile_visibility' => [
         'signed-in' => '2',
         'private'   => '1',
         'public'    => '0',
     ],
 
-    'privacy_friend_request'=> [
-        'public'   => '0',
-        'private'  => '1',
+    'privacy_friend_request' => [
+        'public'  => '0',
+        'private' => '1',
     ],
 
-    'subscribe_unsubscribe_id'=> [
+    'subscribe_unsubscribe_id' => [
         '0' => 'unsubscribe',
         '1' => 'subscribe',
+    ],
+    'conversation_type' => [
+        'direct_message' => '0',
+        'group_message'  => '1',
+        'announcement'   => '2',
+    ],
+    'conversation_type_id' => [
+        '0' => 'direct_message',
+        '1' => 'group_message',
+        '2' => 'announcement',
     ],
 ];
