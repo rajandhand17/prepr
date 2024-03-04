@@ -61,7 +61,8 @@ class ExploreRepository implements ExploreInterface
         }
     }
 
-    public function recommendedSkills(){
+    public function recommendedSkills()
+    {
         try {
             return $this->skillsService->recommendSkills();
         }catch(\Exception $e){
