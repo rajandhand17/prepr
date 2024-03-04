@@ -38,7 +38,7 @@ class AssessedProjectResource extends JsonResource
             });
         }
 
-        if ($project_assessment->pluck('status')) {
+        if ($project_assessment != null) {
             $assessmentStatusCheck = $project_assessment->pluck('status');
             $check = $assessmentStatusCheck->contains(null) || $assessmentStatusCheck->contains('draft');
             switch ($check) {
@@ -56,7 +56,7 @@ class AssessedProjectResource extends JsonResource
             }
         }
 
-        if ($project_assessment->pluck('criteria_comment')) {
+        if ($project_assessment != null) {
             $assessmentComment = $project_assessment->pluck('criteria_comment')->unique();
             $assessmentOverAllComment = $assessmentComment[0];
         }
