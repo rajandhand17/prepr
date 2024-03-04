@@ -320,7 +320,6 @@ class User extends Authenticatable
                         /**sending otp on registeres email */
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
-
                         return $success;
                     }
                     DB::rollback();
