@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Api\Explore;
 
-
 use App\Services\Manage\ChallengeService;
 use App\Services\Public\LabService;
 use App\Services\Public\LabSocialActivitiesService;
@@ -10,7 +9,7 @@ use App\Services\SkillService;
 use App\Services\UserService;
 use App\Services\UserSkillsService;
 use App\Services\UserTagsService;
-use \Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 
 class ExploreRepository implements ExploreInterface
 {
@@ -22,28 +21,32 @@ class ExploreRepository implements ExploreInterface
     private $challengeService;
 
     private $skillsService;
-    public function __construct(LabSocialActivitiesService $labSocialActivitiesService, UserService $userService,LabService $labService,ChallengeService $challengeService,UserSkillsService $userSkillsService,UserTagsService $userTagsService, SkillService $skillsService)
+
+    public function __construct(LabSocialActivitiesService $labSocialActivitiesService, UserService $userService, LabService $labService, ChallengeService $challengeService, UserSkillsService $userSkillsService, UserTagsService $userTagsService, SkillService $skillsService)
     {
         $this->labSocialActivitiesService = $labSocialActivitiesService;
         $this->userService = $userService;
-        $this->labService =$labService;
-        $this->userSkillsService=$userSkillsService;
-        $this->userTagsService=$userTagsService;
-        $this->challengeService=$challengeService;
-        $this->skillsService=$skillsService;
+        $this->labService = $labService;
+        $this->userSkillsService = $userSkillsService;
+        $this->userTagsService = $userTagsService;
+        $this->challengeService = $challengeService;
+        $this->skillsService = $skillsService;
     }
+
     public function recommended()
     {
         try {
             DB::beginTransaction();
-            $usersSkills=$this->userSkillsService->getUserSkills();
-            $getUsersTags=$this->userTagsService->getMyTags();
-            $response['labs']     =$this->labService->getLabsBasedOnSKillsAndTags($usersSkills,$getUsersTags);
-            $response['challenge']=$this->challengeService->getChallengeBasedOnSkillsAndTags($usersSkills,$getUsersTags);
+            $usersSkills = $this->userSkillsService->getUserSkills();
+            $getUsersTags = $this->userTagsService->getMyTags();
+            $response['labs'] = $this->labService->getLabsBasedOnSKillsAndTags($usersSkills, $getUsersTags);
+            $response['challenge'] = $this->challengeService->getChallengeBasedOnSkillsAndTags($usersSkills, $getUsersTags);
             DB::commit();
+
             return $response;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
@@ -51,12 +54,13 @@ class ExploreRepository implements ExploreInterface
     public function getFeaturedLabs()
     {
         try {
-            $getLabs= $this->labService->getLabsBasedOnIds();
-            if($getLabs){
+            $getLabs = $this->labService->getLabsBasedOnIds();
+            if ($getLabs) {
                 return $getLabs;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -65,7 +69,7 @@ class ExploreRepository implements ExploreInterface
     {
         try {
             return $this->skillsService->recommendSkills();
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

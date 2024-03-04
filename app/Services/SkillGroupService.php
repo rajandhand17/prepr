@@ -17,6 +17,7 @@ class SkillGroupService
             if ($getSkillGroupList) {
                 return $getSkillGroupList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -69,5 +70,4 @@ class SkillGroupService
             return false;
         }
     }
-
 }

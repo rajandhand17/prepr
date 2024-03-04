@@ -475,6 +475,7 @@ class ChallengeService
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;
             $clonedChallenge->save();
+
             return $clonedChallenge;
         } catch (Exception $e) {
             return false;
@@ -528,21 +529,23 @@ class ChallengeService
         }
     }
 
-    public static function getChallengeBasedOnSkillsAndTags($skills,$tags){
+    public static function getChallengeBasedOnSkillsAndTags($skills, $tags)
+    {
         try {
             /*get challenge id Based on Skills*/
-            $getChallengeIdBasedOnSkill=ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
+            $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
             /*get challenge id based on tags*/
-            $getChallengeIdBasedOnTags=ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($tags);
-            $challengeIds= array_unique((array)array_merge($getChallengeIdBasedOnTags, $getChallengeIdBasedOnSkill));
+            $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($tags);
+            $challengeIds = array_unique((array) array_merge($getChallengeIdBasedOnTags, $getChallengeIdBasedOnSkill));
 
-            if(!empty($challengeIds)){
-                $challenges=Challenge::where('user_id','!=',auth()->user()->id)->whereIn('id',$challengeIds)->limit('12');
-            }else{
-                $challenges=Challenge::where('user_id','!=',auth()->user()->id)->limit('6');
+            if (!empty($challengeIds)) {
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->whereIn('id', $challengeIds)->limit('12');
+            } else {
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->limit('6');
             }
+
             return $challenges->get();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

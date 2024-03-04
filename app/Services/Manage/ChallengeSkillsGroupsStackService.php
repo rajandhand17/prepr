@@ -174,14 +174,16 @@ class ChallengeSkillsGroupsStackService
         }
     }
 
-    public static function getChallengeIdBasedOnSkills($skills){
+    public static function getChallengeIdBasedOnSkills($skills)
+    {
         try {
-            $getChallengeIds=ChallengeSkillsGroupsStack::where('type', 0)
+            $getChallengeIds = ChallengeSkillsGroupsStack::where('type', 0)
                 ->whereIn('foreign_id', $skills)
                 ->pluck('foreign_id')
                 ->toArray();
+
             return $getChallengeIds;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

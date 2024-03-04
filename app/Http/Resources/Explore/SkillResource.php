@@ -17,8 +17,8 @@ class SkillResource extends JsonResource
         return [
             'id'                     => $this->id,
             'title'                  => $this->title,
-            'challenges'             =>count($this->getChallenges),
-            'labs'                   =>count($this->getLabs),
+            'challenges'             => count($this->getChallenges),
+            'labs'                   => count($this->getLabs),
         ];
     }
 }
