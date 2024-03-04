@@ -15,10 +15,10 @@ class LabResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' =>$this->uuid,
-            'title'=>$this->title,
-            'description'=>$this->description,
-            'media'=>$this->media,
+            'id'         => $this->uuid,
+            'title'      => $this->title,
+            'description'=> $this->description,
+            'media'      => $this->media,
         ];
     }
 }

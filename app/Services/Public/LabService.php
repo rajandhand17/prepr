@@ -4,9 +4,6 @@ namespace App\Services\Public;
 
 use App\Models\FeaturedModule;
 use App\Models\Lab;
-use App\Models\LabSkillsGroupsStack;
-use App\Models\LabTagsGroups;
-use App\Services\LabTagGroupService;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
 
@@ -140,41 +137,47 @@ class LabService
         }
     }
 
-    public function getTrendingLab($request){
+    public function getTrendingLab($request)
+    {
         try {
             $lab_list = Lab::select()->where('labs.status', '1')->limit(20);
-            if(isset($request->search)){
-                $lab_list = $lab_list->where('labs.title','like', '%'.$request->search.'%');
+            if (isset($request->search)) {
+                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
             }
+
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function getLabsBasedOnSKillsAndTags($skills,$tags){
+    public function getLabsBasedOnSKillsAndTags($skills, $tags)
+    {
         try {
             /*gets Labs based on user skills*/
-            $getLabsIdsBasedOnSKills=LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($skills);
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($skills);
             /*gets Tags based on user tags*/
-            $getLabsIdsBasedOnTags=LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
-            $labIds= array_unique((array)array_merge($getLabsIdsBasedOnSKills, $getLabsIdsBasedOnTags));
-            if(!empty($labIds)){
-                $labList = Lab::whereIn('labs.id',$labIds)->where('user_id','!=',auth()->user()->id)->take(12);
-            }else{
-                $labList = Lab::where('user_id','!=',auth()->user()->id)->take(6);
+            $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
+            $labIds = array_unique((array) array_merge($getLabsIdsBasedOnSKills, $getLabsIdsBasedOnTags));
+            if (!empty($labIds)) {
+                $labList = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->take(12);
+            } else {
+                $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(6);
             }
+
             return $labList->get();
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
 
-    public static function getLabsBasedOnIds(){
-        try{
-            $labList =FeaturedModule::where('module_type','0')->get();
+    public static function getLabsBasedOnIds()
+    {
+        try {
+            $labList = FeaturedModule::where('module_type', '0')->get();
+
             return $labList;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

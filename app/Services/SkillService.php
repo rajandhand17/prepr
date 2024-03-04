@@ -92,6 +92,7 @@ class SkillService
             if ($getSkillsList) {
                 return $getSkillsList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -106,17 +107,20 @@ class SkillService
             if ($getSkillsList) {
                 return $getSkillsList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function recommendSkills(){
+    public static function recommendSkills()
+    {
         try {
             $skillsQuery = Skill::select('id', 'title')->whereNotNull('title')->inRandomOrder()->limit(12)->get();
+
             return $skillsQuery;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
