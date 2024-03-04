@@ -19,7 +19,9 @@ class FeaturedModule extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-    public function getLabs(){
-        return $this->belongsTo(Lab::class,'module_id','id');
+
+    public function getLabs()
+    {
+        return $this->belongsTo(Lab::class, 'module_id', 'id');
     }
 }

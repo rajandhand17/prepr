@@ -82,11 +82,13 @@ class TagService
         }
     }
 
-    public static function getTrendingTags(){
+    public static function getTrendingTags()
+    {
         try {
             $tag_list = Tag::select('id', 'title', 'tag_image', 'components');
+
             return $tag_list->paginate(config('site-settings.pagination_per_page'));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

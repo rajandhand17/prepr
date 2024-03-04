@@ -125,14 +125,16 @@ class ChallengeTagsGroupsService
         }
     }
 
-    public static function getChallengeIdBasedOnSkills($tags){
+    public static function getChallengeIdBasedOnSkills($tags)
+    {
         try {
-            $getChallengeIds=ChallengeTagsGroups::where('type', 0)
+            $getChallengeIds = ChallengeTagsGroups::where('type', 0)
                 ->whereIn('foreign_id', $tags)
                 ->pluck('foreign_id')
                 ->toArray();
+
             return $getChallengeIds;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

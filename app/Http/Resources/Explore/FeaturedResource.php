@@ -16,9 +16,9 @@ class FeaturedResource extends JsonResource
     {
         return [
             'id'         => $this->getLabs->uuid,
-            'title'      =>$this->getLabs->title,
-            'description'=>$this->getLabs->description,
-            'media'      =>$this->getLabs->media,
+            'title'      => $this->getLabs->title,
+            'description'=> $this->getLabs->description,
+            'media'      => $this->getLabs->media,
         ];
     }
 }

@@ -70,11 +70,13 @@ class UserSkillsService
         }
     }
 
-    public function getUserSkills(){
+    public function getUserSkills()
+    {
         try {
             $userSkills = UserSkills::where('user_id', auth()->user()->id)->pluck('skill')->toArray();
+
             return $userSkills;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -121,5 +123,4 @@ class UserSkillsService
             return false;
         }
     }
-
 }

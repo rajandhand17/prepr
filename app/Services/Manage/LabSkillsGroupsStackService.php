@@ -135,7 +135,8 @@ class LabSkillsGroupsStackService
         }
     }
 
-    public static function getLabIdBasesOnSKillsId($usersSkills){
+    public static function getLabIdBasesOnSKillsId($usersSkills)
+    {
         try {
             $getSkills = LabSkillsGroupsStack::where('type', 0)
                 ->whereIn('foreign_id', $usersSkills)
@@ -143,7 +144,7 @@ class LabSkillsGroupsStackService
                 ->toArray();
 
             return $getSkills;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
