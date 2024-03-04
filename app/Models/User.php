@@ -328,15 +328,12 @@ class User extends Authenticatable
                     return ['success' => false, 'message' => __('responses.failed_email')];
                 }
                 DB::rollback();
-
                 return ['success' => false, 'message' => __('responses.failed_registration')];
             }
             DB::rollback();
-
             return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
             DB::rollback();
-
             return ['success' => false, 'message' => __('responses.send_error')];
         }
     }
