@@ -28,20 +28,17 @@ class UserPersonal extends Model
             DB::beginTransaction();
             $userpersonal = new UserPersonal();
             $userpersonal->user_id = $user->id;
-            $userpersonal->purpose = $request->purpose;
-            $userpersonal->user_type = $request->user_type;
+            $userpersonal->purpose =config('constants.purpose.'.$request->purpose);
+            $userpersonal->user_type = config('constants.user_types.'.$request->user_type);
             $userpersonal->save();
             if ($userpersonal) {
                 DB::commit();
-
                 return true;
             }
             DB::rollback();
-
             return false;
         } catch (Exception $e) {
             DB::rollback();
-
             return false;
         }
     }
