@@ -114,11 +114,10 @@ class SkillService
         }
     }
 
-    public static function getTrendingSkillsList(){
+    public static function recommendSkills(){
         try {
-            $skill_list= Skill::select('id', 'title')->limit(14);
-            return $skill_list->paginate(config('site-settings.pagination_per_page'));
-
+            $skillsQuery = Skill::select('id', 'title')->whereNotNull('title')->inRandomOrder()->limit(12)->get();
+            return $skillsQuery;
         }catch (\Exception $e) {
             return false;
         }

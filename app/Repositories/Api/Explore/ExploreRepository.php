@@ -6,6 +6,7 @@ namespace App\Repositories\Api\Explore;
 use App\Services\Manage\ChallengeService;
 use App\Services\Public\LabService;
 use App\Services\Public\LabSocialActivitiesService;
+use App\Services\SkillService;
 use App\Services\UserService;
 use App\Services\UserSkillsService;
 use App\Services\UserTagsService;
@@ -19,7 +20,9 @@ class ExploreRepository implements ExploreInterface
     private $userTagsService;
     private $labSocialActivitiesService;
     private $challengeService;
-    public function __construct(LabSocialActivitiesService $labSocialActivitiesService, UserService $userService,LabService $labService,ChallengeService $challengeService,UserSkillsService $userSkillsService,UserTagsService $userTagsService)
+
+    private $skillsService;
+    public function __construct(LabSocialActivitiesService $labSocialActivitiesService, UserService $userService,LabService $labService,ChallengeService $challengeService,UserSkillsService $userSkillsService,UserTagsService $userTagsService, SkillService $skillsService)
     {
         $this->labSocialActivitiesService = $labSocialActivitiesService;
         $this->userService = $userService;
@@ -27,6 +30,7 @@ class ExploreRepository implements ExploreInterface
         $this->userSkillsService=$userSkillsService;
         $this->userTagsService=$userTagsService;
         $this->challengeService=$challengeService;
+        $this->skillsService=$skillsService;
     }
     public function recommended()
     {
@@ -57,4 +61,11 @@ class ExploreRepository implements ExploreInterface
         }
     }
 
+    public function recommendedSkills(){
+        try {
+            return $this->skillsService->recommendSkills();
+        }catch(\Exception $e){
+            return false;
+        }
+    }
 }

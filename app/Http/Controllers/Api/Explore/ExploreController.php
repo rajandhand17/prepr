@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Explore\ChallengeResource;
 use App\Http\Resources\Explore\FeaturedResource;
 use App\Http\Resources\Explore\LabResource;
+use App\Http\Resources\Explore\SkillResource;
 use App\Repositories\Api\Explore\ExploreRepository;
 use Illuminate\Http\Request;
 
@@ -46,6 +47,19 @@ class ExploreController extends AppBaseController
                 return $this->sendResponse($response, $message);
             }
             return $this->sendError(__('responses.send_error'),404);
+        }catch (\Exception $e){
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+
+    public function recommendedSkills(){
+        try {
+            $recommendedSkills = $this->exploreRepository->recommendedSkills();
+            if($recommendedSkills){
+                  return $this->sendResponse(SkillResource::collection($recommendedSkills),__('responses.recommended_skills_successfully'));
+            }
+            return $this->sendResponse([],__('responses.recommended_skills_successfully'));
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
         }
