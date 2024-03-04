@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.0",
+        "beyondcode/laravel-websockets": "^1.14",
         "chargebee/chargebee-php": "^3.16",
         "darkaonline/l5-swagger": "^8.4",
         "doctrine/dbal": "^3.0",
@@ -23,6 +24,7 @@
         "laravel/tinker": "^2.7",
         "league/flysystem-aws-s3-v3": "^3.12",
         "predis/predis": "^2.0",
+        "pusher/pusher-php-server": "^7.2",
         "santigarcor/laratrust": "^7.2",
         "sendgrid/sendgrid": "^7",
         "spatie/pdf-to-image": "^2.2",

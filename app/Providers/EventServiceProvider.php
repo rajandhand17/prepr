@@ -36,22 +36,22 @@ class EventServiceProvider extends ServiceProvider
         DeleteLabAssociatedData::class => [
             HandleDeleteLabAssociatedData::class,
         ],
-        DeleteResourceModuleAssociatedData::class=> [
+        DeleteResourceModuleAssociatedData::class => [
             HandleDeleteResourceModuleAssociatedData::class,
         ],
         DeleteChallengePathAssociatedData::class => [
             HandleDeleteChallengePathAssociatedData::class,
         ],
-        DeleteResourceCollectionAssociatedData::class=> [
+        DeleteResourceCollectionAssociatedData::class => [
             HandleDeleteResourceCollectionAssociatedData::class,
         ],
-        DeleteResourceGroupAssociatedData::class=> [
+        DeleteResourceGroupAssociatedData::class => [
             HandleDeleteResourceGroupAssociatedData::class,
         ],
-        DeleteLabMarketplaceAssociatedData::class=> [
+        DeleteLabMarketplaceAssociatedData::class => [
             HandleDeleteLabMarketplaceAssociatedData::class,
         ],
-        DeleteChallengeTemplateAssociatedData::class=> [
+        DeleteChallengeTemplateAssociatedData::class => [
             HandleDeleteChallengeTemplateAssociatedData::class,
         ],
         DeleteProjectAssociatedData::class => [

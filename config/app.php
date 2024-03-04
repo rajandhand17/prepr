@@ -194,7 +194,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
@@ -209,6 +209,8 @@ return [
         App\Repositories\Api\Discussion\DiscussionServiceProvider::class,
         App\Repositories\Api\Project\ProjectServiceProvider::class,
         App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementServiceProvider::class,
+        App\Repositories\Api\Chat\Conversation\ConversationServiceProvider::class,
+        App\Repositories\Api\Chat\Message\MessageServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
