@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\ChallengeAssessment;
+use App\Models\Project;
 use App\Services\UserService;
 use Exception;
 
@@ -209,6 +210,34 @@ class ChallengeAssessmentService
             }
 
             return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAllChallengeIds($userData)
+    {
+        try {
+            //  Fetch Open Assessment Challenge Ids
+            $getMyProjectChallengeIds = Project::where('user_id', $userData->id)->pluck('challenge_id');
+            $fetchOpenChallenge = ChallengeAssessment::whereIn('challenge_id', $getMyProjectChallengeIds)->where('assessment_type', '1')->pluck('challenge_id');
+
+            //  Fetch Closed Assessment Challenge Ids
+            $closeAssessment = ChallengeAssessment::where('assessment_type', '2')->pluck('members_email', 'challenge_id');
+
+            $closeChallangeID[] = '';
+            foreach ($closeAssessment as $id => $memberList) {
+                if (!empty($memberList)) {
+                    $memberList = array_map('strtolower', $memberList);
+                    if (in_array(strtolower($userData->email), $memberList)) {
+                        $closeChallangeID[] = $id;
+                    }
+                }
+            }
+
+            $bothOpenClosedAssessmentChallengeIds = collect(array_filter($closeChallangeID))->merge($fetchOpenChallenge);
+
+            return $bothOpenClosedAssessmentChallengeIds;
         } catch (Exception $e) {
             return false;
         }

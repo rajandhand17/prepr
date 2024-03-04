@@ -111,4 +111,9 @@ class Project extends Model
 
         return 'no';
     }
+
+    public function getProjectAssessment()
+    {
+        return $this->hasOne(ChallengeAssessment::class, 'challenge_id', 'challenge_id');
+    }
 }

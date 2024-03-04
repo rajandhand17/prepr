@@ -3,7 +3,9 @@
 namespace App\Repositories\Api\Project;
 
 use App\Services\AchievementService;
+use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\ChallengeAchievementService;
+use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\ProjectAdditionalInfoService;
@@ -29,8 +31,10 @@ class ProjectRepository implements ProjectInterface
     private $projectSocialActivitiesService;
     private $challengeAchievementService;
     private $achievementService;
+    private $challengeAssessmentService;
+    private $challengeAssessmentUserService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -43,6 +47,8 @@ class ProjectRepository implements ProjectInterface
         $this->projectSocialActivitiesService = $projectSocialActivitiesService;
         $this->challengeAchievementService = $challengeAchievementService;
         $this->achievementService = $achievementService;
+        $this->challengeAssessmentService = $challengeAssessmentService;
+        $this->challengeAssessmentUserService = $challengeAssessmentUserService;
     }
 
     public function getMyProjectIds($userId)
@@ -67,6 +73,21 @@ class ProjectRepository implements ProjectInterface
     {
         try {
             return $this->projectMemberManagementService->getInvitedProjectIds($userData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAssessProjectIds($userData)
+    {
+        try {
+            $projectIds = [];
+            $getAllChallengeIds = $this->challengeAssessmentService->getAllChallengeIds($userData);
+            if (!empty($getAllChallengeIds)) {
+                $projectIds = $this->projectService->getAssessProjectIds($getAllChallengeIds, $userData);
+            }
+
+            return $projectIds;
         } catch (Exception $e) {
             return false;
         }
@@ -341,6 +362,40 @@ class ProjectRepository implements ProjectInterface
     {
         try {
             return $this->projectSocialActivitiesService->captureSocialActivity($projectId, $column, $action);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkAssessmentChallenges($userData)
+    {
+        try {
+            return $this->challengeAssessmentService->getAllChallengeIds($userData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function captureProjectAssessment($projectData, $userData, $request)
+    {
+        try {
+            $fetchChallengeData = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
+            if ($fetchChallengeData->challenge_assessment_criteria->isNotEmpty()) {
+                $challengeAssessment = $fetchChallengeData->challenge_assessment_criteria;
+                $addProjectEvaluation = DB::transaction(function () use ($challengeAssessment, $projectData, $userData, $request) {
+                    $addProjectEvaluation = $this->challengeAssessmentUserService->addProjectEvaluation($challengeAssessment, $projectData, $userData, $request);
+
+                    return $addProjectEvaluation;
+                });
+
+                if ($addProjectEvaluation) {
+                    DB::commit();
+
+                    return true;
+                }
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }

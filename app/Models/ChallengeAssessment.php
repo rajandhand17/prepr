@@ -34,4 +34,9 @@ class ChallengeAssessment extends Model
     {
         return config('site-settings.aws_url').$value;
     }
+
+    public function getAssessmentCriterias()
+    {
+        return $this->hasMany(ChallengeAssessmentCriteria::class, 'assessment_id', 'id');
+    }
 }
