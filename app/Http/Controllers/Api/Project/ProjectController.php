@@ -29,14 +29,14 @@ class ProjectController extends AppBaseController
         $this->projectRepository = $projectRepository;
     }
 
-    public function index($type, Request $request)
+    public function index(Request $request)
     {
         try {
-            if (!in_array($type, ['my', 'favourite', 'invited', 'assess'])) {
-                return $this->sendError(__('responses.handler_bad_request'), 400);
+            if (!in_array($request->type, ['my', 'favourite', 'invited', 'assess'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
             }
 
-            switch ($type) {
+            switch ($request->type) {
                 case 'my':
                     $getProjectIds = $this->projectRepository->getMyProjectIds(auth()->user()->id);
                     break;

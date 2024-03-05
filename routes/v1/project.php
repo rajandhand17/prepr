@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\Project\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::get('/{type}-projects', [ProjectController::class, 'index']);
+    Route::get('/', [ProjectController::class, 'index']);
     Route::post('/create', [ProjectController::class, 'create']);
     Route::get('{slug}', [ProjectController::class, 'show']);
     Route::post('/{slug}/update', [ProjectController::class, 'update']);
@@ -17,7 +17,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/check-slug/{slug}', [ProjectController::class, 'checkSlug']);
     Route::get('/check-title/{slug}', [ProjectController::class, 'checkName']);
     Route::post('/{slug}/submit', [ProjectController::class, 'submitProject']);
-    Route::get('/{slug}/view-assessment', [ProjectController::class, 'viewAssessedProject']);
-    Route::post('/{slug}/capture-assessment', [ProjectController::class, 'captureAssessmentProject']);
+    Route::get('/{slug}/assessment', [ProjectController::class, 'viewAssessedProject']);
+    Route::post('/{slug}/add-assessment', [ProjectController::class, 'captureAssessmentProject']);
     Route::post('/{slug}/{activity}', [ProjectController::class, 'socialActivity']);
 });
