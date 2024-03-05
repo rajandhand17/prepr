@@ -151,6 +151,15 @@ class Challenge extends Model
         return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1']);
     }
 
+    public function joined()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'email' => auth('api')->user()->email])->first();
+        }
+
+        return 'NA';
+    }
+    
     public function liked()
     {
         if (auth('api')->check()) {

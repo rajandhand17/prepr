@@ -28,7 +28,7 @@ class ProjectService
     public function getProjectList($getProjectIds, $request)
     {
         try {
-            $project_list = Project::select()->whereIn('id', $getProjectIds);
+            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
 
             $project_list = self::filterProjectList($project_list, $request);
 
@@ -71,6 +71,24 @@ class ProjectService
                         break;
                     default:
                         $project_list = $project_list->orderBy('projects.id', 'ASC');
+                }
+            }
+
+            if ($request->has('invite_status') && !empty($request->invite_status)) {
+                $status_array = ['accepted', 'pending'];
+                if (in_array($request->invite_status, $status_array)) {
+                    $project_list = $project_list->join('project_member_management', 'projects.id', '=', 'project_member_management.project_id')
+                    ->where('project_member_management.email', auth()->user()->email)
+                        ->whereNull('projects.deleted_at');
+                    switch ($request->invite_status) {;
+                        case 'accepted':
+                            $project_list->where('project_member_management.invite_status', '1');
+                            break;
+                        case 'pending':
+                            $project_list->where('project_member_management.invite_status', '2');
+                            break;
+                        default:
+                    }
                 }
             }
 

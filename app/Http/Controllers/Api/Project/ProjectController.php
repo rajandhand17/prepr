@@ -9,10 +9,6 @@ use App\Http\Requests\Project\AddProjectAssessmentRequest;
 use App\Http\Requests\Project\CreateProjectRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\AssessedProjectResource;
-use App\Http\Resources\Project\AssessProjectListingResource;
-use App\Http\Resources\Project\FavouriteProjectListingResource;
-use App\Http\Resources\Project\InvitedProjectListingResource;
-use App\Http\Resources\Project\MyProjectListingResource;
 use App\Http\Resources\Project\ProjectAdditionalInfoResource;
 use App\Http\Resources\Project\ProjectExternalLinkResource;
 use App\Http\Resources\Project\ProjectFileResource;
@@ -43,22 +39,18 @@ class ProjectController extends AppBaseController
             switch ($type) {
                 case 'my':
                     $getProjectIds = $this->projectRepository->getMyProjectIds(auth()->user()->id);
-                    $resourceClass = MyProjectListingResource::class;
                     break;
 
                 case 'favourite':
                     $getProjectIds = $this->projectRepository->getFavouriteProjectIds(auth()->user()->id);
-                    $resourceClass = FavouriteProjectListingResource::class;
                     break;
 
                 case 'invited':
                     $getProjectIds = $this->projectRepository->getInvitedProjectIds(auth()->user());
-                    $resourceClass = InvitedProjectListingResource::class;
                     break;
 
                 case 'assess':
                     $getProjectIds = $this->projectRepository->getAssessProjectIds(auth()->user());
-                    $resourceClass = AssessProjectListingResource::class;
                     break;
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
@@ -67,7 +59,6 @@ class ProjectController extends AppBaseController
 
             if (!empty($getProjectIds) && count($getProjectIds) > 0) {
                 $project = $this->projectRepository->getProjectList($getProjectIds, $request);
-                $projectResource = $resourceClass::collection($project);
                 if ($project) {
                     $response = [
                         'total_count'  => $project->total(),
@@ -75,7 +66,7 @@ class ProjectController extends AppBaseController
                         'count'        => $project->count(),
                         'current_page' => $project->currentPage(),
                         'total_pages'  => $project->lastPage(),
-                        'list'         => $projectResource,
+                        'list'         => ProjectResource::collection($project),
                     ];
 
                     return $this->sendResponse($response, __('responses.found_projects_list'));
