@@ -159,7 +159,7 @@ class Challenge extends Model
 
         return 'NA';
     }
-    
+
     public function liked()
     {
         if (auth('api')->check()) {
