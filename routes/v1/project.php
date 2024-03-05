@@ -18,6 +18,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/check-title/{slug}', [ProjectController::class, 'checkName']);
     Route::post('/{slug}/submit', [ProjectController::class, 'submitProject']);
     Route::get('/{slug}/assessment', [ProjectController::class, 'viewAssessedProject']);
-    Route::post('/{slug}/add-assessment', [ProjectController::class, 'captureAssessmentProject']);
+    Route::post('/{slug}/assessment/add', [ProjectController::class, 'captureAssessmentProject']);
     Route::post('/{slug}/{activity}', [ProjectController::class, 'socialActivity']);
 });
