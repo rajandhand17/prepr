@@ -118,7 +118,7 @@ class Challenge extends Model
 
     public function challenge_assessment()
     {
-        return $this->hasMany(ChallengeAssessment::class, 'challenge_id', 'id');
+        return $this->hasOne(ChallengeAssessment::class, 'challenge_id', 'id');
     }
 
     public function challenge_timelines()
@@ -149,6 +149,15 @@ class Challenge extends Model
     public function members()
     {
         return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1']);
+    }
+
+    public function joined()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'email' => auth('api')->user()->email])->first();
+        }
+
+        return 'NA';
     }
 
     public function liked()

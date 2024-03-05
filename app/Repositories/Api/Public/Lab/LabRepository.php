@@ -8,13 +8,13 @@ use App\Services\Public\LabSocialActivitiesService;
 
 class LabRepository implements LabInterface
 {
-    private $LabService;
+    private $labService;
     private $labSocialActivitiesService;
     private $memberManagementService;
 
-    public function __construct(LabService $LabService, LabSocialActivitiesService $labSocialActivitiesService, MemberManagementService $memberManagementService)
+    public function __construct(LabService $labService, LabSocialActivitiesService $labSocialActivitiesService, MemberManagementService $memberManagementService)
     {
-        $this->LabService = $LabService;
+        $this->labService = $labService;
         $this->labSocialActivitiesService = $labSocialActivitiesService;
         $this->memberManagementService = $memberManagementService;
     }
@@ -22,7 +22,7 @@ class LabRepository implements LabInterface
     public function getList($request)
     {
         try {
-            return $this->LabService->getList($request);
+            return $this->labService->getList($request);
         } catch (\Exception $e) {
             return false;
         }
@@ -31,7 +31,7 @@ class LabRepository implements LabInterface
     public function getLabBasedOnSlug($slug)
     {
         try {
-            return $this->LabService->getLabBasedOnSlug($slug);
+            return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
             return false;
         }
@@ -104,6 +104,15 @@ class LabRepository implements LabInterface
     {
         try {
             return $this->memberManagementService->setJoinRequestParameters($language);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectLabs($request, $challengeId)
+    {
+        try {
+            return $this->labService->getProjectLabs($request, $challengeId);
         } catch (\Exception $e) {
             return false;
         }

@@ -10,15 +10,15 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('challenge_assessment_criterias', function (Blueprint $table) {
+        Schema::create('project_files', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('challenge_id');
-            $table->string('title');
-            $table->integer('score');
-            $table->integer('weight');
-            $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
+            $table->unsignedBigInteger('project_id');
+            $table->string('title')->nullable();
+            $table->string('path', 255)->nullable();
+            $table->enum('type', ['image', 'docs', 'video', 'audio'])->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
 
@@ -27,6 +27,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('challenge_assessment_criterias');
+        Schema::dropIfExists('project_files');
     }
 };

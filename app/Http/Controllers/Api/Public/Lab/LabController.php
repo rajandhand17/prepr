@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\Public\Lab;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Repositories\Api\Public\Lab\LabRepository;
 use App\Services\Manage\OrganizationService;
+use App\Services\Public\ChallengeService;
 use Illuminate\Http\Request;
 use stdClass;
 
@@ -83,6 +85,23 @@ class LabController extends AppBaseController
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function labList(Request $request)
+    {
+        try {
+            $checkChallenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
+            if ($checkChallenge) {
+                $getProjectLabList = $this->labRepository->getProjectLabs($request, $checkChallenge->id);
+                if ($getProjectLabList) {
+                    return $this->sendResponse(LabNameListResource::collection($getProjectLabList), __('responses.found_labs_list'));
+                }
+            } else {
+                return $this->sendError(__('responses.not_found_labs_list'), 403);
+            }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

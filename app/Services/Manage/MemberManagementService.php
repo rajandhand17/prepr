@@ -166,6 +166,9 @@ class MemberManagementService
                 case 'challenge':
                     $module_type = config('constants.email_template_module_type.challenge');
                     break;
+                case 'project':
+                    $module_type = config('constants.email_template_module_type.project');
+                    break;
                 default:
                     $module_type = null;
                     break;
