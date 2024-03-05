@@ -80,7 +80,7 @@ class ProjectService
                     $project_list = $project_list->join('project_member_management', 'projects.id', '=', 'project_member_management.project_id')
                     ->where('project_member_management.email', auth()->user()->email)
                         ->whereNull('projects.deleted_at');
-                    switch ($request->invite_status) {;
+                    switch ($request->invite_status) {
                         case 'accepted':
                             $project_list->where('project_member_management.invite_status', '1');
                             break;
