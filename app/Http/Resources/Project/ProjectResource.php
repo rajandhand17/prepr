@@ -177,7 +177,7 @@ class ProjectResource extends JsonResource
             'member_count'          => $this->getMembersCount(),
             'joinedStatus'          => $joinedStatus,
             'challenge_details'     => $challengeData,
-            'lab_id'                => $labData,
+            'lab_details'           => $labData,
             'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
             'submitEnabled'         => $submitEnabled !== false ? 'yes' : 'no',
             'requirement_status'    => ProjectRequirementResource::make($this),

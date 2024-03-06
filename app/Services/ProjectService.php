@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\Project\DeleteProjectAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\Challenge;
 use App\Models\Project;
 use App\Models\ProjectMemberManagement;
 use App\Services\Manage\ChallengeService;
@@ -74,6 +75,52 @@ class ProjectService
                 }
             }
 
+            if ($request->has('status') && !empty($request->status)) {
+                $status_array = ['pending', 'completed', 'submitted', 'challenge_closed', 'assessment_details_available'];
+                if (in_array($request->status, $status_array)) {
+                    $projectStatusIds = $project_list->get()->map(function ($projectData) use ($request) {
+                        $projectIds = [];
+                        switch ($request->status) {
+                            case 'pending':
+                                $projectRequirementData = self::checkProjectRequirementCompleted($projectData);
+                                if ($projectRequirementData === false) {
+                                    $projectIds = $projectData->id;
+                                }
+                                break;
+
+                            case 'completed':
+                                $projectRequirementData = self::checkProjectRequirementCompleted($projectData);
+                                if ($projectRequirementData === true) {
+                                    $projectIds = $projectData->id;
+                                }
+                                break;
+
+                            case 'submitted':
+                                if ($projectData->is_submitted === '1') {
+                                    $projectIds = $projectData->id;
+                                }
+                                break;
+
+
+                            case 'challenge_closed':
+                                $getChallenge = Challenge::find($projectData->challenge_id)->is_open;
+                                if ($getChallenge !== '0') {
+                                    $projectIds = $projectData->id;
+                                }
+                                break;
+
+                            case 'assessment_details_available':
+                                $projectAssessmentData = ChallengeAssessmentUserService::getProjectAssessmentData($projectData);
+                                if ($projectAssessmentData['assessment_status'] === 'publish') {
+                                    $projectIds = $projectData->id;
+                                }
+                                break;
+                        }
+                        return $projectIds;
+                    });
+                    $project_list = $project_list->whereIn('projects.id', $projectStatusIds->filter());
+                }
+            }
             return $project_list;
         } catch (Exception $e) {
             return false;
