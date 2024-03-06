@@ -69,11 +69,11 @@ class ChallengeAssessmentUserService
     {
         try {
             $project_assessment = null;
-            $assessmentStatus = 'pending';
-            $assessmentOverAllComment = null;
+            $assessment_status = 'pending';
+            $assessment_over_all_comment = null;
 
             if ($projectData->getProjectAssessment) {
-                $project_assessment = $projectData->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) {
+                $project_assessment = $projectData->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) use ($projectData) {
                     $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $projectData->id);
 
                     return [
@@ -94,28 +94,28 @@ class ChallengeAssessmentUserService
                 $check = $assessmentStatusCheck->contains(null) || $assessmentStatusCheck->contains('draft');
                 switch ($check) {
                     case true:
-                        $assessmentStatus = 'draft';
+                        $assessment_status = 'draft';
                         break;
 
                     case false:
-                        $assessmentStatus = 'publish';
+                        $assessment_status = 'publish';
                         break;
 
                     default:
-                        $assessmentStatus = 'pending';
+                        $assessment_status = 'pending';
                         break;
                 }
             }
 
             if ($project_assessment != null && $project_assessment->isNotEmpty()) {
                 $assessmentComment = $project_assessment->pluck('criteria_comment')->unique();
-                $assessmentOverAllComment = $assessmentComment[0];
+                $assessment_over_all_comment = $assessmentComment[0];
             }
 
             return [
-                'assessmentStatus'          => $assessmentStatus,
-                'assessmentOverAllComment'  => $assessmentOverAllComment,
-                'assessmentScoringData'     => $project_assessment,
+                'assessment_status'             => $assessment_status,
+                'assessment_over_all_comment'   => $assessment_over_all_comment,
+                'assessment_scoring_data'       => $project_assessment,
             ];
         } catch (Exception $e) {
             return false;

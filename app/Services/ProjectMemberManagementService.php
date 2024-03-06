@@ -427,13 +427,25 @@ class ProjectMemberManagementService
         }
     }
 
-    public function getInvitedProjectIds($userData)
+    public function getAcceptedInvitesProjectIds($userData)
     {
         try {
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
-            $getInvitedProjectIds = ProjectMemberManagement::where('email', $userData->email)->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' => $userData->email, 'invite_status' => '1'])->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
 
-            return $getInvitedProjectIds;
+            return $getAcceptedInvitesProjectIds;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getPendingInvitesProjectIds($userData)
+    {
+        try {
+            $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' => $userData->email, 'invite_status' => '2'])->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
+
+            return $getAcceptedInvitesProjectIds;
         } catch (Exception $e) {
             return false;
         }

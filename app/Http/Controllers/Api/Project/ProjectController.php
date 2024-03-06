@@ -32,7 +32,7 @@ class ProjectController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if (!in_array($request->type, ['my', 'favourite', 'invited', 'assess'])) {
+            if (!in_array($request->type, ['my', 'team', 'invites', 'favourite', 'assessed', 'pending_assessment'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
 
@@ -41,16 +41,24 @@ class ProjectController extends AppBaseController
                     $getProjectIds = $this->projectRepository->getMyProjectIds(auth()->user()->id);
                     break;
 
+                case 'team':
+                    $getProjectIds = $this->projectRepository->getAcceptedInvitesProjectIds(auth()->user());
+                    break;
+
+                case 'invites':
+                    $getProjectIds = $this->projectRepository->getPendingInvitesProjectIds(auth()->user());
+                    break;
+
                 case 'favourite':
                     $getProjectIds = $this->projectRepository->getFavouriteProjectIds(auth()->user()->id);
                     break;
 
-                case 'invited':
-                    $getProjectIds = $this->projectRepository->getInvitedProjectIds(auth()->user());
+                case 'assessed':
+                    $getProjectIds = $this->projectRepository->getAssessedProjectIds(auth()->user());
                     break;
 
-                case 'assess':
-                    $getProjectIds = $this->projectRepository->getAssessProjectIds(auth()->user());
+                case 'pending_assessment':
+                    $getProjectIds = $this->projectRepository->getPendingProjectIds(auth()->user());
                     break;
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);

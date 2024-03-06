@@ -74,24 +74,6 @@ class ProjectService
                 }
             }
 
-            if ($request->has('invite_status') && !empty($request->invite_status)) {
-                $status_array = ['accepted', 'pending'];
-                if (in_array($request->invite_status, $status_array)) {
-                    $project_list = $project_list->join('project_member_management', 'projects.id', '=', 'project_member_management.project_id')
-                    ->where('project_member_management.email', auth()->user()->email)
-                        ->whereNull('projects.deleted_at');
-                    switch ($request->invite_status) {
-                        case 'accepted':
-                            $project_list->where('project_member_management.invite_status', '1');
-                            break;
-                        case 'pending':
-                            $project_list->where('project_member_management.invite_status', '2');
-                            break;
-                        default:
-                    }
-                }
-            }
-
             return $project_list;
         } catch (Exception $e) {
             return false;
@@ -399,7 +381,7 @@ class ProjectService
         }
     }
 
-    public function getAssessProjectIds($getAllChallengeIds, $userData)
+    public function getAssessedProjectIds($getAllChallengeIds, $userData)
     {
         try {
             $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
@@ -407,8 +389,43 @@ class ProjectService
 
             $collaborateProjectIds = $getOwnProjectIds->merge($getProjectIdBasedOnMember)->unique();
             $fetchSubmittedProjectIds = Project::whereNotIn('id', $collaborateProjectIds)->whereIn('challenge_id', $getAllChallengeIds)->where('is_submitted', '1')->pluck('id');
+            $assessedProjectIds = [];
+            if (!empty($fetchSubmittedProjectIds)) {
+                foreach ($fetchSubmittedProjectIds as $fetchSubmittedProjectId) {
+                    $projectData = Project::find($fetchSubmittedProjectId);
+                    $assessedCheck = ChallengeAssessmentUserService::getProjectAssessmentData($projectData);
+                    if ($assessedCheck['assessment_status'] === 'publish') {
+                        $assessedProjectIds[] = $projectData->id;
+                    }
+                }
+            }
 
-            return $fetchSubmittedProjectIds;
+            return collect($assessedProjectIds);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getPendingProjectIds($getAllChallengeIds, $userData)
+    {
+        try {
+            $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
+            $getOwnProjectIds = self::getMyProjectIds($userData->id);
+
+            $collaborateProjectIds = $getOwnProjectIds->merge($getProjectIdBasedOnMember)->unique();
+            $fetchSubmittedProjectIds = Project::whereNotIn('id', $collaborateProjectIds)->whereIn('challenge_id', $getAllChallengeIds)->where('is_submitted', '1')->pluck('id');
+            $pendingProjectIds = [];
+            if (!empty($fetchSubmittedProjectIds)) {
+                foreach ($fetchSubmittedProjectIds as $fetchSubmittedProjectId) {
+                    $projectData = Project::find($fetchSubmittedProjectId);
+                    $assessedCheck = ChallengeAssessmentUserService::getProjectAssessmentData($projectData);
+                    if ($assessedCheck['assessment_status'] !== 'publish') {
+                        $pendingProjectIds[] = $projectData->id;
+                    }
+                }
+            }
+
+            return collect($pendingProjectIds);
         } catch (Exception $e) {
             return false;
         }
