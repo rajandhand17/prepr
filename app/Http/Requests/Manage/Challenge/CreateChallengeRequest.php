@@ -68,7 +68,7 @@ class CreateChallengeRequest extends FormRequest
             'complete_education_program'            => 'in:yes,no',
             'complete_experience'                   => 'in:yes,no',
             'automatic_alert'                       => 'required|in:0,1',
-            'timeline_type'                         => 'required|in:restricted,flexible'
+            'timeline_type'                         => 'required|in:restricted,flexible',
         ];
 
         if ($this->request->has('winner_achievement_participation')) {

@@ -7,7 +7,6 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Project;
 use App\Models\ProjectMemberManagement;
-use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use Exception;
@@ -400,7 +399,7 @@ class ProjectService
                     }
                 }
             }
-            
+
             return collect($assessedProjectIds);
         } catch (Exception $e) {
             return false;

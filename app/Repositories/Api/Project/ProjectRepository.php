@@ -99,7 +99,6 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
-
     public function getPendingProjectIds($userData)
     {
         try {
