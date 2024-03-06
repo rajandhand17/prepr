@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -24,7 +25,7 @@ class UserService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -38,7 +39,7 @@ class UserService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -55,7 +56,7 @@ class UserService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -70,7 +71,7 @@ class UserService
             $user = $user->take(config('site-settings.pagination_per_page'))->get();
 
             return $user;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -83,7 +84,7 @@ class UserService
             $updateUser->save();
 
             return $updateUser;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -104,7 +105,7 @@ class UserService
             $user->save();
 
             return $user;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
@@ -119,7 +120,7 @@ class UserService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
@@ -136,7 +137,7 @@ class UserService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -152,7 +153,18 @@ class UserService
             });
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserIdsByEmail($emailIds)
+    {
+        try {
+            $fetchusers = User::whereIn('email', $emailIds)->pluck('id');
+
+            return $fetchusers;
+        } catch (Exception $e) {
             return false;
         }
     }
