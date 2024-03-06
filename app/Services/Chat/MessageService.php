@@ -48,7 +48,7 @@ class MessageService
             DB::beginTransaction();
             $messageFiles = $this->storeFiles();
 
-            if (!$messageFiles) {
+            if ($messageFiles === false) {
                 DB::rollBack();
 
                 return false;
