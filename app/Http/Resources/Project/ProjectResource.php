@@ -25,7 +25,7 @@ class ProjectResource extends JsonResource
         $labData = null;
         $challenge_pitch = null;
         $challenge_task = null;
-        $privacy = 'public';
+        $privacy = 'no';
         $liked = 'no';
         $voted = 'no';
 
@@ -136,13 +136,13 @@ class ProjectResource extends JsonResource
 
         switch ($this->privacy) {
             case '0':
-                $privacy = 'public';
+                $privacy = 'no';
                 break;
             case '1':
-                $privacy = 'private';
+                $privacy = 'yes';
                 break;
             default:
-                $privacy = 'public';
+                $privacy = 'no';
                 break;
         }
 
@@ -176,7 +176,7 @@ class ProjectResource extends JsonResource
             'favourite'             => $this->favourite(),
             'member_count'          => $this->getMembersCount(),
             'joinedStatus'          => $joinedStatus,
-            'challenge_id'          => $challengeData,
+            'challenge_details'     => $challengeData,
             'lab_id'                => $labData,
             'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
             'submitEnabled'         => $submitEnabled !== false ? 'yes' : 'no',

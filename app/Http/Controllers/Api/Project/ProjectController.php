@@ -61,29 +61,25 @@ class ProjectController extends AppBaseController
                     $getProjectIds = $this->projectRepository->getPendingProjectIds(auth()->user());
                     break;
                 default:
-                    return $this->sendError(__('responses.handler_bad_request'), 400);
+                    return $this->sendError(__('responses.handler_bad_request'), 402);
                     break;
             }
 
-            if (!empty($getProjectIds) && count($getProjectIds) > 0) {
-                $project = $this->projectRepository->getProjectList($getProjectIds, $request);
-                if ($project) {
-                    $response = [
-                        'total_count'  => $project->total(),
-                        'per_page'     => $project->perPage(),
-                        'count'        => $project->count(),
-                        'current_page' => $project->currentPage(),
-                        'total_pages'  => $project->lastPage(),
-                        'list'         => ProjectResource::collection($project),
-                    ];
+            $project = $this->projectRepository->getProjectList($getProjectIds, $request);
+            if ($project !== false) {
+                $response = [
+                    'total_count'  => $project->total(),
+                    'per_page'     => $project->perPage(),
+                    'count'        => $project->count(),
+                    'current_page' => $project->currentPage(),
+                    'total_pages'  => $project->lastPage(),
+                    'list'         => ProjectResource::collection($project),
+                ];
 
-                    return $this->sendResponse($response, __('responses.found_projects_list'));
-                }
-
-                return $this->sendError(__('responses.not_found_projects_list'), 400);
+                return $this->sendResponse($response, __('responses.found_projects_list'));
             }
 
-            return $this->sendError(__('responses.project_list_type'), 400);
+            return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
