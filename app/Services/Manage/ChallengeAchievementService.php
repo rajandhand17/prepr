@@ -149,4 +149,15 @@ class ChallengeAchievementService
             return false;
         }
     }
+
+    public static function fetchChallengeAchievement($challengeId)
+    {
+        try {
+            $challengeAchievement = ChallengeAchievement::where(['challenge_id' => $challengeId, 'achievement_type' => '0'])->first();
+
+            return $challengeAchievement;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

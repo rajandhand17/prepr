@@ -3,6 +3,9 @@
 namespace App\Services\Public;
 
 use App\Models\Challenge;
+use App\Models\MemberManagement;
+use App\Models\Project;
+use Exception;
 
 class ChallengeService
 {
@@ -13,7 +16,7 @@ class ChallengeService
             $challenge_list = self::filterChallengeList($request, $challenge_list);
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -97,6 +100,9 @@ class ChallengeService
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $challenge_list = $challenge_list->whereIn('duration_id', $request->duration_id);
             }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
+            }
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
                     $status_array = ['accepted', 'pending', 'declined'];
@@ -121,7 +127,7 @@ class ChallengeService
             }
 
             return $challenge_list;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -130,7 +136,36 @@ class ChallengeService
     {
         try {
             return Challenge::where('slug', $slug)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectChallenges($request)
+    {
+        try {
+            $userID = auth()->user()->id;
+            $userEmail = auth()->user()->email;
+            $challengeUsedIds = Project::where('user_id', $userID)->pluck('challenge_id');
+            $challengeMemberIds = MemberManagement::where(['module_type' => '2', 'invite_status' => '1', 'email' => $userEmail])->pluck('module_id');
+            $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
+            $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
+
+            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds);
+            $challenge_list = self::filterChallengeList($request, $challenge_list);
+            $limit = config('site-settings.listing_limit');
+
+            return $challenge_list->limit($limit)->get();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnUUID($uuid)
+    {
+        try {
+            return Challenge::where('UUID', $uuid)->first();
+        } catch (Exception $e) {
             return false;
         }
     }

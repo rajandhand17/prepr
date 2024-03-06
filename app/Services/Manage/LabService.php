@@ -384,4 +384,13 @@ class LabService
             return false;
         }
     }
+
+    public static function getLabBasedOnUUID($uUID)
+    {
+        try {
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

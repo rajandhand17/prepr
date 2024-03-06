@@ -127,6 +127,14 @@ class ChallengeService
                 }
             }
 
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $challenge_list = $challenge_list->whereIn('duration_id', $request->duration_id);
+            }
+
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
+            }
+
             return $challenge_list;
         } catch (Exception $e) {
             return false;
@@ -422,7 +430,7 @@ class ChallengeService
     public static function getChallengeBasedOnId($id)
     {
         try {
-            return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'organization_id')->where('id', $id)->first();
+            return Challenge::where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }
@@ -541,6 +549,15 @@ class ChallengeService
         }
     }
 
+    public static function getChallengeBasedOnUUID($uuid)
+    {
+        try {
+            return Challenge::where('UUID', $uuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function challengeTemplateUpdatePreBuilt($challengeTemplateId)
     {
         try {
@@ -557,6 +574,46 @@ class ChallengeService
             }
 
             return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function fetchChallengeDueDate($challengeData, $projectCreatedDate)
+    {
+        try {
+            $challenge_timelines = null;
+            if ($challengeData->challenge_timelines) {
+                if ($challengeData->challenge_timelines->timeline_type == '0') {
+                    switch ($challengeData->challenge_timelines->flexible_date_duration) {
+                        case 'days':
+                            $dateCount = $challengeData->challenge_timelines->flexible_date_number;
+                            break;
+                        case 'weeks':
+                            $dateCount = $challengeData->challenge_timelines->flexible_date_number * 7;
+                            break;
+                        case 'months':
+                            $dateCount = $challengeData->challenge_timelines->flexible_date_number * 30;
+                            break;
+                        default:
+                            $dateCount = $challengeData->challenge_timelines->flexible_date_number;
+                            break;
+                    }
+                    $durationDate = date_create(date('Y-m-d', strtotime($projectCreatedDate.' + '.$dateCount.'days')));
+                    $formatData = UtilityHelper::formatDateTime($durationDate);
+                    $challenge_timelines = [
+                        'timeline_type'                 => 'flexible',
+                        'submission_deadline_date'      => $formatData,
+                    ];
+                } elseif ($challengeData->challenge_timelines->timeline_type == '1') {
+                    $challenge_timelines = [
+                        'timeline_type'                         => 'restricted',
+                        'submission_deadline_date'              => $challengeData->challenge_timelines->submission_deadline_date,
+                    ];
+                }
+            }
+
+            return $challenge_timelines;
         } catch (Exception $e) {
             return false;
         }

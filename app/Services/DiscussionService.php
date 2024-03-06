@@ -52,12 +52,13 @@ class DiscussionService
     {
         try {
             $attachmentPath = null;
-            if ($request->file('attachment') && $request->file('attachment') !== null) {
-                $attachments = $request->file('attachment');
-                $attachmentPath = FileUploadHelper::uploadImageToS3($attachments, 'discussion');
-                if ($attachmentPath == false) {
-                    return false;
-                }
+            $file_upload = $request->file('attachment');
+            if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
+                $file_type = config('constants.file_type.image');
+                $attachmentPath = FileUploadHelper::uploadImageToS3($file_upload, 'discussion');
+            } else {
+                $file_type = (mb_strpos($file_upload->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
+                $attachmentPath = FileUploadHelper::UploadVideoDocToS3($file_upload, 'discussion');
             }
             DB::beginTransaction();
             $addComment = new Discussion();

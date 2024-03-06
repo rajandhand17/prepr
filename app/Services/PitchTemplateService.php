@@ -31,7 +31,7 @@ class PitchTemplateService
         }
     }
 
-    public function getPitchTemplatesBasedOnId($id)
+    public static function getPitchTemplatesBasedOnId($id)
     {
         try {
             $pitch_temple = PitchTemplate::select('id', 'title')->where('id', $id)->get();

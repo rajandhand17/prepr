@@ -14,6 +14,7 @@ class ChallengeTemplateAssessmentCriterias extends Model
     protected $table = 'challenge_template_assessment_criterias';
     protected $fillable = [
         'challenge_template_id',
+        'template_assessment_id',
         'title',
         'score',
         'weight',
