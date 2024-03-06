@@ -7,7 +7,6 @@ use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
-use App\Services\Manage\LabService;
 use App\Services\ProjectAdditionalInfoService;
 use App\Services\ProjectExternalLinksService;
 use App\Services\ProjectFileService;
@@ -22,7 +21,6 @@ class ProjectRepository implements ProjectInterface
 {
     private $projectService;
     private $challengeService;
-    private $labService;
     private $projectPitchService;
     private $projectFileService;
     private $projectExternalLinksService;
@@ -34,11 +32,10 @@ class ProjectRepository implements ProjectInterface
     private $challengeAssessmentService;
     private $challengeAssessmentUserService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, LabService $labService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
-        $this->labService = $labService;
         $this->projectPitchService = $projectPitchService;
         $this->projectFileService = $projectFileService;
         $this->projectExternalLinksService = $projectExternalLinksService;
@@ -69,22 +66,47 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
-    public function getInvitedProjectIds($userData)
+    public function getAcceptedInvitesProjectIds($userData)
     {
         try {
-            return $this->projectMemberManagementService->getInvitedProjectIds($userData);
+            return $this->projectMemberManagementService->getAcceptedInvitesProjectIds($userData);
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public function getAssessProjectIds($userData)
+    public function getPendingInvitesProjectIds($userData)
+    {
+        try {
+            return $this->projectMemberManagementService->getPendingInvitesProjectIds($userData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getAssessedProjectIds($userData)
     {
         try {
             $projectIds = [];
             $getAllChallengeIds = $this->challengeAssessmentService->getAllChallengeIds($userData);
             if (!empty($getAllChallengeIds)) {
-                $projectIds = $this->projectService->getAssessProjectIds($getAllChallengeIds, $userData);
+                $projectIds = $this->projectService->getAssessedProjectIds($getAllChallengeIds, $userData);
+            }
+
+            return $projectIds;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+
+    public function getPendingProjectIds($userData)
+    {
+        try {
+            $projectIds = [];
+            $getAllChallengeIds = $this->challengeAssessmentService->getAllChallengeIds($userData);
+            if (!empty($getAllChallengeIds)) {
+                $projectIds = $this->projectService->getPendingProjectIds($getAllChallengeIds, $userData);
             }
 
             return $projectIds;

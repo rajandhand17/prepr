@@ -8,7 +8,13 @@ interface ProjectInterface
 
     public function getFavouriteProjectIds($userId);
 
-    public function getInvitedProjectIds($userData);
+    public function getAcceptedInvitesProjectIds($userData);
+
+    public function getPendingInvitesProjectIds($userData);
+
+    public function getAssessedProjectIds($userData);
+
+    public function getPendingProjectIds($userData);
 
     public function getProjectList($getProjectIds, $request);
 
@@ -43,4 +49,8 @@ interface ProjectInterface
     public function checkSocialActivity($projectId, $column, $action);
 
     public function captureSocialActivity($projectId, $column, $action);
+
+    public function checkAssessmentChallenges($userData);
+
+    public function captureProjectAssessment($projectData, $userData, $request);
 }
