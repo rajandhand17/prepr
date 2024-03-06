@@ -101,7 +101,6 @@ class ProjectService
                                 }
                                 break;
 
-
                             case 'challenge_closed':
                                 $getChallenge = Challenge::find($projectData->challenge_id)->is_open;
                                 if ($getChallenge !== '0') {
@@ -116,11 +115,13 @@ class ProjectService
                                 }
                                 break;
                         }
+
                         return $projectIds;
                     });
                     $project_list = $project_list->whereIn('projects.id', $projectStatusIds->filter());
                 }
             }
+
             return $project_list;
         } catch (Exception $e) {
             return false;
