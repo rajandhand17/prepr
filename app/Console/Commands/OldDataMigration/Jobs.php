@@ -77,8 +77,12 @@ class Jobs extends Command
             $insertArr = [];
             $this->info('Migrating old data for table (user_job_titles).');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('user_job_titles')->chunkById(1000, function ($userJobs) use ($insertArr) {
+            DB::connection('mysql2')->table('user_job_titles')->chunkById(1000, function ($userJobs) use (&$insertArr) {
                 foreach ($userJobs as $userJob) {
+                    if (!DB::table('users')->where('id', $userJob->user_id)->exists()) {
+                        continue;
+                    }
+
                     $userJobs_details = [
                         'id'          => $userJob->id,
                         'user_id'     => $userJob->user_id,
@@ -93,11 +97,13 @@ class Jobs extends Command
                         $insertArr[] = $userJobs_details;
                     }
                 }
-                $this->info(json_encode($insertArr));
-                UserJob::insert($insertArr);
+                if (!empty($insertArr)) {
+                    UserJob::insert($insertArr);
+                    $insertArr = [];
+                }
             });
             DB::commit();
-            $this->info('Migrating of old data for table (user_job_titles) completed.');
+            $this->info('Migration of old data for table (user_job_titles) completed.');
         } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();

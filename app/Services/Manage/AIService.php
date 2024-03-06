@@ -58,7 +58,8 @@ class AIService
 
             // $language = $request->language;
 
-            $jobTitles = implode(', ', Job::whereIn('id', $request->jobs)->get()->pluck('title')->toArray());
+            $jobTitlesArray = Job::whereIn('id', $request->jobs)->pluck('title')->toArray();
+            $jobTitles = implode(', ', $jobTitlesArray);
             $skillTitles = implode(', ', Skill::whereIn('id', $request->skills)->get()->pluck('title')->toArray());
             $durationTitle = Duration::find($request->duration_id)->title;
             $levelTitle = Levels::find($request->level_id)->title;
@@ -66,13 +67,13 @@ class AIService
             $categoryTitles = Category::pluck('title')->implode(', ');
 
             while ($attempt < 3 && count($validChallenges) < 2) {
-                Log::info('Attempt: ' . $attempt + 1);
+                // Log::info('Attempt: ' . $attempt + 1);
                 $attempt++;
 
                 $startTimeAPI = microtime(true);
                 $openAIResponse = $this->fetchChallengesFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
                 $endTimeAPI = microtime(true);
-                Log::info('API call duration: ' . ($endTimeAPI - $startTimeAPI) . ' seconds');
+                // Log::info('API call duration: ' . ($endTimeAPI - $startTimeAPI) . ' seconds');
 
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
@@ -86,9 +87,7 @@ class AIService
 
                     // Checks for duplicate names in all challenges so no duplicate titles would exist
                     if (is_array($content) && isset($content['title'])) {
-                        if (Challenge::whereRaw('LOWER(title) = ?', [strtolower($content['title'])])->exists()) {
-                            continue;
-                        }
+                        if (Challenge::where('title', $content['title'])->exists()) continue;
                     }
 
                     if (empty($content['skills'])) {
@@ -98,7 +97,7 @@ class AIService
                     $startTimeValidatingSkills = microtime(true);
                     $updatedSkills = $this->processSkills($content['skills']);
                     $endTimeValidatingSkills = microtime(true);
-                    Log::info('Validating skills duration: ' . ($endTimeValidatingSkills - $startTimeValidatingSkills) . ' seconds');
+                    // Log::info('Validating skills duration: ' . ($endTimeValidatingSkills - $startTimeValidatingSkills) . ' seconds');
 
                     // Making sure each challenge has more than 6 verified skill
                     if (count($updatedSkills) < 6 || !isset($content['title'])) {
@@ -117,6 +116,8 @@ class AIService
                     $content['is_ai_created'] = $request->is_ai_created;
                     $content['skill_titles'] = $updatedSkills;
                     $content['skills'] = $skillIds;
+                    $content['job_titles'] = $jobTitlesArray;
+                    $content['jobs'] = $request->jobs;
                     $content['resource_modules'] = $request->resource_modules;
                     $content['resource_module_prepr'] = $request->resource_module_prepr;
                     $content['resource_module_openai'] = $request->resource_module_openai;
@@ -129,7 +130,7 @@ class AIService
                 }
 
                 $endTimeValidatingChallenges = microtime(true);
-                Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
+                // Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
             }
 
 
@@ -445,7 +446,7 @@ class AIService
                         // Check if the content is an array and has a title
                         if (is_array($content) && isset($content['title'])) {
                             // Convert the title to lowercase and check if it already exists in ResourceModule
-                            if (ResourceModule::whereRaw('LOWER(title) = ?', [strtolower($content['title'])])->exists()) {
+                            if (ResourceModule::where('title', $content['title'])->exists()) {
                                 // If the title already exists, set title and description to 'Resource Module'
                                 $group['title'] = 'Resource Module';
                                 $group['description'] = 'Resource Module';
@@ -464,6 +465,8 @@ class AIService
                         $group['title'] = 'Resource Module';
                         $group['description'] = 'Resource Module';
                     }
+
+                    $group['skill_titles'] = $request->skill_titles;
                     $group['skills'] = $request->skills;
                     $group['level'] = Levels::find($request->level_id)->title;
                     $group['level_id'] = Levels::where('title', $group['level'])->pluck('id')->first();

@@ -13,6 +13,7 @@ use App\Services\Manage\ChallengeProjectTemplateService;
 use App\Services\Manage\ChallengeRequirementService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
+use App\Services\Manage\ChallengeJobsService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTagsGroupsService;
 use App\Services\Manage\ChallengeTimelinesService;
@@ -27,6 +28,7 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeAchievementService;
     private $challengeSponsorService;
     private $challengeSkillsGroupsStackService;
+    private $challengeJobsService;
     private $challengeTagsGroupsService;
     private $challengeRequirementService;
     private $challengeAssessmentCriteriaService;
@@ -38,12 +40,13 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeAnnouncementService;
     private $aiService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, AIService $aiService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeJobsService $challengeJobsService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, AIService $aiService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
         $this->challengeSponsorService = $challengeSponsorService;
         $this->challengeSkillsGroupsStackService = $challengeSkillsGroupsStackService;
+        $this->challengeJobsService = $challengeJobsService;
         $this->challengeTagsGroupsService = $challengeTagsGroupsService;
         $this->challengeRequirementService = $challengeRequirementService;
         $this->challengeAssessmentCriteriaService = $challengeAssessmentCriteriaService;
@@ -169,6 +172,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
+                $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
                 $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
                 // Challenge Pitch
                 // $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
@@ -179,6 +183,7 @@ class ChallengeRepository implements ChallengeInterface
                     'createChallengeAchievement'        => $createChallengeAchievement,
                     'createChallengeSkillsGroupsStack'  => $createChallengeSkillsGroupsStack,
                     'createChallengeRequirement'        => $createChallengeRequirement,
+                    'createChallengeJobs'               => $createChallengeJobs,
                     // 'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
                     'createChallengeTimelines'          => $createChallengeTimelines,
                 ];
