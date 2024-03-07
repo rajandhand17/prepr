@@ -194,11 +194,12 @@ class AIService
     protected function processSkills($skills)
     {
         $updatedSkills = [];
+        $lowercaseSkills = array_map('strtolower', $skills);
         try {
-            foreach ($skills as $skill) {
-                $recommendationResponse = RecommendationEngineHelper::getRelatedPreprSkills("/" . strtolower($skill));
-                if ($recommendationResponse) {
-                    $highestScoreSkill = $this->selectHighestScoreSkill($recommendationResponse);
+            $recommendationResponse = RecommendationEngineHelper::getRelatedPreprSkills($lowercaseSkills);
+            foreach ($recommendationResponse as $skill) {
+                if (is_array($skill) && $skill) {
+                    $highestScoreSkill = $this->selectHighestScoreSkill($skill);
                     if ($highestScoreSkill['score'] >= 0.92) {
                         $updatedSkills[] = $highestScoreSkill['skill'];
                     }

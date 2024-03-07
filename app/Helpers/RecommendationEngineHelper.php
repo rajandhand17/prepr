@@ -11,13 +11,16 @@ class RecommendationEngineHelper
     /* -----------------------------------------------------------------------------------------
     @Description:  Function for getting related prepr skills
     -------------------------------------------------------------------------------------------- */
-    public static function getRelatedPreprSkills($url)
+    public static function getRelatedPreprSkills($skills)
     {
         try {
-            $url = config('ai.skills_recommendation_engine_url') . $url;
+            $endpointUrl = config('ai.skills_recommendation_engine_url');
+            $data = ['skills' => $skills];
+            $token = config('ai.skills_recommendation_engine_key');
+
             $response = Http::withHeaders([
-                'authorizationToken' => config('ai.skills_recommendation_engine_key')
-            ])->post($url);
+                'authorizationToken' => $token,
+            ])->post($endpointUrl, $data);
 
             if ($response->failed()) {
                 $responseStatus = false;
@@ -28,7 +31,18 @@ class RecommendationEngineHelper
             if ($response->clientError()) {
                 $responseStatus = false;
             }
-            $responseStatus = $response->getStatusCode() == 200 ? json_decode($response->body(), true) : false;
+
+            if ($response->getStatusCode() == 200) {
+                $decodedResponse = json_decode($response->body(), true);
+
+                if (json_last_error() === JSON_ERROR_NONE && !is_null($decodedResponse)) {
+                    $responseStatus = $decodedResponse;
+                } else {
+                    $responseStatus = $response;
+                }
+            } else {
+                $responseStatus = false;
+            }
 
             return $responseStatus;
         } catch (Exception $e) {

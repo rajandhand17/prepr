@@ -150,12 +150,12 @@ class ChallengeRepository implements ChallengeInterface
     public function createChallengeUsingAIPreview($request)
     {
         try {
-            // $startTimeOverall = microtime(true);
+            $startTimeOverall = microtime(true);
 
             $createChallengeUsingAIPreview = $this->aiService->createChallengeUsingAIPreview($request);
 
-            // $endTimeOverall = microtime(true);
-            // Log::info('Overall duration: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
+            $endTimeOverall = microtime(true);
+            Log::info('Overall duration: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
             return $createChallengeUsingAIPreview;
         } catch (Exception $e) {
