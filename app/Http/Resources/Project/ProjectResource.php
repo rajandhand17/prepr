@@ -21,8 +21,8 @@ class ProjectResource extends JsonResource
     {
         $view_enabled = null;
         $download_enabled = null;
-        $challengeData = null;
-        $labData = null;
+        $challenge_details = null;
+        $lab_details = null;
         $challenge_pitch = null;
         $challenge_task = null;
         $privacy = 'no';
@@ -98,7 +98,7 @@ class ProjectResource extends JsonResource
             if ($fetchChallenge) {
                 $projectDate = UtilityHelper::formatDateTime($this->created_at);
                 $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($fetchChallenge, $projectDate);
-                $challengeData = [
+                $challenge_details = [
                     'id'                => $fetchChallenge->id,
                     'uuid'              => $fetchChallenge->uuid,
                     'title'             => $fetchChallenge->title,
@@ -109,29 +109,47 @@ class ProjectResource extends JsonResource
             }
         }
 
-        $joinedStatus = 'no';
+        $joined_status = 'no';
         if ($this->getJoinedStatus()) {
             switch ($this->getJoinedStatus() !== null) {
                 case '0':
-                    $joinedStatus = 'invited';
+                    $joined_status = 'invited';
                     break;
                 case '1':
-                    $joinedStatus = 'yes';
+                    $joined_status = 'yes';
                     break;
                 case '2':
-                    $joinedStatus = 'pending';
+                    $joined_status = 'pending';
                     break;
                 case '3':
-                    $joinedStatus = 'no';
+                    $joined_status = 'no';
                     break;
                 default:
-                    $joinedStatus = 'no';
+                    $joined_status = 'no';
+                    break;
+            }
+        }
+
+        $access_level = 'viewer';
+        if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status === '1') {
+            switch ($this->getJoinedStatus()->inviter_access_level) {
+                case '0':
+                    $access_level = 'viewer';
+                    break;
+                case '1':
+                    $access_level = 'editor';
+                    break;
+                case '2':
+                    $access_level = 'team_leader';
+                    break;                
+                default:
+                    $access_level = 'viewer';
                     break;
             }
         }
 
         if ($this->lab_id) {
-            $labData = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
+            $lab_details = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
         }
 
         switch ($this->privacy) {
@@ -154,7 +172,7 @@ class ProjectResource extends JsonResource
             $voted = $this->votes() > 0 ? 'yes' : 'no';
         }
 
-        $submitEnabled = ProjectService::checkProjectRequirementCompleted($this);
+        $submit_enabled = ProjectService::checkProjectRequirementCompleted($this);
 
         return [
             'id'                    => $this->uuid,
@@ -175,11 +193,12 @@ class ProjectResource extends JsonResource
             'shares'                => $this->shares(),
             'favourite'             => $this->favourite(),
             'member_count'          => $this->getMembersCount(),
-            'joinedStatus'          => $joinedStatus,
-            'challenge_details'     => $challengeData,
-            'lab_details'           => $labData,
+            'joined_status'         => $joined_status,
+            'access_level'          => $access_level,
+            'challenge_details'     => $challenge_details,
+            'lab_details'           => $lab_details,
             'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
-            'submitEnabled'         => $submitEnabled !== false ? 'yes' : 'no',
+            'submit_enabled'        => $submit_enabled !== false ? 'yes' : 'no',
             'requirement_status'    => ProjectRequirementResource::make($this),
             'project_pitch'         => $challenge_pitch,
             'project_task'          => $challenge_task,
