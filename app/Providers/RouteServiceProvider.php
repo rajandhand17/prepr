@@ -96,7 +96,7 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapProjectMemberManagementRoutes()
     {
-        Route::prefix('api/v1/project-member-management/')->middleware('api')->group(base_path('routes/v1/project-member-management.php'));
+        Route::prefix('api/v1/member-management/project/')->middleware('api')->group(base_path('routes/v1/project-member-management.php'));
     }
 
     protected function mapManageRoutes()
