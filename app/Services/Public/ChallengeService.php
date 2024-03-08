@@ -3,8 +3,11 @@
 namespace App\Services\Public;
 
 use App\Models\Challenge;
+use App\Models\ChallengePitch;
+use App\Models\ChallengeTask;
 use App\Models\MemberManagement;
 use App\Models\Project;
+use App\Services\ProjectSubmissionRequirementService;
 use Exception;
 
 class ChallengeService
@@ -165,6 +168,58 @@ class ChallengeService
     {
         try {
             return Challenge::where('UUID', $uuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getProjectChallengeRequirement($challengeData)
+    {
+        try {
+            $challenge_conditions = [];
+            if ($challengeData->challenge_requirements) {
+                foreach ($challengeData->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
+                    $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($challengeData->language, $project_submission_requirement);
+                    if ($challengeData->challenge_project_template) {
+                        $requirementStatus = '';
+
+                        switch ($check_achievement_condition->id) {
+                            case '1':
+                                $requirementStatus = false;
+                                $challengePitchIds = ChallengePitch::where('template_id', $challengeData->challenge_project_template->template_id)->pluck('id')->all();
+                                if (empty($challengePitchIds)) {
+                                    $requirementStatus = true;
+                                }
+                                break;
+                            case '2':
+                                $requirementStatus = false;
+                                $challengeTaskIds = ChallengeTask::where('template_id', $challengeData->challenge_project_template->template_id)->pluck('id')->all();
+                                if (empty($challengeTaskIds)) {
+                                    $requirementStatus = true;
+                                }
+                                break;
+                            case '3':
+                                $requirementStatus = false;
+                                break;
+                            case '4':
+                                $requirementStatus = false;
+                                break;
+                            case '5':
+                                $requirementStatus = false;
+                                break;
+                        }
+                        $projectStatus = ($requirementStatus) ? 'completed' : 'pending';
+                        $projectState = [
+                            'status'            => $projectStatus,
+                            'Requirement Title' => $check_achievement_condition->title,
+                        ];
+
+                        $challenge_conditions[$check_achievement_condition->id] = $projectState;
+                    }
+                }
+            }
+
+            return $challenge_conditions;
         } catch (Exception $e) {
             return false;
         }
