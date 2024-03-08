@@ -515,7 +515,7 @@ class ProjectService
 
             $assessedChallengeIds = ChallengeAssessmentService::getAllChallengeIds(auth()->user());
             $fetchSubmittedProjectIds = Project::whereIn('challenge_id', $assessedChallengeIds)->where(['id' => $projectData->id, 'is_submitted' => '1'])->first();
-            
+
             if ($checkProjectOwner || $checkProjectMember) {
                 $project_role = 'submitter';
             } elseif ($fetchSubmittedProjectIds) {
@@ -529,5 +529,4 @@ class ProjectService
             return false;
         }
     }
-
 }
