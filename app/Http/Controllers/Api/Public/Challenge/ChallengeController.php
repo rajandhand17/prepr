@@ -114,7 +114,6 @@ class ChallengeController extends AppBaseController
             if ($getProjectChallengeRequirement) {
                 return $this->sendResponse(ChallengeProjectRequirementResource::make($fetchChallengeExistsOrNot), __('responses.project_requirement_found'), 200);
             }
-            dd($getProjectChallengeRequirement);
 
             return $this->sendError(__('responses.project_not_requirement_found'));
         } catch (Exception $e) {
