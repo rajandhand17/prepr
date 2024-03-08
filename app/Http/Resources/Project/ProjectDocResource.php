@@ -4,7 +4,7 @@ namespace App\Http\Resources\Project;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProjectFileResource extends JsonResource
+class ProjectDocResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,8 @@ class ProjectFileResource extends JsonResource
     {
         $project_files = null;
 
-        if ($this->getProjectFile) {
-            $project_files = $this->getProjectFile->map(function ($file) {
+        if ($this->getProjectDocs) {
+            $project_files = $this->getProjectDocs->map(function ($file) {
                 return [
                     'id'        => $file->id,
                     'title'     => $file->title,

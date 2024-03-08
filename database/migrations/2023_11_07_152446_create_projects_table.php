@@ -24,6 +24,7 @@ return new class() extends Migration {
             $table->text('media')->nullable();
             $table->enum('privacy', ['0', '1'])->default('0')->comment('Privacy of Project, 0 -> Public & 1 -> Private');
             $table->enum('is_submitted', ['0', '1'])->default('0')->comment('Project Submission Status, 0 -> Not Submitted & 1 -> Submitted');
+            $table->enum('recruiting_status', ['0', '1'])->default('0')->comment('0-> Currently recruiting, 1-> Currently not recruiting');
             $table->unsignedBigInteger('challenge_id');
             $table->unsignedBigInteger('lab_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();

@@ -22,7 +22,6 @@ return new class() extends Migration {
             $table->string('email_response')->nullable();
             $table->enum('email_resend_status', ['0', '1'])->default('1')->comment('0-> no, 1-> yes');
             $table->enum('inviter_access_level', ['0', '1', '2'])->default('0')->comment('0-> Viewer, 1-> Editor, 2-> Team Leader');
-            $table->enum('recruiting_status', ['0', '1'])->default('0')->comment('0-> Currently recruiting, 1-> Currently not recruiting');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('inviter_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

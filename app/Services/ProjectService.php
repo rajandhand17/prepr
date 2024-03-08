@@ -478,4 +478,28 @@ class ProjectService
             return false;
         }
     }
+
+    public function updateProjectRecruitingStatus($projectId, $request)
+    {
+        try {
+            switch ($request->recruiting_status) {
+                case 'no':
+                    $recruiting_status = '0';
+                    break;
+                case 'yes':
+                    $recruiting_status = '1';
+                    break;                
+                default:
+                    $recruiting_status = '0';
+                    break;
+            }
+            $projectUpdate = Project::find($projectId);
+            $projectUpdate->recruiting_status = $recruiting_status;
+            $projectUpdate->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

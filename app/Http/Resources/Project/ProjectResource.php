@@ -7,6 +7,7 @@ use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
+use App\Services\SkillService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,6 +26,8 @@ class ProjectResource extends JsonResource
         $lab_details = null;
         $challenge_pitch = null;
         $challenge_task = null;
+        $skills = null;
+        $achievement = null;
         $privacy = 'no';
         $liked = 'no';
         $voted = 'no';
@@ -107,6 +110,15 @@ class ProjectResource extends JsonResource
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
                 ];
             }
+
+            if ($fetchChallenge->participation_achievement) {
+                $achievement = [
+                    'achievement_name'      => $fetchChallenge->participation_achievement->achievement_name,
+                    'achievement_points'    => $fetchChallenge->participation_achievement->achievement_points,
+                    'achievement_image'     => $fetchChallenge->participation_achievement->achievement_image,
+                    'achievement_prize'     => $fetchChallenge->participation_achievement->achievement_prize,
+                ];
+            }
         }
 
         $joined_status = 'no';
@@ -116,13 +128,13 @@ class ProjectResource extends JsonResource
                     $joined_status = 'invited';
                     break;
                 case '1':
-                    $joined_status = 'yes';
+                    $joined_status = 'accepted';
                     break;
                 case '2':
                     $joined_status = 'pending';
                     break;
                 case '3':
-                    $joined_status = 'no';
+                    $joined_status = 'declined';
                     break;
                 default:
                     $joined_status = 'no';
@@ -172,6 +184,11 @@ class ProjectResource extends JsonResource
             $voted = $this->votes() > 0 ? 'yes' : 'no';
         }
 
+        if ($this->skills) {
+            $associatedSkills = $this->skills->pluck('skill_id');
+            $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        }
+
         $submit_enabled = ProjectService::checkProjectRequirementCompleted($this);
 
         return [
@@ -192,17 +209,24 @@ class ProjectResource extends JsonResource
             'votes'                 => $this->votes(),
             'shares'                => $this->shares(),
             'favourite'             => $this->favourite(),
-            'member_count'          => $this->getMembersCount(),
-            'joined_status'         => $joined_status,
             'access_level'          => $access_level,
-            'challenge_details'     => $challenge_details,
-            'lab_details'           => $lab_details,
             'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
             'submit_enabled'        => $submit_enabled !== false ? 'yes' : 'no',
+            'recruiting_status'     => $this->recruiting_status !== '0' ? 'yes' : 'no',
+            'member_count'          => $this->getMembersCount(),
+            'joined_status'         => $joined_status,
+            'members'               => ProjectMemberResource::collection($this->members),
+            'skills'                => $skills,
+            'challenge_details'     => $challenge_details,
+            'challenge_achievement' => $achievement,
+            'lab_details'           => $lab_details,
             'requirement_status'    => ProjectRequirementResource::make($this),
             'project_pitch'         => $challenge_pitch,
             'project_task'          => $challenge_task,
-            'project_files'         => ProjectFileResource::make($this),
+            'docs'                  => ProjectDocResource::make($this),
+            'images'                => ProjectImageResource::make($this),
+            'videos'                => ProjectVideoResource::make($this),
+            'audios'                => ProjectAudioResource::make($this),
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
             'assessment_data'       => AssessedProjectResource::make($this),

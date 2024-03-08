@@ -13,6 +13,7 @@ use App\Services\ProjectFileService;
 use App\Services\ProjectMemberManagementService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
+use App\Services\ProjectSkillsService;
 use App\Services\ProjectSocialActivitiesService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -31,8 +32,9 @@ class ProjectRepository implements ProjectInterface
     private $achievementService;
     private $challengeAssessmentService;
     private $challengeAssessmentUserService;
+    private $projectSkillsService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -46,6 +48,7 @@ class ProjectRepository implements ProjectInterface
         $this->achievementService = $achievementService;
         $this->challengeAssessmentService = $challengeAssessmentService;
         $this->challengeAssessmentUserService = $challengeAssessmentUserService;
+        $this->projectSkillsService = $projectSkillsService;
     }
 
     public function getMyProjectIds($userId)
@@ -160,6 +163,8 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -199,6 +204,8 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -220,6 +227,8 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -242,6 +251,8 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -264,6 +275,8 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -286,6 +299,8 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -357,6 +372,8 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -418,6 +435,36 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    public function addUpdateProjectSkillsRecruitingStatus($projectId, $request)
+    {
+        try {
+            $addUpdateProjectSkillsRecruitingStatus = DB::transaction(function () use ($projectId, $request) {
+                $addUpdateProjectSkills = $this->projectSkillsService->addUpdateProjectSkills($projectId, $request);
+                $updateProjectRecruitingStatus =  $this->projectService->updateProjectRecruitingStatus($projectId, $request);
+
+                return [
+                    'addUpdateProjectSkills'        => $addUpdateProjectSkills,
+                    'updateProjectRecruitingStatus' => $updateProjectRecruitingStatus
+                ];
+            });
+
+            if ($addUpdateProjectSkillsRecruitingStatus['addUpdateProjectSkills'] &&
+                $addUpdateProjectSkillsRecruitingStatus['updateProjectRecruitingStatus']
+            ) {
+                DB::commit();
+
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
