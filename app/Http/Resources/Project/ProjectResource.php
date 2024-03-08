@@ -153,7 +153,7 @@ class ProjectResource extends JsonResource
                     break;
                 case '2':
                     $access_level = 'team_leader';
-                    break;                
+                    break;
                 default:
                     $access_level = 'viewer';
                     break;
