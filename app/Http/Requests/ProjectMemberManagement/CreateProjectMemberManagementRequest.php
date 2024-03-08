@@ -28,9 +28,12 @@ class CreateProjectMemberManagementRequest extends FormRequest
         $check_invite_type = $this->request->get('invite_type');
 
         $rules = [
-            'invite_type'  => 'required|in:email,csv',
-            'subject_line' => 'max:250',
-            'email_body'   => 'max:2000',
+            'invite_type'       => 'required|in:email,csv',
+            'subject_line'      => 'max:250',
+            'email_body'        => 'max:2000',
+            'skills'            => 'array',
+            'skills.*'          => 'numeric|exists:skills,id',
+            'recruiting_status' => 'in:yes,no',
         ];
         if ($check_invite_type == 'csv') {
             $rules['invite_email'] = 'required|mimes:csv,txt';
