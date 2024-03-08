@@ -215,7 +215,7 @@ class ChallengeAssessmentService
         }
     }
 
-    public function getAllChallengeIds($userData)
+    public static function getAllChallengeIds($userData)
     {
         try {
             //  Fetch Open Assessment Challenge Ids

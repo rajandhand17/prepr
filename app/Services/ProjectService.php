@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Project;
 use App\Models\ProjectMemberManagement;
+use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use Exception;
@@ -502,4 +503,31 @@ class ProjectService
             return false;
         }
     }
+
+    public static function checkProjectRole($projectData)
+    {
+        try {
+            $userEmail = auth()->user()->email;
+            $userId = auth()->user()->id;
+
+            $checkProjectMember = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $userEmail])->first();
+            $checkProjectOwner = Project::where(['id' => $projectData->id, 'user_id' => $userId])->first();
+
+            $assessedChallengeIds = ChallengeAssessmentService::getAllChallengeIds(auth()->user());
+            $fetchSubmittedProjectIds = Project::whereIn('challenge_id', $assessedChallengeIds)->where(['id' => $projectData->id, 'is_submitted' => '1'])->first();
+            
+            if ($checkProjectOwner || $checkProjectMember) {
+                $project_role = 'submitter';
+            } elseif ($fetchSubmittedProjectIds) {
+                $project_role = 'assessor';
+            } else {
+                $project_role = 'none';
+            }
+
+            return $project_role;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

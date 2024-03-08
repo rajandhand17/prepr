@@ -31,6 +31,7 @@ class ProjectResource extends JsonResource
         $privacy = 'no';
         $liked = 'no';
         $voted = 'no';
+        $project_role = 'none';
 
         if ($this->getProjectTemplate) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
@@ -191,6 +192,8 @@ class ProjectResource extends JsonResource
 
         $submit_enabled = ProjectService::checkProjectRequirementCompleted($this);
 
+        $project_role = ProjectService::checkProjectRole($this);
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
@@ -212,6 +215,7 @@ class ProjectResource extends JsonResource
             'access_level'          => $access_level,
             'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
             'submit_enabled'        => $submit_enabled !== false ? 'yes' : 'no',
+            'project_role'          => $project_role,
             'recruiting_status'     => $this->recruiting_status !== '0' ? 'yes' : 'no',
             'member_count'          => $this->getMembersCount(),
             'joined_status'         => $joined_status,
