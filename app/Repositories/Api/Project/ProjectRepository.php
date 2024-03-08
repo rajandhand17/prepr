@@ -446,11 +446,11 @@ class ProjectRepository implements ProjectInterface
         try {
             $addUpdateProjectSkillsRecruitingStatus = DB::transaction(function () use ($projectId, $request) {
                 $addUpdateProjectSkills = $this->projectSkillsService->addUpdateProjectSkills($projectId, $request);
-                $updateProjectRecruitingStatus =  $this->projectService->updateProjectRecruitingStatus($projectId, $request);
+                $updateProjectRecruitingStatus = $this->projectService->updateProjectRecruitingStatus($projectId, $request);
 
                 return [
                     'addUpdateProjectSkills'        => $addUpdateProjectSkills,
-                    'updateProjectRecruitingStatus' => $updateProjectRecruitingStatus
+                    'updateProjectRecruitingStatus' => $updateProjectRecruitingStatus,
                 ];
             });
 
@@ -461,6 +461,7 @@ class ProjectRepository implements ProjectInterface
 
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             DB::rollBack();

@@ -488,7 +488,7 @@ class ProjectService
                     break;
                 case 'yes':
                     $recruiting_status = '1';
-                    break;                
+                    break;
                 default:
                     $recruiting_status = '0';
                     break;

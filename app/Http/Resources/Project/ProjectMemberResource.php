@@ -16,9 +16,9 @@ class ProjectMemberResource extends JsonResource
      */
     public function toArray($request)
     {
-        $user_name      = null;
-        $full_name      = null;
-        $profile_image  = null;
+        $user_name = null;
+        $full_name = null;
+        $profile_image = null;
 
         switch ($this->inviter_access_level) {
             case '0':
@@ -55,9 +55,9 @@ class ProjectMemberResource extends JsonResource
 
         $getUserDetails = UserService::getUserByEmail($this->email);
         if ($getUserDetails) {
-            $user_name      = $getUserDetails->username;
-            $full_name      = $getUserDetails->full_name;
-            $profile_image  = $getUserDetails->profile_image;
+            $user_name = $getUserDetails->username;
+            $full_name = $getUserDetails->full_name;
+            $profile_image = $getUserDetails->profile_image;
         }
 
         return [
