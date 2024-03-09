@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 
 class createChallengeUsingAIPreviewRequest extends FormRequest
 {
@@ -29,10 +30,17 @@ class createChallengeUsingAIPreviewRequest extends FormRequest
             'duration_id'                           => 'required|exists:durations,id',
             'level_id'                              => 'required|exists:levels,id',
             'additional_information'                => 'nullable',
-            'resource_modules'                      => 'nullable',
-            'is_ai_created'                         => 'in:yes,no',
+            'is_ai_created'                         => 'required|boolean',
             'skills'                                => 'required|array',
+            'skills.*'                              => 'numeric|exists:skills,id',
             'jobs'                                  => 'required|array',
+            'jobs.*'                                => 'numeric|exists:job_titles,id',
+            'resource_modules'                      => 'nullable|boolean',
+            'resource_module_openai'                => 'nullable|boolean',
+            'openai_resource_module_types'          => 'nullable|array',
+            'resource_module_go1'                   => 'nullable|boolean',
+            'go1_resource_module_types'             => 'nullable|array',
+            'resource_module_prepr'                 => 'nullable|boolean',
         ];
 
         return $base_rules;
@@ -50,17 +58,27 @@ class createChallengeUsingAIPreviewRequest extends FormRequest
     public function message()
     {
         return [
-            'organization_id.required'                    => __('responses.organization_id_required'),
-            'organization_id.exists'                      => __('responses.organization_not_found'),
-            'duration_id.required'                        => __('responses.duration_id_required'),
-            'duration_id.exists'                          => __('responses.duration_id_exists'),
-            'level_id.required'                           => __('responses.level_id_required'),
-            'level_id.exists'                             => __('responses.level_id_exists'),
-            'is_ai_created'                               => __('responses.choose_yes_no'),
-            'skills.required'                             => __('responses.skills_required'),
-            'skills.required_if'                          => __('responses.skill_not_found'),
-            'jobs.required'                               => __('responses.jobs_required'),
-            'jobs.required_if'                            => __('responses.job_not_found'),
+            'organization_id.required'              => __('responses.organization_id_required'),
+            'organization_id.exists'                => __('responses.organization_not_found'),
+            'duration_id.required'                  => __('responses.duration_id_required'),
+            'duration_id.exists'                    => __('responses.duration_id_exists'),
+            'level_id.required'                     => __('responses.level_id_required'),
+            'level_id.exists'                       => __('responses.level_id_exists'),
+            'is_ai_created'                         => __('responses.true_or_false'),
+            'skills.array'                          => __('responses.skills_array'),
+            'skills.*.numeric'                      => __('responses.skills_numeric'),
+            'skills.*.exists'                       => __('responses.skill_not_exists'),
+            'skills.required'                       => __('responses.skills_required'),
+            'jobs.array'                            => __('responses.jobs_array'),
+            'jobs.*.numeric'                        => __('responses.jobs_numeric'),
+            'jobs.*.exists'                         => __('responses.job_not_exists'),
+            'jobs.required'                         => __('responses.jobs_required'),
+            'resource_modules.boolean'              => __('responses.true_or_false'),
+            'resource_module_openai'                => __('responses.true_or_false'),
+            'openai_resource_module_types'          => __('responses.openai_resource_module_types_array'),
+            'resource_module_go1'                   => __('responses.true_or_false'),
+            'go1_resource_module_types'             => __('responses.go1_resource_module_types_array'),
+            'resource_module_prepr'                 => __('responses.true_or_false'),
         ];
     }
 }

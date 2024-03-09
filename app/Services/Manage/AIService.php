@@ -80,7 +80,7 @@ class AIService
                     continue;
                 }
 
-                $startTimeValidatingChallenges = microtime(true);
+                // $startTimeValidatingChallenges = microtime(true);
 
                 foreach ($openAIResponse['choices'] as $choice) {
                     $content = json_decode($choice['message']['content'], true);
@@ -94,9 +94,13 @@ class AIService
                         continue;
                     }
 
-                    $startTimeValidatingSkills = microtime(true);
+                    // $startTimeValidatingSkills = microtime(true);
                     $updatedSkills = $this->processSkills($content['skills']);
-                    $endTimeValidatingSkills = microtime(true);
+
+                    // Removing the duplicates and reindexing
+                    $updatedSkills = array_unique($updatedSkills);
+                    $updatedSkills = array_values($updatedSkills);
+                    // $endTimeValidatingSkills = microtime(true);
                     // Log::info('Validating skills duration: ' . ($endTimeValidatingSkills - $startTimeValidatingSkills) . ' seconds');
 
                     // Making sure each challenge has more than 6 verified skill
@@ -129,7 +133,7 @@ class AIService
                     $validChallenges[] = $content;
                 }
 
-                $endTimeValidatingChallenges = microtime(true);
+                // $endTimeValidatingChallenges = microtime(true);
                 // Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
             }
 
@@ -377,7 +381,7 @@ class AIService
                     break; // Exit loop if no full group can be formed
                 }
 
-                $combinedGroups[] = $group;
+                $combinedGroups[] = ['resource_modules' => $group];
             }
 
             return $combinedGroups;
@@ -395,10 +399,10 @@ class AIService
                     $chunkGroupDescriptions = [];
                     foreach ($chunk as $groupIndex => $group) {
                         $descriptionParts = [];
-                        foreach ($group as $item) {
+                        foreach ($group['resource_modules'] as $item) {
                             $title = $item['title'];
                             $description = isset($item['description']) ? $item['description'] : "No description available.";
-
+                        
                             $descriptionParts[] = "{$title} - {$description}";
                         }
                         $chunkGroupDescriptions[] = "Group " . ($groupIndex + 1) . ": " . implode(", ", $descriptionParts);
@@ -442,40 +446,42 @@ class AIService
                 // Update the original groups with the titles and descriptions from AI
                 foreach ($combinedGroups as $index => &$group) {
                     if (isset($allAiResults[$index])) {
-                        $content = $allAiResults[$index]; // Assuming $allAiResults[$index] is an array with 'title' and 'description'
+                        $content = $allAiResults[$index];
 
-                        // Check if the content is an array and has a title
+                        $newResourceModule = [];
+
                         if (is_array($content) && isset($content['title'])) {
                             // Convert the title to lowercase and check if it already exists in ResourceModule
                             if (ResourceModule::where('title', $content['title'])->exists()) {
                                 // If the title already exists, set title and description to 'Resource Module'
-                                $group['title'] = 'Resource Module';
-                                $group['description'] = 'Resource Module';
+                                $newResourceModule['title'] = 'Resource Module';
+                                $newResourceModule['description'] = 'Resource Module';
                             } else {
                                 // If the title does not exist, use the title and description from $allAiResults[$index]
-                                $group['title'] = $content['title'];
-                                $group['description'] = $content['description'];
+                                $newResourceModule['title'] = $content['title'];
+                                $newResourceModule['description'] = $content['description'];
                             }
                         } else {
                             // If $content is not an array or does not have a title, use default 'Resource Module'
-                            $group['title'] = 'Resource Module';
-                            $group['description'] = 'Resource Module';
+                            $newResourceModule['title'] = 'Resource Module';
+                            $newResourceModule['description'] = 'Resource Module';
                         }
-                    } else {
-                        // If $allAiResults[$index] is not set, use default 'Resource Module'
-                        $group['title'] = 'Resource Module';
-                        $group['description'] = 'Resource Module';
+
+                        // Append the new resource module to the 'resource_modules' array of the group
+                        $group['title'] = $newResourceModule['title'];
+                        $group['description'] = $newResourceModule['description'];
                     }
 
                     $group['skill_titles'] = $request->skill_titles;
                     $group['skills'] = $request->skills;
                     $group['level'] = Levels::find($request->level_id)->title;
                     $group['level_id'] = Levels::where('title', $group['level'])->pluck('id')->first();
-                    $group['duration'] = Duration::find($request->duration_id)->title;;
+                    $group['duration'] = Duration::find($request->duration_id)->title;
                     $group['duration_id'] = Duration::where('title', $group['duration'])->pluck('id')->first();
                     $group['is_ai_created'] = $request->is_ai_created;
                 }
-                unset($group); // Break the reference with the last element
+                unset($group); // Unset the reference to the last element
+
             } catch (Exception $e) {
                 Log::error("Error in createResourceModuleUsingAIPreview in AIService.php: " . $e->getMessage());
             }

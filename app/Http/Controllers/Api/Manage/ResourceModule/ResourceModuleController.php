@@ -301,14 +301,16 @@ class ResourceModuleController extends AppBaseController
 
             $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $CreateResourceModuleUsingAI->id);
 
-            $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request["challenge_id"]);
-            $challengeResourceModule = ChallengeResourceModule::create([
-                'challenge_id' => $challengeID,
-                'resource_module_id' => $CreateResourceModuleUsingAI->id,
-            ]);
+            if ($request["challenge_id"]) {
+                $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request["challenge_id"]);
+                $challengeResourceModule = ChallengeResourceModule::create([
+                    'challenge_id' => $challengeID,
+                    'resource_module_id' => $CreateResourceModuleUsingAI->id,
+                ]);
 
-            if (!$challengeResourceModule) {
-                throw new Exception("challengeResourceModule has no value!");
+                if (!$challengeResourceModule) {
+                    throw new Exception("challengeResourceModule has no value!");
+                }
             }
 
             if (!$createResourceModuleDetailsAI) {

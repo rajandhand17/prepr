@@ -78,7 +78,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $CreateResourceModuleUsingAI->id);
 
                 return [
-                    'CreateResourceModuleUsingAI'                 => $CreateResourceModuleUsingAI,
+                    'CreateResourceModuleUsingAI'           => $CreateResourceModuleUsingAI,
                     'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
                 ];
             });
