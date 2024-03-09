@@ -11,7 +11,6 @@ use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\AssessedProjectResource;
 use App\Http\Resources\Project\ProjectAdditionalInfoResource;
 use App\Http\Resources\Project\ProjectExternalLinkResource;
-use App\Http\Resources\Project\ProjectFileResource;
 use App\Http\Resources\Project\ProjectRequirementResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Repositories\Api\Project\ProjectRepository;
@@ -191,7 +190,7 @@ class ProjectController extends AppBaseController
             $addProjectFiles = $this->projectRepository->projectProjectFile($checkProjectExistsOrNot->id, $request);
 
             if ($addProjectFiles) {
-                return $this->sendResponse(ProjectFileResource::make($checkProjectExistsOrNot), __('responses.project_file_stored_success'), 200);
+                return $this->sendResponse(ProjectResource::make($checkProjectExistsOrNot), __('responses.project_file_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.project_file_stored_failed'), 400);

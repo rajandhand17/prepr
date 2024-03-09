@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Project;
 use App\Models\ProjectMemberManagement;
+use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use Exception;
@@ -474,6 +475,56 @@ class ProjectService
             }
 
             return collect($pendingProjectIds);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateProjectRecruitingStatus($projectId, $request)
+    {
+        try {
+            switch ($request->recruiting_status) {
+                case 'no':
+                    $recruiting_status = '0';
+                    break;
+                case 'yes':
+                    $recruiting_status = '1';
+                    break;
+                default:
+                    $recruiting_status = '0';
+                    break;
+            }
+            $projectUpdate = Project::find($projectId);
+            $projectUpdate->recruiting_status = $recruiting_status;
+            $projectUpdate->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkProjectRole($projectData)
+    {
+        try {
+            $userEmail = auth()->user()->email;
+            $userId = auth()->user()->id;
+
+            $checkProjectMember = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $userEmail])->first();
+            $checkProjectOwner = Project::where(['id' => $projectData->id, 'user_id' => $userId])->first();
+
+            $assessedChallengeIds = ChallengeAssessmentService::getAllChallengeIds(auth()->user());
+            $fetchSubmittedProjectIds = Project::whereIn('challenge_id', $assessedChallengeIds)->where(['id' => $projectData->id, 'is_submitted' => '1'])->first();
+
+            if ($checkProjectOwner || $checkProjectMember) {
+                $project_role = 'submitter';
+            } elseif ($fetchSubmittedProjectIds) {
+                $project_role = 'assessor';
+            } else {
+                $project_role = 'none';
+            }
+
+            return $project_role;
         } catch (Exception $e) {
             return false;
         }

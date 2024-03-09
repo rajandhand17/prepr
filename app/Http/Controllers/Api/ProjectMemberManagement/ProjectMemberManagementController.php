@@ -8,6 +8,7 @@ use App\Http\Requests\ProjectMemberManagement\CreateProjectMemberManagementReque
 use App\Http\Requests\ProjectMemberManagement\DeleteProjectMemberManagementRequest;
 use App\Http\Resources\EmailTemplate\EmailTemplateResource;
 use App\Http\Resources\ProjectMemberManagement\ProjectMemberManagementResource;
+use App\Repositories\Api\Project\ProjectRepository;
 use App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementRepository;
 use App\Services\UserService;
 use Exception;
@@ -16,10 +17,12 @@ use Illuminate\Http\Request;
 class ProjectMemberManagementController extends AppBaseController
 {
     private $projectMemberManagementRepository;
+    private $projectRepository;
 
-    public function __construct(ProjectMemberManagementRepository $projectMemberManagementRepository)
+    public function __construct(ProjectMemberManagementRepository $projectMemberManagementRepository, ProjectRepository $projectRepository)
     {
         $this->projectMemberManagementRepository = $projectMemberManagementRepository;
+        $this->projectRepository = $projectRepository;
     }
 
     public function index($slug, Request $request)
@@ -85,6 +88,9 @@ class ProjectMemberManagementController extends AppBaseController
             if ($checkProjectExistsOrNot == false) {
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
+
+            $addUpdateProjectSkillsRecruitingStatus = $this->projectRepository->addUpdateProjectSkillsRecruitingStatus($checkProjectExistsOrNot->id, $request);
+
             $participatesList = $this->projectMemberManagementRepository->addParticipates($checkProjectExistsOrNot, $request);
             if ((count($participatesList['invalid_emails']) > 0 || count($participatesList['already_members']) > 0) && count($participatesList['invited_emails']) < 1) {
                 return $this->sendError($participatesList['add_participant_response'], 403);

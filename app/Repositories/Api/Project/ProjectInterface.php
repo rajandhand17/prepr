@@ -53,4 +53,6 @@ interface ProjectInterface
     public function checkAssessmentChallenges($userData);
 
     public function captureProjectAssessment($projectData, $userData, $request);
+
+    public function addUpdateProjectSkillsRecruitingStatus($projectId, $request);
 }

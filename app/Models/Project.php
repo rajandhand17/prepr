@@ -24,6 +24,7 @@ class Project extends Model
         'media_type',
         'media',
         'privacy',
+        'recruiting_status',
         'challenge_id',
         'lab_id',
         'category_id',
@@ -47,9 +48,24 @@ class Project extends Model
         return $this->hasOne(ChallengeProjectTemplate::class, 'challenge_id', 'challenge_id');
     }
 
-    public function getProjectFile()
+    public function getProjectImages()
     {
-        return $this->hasMany(ProjectFile::class, 'project_id', 'id');
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'image');
+    }
+
+    public function getProjectDocs()
+    {
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'docs');
+    }
+
+    public function getProjectVideos()
+    {
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'video');
+    }
+
+    public function getProjectAudios()
+    {
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'audio');
     }
 
     public function external_links()
@@ -115,5 +131,15 @@ class Project extends Model
     public function getProjectAssessment()
     {
         return $this->hasOne(ChallengeAssessment::class, 'challenge_id', 'challenge_id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(ProjectSkill::class, 'project_id', 'id');
+    }
+
+    public function members()
+    {
+        return $this->hasMany(ProjectMemberManagement::class, 'project_id', 'id')->where('invite_status', '1');
     }
 }
