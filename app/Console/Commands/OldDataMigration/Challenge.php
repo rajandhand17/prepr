@@ -147,6 +147,18 @@ class Challenge extends Command
                             break;
                     }
 
+                    switch ($challenge->is_ai_created) {
+                        case '0':
+                            $challengeAiCreated = '0';
+                            break;
+                        case '1':
+                            $challengeAiCreated = '1';
+                            break;
+                        default:
+                            $challengeAiCreated = '0';
+                            break;
+                    }
+
                     switch ($challenge->notify_participants) {
                         case 'send':
                             $challengeNotifyParticipants = '1';
@@ -190,6 +202,7 @@ class Challenge extends Command
                     $newChallenge->project_privacy = $challengeProjectPrivacy;
                     $newChallenge->is_open = $challengeStatus;
                     $newChallenge->is_auto_created = $challengeAutoCreated;
+                    $newChallenge->is_ai_created = $challengeAiCreated;
                     $newChallenge->save();
 
                     // For Challenge Host/Sponser
