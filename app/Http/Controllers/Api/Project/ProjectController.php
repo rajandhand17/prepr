@@ -455,7 +455,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            $checkChallengeProjectAssessment = $this-> projectRepository->checkChallengeProjectAssessment($checkProjectExistsOrNot->id, auth()->user());
+            $checkChallengeProjectAssessment = $this->projectRepository->checkChallengeProjectAssessment($checkProjectExistsOrNot->id, auth()->user());
             if ($checkChallengeProjectAssessment == false) {
                 return $this->sendError(__('responses.project_assessment_not_done_by_you'), 403);
             }
@@ -464,6 +464,7 @@ class ProjectController extends AppBaseController
             if ($deleteProjectAssessment) {
                 return $this->sendResponse([], __('responses.project_assessment_deleted'), 200);
             }
+
             return $this->sendError(__('responses.project_assessment_not_delete'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
