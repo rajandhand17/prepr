@@ -32,6 +32,7 @@ class ProjectResource extends JsonResource
         $liked = 'no';
         $voted = 'no';
         $project_role = 'none';
+        $is_assess_enabled = 'yes';
 
         if ($this->getProjectTemplate) {
             $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
@@ -107,6 +108,7 @@ class ProjectResource extends JsonResource
                     'uuid'              => $fetchChallenge->uuid,
                     'title'             => $fetchChallenge->title,
                     'slug'              => $fetchChallenge->slug,
+                    'template_id'       => $fetchChallenge->challenge_project_template->template_id ?? 0,
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
                 ];
@@ -119,6 +121,10 @@ class ProjectResource extends JsonResource
                     'achievement_image'     => $fetchChallenge->participation_achievement->achievement_image,
                     'achievement_prize'     => $fetchChallenge->participation_achievement->achievement_prize,
                 ];
+            }
+
+            if ($this->is_submitted === '1') {
+                $is_assess_enabled = ($fetchChallenge->is_open === '2') ? 'no' : 'yes';
             }
         }
 
@@ -232,6 +238,7 @@ class ProjectResource extends JsonResource
             'videos'                => ProjectVideoResource::make($this),
             'audios'                => ProjectAudioResource::make($this),
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
+            'is_assess_enabled'     => $is_assess_enabled,
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
             'assessment_data'       => AssessedProjectResource::make($this),
             'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),

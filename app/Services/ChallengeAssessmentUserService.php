@@ -11,7 +11,7 @@ class ChallengeAssessmentUserService
     public function addProjectEvaluation($challengeAssessment, $projectData, $userData, $request)
     {
         try {
-            $assessmentStatus = $request->status == 'publish' ? config('constants.challenge_status.publish') : config('constants.challenge_status.draft');
+            $assessmentStatus = $request->status == 'published' ? config('constants.challenge_status.publish') : config('constants.challenge_status.draft');
 
             if (isset($request->criteria_id) && isset($request->score) && isset($request->comment)) {
                 foreach ($request->criteria_id as $key => $criteriaId) {
@@ -98,7 +98,7 @@ class ChallengeAssessmentUserService
                         break;
 
                     case false:
-                        $assessment_status = 'publish';
+                        $assessment_status = 'published';
                         break;
 
                     default:
@@ -117,6 +117,35 @@ class ChallengeAssessmentUserService
                 'assessment_over_all_comment'   => $assessment_over_all_comment,
                 'assessment_scoring_data'       => $project_assessment,
             ];
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkChallengeProjectAssessment($projectDataId, $userData)
+    {
+        try {
+            $checkChallengeProjectAssessment = ChallengeAssessmentUser::where(['project_id' => $projectDataId, 'user_id' => $userData->id])->get();
+            if (!empty($checkChallengeProjectAssessment)) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteChallengeProjectAssessment($projectDataId, $userData)
+    {
+        try {
+            $checkChallengeProjectAssessment = ChallengeAssessmentUser::where(['project_id' => $projectDataId, 'user_id' => $userData->id])->get();
+            if (!empty($checkChallengeProjectAssessment)) {
+                ChallengeAssessmentUser::where(['project_id' => $projectDataId, 'user_id' => $userData->id])->delete();
+                return true;
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }
