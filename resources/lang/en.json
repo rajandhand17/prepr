@@ -963,8 +963,12 @@
     "responses.project_not_allowed_assessment": "Apologies, but it seems that assessing this project isn't permitted within the scope of this challenge.",
     "responses.project_not_assessment_submitted": "The Project(s) assessment has not been submitted.",
     "responses.project_assessment_submitted": "The Project(s) assessment has been submitted.",
+    "responses.project_assessment_draft": "The Project(s) assessment has been saved as draft.",
     "responses.project_assessment_retrived": "The Project(s) assessment has been retrieved.",
     "responses.project_assessment_not_retrived": "The Project(s) assessment has not been retrieved.",
     "responses.project_score_comment": "is required.",
-    "responses.project_score_exceeds": "exceeds the given criteria score."
+    "responses.project_score_exceeds": "exceeds the given criteria score.",
+    "responses.project_assessment_deleted": "Project Assessment has been deleted.",
+    "responses.project_assessment_not_done_by_you": "No Assessment is done in this Project by you.",
+    "responses.project_assessment_not_delete": "Failed to delete project assessment."
 }

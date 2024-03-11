@@ -14,6 +14,7 @@ use App\Http\Resources\Project\ProjectExternalLinkResource;
 use App\Http\Resources\Project\ProjectRequirementResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Repositories\Api\Project\ProjectRepository;
+use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\ChallengeService;
 use Carbon\Carbon;
 use Exception;
@@ -427,10 +428,44 @@ class ProjectController extends AppBaseController
 
             $captureProjectAssessment = $this->projectRepository->captureProjectAssessment($checkProjectSlugExistsOrNot, auth()->user(), $request);
             if ($captureProjectAssessment) {
-                return $this->sendResponse(AssessedProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_assessment_submitted'), 200);
+                $fetchProjectAssessment = ChallengeAssessmentUserService::getProjectAssessmentData($checkProjectSlugExistsOrNot);
+                switch ($fetchProjectAssessment['assessment_status']) {
+                    case 'published':
+                        $responseMessage = __('responses.project_assessment_submitted');
+                        break;
+                    case 'draft':
+                        $responseMessage = __('responses.project_assessment_draft');
+                        break;
+                }
+
+                return $this->sendResponse(AssessedProjectResource::make($checkProjectSlugExistsOrNot), $responseMessage, 200);
             }
 
             return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function deleteAssessmentProject($slug)
+    {
+        try {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $checkChallengeProjectAssessment = $this->projectRepository->checkChallengeProjectAssessment($checkProjectExistsOrNot->id, auth()->user());
+            if ($checkChallengeProjectAssessment == false) {
+                return $this->sendError(__('responses.project_assessment_not_done_by_you'), 403);
+            }
+
+            $deleteProjectAssessment = $this->projectRepository->deleteChallengeProjectAssessment($checkProjectExistsOrNot->id, auth()->user());
+            if ($deleteProjectAssessment) {
+                return $this->sendResponse([], __('responses.project_assessment_deleted'), 200);
+            }
+
+            return $this->sendError(__('responses.project_assessment_not_delete'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

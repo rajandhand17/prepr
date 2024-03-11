@@ -27,8 +27,11 @@ class AddProjectAssessmentRequest extends FormRequest
         $base_rules = [
             'criteria_id'       => 'array|required',
             'criteria_id.*'     => 'numeric|exists:challenge_assessment_criterias,id',
-            'score.*'           => 'array|required|numeric',
-            'status'            => 'required|in:draft,publish',
+            'score'             => 'array|required',
+            'score.*'           => 'numeric',
+            'comment'           => 'array|required',
+            'comment.*'         => 'min:1',
+            'status'            => 'required|in:draft,published',
             'criteria_comment'  => 'required|string|min:1',
         ];
 
