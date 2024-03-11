@@ -19,6 +19,10 @@ class ChallengePitch extends Model
         'description',
         'fr_CA_description',
     ];
-
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function getProjectPitchAnswer()
+    {
+        return $this->hasMany(ProjectPitchValue::class, 'project_pitch_id', 'id');
+    }
 }

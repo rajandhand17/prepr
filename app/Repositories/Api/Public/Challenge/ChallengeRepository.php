@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Public\Challenge;
 
 use App\Services\Public\ChallengeService;
 use App\Services\Public\ChallengeSocialActivitiesService;
+use Exception;
 
 class ChallengeRepository implements ChallengeInterface
 {
@@ -20,7 +21,16 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->getList($request);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectChallenges($request)
+    {
+        try {
+            return $this->challengeService->getProjectChallenges($request);
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -29,7 +39,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->getChallengeBasedOnSlug($slug);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -38,7 +48,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeSocialActivitiesService->getColumnNameValue($action);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -47,7 +57,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeSocialActivitiesService->checkSocialActivity($challenge_id, $column, $action);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -56,7 +66,16 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeSocialActivitiesService->captureSocialActivity($challenge_id, $column, $value);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectChallengeRequirement($challengeData)
+    {
+        try {
+            return $this->challengeService->getProjectChallengeRequirement($challengeData);
+        } catch (Exception $e) {
             return false;
         }
     }

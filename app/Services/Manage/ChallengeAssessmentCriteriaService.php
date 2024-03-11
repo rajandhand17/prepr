@@ -7,13 +7,14 @@ use Exception;
 
 class ChallengeAssessmentCriteriaService
 {
-    public function createChallengeAssessmentCriteria($request, $challenge)
+    public function createChallengeAssessmentCriteria($request, $challenge, $challengeAssessment)
     {
         try {
-            if ($request->assessment_title !== null && $request->assessment_score !== null && $request->assessment_weight !== null) {
+            if (!empty($request->assessment_type) && $request->assessment_title !== null && $request->assessment_score !== null && $request->assessment_weight !== null) {
                 foreach ($request->assessment_title as $key => $value) {
                     $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
                     $challengeAssessmentCriteria->challenge_id = $challenge;
+                    $challengeAssessmentCriteria->assessment_id = $challengeAssessment->id;
                     $challengeAssessmentCriteria->title = $request->assessment_title[$key];
                     $challengeAssessmentCriteria->score = $request->assessment_score[$key];
                     $challengeAssessmentCriteria->weight = $request->assessment_weight[$key];
@@ -27,7 +28,7 @@ class ChallengeAssessmentCriteriaService
         }
     }
 
-    public function updateChallengeAssessmentCriteria($request, $challenge_id)
+    public function updateChallengeAssessmentCriteria($request, $challenge_id, $updateChallengeAssessment)
     {
         try {
             if ($request->has('assessment_title') && $request->has('assessment_score') && $request->has('assessment_weight')) {
@@ -36,6 +37,7 @@ class ChallengeAssessmentCriteriaService
                     foreach ($request->assessment_title as $key => $value) {
                         $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
                         $challengeAssessmentCriteria->challenge_id = $challenge_id;
+                        $challengeAssessmentCriteria->assessment_id = $updateChallengeAssessment->id;
                         $challengeAssessmentCriteria->title = $request->assessment_title[$key];
                         $challengeAssessmentCriteria->score = $request->assessment_score[$key];
                         $challengeAssessmentCriteria->weight = $request->assessment_weight[$key];

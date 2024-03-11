@@ -42,6 +42,8 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
             $this->mapChatRoutes();
+            $this->mapProjectRoutes();
+            $this->mapProjectMemberManagementRoutes();
         });
     }
 
@@ -91,6 +93,16 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapSettingRoutes()
     {
         Route::prefix('api/v1/setting/')->middleware('api')->group(base_path('routes/v1/setting.php'));
+    }
+
+    protected function mapProjectRoutes()
+    {
+        Route::prefix('api/v1/project/')->middleware('api')->group(base_path('routes/v1/project.php'));
+    }
+
+    protected function mapProjectMemberManagementRoutes()
+    {
+        Route::prefix('api/v1/member-management/project/')->middleware('api')->group(base_path('routes/v1/project-member-management.php'));
     }
 
     protected function mapManageRoutes()

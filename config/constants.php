@@ -32,7 +32,7 @@ return [
         'organization' => '0',
         'lab'          => '1',
         'challenge'    => '2',
-        'project'      => '3',
+        'project'      => '5',
     ],
 
     'member_management_invite_status' => [
@@ -157,19 +157,14 @@ return [
         'yes' => '1',
     ],
 
-    'project_privacy' => [
-        'no'  => '0',
-        'yes' => '1',
-    ],
-
     'challenge_notification_enabled' => [
         'no'  => '0',
         'yes' => '1',
     ],
 
     'challenge_open_close' => [
-        'no'  => '0',
-        'yes' => '1',
+        'no'  => '1',
+        'yes' => '0',
     ],
 
     'challenge_auto_created' => [
@@ -283,6 +278,7 @@ return [
         'yes' => '1',
         'no'  => '2',
     ],
+
     'disability' => [
         'yes' => '1',
         'no'  => '2',
@@ -297,6 +293,44 @@ return [
         'url'                  => '5',
         'image'                => '6',
         'embedded_Cover_Video' => '7',
+    ],
+
+    'file_type' => [
+        'document'             => '0',
+        'video'                => '1',
+        'audio'                => '2',
+        'embedded'             => '3',
+        'embedded_audio'       => '4',
+        'url'                  => '5',
+        'image'                => '6',
+        'embedded_Cover_Video' => '7',
+    ],
+
+    'project_view_enabled' => [
+        'no'        => '0',
+        'yes'       => '1',
+    ],
+
+    'project_download_enabled' => [
+        'no'        => '0',
+        'yes'       => '1',
+    ],
+
+    'project_media_type' => [
+        'image'         => '0',
+        'embedded'      => '1',
+        'video'         => '2',
+    ],
+
+    'project_privacy' => [
+        'public'       => '0',
+        'private'      => '1',
+    ],
+
+    'file_type' => [
+        'image' => 'image',
+        'video' => 'video',
+        'docs'  => 'docs',
     ],
 
     'subscription_options' => [
@@ -342,6 +376,7 @@ return [
         '0' => 'unsubscribe',
         '1' => 'subscribe',
     ],
+
     'conversation_type' => [
         'direct_message' => '0',
         'group_message'  => '1',
@@ -351,5 +386,74 @@ return [
         '0' => 'direct_message',
         '1' => 'group_message',
         '2' => 'announcement',
+    ],
+
+    'purpose'=> [
+        'looking_team'                   => '0',
+        'currently_mentor'               => '1',
+        'looking_employers'              => '2',
+        'currently_team'                 => '3',
+        'looking_teammates'              => '4',
+        'looking_employees'              => '5',
+        'looking_invest'                 => '6',
+        'looking_mentor'                 => '7',
+        'looking_for_investors'          => '8',
+        'looking_to_create_social_impact'=> '9',
+        'looking_to_learn'               => '10',
+        'looking_to_solve_problems'      => '11',
+        'looking_to_build_skills'        => '12',
+    ],
+
+    'user_types'=> [
+        'employee'                  => '0',
+        'investor'                  => '1',
+        'teacher'                   => '2',
+        'job_seeker'                => '3',
+        'student'                   => '4',
+        'recent_grad'               => '5',
+        'expert'                    => '6',
+        'employer'                  => '7',
+        'Recent Grad'               => '8',
+        'facilitator'               => '9',
+        'Job Seeker'                => '10',
+        'startup'                   => '11',
+        'learner'                   => '12',
+        'mentor'                    => '13',
+        'innovator'                 => '14',
+        'aspiring_entrepreneur'     => '15',
+        'evaluator'                 => '16',
+        'small_mid_size_business'   => '17',
+        'entrepreneur'              => '18',
+        'ngo_charity_not_for_profit'=> '19',
+        'enterprise'                => '20',
+        'applicant'                 => '21',
+        'educational_institution'   => '22',
+        'community_organization'    => '23',
+    ],
+
+    'project_member_management_invite_type' => [
+        'email'        => '0',
+        'network'      => '1',
+        'csv'          => '2',
+    ],
+
+    'project_member_management_invite_status' => [
+        'invited'      => '0',
+        'accepted'     => '1',
+        'pending'      => '2',
+        'declined'     => '3',
+    ],
+
+    'project_member_management_email_status' => [
+        'scheduled' => '0',
+        'sent'      => '1',
+        'fail'      => '2',
+        'na'        => '3',
+    ],
+
+    'project_access_level' => [
+        'editor'        => '0',
+        'viewer'        => '1',
+        'team_leader'   => '2',
     ],
 ];

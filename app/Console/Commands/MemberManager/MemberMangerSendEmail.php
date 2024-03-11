@@ -20,7 +20,7 @@ class MemberMangerSendEmail extends Command
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old languages table data to new db structure.';
+    protected $description = 'This command is use to send email invitation to members from member management.';
 
     /**
      * Create a new command instance.

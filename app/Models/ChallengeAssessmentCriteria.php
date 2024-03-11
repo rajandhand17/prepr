@@ -14,8 +14,14 @@ class ChallengeAssessmentCriteria extends Model
     protected $table = 'challenge_assessment_criterias';
     protected $fillable = [
         'challenge_id',
+        'assessment_id',
         'title',
         'score',
         'weight',
     ];
+
+    public function assessment()
+    {
+        return $this->belongsTo(ChallengeAssessment::class, 'assessment_id', 'id');
+    }
 }

@@ -11,19 +11,20 @@ class ChallengeTemplateAssessmentService
     public function addChallengeTemplateAssessment($challengeId, $templateChallengeId)
     {
         try {
-            $challengeAssessments = ChallengeAssessment::where('challenge_id', $challengeId)->get();
-            foreach ($challengeAssessments as $challengeAssessment) {
+            $challengeTemplateAssessment = true;
+            $challengeAssessments = ChallengeAssessment::where('challenge_id', $challengeId)->first();
+            if ($challengeAssessments) {
                 $challengeTemplateAssessment = new ChallengeTemplateAssessment();
                 $challengeTemplateAssessment->challenge_template_id = $templateChallengeId;
-                $challengeTemplateAssessment->assessment_type = $challengeAssessment->assessment_type;
-                $challengeTemplateAssessment->visibility = ($challengeAssessment->assessment_type == '2') ? '1' : $challengeAssessment->visibility;
-                $challengeTemplateAssessment->members_email = ($challengeAssessment->assessment_type == '2') ? null : $challengeAssessment->members_email;
-                $challengeTemplateAssessment->guidelines = $challengeAssessment->guidelines;
-                $challengeTemplateAssessment->attachments = $challengeAssessment->attachments;
+                $challengeTemplateAssessment->assessment_type = $challengeAssessments->assessment_type;
+                $challengeTemplateAssessment->visibility = ($challengeAssessments->assessment_type == '2') ? '1' : $challengeAssessments->visibility;
+                $challengeTemplateAssessment->members_email = ($challengeAssessments->assessment_type == '2') ? null : $challengeAssessments->members_email;
+                $challengeTemplateAssessment->guidelines = $challengeAssessments->guidelines;
+                $challengeTemplateAssessment->attachments = $challengeAssessments->attachments;
                 $challengeTemplateAssessment->save();
             }
 
-            return true;
+            return $challengeTemplateAssessment;
         } catch (Exception $e) {
             return false;
         }
@@ -32,21 +33,20 @@ class ChallengeTemplateAssessmentService
     public function redeemChallengeTemplateAssessment($redeemChallengeId, $challengeTemplateId)
     {
         try {
-            $checkChallengeTemplateAssessments = ChallengeTemplateAssessment::where('challenge_template_id', $challengeTemplateId)->get();
-            if (!empty($checkChallengeTemplateAssessments)) {
-                foreach ($checkChallengeTemplateAssessments as $challengeTemplateAssessment) {
-                    $newChallengeAssessments = new ChallengeAssessment();
-                    $newChallengeAssessments->challenge_id = $redeemChallengeId;
-                    $newChallengeAssessments->assessment_type = $challengeTemplateAssessment->assessment_type;
-                    $newChallengeAssessments->visibility = ($challengeTemplateAssessment->assessment_type == '2') ? '1' : $challengeTemplateAssessment->visibility;
-                    $newChallengeAssessments->members_email = ($challengeTemplateAssessment->assessment_type == '2') ? null : $challengeTemplateAssessment->members_email;
-                    $newChallengeAssessments->guidelines = $challengeTemplateAssessment->guidelines;
-                    $newChallengeAssessments->attachments = $challengeTemplateAssessment->attachments;
-                    $newChallengeAssessments->save();
-                }
+            $newChallengeAssessments = true;
+            $checkChallengeTemplateAssessments = ChallengeTemplateAssessment::where('challenge_template_id', $challengeTemplateId)->first();
+            if ($checkChallengeTemplateAssessments) {
+                $newChallengeAssessments = new ChallengeAssessment();
+                $newChallengeAssessments->challenge_id = $redeemChallengeId;
+                $newChallengeAssessments->assessment_type = $checkChallengeTemplateAssessments->assessment_type;
+                $newChallengeAssessments->visibility = ($checkChallengeTemplateAssessments->assessment_type == '2') ? '1' : $checkChallengeTemplateAssessments->visibility;
+                $newChallengeAssessments->members_email = ($checkChallengeTemplateAssessments->assessment_type == '2') ? null : $checkChallengeTemplateAssessments->members_email;
+                $newChallengeAssessments->guidelines = $checkChallengeTemplateAssessments->guidelines;
+                $newChallengeAssessments->attachments = $checkChallengeTemplateAssessments->attachments;
+                $newChallengeAssessments->save();
             }
 
-            return true;
+            return $newChallengeAssessments;
         } catch (Exception $e) {
             return false;
         }

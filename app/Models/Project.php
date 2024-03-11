@@ -1,0 +1,145 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Project extends Model
+{
+    use HasFactory;
+    use SoftDeletes;
+
+    protected $table = 'projects';
+    protected $fillable = [
+        'uuid',
+        'language',
+        'user_id',
+        'title',
+        'slug',
+        'description',
+        'is_view_enabled',
+        'is_download_enabled',
+        'media_type',
+        'media',
+        'privacy',
+        'recruiting_status',
+        'challenge_id',
+        'lab_id',
+        'category_id',
+        'type_id',
+        'industry_id',
+        'stage_id',
+        'vertical_id',
+        'status_id',
+        'is_submitted',
+    ];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
+    public function getProjectTemplate()
+    {
+        return $this->hasOne(ChallengeProjectTemplate::class, 'challenge_id', 'challenge_id');
+    }
+
+    public function getProjectImages()
+    {
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'image');
+    }
+
+    public function getProjectDocs()
+    {
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'docs');
+    }
+
+    public function getProjectVideos()
+    {
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'video');
+    }
+
+    public function getProjectAudios()
+    {
+        return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'audio');
+    }
+
+    public function external_links()
+    {
+        return $this->hasMany(ProjectExternalLink::class, 'project_id', 'id');
+    }
+
+    public function getProjectAdditionalInfo()
+    {
+        return $this->hasOne(ProjectAdditionalInfo::class, 'project_id', 'id');
+    }
+
+    public function getJoinedStatus()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where(['invite_status' => '1', 'email' => auth('api')->user()->email])->first();
+        }
+
+        return null;
+    }
+
+    public function getMembersCount()
+    {
+        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('invite_status', '1')->count();
+    }
+
+    public function likes()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'like_dislike' => '1'])->count();
+        }
+
+        return 0;
+    }
+
+    public function votes()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'vote' => '1'])->count();
+        }
+
+        return 0;
+    }
+
+    public function shares()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'share' => '1'])->count();
+        }
+
+        return 0;
+    }
+
+    public function favourite()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'favourite' => '1'])->count() > 0) ? 'yes' : 'no';
+        }
+
+        return 'no';
+    }
+
+    public function getProjectAssessment()
+    {
+        return $this->hasOne(ChallengeAssessment::class, 'challenge_id', 'challenge_id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(ProjectSkill::class, 'project_id', 'id');
+    }
+
+    public function members()
+    {
+        return $this->hasMany(ProjectMemberManagement::class, 'project_id', 'id')->where('invite_status', '1');
+    }
+}

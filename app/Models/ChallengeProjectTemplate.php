@@ -16,4 +16,14 @@ class ChallengeProjectTemplate extends Model
         'challenge_id',
         'template_id',
     ];
+
+    public function getTemplatePitches()
+    {
+        return $this->hasMany(ChallengePitch::class, 'template_id', 'template_id');
+    }
+
+    public function getTemplateTasks()
+    {
+        return $this->hasMany(ChallengeTask::class, 'template_id', 'template_id');
+    }
 }

@@ -29,7 +29,7 @@ class ChallengeAssessmentResource extends JsonResource
             });
         }
 
-        if ($this->challenge_assessment->isNotEmpty()) {
+        if ($this->challenge_assessment) {
             $challenge_assessment = ChallengeAssessmentService::getChallengeAssessmentData($this->challenge_assessment);
         }
 

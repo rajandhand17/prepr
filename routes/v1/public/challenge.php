@@ -13,5 +13,7 @@ Route::middleware($middleware)->group(function () {
     Route::get('/{slug}', [ChallengeController::class, 'show']);
 });
 Route::middleware(['language', 'auth:api'])->group(function () {
+    Route::get('/active-challenge/list', [ChallengeController::class, 'challengeList']);
+    Route::get('{slug}/requirements', [ChallengeController::class, 'challengeRequirements']);
     Route::post('/{slug}/{activity}', [ChallengeController::class, 'socialActivity']);
 });
