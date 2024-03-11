@@ -142,6 +142,7 @@ class ChallengeAssessmentUserService
             $checkChallengeProjectAssessment = ChallengeAssessmentUser::where(['project_id' => $projectDataId, 'user_id' => $userData->id])->get();
             if (!empty($checkChallengeProjectAssessment)) {
                 ChallengeAssessmentUser::where(['project_id' => $projectDataId, 'user_id' => $userData->id])->delete();
+
                 return true;
             }
 
