@@ -23,7 +23,7 @@ class ChallengeAssessmentUserService
                         ],
                         [
                             'score'            => $request->score[$key],
-                            'comment'          => $request->comment[$key],
+                            'comment'          => $request->comment[$key] ?? null,
                             'criteria_comment' => $request->criteria_comment,
                             'status'           => $assessmentStatus,
                         ]

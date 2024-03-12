@@ -428,7 +428,7 @@ class ProjectController extends AppBaseController
 
             $captureProjectAssessment = $this->projectRepository->captureProjectAssessment($checkProjectSlugExistsOrNot, auth()->user(), $request);
             if ($captureProjectAssessment) {
-                $fetchProjectAssessment = ChallengeAssessmentUserService::getProjectAssessmentData($checkProjectSlugExistsOrNot);
+                $fetchProjectAssessment = ChallengeAssessmentUserService::getProjectAssessmentData($checkProjectSlugExistsOrNot, auth()->user()->id);
                 switch ($fetchProjectAssessment['assessment_status']) {
                     case 'published':
                         $responseMessage = __('responses.project_assessment_submitted');
