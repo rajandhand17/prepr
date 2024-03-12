@@ -17,7 +17,7 @@ class AssessedProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $fetchProjectAssessment = ChallengeAssessmentUserService::getProjectAssessmentData($this);
+        $fetchProjectAssessment = ChallengeAssessmentUserService::getProjectAssessmentData($this, auth()->user()->id);
 
         return $fetchProjectAssessment;
     }

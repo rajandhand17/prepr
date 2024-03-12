@@ -40,12 +40,12 @@ class ChallengeAssessmentUserService
         }
     }
 
-    public static function getcriteriaDataBasedOnId($criteriaData, $projectId)
+    public static function getcriteriaDataBasedOnId($criteriaData, $projectId, $userId)
     {
         try {
             $challenge_assessment_criteria = ChallengeAssessmentCriteria::select('id', 'title', 'score', 'weight')->where('id', $criteriaData->id)->first();
 
-            $check_assessment_criteria = ChallengeAssessmentUser::where(['criteria_id' => $criteriaData->id, 'project_id' => $projectId, 'user_id' => auth()->user()->id])->first();
+            $check_assessment_criteria = ChallengeAssessmentUser::where(['criteria_id' => $criteriaData->id, 'project_id' => $projectId, 'user_id' => $userId])->first();
 
             $challenge_assessment_criteria->score_received = null;
             $challenge_assessment_criteria->comment = null;
@@ -65,7 +65,7 @@ class ChallengeAssessmentUserService
         }
     }
 
-    public static function getProjectAssessmentData($projectData)
+    public static function getProjectAssessmentData($projectData, $userId)
     {
         try {
             $project_assessment = null;
@@ -73,8 +73,8 @@ class ChallengeAssessmentUserService
             $assessment_over_all_comment = null;
 
             if ($projectData->getProjectAssessment) {
-                $project_assessment = $projectData->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) use ($projectData) {
-                    $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $projectData->id);
+                $project_assessment = $projectData->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) use ($projectData, $userId) {
+                    $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $projectData->id, $userId);
 
                     return [
                         'id'                => $criteriaData->id,
