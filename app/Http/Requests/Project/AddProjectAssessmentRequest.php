@@ -29,8 +29,7 @@ class AddProjectAssessmentRequest extends FormRequest
             'criteria_id.*'     => 'numeric|exists:challenge_assessment_criterias,id',
             'score'             => 'array|required',
             'score.*'           => 'numeric',
-            'comment'           => 'array|required',
-            'comment.*'         => 'min:1',
+            'comment'           => 'array',
             'status'            => 'required|in:draft,published',
             'criteria_comment'  => 'required|string|min:1',
         ];
@@ -52,18 +51,16 @@ class AddProjectAssessmentRequest extends FormRequest
             ];
         }
 
-        foreach ($criteriaIds as $key => $criteriaId) {
-            $base_rules["comment.$key"] = [
-                'required',
-                'string',
-                'min:1',
-                function ($attribute, $value, $fail) use ($criteriaId, $comments, $key) {
-                    if (!isset($comments[$key]) || empty($comments[$key])) {
-                        $fail("The comment for criteria_id $criteriaId is missing or empty.");
-                    }
-                },
-            ];
-        }
+        // foreach ($criteriaIds as $key => $criteriaId) {
+        //     $base_rules["comment.$key"] = [
+        //         'string',
+        //         function ($attribute, $value, $fail) use ($criteriaId, $comments, $key) {
+        //             if (!isset($comments[$key]) || empty($comments[$key])) {
+        //                 $fail("The comment for criteria_id $criteriaId is missing or empty.");
+        //             }
+        //         },
+        //     ];
+        // }
 
         return $base_rules;
     }
