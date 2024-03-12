@@ -122,20 +122,23 @@ class ResourceModuleSkillsGroupsStackService
     {
         try {
             ResourceModuleSkillsGroupsStack::where('resource_module_id', $resource_module_id)->delete();
+
             return true;
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public static function getRecommendedSkills($skills){
+    public static function getRecommendedSkills($skills)
+    {
         try {
-            $resourceModuleIds=ResourceModuleSkillsGroupsStack::where('type','0')
+            $resourceModuleIds = ResourceModuleSkillsGroupsStack::where('type', '0')
                 ->whereIn('foreign_id', $skills)->pluck('resource_module_id');
-            $resourceSkillIds=ResourceModuleSkillsGroupsStack::where('type','0')
+            $resourceSkillIds = ResourceModuleSkillsGroupsStack::where('type', '0')
                 ->whereIn('resource_module_id', $resourceModuleIds)->pluck('foreign_id')->unique();
+
             return $resourceSkillIds;
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }

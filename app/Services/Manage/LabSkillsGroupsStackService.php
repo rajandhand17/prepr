@@ -141,6 +141,7 @@ class LabSkillsGroupsStackService
             $getSkills = LabSkillsGroupsStack::where('type', 0)
                 ->whereIn('foreign_id', $usersSkills)
                 ->pluck('foreign_id');
+
             return $getSkills;
         } catch (\Exception $e) {
             return false;
