@@ -12,7 +12,7 @@ return new class() extends Migration {
     {
         Schema::create('featured_module', function (Blueprint $table) {
             $table->id();
-            $table->enum('module_type', ['0', '1', '2'])->comment('0->labs,1->project,2->challenge');
+            $table->enum('module_type', ['0', '1', '2','3','4'])->comment('0->labs,1->challenge,2->resource group,3->resource module,4->resource collection');
             $table->unsignedBigInteger('module_id');
             $table->timestamps();
             $table->softDeletes();

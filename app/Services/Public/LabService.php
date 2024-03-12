@@ -6,7 +6,6 @@ use App\Models\ComponentAssociation;
 use App\Models\Lab;
 use App\Models\MemberManagement;
 use App\Models\FeaturedModule;
-use App\Models\Lab;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
 
@@ -178,13 +177,12 @@ class LabService
             $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($skills);
             /*gets Tags based on user tags*/
             $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
-            $labIds = array_unique((array) array_merge($getLabsIdsBasedOnSKills, $getLabsIdsBasedOnTags));
+            $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique();
             if (!empty($labIds)) {
                 $labList = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->take(12);
             } else {
                 $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(6);
             }
-
             return $labList->get();
         } catch(\Exception $e) {
             return false;
@@ -195,7 +193,6 @@ class LabService
     {
         try {
             $labList = FeaturedModule::where('module_type', '0')->get();
-
             return $labList;
         } catch(\Exception $e) {
             return false;

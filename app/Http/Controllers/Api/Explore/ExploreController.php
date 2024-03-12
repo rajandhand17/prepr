@@ -8,6 +8,7 @@ use App\Http\Resources\Explore\FeaturedResource;
 use App\Http\Resources\Explore\LabResource;
 use App\Http\Resources\Explore\SkillResource;
 use App\Repositories\Api\Explore\ExploreRepository;
+use Illuminate\Support\Facades\Auth;
 
 class ExploreController extends AppBaseController
 {
@@ -18,9 +19,12 @@ class ExploreController extends AppBaseController
         $this->exploreRepository = $exploreRepository;
     }
 
-    public function index($action = null)
+    public function index($action)
     {
         try {
+            if (!in_array($action, ['recommended', 'featured'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 400);
+            }
             $response = [];
             switch ($action) {
                 case 'recommended':
@@ -31,16 +35,18 @@ class ExploreController extends AppBaseController
                             'challenge'  => ChallengeResource::collection($explore['challenge']),
                         ];
                         $message = __('responses.recommended_labs_challenges_successfully');
+                    }else{
+                        $message = __('responses.recommended_labs_challenges_failed');
                     }
-                    $response = __('responses.recommended_labs_challenges_failed');
                     break;
                 case 'featured':
                     $featured = $this->exploreRepository->getFeaturedLabs();
                     if ($featured) {
                         $response = FeaturedResource::collection($featured);
                         $message = __('responses.featured_labs_successfully');
+                    }else{
+                        $message = __('responses.featured_labs_failed');
                     }
-                    $message = __('responses.featured_labs_failed');
                     break;
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
@@ -49,7 +55,6 @@ class ExploreController extends AppBaseController
             if ($response) {
                 return $this->sendResponse($response, $message);
             }
-
             return $this->sendError(__('responses.send_error'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -63,7 +68,6 @@ class ExploreController extends AppBaseController
             if ($recommendedSkills) {
                 return $this->sendResponse(SkillResource::collection($recommendedSkills), __('responses.recommended_skills_successfully'));
             }
-
             return $this->sendResponse([], __('responses.recommended_skills_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

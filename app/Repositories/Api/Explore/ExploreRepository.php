@@ -36,18 +36,13 @@ class ExploreRepository implements ExploreInterface
     public function recommended()
     {
         try {
-            DB::beginTransaction();
             $usersSkills = $this->userSkillsService->getUserSkills();
             $getUsersTags = $this->userTagsService->getMyTags();
             $response['labs'] = $this->labService->getLabsBasedOnSKillsAndTags($usersSkills, $getUsersTags);
             $response['challenge'] = $this->challengeService->getChallengeBasedOnSkillsAndTags($usersSkills, $getUsersTags);
-            DB::commit();
-
             return $response;
         } catch (\Exception $e) {
             DB::rollback();
-
-            return false;
         }
     }
 

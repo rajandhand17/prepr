@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
+use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\LabChallengeRedeem;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use Exception;
@@ -593,8 +594,7 @@ class ChallengeService
             $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
             /*get challenge id based on tags*/
             $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($tags);
-            $challengeIds = array_unique((array) array_merge($getChallengeIdBasedOnTags, $getChallengeIdBasedOnSkill));
-
+            $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique();
             if (!empty($challengeIds)) {
                 $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->whereIn('id', $challengeIds)->limit('12');
             } else {

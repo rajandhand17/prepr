@@ -2,6 +2,8 @@
 
 namespace App\Services\Manage;
 
+use App\Models\ResourceCollectionSkillsGroupsStack;
+use App\Models\ResourceGroup;
 use App\Models\ResourceGroupSkillsGroupStack;
 
 class ResourceGroupSkillsGroupsStackService
@@ -133,6 +135,18 @@ class ResourceGroupSkillsGroupsStackService
                 }
             }
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getRecommendedSkills($skills){
+        try {
+            $resourceGroupId=ResourceGroupSkillsGroupStack::where('type','0')
+                ->whereIn('foreign_id', $skills)->pluck('resource_group_id')->unique();
+            $resourceGroupSkillIds=ResourceGroupSkillsGroupStack::where('type','0')
+                ->whereIn('resource_group_id', $resourceGroupId)->pluck('foreign_id');
+            return $resourceGroupSkillIds;
+        }catch (\Exception $e) {
             return false;
         }
     }

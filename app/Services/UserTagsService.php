@@ -57,7 +57,6 @@ class UserTagsService
     {
         try {
             $userTags = UserTag::where('user_id', auth()->user()->id)->pluck('tag_id');
-
             return $userTags;
         } catch (\Exception $e) {
             return false;
