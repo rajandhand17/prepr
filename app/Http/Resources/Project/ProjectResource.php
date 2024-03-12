@@ -111,6 +111,8 @@ class ProjectResource extends JsonResource
                     'template_id'       => $fetchChallenge->challenge_project_template->template_id ?? 0,
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
+                    'submission_status' => $fetchChallengeDueDate['submission_status'],
+                    'challenge_status'  => $fetchChallengeDueDate['challenge_status'],
                 ];
             }
 
