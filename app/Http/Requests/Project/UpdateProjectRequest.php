@@ -38,7 +38,7 @@ class UpdateProjectRequest extends FormRequest
             'media_type'                => 'required|in:image,embedded',
             'privacy'                   => 'required|in:public,private',
             'cover_media'               => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
-            'lab_id'                    => 'nullable|exists:labs,id',
+            'lab_id'                    => 'nullable|exists:labs,uuid',
         ];
 
         return $base_rules;

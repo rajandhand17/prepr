@@ -32,7 +32,7 @@ class CreateProjectRequest extends FormRequest
             'privacy'                   => 'required|in:public,private',
             'cover_media'               => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'challenge_id'              => 'required|exists:challenges,uuid',
-            'lab_id'                    => 'nullable|exists:labs,id',
+            'lab_id'                    => 'nullable|exists:labs,uuid',
         ];
 
         return $base_rules;

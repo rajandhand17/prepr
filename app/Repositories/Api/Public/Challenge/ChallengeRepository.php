@@ -44,6 +44,15 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
+    public function getChallengeBasedOnUUID($uuid)
+    {
+        try {
+            return $this->challengeService->getChallengeBasedOnUUID($uuid);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getColumnNameValue($action)
     {
         try {

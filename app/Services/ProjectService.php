@@ -110,8 +110,8 @@ class ProjectService
                                 break;
 
                             case 'assessment_details_available':
-                                $projectAssessmentData = ChallengeAssessmentUserService::getProjectAssessmentData($projectData);
-                                if ($projectAssessmentData['assessment_status'] === 'publish') {
+                                $projectAssessmentData = ChallengeAssessmentUserService::getProjectAssessmentData($projectData, auth()->user()->id);
+                                if ($projectAssessmentData['assessment_status'] === 'published') {
                                     $projectIds = $projectData->id;
                                 }
                                 break;
@@ -442,8 +442,8 @@ class ProjectService
             if (!empty($fetchSubmittedProjectIds)) {
                 foreach ($fetchSubmittedProjectIds as $fetchSubmittedProjectId) {
                     $projectData = Project::find($fetchSubmittedProjectId);
-                    $assessedCheck = ChallengeAssessmentUserService::getProjectAssessmentData($projectData);
-                    if ($assessedCheck['assessment_status'] === 'publish') {
+                    $assessedCheck = ChallengeAssessmentUserService::getProjectAssessmentData($projectData, $userData->id);
+                    if ($assessedCheck['assessment_status'] === 'published') {
                         $assessedProjectIds[] = $projectData->id;
                     }
                 }
@@ -467,8 +467,8 @@ class ProjectService
             if (!empty($fetchSubmittedProjectIds)) {
                 foreach ($fetchSubmittedProjectIds as $fetchSubmittedProjectId) {
                     $projectData = Project::find($fetchSubmittedProjectId);
-                    $assessedCheck = ChallengeAssessmentUserService::getProjectAssessmentData($projectData);
-                    if ($assessedCheck['assessment_status'] !== 'publish') {
+                    $assessedCheck = ChallengeAssessmentUserService::getProjectAssessmentData($projectData, $userData->id);
+                    if ($assessedCheck['assessment_status'] !== 'published') {
                         $pendingProjectIds[] = $projectData->id;
                     }
                 }
