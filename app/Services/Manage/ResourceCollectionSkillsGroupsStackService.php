@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Models\ResourceCollectionSkillsGroupsStack;
-use App\Models\ResourceModuleSkillsGroupsStack;
 
 class ResourceCollectionSkillsGroupsStackService
 {
@@ -139,14 +138,17 @@ class ResourceCollectionSkillsGroupsStackService
             return false;
         }
     }
-    public static function getRecommendedSkills($skills){
+
+    public static function getRecommendedSkills($skills)
+    {
         try {
-            $resourceCollectionId=ResourceCollectionSkillsGroupsStack::where('type','0')
+            $resourceCollectionId = ResourceCollectionSkillsGroupsStack::where('type', '0')
                 ->whereIn('foreign_id', $skills)->pluck('resource_collection_id')->unique();
-            $resourceSkillIds=ResourceCollectionSkillsGroupsStack::where('type','0')
+            $resourceSkillIds = ResourceCollectionSkillsGroupsStack::where('type', '0')
                 ->whereIn('resource_collection_id', $resourceCollectionId)->pluck('foreign_id');
+
             return $resourceSkillIds;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

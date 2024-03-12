@@ -40,6 +40,7 @@ class ExploreRepository implements ExploreInterface
             $getUsersTags = $this->userTagsService->getMyTags();
             $response['labs'] = $this->labService->getLabsBasedOnSKillsAndTags($usersSkills, $getUsersTags);
             $response['challenge'] = $this->challengeService->getChallengeBasedOnSkillsAndTags($usersSkills, $getUsersTags);
+
             return $response;
         } catch (\Exception $e) {
             DB::rollback();
@@ -69,12 +70,14 @@ class ExploreRepository implements ExploreInterface
         }
     }
 
-    public function trendingJobs(){
+    public function trendingJobs()
+    {
         try {
             $response['labs'] = $this->labService->getTrendingLab();
             $response['challenge'] = $this->challengeService->getTrendingChallenge();
+
             return $response;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

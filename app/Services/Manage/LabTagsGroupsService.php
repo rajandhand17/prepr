@@ -109,6 +109,7 @@ class LabTagsGroupsService
             $getTags = LabTagsGroups::whereIn('foreign_id', $tagIds)
                    ->where('type', '0')
                    ->pluck('lab_id');
+
             return $getTags;
         } catch (\Exception $e) {
             return false;

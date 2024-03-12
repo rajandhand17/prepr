@@ -3,9 +3,9 @@
 namespace App\Services\Public;
 
 use App\Models\ComponentAssociation;
+use App\Models\FeaturedModule;
 use App\Models\Lab;
 use App\Models\MemberManagement;
-use App\Models\FeaturedModule;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
 
@@ -159,10 +159,11 @@ class LabService
     public function getTrendingLab()
     {
         try {
-            $getLatestLabsIds=MemberManagementService::getLatestLabsIds();
-            $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id',$getLatestLabsIds)->limit(6);
+            $getLatestLabsIds = MemberManagementService::getLatestLabsIds();
+            $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id', $getLatestLabsIds)->limit(6);
+
             return $lab_list->get();
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -180,6 +181,7 @@ class LabService
             } else {
                 $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(6);
             }
+
             return $labList->get();
         } catch(\Exception $e) {
             return false;
@@ -190,6 +192,7 @@ class LabService
     {
         try {
             $labList = FeaturedModule::where('module_type', '0')->get();
+
             return $labList;
         } catch(\Exception $e) {
             return false;
