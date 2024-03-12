@@ -60,11 +60,21 @@ class ExploreRepository implements ExploreInterface
         }
     }
 
-    public function recommendedSkills()
+    public function recommendedSkills($getUserSkills)
     {
         try {
-            return $this->skillsService->recommendSkills();
+            return $this->skillsService->recommendSkills($getUserSkills);
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function trendingJobs(){
+        try {
+            $response['labs'] = $this->labService->getTrendingLab();
+            $response['challenge'] = $this->challengeService->getTrendingChallenge();
+            return $response;
+        }catch(\Exception $e){
             return false;
         }
     }

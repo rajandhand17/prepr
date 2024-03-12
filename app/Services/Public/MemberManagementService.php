@@ -14,7 +14,6 @@ class MemberManagementService
             if ($member_manger) {
                 return true;
             }
-
             return false;
         } catch(\Exception $e) {
             return false;
@@ -40,6 +39,31 @@ class MemberManagementService
 
             return true;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLatestLabsIds(){
+        try {
+            $memberManagement = MemberManagement::where('module_type','1')
+                ->orderBy('created_at')
+                ->limit(6)
+                ->pluck('module_id');
+            return $memberManagement;
+
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public static function getLatestChallengeIds(){
+        try {
+            $memberManagement = MemberManagement::where('module_type','2')
+                ->orderBy('created_at')
+                ->limit(6)
+                ->pluck('module_id');
+            return $memberManagement;
+        }catch (\Exception $e){
             return false;
         }
     }

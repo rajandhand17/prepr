@@ -123,12 +123,9 @@ class SkillService
         }
     }
 
-    public static function recommendSkills()
+    public static function recommendSkills($getUserSkills)
     {
         try {
-            $getUserSkills=UserSkillsService::getUserSkills();
-            $skills='';
-            if($getUserSkills!==''){
                 // Get challenge skills
                 $challengeSkills=ChallengeSkillsGroupsStackService::getRecommendedSkills($getUserSkills);
                 // Get resource module skills
@@ -146,8 +143,7 @@ class SkillService
                 //Fetch the 12 recommendations skills
                 $skills = Skill::select('id', 'title')->whereIn('id',$uniqueSkills)->limit(12)->get();
                 return $skills;
-            }
-            return $skills;
+
         } catch (\Exception $e) {
             return false;
         }

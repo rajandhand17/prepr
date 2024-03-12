@@ -156,16 +156,13 @@ class LabService
         }
     }
 
-    public function getTrendingLab($request)
+    public function getTrendingLab()
     {
         try {
-            $lab_list = Lab::select()->where('labs.status', '1')->limit(20);
-            if (isset($request->search)) {
-                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
-            }
-
-            return $lab_list->paginate(config('site-settings.pagination_per_page'));
-        } catch(\Exception $e) {
+            $getLatestLabsIds=MemberManagementService::getLatestLabsIds();
+            $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id',$getLatestLabsIds)->limit(6);
+            return $lab_list->get();
+        }catch(\Exception $e){
             return false;
         }
     }

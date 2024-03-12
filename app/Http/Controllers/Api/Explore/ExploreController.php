@@ -8,6 +8,7 @@ use App\Http\Resources\Explore\FeaturedResource;
 use App\Http\Resources\Explore\LabResource;
 use App\Http\Resources\Explore\SkillResource;
 use App\Repositories\Api\Explore\ExploreRepository;
+use App\Services\UserSkillsService;
 use Illuminate\Support\Facades\Auth;
 
 class ExploreController extends AppBaseController
@@ -22,7 +23,7 @@ class ExploreController extends AppBaseController
     public function index($action)
     {
         try {
-            if (!in_array($action, ['recommended', 'featured'])) {
+            if (!in_array($action, ['recommended', 'featured','teams'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $response = [];
@@ -48,6 +49,15 @@ class ExploreController extends AppBaseController
                         $message = __('responses.featured_labs_failed');
                     }
                     break;
+                case 'teams':
+                    $featured = $this->exploreRepository->getFeaturedLabs();
+                    if ($featured) {
+                        $response = FeaturedResource::collection($featured);
+                        $message = __('responses.featured_labs_successfully');
+                    }else{
+                        $message = __('responses.featured_labs_failed');
+                    }
+                    break;
                 default:
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                     break;
@@ -61,14 +71,27 @@ class ExploreController extends AppBaseController
         }
     }
 
-    public function recommendedSkills()
+    public function recommendedOrTrendingLabAndChallenge()
     {
         try {
-            $recommendedSkills = $this->exploreRepository->recommendedSkills();
-            if ($recommendedSkills) {
-                return $this->sendResponse(SkillResource::collection($recommendedSkills), __('responses.recommended_skills_successfully'));
+            $getUserSkills=UserSkillsService::getUserSkills();
+            if($getUserSkills){
+                $recommendedSkills = $this->exploreRepository->recommendedSkills($getUserSkills);
+                if ($recommendedSkills) {
+                    return $this->sendResponse(SkillResource::collection($recommendedSkills), __('responses.recommended_skills_successfully'));
+                }
+                return $this->sendResponse([], __('responses.recommended_skills_successfully'));
+            }else{
+                $getTendingJobs=$this->exploreRepository->trendingJobs();
+                if($getTendingJobs){
+                    $response = [
+                        'labs'       => LabResource::collection($getTendingJobs['labs']),
+                        'challenge'  => ChallengeResource::collection($getTendingJobs['challenge']),
+                    ];
+                    return $this->sendResponse($response, __('responses.trending_labs_challenges_successfully'));
+                }
             }
-            return $this->sendResponse([], __('responses.recommended_skills_successfully'));
+
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

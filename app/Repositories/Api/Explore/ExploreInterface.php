@@ -8,5 +8,6 @@ interface ExploreInterface
 
     public function getFeaturedLabs();
 
-    public function recommendedSkills();
+    public function recommendedSkills($getUserSkills);
+
 }

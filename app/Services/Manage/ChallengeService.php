@@ -6,8 +6,10 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengeSkillsGroupsStack;
+use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
 use App\Services\Public\ChallengeSocialActivitiesService;
+use App\Services\Public\MemberManagementService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -603,6 +605,16 @@ class ChallengeService
 
             return $challenges->get();
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTrendingChallenge(){
+        try {
+            $getLatestChallengeIds=MemberManagementService::getLatestChallengeIds();
+            $challenges= Challenge::select()->where('challenges.status','1')->whereIn('id',$getLatestChallengeIds)->limit(6);
+            return $challenges->get();
+        }catch (\Exception $e) {
             return false;
         }
     }
