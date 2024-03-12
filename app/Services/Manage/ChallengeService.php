@@ -567,9 +567,9 @@ class ChallengeService
                             $dateCount = $challengeData->challenge_timelines->flexible_date_number;
                             break;
                     }
-                    $durationDate = date_create(date('Y-m-d', strtotime($projectCreatedDate . ' + ' . $dateCount . 'days')));
+                    $durationDate = date_create(date('Y-m-d', strtotime($projectCreatedDate.' + '.$dateCount.'days')));
                     $formatDate = UtilityHelper::formatDateTime($durationDate);
-                    $currentDate = UtilityHelper::formatDateTime(date_create(date("Y-m-d H:i:s")));
+                    $currentDate = UtilityHelper::formatDateTime(date_create(date('Y-m-d H:i:s')));
                     $dateResult = $formatDate < $currentDate;
 
                     switch ($challengeData->is_open) {
