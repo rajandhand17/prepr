@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Events\Organization\DeleteOrganizationAssociatedData;
-use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Organization;
@@ -199,11 +198,13 @@ class OrganizationService
     public static function deleteOrganization($organizationId, $language = 'en')
     {
         try {
-            $organization=Organization::find($organizationId)->delete();
-            if($organization){
+            $organization = Organization::find($organizationId)->delete();
+            if ($organization) {
                 event(new DeleteOrganizationAssociatedData($organizationId));
+
                 return true;
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
