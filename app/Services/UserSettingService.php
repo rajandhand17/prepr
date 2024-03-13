@@ -42,7 +42,6 @@ class UserSettingService
 
             return $user;
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
