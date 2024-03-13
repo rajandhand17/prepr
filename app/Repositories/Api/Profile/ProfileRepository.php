@@ -83,7 +83,6 @@ class ProfileRepository implements ProfileInterface
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
-
             return false;
         }
     }
