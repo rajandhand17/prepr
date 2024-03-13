@@ -456,4 +456,9 @@ return [
         'viewer'        => '1',
         'team_leader'   => '2',
     ],
+
+    'recent_immigration'=> [
+        'yes' => '1',
+        'no'  => '2',
+    ],
 ];
