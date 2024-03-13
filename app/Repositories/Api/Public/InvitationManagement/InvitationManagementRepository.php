@@ -16,19 +16,19 @@ class InvitationManagementRepository implements InvitationManagementInterface
         $this->roleService = $roleService;
     }
 
-    public function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
+    public function checkComponentJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
     {
         try {
-            return  $this->memberManagementService->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
+            return  $this->memberManagementService->checkComponentJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
+    public function acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
     {
         try {
-            return $this->memberManagementService->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+            return $this->memberManagementService->acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
         } catch (\Exception $e) {
             return false;
         }
