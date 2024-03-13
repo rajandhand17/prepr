@@ -131,11 +131,12 @@ class ResourceCollectionResource extends JsonResource
                 break;
         }
         $rating = intval('0');
-        if(isset(auth()->user()->id)){
+        if (isset(auth()->user()->id)) {
             if ($this->resource_rating) {
                 $rating = intval($this->resource_rating->rating);
             }
         }
+
         return [
             'id'                                       => $this->uuid,
             'language'                                 => $this->language,
