@@ -23,6 +23,7 @@ class OrganizationResource extends JsonResource
             $category = $this->getCategory->title;
         } else {
             $category = null;
+            $category_id=null;
         }
 
         return [
