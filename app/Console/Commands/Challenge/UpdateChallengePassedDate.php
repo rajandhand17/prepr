@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\Challenge;
 
-use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use Exception;
 use Illuminate\Console\Command;
@@ -32,7 +31,7 @@ class UpdateChallengePassedDate extends Command
         try {
             DB::beginTransaction();
 
-            $currentDate = date("Y-m-d H:i:s"); // Getting current date and time
+            $currentDate = date('Y-m-d H:i:s'); // Getting current date and time
             $challengeDatas = Challenge::with('challenge_timelines')->where(['status' => '1', 'is_open' => '0'])->get();
 
             if ($challengeDatas->isNotEmpty()) {
@@ -42,10 +41,10 @@ class UpdateChallengePassedDate extends Command
                     if ($challengeTimeline) {
                         if ($challengeTimeline->timeline_type === '0' && $challengeTimeline->flexible_expire_deadline !== '1969-12-31 00:00:00' && $challengeTimeline->flexible_expire_deadline < $currentDate) {
                             $challengeData->update(['is_open' => '1']);
-                            $this->info('This challenge id has been updated:- ' . $challengeData->id);
+                            $this->info('This challenge id has been updated:- '.$challengeData->id);
                         } elseif ($challengeTimeline->timeline_type === '1' && $challengeTimeline->submission_deadline_date < $currentDate) {
                             $challengeData->update(['is_open' => '1']);
-                            $this->info('This challenge id has been updated:- ' . $challengeData->id);
+                            $this->info('This challenge id has been updated:- '.$challengeData->id);
                         }
                     }
                 }
@@ -57,5 +56,4 @@ class UpdateChallengePassedDate extends Command
             $this->error('Challenge Status not updated');
         }
     }
-
 }
