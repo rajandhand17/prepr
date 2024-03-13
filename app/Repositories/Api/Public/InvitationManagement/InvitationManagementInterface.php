@@ -6,5 +6,5 @@ interface InvitationManagementInterface
 {
     public function checkComponentJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
 
-    public function acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
+    public function acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
 }
