@@ -59,7 +59,7 @@ class EventServiceProvider extends ServiceProvider
         DeleteProjectAssociatedData::class => [
             HandleDeleteProjectAssociatedData::class,
         ],
-        DeleteOrganizationAssociatedData::class=>[
+        DeleteOrganizationAssociatedData::class=> [
             HandleDeleteOrganizationAssociatedData::class,
         ],
     ];
