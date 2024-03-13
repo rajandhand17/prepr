@@ -48,6 +48,11 @@ class Project extends Model
         return $this->hasOne(ChallengeProjectTemplate::class, 'challenge_id', 'challenge_id');
     }
 
+    public function getProjectIdBasedTemplate()
+    {
+        return $this->hasOne(ProjectTemplate::class, 'project_id', 'id')->latest();
+    }
+
     public function getProjectImages()
     {
         return $this->hasMany(ProjectFile::class, 'project_id', 'id')->where('type', 'image');
