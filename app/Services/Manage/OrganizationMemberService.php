@@ -64,4 +64,19 @@ class OrganizationMemberService
             return false;
         }
     }
+
+    public static function deleteOrganizationMembers($organizationId){
+        try {
+            $organizationMember=OrganizationMember::where('organization_id',$organizationId)->first();
+            if($organizationMember){
+                $deleteOrganizationMember=OrganizationMember::where('organization_id',$organizationId)->delete();
+                if($deleteOrganizationMember){
+                     return true;
+                }
+            }
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

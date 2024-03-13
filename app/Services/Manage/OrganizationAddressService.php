@@ -73,4 +73,19 @@ class OrganizationAddressService
             return false;
         }
     }
+
+    public static function deleteOrganizationAddress($organizationId){
+        try {
+            $organization=OrganizationAddress::where('organization_id',$organizationId)->first();
+            if($organization){
+                $organization=OrganizationAddress::where('organization_id',$organizationId)->delete();
+                if($organization){
+                    return true;
+                }
+            }
+            return true;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }
