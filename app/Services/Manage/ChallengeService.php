@@ -600,15 +600,57 @@ class ChallengeService
                             break;
                     }
                     $durationDate = date_create(date('Y-m-d', strtotime($projectCreatedDate.' + '.$dateCount.'days')));
-                    $formatData = UtilityHelper::formatDateTime($durationDate);
+                    $formatDate = UtilityHelper::formatDateTime($durationDate);
+                    $currentDate = UtilityHelper::formatDateTime(date_create(date('Y-m-d H:i:s')));
+                    $dateResult = $formatDate < $currentDate;
+
+                    switch ($challengeData->is_open) {
+                        case '0':
+                            $submission_status = 'submission';
+                            if ($dateResult) {
+                                $submission_status = 'late_submission';
+                            }
+                            $challenge_status = 'open';
+                            break;
+                        case '1':
+                            $submission_status = 'late_submission';
+                            $challenge_status = 'closed';
+                            break;
+                        case '2':
+                            $submission_status = 'not_allowed';
+                            $challenge_status = 'completed';
+                            break;
+                        default:
+                    }
+
                     $challenge_timelines = [
                         'timeline_type'                 => 'flexible',
-                        'submission_deadline_date'      => $formatData,
+                        'submission_deadline_date'      => $formatDate,
+                        'submission_status'             => $submission_status,
+                        'challenge_status'              => $challenge_status,
                     ];
                 } elseif ($challengeData->challenge_timelines->timeline_type == '1') {
+                    switch ($challengeData->is_open) {
+                        case '0':
+                            $submission_status = 'submission';
+                            $challenge_status = 'open';
+                            break;
+                        case '1':
+                            $submission_status = 'late_submission';
+                            $challenge_status = 'closed';
+                            break;
+                        case '2':
+                            $submission_status = 'not_allowed';
+                            $challenge_status = 'completed';
+                            break;
+                        default:
+                    }
+
                     $challenge_timelines = [
                         'timeline_type'                         => 'restricted',
                         'submission_deadline_date'              => $challengeData->challenge_timelines->submission_deadline_date,
+                        'submission_status'                     => $submission_status,
+                        'challenge_status'                      => $challenge_status,
                     ];
                 }
             }

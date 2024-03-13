@@ -11,7 +11,7 @@ class ChallengeAssessmentUserService
     public function addProjectEvaluation($challengeAssessment, $projectData, $userData, $request)
     {
         try {
-            $assessmentStatus = $request->status == 'publish' ? config('constants.challenge_status.publish') : config('constants.challenge_status.draft');
+            $assessmentStatus = $request->status == 'published' ? config('constants.challenge_status.publish') : config('constants.challenge_status.draft');
 
             if (isset($request->criteria_id) && isset($request->score) && isset($request->comment)) {
                 foreach ($request->criteria_id as $key => $criteriaId) {
@@ -23,7 +23,7 @@ class ChallengeAssessmentUserService
                         ],
                         [
                             'score'            => $request->score[$key],
-                            'comment'          => $request->comment[$key],
+                            'comment'          => $request->comment[$key] ?? null,
                             'criteria_comment' => $request->criteria_comment,
                             'status'           => $assessmentStatus,
                         ]
@@ -40,12 +40,12 @@ class ChallengeAssessmentUserService
         }
     }
 
-    public static function getcriteriaDataBasedOnId($criteriaData, $projectId)
+    public static function getcriteriaDataBasedOnId($criteriaData, $projectId, $userId)
     {
         try {
             $challenge_assessment_criteria = ChallengeAssessmentCriteria::select('id', 'title', 'score', 'weight')->where('id', $criteriaData->id)->first();
 
-            $check_assessment_criteria = ChallengeAssessmentUser::where(['criteria_id' => $criteriaData->id, 'project_id' => $projectId, 'user_id' => auth()->user()->id])->first();
+            $check_assessment_criteria = ChallengeAssessmentUser::where(['criteria_id' => $criteriaData->id, 'project_id' => $projectId, 'user_id' => $userId])->first();
 
             $challenge_assessment_criteria->score_received = null;
             $challenge_assessment_criteria->comment = null;
@@ -65,7 +65,7 @@ class ChallengeAssessmentUserService
         }
     }
 
-    public static function getProjectAssessmentData($projectData)
+    public static function getProjectAssessmentData($projectData, $userId)
     {
         try {
             $project_assessment = null;
@@ -73,8 +73,8 @@ class ChallengeAssessmentUserService
             $assessment_over_all_comment = null;
 
             if ($projectData->getProjectAssessment) {
-                $project_assessment = $projectData->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) use ($projectData) {
-                    $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $projectData->id);
+                $project_assessment = $projectData->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) use ($projectData, $userId) {
+                    $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $projectData->id, $userId);
 
                     return [
                         'id'                => $criteriaData->id,
@@ -98,7 +98,7 @@ class ChallengeAssessmentUserService
                         break;
 
                     case false:
-                        $assessment_status = 'publish';
+                        $assessment_status = 'published';
                         break;
 
                     default:
@@ -117,6 +117,36 @@ class ChallengeAssessmentUserService
                 'assessment_over_all_comment'   => $assessment_over_all_comment,
                 'assessment_scoring_data'       => $project_assessment,
             ];
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkChallengeProjectAssessment($projectDataId, $userData)
+    {
+        try {
+            $checkChallengeProjectAssessment = ChallengeAssessmentUser::where(['project_id' => $projectDataId, 'user_id' => $userData->id])->get();
+            if (!empty($checkChallengeProjectAssessment)) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteChallengeProjectAssessment($projectDataId, $userData)
+    {
+        try {
+            $checkChallengeProjectAssessment = ChallengeAssessmentUser::where(['project_id' => $projectDataId, 'user_id' => $userData->id])->get();
+            if (!empty($checkChallengeProjectAssessment)) {
+                ChallengeAssessmentUser::where(['project_id' => $projectDataId, 'user_id' => $userData->id])->delete();
+
+                return true;
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }

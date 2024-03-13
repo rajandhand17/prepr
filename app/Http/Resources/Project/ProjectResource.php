@@ -32,9 +32,15 @@ class ProjectResource extends JsonResource
         $liked = 'no';
         $voted = 'no';
         $project_role = 'none';
+        $is_assess_enabled = 'yes';
 
         if ($this->getProjectTemplate) {
-            $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
+            if ($this->getProjectTemplate->template_id == '0') {
+                $templateData = $this->getProjectIdBasedTemplate ?? $this->getProjectTemplate;
+            } else {
+                $templateData = $this->getProjectTemplate;
+            }
+            $challenge_pitch = $templateData->getTemplatePitches->map(function ($task) {
                 $pitchAnswer = ProjectPitchService::getPitchAnswerBasedOnId($task, $this->id, $this->language);
 
                 return [
@@ -43,10 +49,8 @@ class ProjectResource extends JsonResource
                     'pitch_answer'      => $pitchAnswer->description_answer,
                 ];
             });
-        }
 
-        if ($this->getProjectTemplate) {
-            $challenge_task = $this->getProjectTemplate->getTemplateTasks->map(function ($task) {
+            $challenge_task = $templateData->getTemplateTasks->map(function ($task) {
                 $taskAnswer = ProjectPitchService::getTaskAnswerBasedOnId($task, $this->id, $this->language);
 
                 return [
@@ -100,6 +104,7 @@ class ProjectResource extends JsonResource
         if ($this->challenge_id) {
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
             if ($fetchChallenge) {
+                $getTemplate = ($this->getProjectIdBasedTemplate !== null) ? $this->getProjectIdBasedTemplate->template_id : ($fetchChallenge->challenge_project_template->template_id ?? 0);
                 $projectDate = UtilityHelper::formatDateTime($this->created_at);
                 $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($fetchChallenge, $projectDate);
                 $challenge_details = [
@@ -107,8 +112,11 @@ class ProjectResource extends JsonResource
                     'uuid'              => $fetchChallenge->uuid,
                     'title'             => $fetchChallenge->title,
                     'slug'              => $fetchChallenge->slug,
+                    'template_id'       => $getTemplate,
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
+                    'submission_status' => $fetchChallengeDueDate['submission_status'],
+                    'challenge_status'  => $fetchChallengeDueDate['challenge_status'],
                 ];
             }
 
@@ -119,6 +127,10 @@ class ProjectResource extends JsonResource
                     'achievement_image'     => $fetchChallenge->participation_achievement->achievement_image,
                     'achievement_prize'     => $fetchChallenge->participation_achievement->achievement_prize,
                 ];
+            }
+
+            if ($this->is_submitted === '1') {
+                $is_assess_enabled = ($fetchChallenge->is_open === '2') ? 'no' : 'yes';
             }
         }
 
@@ -232,6 +244,7 @@ class ProjectResource extends JsonResource
             'videos'                => ProjectVideoResource::make($this),
             'audios'                => ProjectAudioResource::make($this),
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
+            'is_assess_enabled'     => $is_assess_enabled,
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
             'assessment_data'       => AssessedProjectResource::make($this),
             'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),

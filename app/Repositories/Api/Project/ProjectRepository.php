@@ -469,4 +469,36 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function checkChallengeProjectAssessment($projectDataId, $userData)
+    {
+        try {
+            return $this->challengeAssessmentUserService->checkChallengeProjectAssessment($projectDataId, $userData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteChallengeProjectAssessment($projectDataId, $userData)
+    {
+        try {
+            $deleteProjectAssessment = DB::transaction(function () use ($projectDataId, $userData) {
+                $deleteAssessment = $this->challengeAssessmentUserService->deleteChallengeProjectAssessment($projectDataId, $userData);
+
+                return $deleteAssessment;
+            });
+
+            if ($deleteProjectAssessment) {
+                DB::commit();
+
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
 }

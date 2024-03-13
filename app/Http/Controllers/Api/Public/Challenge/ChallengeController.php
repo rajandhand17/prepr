@@ -102,10 +102,10 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function challengeRequirements($slug)
+    public function challengeRequirements($uuid)
     {
         try {
-            $fetchChallengeExistsOrNot = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            $fetchChallengeExistsOrNot = $this->challengeRepository->getChallengeBasedOnUUID($uuid);
             if (!$fetchChallengeExistsOrNot) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
