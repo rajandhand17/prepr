@@ -191,7 +191,7 @@ class User extends Authenticatable
 
     public function userResume()
     {
-        return $this->hasOne(UserPersonalFile::class)->where('type','0');
+        return $this->hasOne(UserPersonalFile::class)->where('type', '0');
     }
 
     /**login apis */

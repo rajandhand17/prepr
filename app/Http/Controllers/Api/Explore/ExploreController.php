@@ -7,10 +7,11 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Explore\FeaturedResource;
 //use App\Http\Resources\Explore\LabResource;
 use App\Http\Resources\Explore\SkillResource;
+use App\Http\Resources\Public\Challenge\ChallengeResource;
+use App\Http\Resources\Public\Lab\LabResource;
 use App\Repositories\Api\Explore\ExploreRepository;
 use App\Services\UserSkillsService;
-use App\Http\Resources\Public\Lab\LabResource;
-use App\Http\Resources\Public\Challenge\ChallengeResource;
+
 class ExploreController extends AppBaseController
 {
     private $exploreRepository;

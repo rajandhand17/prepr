@@ -190,15 +190,16 @@ class ChallengeSkillsGroupsStackService
     public static function getRecommendedSkills($getUserSkills)
     {
         try {
-            $getChallengeSkillsIds=[];
+            $getChallengeSkillsIds = [];
             $challengeId = ChallengeSkillsGroupsStack::where('type', '0')
                 ->whereIn('foreign_id', $getUserSkills)
                 ->pluck('challenge_id');
-            if(!empty($challengeId)){
+            if (!empty($challengeId)) {
                 $getChallengeSkillsIds = ChallengeSkillsGroupsStack::where('type', '0')
                     ->whereIn('challenge_id', $challengeId)
                     ->pluck('foreign_id')->unique();
             }
+
             return $getChallengeSkillsIds;
         } catch (\Exception $e) {
             return false;

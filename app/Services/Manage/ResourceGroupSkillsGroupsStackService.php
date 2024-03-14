@@ -140,13 +140,14 @@ class ResourceGroupSkillsGroupsStackService
     public static function getRecommendedSkills($skills)
     {
         try {
-            $resourceGroupSkillIds=[];
+            $resourceGroupSkillIds = [];
             $resourceGroupId = ResourceGroupSkillsGroupStack::where('type', '0')
                 ->whereIn('foreign_id', $skills)->pluck('resource_group_id')->unique();
-            if(!empty($resourceGroupId)){
+            if (!empty($resourceGroupId)) {
                 $resourceGroupSkillIds = ResourceGroupSkillsGroupStack::where('type', '0')
                     ->whereIn('resource_group_id', $resourceGroupId)->pluck('foreign_id');
             }
+
             return $resourceGroupSkillIds;
         } catch (\Exception $e) {
             return false;
