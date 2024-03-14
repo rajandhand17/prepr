@@ -85,7 +85,7 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function getProjectBasedOnSlug($slug)
+    public function checkSlug($slug)
     {
         try {
             $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
