@@ -69,12 +69,13 @@ class OrganizationMemberService
     {
         try {
             $organizationMemberIds = OrganizationMember::where('organization_id', $organizationId)->pluck('id');
-            if (!empty($organizationMemberIds)){
+            if (!empty($organizationMemberIds)) {
                 $deleteOrganizationMember = OrganizationMember::whereIn('id', $organizationMemberIds)->delete();
                 if ($deleteOrganizationMember) {
                     return true;
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
