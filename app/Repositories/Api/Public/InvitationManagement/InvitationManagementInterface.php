@@ -4,5 +4,7 @@ namespace App\Repositories\Api\Public\InvitationManagement;
 
 interface InvitationManagementInterface
 {
-    public function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+    public function checkComponentJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
+
+    public function acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
 }

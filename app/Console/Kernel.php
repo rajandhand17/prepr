@@ -16,7 +16,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('challenges:close-challenge-for-passed-dates')->everyMinute();
+        $schedule->command('member-manger:send-email')->everyMinute();
     }
 
     /**
