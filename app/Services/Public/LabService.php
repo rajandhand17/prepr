@@ -159,20 +159,19 @@ class LabService
     public function getTrendingLab()
     {
         try {
-            $getLatestLabsIds = MemberManagementService::getLatestLabsIds();
-            $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id', $getLatestLabsIds)->limit(6);
-
+            $getLatestLabsIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.member_management_component_type.lab'));
+            $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id', $getLatestLabsIds);
             return $lab_list->get();
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function getLabsBasedOnSKillsAndTags($skills, $tags)
+    public function getLabsBasedOnSKillsAndTags($usersSkills, $tags)
     {
         try {
             /*gets Labs based on user skills*/
-            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($skills);
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($usersSkills);
             /*gets Tags based on user tags*/
             $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
             $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique();
@@ -191,8 +190,7 @@ class LabService
     public static function getLabsBasedOnIds()
     {
         try {
-            $labList = FeaturedModule::where('module_type', '0')->get();
-
+            $labList = FeaturedModule::where('module_type', '0')->take(6)->get();
             return $labList;
         } catch(\Exception $e) {
             return false;

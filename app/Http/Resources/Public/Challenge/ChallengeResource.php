@@ -106,12 +106,13 @@ class ChallengeResource extends JsonResource
                 ];
             });
         }
-
         if ($this->challenge_requirements) {
             $challenge_conditions = [];
             foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
                 $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
-                $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+               if($check_achievement_condition!==null) {
+                   $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+               }
             }
             switch ($this->challenge_requirements->allow_submit_project) {
                 case '0':
@@ -272,8 +273,8 @@ class ChallengeResource extends JsonResource
             'id'                            => $this->uuid,
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
-            'organization_id'               => $this->organization->uuid,
-            'organization'                  => $this->organization->title,
+            'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
+            'organization'                  => isset($this->organization->title) ? $this->organization->title : null,
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration'                      => $duration,

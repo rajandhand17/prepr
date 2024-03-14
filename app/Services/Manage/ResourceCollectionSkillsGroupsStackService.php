@@ -142,11 +142,13 @@ class ResourceCollectionSkillsGroupsStackService
     public static function getRecommendedSkills($skills)
     {
         try {
+            $resourceSkillIds=[];
             $resourceCollectionId = ResourceCollectionSkillsGroupsStack::where('type', '0')
                 ->whereIn('foreign_id', $skills)->pluck('resource_collection_id')->unique();
-            $resourceSkillIds = ResourceCollectionSkillsGroupsStack::where('type', '0')
-                ->whereIn('resource_collection_id', $resourceCollectionId)->pluck('foreign_id');
-
+            if(!empty($resourceCollectionId)){
+                $resourceSkillIds = ResourceCollectionSkillsGroupsStack::where('type', '0')
+                    ->whereIn('resource_collection_id', $resourceCollectionId)->pluck('foreign_id');
+            }
             return $resourceSkillIds;
         } catch (\Exception $e) {
             return false;

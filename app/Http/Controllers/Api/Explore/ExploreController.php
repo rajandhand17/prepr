@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api\Explore;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\Explore\ChallengeResource;
+//use App\Http\Resources\Explore\ChallengeResource;
 use App\Http\Resources\Explore\FeaturedResource;
-use App\Http\Resources\Explore\LabResource;
+//use App\Http\Resources\Explore\LabResource;
 use App\Http\Resources\Explore\SkillResource;
 use App\Repositories\Api\Explore\ExploreRepository;
 use App\Services\UserSkillsService;
-
+use App\Http\Resources\Public\Lab\LabResource;
+use App\Http\Resources\Public\Challenge\ChallengeResource;
 class ExploreController extends AppBaseController
 {
     private $exploreRepository;
@@ -28,7 +29,7 @@ class ExploreController extends AppBaseController
             $response = [];
             switch ($action) {
                 case 'recommended':
-                    $explore = $this->exploreRepository->recommended();
+                    $explore = $this->exploreRepository->recommendedLabsAndChallenges();
                     if ($explore) {
                         $response = [
                             'labs'       => LabResource::collection($explore['labs']),
@@ -74,7 +75,7 @@ class ExploreController extends AppBaseController
     public function recommendedOrTrendingLabAndChallenge()
     {
         try {
-            $getUserSkills = UserSkillsService::getUserSkills();
+            $getUserSkills = '';//UserSkillsService::getUserSkills();
             if ($getUserSkills) {
                 $recommendedSkills = $this->exploreRepository->recommendedSkills($getUserSkills);
                 if ($recommendedSkills) {

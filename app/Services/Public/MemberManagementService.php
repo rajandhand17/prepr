@@ -43,32 +43,19 @@ class MemberManagementService
             return false;
         }
     }
-
-    public static function getLatestLabsIds()
+    public static function getLatestIdsBasedOnModule($moduleType)
     {
         try {
-            $memberManagement = MemberManagement::where('module_type', '1')
-                ->orderBy('created_at')
-                ->limit(6)
+            $moduleIds = MemberManagement::select('module_id', \DB::raw('COUNT(email) as email_count'))
+                ->groupBy('module_id')
+                ->orderBy('email_count', 'desc')
+                ->where(['module_type'=>$moduleType,'invite_status'=>'1'])
+                ->take(6)
                 ->pluck('module_id');
-
-            return $memberManagement;
+            return $moduleIds;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getLatestChallengeIds()
-    {
-        try {
-            $memberManagement = MemberManagement::where('module_type', '2')
-                ->orderBy('created_at')
-                ->limit(6)
-                ->pluck('module_id');
-
-            return $memberManagement;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 }

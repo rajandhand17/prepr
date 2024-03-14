@@ -32,7 +32,7 @@ return [
         'organization' => '0',
         'lab'          => '1',
         'challenge'    => '2',
-        'project'      => '5',
+        'project'      => '3',
     ],
 
     'member_management_invite_status' => [
@@ -456,4 +456,5 @@ return [
         'viewer'        => '1',
         'team_leader'   => '2',
     ],
+
 ];

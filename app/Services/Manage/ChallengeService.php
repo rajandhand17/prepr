@@ -629,18 +629,18 @@ class ChallengeService
         }
     }
 
-    public static function getChallengeBasedOnSkillsAndTags($skills, $tags)
+    public static function getChallengeBasedOnSkillsAndTags($skills, $getUsersTags)
     {
         try {
             /*get challenge id Based on Skills*/
             $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
             /*get challenge id based on tags*/
-            $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($tags);
+            $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($getUsersTags);
             $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique();
             if (!empty($challengeIds)) {
-                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->whereIn('id', $challengeIds)->limit('12');
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->whereIn('id', $challengeIds)->take('12');
             } else {
-                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->limit('6');
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->take('6');
             }
 
             return $challenges->get();
@@ -652,8 +652,8 @@ class ChallengeService
     public static function getTrendingChallenge()
     {
         try {
-            $getLatestChallengeIds = MemberManagementService::getLatestChallengeIds();
-            $challenges = Challenge::select()->where('challenges.status', '1')->whereIn('id', $getLatestChallengeIds)->limit(6);
+            $getLatestChallengeIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.member_management_component_type.challenge'));
+            $challenges = Challenge::select()->where('challenges.status', '1')->whereIn('id', $getLatestChallengeIds);
 
             return $challenges->get();
         } catch (\Exception $e) {

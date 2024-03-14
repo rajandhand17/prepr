@@ -33,7 +33,7 @@ class ExploreRepository implements ExploreInterface
         $this->skillsService = $skillsService;
     }
 
-    public function recommended()
+    public function recommendedLabsAndChallenges()
     {
         try {
             $usersSkills = $this->userSkillsService->getUserSkills();
