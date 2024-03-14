@@ -46,7 +46,7 @@ class ProjectResource extends JsonResource
                 return [
                     'pitch_id'          => $pitchAnswer->id,
                     'title'             => $pitchAnswer->title,
-                    'pitch_answer'      => $pitchAnswer->description_answer,
+                    'answer'            => $pitchAnswer->description_answer,
                 ];
             });
 
@@ -56,7 +56,7 @@ class ProjectResource extends JsonResource
                 return [
                     'task_id'           => $taskAnswer->id,
                     'title'             => $taskAnswer->title,
-                    'task_answer'       => $taskAnswer->is_completed,
+                    'answer'            => $taskAnswer->is_completed,
                     'task_completed_at' => $taskAnswer->completed_at,
                 ];
             });
