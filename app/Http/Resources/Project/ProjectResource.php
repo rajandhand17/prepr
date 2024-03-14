@@ -44,7 +44,7 @@ class ProjectResource extends JsonResource
                 $pitchAnswer = ProjectPitchService::getPitchAnswerBasedOnId($task, $this->id, $this->language);
 
                 return [
-                    'pitch_id'          => $pitchAnswer->id,
+                    'id'                => $pitchAnswer->id,
                     'title'             => $pitchAnswer->title,
                     'answer'            => $pitchAnswer->description_answer,
                 ];
@@ -54,7 +54,7 @@ class ProjectResource extends JsonResource
                 $taskAnswer = ProjectPitchService::getTaskAnswerBasedOnId($task, $this->id, $this->language);
 
                 return [
-                    'task_id'           => $taskAnswer->id,
+                    'id'                => $taskAnswer->id,
                     'title'             => $taskAnswer->title,
                     'answer'            => $taskAnswer->is_completed,
                     'task_completed_at' => $taskAnswer->completed_at,
