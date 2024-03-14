@@ -75,7 +75,7 @@ class ExploreController extends AppBaseController
     public function recommendedOrTrendingLabAndChallenge()
     {
         try {
-            $getUserSkills = '';//UserSkillsService::getUserSkills();
+            $getUserSkills = UserSkillsService::getUserSkills();
             if ($getUserSkills) {
                 $recommendedSkills = $this->exploreRepository->recommendedSkills($getUserSkills);
                 if ($recommendedSkills) {
