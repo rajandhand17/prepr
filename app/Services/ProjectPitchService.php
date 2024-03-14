@@ -7,6 +7,7 @@ use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
 use App\Models\ProjectPitchValue;
 use App\Models\ProjectTaskValue;
+use App\Models\ProjectTemplate;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Schema;
@@ -17,6 +18,16 @@ class ProjectPitchService
     {
         try {
             $templateId = $request->template_id;
+            $checkProjectTemplate = ProjectTemplate::where(['project_id' => $projectId, 'template_id' => $templateId])->first();
+            if ($checkProjectTemplate) {
+                $projectTemplate = $checkProjectTemplate;
+            } else {
+                $projectTemplate = new ProjectTemplate();
+            }
+            $projectTemplate->project_id = $projectId;
+            $projectTemplate->template_id = $templateId;
+            $projectTemplate->save();
+
             if (isset($request->pitch_id)) {
                 foreach ($request->pitch_id as $key => $value) {
                     $pitchId = $request['pitch_id'][$key];

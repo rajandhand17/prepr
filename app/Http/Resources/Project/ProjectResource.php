@@ -35,25 +35,28 @@ class ProjectResource extends JsonResource
         $is_assess_enabled = 'yes';
 
         if ($this->getProjectTemplate) {
-            $challenge_pitch = $this->getProjectTemplate->getTemplatePitches->map(function ($task) {
+            if ($this->getProjectTemplate->template_id == '0') {
+                $templateData = $this->getProjectIdBasedTemplate ?? $this->getProjectTemplate;
+            } else {
+                $templateData = $this->getProjectTemplate;
+            }
+            $challenge_pitch = $templateData->getTemplatePitches->map(function ($task) {
                 $pitchAnswer = ProjectPitchService::getPitchAnswerBasedOnId($task, $this->id, $this->language);
 
                 return [
                     'pitch_id'          => $pitchAnswer->id,
                     'title'             => $pitchAnswer->title,
-                    'pitch_answer'      => $pitchAnswer->description_answer,
+                    'answer'            => $pitchAnswer->description_answer,
                 ];
             });
-        }
 
-        if ($this->getProjectTemplate) {
-            $challenge_task = $this->getProjectTemplate->getTemplateTasks->map(function ($task) {
+            $challenge_task = $templateData->getTemplateTasks->map(function ($task) {
                 $taskAnswer = ProjectPitchService::getTaskAnswerBasedOnId($task, $this->id, $this->language);
 
                 return [
                     'task_id'           => $taskAnswer->id,
                     'title'             => $taskAnswer->title,
-                    'task_answer'       => $taskAnswer->is_completed,
+                    'answer'            => $taskAnswer->is_completed,
                     'task_completed_at' => $taskAnswer->completed_at,
                 ];
             });
@@ -101,6 +104,7 @@ class ProjectResource extends JsonResource
         if ($this->challenge_id) {
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
             if ($fetchChallenge) {
+                $getTemplate = ($this->getProjectIdBasedTemplate !== null) ? $this->getProjectIdBasedTemplate->template_id : ($fetchChallenge->challenge_project_template->template_id ?? 0);
                 $projectDate = UtilityHelper::formatDateTime($this->created_at);
                 $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($fetchChallenge, $projectDate);
                 $challenge_details = [
@@ -108,7 +112,7 @@ class ProjectResource extends JsonResource
                     'uuid'              => $fetchChallenge->uuid,
                     'title'             => $fetchChallenge->title,
                     'slug'              => $fetchChallenge->slug,
-                    'template_id'       => $fetchChallenge->challenge_project_template->template_id ?? 0,
+                    'template_id'       => $getTemplate,
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
                     'submission_status' => $fetchChallengeDueDate['submission_status'],
