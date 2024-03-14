@@ -69,19 +69,20 @@ class MemberManagementService
             return false;
         }
     }
+
     public static function getLatestIdsBasedOnModule($moduleType)
     {
         try {
             $moduleIds = MemberManagement::select('module_id', \DB::raw('COUNT(email) as email_count'))
                 ->groupBy('module_id')
                 ->orderBy('email_count', 'desc')
-                ->where(['module_type'=>$moduleType,'invite_status'=>'1'])
+                ->where(['module_type'=>$moduleType, 'invite_status'=>'1'])
                 ->take(6)
                 ->pluck('module_id');
+
             return $moduleIds;
         } catch (\Exception $e) {
             return false;
         }
     }
-
 }

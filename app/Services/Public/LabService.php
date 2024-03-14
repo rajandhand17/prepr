@@ -161,6 +161,7 @@ class LabService
         try {
             $getLatestLabsIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.member_management_component_type.lab'));
             $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id', $getLatestLabsIds);
+
             return $lab_list->get();
         } catch(\Exception $e) {
             return false;
@@ -191,6 +192,7 @@ class LabService
     {
         try {
             $labList = FeaturedModule::where('module_type', '0')->take(6)->get();
+
             return $labList;
         } catch(\Exception $e) {
             return false;

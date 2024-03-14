@@ -110,9 +110,9 @@ class ChallengeResource extends JsonResource
             $challenge_conditions = [];
             foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
                 $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
-               if($check_achievement_condition!==null) {
-                   $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
-               }
+                if ($check_achievement_condition !== null) {
+                    $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                }
             }
             switch ($this->challenge_requirements->allow_submit_project) {
                 case '0':
