@@ -68,9 +68,9 @@ class OrganizationMemberService
     public static function deleteOrganizationMembers($organizationId)
     {
         try {
-            $organizationMember = OrganizationMember::where('organization_id', $organizationId)->first();
-            if ($organizationMember) {
-                $deleteOrganizationMember = OrganizationMember::where('organization_id', $organizationId)->delete();
+            $organizationMemberIds = OrganizationMember::where('organization_id', $organizationId)->pluck('id');
+            if ($organizationMemberIds) {
+                $deleteOrganizationMember = OrganizationMember::whereIn('id', $organizationMemberIds)->delete();
                 if ($deleteOrganizationMember) {
                     return true;
                 }

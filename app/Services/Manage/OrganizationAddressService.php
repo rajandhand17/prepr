@@ -77,9 +77,9 @@ class OrganizationAddressService
     public static function deleteOrganizationAddress($organizationId)
     {
         try {
-            $organization = OrganizationAddress::where('organization_id', $organizationId)->first();
-            if ($organization) {
-                $organization = OrganizationAddress::where('organization_id', $organizationId)->delete();
+            $organizationAddressIds = OrganizationAddress::where('organization_id', $organizationId)->pluck('id');
+            if ($organizationAddressIds) {
+                $organization = OrganizationAddress::whereIn('id', $organizationAddressIds)->delete();
                 if ($organization) {
                     return true;
                 }
