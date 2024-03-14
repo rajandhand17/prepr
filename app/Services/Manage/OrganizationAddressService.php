@@ -78,13 +78,12 @@ class OrganizationAddressService
     {
         try {
             $organizationAddressIds = OrganizationAddress::where('organization_id', $organizationId)->pluck('id');
-            if ($organizationAddressIds) {
+            if (!empty($organizationAddressIds)){
                 $organization = OrganizationAddress::whereIn('id', $organizationAddressIds)->delete();
                 if ($organization) {
                     return true;
                 }
             }
-
             return true;
         } catch (\Exception $e) {
             return false;
