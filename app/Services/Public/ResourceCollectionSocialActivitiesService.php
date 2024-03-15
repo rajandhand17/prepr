@@ -96,7 +96,6 @@ class ResourceCollectionSocialActivitiesService
                             $columnValue['column'] => $columnValue['action'],
                         ]
                     )->get();
-
                     return $resource_collection_ids;
                 }
 
