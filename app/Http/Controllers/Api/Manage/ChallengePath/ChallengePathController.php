@@ -85,7 +85,7 @@ class ChallengePathController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = $this->challengePathRepository->checkSlug($slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(__('responses.slug_not_exists'), 403);
+                return $this->sendError(__('responses.challenge_path_not_found'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             if ($request->media !== null) {
