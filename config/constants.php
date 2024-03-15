@@ -320,7 +320,7 @@ return [
         'image' => 'image',
         'video' => 'video',
         'docs'  => 'docs',
-        'audio' => 'audio'
+        'audio' => 'audio',
     ],
 
     'subscription_options' => [
