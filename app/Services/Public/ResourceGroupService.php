@@ -29,7 +29,7 @@ class ResourceGroupService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'archive') ? '2' : '3'));
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', $status);
             } else {
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', '1');
