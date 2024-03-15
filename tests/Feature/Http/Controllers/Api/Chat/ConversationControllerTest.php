@@ -67,6 +67,7 @@ final class ConversationControllerTest extends ChatTestCase
                     ->where('message', __("responses.conversation_created"))
                     ->where('data.type', 'direct_message')
             );
+        $this->assertDatabaseCount('conversations', 1);
     }
 
     public function test_create_conversation_by_passing_more_than_one_username_positive(): void

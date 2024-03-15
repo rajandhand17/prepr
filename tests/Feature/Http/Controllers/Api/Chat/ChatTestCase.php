@@ -4,9 +4,10 @@ namespace Tests\Feature\Http\Controllers\Api\Chat;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
+use Tests\BaseTestCase;
 use Tests\TestCase;
 
-class ChatTestCase extends TestCase
+class ChatTestCase extends BaseTestCase
 {
 
     use RefreshDatabase;
@@ -16,16 +17,12 @@ class ChatTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->seed();
         $this->parameters = [
             'email' => 'testprepradmin@gmail.com',
             'password' => 'Test@1234',
             'group_usernames' => ["testchallengemanager", "testlabmanager", "testusers"],
             "direct_message_usernames" => ["testchallengemanager"]
         ];
-        Auth::attempt(['email' => $this->parameters['email'], 'password' => $this->parameters['password']]);
-        $user = Auth::user();
-        $this->actingAs($user, 'api');
     }
 
     protected function getCreatedConversationUuid()

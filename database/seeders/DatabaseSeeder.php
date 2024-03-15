@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
         if (app()->environment('testing')) {
             $classes[] = UserSeeder::class;
             $classes[] = LanguageSeeder::class;
+            $classes[] = SkillSeeder::class;
+            $classes[] = TagSeeder::class;
         }
 
         $this->call($classes);
