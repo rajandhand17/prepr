@@ -17,4 +17,9 @@ class ProjectExternalLink extends Model
         'social_media_link',
         'social_link_id',
     ];
+
+    public function social_link()
+    {
+        return $this->belongsTo(SocialLink::class, 'social_link_id', 'id');
+    }
 }
