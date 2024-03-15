@@ -2,14 +2,14 @@
 
 namespace App\Repositories\Api\Manage\ResourceModule;
 
+use App\Services\Manage\AIService;
 use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\Manage\ResourceModuleRatingService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleTagsGroupsService;
-use App\Services\Manage\AIService;
-use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ResourceModuleRepository implements ResourceModuleInterface
@@ -24,7 +24,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     protected $resourceModuleTagsGroupsService;
     private $aiService;
 
-    public function __construct(ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService,  AIService $aiService)
+    public function __construct(ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService, AIService $aiService)
     {
         $this->resourceModuleService = $resourceModuleService;
         $this->resourceModuleDetailsService = $resourceModuleDetailsService;
@@ -52,9 +52,9 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->createResourceModuleTagsGroups($request, $createResourceModule->id);
 
                 return [
-                    'createResourceModule'                 => $createResourceModule,
+                    'createResourceModule'                  => $createResourceModule,
                     'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
-                    'resourceModuleTagsGroupsService'      => $resourceModuleTagsGroupsService,
+                    'resourceModuleTagsGroupsService'       => $resourceModuleTagsGroupsService,
                 ];
             });
             if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
@@ -85,7 +85,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return $createLabProgram['CreateResourceModuleUsingAI'];
         } catch (Exception $e) {
-            Log::error("Error in CreateResourceModuleUsingAI in ResourceModuleRepository.php: " . $e->getMessage());
+            Log::error('Error in CreateResourceModuleUsingAI in ResourceModuleRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -98,7 +98,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return $createResourceModuleUsingAI;
         } catch (Exception $e) {
-            Log::error("Error in createResourceModuleDetailsAI in ResourceModuleRepository.php: " . $e->getMessage());
+            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -174,7 +174,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->updateResourceModuleTagsGroups($request, $updateResourceModule->id);
 
                 return [
-                    'updateResourceModule'           => $updateResourceModule,
+                    'updateResourceModule'            => $updateResourceModule,
                     'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,
                     'resourceModuleTagsGroupsService' => $resourceModuleTagsGroupsService,
                 ];

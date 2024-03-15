@@ -2,8 +2,8 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\Http;
 use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class RecommendationEngineHelper
@@ -46,7 +46,8 @@ class RecommendationEngineHelper
 
             return $responseStatus;
         } catch (Exception $e) {
-            Log::error("Error in getRelatedPreprSkills in RecommendationEngineHelper.php: " . $e->getMessage());
+            Log::error('Error in getRelatedPreprSkills in RecommendationEngineHelper.php: '.$e->getMessage());
+
             return false;
         }
     }

@@ -161,13 +161,13 @@ class ResourceModuleDetailService
             foreach ($request as $key => $item) {
                 if (is_numeric($key) && is_array($item)) {
                     $resourceDetail = new ResourceModuleDetail([
-                        'title' => $item['title'],
-                        'path' => $item['url'],
+                        'title'              => $item['title'],
+                        'path'               => $item['url'],
                         'resource_module_id' => $resource_module_id,
                     ]);
 
                     if (isset($item['embedHTML']) && !empty($item['embedHTML'])) {
-                        $resourceDetail->type = "3";
+                        $resourceDetail->type = '3';
                     }
 
                     $resourceDetail->save();

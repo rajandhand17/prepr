@@ -6,9 +6,9 @@ use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class ResourceModuleService
 {
@@ -28,7 +28,7 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%' . $request->search . '%');
+                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -215,7 +215,7 @@ class ResourceModuleService
                     $is_ai_created = config('constants.challenge_ai_created.no');
                     break;
             }
-            
+
             $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $resourceModule = new ResourceModule();
@@ -237,7 +237,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (Exception $e) {
-            Log::error("Error in createResourceModule in ResourceModuleService.php: " . $e->getMessage());
+            Log::error('Error in createResourceModule in ResourceModuleService.php: '.$e->getMessage());
 
             return false;
         }

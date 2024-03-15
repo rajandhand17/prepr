@@ -3,21 +3,21 @@
 namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Models\Challenge;
+use App\Services\Manage\AIService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAnnouncementService;
 use App\Services\Manage\ChallengeAssessmentCriteriaService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeCustomTimelinesService;
 use App\Services\Manage\ChallengeExternalLinkService;
+use App\Services\Manage\ChallengeJobsService;
 use App\Services\Manage\ChallengeProjectTemplateService;
 use App\Services\Manage\ChallengeRequirementService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
-use App\Services\Manage\ChallengeJobsService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTagsGroupsService;
 use App\Services\Manage\ChallengeTimelinesService;
-use App\Services\Manage\AIService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -141,7 +141,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return false;
         } catch (Exception $e) {
-            Log::error("Error in createChallenge in ChallengeRepository.php: " . $e->getMessage());
+            Log::error('Error in createChallenge in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -159,7 +159,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return $createChallengeUsingAIPreview;
         } catch (Exception $e) {
-            Log::error("Error in createChallengeUsingAIPreview in ChallengeRepository.php: " . $e->getMessage());
+            Log::error('Error in createChallengeUsingAIPreview in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -191,7 +191,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return $createChallenge['createChallenge'];
         } catch (Exception $e) {
-            Log::error("Error in createChallengeUsingAI in ChallengeRepository.php: " . $e->getMessage());
+            Log::error('Error in createChallengeUsingAI in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
         }

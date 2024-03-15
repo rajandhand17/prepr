@@ -7,9 +7,9 @@ use App\Models\JobSkill;
 use App\Models\RelatedJob;
 use App\Models\UserJob;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Console\Command;
 use Exception;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class Jobs extends Command
 {
@@ -70,6 +70,7 @@ class Jobs extends Command
         } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();
+
             return;
         }
 
@@ -107,6 +108,7 @@ class Jobs extends Command
         } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();
+
             return;
         }
 
@@ -136,6 +138,7 @@ class Jobs extends Command
         } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();
+
             return;
         }
 
@@ -165,10 +168,11 @@ class Jobs extends Command
         } catch (Exception $e) {
             $this->error($e->getMessage());
             DB::rollback();
+
             return;
         }
 
         $this->info('Migrating of old data for tables (titles, user_job_titles, related_titles & title_skills) completed.');
-        return;
+
     }
 }

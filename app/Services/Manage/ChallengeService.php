@@ -30,7 +30,7 @@ class ChallengeService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challenge_list = $challenge_list->where('challenges.title', 'like', '%' . $request->search . '%');
+                $challenge_list = $challenge_list->where('challenges.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -284,7 +284,7 @@ class ChallengeService
 
             return $challenge;
         } catch (Exception $e) {
-            Log::error("Error in createChallenge in ChallengeService.php: " . $e->getMessage());
+            Log::error('Error in createChallenge in ChallengeService.php: '.$e->getMessage());
 
             return false;
         }
@@ -496,7 +496,7 @@ class ChallengeService
 
             return $challengeId ?: false;
         } catch (Exception $e) {
-            Log::error("Error in getChallengeIdBasedOnUUID in ChallengeService.php: " . $e->getMessage());
+            Log::error('Error in getChallengeIdBasedOnUUID in ChallengeService.php: '.$e->getMessage());
 
             return false;
         }
@@ -507,11 +507,11 @@ class ChallengeService
         try {
             $originalChallenge = Challenge::find($challengeId);
             $model = new Challenge();
-            $slug = UtilityHelper::generateSlug($organization->title . ' ' . $originalChallenge->title, $model);
+            $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
 
             $clonedChallenge = $originalChallenge->replicate();
             $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $clonedChallenge->title = $organization->title . ' ' . $originalChallenge->title;
+            $clonedChallenge->title = $organization->title.' '.$originalChallenge->title;
             $clonedChallenge->slug = $slug;
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;

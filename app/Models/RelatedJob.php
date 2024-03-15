@@ -10,7 +10,7 @@ class RelatedJob extends Model
 
     protected $fillable = [
         'job_id',
-        'related_job_id'
+        'related_job_id',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

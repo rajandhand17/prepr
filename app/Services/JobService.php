@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Job;
-use Illuminate\Support\Facades\Schema;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class JobService
 {
@@ -24,7 +24,7 @@ class JobService
                 if (!$column_name || !Schema::hasColumn('jobs', $column_name)) {
                     return false;
                 }
-                $job_list = Job::select('id', $column_name . ' as title');
+                $job_list = Job::select('id', $column_name.' as title');
             }
 
             if ($search != null) {
@@ -42,7 +42,7 @@ class JobService
 
             return $job_list;
         } catch (Exception $e) {
-            Log::error("Error in getJobs in JobService.php: " . $e->getMessage());
+            Log::error('Error in getJobs in JobService.php: '.$e->getMessage());
 
             return false;
         }
@@ -51,11 +51,11 @@ class JobService
     public static function filterJobList($getJobsList, $job_column_name, $search)
     {
         try {
-            $getJobsList = $getJobsList->where($job_column_name, 'like', '%' . $search . '%');
+            $getJobsList = $getJobsList->where($job_column_name, 'like', '%'.$search.'%');
 
             return $getJobsList;
         } catch (Exception $e) {
-            Log::error("Error in filterJobList in JobService.php: " . $e->getMessage());
+            Log::error('Error in filterJobList in JobService.php: '.$e->getMessage());
 
             return false;
         }
@@ -64,12 +64,12 @@ class JobService
     public static function getJobBasedOnIds($job_ids)
     {
         try {
-            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title') . ' as title')
+            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
                 ->whereIn('id', $job_ids)->get();
 
             return $getJobsList;
         } catch (Exception $e) {
-            Log::error("Error in getJobBasedOnIds in JobService.php: " . $e->getMessage());
+            Log::error('Error in getJobBasedOnIds in JobService.php: '.$e->getMessage());
 
             return false;
         }
@@ -78,12 +78,12 @@ class JobService
     public static function getJobBasedOnId($job_id)
     {
         try {
-            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title') . ' as title')
+            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
                 ->where('id', $job_id)->first();
 
             return $getJobsList;
         } catch (Exception $e) {
-            Log::error("Error in getJobBasedOnId in JobService.php: " . $e->getMessage());
+            Log::error('Error in getJobBasedOnId in JobService.php: '.$e->getMessage());
 
             return false;
         }

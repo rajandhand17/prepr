@@ -13,7 +13,6 @@ use App\Services\TagGroupService;
 use App\Services\TagService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
 class ChallengeResource extends JsonResource
 {

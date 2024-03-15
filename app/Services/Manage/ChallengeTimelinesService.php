@@ -54,7 +54,7 @@ class ChallengeTimelinesService
                 }
                 $flexible_date_number = $request->flexible_date_number ?? null;
                 $flexible_date_duration = $request->flexible_date_duration ?? null;
-                $automatic_alert = $request->automatic_alert ?? "0";
+                $automatic_alert = $request->automatic_alert ?? '0';
 
                 $challengeFlexibleTimeLine = new ChallengeTimelines();
                 $challengeFlexibleTimeLine->challenge_id = $challenge_id;
@@ -67,7 +67,7 @@ class ChallengeTimelinesService
 
             return true;
         } catch (Exception $e) {
-            Log::error("Error in createChallengeTimelines in ChallengeTimelinesService.php: " . $e->getMessage());
+            Log::error('Error in createChallengeTimelines in ChallengeTimelinesService.php: '.$e->getMessage());
 
             return false;
         }

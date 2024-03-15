@@ -11,7 +11,7 @@ class Job extends Model
     protected $fillable = [
         'title',
         'fr_CA_title',
-        'lightcast_id'
+        'lightcast_id',
     ];
 
     protected $hidden = ['created_at', 'updated_at'];
