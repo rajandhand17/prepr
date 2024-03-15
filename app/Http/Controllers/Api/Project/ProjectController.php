@@ -7,6 +7,7 @@ use App\Http\Requests\Project\AddAdditionalInfoProjectRequest;
 use App\Http\Requests\Project\AddLinksProjectRequest;
 use App\Http\Requests\Project\AddProjectAssessmentRequest;
 use App\Http\Requests\Project\CreateProjectRequest;
+use App\Http\Requests\Project\DeleteProjectMediaRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\AssessedProjectResource;
 use App\Http\Resources\Project\ProjectAdditionalInfoResource;
@@ -466,6 +467,25 @@ class ProjectController extends AppBaseController
             }
 
             return $this->sendError(__('responses.project_assessment_not_delete'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function deleteMedia(DeleteProjectMediaRequest $request, $slug)
+    {
+        try {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $deleteProjectMedia = $this->projectRepository->deleteProjectMedia($request, $checkProjectExistsOrNot->id);
+            if ($deleteProjectMedia) {
+                return $this->sendResponse(null, __('responses.project_media_delete'));
+            }
+
+            return $this->sendError(__('responses.project_media_not_delete'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

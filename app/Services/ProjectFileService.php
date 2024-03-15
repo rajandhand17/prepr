@@ -100,4 +100,18 @@ class ProjectFileService
             return false;
         }
     }
+
+    public function deleteProjectMediaFile($request, $projectId)
+    {
+        try {
+            $getProjectFile = ProjectFile::where(['id' => $request->media_id, 'project_id' => $projectId, 'type' => $request->type]);
+            if ($getProjectFile->delete()) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
