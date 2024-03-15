@@ -13,14 +13,18 @@ class ProjectFileService
         try {
             if (isset($request->file_upload) && !empty($request->file_upload)) {
                 foreach ($request->file_upload as $file_upload) {
+                    // dd($file_upload->getMimeType());
                     if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
-                        $file_type = config('constants.file_type.image');
+                        $file_type = config('constants.project_file_type.image');
                         $uploaded_file_path = FileUploadHelper::uploadImageToS3($file_upload, 'project_file');
                     } elseif (false !== mb_strpos($file_upload->getMimeType(), 'video')) {
-                        $file_type = config('constants.file_type.video');
+                        $file_type = config('constants.project_file_type.video');
                         $uploaded_file_path = FileUploadHelper::uploadVideoToS3($file_upload, 'project_file');
+                    } elseif (false !== mb_strpos($file_upload->getMimeType(), 'audio')) {
+                        $file_type = config('constants.project_file_type.audio');
+                        $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'project_file');
                     } else {
-                        $file_type = config('constants.file_type.docs');
+                        $file_type = config('constants.project_file_type.docs');
                         $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'project_file');
                     }
 
