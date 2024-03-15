@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Api\Dashboard\User;
 
-
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengeService;
@@ -15,7 +14,7 @@ class UserDashboardRepository implements UserDashboardInterface
     private $projectService;
     private $challengeAssessmentService;
 
-    public function __construct( LabService $labService, ChallengeService $challengeService,ProjectService $projectService,ChallengeAssessmentService $challengeAssessmentService)
+    public function __construct(LabService $labService, ChallengeService $challengeService, ProjectService $projectService, ChallengeAssessmentService $challengeAssessmentService)
     {
         $this->labService = $labService;
         $this->challengeService = $challengeService;
