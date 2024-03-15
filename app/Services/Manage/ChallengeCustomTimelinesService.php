@@ -20,7 +20,7 @@ class ChallengeCustomTimelinesService
                         $challengeCustomTimeline->custom_timelines_date = $custom_date;
                         $challengeCustomTimeline->custom_timelines_description = $request->custom_timelines_description[$key];
                         $challengeCustomTimeline->custom_timelines_duration = $request->custom_timelines_duration[$key];
-                        $challengeCustomTimeline->schedule_custom_notify = $request->schedule_custom_notify[$key];
+                        $challengeCustomTimeline->schedule_custom_notify = $request->schedule_custom_notify[$key] ?? 0;
                         $challengeCustomTimeline->save();
                     }
                 }
@@ -47,7 +47,7 @@ class ChallengeCustomTimelinesService
                             $challengeCustomTimeline->custom_timelines_date = $custom_date;
                             $challengeCustomTimeline->custom_timelines_description = $request->custom_timelines_description[$key];
                             $challengeCustomTimeline->custom_timelines_duration = $request->custom_timelines_duration[$key];
-                            $challengeCustomTimeline->schedule_custom_notify = $request->schedule_custom_notify[$key];
+                            $challengeCustomTimeline->schedule_custom_notify = $request->schedule_custom_notify[$key] ?? 0;
                             $challengeCustomTimeline->save();
                         }
                     }
