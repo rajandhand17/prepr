@@ -122,7 +122,7 @@ class OrganizationDashboardController extends AppBaseController
                     return $this->sendError(__('responses.handler_bad_request'), 402);
                     break;
             }
-            if($getProjectIds){
+            if ($getProjectIds) {
                 $project = $this->organizationDashboardRepository->getProjectList($getProjectIds, $request);
                 if ($project !== false) {
                     $response = [

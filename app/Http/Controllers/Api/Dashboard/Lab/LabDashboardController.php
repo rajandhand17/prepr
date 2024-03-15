@@ -13,10 +13,12 @@ use Illuminate\Http\Request;
 class LabDashboardController extends AppBaseController
 {
     private $labDashboardRepository;
+
     public function __construct(LabDashboardRepository $labDashboardRepository)
     {
         $this->labDashboardRepository = $labDashboardRepository;
     }
+
     public function getMyLabs(Request $request)
     {
         try {
@@ -96,7 +98,7 @@ class LabDashboardController extends AppBaseController
                     return $this->sendError(__('responses.handler_bad_request'), 402);
                     break;
             }
-            if($getProjectIds){
+            if ($getProjectIds) {
                 $project = $this->labDashboardRepository->getProjectList($getProjectIds, $request);
                 if ($project !== false) {
                     $response = [

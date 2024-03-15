@@ -65,7 +65,7 @@ class ProjectController extends AppBaseController
                     return $this->sendError(__('responses.handler_bad_request'), 402);
                     break;
             }
-            if($getProjectIds){
+            if ($getProjectIds) {
                 $project = $this->projectRepository->getProjectList($getProjectIds, $request);
                 if ($project !== false) {
                     $response = [
@@ -80,6 +80,7 @@ class ProjectController extends AppBaseController
                     return $this->sendResponse($response, __('responses.found_projects_list'));
                 }
             }
+
             return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Dashboard\User;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
@@ -14,10 +13,12 @@ use Illuminate\Http\Request;
 class UserDashboardController extends AppBaseController
 {
     private $userDashboardRepository;
+
     public function __construct(UserDashboardRepository $userDashboardRepository)
     {
         $this->userDashboardRepository = $userDashboardRepository;
     }
+
     public function getMyLabs(Request $request)
     {
         try {
@@ -97,7 +98,7 @@ class UserDashboardController extends AppBaseController
                     return $this->sendError(__('responses.handler_bad_request'), 402);
                     break;
             }
-            if($getProjectIds){
+            if ($getProjectIds) {
                 $project = $this->userDashboardRepository->getProjectList($getProjectIds, $request);
                 if ($project !== false) {
                     $response = [
@@ -119,4 +120,3 @@ class UserDashboardController extends AppBaseController
         }
     }
 }
-

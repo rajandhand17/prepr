@@ -2,12 +2,11 @@
 
 namespace App\Repositories\Api\Dashboard\Organization;
 
-
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\OrganizationService;
 use App\Services\ProjectService;
-use App\Services\Public\LabService;
 use App\Services\Public\ChallengeService;
+use App\Services\Public\LabService;
 
 class OrganizationDashboardRepository implements OrganizationDashboardInterface
 {
@@ -17,7 +16,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
     private $projectService;
     private $challengeAssessmentService;
 
-    public function __construct( OrganizationService $organizationService,LabService $labService, ChallengeService $challengeService,ProjectService $projectService,ChallengeAssessmentService $challengeAssessmentService)
+    public function __construct(OrganizationService $organizationService, LabService $labService, ChallengeService $challengeService, ProjectService $projectService, ChallengeAssessmentService $challengeAssessmentService)
     {
         $this->organizationService = $organizationService;
         $this->labService = $labService;
