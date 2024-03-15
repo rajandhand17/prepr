@@ -32,6 +32,8 @@ class ProjectService
         try {
             $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
 
+            dd($getProjectIds);
+
             $project_list = self::filterProjectList($project_list, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
