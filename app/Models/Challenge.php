@@ -190,6 +190,11 @@ class Challenge extends Model
 
     public function submitted_projects()
     {
+        return $this->hasMany(Project::class, 'challenge_id', 'id')->where('is_submitted', '1');
+    }
+
+    public function submitted_project_count()
+    {
         return $this->hasMany(Project::class, 'challenge_id', 'id')->where('is_submitted', '1')->count();
     }
 }
