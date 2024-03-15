@@ -163,6 +163,7 @@ class ResourceCollectionService
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }
