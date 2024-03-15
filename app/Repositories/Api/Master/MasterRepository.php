@@ -345,7 +345,7 @@ class MasterRepository implements MasterInterface
         try {
             return $this->jobService->getJobs($request->language, $request->search);
         } catch (Exception $e) {
-            Log::error("Error in getJobs in MasterRepository.php: " . $e->getMessage());
+            Log::error('Error in getJobs in MasterRepository.php: '.$e->getMessage());
 
             return false;
         }

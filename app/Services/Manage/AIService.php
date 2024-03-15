@@ -10,9 +10,9 @@ use App\Models\Job;
 use App\Models\Levels;
 use App\Models\ResourceModule;
 use App\Models\Skill;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class AIService
 {
@@ -27,24 +27,24 @@ class AIService
 
         $this->openAIClient = new Client([
             'base_uri' => 'https://api.openai.com/v1/chat/completions',
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $openAIAPIKey,
+            'headers'  => [
+                'Content-Type'  => 'application/json',
+                'Authorization' => 'Bearer '.$openAIAPIKey,
             ],
         ]);
 
         $this->bingArticleClient = new Client([
             'base_uri' => 'https://api.bing.microsoft.com/v7.0/search',
-            'headers' => [
-                'Content-Type' => 'application/json',
+            'headers'  => [
+                'Content-Type'              => 'application/json',
                 'Ocp-Apim-Subscription-Key' => $bingAPIKey,
             ],
         ]);
 
         $this->bingVideoClient = new Client([
             'base_uri' => 'https://api.bing.microsoft.com/v7.0/videos/search',
-            'headers' => [
-                'Content-Type' => 'application/json',
+            'headers'  => [
+                'Content-Type'              => 'application/json',
                 'Ocp-Apim-Subscription-Key' => $bingAPIKey,
             ],
         ]);
@@ -75,7 +75,6 @@ class AIService
                 $endTimeAPI = microtime(true);
                 // Log::info('API call duration: ' . ($endTimeAPI - $startTimeAPI) . ' seconds');
 
-
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
                     continue;
                 }
@@ -87,7 +86,9 @@ class AIService
 
                     // Checks for duplicate names in all challenges so no duplicate titles would exist
                     if (is_array($content) && isset($content['title'])) {
-                        if (Challenge::where('title', $content['title'])->exists()) continue;
+                        if (Challenge::where('title', $content['title'])->exists()) {
+                            continue;
+                        }
                     }
 
                     if (empty($content['skills'])) {
@@ -137,14 +138,13 @@ class AIService
                 // Log::info('Validating challenges duration: ' . ($endTimeValidatingChallenges - $startTimeValidatingChallenges) . ' seconds');
             }
 
-
             if (count($validChallenges) < 2) {
-                throw new Exception("Failed to generate sufficient valid challenges.");
+                throw new Exception('Failed to generate sufficient valid challenges.');
             }
 
-            return (object)$validChallenges;
+            return (object) $validChallenges;
         } catch (Exception $e) {
-            Log::error("Error in createChallengeUsingAIPreview in AIService.php: " . $e->getMessage());
+            Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -154,18 +154,18 @@ class AIService
     {
         try {
             $payload = [
-                'model' => 'gpt-3.5-turbo',
-                'n' => 10,
+                'model'    => 'gpt-3.5-turbo',
+                'n'        => 10,
                 'messages' => [
                     [
-                        'role' => 'user',
+                        'role'    => 'user',
                         'content' => '
-                            Please design an educational challenge for the careers: "' . $jobTitles . '", with skills: "' . $skillTitles . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the challenge to finish. Additional information would be ("' . $additionalInformation . '")
+                            Please design an educational challenge for the careers: "'.$jobTitles.'", with skills: "'.$skillTitles.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the challenge to finish. Additional information would be ("'.$additionalInformation.'")
                             1. **Title**: Craft a brief title for the challenge.
                             2. **Description**: Provide a brief description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
                             3. **Steps**: Write the exact same steps mentioned in description in an array as well.
                             4. **Skills**: Enumerate 10 vital skills necessary for this challenge along with the provided skills.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitles . '".
+                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitles.'".
                             6. **Reflections**: provide 3-5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
                 
                             Output format (Make sure you exactly follow it):
@@ -177,7 +177,7 @@ class AIService
                             "skills": ["Skill 1", "Skill 2", ...],
                             "reflections": ["Reflection 1", "Reflection 2", ...]
                         }',
-                    ]
+                    ],
                 ],
             ];
 
@@ -189,7 +189,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error("Error in fetchChallengesFromOpenAI in AIService.php: " . $e->getMessage());
+            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -199,6 +199,7 @@ class AIService
     {
         $updatedSkills = [];
         $lowercaseSkills = array_map('strtolower', $skills);
+
         try {
             $recommendationResponse = RecommendationEngineHelper::getRelatedPreprSkills($lowercaseSkills);
             foreach ($recommendationResponse as $skill) {
@@ -212,7 +213,7 @@ class AIService
 
             return $updatedSkills;
         } catch (Exception $e) {
-            Log::error("Error in processSkills in AIService.php: " . $e->getMessage());
+            Log::error('Error in processSkills in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -222,6 +223,7 @@ class AIService
     {
         $highestScore = 0;
         $highestScoreSkill = null;
+
         try {
             foreach ($recommendations as $skill => $score) {
                 if ($score > $highestScore) {
@@ -232,7 +234,7 @@ class AIService
 
             return ['skill' => $highestScoreSkill, 'score' => $highestScore];
         } catch (Exception $e) {
-            Log::error("Error in selectHighestScoreSkill in AIService.php: " . $e->getMessage());
+            Log::error('Error in selectHighestScoreSkill in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -265,16 +267,16 @@ class AIService
                     if ($collectArticles && !$articlesCollected) {
                         try {
                             $articleResponse = $this->bingArticleClient->request('GET', '', [
-                                'query' => ['q' => 'Articles about ' . $title . ' for level ' . $levelTitle, 'count' => 15],
+                                'query' => ['q' => 'Articles about '.$title.' for level '.$levelTitle, 'count' => 15],
                             ]);
                             $articleResponse = json_decode($articleResponse->getBody(), true);
 
                             foreach ($articleResponse['webPages']['value'] as $item) {
                                 $article = [
-                                    'type' => 'link',
-                                    'title' => $item['name'],
+                                    'type'        => 'link',
+                                    'title'       => $item['name'],
                                     'description' => $item['snippet'] ?? '',
-                                    'url' => $item['url']
+                                    'url'         => $item['url'],
                                 ];
                                 if (!empty($article['title'])) {
                                     $currentData['articles'][] = $article;
@@ -290,18 +292,18 @@ class AIService
                     if ($collectVideos && !$videosCollected) {
                         try {
                             $videoResponse = $this->bingVideoClient->request('GET', '', [
-                                'query' => ['q' => 'Videos about ' . $title . ' for level ' . $levelTitle, 'count' => 15],
+                                'query' => ['q' => 'Videos about '.$title.' for level '.$levelTitle, 'count' => 15],
                             ]);
                             $videoResponse = json_decode($videoResponse->getBody(), true);
 
                             foreach ($videoResponse['value'] as $video) {
                                 $videoData = [
-                                    'type' => 'video',
-                                    'title' => $video['name'],
+                                    'type'        => 'video',
+                                    'title'       => $video['name'],
                                     'description' => $video['description'] ?? '',
-                                    'publisher' => $video['publisher'][0]['name'] ?? '',
-                                    'url' => $video['contentUrl'],
-                                    'embedHTML' => $video['embedHtml'] ?? ''
+                                    'publisher'   => $video['publisher'][0]['name'] ?? '',
+                                    'url'         => $video['contentUrl'],
+                                    'embedHTML'   => $video['embedHtml'] ?? '',
                                 ];
                                 if (!empty($videoData['title'])) {
                                     $currentData['videos'][] = $videoData;
@@ -326,10 +328,10 @@ class AIService
                 }
 
                 if (($collectArticles ? $articlesCollected : true) && ($collectVideos ? $videosCollected : true)) {
-                    throw new Exception("Error in gathering enough data!");
+                    throw new Exception('Error in gathering enough data!');
                 }
             } catch (Exception $e) {
-                Log::error("Error in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: " . $e->getMessage());
+                Log::error("Error in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: ".$e->getMessage());
             }
         }
 
@@ -401,26 +403,26 @@ class AIService
                         $descriptionParts = [];
                         foreach ($group['resource_modules'] as $item) {
                             $title = $item['title'];
-                            $description = isset($item['description']) ? $item['description'] : "No description available.";
-                        
+                            $description = isset($item['description']) ? $item['description'] : 'No description available.';
+
                             $descriptionParts[] = "{$title} - {$description}";
                         }
-                        $chunkGroupDescriptions[] = "Group " . ($groupIndex + 1) . ": " . implode(", ", $descriptionParts);
+                        $chunkGroupDescriptions[] = 'Group '.($groupIndex + 1).': '.implode(', ', $descriptionParts);
                     }
 
-                    $combinedChunkDescription = implode(" ", $chunkGroupDescriptions);
+                    $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
 
-                    $prompt = "For each group described below, generate a title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: " . $combinedChunkDescription .
-                        " Example format: {\"results\": [{\"title\": \"Title 1\", \"description\": \"Description 1\"}, {\"title\": \"Title 2\", \"description\": \"Description 2\"}]}";
+                    $prompt = "For each group described below, generate a title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: ".$combinedChunkDescription.
+                        ' Example format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                     $payload = [
-                        'model' => 'gpt-3.5-turbo',
-                        'n' => 1,
+                        'model'    => 'gpt-3.5-turbo',
+                        'n'        => 1,
                         'messages' => [
                             [
-                                'role' => 'user',
-                                'content' => $prompt
-                            ]
+                                'role'    => 'user',
+                                'content' => $prompt,
+                            ],
                         ],
                     ];
 
@@ -436,10 +438,10 @@ class AIService
                             // Append AI results for this chunk to the overall results
                             $allAiResults = array_merge($allAiResults, $contentArray['results']);
                         } else {
-                            Log::error('The parsed AI response did not contain the expected "results" key for chunk ' . $chunkIndex);
+                            Log::error('The parsed AI response did not contain the expected "results" key for chunk '.$chunkIndex);
                         }
                     } else {
-                        Log::error('The AI response structure is not as expected for chunk ' . $chunkIndex);
+                        Log::error('The AI response structure is not as expected for chunk '.$chunkIndex);
                     }
                 }
 
@@ -481,9 +483,8 @@ class AIService
                     $group['is_ai_created'] = $request->is_ai_created;
                 }
                 unset($group); // Unset the reference to the last element
-
             } catch (Exception $e) {
-                Log::error("Error in createResourceModuleUsingAIPreview in AIService.php: " . $e->getMessage());
+                Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
             }
         }
 

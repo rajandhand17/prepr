@@ -1375,14 +1375,14 @@ class MasterController extends AppBaseController
         try {
             $jobs = $this->masterRepository->getJobs($request);
             if ($jobs) {
-                return $this->sendResponse(JobResource::collection($jobs), __("responses.found_job_list"));
+                return $this->sendResponse(JobResource::collection($jobs), __('responses.found_job_list'));
             }
 
-            return $this->sendResponse(null, __("responses.not_found_job_list"));
+            return $this->sendResponse(null, __('responses.not_found_job_list'));
         } catch (\Exception $e) {
-            Log::error("Error in getJobs in MasterController.php: " . $e->getMessage());
+            Log::error('Error in getJobs in MasterController.php: '.$e->getMessage());
 
-            return $this->sendError(__("responses.server_failed"), 500);
+            return $this->sendError(__('responses.server_failed'), 500);
         }
     }
 }

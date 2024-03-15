@@ -51,7 +51,7 @@ class ChallengeAchievementService
 
             return true;
         } catch (Exception $e) {
-            Log::error("Error in createChallengeAchievement in ChallengeAchievementService.php: " . $e->getMessage());
+            Log::error('Error in createChallengeAchievement in ChallengeAchievementService.php: '.$e->getMessage());
 
             return false;
         }
