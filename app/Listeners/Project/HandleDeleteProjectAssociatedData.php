@@ -3,9 +3,9 @@
 namespace App\Listeners\Project;
 
 use App\Events\Project\DeleteProjectAssociatedData;
-use App\Services\Manage\ProjectAdditionalInfoService;
-use App\Services\Manage\ProjectFileService;
-use App\Services\Manage\ProjectPitchService;
+use App\Services\ProjectAdditionalInfoService;
+use App\Services\ProjectFileService;
+use App\Services\ProjectPitchService;
 use Exception;
 
 class HandleDeleteProjectAssociatedData

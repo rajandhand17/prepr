@@ -11,6 +11,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('{slug}/requirements', [ProjectController::class, 'projectRequirements']);
     Route::post('/{slug}/pitch-task', [ProjectController::class, 'projectPitchTask']);
     Route::post('/{slug}/file-upload', [ProjectController::class, 'fileUpload']);
+    Route::delete('/{slug}/media', [ProjectController::class, 'deleteMedia']);
     Route::post('/{slug}/additional-info', [ProjectController::class, 'projectAdditionalInfo']);
     Route::post('/{slug}/external-links', [ProjectController::class, 'projectExternalLinks']);
     Route::delete('/{slug}/delete', [ProjectController::class, 'delete']);
