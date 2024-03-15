@@ -87,9 +87,9 @@ class ResourceCollectionController extends AppBaseController
     public function update($slug, UpdateResourceCollectionRequest $request)
     {
         try {
-            $checkOrganizationExistsOrNot=OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-            if($checkOrganizationExistsOrNot==false) {
-               return $this->sendError(__('responses.organization_not_found'), 422);
+            $checkOrganizationExistsOrNot = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if ($checkOrganizationExistsOrNot == false) {
+                return $this->sendError(__('responses.organization_not_found'), 422);
             }
             $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionSlugExistsOrNot == false) {
