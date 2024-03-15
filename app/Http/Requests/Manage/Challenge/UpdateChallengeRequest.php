@@ -101,6 +101,8 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_title.*'] = 'required';
             $base_rules['custom_timelines_date'] = 'array';
             $base_rules['custom_timelines_date.*'] = ['required', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+            $base_rules['schedule_custom_notify'] = 'array|required';
+            $base_rules['schedule_custom_notify.*'] = 'in:0,1';
         }
 
         if ($this->has('assessment_title') !== null && $this->has('assessment_score') !== null && $this->has('assessment_weight') !== null) {
