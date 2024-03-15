@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
-use App\Models\Job;
+use App\Models\JobTitle;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +14,7 @@ class JobService
     {
         try {
             if ($language == 'en') {
-                $job_list = Job::select('id', 'title');
+                $job_list = JobTitle::select('id', 'title');
                 if ($job_id !== null) {
                     $job_list = $job_list->whereIn('id', $job_id);
                 }
@@ -24,7 +24,7 @@ class JobService
                 if (!$column_name || !Schema::hasColumn('jobs', $column_name)) {
                     return false;
                 }
-                $job_list = Job::select('id', $column_name.' as title');
+                $job_list = JobTitle::select('id', $column_name.' as title');
             }
 
             if ($search != null) {
@@ -64,7 +64,7 @@ class JobService
     public static function getJobBasedOnIds($job_ids)
     {
         try {
-            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+            $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
                 ->whereIn('id', $job_ids)->get();
 
             return $getJobsList;
@@ -78,7 +78,7 @@ class JobService
     public static function getJobBasedOnId($job_id)
     {
         try {
-            $getJobsList = Job::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+            $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
                 ->where('id', $job_id)->first();
 
             return $getJobsList;

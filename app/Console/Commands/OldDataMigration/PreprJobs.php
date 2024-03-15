@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use App\Models\Job;
+use App\Models\JobTitle;
 use App\Models\JobSkill;
 use App\Models\RelatedJob;
 use App\Models\UserJob;
@@ -58,12 +58,12 @@ class Jobs extends Command
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now(),
                     ];
-                    $check_jobs = Job::find($job->id);
+                    $check_jobs = JobTitle::find($job->id);
                     if (!$check_jobs) {
                         $insertArr[] = $jobs_details;
                     }
                 }
-                Job::insert($insertArr);
+                JobTitle::insert($insertArr);
             });
             DB::commit();
             $this->info('Migrating of old data for table (titles) completed.');

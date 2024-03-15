@@ -6,7 +6,7 @@ use App\Helpers\RecommendationEngineHelper;
 use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Duration;
-use App\Models\Job;
+use App\Models\JobTitle;
 use App\Models\Levels;
 use App\Models\ResourceModule;
 use App\Models\Skill;
@@ -58,7 +58,7 @@ class AIService
 
             // $language = $request->language;
 
-            $jobTitlesArray = Job::whereIn('id', $request->jobs)->pluck('title')->toArray();
+            $jobTitlesArray = JobTitle::whereIn('id', $request->jobs)->pluck('title')->toArray();
             $jobTitles = implode(', ', $jobTitlesArray);
             $skillTitles = implode(', ', Skill::whereIn('id', $request->skills)->get()->pluck('title')->toArray());
             $durationTitle = Duration::find($request->duration_id)->title;
