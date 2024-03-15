@@ -130,10 +130,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function deleteOrganization($slug, $language)
+    public function deleteOrganization($organizationId, $language)
     {
         try {
-            return  $this->organizationService->deleteOrganization($slug, $language);
+            return  $this->organizationService->deleteOrganization($organizationId, $language);
         } catch (\Exception $e) {
             return false;
         }

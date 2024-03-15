@@ -35,7 +35,7 @@ class MemberManagementController extends AppBaseController
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
 
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
             $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
             $getTemplate = $this->memberManagementRepository->getTemplate($request, $component);
@@ -79,19 +79,19 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
             if ($component != 'organization' && $request->role != 'User') {
-                return $this->sendError(__('responses.select_valid_role_error'), 403);
+                return $this->sendError(__('responses.select_valid_role_error'), 422);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
             if ((count($memberLists['invalid_emails']) > 0 || count($memberLists['already_members']) > 0) && count($memberLists['invited_emails']) < 1) {
-                return $this->sendError($memberLists['add_member_response'], 403);
+                return $this->sendError($memberLists['add_member_response'], 422);
             } elseif ($memberLists) {
                 return $this->sendResponse($memberLists, $memberLists['add_member_response']);
             }
 
-            return $this->sendError(__('responses.create_member_manger_failed'), 403);
+            return $this->sendError(__('responses.create_member_manger_failed'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -102,7 +102,7 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
             $member_management = $this->memberManagementRepository->deleteMembers($checkComponentBasedOnSlug, $component, $request);
             if ($member_management) {
@@ -120,7 +120,7 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
             $checkLabStatus = $this->memberManagementRepository->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
             if ($checkLabStatus) {
