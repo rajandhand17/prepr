@@ -619,12 +619,12 @@ class OrganizationController extends AppBaseController
         try {
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_title_unique'), 422);
+                return $this->sendError(__('responses.organization_not_exists'), 422);
             }
             if (!auth()->user()->isAbleTo('delete_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_delete_access_denied'), 403);
             }
-            $deleteOrganization = $this->organizationRepository->deleteOrganization($slug, $request->language);
+            $deleteOrganization = $this->organizationRepository->deleteOrganization($checkOrganization->id, $request->language);
             if ($deleteOrganization) {
                 return $this->sendResponse(null, __('responses.organization_delete'), 200);
             }

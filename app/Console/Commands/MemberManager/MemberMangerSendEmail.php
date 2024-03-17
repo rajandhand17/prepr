@@ -20,7 +20,7 @@ class MemberMangerSendEmail extends Command
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old languages table data to new db structure.';
+    protected $description = 'This command is use to send email invitation to members from member management.';
 
     /**
      * Create a new command instance.
@@ -48,7 +48,7 @@ class MemberMangerSendEmail extends Command
                 $data = ['subject' => 'Invite Users', 'first_name' =>'first_name', 'last_name' =>'last_name', 'otp' =>'otp'];
                 $mail = SendMailHelper::sendMail($user, 'email.member_manager_invite_users', $data);
                 if ($mail) {
-                    $update_member_management = MemberManagement::where('email', $list->email)->update(['email_status'=>'1']);
+                    $update_member_management = MemberManagement::where('email', $list->email)->update(['email_status'=>'1', 'invite_status'=>'2']);
                     if ($update_member_management) {
                         DB::commit();
                         $this->info('Member manger emails send');

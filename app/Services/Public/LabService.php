@@ -2,7 +2,9 @@
 
 namespace App\Services\Public;
 
+use App\Models\ComponentAssociation;
 use App\Models\Lab;
+use App\Models\MemberManagement;
 
 class LabService
 {
@@ -29,7 +31,10 @@ class LabService
                 $lab_list = $lab_list->whereIn('labs.category_id', $request->category);
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $lab_list = $lab_list->whereIn('organization_id', $request->organization_id);
+                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                if (!empty($getOrganizationIds)) {
+                    $lab_list = $lab_list->whereIn('organization_id', $getOrganizationIds);
+                }
             }
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
@@ -97,6 +102,9 @@ class LabService
                         $lab_list = $lab_list->join('member_management', 'labs.id', '=', 'member_management.module_id')
                         ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email]);
                         switch ($request->request_status) {
+                            case 'invited':
+                                $lab_list->where('member_management.invite_status', '0');
+                                break;
                             case 'accepted':
                                 $lab_list->where('member_management.invite_status', '1');
                                 break;
@@ -123,6 +131,23 @@ class LabService
     {
         try {
             return Lab::where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectLabs($request, $challengeId)
+    {
+        try {
+            $getLabList = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_id')->get()->pluck('lab_id');
+
+            $userEmail = auth()->user()->email;
+            $labMemberIds = MemberManagement::whereIn('module_id', $getLabList)->where(['module_type' => '1', 'invite_status' => '1', 'email' => $userEmail])->pluck('module_id');
+            $lab_list = Lab::select('uuid', 'title', 'media')->whereIn('id', $labMemberIds);
+            $lab_list = self::filterLabList($request, $lab_list);
+            $limit = config('site-settings.listing_limit');
+
+            return $lab_list->limit($limit)->get();
         } catch (\Exception $e) {
             return false;
         }

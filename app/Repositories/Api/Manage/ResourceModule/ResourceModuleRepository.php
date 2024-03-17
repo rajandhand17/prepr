@@ -55,7 +55,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
                 DB::commit();
 
-                return true;
+                return $createLabProgram['createResourceModule'];
             }
             DB::rollback();
 
@@ -127,7 +127,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
                 DB::commit();
 
-                return true;
+                return $updateResourceModule['updateResourceModule'];
             }
             DB::rollback();
 
@@ -137,19 +137,19 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function fileUpload($request, $resource_module_id, $type)
+    public function fileUpload($request, $resource_module_id)
     {
         try {
-            return $this->resourceModuleDetailsService->fileUpload($request, $resource_module_id, $type);
+            return $this->resourceModuleDetailsService->fileUpload($request, $resource_module_id);
         } catch(\Exception $e) {
             return false;
         }
     }
 
-    public function deleteResourceModuleMedia($request, $resource_module_id, $type)
+    public function deleteResourceModuleMedia($request, $resource_module_id)
     {
         try {
-            return $this->resourceModuleDetailsService->deleteResourceModuleMedia($request, $resource_module_id, $type);
+            return $this->resourceModuleDetailsService->deleteResourceModuleMedia($request, $resource_module_id);
         } catch(\Exception $e) {
             return false;
         }
@@ -168,6 +168,15 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return $this->resourceModuleDetailsService->addEmbeddedMedia($request, $resource_module_id);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getListName($request, $organization)
+    {
+        try {
+            return  $this->resourceModuleService->getListName($request, $organization);
         } catch(\Exception $e) {
             return false;
         }

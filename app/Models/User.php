@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -48,6 +50,7 @@ class User extends Authenticatable
         'referral_code',
         'is_profile_completed',
         'remember_token',
+        'is_deactivated',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -58,6 +61,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'users.'.$this->id;
+    }
 
     public function getProfileImageAttribute($value)
     {
@@ -74,6 +82,113 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class);
     }
 
+    public function userLabs()
+    {
+        return $this->hasMany(Lab::class, 'user_id', 'id');
+    }
+
+    public function userAchievements()
+    {
+        return $this->hasMany(UserAchievement::class, 'user_id', 'id');
+    }
+
+    public function userFollow()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')
+            ->where('reference_follow', '2')
+            ->orWhere(function ($query) {
+                $query->where(['user_id' => $this->id, 'user_follow' => '2']);
+            });
+    }
+
+    public function userFriends()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')
+            ->where('status', '1')
+            ->orWhere(function ($query) {
+                $query->where('user_id', $this->id)
+                    ->where('status', '1');
+            });
+    }
+
+    public function userRequestSend()
+    {
+        return $this->hasMany(Friend::class, 'user_id', 'id')->where('status', '0');
+    }
+
+    public function requestReceived()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')->where('status', '0');
+    }
+
+    public function userFollowRequest()
+    {
+        return $this->hasMany(Friend::class, 'user_id', 'id')->where('user_follow', '0');
+    }
+
+    public function followRequestSent()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')
+            ->where('user_follow', '1')
+            ->orWhere(function ($query) {
+                $query->where(['user_id' => $this->id, 'reference_follow' => '1']);
+            });
+    }
+
+    public function followRequestReceived()
+    {
+        return $this->hasMany(Friend::class, 'reference_id', 'id')
+            ->where('reference_follow', '1')
+            ->orWhere(function ($query) {
+                $query->where(['user_id' => $this->id, 'user_follow' => '1']);
+            });
+    }
+
+    public function userAddress()
+    {
+        return $this->hasOne(UserAddress::class, 'user_id', 'id');
+    }
+
+    public function userExperience()
+    {
+        return $this->hasMany(UserExperience::class);
+    }
+
+    public function userEducation()
+    {
+        return $this->hasMany(UserEducation::class);
+    }
+
+    public function userPatents()
+    {
+        return $this->hasMany(UserPatent::class);
+    }
+
+    public function userSkills()
+    {
+        return $this->hasMany(UserSkills::class)->where('pinned', '0');
+    }
+
+    public function userTags()
+    {
+        return $this->hasMany(UserTag::class, 'user_id', 'id');
+    }
+
+    public function userPinnedSkills()
+    {
+        return $this->hasMany(UserSkills::class)->where('pinned', '1');
+    }
+
+    public function userCertificates()
+    {
+        return $this->hasMany(UserCertificate::class);
+    }
+
+    public function userPersonalFiles()
+    {
+        return $this->hasMany(UserPersonalFile::class);
+    }
+
     /**login apis */
     public function login($request)
     {
@@ -82,6 +197,11 @@ class User extends Authenticatable
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
+
+                return $response;
+            }
+            if ($user->is_deactivated == 1) {
+                $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
                 return $response;
             }
@@ -99,27 +219,27 @@ class User extends Authenticatable
                         $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
-                            return ['success' => true, 'message'=> __('responses.two_factor_otp'), 'code' => 2];
+                            return ['success' => true, 'message' => __('responses.two_factor_otp'), 'code' => 2];
                         }
 
-                        return ['success' => false, 'message' => __('responses.failed_email'), 'code'=>null];
+                        return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
                     $data = User::where('email', $request->email)->first();
-                    $response = ['success' => true,  'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                    $response = ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                     return $response;
                 } else {
-                    $response = ['success' => false, 'message'=>__('responses.invalid_credentials'), 'code' => 4];
+                    $response = ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
 
                     return $response;
                 }
             } else {
-                $response = ['success' => false, 'message'=>__('responses.user_not_found'), 'code' => 5];
+                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 
                 return $response;
             }
         } catch (\Exception $e) {
-            $response = ['success' => false, 'message'=>__('responses.send_error'), 'code' => 6];
+            $response = ['success' => false, 'message' => __('responses.send_error'), 'code' => 6];
 
             return $response;
         }
@@ -174,7 +294,7 @@ class User extends Authenticatable
             if ($member_manager) {
                 foreach ($member_manager as $member) {
                     $user->attachRole($member->role, $member->module_id);
-                    $member_manager = MemberManagement::where('id', $member->id)->update(['invite_status'=>'1']);
+                    $member_manager = MemberManagement::where('id', $member->id)->update(['invite_status' => '1']);
                 }
             }
             if ($user->id) {
@@ -278,7 +398,7 @@ class User extends Authenticatable
                 if ($user->save()) {
                     /**sending otp for forget password*/
                     if ($request->purpose === 'forget_password') {
-                        $data = ['subject' =>__('responses.email_subject_forget_password'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
+                        $data = ['subject' => __('responses.email_subject_forget_password'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                         $mail = SendMailHelper::sendMail($user, 'email.forget_password_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'forget_password', 'code' => 1];
@@ -290,7 +410,7 @@ class User extends Authenticatable
                     }
                     /**sending otp for verify email*/
                     if ($request->purpose === 'verify_email') {
-                        $data = ['subject' =>__('responses.verify_your_email'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
+                        $data = ['subject' => __('responses.verify_your_email'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                         $mail = SendMailHelper::sendMail($user, 'email.verify_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'verify_email', 'code' => 2];
@@ -342,7 +462,7 @@ class User extends Authenticatable
                 $user->email_verified_at = Carbon::now();
                 $user->verified_user = '1';
                 if ($user->save()) {
-                    $data = ['subject' =>__('responses.email_subject_verified_successfully'), 'first_name' => $user->first_name, 'last_name' => $user->last_name];
+                    $data = ['subject' => __('responses.email_subject_verified_successfully'), 'first_name' => $user->first_name, 'last_name' => $user->last_name];
                     $mail = SendMailHelper::sendMail($user, 'email.verified_successfully', $data);
                     if ($mail) {
                         $success = ['success' => true, 'user' => $user, 'code' => 2];
@@ -355,7 +475,7 @@ class User extends Authenticatable
 
                 return false;
             } else {
-                $response = ['success' => false, 'message' =>__('responses.otp_correct_required'), 'code' => 4];
+                $response = ['success' => false, 'message' => __('responses.otp_correct_required'), 'code' => 4];
 
                 return $response;
             }
@@ -415,7 +535,7 @@ class User extends Authenticatable
             $user = User::where(['email' => $request->email])->first();
             /**check user account verified or not */
             if ($user->verified_user == 0) {
-                $response = ['success' => false, 'message' =>__('responses.account_not_verified'), 'code' => 1];
+                $response = ['success' => false, 'message' => __('responses.account_not_verified'), 'code' => 1];
 
                 return $response;
             }
@@ -434,7 +554,7 @@ class User extends Authenticatable
                     return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
                 }
             } else {
-                $response = ['success' => false, 'message' =>__('responses.otp_correct_required'), 'code' => 3];
+                $response = ['success' => false, 'message' => __('responses.otp_correct_required'), 'code' => 3];
 
                 return $response;
             }
@@ -486,7 +606,7 @@ class User extends Authenticatable
                 } else {
                     $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
                 }
-                $response = ['success' => true,  'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                $response = ['success' => true, 'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                 return $response;
             } else {
@@ -519,7 +639,7 @@ class User extends Authenticatable
 //                } else {
 //                    $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
 //                }
-                $response = ['success' => true,  'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                $response = ['success' => true, 'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                 return $response;
             } else {
@@ -527,7 +647,7 @@ class User extends Authenticatable
                     'user'         => $magnetUserDetails['data'],
                     'access_token' => $magnetUserDetails['access_token'],
                 ];
-                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData,  'code' => 5];
+                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData, 'code' => 5];
 
                 return $response;
             }
@@ -550,5 +670,15 @@ class User extends Authenticatable
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_users', 'user_id', 'conversation_id');
+    }
+
+    public function presence()
+    {
+        return $this->hasOne(ConversationUserPresenceStatus::class, 'user_id', 'id');
     }
 }

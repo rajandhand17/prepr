@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Manage\Challenge;
 
 use App\Services\Manage\ChallengeService;
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -73,6 +74,8 @@ class UpdateChallengeRequest extends FormRequest
             'requirement_program'                   => 'in:yes,no',
             'complete_education_program'            => 'in:yes,no',
             'complete_experience'                   => 'in:yes,no',
+            'automatic_alert'                       => 'required|in:0,1',
+            'timeline_type'                         => 'required|in:restricted,flexible',
         ];
 
         if ($this->request->has('winner_achievement_participation')) {
@@ -97,7 +100,9 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_title'] = 'array';
             $base_rules['custom_timelines_title.*'] = 'required';
             $base_rules['custom_timelines_date'] = 'array';
-            $base_rules['custom_timelines_date.*'] = 'required';
+            $base_rules['custom_timelines_date.*'] = ['required', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+            $base_rules['schedule_custom_notify'] = 'array|required';
+            $base_rules['schedule_custom_notify.*'] = 'in:0,1';
         }
 
         if ($this->has('assessment_title') !== null && $this->has('assessment_score') !== null && $this->has('assessment_weight') !== null) {
@@ -109,31 +114,33 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['assessment_weight.*'] = 'required|numeric';
         }
 
-        if ($this->request->has('assessment_type') !== null) {
-            $base_rules['assessment_type'] = 'required|in:open,close';
-            $base_rules['visibility'] = 'required|in:users,hidden';
-            $base_rules['guidelines'] = 'required_if:request_type,publish';
-            $base_rules['attachments'] = 'mimes:jpeg,jpg,png,webp|max:1024';
-            if ($this->assessment_type == 'close' && $this->members_email !== null) {
-                $base_rules['members_email'] = 'array';
-                $base_rules['members_email.*'] = 'required_if:request_type,publish||email';
+        if ($this->request->has('assessment_type')) {
+            $base_rules['assessment_type'] = 'in:open,closed';
+            $base_rules['visibility'] = 'required_if:assessment_type,open,closed|in:users,hidden';
+            $base_rules['guidelines'] = 'required_if:assessment_type,open,closed';
+            $base_rules['attachments'] = 'required_if:assessment_type,open,closed|mimes:jpeg,jpg,png,webp|max:1024';
+
+            if ($this->request->get('assessment_type') == 'closed') {
+                $base_rules['members_email'] = 'array|required';
+                $base_rules['members_email.*'] = 'email';
             }
         }
 
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'restricted') {
-            $base_rules['open_call_date'] = 'required_if:request_type,publish';
+            $base_rules['open_call_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['open_call_date_description'] = 'required_if:request_type,publish';
-            $base_rules['last_call_date'] = 'required_if:request_type,publish';
+            $base_rules['last_call_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['last_call_date_description'] = 'required_if:request_type,publish';
-            $base_rules['application_deadline_date'] = 'required_if:request_type,publish';
+            $base_rules['application_deadline_date'] = ['required_if:request_type,publish', 'after_or_equal:open_call_date'];
             $base_rules['application_deadline_date_description'] = 'required_if:request_type,publish';
-            $base_rules['submission_deadline_date'] = 'required_if:request_type,publish';
+            $base_rules['submission_deadline_date'] = ['required_if:request_type,publish', 'after_or_equal:application_deadline_date'];
             $base_rules['submission_deadline_date_description'] = 'required_if:request_type,publish';
         }
 
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
+            $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
         }
 
         return $base_rules;

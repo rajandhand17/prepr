@@ -194,7 +194,7 @@ class ChallengeResource extends JsonResource
             });
         }
 
-        if ($this->challenge_assessment->isNotEmpty()) {
+        if ($this->challenge_assessment) {
             $challenge_assessment = ChallengeAssessmentService::getChallengeAssessmentData($this->challenge_assessment);
         }
 
@@ -247,6 +247,28 @@ class ChallengeResource extends JsonResource
                 break;
         }
 
+        $joined_status = $this->joined();
+        $join_status = 'No';
+        if ($joined_status != 'NA' && $joined_status != null) {
+            switch ($joined_status->invite_status) {
+                case '0':
+                    $join_status = 'Invited';
+                    break;
+                case '1':
+                    $join_status = 'Yes';
+                    break;
+                case '2':
+                    $join_status = 'Pending';
+                    break;
+                case '3':
+                    $join_status = 'No';
+                    break;
+                default:
+                    $join_status = 'No';
+                    break;
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -259,6 +281,7 @@ class ChallengeResource extends JsonResource
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
+            'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'slug'                          => $this->slug,
             'title'                         => $this->title,
             'description'                   => $this->description,
@@ -286,12 +309,13 @@ class ChallengeResource extends JsonResource
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
             'challenge_template'            => $this->challenge_project_template,
+            'joined'                        => $join_status,
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'member_count'                  => $this->members()->count(),
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
-            'project_submitted_count'       => '0', // Till project api's are not done statically sending this
+            'project_submitted_count'       => $this->submitted_projects(),
             'external_links'                => ChallengeExternalLinkResource::collection($this->external_links),
         ];
     }

@@ -183,6 +183,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         L5Swagger\L5SwaggerServiceProvider::class,
         \PhpUnitGen\Console\Adapters\Laravel\PhpUnitGenServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -193,7 +194,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
@@ -205,17 +206,24 @@ return [
 
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
+        App\Repositories\Api\Discussion\DiscussionServiceProvider::class,
+        App\Repositories\Api\Project\ProjectServiceProvider::class,
+        App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementServiceProvider::class,
+        App\Repositories\Api\Chat\Conversation\ConversationServiceProvider::class,
+        App\Repositories\Api\Chat\Message\MessageServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
         App\Repositories\Api\Manage\MemberManagement\MemberManagementServiceProvider::class,
         App\Repositories\Api\Manage\Lab\LabServiceProvider::class,
+        App\Repositories\Api\Manage\LabMarketplace\LabMarketplaceServiceProvider::class,
         App\Repositories\Api\Manage\LabProgram\LabProgramServiceProvider::class,
         App\Repositories\Api\Manage\ResourceModule\ResourceModuleServiceProvider::class,
         App\Repositories\Api\Manage\Challenge\ChallengeServiceProvider::class,
         App\Repositories\Api\Manage\ChallengePath\ChallengePathServiceProvider::class,
         App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
+        App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
@@ -227,7 +235,9 @@ return [
         App\Repositories\Api\Public\ChallengePath\ChallengePathServiceProvider::class,
         App\Repositories\Api\Public\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
-
+        App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
+        App\Repositories\Api\Setting\SettingServiceProvider::class,
+        App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
     ],
 
     /*
@@ -244,6 +254,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'PDF'   => Barryvdh\DomPDF\Facade::class,
+
     ])->toArray(),
 
 ];

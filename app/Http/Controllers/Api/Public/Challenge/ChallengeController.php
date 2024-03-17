@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\Public\Challenge;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
+use App\Http\Resources\Public\Challenge\ChallengeProjectRequirementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Repositories\Api\Public\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
+use Exception;
 use Illuminate\Http\Request;
 
 class ChallengeController extends AppBaseController
@@ -42,7 +45,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_challenges_list'), 404);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -56,7 +59,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -82,7 +85,38 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function challengeList(Request $request)
+    {
+        try {
+            $getProjectChallengeList = $this->challengeRepository->getProjectChallenges($request);
+            if ($getProjectChallengeList) {
+                return $this->sendResponse(ChallengeListNameResource::collection($getProjectChallengeList), __('responses.found_challenges_list'));
+            }
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function challengeRequirements($uuid)
+    {
+        try {
+            $fetchChallengeExistsOrNot = $this->challengeRepository->getChallengeBasedOnUUID($uuid);
+            if (!$fetchChallengeExistsOrNot) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            $getProjectChallengeRequirement = $this->challengeRepository->getProjectChallengeRequirement($fetchChallengeExistsOrNot);
+            if ($getProjectChallengeRequirement) {
+                return $this->sendResponse(ChallengeProjectRequirementResource::make($fetchChallengeExistsOrNot), __('responses.project_requirement_found'), 200);
+            }
+
+            return $this->sendError(__('responses.project_not_requirement_found'));
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

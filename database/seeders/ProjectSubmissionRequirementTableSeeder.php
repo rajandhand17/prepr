@@ -20,8 +20,8 @@ class ProjectSubmissionRequirementTableSeeder extends Seeder
                 'title'      => 'Complete project tasks',
                 'fr_CA_title'=> 'Effectuer les tâches du projet',
             ], [
-                'title'      => 'Project external links',
-                'fr_CA_title'=> 'Liens externes du projet',
+                'title'      => 'Added Project URL',
+                'fr_CA_title'=> 'URL du projet ajoutée',
             ], [
                 'title'      => 'Uploaded to project gallery',
                 'fr_CA_title'=> 'Téléchargé dans la galerie de projets',

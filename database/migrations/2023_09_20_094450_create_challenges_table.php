@@ -30,6 +30,7 @@ return new class() extends Migration {
             $table->longText('agreement')->nullable();
             $table->enum('is_notification_enabled', ['0', '1'])->comment('0->no,1->yes & let users know if any updates are made')->default('0');
             $table->enum('project_privacy', ['0', '1'])->comment('0->no,1->yes')->default('0');
+            $table->enum('is_pre_built', ['0', '1'])->comment('0->no,1->yes')->default('0');
             $table->enum('is_open', ['0', '1', '2'])->comment('0 -> open,1 -> close, 3 -> completed')->default('0');
             $table->enum('is_auto_created', ['0', '1'])->comment('0->no,1->yes')->default('0');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

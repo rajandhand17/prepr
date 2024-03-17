@@ -5,6 +5,7 @@ namespace App\Services\Public;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceGroup;
+use App\Models\ResourceGroupRating;
 
 class ResourceGroupService
 {
@@ -28,10 +29,23 @@ class ResourceGroupService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'archive') ? '2' : '3'));
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', $status);
             } else {
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', '1');
+            }
+
+            if ($request->has('organization_id') && !empty($request->organization_id)) {
+                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                if (!empty($getOrganizationIds)) {
+                    $resourceGroupList = $resourceGroupList->whereIn('organization_id', $getOrganizationIds);
+                }
+            }
+
+            if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
+                $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
+                $resourceIds = ResourceGroupSocialActivitiesService::getResourceGroupsBasedOnActivity($activityType)->pluck('resource_group_id');
+                $resourceGroupList->whereIn('resource_groups.id', $resourceIds);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
@@ -110,6 +124,22 @@ class ResourceGroupService
     {
         try {
             return ResourceGroup::where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addRating($resource_group_id, $request)
+    {
+        try {
+            ResourceGroupRating::updateOrInsert([
+                'resource_group_id'     => $resource_group_id,
+                'user_id'               => auth()->user()->id,
+            ], [
+                'rating' => $request->rating,
+            ]);
+
+            return true;
         } catch (\Exception $e) {
             return false;
         }

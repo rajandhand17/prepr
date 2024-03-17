@@ -27,9 +27,9 @@ class ChallengeListNameResource extends JsonResource
         }
 
         return [
-            'id'    => $this->uuid,
-            'title' => $this->title,
-            'media' => $media,
+            'uuid'    => $this->uuid,
+            'title'   => $this->title,
+            'media'   => $media,
         ];
     }
 }

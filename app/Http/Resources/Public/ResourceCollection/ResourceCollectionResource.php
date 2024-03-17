@@ -44,6 +44,7 @@ class ResourceCollectionResource extends JsonResource
                 $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
                 $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
                 $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
+                $resourceModules[$resource_module->resource_module_id]['slug'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->slug;
             }
         }
         if ($this->challenges) {
@@ -52,6 +53,7 @@ class ResourceCollectionResource extends JsonResource
                 $challenges[$challenge_records->challenge_id]['title'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->title;
                 $challenges[$challenge_records->challenge_id]['image'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->image;
                 $challenges[$challenge_records->challenge_id]['description'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->description;
+                $challenges[$challenge_records->challenge_id]['slug'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->slug;
             }
         }
         if ($this->labs) {
@@ -60,6 +62,7 @@ class ResourceCollectionResource extends JsonResource
                 $labs[$lab_records->lab_id]['title'] = LabService::getLabBasedOnId($lab_records->lab_id)->title;
                 $labs[$lab_records->lab_id]['image'] = LabService::getLabBasedOnId($lab_records->lab_id)->media;
                 $labs[$lab_records->lab_id]['description'] = LabService::getLabBasedOnId($lab_records->lab_id)->description;
+                $labs[$lab_records->lab_id]['slug'] = LabService::getLabBasedOnId($lab_records->lab_id)->slug;
             }
         }
         if ($this->getDuration) {
@@ -103,10 +106,10 @@ class ResourceCollectionResource extends JsonResource
 
         switch($this->privacy) {
             case '0':
-                $privacy = 'yes';
+                $privacy = 'no';
                 break;
             case '1':
-                $privacy = 'no';
+                $privacy = 'yes';
                 break;
             default:
                 $privacy = 'no';
@@ -126,6 +129,12 @@ class ResourceCollectionResource extends JsonResource
             default:
                 $status = 'draft';
                 break;
+        }
+        $rating = intval('0');
+        if (isset(auth()->user()->id)) {
+            if ($this->resource_rating) {
+                $rating = intval($this->resource_rating->rating);
+            }
         }
 
         return [
@@ -153,7 +162,11 @@ class ResourceCollectionResource extends JsonResource
             'skill_stacks'                             => $skill_stacks,
             'tags'                                     => $tags,
             'tag_groups'                               => $tag_groups,
-
+            'rating'                                   => $rating,
+            'likes'                                    => $this->likes()->count(),
+            'shares'                                   => $this->shares()->count(),
+            'liked'                                    => $this->liked(),
+            'favourite'                                => $this->favorites(),
         ];
     }
 }

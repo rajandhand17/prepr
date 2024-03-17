@@ -22,7 +22,9 @@ interface ResourceModuleInterface
 
     public function updateResourceModule($slug, $request, $upload_cover_image);
 
-    public function fileUpload($request, $resource_module_id, $type);
+    public function fileUpload($request, $resource_module_id);
 
-    public function deleteResourceModuleMedia($request, $resource_module_id, $type);
+    public function deleteResourceModuleMedia($request, $resource_module_id);
+
+    public function getListName($request, $organization);
 }

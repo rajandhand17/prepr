@@ -79,7 +79,7 @@ class LabProgramRepository implements LabProgramInterface
             if ($createLabProgram['createLabProgram'] && $createLabProgram['labProgramSkillsGroupsStack'] && $createLabProgram['labProgramTagsGroupsService'] && $createLabProgram['componentAssociation']) {
                 DB::commit();
 
-                return true;
+                return $createLabProgram['createLabProgram'];
             }
             DB::rollback();
 
@@ -113,7 +113,7 @@ class LabProgramRepository implements LabProgramInterface
             if ($createLabProgram['updateLabProgram'] && $createLabProgram['componentAssociation'] && $createLabProgram['labProgramSkillsGroupsStack']) {
                 DB::commit();
 
-                return true;
+                return $createLabProgram['updateLabProgram'];
             }
             DB::rollback();
 

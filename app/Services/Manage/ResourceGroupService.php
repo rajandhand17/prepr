@@ -31,7 +31,7 @@ class ResourceGroupService
         try {
             $status = config('constants.resource_group_status.draft');
             switch($request->status) {
-                case 'published':
+                case 'publish':
                     $status = config('constants.resource_group_status.publish');
                     break;
                 case 'archive':
@@ -62,7 +62,7 @@ class ResourceGroupService
             $resourceGroup->title = $request->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->description = $request->description;
-            $resourceGroup->media_type = $request->media_type;
+            $resourceGroup->media_type = 'image';
             $resourceGroup->media = $upload_cover_image;
             $resourceGroup->level = $request->level;
             $resourceGroup->duration = $request->duration;
@@ -119,7 +119,7 @@ class ResourceGroupService
             $status = $resourceGroup->status;
             $privacy = $resourceGroup->privacy;
             switch($request->status) {
-                case 'published':
+                case 'publish':
                     $status = config('constants.resource_group_status.publish');
                     break;
                 case 'archive':
@@ -179,7 +179,7 @@ class ResourceGroupService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : (($request->status == 'archive') ? '2' : '3'));
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', $status);
             } else {
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', '1');
@@ -252,6 +252,15 @@ class ResourceGroupService
             }
 
             return $resourceGroupList;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnId($id)
+    {
+        try {
+            return ResourceGroup::where('id', $id)->first();
         } catch (\Exception $e) {
             return false;
         }

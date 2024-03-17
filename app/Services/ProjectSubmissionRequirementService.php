@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\ProjectSubmissionRequirement;
+use Exception;
 use Illuminate\Support\Facades\Schema;
 
 class ProjectSubmissionRequirementService
@@ -37,7 +38,7 @@ class ProjectSubmissionRequirementService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -60,7 +61,7 @@ class ProjectSubmissionRequirementService
             $project_condition = $project_submission_requirement->find($project_condition_id);
 
             return $project_condition;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

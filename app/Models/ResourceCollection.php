@@ -96,4 +96,41 @@ class ResourceCollection extends Model
     {
         return $this->hasMany(ResourceCollectionTagsGroups::class, 'resource_collection_id', 'id')->where('type', '1');
     }
+
+    public function likes()
+    {
+        return $this->hasMany(ResourceCollectionSocialActivity::class, 'resource_collection_id', 'id')->where('like_dislike', '1');
+    }
+
+    public function shares()
+    {
+        return $this->hasMany(ResourceCollectionSocialActivity::class, 'resource_collection_id', 'id')->where('share', '1');
+    }
+
+    public function liked()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ResourceCollectionSocialActivity::class, 'resource_collection_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'N/A';
+    }
+
+    public function favorites()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(ResourceCollectionSocialActivity::class, 'resource_collection_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'N/A';
+    }
+
+    public function resource_rating()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ResourceCollectionRating::class, 'resource_collection_id', 'id')->where('user_id', auth('api')->user()->id);
+        }
+
+        return 'N/A';
+    }
 }
