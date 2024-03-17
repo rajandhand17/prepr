@@ -7,6 +7,7 @@ use App\Http\Requests\Project\AddAdditionalInfoProjectRequest;
 use App\Http\Requests\Project\AddLinksProjectRequest;
 use App\Http\Requests\Project\AddProjectAssessmentRequest;
 use App\Http\Requests\Project\CreateProjectRequest;
+use App\Http\Requests\Project\DeleteProjectMediaRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\AssessedProjectResource;
 use App\Http\Resources\Project\ProjectAdditionalInfoResource;
@@ -64,19 +65,20 @@ class ProjectController extends AppBaseController
                     return $this->sendError(__('responses.handler_bad_request'), 402);
                     break;
             }
+            if ($getProjectIds) {
+                $project = $this->projectRepository->getProjectList($getProjectIds, $request);
+                if ($project !== false) {
+                    $response = [
+                        'total_count'  => $project->total(),
+                        'per_page'     => $project->perPage(),
+                        'count'        => $project->count(),
+                        'current_page' => $project->currentPage(),
+                        'total_pages'  => $project->lastPage(),
+                        'list'         => ProjectResource::collection($project),
+                    ];
 
-            $project = $this->projectRepository->getProjectList($getProjectIds, $request);
-            if ($project !== false) {
-                $response = [
-                    'total_count'  => $project->total(),
-                    'per_page'     => $project->perPage(),
-                    'count'        => $project->count(),
-                    'current_page' => $project->currentPage(),
-                    'total_pages'  => $project->lastPage(),
-                    'list'         => ProjectResource::collection($project),
-                ];
-
-                return $this->sendResponse($response, __('responses.found_projects_list'));
+                    return $this->sendResponse($response, __('responses.found_projects_list'));
+                }
             }
 
             return $this->sendError(__('responses.not_found_projects_list'), 404);
@@ -466,6 +468,25 @@ class ProjectController extends AppBaseController
             }
 
             return $this->sendError(__('responses.project_assessment_not_delete'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function deleteMedia(DeleteProjectMediaRequest $request, $slug)
+    {
+        try {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $deleteProjectMedia = $this->projectRepository->deleteProjectMedia($request, $checkProjectExistsOrNot->id);
+            if ($deleteProjectMedia) {
+                return $this->sendResponse(null, __('responses.project_media_delete'));
+            }
+
+            return $this->sendError(__('responses.project_media_not_delete'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

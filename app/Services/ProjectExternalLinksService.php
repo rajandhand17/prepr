@@ -59,4 +59,18 @@ class ProjectExternalLinksService
             return false;
         }
     }
+
+    public function deleteProjectMediaLink($request, $projectId)
+    {
+        try {
+            $getProjectExternalLink = ProjectExternalLink::where(['id' => $request->media_id, 'project_id' => $projectId]);
+            if ($getProjectExternalLink->delete()) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
