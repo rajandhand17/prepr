@@ -972,5 +972,6 @@
     "responses.project_assessment_not_done_by_you": "No Assessment is done in this Project by you.",
     "responses.project_assessment_not_delete": "Failed to delete project assessment.",
     "responses.project_media_delete": "The Project media has been deleted successfully!",
-    "responses.project_media_not_delete": "The Project media has been not deleted!"
+    "responses.project_media_not_delete": "The Project media has been not deleted!",
+    "responses.regex_phone_number": "Please enter a valid phone number."
 }
