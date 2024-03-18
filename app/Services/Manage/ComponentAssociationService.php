@@ -114,10 +114,10 @@ class ComponentAssociationService
                         ['lab_id', '=', $lab_id],
                         ['lab_program_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first();
-                    if($sequences!==null){
-                        $sequence=$sequences->sequence;
-                    }else{
-                        $sequence=0;
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
                     }
                     foreach ($newComponentAssociation as $lab_program) {
                         $sequence++;
@@ -143,10 +143,10 @@ class ComponentAssociationService
                         ['lab_id', '=', $lab_id],
                         ['challenge_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first();
-                    if($sequences!==null){
-                        $sequence=$sequences->sequence;
-                    }else{
-                        $sequence=0;
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
                     }
                     foreach ($newComponentAssociationChallenge as $challenge) {
                         $sequence++;
@@ -198,10 +198,10 @@ class ComponentAssociationService
                         ['lab_id', '=', $lab_id],
                         ['resource_module_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first();
-                    if($sequences!==null){
-                        $sequence=$sequences->sequence;
-                    }else{
-                        $sequence=0;
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
                     }
                     foreach ($newComponentAssociationResourceModuleId as $resource_module) {
                         $sequence++;
@@ -228,10 +228,10 @@ class ComponentAssociationService
                         ['lab_id', '=', $lab_id],
                         ['resource_group_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first();
-                    if($sequences!==null){
-                        $sequence=$sequences->sequence;
-                    }else{
-                        $sequence=0;
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
                     }
                     foreach ($newComponentAssociationResourceGroupId as $resource_group) {
                         $sequence++;
@@ -259,10 +259,10 @@ class ComponentAssociationService
                         ['lab_id', '=', $lab_id],
                         ['resource_collection_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first();
-                    if($sequences!==null){
-                        $sequence=$sequences->sequence;
-                    }else{
-                        $sequence=0;
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
                     }
                     foreach ($newComponentAssociationResourceGroupId as $resource_collection) {
                         $sequence++;
