@@ -112,6 +112,7 @@ class ProjectResource extends JsonResource
                     'uuid'              => $fetchChallenge->uuid,
                     'title'             => $fetchChallenge->title,
                     'slug'              => $fetchChallenge->slug,
+                    'agreement'         => $fetchChallenge->agreement,
                     'template_id'       => $getTemplate,
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
