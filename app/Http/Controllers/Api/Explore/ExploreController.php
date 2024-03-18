@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api\Explore;
 
 use App\Http\Controllers\AppBaseController;
-//use App\Http\Resources\Explore\ChallengeResource;
 use App\Http\Resources\Explore\FeaturedResource;
-//use App\Http\Resources\Explore\LabResource;
 use App\Http\Resources\Explore\SkillResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\Lab\LabResource;
