@@ -65,19 +65,20 @@ class ProjectController extends AppBaseController
                     return $this->sendError(__('responses.handler_bad_request'), 402);
                     break;
             }
+            if ($getProjectIds) {
+                $project = $this->projectRepository->getProjectList($getProjectIds, $request);
+                if ($project !== false) {
+                    $response = [
+                        'total_count'  => $project->total(),
+                        'per_page'     => $project->perPage(),
+                        'count'        => $project->count(),
+                        'current_page' => $project->currentPage(),
+                        'total_pages'  => $project->lastPage(),
+                        'list'         => ProjectResource::collection($project),
+                    ];
 
-            $project = $this->projectRepository->getProjectList($getProjectIds, $request);
-            if ($project !== false) {
-                $response = [
-                    'total_count'  => $project->total(),
-                    'per_page'     => $project->perPage(),
-                    'count'        => $project->count(),
-                    'current_page' => $project->currentPage(),
-                    'total_pages'  => $project->lastPage(),
-                    'list'         => ProjectResource::collection($project),
-                ];
-
-                return $this->sendResponse($response, __('responses.found_projects_list'));
+                    return $this->sendResponse($response, __('responses.found_projects_list'));
+                }
             }
 
             return $this->sendError(__('responses.not_found_projects_list'), 404);

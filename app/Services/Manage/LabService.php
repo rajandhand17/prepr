@@ -33,7 +33,7 @@ class LabService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated' || $request->status == 'archived') ? '2' : '3'));
                 $lab_list = $lab_list->where('labs.status', $status);
             } else {
                 $lab_list = $lab_list->where('labs.status', '1');
