@@ -14,7 +14,7 @@ class UserEducation extends Model
     protected $table = 'user_educations';
 
     protected $fillable = [
-        'user_id', 'university', 'degree', 'start_date', 'end_date', 'address','state','country','description',
+        'user_id', 'university', 'degree', 'start_date', 'end_date', 'address', 'state', 'country', 'description',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }
