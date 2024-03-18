@@ -49,9 +49,6 @@ class ResourceCollectionResource extends JsonResource
         }
         if ($this->challenges) {
             foreach ($this->challenges as $challenge_records) {
-                if(!isset(ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->uuid)){
-                    continue;
-                }
                 $challenges[$challenge_records->challenge_id]['uuid'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->uuid;
                 $challenges[$challenge_records->challenge_id]['title'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->title;
                 $challenges[$challenge_records->challenge_id]['image'] = ChallengeService::getChallengeBasedOnId($challenge_records->challenge_id)->image;
@@ -61,9 +58,6 @@ class ResourceCollectionResource extends JsonResource
         }
         if ($this->labs) {
             foreach ($this->labs as $lab_records) {
-                if(!isset(LabService::getLabBasedOnId($lab_records->lab_id)->uuid)){
-                    continue;
-                }
                 $labs[$lab_records->lab_id]['uuid'] = LabService::getLabBasedOnId($lab_records->lab_id)->uuid;
                 $labs[$lab_records->lab_id]['title'] = LabService::getLabBasedOnId($lab_records->lab_id)->title;
                 $labs[$lab_records->lab_id]['image'] = LabService::getLabBasedOnId($lab_records->lab_id)->media;
