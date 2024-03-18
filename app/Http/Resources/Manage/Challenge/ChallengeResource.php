@@ -316,7 +316,7 @@ class ChallengeResource extends JsonResource
             'member_count'                  => $this->members()->count(),
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
-            'submissions_count'             => $this->submitted_project_count(),
+            'submissions_count'             => $this->submitted_projects()->count(),
             'project_submitted'             => SubmittedProjectResource::collection($this->submitted_projects),
             'external_links'                => ChallengeExternalLinkResource::collection($this->external_links),
         ];
