@@ -36,7 +36,7 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_module_list'), 400);
         } catch (\Exception $e) {
-            return false;
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
