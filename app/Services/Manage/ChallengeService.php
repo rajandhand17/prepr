@@ -652,7 +652,7 @@ class ChallengeService
     public static function getTrendingChallenge()
     {
         try {
-            $getLatestChallengeIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.member_management_component_type.challenge'));
+            $getLatestChallengeIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.module_component_type.challenge'));
             $challenges = Challenge::select()->where('challenges.status', '1')->whereIn('id', $getLatestChallengeIds);
 
             return $challenges->get();

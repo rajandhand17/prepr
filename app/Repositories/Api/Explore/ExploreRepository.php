@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Explore;
 
 use App\Services\Manage\ChallengeService;
+use App\Services\Public\FeaturedModuleService;
 use App\Services\Public\LabService;
 use App\Services\Public\LabSocialActivitiesService;
 use App\Services\SkillService;
@@ -22,7 +23,9 @@ class ExploreRepository implements ExploreInterface
 
     private $skillsService;
 
-    public function __construct(LabSocialActivitiesService $labSocialActivitiesService, UserService $userService, LabService $labService, ChallengeService $challengeService, UserSkillsService $userSkillsService, UserTagsService $userTagsService, SkillService $skillsService)
+    private $featuredModuleService;
+
+    public function __construct(FeaturedModuleService $featuredModuleService,LabSocialActivitiesService $labSocialActivitiesService, UserService $userService, LabService $labService, ChallengeService $challengeService, UserSkillsService $userSkillsService, UserTagsService $userTagsService, SkillService $skillsService)
     {
         $this->labSocialActivitiesService = $labSocialActivitiesService;
         $this->userService = $userService;
@@ -31,6 +34,7 @@ class ExploreRepository implements ExploreInterface
         $this->userTagsService = $userTagsService;
         $this->challengeService = $challengeService;
         $this->skillsService = $skillsService;
+        $this->featuredModuleService=$featuredModuleService;
     }
 
     public function recommendedLabsAndChallenges()
@@ -50,9 +54,9 @@ class ExploreRepository implements ExploreInterface
     public function getFeaturedLabs()
     {
         try {
-            $getLabs = $this->labService->getLabsBasedOnIds();
-            if ($getLabs) {
-                return $getLabs;
+            $getFeaturedLabs=$this->featuredModuleService->getFeaturedLabs();
+            if (!empty($getFeaturedLabs)) {
+                return $getFeaturedLabs;
             }
 
             return false;

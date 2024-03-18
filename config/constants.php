@@ -32,7 +32,7 @@ return [
         'organization' => '0',
         'lab'          => '1',
         'challenge'    => '2',
-        'project'      => '3',
+        'project'      => '5',
     ],
 
     'member_management_invite_status' => [
@@ -450,5 +450,12 @@ return [
     'recent_immigration'=> [
         'yes' => '1',
         'no'  => '2',
+    ],
+
+    'module_component_type' => [
+        'organization' => '0',
+        'lab'          => '1',
+        'challenge'    => '2',
+        'project'      => '3',
     ],
 ];

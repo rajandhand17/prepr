@@ -77,7 +77,7 @@ class ExploreController extends AppBaseController
     {
         try {
             $getUserSkills = UserSkillsService::getUserSkills();
-            if ($getUserSkills) {
+            if (!empty($getUserSkills)) {
                 $recommendedSkills = $this->exploreRepository->recommendedSkills($getUserSkills);
                 if ($recommendedSkills) {
                     return $this->sendResponse(SkillResource::collection($recommendedSkills), __('responses.recommended_skills_successfully'));

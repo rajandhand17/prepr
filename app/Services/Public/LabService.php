@@ -159,7 +159,7 @@ class LabService
     public function getTrendingLab()
     {
         try {
-            $getLatestLabsIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.member_management_component_type.lab'));
+            $getLatestLabsIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.module_component_type.lab'));
             $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id', $getLatestLabsIds);
 
             return $lab_list->get();
