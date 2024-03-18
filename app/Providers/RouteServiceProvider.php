@@ -44,6 +44,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapChatRoutes();
             $this->mapProjectRoutes();
             $this->mapProjectMemberManagementRoutes();
+            $this->mapDashboardRoutes();
         });
     }
 
@@ -133,5 +134,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
         Route::prefix('api/v1/public/skills/')->middleware('api')->group(base_path('routes/v1/public/skills.php'));
+    }
+
+    public function mapDashboardRoutes()
+    {
+        Route::prefix('api/v1/dashboard/organization')->middleware('api')->group(base_path('routes/v1/dashboard/organization.php'));
+        Route::prefix('api/v1/dashboard/lab')->middleware('api')->group(base_path('routes/v1/dashboard/lab.php'));
+        Route::prefix('api/v1/dashboard/user')->middleware('api')->group(base_path('routes/v1/dashboard/user.php'));
     }
 }

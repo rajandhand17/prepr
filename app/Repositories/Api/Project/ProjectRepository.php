@@ -501,4 +501,31 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function deleteProjectMedia($request, $projectDataId)
+    {
+        try {
+            $deleteProjectMedia = DB::transaction(function () use ($request, $projectDataId) {
+                if ($request->type === 'url') {
+                    $deleteMedia = $this->projectExternalLinksService->deleteProjectMediaLink($request, $projectDataId);
+                } else {
+                    $deleteMedia = $this->projectFileService->deleteProjectMediaFile($request, $projectDataId);
+                }
+
+                return $deleteMedia;
+            });
+
+            if ($deleteProjectMedia) {
+                DB::commit();
+
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
 }

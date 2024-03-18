@@ -187,4 +187,9 @@ class Challenge extends Model
     {
         return $this->hasMany(ChallengeAnnouncement::class, 'challenge_id', 'id');
     }
+
+    public function submitted_projects()
+    {
+        return $this->hasMany(Project::class, 'challenge_id', 'id')->where('is_submitted', '1');
+    }
 }
