@@ -31,7 +31,7 @@ class UpdateSettingRequest extends FormRequest
                 'last_name'                => 'required|string',
                 'username'                 => 'required',
                 'email'                    => 'required|email',
-                'phone_number'             => 'required',
+                'phone_number'             => 'required|regex:/^\+?(\d{1,3})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/',
                 'preferred_timezone'       => 'required',
                 'preferred_language'       => 'required',
                 'two_factor_verification'  => 'required|in:yes,no',
@@ -45,7 +45,7 @@ class UpdateSettingRequest extends FormRequest
             ];
         } elseif ($activity == 'password') {
             $base_rules = [
-                'password'                 => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+                'password'                 => 'required|min:8|max:14|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
                 'password_confirmation'    => 'required|same:password',
             ];
         } elseif ($activity == 'notification') {
@@ -77,12 +77,14 @@ class UpdateSettingRequest extends FormRequest
             'email.required'                   => __('responses.email_field_required'),
             'email.email'                      => __('responses.valid_email_pattern'),
             'phone_number.required'            => __('responses.required_field'),
+            'phone_number.regex'               => __('responses.regex_phone_number'),
             'preferred_timezone.required'      => __('responses.required_field'),
             'preferred_language.required'      => __('responses.required_field'),
             'two_factor_verification.required' => __('responses.required_field'),
             'two_factor_verification.in'       => __('responses.choose_yes_no'),
             'password.required'                => __('responses.password_required_field'),
             'password.min'                     => __('responses.min_content_6'),
+            'password.max'                     => __('responses.max_content_14'),
             'password_confirmation.required'   => __('responses.password_confirmation_required_field'),
             'password_confirmation.same'       => __('responses.match_confirmed_password'),
             'communication.required'           => __('responses.required_fields'),

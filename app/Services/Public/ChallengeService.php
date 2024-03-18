@@ -129,6 +129,12 @@ class ChallengeService
                 }
             }
 
+            if ($request->has('submissions') && !empty($request->submissions) && $request->submissions === 'yes') {
+                $challenge_list = $challenge_list->whereHas('submitted_projects', function ($query) {
+                    $query->where('is_submitted', '1');
+                });
+            }
+
             return $challenge_list;
         } catch (Exception $e) {
             return false;
