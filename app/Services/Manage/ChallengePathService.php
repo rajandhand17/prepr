@@ -355,4 +355,17 @@ class ChallengePathService
             return false;
         }
     }
+
+    public function getChallengePathListName($request, $organization)
+    {
+        try {
+            $challengePathList = ChallengePath::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $challengePathList = self::filterChallengePathList($challengePathList, $request);
+            $limit = config('site-settings.listing_limit');
+
+            return $challengePathList->limit($limit)->get();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

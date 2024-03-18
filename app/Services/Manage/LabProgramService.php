@@ -266,4 +266,17 @@ class LabProgramService
             return false;
         }
     }
+
+    public function getLabProgramListName($request, $organization)
+    {
+        try {
+            $labProgramList = LabProgram::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $labProgramList = self::filterLabProgramList($labProgramList, $request);
+            $limit = config('site-settings.listing_limit');
+
+            return $labProgramList->limit($limit)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
