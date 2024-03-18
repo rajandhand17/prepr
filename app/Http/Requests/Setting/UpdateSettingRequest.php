@@ -45,7 +45,7 @@ class UpdateSettingRequest extends FormRequest
             ];
         } elseif ($activity == 'password') {
             $base_rules = [
-                'password'                 => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+                'password'                 => 'required|min:8|max:14|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
                 'password_confirmation'    => 'required|same:password',
             ];
         } elseif ($activity == 'notification') {
@@ -83,6 +83,7 @@ class UpdateSettingRequest extends FormRequest
             'two_factor_verification.in'       => __('responses.choose_yes_no'),
             'password.required'                => __('responses.password_required_field'),
             'password.min'                     => __('responses.min_content_6'),
+            'password.max'                     => __('responses.max_content_14'),
             'password_confirmation.required'   => __('responses.password_confirmation_required_field'),
             'password_confirmation.same'       => __('responses.match_confirmed_password'),
             'communication.required'           => __('responses.required_fields'),
