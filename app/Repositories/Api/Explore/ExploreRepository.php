@@ -25,7 +25,7 @@ class ExploreRepository implements ExploreInterface
 
     private $featuredModuleService;
 
-    public function __construct(FeaturedModuleService $featuredModuleService,LabSocialActivitiesService $labSocialActivitiesService, UserService $userService, LabService $labService, ChallengeService $challengeService, UserSkillsService $userSkillsService, UserTagsService $userTagsService, SkillService $skillsService)
+    public function __construct(FeaturedModuleService $featuredModuleService, LabSocialActivitiesService $labSocialActivitiesService, UserService $userService, LabService $labService, ChallengeService $challengeService, UserSkillsService $userSkillsService, UserTagsService $userTagsService, SkillService $skillsService)
     {
         $this->labSocialActivitiesService = $labSocialActivitiesService;
         $this->userService = $userService;
@@ -34,7 +34,7 @@ class ExploreRepository implements ExploreInterface
         $this->userTagsService = $userTagsService;
         $this->challengeService = $challengeService;
         $this->skillsService = $skillsService;
-        $this->featuredModuleService=$featuredModuleService;
+        $this->featuredModuleService = $featuredModuleService;
     }
 
     public function recommendedLabsAndChallenges()
@@ -54,7 +54,7 @@ class ExploreRepository implements ExploreInterface
     public function getFeaturedLabs()
     {
         try {
-            $getFeaturedLabs=$this->featuredModuleService->getFeaturedLabs();
+            $getFeaturedLabs = $this->featuredModuleService->getFeaturedLabs();
             if (!empty($getFeaturedLabs)) {
                 return $getFeaturedLabs;
             }
