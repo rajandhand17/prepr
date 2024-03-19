@@ -27,7 +27,7 @@ class ProjectSkillsService
                         $projectSkills->skill_id = $skill;
                         $projectSkills->save();
                         $projectSkill = Skill::find($skill);
-                        $activity = auth()->user()->full_name . ' ' . __('responses.project_updated_skills'). ' '. $projectSkill->title;
+                        $activity = auth()->user()->full_name.' '.__('responses.project_updated_skills').' '.$projectSkill->title;
                         ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
                     }
                 }

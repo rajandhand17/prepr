@@ -26,7 +26,7 @@ class ProjectAdditionalInfoService
             $newprojectAdditionalInfo->status_id = $request->status_id ?? null;
             $newprojectAdditionalInfo->save();
             if ($newprojectAdditionalInfo) {
-                $activity = auth()->user()->full_name . ' ' . __('responses.project_updated_additional_activty');
+                $activity = auth()->user()->full_name.' '.__('responses.project_updated_additional_activty');
                 ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
             }
 
