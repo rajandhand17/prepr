@@ -3,7 +3,6 @@
 namespace App\Services\Public;
 
 use App\Models\ComponentAssociation;
-use App\Models\FeaturedModule;
 use App\Models\Lab;
 use App\Models\MemberManagement;
 use App\Services\Manage\LabSkillsGroupsStackService;
@@ -191,7 +190,8 @@ class LabService
     public static function getLabsBasedOnIds($labIds)
     {
         try {
-            $labList=Lab::whereIn('id',$labIds)->get();
+            $labList = Lab::whereIn('id', $labIds)->get();
+
             return $labList;
         } catch(\Exception $e) {
             return false;
