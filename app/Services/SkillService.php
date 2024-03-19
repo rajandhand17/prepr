@@ -136,7 +136,7 @@ class SkillService
             // Make the merged skills unique
             $uniqueSkills = $mergedSkills->unique()->diff($getUserSkills);
             //Fetch the 12 recommendations skills
-            $skills = Skill::select('id', 'title')->whereIn('id', $uniqueSkills)->limit(config('site-settings.explore_page_limit_max'))->get();
+            $skills = Skill::select('id', 'title')->whereIn('id', $uniqueSkills)->take(config('site-settings.explore_page_limit_max'))->get();
 
             return $skills;
         } catch (\Exception $e) {
