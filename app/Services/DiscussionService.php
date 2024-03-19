@@ -62,12 +62,12 @@ class DiscussionService
                     $attachmentPath = FileUploadHelper::UploadVideoDocToS3($file_upload, 'discussion');
                 }
             }
-            
+
             DB::beginTransaction();
             $addComment = new Discussion();
             $addComment->user_id = auth()->user()->id;
             $addComment->module_id = $getComponentId;
-            $addComment->module_type = config('constants.discussion_module_type.' . $component);
+            $addComment->module_type = config('constants.discussion_module_type.'.$component);
             $addComment->comments = $request->comment ? $request->comment : null;
             $addComment->attachment = $attachmentPath;
             $addComment->comment_id = isset($request->comment_id) ? $request->comment_id : null;
