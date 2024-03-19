@@ -31,10 +31,10 @@ class ResourceCollectionController extends AppBaseController
                     'list'         => ResourceCollectionResource::collection($responseCollectionList),
                 ];
 
-                return $this->sendResponse($response, __('responses.found_resource_module_list'));
+                return $this->sendResponse($response, __('responses.found_resource_collection_list'));
             }
 
-            return $this->sendError(__('responses.not_found_resource_module_list'), 400);
+            return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
