@@ -350,6 +350,10 @@ class ProjectMemberManagementService
                 $projectMember->invite_status = $invite_status;
                 $projectMember->inviter_id = auth()->user()->id;
                 $projectMember->save();
+            $projectMemberData = ProjectMemberManagement::whereIn('email', $request->email)->where(['project_id' => $projectData->id, 'invite_status' => '2', 'invite_type' => '3'])->get();
+                $user = UserService::getUserByEmail($request->email);
+                $activity = auth()->user()->full_name . ' ' . __('responses.project_updated_member_activity') . ' ' . $user->full_name;
+                ProjectHistoryService::storeHistory($projectData->id, auth()->user()->id, $activity);
             }
 
             return true;
@@ -480,6 +484,9 @@ class ProjectMemberManagementService
             }
             $project_member = ProjectMemberManagement::where(['email' => $request->email, 'project_id' => $projectData->id, 'invite_status' => '2'])->where('invite_type', '<>', '3')->first();
             if ($project_member) {
+                $user = UserService::getUserByEmail($request->email);
+                $activity = auth()->user()->full_name . ' ' . __('responses.project_updated_member_activity') . ' ' . $user->full_name;
+                ProjectHistoryService::storeHistory($projectData->id, auth()->user()->id, $activity);
                 $project_member->update(['inviter_id' => auth()->user()->id, 'invite_status' => $invite_status]);
             }
 

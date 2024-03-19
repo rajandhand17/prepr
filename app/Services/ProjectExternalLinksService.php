@@ -24,6 +24,10 @@ class ProjectExternalLinksService
                             if ($projectExternalLink['social_media_link'] !== $request->external_links[$key]) {
                                 $projectExternalLink->social_media_link = $request->external_links[$key];
                                 $projectExternalLink->save();
+                                if ($projectExternalLink) {
+                                    $activity = auth()->user()->full_name . ' ' . __('responses.project_updated_social_activty') . ' ' . $request->external_links[$key];
+                                    ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
+                                }
                             }
                         }
                         if (!$projectExternalLink) {
@@ -33,6 +37,10 @@ class ProjectExternalLinksService
                                 $projectExternalLink->social_media_link = $request->external_links[$key];
                                 $projectExternalLink->social_link_id = $value;
                                 $projectExternalLink->save();
+                                if ($projectExternalLink) {
+                                    $activity = auth()->user()->full_name . ' ' . __('responses.project_added_new_social_activty') . ' ' . $request->external_links[$key];
+                                    ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
+                                }
                             }
                         }
                     }
@@ -64,7 +72,10 @@ class ProjectExternalLinksService
     {
         try {
             $getProjectExternalLink = ProjectExternalLink::where(['id' => $request->media_id, 'project_id' => $projectId]);
+            $linkName = $getProjectExternalLink->first()->social_media_link;
             if ($getProjectExternalLink->delete()) {
+                $activity = auth()->user()->full_name . ' ' . __('responses.project_deleted_social_activty') . ' ' . $linkName;
+                ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
                 return true;
             }
 
