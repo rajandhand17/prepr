@@ -979,5 +979,16 @@
     "responses.project_pitch_activty": "updated the pitch data",
     "responses.project_task_activty": "updated the task data",
     "responses.project_history_retrived": "The Project(s) history has been retrieved.",
-    "responses.project_history_not_retrived": "The Project(s) history has not been retrieved."
+    "responses.project_history_not_retrived": "The Project(s) history has not been retrieved.",
+    "responses.project_media_activty": "uploaded the media",
+    "responses.project_updated_activty": "updated the Project:-",
+    "responses.project_updated_social_activty": "updated the Project social link",
+    "responses.project_added_new_social_activty": "added new the Project social link",
+    "responses.project_updated_additional_activty": "updated the Project additional info.",
+    "responses.project_submit_activty": "has submitted the Project:-",
+    "responses.project_deleted_social_activty": "has deleted the Project social link",
+    "responses.project_media_removed_activty": "removed the media",
+    "responses.project_updated_recruiting": "updated the Project recruiting status",
+    "responses.project_updated_skills": "updated the Project skill:-",
+    "responses.project_updated_member_activity": "added new Project member:-"
 }
