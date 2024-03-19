@@ -252,6 +252,7 @@ class ProjectResource extends JsonResource
             'is_assess_enabled'     => $is_assess_enabled,
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
             'assessment_data'       => AssessedProjectResource::make($this),
+            'history'               => ProjectHistoryResource::collection($this->history),
             'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }
