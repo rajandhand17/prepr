@@ -495,9 +495,9 @@ class ProjectService
                     $recruiting_status = '0';
                     break;
             }
-            
+
             if ($projectUpdate->recruiting_status !== $recruiting_status) {
-                $activity = auth()->user()->full_name . ' ' . __('responses.project_updated_recruiting');
+                $activity = auth()->user()->full_name.' '.__('responses.project_updated_recruiting');
                 ProjectHistoryService::storeHistory($projectUpdate->id, auth()->user()->id, $activity);
             }
             $projectUpdate->recruiting_status = $recruiting_status;

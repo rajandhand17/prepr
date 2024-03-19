@@ -33,7 +33,7 @@ class ProjectFileService
 
                     $storeData = self::uploadData($projectId, $uploaded_file_path, $file_type, $file_upload);
                     if ($storeData) {
-                        $activity = auth()->user()->full_name . ' ' . __('responses.project_media_activty') . ' ' . $file_upload->getClientOriginalName();
+                        $activity = auth()->user()->full_name.' '.__('responses.project_media_activty').' '.$file_upload->getClientOriginalName();
                         ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
                     }
                     if (!$storeData) {
@@ -114,8 +114,9 @@ class ProjectFileService
             $getProjectFile = ProjectFile::where(['id' => $request->media_id, 'project_id' => $projectId, 'type' => $request->type]);
             $mediaName = $getProjectFile->first()->title;
             if ($getProjectFile->delete()) {
-                $activity = auth()->user()->full_name . ' ' . __('responses.project_media_removed_activty') . ' ' . $mediaName;
+                $activity = auth()->user()->full_name.' '.__('responses.project_media_removed_activty').' '.$mediaName;
                 ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
+
                 return true;
             }
 
