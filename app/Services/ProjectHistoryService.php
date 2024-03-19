@@ -28,6 +28,7 @@ class ProjectHistoryService
             if (!empty($fetchProjectHistory)) {
                 return $fetchProjectHistory;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

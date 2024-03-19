@@ -159,7 +159,7 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
-                $activity = auth()->user()->full_name . ' ' . __('responses.project_created_activty') . ' ' . $createProject['createProject']->title;
+                $activity = auth()->user()->full_name.' '.__('responses.project_created_activty').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 DB::commit();
 
