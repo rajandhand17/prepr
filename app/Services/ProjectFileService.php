@@ -13,7 +13,6 @@ class ProjectFileService
         try {
             if (isset($request->file_upload) && !empty($request->file_upload)) {
                 foreach ($request->file_upload as $file_upload) {
-                    // dd($file_upload->getMimeType());
                     if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
                         $file_type = config('constants.project_file_type.image');
                         $uploaded_file_path = FileUploadHelper::uploadImageToS3($file_upload, 'project_file');
