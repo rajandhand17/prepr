@@ -73,13 +73,14 @@ class MemberManagementService
     public static function getLatestIdsBasedOnModule($moduleType)
     {
         try {
-            $moduleIds=MemberManagement::select('module_id')
+            $moduleIds = MemberManagement::select('module_id')
                 ->selectRaw('COUNT(email) as email_count')
                 ->where(['module_type'=>$moduleType, 'invite_status'=>'1'])
                 ->groupBy('module_id')
                 ->orderByDesc('email_count')
                 ->limit(config('site-settings.explore_page_limit_min'))
                 ->pluck('module_id');
+
             return $moduleIds;
         } catch (\Exception $e) {
             return false;
