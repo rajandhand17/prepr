@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Project;
 
 use App\Helpers\UtilityHelper;
-use App\Services\ChallengeAssessmentUserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
