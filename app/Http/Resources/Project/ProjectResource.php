@@ -89,15 +89,19 @@ class ProjectResource extends JsonResource
         switch ($this->media_type) {
             case '0':
                 $media = $this->media;
+                $media_type = 'image';
                 break;
             case '1':
                 $media = $this->getRawOriginal('media');
+                $media_type = 'embedded';
                 break;
             case '2':
                 $media = $this->media;
+                $media_type = 'video';
                 break;
             default:
                 $media = $this->media;
+                $media_type = 'image';
                 break;
         }
 
@@ -216,7 +220,7 @@ class ProjectResource extends JsonResource
             'description'           => $this->description,
             'is_view_enabled'       => $view_enabled,
             'is_download_enabled'   => $download_enabled,
-            'media_type'            => $this->media_type,
+            'media_type'            => $media_type,
             'media'                 => $media,
             'privacy'               => $privacy,
             'liked'                 => $liked,

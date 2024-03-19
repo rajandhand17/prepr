@@ -53,18 +53,21 @@ class DiscussionService
         try {
             $attachmentPath = null;
             $file_upload = $request->file('attachment');
-            if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
-                $file_type = config('constants.file_type.image');
-                $attachmentPath = FileUploadHelper::uploadImageToS3($file_upload, 'discussion');
-            } else {
-                $file_type = (mb_strpos($file_upload->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
-                $attachmentPath = FileUploadHelper::UploadVideoDocToS3($file_upload, 'discussion');
+            if (isset($file_upload) && !empty($file_upload)) {
+                if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
+                    $file_type = config('constants.file_type.image');
+                    $attachmentPath = FileUploadHelper::uploadImageToS3($file_upload, 'discussion');
+                } else {
+                    $file_type = (mb_strpos($file_upload->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
+                    $attachmentPath = FileUploadHelper::UploadVideoDocToS3($file_upload, 'discussion');
+                }
             }
+            
             DB::beginTransaction();
             $addComment = new Discussion();
             $addComment->user_id = auth()->user()->id;
             $addComment->module_id = $getComponentId;
-            $addComment->module_type = config('constants.discussion_module_type.'.$component);
+            $addComment->module_type = config('constants.discussion_module_type.' . $component);
             $addComment->comments = $request->comment ? $request->comment : null;
             $addComment->attachment = $attachmentPath;
             $addComment->comment_id = isset($request->comment_id) ? $request->comment_id : null;
