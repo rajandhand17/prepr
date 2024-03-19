@@ -15,6 +15,12 @@ return [
         'external' => '1',
     ],
 
+    'discussion_module_type' => [
+        'lab'           => '0',
+        'challenge'     => '1',
+        'project'       => '2',
+    ],
+
     'member_management_type' => [
         'invite'       => '0',
         'join_request' => '1',
