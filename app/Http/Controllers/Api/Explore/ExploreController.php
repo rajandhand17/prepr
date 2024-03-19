@@ -32,7 +32,7 @@ class ExploreController extends AppBaseController
                     if ($explore) {
                         $response = [
                             'labs'       => LabResource::collection($explore['labs']),
-                            'challenge'  => ChallengeResource::collection($explore['challenge']),
+                            'challenges'  => ChallengeResource::collection($explore['challenge']),
                         ];
                         $message = __('responses.recommended_labs_challenges_successfully');
                     } else {
@@ -42,7 +42,7 @@ class ExploreController extends AppBaseController
                 case 'featured':
                     $featured = $this->exploreRepository->getFeaturedLabs();
                     if ($featured) {
-                        $response = FeaturedResource::collection($featured);
+                        $response=LabResource::collection($featured);
                         $message = __('responses.featured_labs_successfully');
                     } else {
                         $message = __('responses.featured_labs_failed');
@@ -51,7 +51,7 @@ class ExploreController extends AppBaseController
                 case 'teams':
                     $featured = $this->exploreRepository->getFeaturedLabs();
                     if ($featured) {
-                        $response = FeaturedResource::collection($featured);
+                        $response=LabResource::collection($featured);
                         $message = __('responses.featured_labs_successfully');
                     } else {
                         $message = __('responses.featured_labs_failed');
@@ -74,7 +74,7 @@ class ExploreController extends AppBaseController
     public function recommendedOrTrendingLabAndChallenge()
     {
         try {
-            $getUserSkills = UserSkillsService::getUserSkills();
+            $getUserSkills =UserSkillsService::getUserSkills();
             if (!empty($getUserSkills)) {
                 $recommendedSkills = $this->exploreRepository->recommendedSkills($getUserSkills);
                 if (!empty($recommendedSkills)) {
@@ -87,11 +87,12 @@ class ExploreController extends AppBaseController
                 if ($getTendingJobs) {
                     $response = [
                         'labs'       => LabResource::collection($getTendingJobs['labs']),
-                        'challenge'  => ChallengeResource::collection($getTendingJobs['challenge']),
+                        'challenges'  => ChallengeResource::collection($getTendingJobs['challenge']),
                     ];
 
                     return $this->sendResponse($response, __('responses.trending_labs_challenges_successfully'));
                 }
+                return $this->sendResponse([], __('responses.trending_labs_challenges_successfully'));
             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

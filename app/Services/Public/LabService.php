@@ -177,9 +177,9 @@ class LabService
             $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
             $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique();
             if (!empty($labIds)) {
-                $labList = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->take(12);
+                $labList = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_max'));
             } else {
-                $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(6);
+                $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
             }
 
             return $labList->get();
@@ -188,11 +188,10 @@ class LabService
         }
     }
 
-    public static function getLabsBasedOnIds()
+    public static function getLabsBasedOnIds($labIds)
     {
         try {
-            $labList = FeaturedModule::where('module_type', '0')->take(6)->get();
-
+            $labList=Lab::whereIn('id',$labIds)->get();
             return $labList;
         } catch(\Exception $e) {
             return false;

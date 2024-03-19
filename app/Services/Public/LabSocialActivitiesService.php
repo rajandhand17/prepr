@@ -123,7 +123,7 @@ class LabSocialActivitiesService
             $lab_ids = LabSocialActivity::select('lab_id')->where('user_id', '!=', auth()->user()->id)
                 ->orderBy('like_dislike', 'ASC')
                 ->orderBy('share', 'ASC')
-                ->limit(6)
+                ->take(config('site-settings.explore_page_limit_min'))
                 ->get();
 
             return $lab_ids;
