@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\LanguageColumnHelper;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
+use App\Models\PitchTemplate;
 use App\Models\ProjectPitchValue;
 use App\Models\ProjectTaskValue;
 use App\Models\ProjectTemplate;
@@ -35,6 +36,12 @@ class ProjectPitchService
 
                     if ($pitchId != null) {
                         $createPitch = self::insertPitchData($projectId, $templateId, $pitchId, $pitchAnswer);
+                        if ($createPitch) {
+                            $getPitch = ChallengePitch::where('id', $pitchId)->first();
+                            $activity = auth()->user()->full_name . ' ' . __('responses.project_pitch_activty') .' '. $getPitch->title;
+                            ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
+                        }
+
                         if (!$createPitch) {
                             return false;
                         }
@@ -49,6 +56,12 @@ class ProjectPitchService
 
                     if ($taskId != null && $taskAnswer != null) {
                         $createTask = self::insertTaskData($projectId, $templateId, $taskId, $taskAnswer);
+                        if ($createTask) {
+                            $getTask = ChallengeTask::where('id', $taskId)->first();
+                            $activity = auth()->user()->full_name . ' ' . __('responses.project_task_activty') . ' ' . $getTask->title;
+                            ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
+                        }
+
                         if (!$createTask) {
                             return false;
                         }

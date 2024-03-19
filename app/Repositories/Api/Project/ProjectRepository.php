@@ -10,6 +10,7 @@ use App\Services\Manage\ChallengeService;
 use App\Services\ProjectAdditionalInfoService;
 use App\Services\ProjectExternalLinksService;
 use App\Services\ProjectFileService;
+use App\Services\ProjectHistoryService;
 use App\Services\ProjectMemberManagementService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
@@ -33,8 +34,9 @@ class ProjectRepository implements ProjectInterface
     private $challengeAssessmentService;
     private $challengeAssessmentUserService;
     private $projectSkillsService;
+    private $projectHistoryService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -49,6 +51,7 @@ class ProjectRepository implements ProjectInterface
         $this->challengeAssessmentService = $challengeAssessmentService;
         $this->challengeAssessmentUserService = $challengeAssessmentUserService;
         $this->projectSkillsService = $projectSkillsService;
+        $this->projectHistoryService = $projectHistoryService;
     }
 
     public function getMyProjectIds($userId)
@@ -156,6 +159,8 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
+                $activity = auth()->user()->full_name . ' ' . __('responses.project_created_activty') . ' ' . $createProject['createProject']->title;
+                self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 DB::commit();
 
                 return $createProject['createProject'];
@@ -525,6 +530,24 @@ class ProjectRepository implements ProjectInterface
         } catch (Exception $e) {
             DB::rollBack();
 
+            return false;
+        }
+    }
+
+    public function storeHistory($projectId, $userId, $activity)
+    {
+        try {
+            return $this->projectHistoryService->storeHistory($projectId, $userId, $activity);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function fetchProjectHistory($projectId)
+    {
+        try {
+            return $this->projectHistoryService->fetchProjectHistory($projectId);
+        } catch (Exception $e) {
             return false;
         }
     }
