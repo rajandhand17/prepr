@@ -113,6 +113,9 @@ class ProjectMemberManagementController extends AppBaseController
             }
 
             $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request, $checkProjectExistsOrNot);
+            if ($checkProjectStatus == false) {
+                return $this->sendError(__('responses.project_sender_cannot_accept_request'), 404);
+            }
             if ($checkProjectStatus) {
                 $projectMemberManagement = $this->projectMemberManagementRepository->acceptOrRejectProjectJoinRequest($request, $checkProjectExistsOrNot, $action);
                 if ($projectMemberManagement) {
@@ -129,9 +132,18 @@ class ProjectMemberManagementController extends AppBaseController
     public function changeRole($slug, $uuid, $role)
     {
         try {
+            if (!in_array($role, ['team_leader', 'editor', 'viewer'])) {
+                return $this->sendError(__('responses.role_not_exists'), 422);
+            }
+
             $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
             if ($checkProjectExistsOrNot == false) {
                 return $this->sendError(__('responses.project_not_found'), 404);
+            }
+
+            $checkParticipantsUUID = $this->projectMemberManagementRepository->checkParticipantsUUID($checkProjectExistsOrNot->id, $uuid);
+            if ($checkParticipantsUUID == false) {
+                return $this->sendError(__('responses.project_member_invalid_uuid'), 404);
             }
 
             $checkCurrentProjectRole = $this->projectMemberManagementRepository->checkCurrentProjectRole($checkProjectExistsOrNot->id, $uuid, $role);
@@ -169,7 +181,7 @@ class ProjectMemberManagementController extends AppBaseController
         }
     }
 
-    public function participantAcceptOrRejectJoinRequest(Request $request, $slug, $action)
+    public function participantAcceptOrRejectJoinRequest($slug, $action)
     {
         try {
             $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
@@ -177,9 +189,10 @@ class ProjectMemberManagementController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
-            $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request, $checkProjectExistsOrNot);
+            $userEmail = auth()->user()->email;
+            $checkProjectStatus = $this->projectMemberManagementRepository->checkParticipantProjectJoinUnjoinStatus($userEmail, $checkProjectExistsOrNot);
             if ($checkProjectStatus) {
-                $projectMemberManagement = $this->projectMemberManagementRepository->participantAcceptOrRejectJoinRequest($request, $checkProjectExistsOrNot, $action);
+                $projectMemberManagement = $this->projectMemberManagementRepository->participantAcceptOrRejectJoinRequest($userEmail, $checkProjectExistsOrNot, $action);
                 if ($projectMemberManagement) {
                     return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }
