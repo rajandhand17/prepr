@@ -128,4 +128,21 @@ class ResourceModuleSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getRecommendedSkills($skills)
+    {
+        try {
+            $resourceSkillIds = [];
+            $resourceModuleIds = ResourceModuleSkillsGroupsStack::where('type', '0')
+                ->whereIn('foreign_id', $skills)->pluck('resource_module_id');
+            if (!empty($resourceModuleIds)) {
+                $resourceSkillIds = ResourceModuleSkillsGroupsStack::where('type', '0')
+                    ->whereIn('resource_module_id', $resourceModuleIds)->pluck('foreign_id')->unique();
+            }
+
+            return $resourceSkillIds;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

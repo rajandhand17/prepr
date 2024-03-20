@@ -189,6 +189,11 @@ class User extends Authenticatable
         return $this->hasMany(UserPersonalFile::class);
     }
 
+    public function userResume()
+    {
+        return $this->hasOne(UserPersonalFile::class)->where('type', '0');
+    }
+
     /**login apis */
     public function login($request)
     {

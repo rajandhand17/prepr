@@ -98,10 +98,10 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         }
     }
 
-    public function checkProjectJoinUnjoinStatus($request, $projectData)
+    public function checkProjectJoinUnjoinStatus($userEmail, $projectData)
     {
         try {
-            return $this->projectMemberManagementService->checkProjectJoinUnjoinStatus($request, $projectData);
+            return $this->projectMemberManagementService->checkProjectJoinUnjoinStatus($userEmail, $projectData);
         } catch (Exception $e) {
             return false;
         }
@@ -111,6 +111,15 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
     {
         try {
             return $this->projectMemberManagementService->acceptOrRejectProjectJoinRequest($request, $projectData, $action);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkParticipantsUUID($projectId, $uuid)
+    {
+        try {
+            return $this->projectMemberManagementService->checkParticipantsUUID($projectId, $uuid);
         } catch (Exception $e) {
             return false;
         }
@@ -143,10 +152,19 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         }
     }
 
-    public function participantAcceptOrRejectJoinRequest($request, $projectData, $action)
+    public function checkParticipantProjectJoinUnjoinStatus($userEmail, $projectData)
     {
         try {
-            return $this->projectMemberManagementService->participantAcceptOrRejectJoinRequest($request, $projectData, $action);
+            return $this->projectMemberManagementService->checkParticipantProjectJoinUnjoinStatus($userEmail, $projectData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action)
+    {
+        try {
+            return $this->projectMemberManagementService->participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action);
         } catch (Exception $e) {
             return false;
         }

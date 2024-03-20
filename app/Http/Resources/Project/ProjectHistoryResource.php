@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources\Project;
 
+use App\Helpers\UtilityHelper;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProjectExternalLinkResource extends JsonResource
+class ProjectHistoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -13,12 +15,11 @@ class ProjectExternalLinkResource extends JsonResource
      *
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
         return [
-            'id'        => $this->id,
-            'link'      => $this->social_media_link,
-            'image'     => $this->social_link['icon'],
+            'activity'      => $this->activity,
+            'updated_at'    => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }
 }

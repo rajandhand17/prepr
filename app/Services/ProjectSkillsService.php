@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ProjectSkill;
+use App\Models\Skill;
 use Exception;
 
 class ProjectSkillsService
@@ -25,6 +26,9 @@ class ProjectSkillsService
                         $projectSkills->project_id = $projectId;
                         $projectSkills->skill_id = $skill;
                         $projectSkills->save();
+                        $projectSkill = Skill::find($skill);
+                        $activity = auth()->user()->full_name.' '.__('responses.project_updated_skills').' '.$projectSkill->title;
+                        ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
                     }
                 }
             }
