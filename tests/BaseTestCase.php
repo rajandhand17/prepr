@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 
 class BaseTestCase extends TestCase
@@ -17,7 +16,7 @@ class BaseTestCase extends TestCase
         parent::setUp();
         $this->seed();
         $this->parameters = [
-            'email' => 'testprepradmin@gmail.com',
+            'email'    => 'testprepradmin@gmail.com',
             'password' => 'Test@1234',
         ];
         Auth::attempt(['email' => $this->parameters['email'], 'password' => $this->parameters['password']]);

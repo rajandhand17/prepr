@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Skill;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SkillSeeder extends Seeder
@@ -15,29 +14,29 @@ class SkillSeeder extends Seeder
     {
         $skills = [
             [
-                "title" => "Critical thinking",
-                "fr_CA_title" => "Esprit critique",
+                'title'       => 'Critical thinking',
+                'fr_CA_title' => 'Esprit critique',
             ],
             [
-                "title" => "Communication",
-                "fr_CA_title" => "Communication",
+                'title'       => 'Communication',
+                'fr_CA_title' => 'Communication',
             ],
             [
-                "title" => "Empathy",
-                "fr_CA_title" => "Empathie",
+                'title'       => 'Empathy',
+                'fr_CA_title' => 'Empathie',
             ],
             [
-                "title" => "Problem Solving",
-                "fr_CA_title" => "Résolution de problème",
+                'title'       => 'Problem Solving',
+                'fr_CA_title' => 'Résolution de problème',
             ],
             [
-                "title" => "Creativity",
-                "fr_CA_title" => "Créativité",
+                'title'       => 'Creativity',
+                'fr_CA_title' => 'Créativité',
             ],
         ];
 
         foreach ($skills as $skill) {
-            Skill::updateOrCreate(["title" => $skill["title"]], $skill);
+            Skill::updateOrCreate(['title' => $skill['title']], $skill);
         }
     }
 }

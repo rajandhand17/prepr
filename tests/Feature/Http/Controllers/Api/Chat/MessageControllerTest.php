@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers\Api\Chat;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -14,10 +13,9 @@ use Illuminate\Testing\Fluent\AssertableJson;
  */
 final class MessageControllerTest extends ChatTestCase
 {
-
     public function test_message_listing_with_invalid_conversation_uuid_negative(): void
     {
-        $this->get("/api/v1/chat/conversation/invaliduuid/message?language=en")->assertNotFound();
+        $this->get('/api/v1/chat/conversation/invaliduuid/message?language=en')->assertNotFound();
     }
 
     public function test_message_listing_with_no_language_params_negative(): void
@@ -25,8 +23,9 @@ final class MessageControllerTest extends ChatTestCase
         $createdUuid = $this->getCreatedConversationUuid();
         $this->get("/api/v1/chat/conversation/$createdUuid/message")
             ->assertBadRequest()
-            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['success', 'message'])
-                ->where('message', __("responses.provide_language"))
+            ->assertJson(
+                fn (AssertableJson $json) => $json->hasAll(['success', 'message'])
+                ->where('message', __('responses.provide_language'))
                 ->etc()
             );
     }
@@ -37,7 +36,7 @@ final class MessageControllerTest extends ChatTestCase
         $this->get("/api/v1/chat/conversation/$createdUuid/message?language=en")
             ->assertOk()
             ->assertJson(
-                fn(AssertableJson $json) => $json->hasAll(["success", "data", "message"])->where("success", true)
+                fn (AssertableJson $json) => $json->hasAll(['success', 'data', 'message'])->where('success', true)
             );
     }
 
@@ -45,35 +44,36 @@ final class MessageControllerTest extends ChatTestCase
     {
         $createdUuid = $this->getCreatedConversationUuid();
         $this->post("/api/v1/chat/conversation/$createdUuid/message/create?language=en", [
-            "message" => "this is message"
+            'message' => 'this is message',
         ])->json();
 
         $this->get("/api/v1/chat/conversation/$createdUuid/message?language=en")
             ->assertOk()
             ->assertJson(
-                fn(AssertableJson $json) => $json->hasAll(["data", "success", "message"])->has("data.list", 1)
+                fn (AssertableJson $json) => $json->hasAll(['data', 'success', 'message'])->has('data.list', 1)
             );
-
     }
 
     public function test_message_create_with_invalid_language_params_negative()
     {
         $createdUuid = $this->getCreatedConversationUuid();
         $this->post("/api/v1/chat/conversation/$createdUuid/message/create", [
-            "message" => "this is message"
+            'message' => 'this is message',
         ])->assertBadRequest()
-            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['success', 'message'])
-                ->where('message', __("responses.provide_language"))
+            ->assertJson(
+                fn (AssertableJson $json) => $json->hasAll(['success', 'message'])
+                ->where('message', __('responses.provide_language'))
                 ->etc()
             );
     }
 
     public function test_message_create_with_invalid_conversation_uuid_negative()
     {
-        $this->post("/api/v1/chat/conversation/invaliduuid/message/create?language=en", [
-            "message" => "this is message"
+        $this->post('/api/v1/chat/conversation/invaliduuid/message/create?language=en', [
+            'message' => 'this is message',
         ])->assertNotFound()
-            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['success', 'message'])
+            ->assertJson(
+                fn (AssertableJson $json) => $json->hasAll(['success', 'message'])
                 ->where('message', __('responses.conversation_not_found'))
                 ->where('success', false)
                 ->etc()
@@ -86,11 +86,11 @@ final class MessageControllerTest extends ChatTestCase
 
         $this->post("/api/v1/chat/conversation/$createdUuid/message/create?language=en")->assertUnprocessable()
             ->assertJson(
-                fn(AssertableJson $json) => $json->hasAll(['message', 'success', 'data'])
+                fn (AssertableJson $json) => $json->hasAll(['message', 'success', 'data'])
                     ->where('success', false)
                     ->where('message', 'Validation errors')
-                    ->has('data.message', fn(AssertableJson $json) => $json->where('0', __('responses.message_without_attachment')))
-                    ->has('data.attachment', fn(AssertableJson $json) => $json->where('0', __('responses.attachment_without_message')))
+                    ->has('data.message', fn (AssertableJson $json) => $json->where('0', __('responses.message_without_attachment')))
+                    ->has('data.attachment', fn (AssertableJson $json) => $json->where('0', __('responses.attachment_without_message')))
             );
     }
 
@@ -100,9 +100,9 @@ final class MessageControllerTest extends ChatTestCase
         Storage::fake('attachments');
         $file = UploadedFile::fake()->image('attachment.jpg');
         $this->post("/api/v1/chat/conversation/$createdUuid/message/create?language=en", [
-            "message" => "this is message",
-            "attachment" => [$file]
+            'message'    => 'this is message',
+            'attachment' => [$file],
         ])->assertOk()
-            ->assertJson(fn(AssertableJson $json) => $json->where("success", true)->etc());
+            ->assertJson(fn (AssertableJson $json) => $json->where('success', true)->etc());
     }
 }
