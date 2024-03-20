@@ -500,7 +500,6 @@ class ProjectMemberManagementService
         }
     }
 
-
     public static function participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action)
     {
         try {
