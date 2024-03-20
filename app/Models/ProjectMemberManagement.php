@@ -17,11 +17,14 @@ class ProjectMemberManagement extends Model
         'project_id',
         'inviter_id',
         'email',
+        'invitee_name',
         'invite_type',
         'invite_status',
         'email_status',
         'email_response',
         'email_resend_status',
         'inviter_access_level',
+        'subject_line',
+        'email_body',
     ];
 }

@@ -16,7 +16,7 @@ class ProjectExternalLinkResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'        => $this->social_link_id,
+            'id'        => $this->id,
             'link'      => $this->social_media_link,
             'image'     => $this->social_link['icon'],
         ];
