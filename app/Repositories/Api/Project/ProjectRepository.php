@@ -249,6 +249,8 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($updateProject['updateProject']) {
+                $activity = auth()->user()->full_name.' '.__('responses.project_updated_activty').' '.$updateProject['updateProject']->title;
+                self::storeHistory($updateProject['updateProject']->id, auth()->user()->id, $activity);
                 DB::commit();
 
                 return $updateProject['updateProject'];
@@ -370,6 +372,8 @@ class ProjectRepository implements ProjectInterface
 
             if ($submitProject['submitProject'] &&
                 $submitProject['addAchievement']) {
+                $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
+                self::storeHistory($projectData->id, auth()->user()->id, $activity);
                 DB::commit();
 
                 return $submitProject['submitProject'];
