@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
+use App\Http\Requests\Manage\Challenge\createChallengesForLabUsingAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\createChallengeUsingAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\createChallengeUsingAIRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
@@ -447,6 +448,23 @@ class ChallengeController extends AppBaseController
             }
         } catch (Exception $e) {
             Log::error('Error in createChallengeUsingAIPreview in ChallengeController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function createChallengesForLabUsingAIPreview(createChallengesForLabUsingAIPreviewRequest $request)
+    {
+        try {
+            $createChallengesForLabUsingAIPreview = $this->challengeRepository->createChallengesForLabUsingAIPreview($request);
+
+            if ($createChallengesForLabUsingAIPreview) {
+                return $this->sendResponse($createChallengesForLabUsingAIPreview, __('responses.challenges_previews_created_successfully'), 200);
+            } else {
+                throw new Exception('createChallengesForLabUsingAIPreview has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in createChallengesForLabUsingAIPreview in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
         }

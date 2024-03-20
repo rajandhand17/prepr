@@ -19,5 +19,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::delete('/{slug}/announcement/delete', [ChallengeController::class, 'deleteAnnouncement']);
     Route::get('/{slug}/announcement/list', [ChallengeController::class, 'listAnnouncement']);
     Route::post('/ai/create-challenge-preview', [ChallengeController::class, 'createChallengeUsingAIPreview'])->middleware('permission:create_challenge');
+    Route::post('/ai/create-challenges-for-lab-preview', [ChallengeController::class, 'createChallengesForLabUsingAIPreview'])->middleware('permission:create_challenge');
     Route::post('/ai/create-challenge', [ChallengeController::class, 'createChallengeUsingAI'])->middleware('permission:create_challenge');
 });
