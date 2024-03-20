@@ -73,8 +73,6 @@ class ExploreControllerTest extends TestCase
             $this->assertArrayHasKey('lab_address', $data['data']['labs'][0]);
             $this->assertArrayHasKey('lab_achievement', $data['data']['labs'][0]);
             $this->assertArrayHasKey('lab_external_links', $data['data']['labs'][0]);
-
-
             $this->assertArrayHasKey('id', $data['data']['challenges'][0]);
             $this->assertArrayHasKey('language', $data['data']['challenges'][0]);
             $this->assertArrayHasKey('title', $data['data']['challenges'][0]);
@@ -226,8 +224,6 @@ class ExploreControllerTest extends TestCase
             $this->assertArrayHasKey('lab_address', $data['data']['labs'][0]);
             $this->assertArrayHasKey('lab_achievement', $data['data']['labs'][0]);
             $this->assertArrayHasKey('lab_external_links', $data['data']['labs'][0]);
-
-
             $this->assertArrayHasKey('id', $data['data']['challenges'][0]);
             $this->assertArrayHasKey('language', $data['data']['challenges'][0]);
             $this->assertArrayHasKey('title', $data['data']['challenges'][0]);
