@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\LabChallengeRedeem;
 use App\Services\Public\ChallengeSocialActivitiesService;
+use App\Services\Public\MemberManagementService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -476,7 +477,6 @@ class ChallengeService
             $originalChallenge = Challenge::find($challengeId);
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
-
             $clonedChallenge = $originalChallenge->replicate();
             $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $clonedChallenge->title = $organization->title.' '.$originalChallenge->title;
@@ -625,6 +625,38 @@ class ChallengeService
 
             return $challenge_timelines;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnSkillsAndTags($skills, $getUsersTags)
+    {
+        try {
+            /*get challenge id Based on Skills*/
+            $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
+            /*get challenge id based on tags*/
+            $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($getUsersTags);
+            $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique();
+            if (!empty($challengeIds)) {
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->whereIn('id', $challengeIds)->take(config('site-settings.explore_page_limit_max'));
+            } else {
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
+            }
+
+            return $challenges->get();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTrendingChallenge()
+    {
+        try {
+            $getLatestChallengeIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.module_component_type.challenge'));
+            $challenges = Challenge::select()->where('challenges.status', '1')->whereIn('id', $getLatestChallengeIds);
+
+            return $challenges->get();
+        } catch (\Exception $e) {
             return false;
         }
     }
