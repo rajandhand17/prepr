@@ -12,7 +12,7 @@ interface ProjectMemberManagementInterface
 
     public function addParticipates($projectData, $request);
 
-    public function checkProjectJoinUnjoinStatus($request, $projectData);
+    public function checkProjectJoinUnjoinStatus($userEmail, $projectData);
 
     public function acceptOrRejectProjectJoinRequest($request, $projectData, $action);
 
@@ -21,4 +21,8 @@ interface ProjectMemberManagementInterface
     public function updateProjectRole($projectId, $uuid, $role);
 
     public function deleteParticipates($projectData, $request);
+
+    public function checkParticipantProjectJoinUnjoinStatus($userEmail, $projectData);
+
+    public function participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action);
 }

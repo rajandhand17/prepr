@@ -12,6 +12,7 @@ use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\AssessedProjectResource;
 use App\Http\Resources\Project\ProjectAdditionalInfoResource;
 use App\Http\Resources\Project\ProjectExternalLinkResource;
+use App\Http\Resources\Project\ProjectHistoryResource;
 use App\Http\Resources\Project\ProjectRequirementResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Repositories\Api\Project\ProjectRepository;
@@ -487,6 +488,25 @@ class ProjectController extends AppBaseController
             }
 
             return $this->sendError(__('responses.project_media_not_delete'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function projectHistory($slug)
+    {
+        try {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $fetchProjectHistory = $this->projectRepository->fetchProjectHistory($checkProjectExistsOrNot->id);
+            if ($fetchProjectHistory) {
+                return $this->sendResponse(ProjectHistoryResource::collection($fetchProjectHistory), __('responses.project_history_retrived'), 200);
+            }
+
+            return $this->sendError(__('responses.project_history_not_retrived'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

@@ -173,4 +173,36 @@ class ChallengeSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getChallengeIdBasedOnSkills($skills)
+    {
+        try {
+            $getChallengeIds = ChallengeSkillsGroupsStack::where('type', '0')
+                ->whereIn('foreign_id', $skills)
+                ->pluck('challenge_id');
+
+            return $getChallengeIds;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getRecommendedSkills($getUserSkills)
+    {
+        try {
+            $getChallengeSkillsIds = [];
+            $challengeId = ChallengeSkillsGroupsStack::where('type', '0')
+                ->whereIn('foreign_id', $getUserSkills)
+                ->pluck('challenge_id');
+            if (!empty($challengeId)) {
+                $getChallengeSkillsIds = ChallengeSkillsGroupsStack::where('type', '0')
+                    ->whereIn('challenge_id', $challengeId)
+                    ->pluck('foreign_id')->unique();
+            }
+
+            return $getChallengeSkillsIds;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
