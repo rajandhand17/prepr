@@ -53,6 +53,8 @@ class UserResource extends JsonResource
                 'microsoft'     => 'inactive',
                 'apple'         => 'inactive',
             ],
+
+            'resume'                            => $this->userResume ? 'true' : 'false',
         ];
     }
 }

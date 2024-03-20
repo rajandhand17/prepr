@@ -17,4 +17,9 @@ class LabTagsGroups extends Model
         'foreign_id',
         'type',
     ];
+
+    public function tags()
+    {
+        return $this->hasOne(Tag::class, 'id', 'foreign_id');
+    }
 }

@@ -457,4 +457,11 @@ return [
         'yes' => '1',
         'no'  => '2',
     ],
+
+    'module_component_type' => [
+        'organization' => '0',
+        'lab'          => '1',
+        'challenge'    => '2',
+        'project'      => '3',
+    ],
 ];
