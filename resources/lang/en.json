@@ -999,6 +999,7 @@
     "responses.recommended_skills_successfully": "The recommended skills list has been successfully retrieved",
     "responses.recommended_skills_failed": "The list of recommended skills has not been retrieved with success",
     "responses.trending_labs_challenges_successfully": "The trending labs and challenges have been successfully retrieved",
-    "responses.trending_labs_challenges_failed": "The list of trending labs and challenges has not been retrieved with success."
-
+    "responses.trending_labs_challenges_failed": "The list of trending labs and challenges has not been retrieved with success.",
+    "responses.project_sender_cannot_accept_request": "You can't accept an invitation from a user to join the project if you've already sent them a request to join.",
+    "responses.project_member_invalid_uuid": "Invalid ID! please try again."
 }

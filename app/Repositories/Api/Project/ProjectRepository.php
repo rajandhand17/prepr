@@ -7,6 +7,7 @@ use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
+use App\Services\Manage\EmailTemplateService;
 use App\Services\ProjectAdditionalInfoService;
 use App\Services\ProjectExternalLinksService;
 use App\Services\ProjectFileService;
@@ -144,14 +145,19 @@ class ProjectRepository implements ProjectInterface
             //field entry for owner's data entry in project member management
             $userId = auth()->user()->id;
             $userEmail = auth()->user()->email;
+            $userFullName = auth()->user()->full_name;
             $inviteType = '1';
             $inviteStatus = '1';
             $emailStatus = '1';
             $accessLevel = '2';
+            $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), config('constants.member_management_component_type.project'), $request->language);
 
-            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId, $userEmail, $inviteType, $inviteStatus, $emailStatus, $accessLevel) {
+            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $getTemplate) {
                 $createProject = $this->projectService->createProject($request, $uploadedCoverMedia);
-                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $inviteType, $inviteStatus, $emailStatus, $accessLevel);
+                $getTemplate->body_content = str_replace('user_name', $userFullName, str_replace('component_title', $createProject->title, $getTemplate->body_content));
+                $subject = $getTemplate->subject;
+                $emailBody = $getTemplate->body_content;
+                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody);
 
                 return [
                     'createProject'         => $createProject,
