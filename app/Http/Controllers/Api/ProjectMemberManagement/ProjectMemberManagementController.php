@@ -140,7 +140,7 @@ class ProjectMemberManagementController extends AppBaseController
             if ($checkProjectExistsOrNot == false) {
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
-            
+
             $checkParticipantsUUID = $this->projectMemberManagementRepository->checkParticipantsUUID($checkProjectExistsOrNot->id, $uuid);
             if ($checkParticipantsUUID == false) {
                 return $this->sendError(__('responses.project_member_invalid_uuid'), 404);

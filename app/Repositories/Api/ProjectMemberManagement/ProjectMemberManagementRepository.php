@@ -160,7 +160,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return false;
         }
     }
-    
+
     public function participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action)
     {
         try {
