@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Manage\Challenge;
 
 use App\Services\JobService;
+use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
@@ -326,7 +327,8 @@ class ChallengeResource extends JsonResource
             'member_count'                  => $this->members()->count(),
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
-            'project_submitted_count'       => $this->submitted_projects(),
+            'submissions_count'             => $this->submitted_projects()->count(),
+            'project_submitted'             => SubmittedProjectResource::collection($this->submitted_projects),
             'external_links'                => ChallengeExternalLinkResource::collection($this->external_links),
         ];
     }
