@@ -22,30 +22,30 @@ return new class() extends Migration
             $table->timestamps();
         });
 
-        Schema::create('user_jobs', function (Blueprint $table) {
+        Schema::create('user_job_titles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('job_id');
+            $table->unsignedBigInteger('job_title_id');
             $table->boolean('pinned')->default(false);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('job_id')->references('id')->on('job_titles')->onDelete('cascade');
+            $table->foreign('job_title_id')->references('id')->on('job_titles')->onDelete('cascade');
             $table->timestamps();
         });
 
-        Schema::create('related_jobs', function (Blueprint $table) {
+        Schema::create('related_job_titles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('job_id');
-            $table->unsignedBigInteger('related_job_id');
-            $table->foreign('job_id')->references('id')->on('job_titles')->onDelete('cascade');
-            $table->foreign('related_job_id')->references('id')->on('job_titles')->onDelete('cascade');
+            $table->unsignedBigInteger('job_title_id');
+            $table->unsignedBigInteger('related_job_title_id');
+            $table->foreign('job_title_id')->references('id')->on('job_titles')->onDelete('cascade');
+            $table->foreign('related_job_title_id')->references('id')->on('job_titles')->onDelete('cascade');
             $table->timestamps();
         });
 
-        Schema::create('job_skills', function (Blueprint $table) {
+        Schema::create('job_title_skills', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('job_id');
+            $table->unsignedBigInteger('job_title_id');
             $table->unsignedBigInteger('skill_id');
-            $table->foreign('job_id')->references('id')->on('job_titles')->onDelete('cascade');
+            $table->foreign('job_title_id')->references('id')->on('job_titles')->onDelete('cascade');
             $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
             $table->timestamps();
         });
@@ -58,9 +58,9 @@ return new class() extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('related_jobs');
-        Schema::dropIfExists('user_jobs');
-        Schema::dropIfExists('job_skills');
+        Schema::dropIfExists('related_job_titles');
+        Schema::dropIfExists('user_job_titles');
+        Schema::dropIfExists('job_title_skills');
         Schema::dropIfExists('job_titles');
     }
 };

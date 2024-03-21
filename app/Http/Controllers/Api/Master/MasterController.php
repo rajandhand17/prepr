@@ -12,7 +12,7 @@ use App\Http\Resources\Master\CountryResource;
 use App\Http\Resources\Master\DurationsResource;
 use App\Http\Resources\Master\FlexibleDateDurationResource;
 use App\Http\Resources\Master\HostResource;
-use App\Http\Resources\Master\JobResource;
+use App\Http\Resources\Master\JobTitleResource;
 use App\Http\Resources\Master\LabConditionResource;
 use App\Http\Resources\Master\LevelsResource;
 use App\Http\Resources\Master\ProjectIndustryResource;
@@ -1371,12 +1371,12 @@ class MasterController extends AppBaseController
      * )
      */
 
-    public function getJobsTitles(Request $request)
+    public function getJobTitles(Request $request)
     {
         try {
-            $jobTitles = $this->masterRepository->getJobsTitles($request);
+            $jobTitles = $this->masterRepository->getJobTitles($request);
             if ($jobTitles) {
-                return $this->sendResponse(JobResource::collection($jobTitles), __('responses.found_job_list'));
+                return $this->sendResponse(JobTitleResource::collection($jobTitles), __('responses.found_job_list'));
             }
 
             return $this->sendResponse(null, __('responses.not_found_job_list'));

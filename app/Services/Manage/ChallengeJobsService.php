@@ -2,7 +2,7 @@
 
 namespace App\Services\Manage;
 
-use App\Models\ChallengeJobs;
+use App\Models\ChallengeJobTitles;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -14,9 +14,9 @@ class ChallengeJobsService
             if ($request->has('jobs')) {
                 if (count($request->jobs) > 0) {
                     foreach ($request->jobs as $job) {
-                        $ChallengeJobsGroupsStack = new ChallengeJobs();
+                        $ChallengeJobsGroupsStack = new ChallengeJobTitles();
                         $ChallengeJobsGroupsStack->challenge_id = $challenge_id;
-                        $ChallengeJobsGroupsStack->job_id = $job;
+                        $ChallengeJobsGroupsStack->job_title_id = $job;
                         $ChallengeJobsGroupsStack->save();
                     }
                 }

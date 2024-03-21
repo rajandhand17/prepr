@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Schema;
 
 class JobTitleService
 {
-    public static function getJobsTitles($language = 'en', $search = null, $job_id = null)
+    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null)
     {
         try {
             if ($language == 'en') {
                 $job_list = JobTitle::select('id', 'title');
-                if ($job_id !== null) {
-                    $job_list = $job_list->whereIn('id', $job_id);
+                if ($job_title_id !== null) {
+                    $job_list = $job_list->whereIn('id', $job_title_id);
                 }
             } else {
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -42,7 +42,7 @@ class JobTitleService
 
             return $job_list;
         } catch (Exception $e) {
-            Log::error('Error in getJobsTitles in JobTitleService.php: '.$e->getMessage());
+            Log::error('Error in getJobTitles in JobTitleService.php: '.$e->getMessage());
 
             return false;
         }
@@ -61,11 +61,11 @@ class JobTitleService
         }
     }
 
-    public static function getJobBasedOnIdArray($job_ids)
+    public static function getJobBasedOnIdArray($job_title_ids)
     {
         try {
             $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
-                ->whereIn('id', $job_ids)->get();
+                ->whereIn('id', $job_title_ids)->get();
 
             return $getJobsList;
         } catch (Exception $e) {
@@ -75,11 +75,11 @@ class JobTitleService
         }
     }
 
-    public static function getJobBasedOnId($job_id)
+    public static function getJobBasedOnId($job_title_id)
     {
         try {
             $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
-                ->where('id', $job_id)->first();
+                ->where('id', $job_title_id)->first();
 
             return $getJobsList;
         } catch (Exception $e) {

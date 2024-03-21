@@ -19,12 +19,12 @@ class JobTitle extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_jobs', 'job_id', 'user_id');
+        return $this->belongsToMany(User::class, 'user_job_titles', 'job_title_id', 'user_id');
     }
 
     public function skills()
     {
-        return $this->belongsToMany(Skill::class, 'job_skills', 'job_id', 'skill_id')
+        return $this->belongsToMany(Skill::class, 'job_title_skills', 'job_title_id', 'skill_id')
             ->withTimestamps();
     }
 }

@@ -340,10 +340,10 @@ class MasterRepository implements MasterInterface
         }
     }
 
-    public function getJobsTitles($request)
+    public function getJobTitles($request)
     {
         try {
-            return $this->jobTitleService->getJobsTitles($request->language, $request->search);
+            return $this->jobTitleService->getJobTitles($request->language, $request->search);
         } catch (Exception $e) {
             Log::error('Error in getJobTitles in MasterRepository.php: '.$e->getMessage());
 

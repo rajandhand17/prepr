@@ -85,14 +85,7 @@ class User extends Command
                     } else {
                         $user = new \App\Models\User();
                     }
-                    $createdAt = Carbon::createFromTimestamp($single_user->created_at, 'UTC');
 
-                    // Check if datetime is during the DST transition
-                    if ($createdAt->format('Y-m-d H:i:s') == '2021-03-14 02:25:19') {
-                        // Adjust to a valid time, e.g., 3:00 AM
-                        $createdAt->setTime(3, 0, 0);
-                    }
-    
                     $user->id = $single_user->id;
                     $user->preferred_language = $language;
                     $user->first_name = $single_user->first_name;
@@ -100,7 +93,7 @@ class User extends Command
                     $user->full_name = $single_user->name;
                     $user->username = $username;
                     $user->email = $single_user->email;
-                    $user->email_verified_at = $createdAt;
+                    $user->email_verified_at = Carbon::createFromTimestamp($single_user->created_at);
                     $user->password = $single_user->password;
                     $user->country_code = $single_user->country_code;
                     $user->phone_number = $single_user->phone_number;
@@ -109,7 +102,7 @@ class User extends Command
                     $user->profile_image = (!empty($single_user->profile_image)) ? $single_user->profile_image : config('site-settings.default_user_profile_image');
                     $user->referral_code = $single_user->referal_code;
                     $user->remember_token = $single_user->remember_token;
-                    $user->created_at = $createdAt;
+                    $user->created_at = Carbon::createFromTimestamp($single_user->created_at);
                     $user->verified_user = $verified;
                     $user->is_profile_completed = '1';
                     $user->save();

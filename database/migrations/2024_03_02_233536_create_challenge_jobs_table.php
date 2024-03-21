@@ -13,14 +13,14 @@ return new class() extends Migration {
         Schema::create('challenge_job_title_association', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('challenge_id')->unsigned();
-            $table->bigInteger('job_id')->unsigned();
+            $table->bigInteger('job_title_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('challenge_id')
                 ->references('id')->on('challenges')
                 ->onDelete('cascade');
 
-            $table->foreign('job_id')
+            $table->foreign('job_title_id')
                 ->references('id')->on('job_titles')
                 ->onDelete('cascade');
         });
