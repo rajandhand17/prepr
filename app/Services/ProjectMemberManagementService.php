@@ -532,7 +532,7 @@ class ProjectMemberManagementService
             if ($checkProjectJoinedStatus) {
                 return $checkProjectJoinedStatus;
             }
-            
+
             return false;
         } catch (Exception $e) {
             return false;
