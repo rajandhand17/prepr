@@ -337,4 +337,13 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public static function getResourceModuleBasedOnUUID($uUID)
+    {
+        try {
+            return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

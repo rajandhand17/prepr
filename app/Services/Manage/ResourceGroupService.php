@@ -278,4 +278,13 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public static function getResourceGroupBasedOnUUID($uUID)
+    {
+        try {
+            return ResourceGroup::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

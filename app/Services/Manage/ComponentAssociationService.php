@@ -754,4 +754,108 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public function createChallengeComponentAssociation($request, $challengeId)
+    {
+        try {
+            if ($request->has('labs')) {
+                $sequence = 1;
+                if (count($request->labs) > 0) {
+                    foreach ($request->labs as $lab) {
+                        $getLabId = LabService::getLabBasedOnUUID($lab);
+                        $checkLabAssociation = ComponentAssociation::where('lab_id', $getLabId->id)->whereNotNull('challenge_id')->orderBy('created_at', 'desc')->first();
+                        if ($checkLabAssociation) {
+                            $sequence = $checkLabAssociation->sequence + 1;
+                        }
+                        $challengeLabAssociation = new ComponentAssociation();
+                        $challengeLabAssociation->lab_id = $getLabId->id;
+                        $challengeLabAssociation->challenge_id = $challengeId;
+                        $challengeLabAssociation->sequence = $sequence;
+                        $challengeLabAssociation->save();
+                        $sequence++;
+                    }
+                }
+            }
+
+            if ($request->has('lab_programs')) {
+                $sequence = 1;
+                if (count($request->lab_programs) > 0) {
+                    foreach ($request->lab_programs as $lab_program) {
+                        $getLabProgramId = LabProgramService::getLabProgramBasedOnUUID($lab_program);
+                        $checkLabProgramAssociation = ComponentAssociation::where('lab_program_id', $getLabProgramId->id)->whereNotNull('challenge_id')->orderBy('created_at', 'desc')->first();
+                        if ($checkLabProgramAssociation) {
+                            $sequence = $checkLabProgramAssociation->sequence + 1;
+                        }
+                        $challengeLabAssociation = new ComponentAssociation();
+                        $challengeLabAssociation->lab_program_id = $getLabProgramId->id;
+                        $challengeLabAssociation->challenge_id = $challengeId;
+                        $challengeLabAssociation->sequence = $sequence;
+                        $challengeLabAssociation->save();
+                        $sequence++;
+                    }
+                }
+            }
+
+            if ($request->has('resource_modules')) {
+                $sequence = 1;
+                if (count($request->resource_modules) > 0) {
+                    foreach ($request->resource_modules as $resource_module) {
+                        $getResourceModuleId = ResourceModuleService::getResourceModuleBasedOnUUID($resource_module);
+                        $checkResourceModuleAssociation = ComponentAssociation::where('resource_module_id', $getResourceModuleId->id)->whereNotNull('challenge_id')->orderBy('created_at', 'desc')->first();
+                        if ($checkResourceModuleAssociation) {
+                            $sequence = $checkResourceModuleAssociation->sequence + 1;
+                        }
+                        $challengeLabAssociation = new ComponentAssociation();
+                        $challengeLabAssociation->resource_module_id = $getResourceModuleId->id;
+                        $challengeLabAssociation->challenge_id = $challengeId;
+                        $challengeLabAssociation->sequence = $sequence;
+                        $challengeLabAssociation->save();
+                        $sequence++;
+                    }
+                }
+            }
+
+            if ($request->has('resource_collections')) {
+                $sequence = 1;
+                if (count($request->resource_collections) > 0) {
+                    foreach ($request->resource_collections as $resource_collection) {
+                        $getResourceCollectionId = ResourceCollectionService::getResourceCollectionBasedOnUUID($resource_collection);
+                        $checkResourceCollectionAssociation = ComponentAssociation::where('resource_collection_id', $getResourceCollectionId->id)->whereNotNull('challenge_id')->orderBy('created_at', 'desc')->first();
+                        if ($checkResourceCollectionAssociation) {
+                            $sequence = $checkResourceCollectionAssociation->sequence + 1;
+                        }
+                        $challengeLabAssociation = new ComponentAssociation();
+                        $challengeLabAssociation->resource_collection_id = $getResourceCollectionId->id;
+                        $challengeLabAssociation->challenge_id = $challengeId;
+                        $challengeLabAssociation->sequence = $sequence;
+                        $challengeLabAssociation->save();
+                        $sequence++;
+                    }
+                }
+            }
+
+            if ($request->has('resource_groups')) {
+                $sequence = 1;
+                if (count($request->resource_groups) > 0) {
+                    foreach ($request->resource_groups as $resource_group) {
+                        $getResourceGroupId = ResourceGroupService::getResourceGroupBasedOnUUID($resource_group);
+                        $checkResourceGroupAssociation = ComponentAssociation::where('resource_group_id', $getResourceGroupId->id)->whereNotNull('challenge_id')->orderBy('created_at', 'desc')->first();
+                        if ($checkResourceGroupAssociation) {
+                            $sequence = $checkResourceGroupAssociation->sequence + 1;
+                        }
+                        $challengeLabAssociation = new ComponentAssociation();
+                        $challengeLabAssociation->resource_group_id = $getResourceGroupId->id;
+                        $challengeLabAssociation->challenge_id = $challengeId;
+                        $challengeLabAssociation->sequence = $sequence;
+                        $challengeLabAssociation->save();
+                        $sequence++;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

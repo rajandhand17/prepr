@@ -279,4 +279,22 @@ class LabProgramService
             return false;
         }
     }
+
+    public static function getLabProgramBasedOnUUID($uUID)
+    {
+        try {
+            return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabProgramBasedOnId($Id)
+    {
+        try {
+            return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -136,6 +136,31 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
         }
 
+        if ($this->request->has('labs')) {
+            $base_rules['labs'] = 'array';
+            $base_rules['labs.*'] = 'exists:labs,uuid';
+        }
+
+        if ($this->request->has('lab_programs')) {
+            $base_rules['lab_programs'] = 'array';
+            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
+        }
+
+        if ($this->request->has('resource_modules')) {
+            $base_rules['resource_modules'] = 'array';
+            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
+        }
+
+        if ($this->request->has('resource_collections')) {
+            $base_rules['resource_collections'] = 'array';
+            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
+        }
+
+        if ($this->request->has('resource_groups')) {
+            $base_rules['resource_groups'] = 'array';
+            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
+        }
+
         return $base_rules;
     }
 
