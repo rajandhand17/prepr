@@ -561,4 +561,31 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
+
+    public function checkProjectJoinedStatus($projectId, $userEmail)
+    {
+        try {
+            return $this->projectMemberManagementService->checkProjectJoinedStatus($projectId, $userEmail);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function joinProject($projectId, $userEmail)
+    {
+        try {
+            return $this->projectMemberManagementService->joinProject($projectId, $userEmail);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function unJoinProject($projectId, $userEmail)
+    {
+        try {
+            return $this->projectMemberManagementService->unJoinProject($projectId, $userEmail);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

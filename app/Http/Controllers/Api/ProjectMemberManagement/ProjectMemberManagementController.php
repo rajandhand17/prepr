@@ -33,6 +33,10 @@ class ProjectMemberManagementController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
+            if (!in_array($request->access_level, ['team_leader', 'editor', 'viewer'])) {
+                return $this->sendError(__('responses.role_not_exists'), 422);
+            }
+
             $projectMemberManagementListing = $this->projectMemberManagementRepository->getProjectBasedParticipants($checkProjectExistsOrNot, $request);
             $getTemplate = $this->projectMemberManagementRepository->getTemplate($request->language);
 
@@ -112,7 +116,7 @@ class ProjectMemberManagementController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
-            $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request, $checkProjectExistsOrNot);
+            $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request->email, $checkProjectExistsOrNot);
             if ($checkProjectStatus == false) {
                 return $this->sendError(__('responses.project_sender_cannot_accept_request'), 404);
             }

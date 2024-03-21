@@ -223,7 +223,7 @@ class ProjectMemberManagementService
                 if (UtilityHelper::validEmail($pariticipateData['invitee_email'])) {
                     $checkExistenceEntry = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $pariticipateData['invitee_email']])->exists();
                     if ($checkExistenceEntry == false) {
-                        $invite_status = config('constants.project_member_management_invite_status.pending');
+                        $invite_status = config('constants.project_member_management_invite_status.invited');
                         $email_status = config('constants.project_member_management_email_status.scheduled');
 
                         switch ($pariticipateData['access_level']) {
@@ -462,7 +462,7 @@ class ProjectMemberManagementService
     {
         try {
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
-            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' => $userData->email, 'invite_status' => '2'])->where('invite_type', '<>', '3')->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' => $userData->email, 'invite_status' => '0'])->where('invite_type', '<>', '3')->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
 
             return $getAcceptedInvitesProjectIds;
         } catch (Exception $e) {
@@ -489,7 +489,7 @@ class ProjectMemberManagementService
     public static function checkParticipantProjectJoinUnjoinStatus($userEmail, $projectData)
     {
         try {
-            $projectMemberData = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $userEmail, 'invite_status' => '2'])->where('invite_type', '<>', '3')->first();
+            $projectMemberData = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $userEmail, 'invite_status' => '0'])->where('invite_type', '<>', '3')->first();
             if ($projectMemberData) {
                 return true;
             }
@@ -511,7 +511,7 @@ class ProjectMemberManagementService
                     $invite_status = config('constants.member_management_invite_status.declined');
                     break;
             }
-            $project_member = ProjectMemberManagement::where(['email' => $userEmail, 'project_id' => $projectData->id, 'invite_status' => '2'])->where('invite_type', '<>', '3')->first();
+            $project_member = ProjectMemberManagement::where(['email' => $userEmail, 'project_id' => $projectData->id, 'invite_status' => '0'])->where('invite_type', '<>', '3')->first();
             if ($project_member) {
                 $user = UserService::getUserByEmail($userEmail);
                 $activity = auth()->user()->full_name.' '.__('responses.project_updated_member_activity').' '.$user->full_name;
@@ -520,6 +520,61 @@ class ProjectMemberManagementService
             }
 
             return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkProjectJoinedStatus($projectId, $userEmail)
+    {
+        try {
+            $checkProjectJoinedStatus = ProjectMemberManagement::where(['project_id' => $projectId, 'email' => $userEmail])->first();
+            if ($checkProjectJoinedStatus) {
+                return $checkProjectJoinedStatus;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function joinProject($projectId, $userEmail)
+    {
+        try {
+            $getUser = UserService::getUserByEmail($userEmail);
+            $joinProject = ProjectMemberManagement::create([
+                'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'project_id'                => $projectId,
+                'inviter_id'                => $getUser->id,
+                'email'                     => $getUser->email,
+                'invitee_name'              => $getUser->full_name,
+                'invite_type'               => '3',
+                'invite_status'             => '2',
+                'email_status'              => '1',
+                'inviter_access_level'      => '0',
+                'subject_line'              => null,
+                'email_body'                => null,
+            ]);
+            if ($joinProject) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function unJoinProject($projectId, $userEmail)
+    {
+        try {
+            $unJoinProject = ProjectMemberManagement::where(['project_id' => $projectId, 'email' => $userEmail])->delete();
+            if ($unJoinProject) {
+                return true;
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }
