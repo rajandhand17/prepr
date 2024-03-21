@@ -10,7 +10,7 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('challenge_jobs', function (Blueprint $table) {
+        Schema::create('challenge_job_title_association', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('challenge_id')->unsigned();
             $table->bigInteger('job_id')->unsigned();
@@ -31,6 +31,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('challenge_jobs');
+        Schema::dropIfExists('challenge_job_title_association');
     }
 };

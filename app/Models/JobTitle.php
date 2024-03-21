@@ -9,6 +9,7 @@ class JobTitle extends Model
     protected $table = 'job_titles';
 
     protected $fillable = [
+        'uuid',
         'title',
         'fr_CA_title',
         'lightcast_id',

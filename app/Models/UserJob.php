@@ -18,6 +18,6 @@ class UserJob extends Model
 
     public function jobID()
     {
-        return $this->belongsTo(Job::class, 'job_id');
+        return $this->belongsTo(JobTitle::class, 'job_id');
     }
 }

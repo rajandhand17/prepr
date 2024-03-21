@@ -254,7 +254,7 @@ class ChallengeRepository implements ChallengeInterface
     public function createChallengeAssessment($request, $challenge)
     {
         try {
-            return $this->challengeAssessmentService->createChallengeAssessment($request, $challenge, null);
+            return $this->challengeAssessmentService->createChallengeAssessment($request, $challenge);
         } catch (Exception $e) {
             return false;
         }

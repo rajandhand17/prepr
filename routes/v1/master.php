@@ -30,5 +30,5 @@ Route::middleware(['language'])->group(function () {
     Route::post('/create-sponsor/', [MasterController::class, 'createSponsor']);
     Route::get('/countries', [MasterController::class, 'getCountries']);
     Route::get('/challenge-announcement-recipient', [MasterController::class, 'getChallengeAnnouncementRecipient']);
-    Route::get('/jobs', [MasterController::class, 'getJobs']);
+    Route::get('/jobTitles', [MasterController::class, 'getJobTitles']);
 });

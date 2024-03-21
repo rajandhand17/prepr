@@ -11,7 +11,7 @@ class ChallengeJobs extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'challenge_jobs';
+    protected $table = 'challenge_job_title_association';
     protected $fillable = [
         'challenge_id',
         'job_id',

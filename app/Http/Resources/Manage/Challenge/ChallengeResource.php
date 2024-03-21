@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Manage\Challenge;
 
-use App\Services\JobService;
+use App\Services\JobTitleService;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
@@ -69,7 +69,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->jobs) {
             $associatedJobs = $this->jobs->pluck('foreign_id');
-            $jobs = JobService::getJobBasedOnIds($associatedJobs)->pluck('title', 'id');
+            $jobs = JobTitleService::getJobBasedOnIdArray($associatedJobs)->pluck('title', 'uuid');
         }
 
         if ($this->skill_groups) {

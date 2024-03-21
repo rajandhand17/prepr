@@ -8,9 +8,9 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-class JobService
+class JobTitleService
 {
-    public static function getJobs($language = 'en', $search = null, $job_id = null)
+    public static function getJobsTitles($language = 'en', $search = null, $job_id = null)
     {
         try {
             if ($language == 'en') {
@@ -42,26 +42,26 @@ class JobService
 
             return $job_list;
         } catch (Exception $e) {
-            Log::error('Error in getJobs in JobService.php: '.$e->getMessage());
+            Log::error('Error in getJobsTitles in JobTitleService.php: '.$e->getMessage());
 
             return false;
         }
     }
 
-    public static function filterJobList($getJobsList, $job_column_name, $search)
+    public static function filterJobList($getJobTitlesList, $job_column_name, $search)
     {
         try {
-            $getJobsList = $getJobsList->where($job_column_name, 'like', '%'.$search.'%');
+            $getJobTitlesList = $getJobTitlesList->where($job_column_name, 'like', '%'.$search.'%');
 
-            return $getJobsList;
+            return $getJobTitlesList;
         } catch (Exception $e) {
-            Log::error('Error in filterJobList in JobService.php: '.$e->getMessage());
+            Log::error('Error in filterJobList in JobTitleService.php: '.$e->getMessage());
 
             return false;
         }
     }
 
-    public static function getJobBasedOnIds($job_ids)
+    public static function getJobBasedOnIdArray($job_ids)
     {
         try {
             $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
@@ -69,7 +69,7 @@ class JobService
 
             return $getJobsList;
         } catch (Exception $e) {
-            Log::error('Error in getJobBasedOnIds in JobService.php: '.$e->getMessage());
+            Log::error('Error in getJobBasedOnIdArray in JobTitleService.php: '.$e->getMessage());
 
             return false;
         }
@@ -83,7 +83,7 @@ class JobService
 
             return $getJobsList;
         } catch (Exception $e) {
-            Log::error('Error in getJobBasedOnId in JobService.php: '.$e->getMessage());
+            Log::error('Error in getJobBasedOnId in JobTitleService.php: '.$e->getMessage());
 
             return false;
         }
