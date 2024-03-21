@@ -4,6 +4,10 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\Skill;
+use App\Services\Manage\ChallengeSkillsGroupsStackService;
+use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
+use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
+use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -109,6 +113,32 @@ class SkillService
             }
 
             return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function recommendSkills($getUserSkills)
+    {
+        try {
+            // Get challenge skills
+            $challengeSkills = ChallengeSkillsGroupsStackService::getRecommendedSkills($getUserSkills);
+            // Get resource module skills
+            $resourceModuleSkills = ResourceModuleSkillsGroupsStackService::getRecommendedSkills($getUserSkills);
+            // Get resource collection skills
+            $resourceCollectionSkills = ResourceCollectionSkillsGroupsStackService::getRecommendedSkills($getUserSkills);
+            // Get resource group skills
+            $resourceGroupSkills = ResourceGroupSkillsGroupsStackService::getRecommendedSkills($getUserSkills);
+            // Merge all skill IDs
+            $mergedSkills = $challengeSkills->merge($resourceModuleSkills)
+                ->merge($resourceCollectionSkills)
+                ->merge($resourceGroupSkills);
+            // Make the merged skills unique
+            $uniqueSkills = $mergedSkills->unique()->diff($getUserSkills);
+            //Fetch the 12 recommendations skills
+            $skills = Skill::select('id', 'title')->whereIn('id', $uniqueSkills)->take(config('site-settings.explore_page_limit_max'))->get();
+
+            return $skills;
         } catch (\Exception $e) {
             return false;
         }
