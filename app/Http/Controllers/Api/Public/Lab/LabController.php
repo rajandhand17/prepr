@@ -99,9 +99,8 @@ class LabController extends AppBaseController
                 if ($getProjectLabList) {
                     return $this->sendResponse(LabNameListResource::collection($getProjectLabList), __('responses.found_labs_list'));
                 }
-            } else {
-                return $this->sendError(__('responses.not_found_labs_list'), 403);
             }
+            return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

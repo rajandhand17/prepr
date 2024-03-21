@@ -99,7 +99,6 @@ class ProjectMemberManagementResource extends JsonResource
             'email'                 => $this->email,
             'username'              => $username,
             'invited_by'            => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
-            'role'                  => $this->role,
             'inviter_access_level'  => $inviter_access_level,
             'invite_status'         => $invite_status,
             'email_status'          => $email_status,
