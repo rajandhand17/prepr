@@ -287,4 +287,18 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public static function getResourceGroupBasedOnUUIDArray($resourceGroupUUIDArray)
+    {
+        try {
+            $resourceGroupIds = ResourceGroup::whereIn('uuid', $resourceGroupUUIDArray)->pluck('id')->all();
+            if ($resourceGroupIds != null) {
+                return $resourceGroupIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -189,24 +189,6 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function createChallengeAssessmentCriteria($request, $challenge)
-    {
-        try {
-            return $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $challenge);
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public function createChallengeAssessment($request, $challenge)
-    {
-        try {
-            return $this->challengeAssessmentService->createChallengeAssessment($request, $challenge);
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public function createChallengeProjectTemplate($request, $challenge)
     {
         try {
@@ -232,6 +214,7 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallengeTimelines = $this->challengeTimelinesService->updateChallengeTimelines($request, $updateChallenge->id);
                 $updateChallengeCustomTimelines = $this->challengeCustomTimelinesService->updateChallengeCustomTimelines($request, $updateChallenge->id);
                 $updateChallengeExternalLinks = $this->challengeExternalLinkService->updateChallengeExternalLink($request, $updateChallenge->id);
+                $updateChallengeAssociation = $this->componentAssociationService->updateChallengeComponentAssociation($request, $updateChallenge->id);
 
                 return [
                     'updateChallenge'                   => $updateChallenge,
@@ -246,6 +229,7 @@ class ChallengeRepository implements ChallengeInterface
                     'updateChallengeTimelines'          => $updateChallengeTimelines,
                     'updateChallengeCustomTimelines'    => $updateChallengeCustomTimelines,
                     'updateChallengeExternalLinks'      => $updateChallengeExternalLinks,
+                    'updateChallengeAssociation'        => $updateChallengeAssociation,
                 ];
             });
 
@@ -261,7 +245,8 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['updateChallengeProjectTemplate'] &&
                 $updateChallenge['updateChallengeTimelines'] &&
                 $updateChallenge['updateChallengeCustomTimelines'] &&
-                $updateChallenge['updateChallengeExternalLinks']
+                $updateChallenge['updateChallengeExternalLinks'] &&
+                $updateChallenge['updateChallengeAssociation']
             ) {
                 DB::commit();
 

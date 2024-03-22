@@ -786,11 +786,11 @@ class ComponentAssociationService
                         if ($checkLabProgramAssociation) {
                             $sequence = $checkLabProgramAssociation->sequence + 1;
                         }
-                        $challengeLabAssociation = new ComponentAssociation();
-                        $challengeLabAssociation->lab_program_id = $getLabProgramId->id;
-                        $challengeLabAssociation->challenge_id = $challengeId;
-                        $challengeLabAssociation->sequence = $sequence;
-                        $challengeLabAssociation->save();
+                        $challengeLabProgramAssociation = new ComponentAssociation();
+                        $challengeLabProgramAssociation->lab_program_id = $getLabProgramId->id;
+                        $challengeLabProgramAssociation->challenge_id = $challengeId;
+                        $challengeLabProgramAssociation->sequence = $sequence;
+                        $challengeLabProgramAssociation->save();
                         $sequence++;
                     }
                 }
@@ -805,11 +805,11 @@ class ComponentAssociationService
                         if ($checkResourceModuleAssociation) {
                             $sequence = $checkResourceModuleAssociation->sequence + 1;
                         }
-                        $challengeLabAssociation = new ComponentAssociation();
-                        $challengeLabAssociation->resource_module_id = $getResourceModuleId->id;
-                        $challengeLabAssociation->challenge_id = $challengeId;
-                        $challengeLabAssociation->sequence = $sequence;
-                        $challengeLabAssociation->save();
+                        $challengeResourceModuleAssociation = new ComponentAssociation();
+                        $challengeResourceModuleAssociation->resource_module_id = $getResourceModuleId->id;
+                        $challengeResourceModuleAssociation->challenge_id = $challengeId;
+                        $challengeResourceModuleAssociation->sequence = $sequence;
+                        $challengeResourceModuleAssociation->save();
                         $sequence++;
                     }
                 }
@@ -824,11 +824,11 @@ class ComponentAssociationService
                         if ($checkResourceCollectionAssociation) {
                             $sequence = $checkResourceCollectionAssociation->sequence + 1;
                         }
-                        $challengeLabAssociation = new ComponentAssociation();
-                        $challengeLabAssociation->resource_collection_id = $getResourceCollectionId->id;
-                        $challengeLabAssociation->challenge_id = $challengeId;
-                        $challengeLabAssociation->sequence = $sequence;
-                        $challengeLabAssociation->save();
+                        $challengeResourceCollectionAssociation = new ComponentAssociation();
+                        $challengeResourceCollectionAssociation->resource_collection_id = $getResourceCollectionId->id;
+                        $challengeResourceCollectionAssociation->challenge_id = $challengeId;
+                        $challengeResourceCollectionAssociation->sequence = $sequence;
+                        $challengeResourceCollectionAssociation->save();
                         $sequence++;
                     }
                 }
@@ -843,12 +843,176 @@ class ComponentAssociationService
                         if ($checkResourceGroupAssociation) {
                             $sequence = $checkResourceGroupAssociation->sequence + 1;
                         }
+                        $challengeResourceGroupAssociation = new ComponentAssociation();
+                        $challengeResourceGroupAssociation->resource_group_id = $getResourceGroupId->id;
+                        $challengeResourceGroupAssociation->challenge_id = $challengeId;
+                        $challengeResourceGroupAssociation->sequence = $sequence;
+                        $challengeResourceGroupAssociation->save();
+                        $sequence++;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateChallengeComponentAssociation($request, $challengeId)
+    {
+        try {
+            if ($request->has('labs')) {
+                $sequence = 1;
+                if (count($request->labs) > 0) {
+                    $getLabIds = LabService::getLabIdBasedOnUUIDArray($request->labs);
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['lab_id', '!=', null],
+                    ])->pluck('lab_id')->all();
+                    $nonExistingIds = array_diff($existComponentAssociation, $getLabIds);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('challenge_id', $challengeId)->whereIn('lab_id', $nonExistingIds)->delete();
+                    $newComponentAssociations = array_diff($getLabIds, $existComponentAssociation);
+                    $sequences = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['lab_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
+                    }
+                    foreach ($newComponentAssociations as $lab) {
+                        $sequence++;
                         $challengeLabAssociation = new ComponentAssociation();
-                        $challengeLabAssociation->resource_group_id = $getResourceGroupId->id;
                         $challengeLabAssociation->challenge_id = $challengeId;
+                        $challengeLabAssociation->lab_id = $lab;
                         $challengeLabAssociation->sequence = $sequence;
                         $challengeLabAssociation->save();
+                    }
+                }
+            }
+
+            if ($request->has('lab_programs')) {
+                $sequence = 1;
+                if (count($request->lab_programs) > 0) {
+                    $getLabProgramIds = LabProgramService::getLabProgramIdBasedOnUUIDArray($request->lab_programs);
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['lab_program_id', '!=', null],
+                    ])->pluck('lab_program_id')->all();
+                    $nonExistingIds = array_diff($existComponentAssociation, $getLabProgramIds);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('challenge_id', $challengeId)->whereIn('lab_program_id', $nonExistingIds)->delete();
+                    $newComponentAssociations = array_diff($getLabProgramIds, $existComponentAssociation);
+                    $sequences = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['lab_program_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
+                    }
+                    foreach ($newComponentAssociations as $lab_program) {
                         $sequence++;
+                        $challengeLabProgramAssociation = new ComponentAssociation();
+                        $challengeLabProgramAssociation->challenge_id = $challengeId;
+                        $challengeLabProgramAssociation->lab_program_id = $lab_program;
+                        $challengeLabProgramAssociation->sequence = $sequence;
+                        $challengeLabProgramAssociation->save();
+                    }
+                }
+            }
+
+            if ($request->has('resource_modules')) {
+                $sequence = 1;
+                if (count($request->resource_modules) > 0) {
+                    $getResourceModuleIds = ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_modules);
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['resource_module_id', '!=', null],
+                    ])->pluck('resource_module_id')->all();
+                    $nonExistingIds = array_diff($existComponentAssociation, $getResourceModuleIds);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('challenge_id', $challengeId)->whereIn('resource_module_id', $nonExistingIds)->delete();
+                    $newComponentAssociations = array_diff($getResourceModuleIds, $existComponentAssociation);
+                    $sequences = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['resource_module_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
+                    }
+                    foreach ($newComponentAssociations as $resource_module) {
+                        $sequence++;
+                        $challengeResourceModuleAssociation = new ComponentAssociation();
+                        $challengeResourceModuleAssociation->challenge_id = $challengeId;
+                        $challengeResourceModuleAssociation->resource_module_id = $resource_module;
+                        $challengeResourceModuleAssociation->sequence = $sequence;
+                        $challengeResourceModuleAssociation->save();
+                    }
+                }
+            }
+
+            if ($request->has('resource_collections')) {
+                $sequence = 1;
+                if (count($request->resource_collections) > 0) {
+                    $getResourceCollectionIds = ResourceCollectionService::getResourceCollectionBasedOnUUIDArray($request->resource_collections);
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['resource_collection_id', '!=', null],
+                    ])->pluck('resource_collection_id')->all();
+                    $nonExistingIds = array_diff($existComponentAssociation, $getResourceCollectionIds);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('challenge_id', $challengeId)->whereIn('resource_collection_id', $nonExistingIds)->delete();
+                    $newComponentAssociations = array_diff($getResourceCollectionIds, $existComponentAssociation);
+                    $sequences = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['resource_collection_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
+                    }
+                    foreach ($newComponentAssociations as $resource_collection) {
+                        $sequence++;
+                        $challengeResourceCollectionAssociation = new ComponentAssociation();
+                        $challengeResourceCollectionAssociation->challenge_id = $challengeId;
+                        $challengeResourceCollectionAssociation->resource_collection_id = $resource_collection;
+                        $challengeResourceCollectionAssociation->sequence = $sequence;
+                        $challengeResourceCollectionAssociation->save();
+                    }
+                }
+            }
+
+            if ($request->has('resource_groups')) {
+                $sequence = 1;
+                if (count($request->resource_groups) > 0) {
+                    $getResourceGroupIds = ResourceGroupService::getResourceGroupBasedOnUUIDArray($request->resource_groups);
+                    $existComponentAssociation = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['resource_group_id', '!=', null],
+                    ])->pluck('resource_group_id')->all();
+                    $nonExistingIds = array_diff($existComponentAssociation, $getResourceGroupIds);
+                    $deleteNonExistingComponentAssociation = ComponentAssociation::where('challenge_id', $challengeId)->whereIn('resource_group_id', $nonExistingIds)->delete();
+                    $newComponentAssociations = array_diff($getResourceGroupIds, $existComponentAssociation);
+                    $sequences = ComponentAssociation::where([
+                        ['challenge_id', '=', $challengeId],
+                        ['resource_group_id', '!=', null],
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if ($sequences !== null) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
+                    }
+                    foreach ($newComponentAssociations as $resource_group) {
+                        $sequence++;
+                        $challengeResourceGroupAssociation = new ComponentAssociation();
+                        $challengeResourceGroupAssociation->challenge_id = $challengeId;
+                        $challengeResourceGroupAssociation->resource_group_id = $resource_group;
+                        $challengeResourceGroupAssociation->sequence = $sequence;
+                        $challengeResourceGroupAssociation->save();
                     }
                 }
             }
