@@ -37,7 +37,11 @@ class ProjectController extends AppBaseController
             if (!in_array($request->type, ['my', 'team', 'invites', 'favourite', 'assessed', 'pending_assessment'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
-
+            if ($request->access_level) {
+                if (!in_array($request->access_level, ['team_leader', 'editor', 'viewer'])) {
+                    return $this->sendError(__('responses.role_not_exists'), 422);
+                }
+            }
             switch ($request->type) {
                 case 'my':
                     $getProjectIds = $this->projectRepository->getMyProjectIds(auth()->user()->id);
