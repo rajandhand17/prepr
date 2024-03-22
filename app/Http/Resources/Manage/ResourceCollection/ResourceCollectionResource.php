@@ -111,13 +111,13 @@ class ResourceCollectionResource extends JsonResource
 
         switch($this->privacy) {
             case '0':
-                $privacy = 'yes';
+                $privacy = 'no';
                 break;
             case '1':
-                $privacy = 'no';
+                $privacy = 'yes';
                 break;
             default:
-                $privacy = 'no';
+                $privacy = 'nan';
                 break;
         }
 
