@@ -12,6 +12,7 @@ use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\AssessedProjectResource;
 use App\Http\Resources\Project\ProjectAdditionalInfoResource;
 use App\Http\Resources\Project\ProjectExternalLinkResource;
+use App\Http\Resources\Project\ProjectHistoryResource;
 use App\Http\Resources\Project\ProjectRequirementResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Repositories\Api\Project\ProjectRepository;
@@ -36,7 +37,11 @@ class ProjectController extends AppBaseController
             if (!in_array($request->type, ['my', 'team', 'invites', 'favourite', 'assessed', 'pending_assessment'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
-
+            if ($request->access_level) {
+                if (!in_array($request->access_level, ['team_leader', 'editor', 'viewer'])) {
+                    return $this->sendError(__('responses.role_not_exists'), 422);
+                }
+            }
             switch ($request->type) {
                 case 'my':
                     $getProjectIds = $this->projectRepository->getMyProjectIds(auth()->user()->id);
@@ -487,6 +492,91 @@ class ProjectController extends AppBaseController
             }
 
             return $this->sendError(__('responses.project_media_not_delete'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function projectHistory($slug)
+    {
+        try {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $fetchProjectHistory = $this->projectRepository->fetchProjectHistory($checkProjectExistsOrNot->id);
+            if ($fetchProjectHistory) {
+                return $this->sendResponse(ProjectHistoryResource::collection($fetchProjectHistory), __('responses.project_history_retrived'), 200);
+            }
+
+            return $this->sendError(__('responses.project_history_not_retrived'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function joinProject($slug)
+    {
+        try {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            if ($checkProjectExistsOrNot->recruiting_status === '1') {
+                return $this->sendError(__('responses.project_join_not_allowed'), 404);
+            }
+
+            $userEmail = auth()->user()->email;
+            $checkProjectJoinedStatus = $this->projectRepository->checkProjectJoinedStatus($checkProjectExistsOrNot->id, $userEmail);
+            if ($checkProjectJoinedStatus != false) {
+                if ($checkProjectJoinedStatus->invite_status === '0') {
+                    return $this->sendError(__('responses.project_join_invited'), 404);
+                }
+
+                if ($checkProjectJoinedStatus->invite_status === '2') {
+                    return $this->sendError(__('responses.project_join_request_already_sent'), 404);
+                }
+            }
+
+            $joinProject = $this->projectRepository->joinProject($checkProjectExistsOrNot->id, $userEmail);
+            if ($joinProject) {
+                return $this->sendResponse(null, __('responses.project_join_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.project_joined_failed'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function unJoinProject($slug)
+    {
+        try {
+            $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $userEmail = auth()->user()->email;
+            $checkProjectJoinedStatus = $this->projectRepository->checkProjectJoinedStatus($checkProjectExistsOrNot->id, $userEmail);
+            if ($checkProjectJoinedStatus == false) {
+                return $this->sendError(__('responses.project_unjoin_request_already'), 404);
+            }
+
+            if ($checkProjectJoinedStatus != false) {
+                if ($checkProjectJoinedStatus->invite_status === '0') {
+                    return $this->sendError(__('responses.project_join_invited'), 404);
+                }
+            }
+
+            $unJoinProject = $this->projectRepository->unJoinProject($checkProjectExistsOrNot->id, $userEmail);
+            if ($unJoinProject) {
+                return $this->sendResponse(null, __('responses.project_unjoined_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.project_unjoined_failed'), 404);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

@@ -15,6 +15,12 @@ return [
         'external' => '1',
     ],
 
+    'discussion_module_type' => [
+        'lab'           => '0',
+        'challenge'     => '1',
+        'project'       => '2',
+    ],
+
     'member_management_type' => [
         'invite'       => '0',
         'join_request' => '1',
@@ -447,13 +453,20 @@ return [
     ],
 
     'project_access_level' => [
-        'editor'        => '0',
-        'viewer'        => '1',
+        'viewer'        => '0',
+        'editor'        => '1',
         'team_leader'   => '2',
     ],
 
     'recent_immigration'=> [
         'yes' => '1',
         'no'  => '2',
+    ],
+
+    'module_component_type' => [
+        'organization' => '0',
+        'lab'          => '1',
+        'challenge'    => '2',
+        'project'      => '3',
     ],
 ];

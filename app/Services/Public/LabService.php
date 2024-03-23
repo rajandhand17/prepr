@@ -5,6 +5,8 @@ namespace App\Services\Public;
 use App\Models\ComponentAssociation;
 use App\Models\Lab;
 use App\Models\MemberManagement;
+use App\Services\Manage\LabSkillsGroupsStackService;
+use App\Services\Manage\LabTagsGroupsService;
 
 class LabService
 {
@@ -149,6 +151,49 @@ class LabService
 
             return $lab_list->limit($limit)->get();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getTrendingLab()
+    {
+        try {
+            $getLatestLabsIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.module_component_type.lab'));
+            $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id', $getLatestLabsIds);
+
+            return $lab_list->get();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getLabsBasedOnSKillsAndTags($usersSkills, $tags)
+    {
+        try {
+            /*gets Labs based on user skills*/
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($usersSkills);
+            /*gets Tags based on user tags*/
+            $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
+            $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique();
+            if (!empty($labIds)) {
+                $labList = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_max'));
+            } else {
+                $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
+            }
+
+            return $labList->get();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabsBasedOnIds($labIds)
+    {
+        try {
+            $labList = Lab::whereIn('id', $labIds)->get();
+
+            return $labList;
+        } catch(\Exception $e) {
             return false;
         }
     }

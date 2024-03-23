@@ -124,4 +124,17 @@ class ChallengeTagsGroupsService
             return false;
         }
     }
+
+    public static function getChallengeIdBasedOnSkills($tags)
+    {
+        try {
+            $getChallengeIds = ChallengeTagsGroups::where('type', '0')
+                ->whereIn('foreign_id', $tags)
+                ->pluck('challenge_id');
+
+            return $getChallengeIds;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

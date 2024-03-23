@@ -7,9 +7,11 @@ use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
+use App\Services\Manage\EmailTemplateService;
 use App\Services\ProjectAdditionalInfoService;
 use App\Services\ProjectExternalLinksService;
 use App\Services\ProjectFileService;
+use App\Services\ProjectHistoryService;
 use App\Services\ProjectMemberManagementService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
@@ -33,8 +35,9 @@ class ProjectRepository implements ProjectInterface
     private $challengeAssessmentService;
     private $challengeAssessmentUserService;
     private $projectSkillsService;
+    private $projectHistoryService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -49,6 +52,7 @@ class ProjectRepository implements ProjectInterface
         $this->challengeAssessmentService = $challengeAssessmentService;
         $this->challengeAssessmentUserService = $challengeAssessmentUserService;
         $this->projectSkillsService = $projectSkillsService;
+        $this->projectHistoryService = $projectHistoryService;
     }
 
     public function getMyProjectIds($userId)
@@ -141,14 +145,19 @@ class ProjectRepository implements ProjectInterface
             //field entry for owner's data entry in project member management
             $userId = auth()->user()->id;
             $userEmail = auth()->user()->email;
+            $userFullName = auth()->user()->full_name;
             $inviteType = '1';
             $inviteStatus = '1';
             $emailStatus = '1';
             $accessLevel = '2';
+            $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), config('constants.member_management_component_type.project'), $request->language);
 
-            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId, $userEmail, $inviteType, $inviteStatus, $emailStatus, $accessLevel) {
+            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $getTemplate) {
                 $createProject = $this->projectService->createProject($request, $uploadedCoverMedia);
-                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $inviteType, $inviteStatus, $emailStatus, $accessLevel);
+                $getTemplate->body_content = str_replace('user_name', $userFullName, str_replace('component_title', $createProject->title, $getTemplate->body_content));
+                $subject = $getTemplate->subject;
+                $emailBody = $getTemplate->body_content;
+                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody);
 
                 return [
                     'createProject'         => $createProject,
@@ -156,6 +165,8 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
+                $activity = auth()->user()->full_name.' '.__('responses.project_created_activty').' '.$createProject['createProject']->title;
+                self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 DB::commit();
 
                 return $createProject['createProject'];
@@ -244,6 +255,8 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($updateProject['updateProject']) {
+                $activity = auth()->user()->full_name.' '.__('responses.project_updated_activty').' '.$updateProject['updateProject']->title;
+                self::storeHistory($updateProject['updateProject']->id, auth()->user()->id, $activity);
                 DB::commit();
 
                 return $updateProject['updateProject'];
@@ -365,6 +378,8 @@ class ProjectRepository implements ProjectInterface
 
             if ($submitProject['submitProject'] &&
                 $submitProject['addAchievement']) {
+                $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
+                self::storeHistory($projectData->id, auth()->user()->id, $activity);
                 DB::commit();
 
                 return $submitProject['submitProject'];
@@ -525,6 +540,51 @@ class ProjectRepository implements ProjectInterface
         } catch (Exception $e) {
             DB::rollBack();
 
+            return false;
+        }
+    }
+
+    public function storeHistory($projectId, $userId, $activity)
+    {
+        try {
+            return $this->projectHistoryService->storeHistory($projectId, $userId, $activity);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function fetchProjectHistory($projectId)
+    {
+        try {
+            return $this->projectHistoryService->fetchProjectHistory($projectId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkProjectJoinedStatus($projectId, $userEmail)
+    {
+        try {
+            return $this->projectMemberManagementService->checkProjectJoinedStatus($projectId, $userEmail);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function joinProject($projectId, $userEmail)
+    {
+        try {
+            return $this->projectMemberManagementService->joinProject($projectId, $userEmail);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function unJoinProject($projectId, $userEmail)
+    {
+        try {
+            return $this->projectMemberManagementService->unJoinProject($projectId, $userEmail);
+        } catch (Exception $e) {
             return false;
         }
     }

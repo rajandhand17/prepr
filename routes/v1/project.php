@@ -17,7 +17,10 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::delete('/{slug}/delete', [ProjectController::class, 'delete']);
     Route::get('/check-slug/{slug}', [ProjectController::class, 'checkSlug']);
     Route::get('/check-title/{slug}', [ProjectController::class, 'checkName']);
+    Route::get('/{slug}/history', [ProjectController::class, 'projectHistory']);
     Route::post('/{slug}/submit', [ProjectController::class, 'submitProject']);
+    Route::post('/{slug}/join', [ProjectController::class, 'joinProject']);
+    Route::delete('/{slug}/un-join', [ProjectController::class, 'unJoinProject']);
     Route::get('/{slug}/assessment', [ProjectController::class, 'viewAssessedProject']);
     Route::post('/{slug}/assessment/add', [ProjectController::class, 'captureAssessmentProject']);
     Route::delete('/{slug}/assessment/delete', [ProjectController::class, 'deleteAssessmentProject']);
