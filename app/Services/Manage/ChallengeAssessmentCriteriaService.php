@@ -7,7 +7,7 @@ use Exception;
 
 class ChallengeAssessmentCriteriaService
 {
-    public function createChallengeAssessmentCriteria($request, $challenge, $challengeAssessment)
+    public function createChallengeAssessmentCriteria($request, $challenge, $challengeAssessment = null)
     {
         try {
             if (!empty($request->assessment_type) && $request->assessment_title !== null && $request->assessment_score !== null && $request->assessment_weight !== null) {

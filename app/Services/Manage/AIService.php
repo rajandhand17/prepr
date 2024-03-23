@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\RecommendationEngineHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Duration;
@@ -58,9 +59,10 @@ class AIService
 
             // $language = $request->language;
 
-            $jobTitlesArray = JobTitle::whereIn('id', $request->jobs)->pluck('title')->toArray();
+            $jobTitlesArray = UtilityHelper::objectToArray(JobTitle::whereIn('id', $request->jobs)->pluck('title'));
             $jobTitles = implode(', ', $jobTitlesArray);
-            $skillTitles = implode(', ', Skill::whereIn('id', $request->skills)->get()->pluck('title')->toArray());
+            $skillTitlesArray = UtilityHelper::objectToArray(Skill::whereIn('id', $request->skills)->get()->pluck('title'));
+            $skillTitles = implode(', ', $skillTitlesArray);
             $durationTitle = Duration::find($request->duration_id)->title;
             $levelTitle = Levels::find($request->level_id)->title;
             $additionalInformation = $request->additional_information;
@@ -109,10 +111,7 @@ class AIService
                         continue;
                     }
 
-                    $skillIds = Skill::whereIn('title', $updatedSkills)
-                        ->get(['id'])
-                        ->pluck('id')
-                        ->toArray();
+                    $skillIds = UtilityHelper::objectToArray(Skill::whereIn('title', $updatedSkills)->get(['id'])->pluck('id'));
 
                     $content['level'] = $levelTitle;
                     $content['level_id'] = Levels::where('title', $content['level'])->pluck('id')->first();
@@ -158,9 +157,10 @@ class AIService
 
             // $language = $request->language;
 
-            $jobTitlesArray = JobTitle::whereIn('id', $request->jobs)->pluck('title')->toArray();
+            $jobTitlesArray = UtilityHelper::objectToArray(JobTitle::whereIn('id', $request->jobs)->pluck('title'));
             $jobTitles = implode(', ', $jobTitlesArray);
-            $skillTitles = implode(', ', Skill::whereIn('id', $request->skills)->get()->pluck('title')->toArray());
+            $skillTitlesArray = UtilityHelper::objectToArray(Skill::whereIn('id', $request->skills)->get()->pluck('title'));
+            $skillTitles = implode(', ', $skillTitlesArray);
             $durationTitle = Duration::find($request->duration_id)->title;
             $levelTitle = Levels::find($request->level_id)->title;
             $additionalInformation = $request->additional_information;
@@ -179,7 +179,6 @@ class AIService
                     $lab = json_decode($choice['message']['content'], true);
                     if (isset($lab['challenges']) && is_array($lab['challenges'])) {
                         $allChallengesValid = true;
-                        
                         foreach ($lab['challenges'] as $challenge) {
                             if (isset($challenge['title']) && Challenge::where('title', $challenge['title'])->exists()) {
                                 $allChallengesValid = false;
@@ -195,9 +194,7 @@ class AIService
                             $updatedSkills = array_unique($updatedSkills);
                             $updatedSkills = array_values($updatedSkills);
 
-                            $skillIds = Skill::whereIn('title', $updatedSkills)
-                                ->pluck('id')
-                                ->toArray();
+                            $skillIds = UtilityHelper::objectToArray(Skill::whereIn('title', $updatedSkills)->pluck('id'));
 
                             // Append processed data to challenge
                             $challenge += [

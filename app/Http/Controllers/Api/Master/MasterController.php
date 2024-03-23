@@ -12,7 +12,7 @@ use App\Http\Resources\Master\CountryResource;
 use App\Http\Resources\Master\DurationsResource;
 use App\Http\Resources\Master\FlexibleDateDurationResource;
 use App\Http\Resources\Master\HostResource;
-use App\Http\Resources\Master\JobResource;
+use App\Http\Resources\Master\JobTitleResource;
 use App\Http\Resources\Master\LabConditionResource;
 use App\Http\Resources\Master\LevelsResource;
 use App\Http\Resources\Master\ProjectIndustryResource;
@@ -1325,11 +1325,11 @@ class MasterController extends AppBaseController
 
     /**
      * @OA\Get(
-     *     path="/api/v1/master/jobs",
-     *     tags={"Master API -Jobs"},
-     *     summary="Finds lists of jobs",
-     *     description="Get all the jobs lists",
-     *     operationId="getJobs",
+     *     path="/api/v1/master/job-titles",
+     *     tags={"Master API -JobTitles"},
+     *     summary="Finds lists of job titles",
+     *     description="Get all the job titles lists",
+     *     operationId="getJobTitles",
      *
      *     @OA\Parameter(
      *         name="language",
@@ -1370,17 +1370,18 @@ class MasterController extends AppBaseController
      *     ),
      * )
      */
-    public function getJobs(Request $request)
+
+    public function getJobTitles(Request $request)
     {
         try {
-            $jobs = $this->masterRepository->getJobs($request);
-            if ($jobs) {
-                return $this->sendResponse(JobResource::collection($jobs), __('responses.found_job_list'));
+            $jobTitles = $this->masterRepository->getJobTitles($request);
+            if ($jobTitles) {
+                return $this->sendResponse(JobTitleResource::collection($jobTitles), __('responses.found_job_list'));
             }
 
             return $this->sendResponse(null, __('responses.not_found_job_list'));
         } catch (\Exception $e) {
-            Log::error('Error in getJobs in MasterController.php: '.$e->getMessage());
+            Log::error('Error in getJobTitles in MasterController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
         }

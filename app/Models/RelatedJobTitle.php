@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RelatedJob extends Model
+class RelatedJobTitle extends Model
 {
-    protected $table = 'related_jobs';
+    protected $table = 'related_job_titles';
 
     protected $fillable = [
-        'job_id',
-        'related_job_id',
+        'job_title_id',
+        'related_job_title_id',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

@@ -3,15 +3,16 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Models\JobTitle;
-use App\Models\JobSkill;
-use App\Models\RelatedJob;
-use App\Models\UserJob;
+use App\Models\JobTitleSkill;
+use App\Models\RelatedJobTitle;
+use App\Models\UserJobTitle;
 use Carbon\Carbon;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class Jobs extends Command
+class PreprJobTitles extends Command
 {
     /**
      * The name and signature of the console command.
@@ -45,31 +46,37 @@ class Jobs extends Command
     public function handle()
     {
         try {
-            $insertArr = [];
             $this->info('Migrating old data for table (titles).');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('titles')->chunkById(1000, function ($jobs) use ($insertArr) {
-                foreach ($jobs as $job) {
+
+            DB::connection('mysql2')->table('titles')->orderBy('id')->chunkById(1000, function ($jobTitles) use (&$insertArr) {
+                $insertArr = [];
+
+                foreach ($jobTitles as $job) {
+                    $uuid = Randomize::chars(10)->alphanumeric()->generate();
                     $jobs_details = [
                         'id'                => $job->id,
+                        'uuid'              => $uuid,
                         'title'             => $job->name,
                         'fr_CA_title'       => $job->fr_CA_name,
                         'lightcast_id'      => $job->lc_id,
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now(),
                     ];
-                    $check_jobs = JobTitle::find($job->id);
-                    if (!$check_jobs) {
-                        $insertArr[] = $jobs_details;
-                    }
+
+                    $insertArr[] = $jobs_details;
                 }
-                JobTitle::insert($insertArr);
+
+                if (!empty($insertArr)) {
+                    JobTitle::insert($insertArr);
+                }
             });
+
             DB::commit();
-            $this->info('Migrating of old data for table (titles) completed.');
+            $this->info('Migration of old data for table (titles) completed.');
         } catch (Exception $e) {
-            $this->error($e->getMessage());
             DB::rollback();
+            $this->error('Migration failed: ' . $e->getMessage());
 
             return;
         }
@@ -87,19 +94,19 @@ class Jobs extends Command
                     $userJobs_details = [
                         'id'          => $userJob->id,
                         'user_id'     => $userJob->user_id,
-                        'job_id'      => $userJob->title_id,
+                        'job_title_id'      => $userJob->title_id,
                         'pinned'      => $userJob->pinned,
                         'created_at'  => $userJob->created_at,
                         'updated_at'  => $userJob->updated_at,
                     ];
 
-                    $check_userJobs = UserJob::find($userJob->id);
+                    $check_userJobs = UserJobTitle::find($userJob->id);
                     if (!$check_userJobs) {
                         $insertArr[] = $userJobs_details;
                     }
                 }
                 if (!empty($insertArr)) {
-                    UserJob::insert($insertArr);
+                    UserJobTitle::insert($insertArr);
                     $insertArr = [];
                 }
             });
@@ -120,18 +127,18 @@ class Jobs extends Command
                 foreach ($relatedJobs as $relatedJob) {
                     $relatedJobs_details = [
                         'id'                => $relatedJob->id,
-                        'job_id'            => $relatedJob->title_id,
-                        'related_job_id'    => $relatedJob->related_title_id,
+                        'job_title_id'            => $relatedJob->title_id,
+                        'related_job_title_id'    => $relatedJob->related_title_id,
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now(),
                     ];
 
-                    $check_relatedJobs = RelatedJob::find($relatedJob->id);
+                    $check_relatedJobs = RelatedJobTitle::find($relatedJob->id);
                     if (!$check_relatedJobs) {
                         $insertArr[] = $relatedJobs_details;
                     }
                 }
-                RelatedJob::insert($insertArr);
+                RelatedJobTitle::insert($insertArr);
             });
             DB::commit();
             $this->info('Migrating of old data for table (related_titles) completed.');
@@ -150,18 +157,18 @@ class Jobs extends Command
                 foreach ($jobSkills as $jobSkill) {
                     $jobSkills_details = [
                         'id'                => $jobSkill->id,
-                        'job_id'            => $jobSkill->title_id,
+                        'job_title_id'            => $jobSkill->title_id,
                         'skill_id'          => $jobSkill->skill_id,
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now(),
                     ];
 
-                    $check_jobSkills = JobSkill::find($jobSkill->id);
+                    $check_jobSkills = JobTitleSkill::find($jobSkill->id);
                     if (!$check_jobSkills) {
                         $insertArr[] = $jobSkills_details;
                     }
                 }
-                JobSkill::insert($insertArr);
+                JobTitleSkill::insert($insertArr);
             });
             DB::commit();
             $this->info('Migrating of old data for table (title_skills) completed.');
@@ -173,6 +180,5 @@ class Jobs extends Command
         }
 
         $this->info('Migrating of old data for tables (titles, user_job_titles, related_titles & title_skills) completed.');
-
     }
 }

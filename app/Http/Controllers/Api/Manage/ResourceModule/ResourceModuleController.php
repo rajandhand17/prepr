@@ -13,6 +13,7 @@ use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Models\ChallengeResourceModule;
+use App\Models\ComponentAssociation;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\OrganizationService;
@@ -303,8 +304,8 @@ class ResourceModuleController extends AppBaseController
 
             if ($request['challenge_id']) {
                 $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request['challenge_id']);
-                $challengeResourceModule = ChallengeResourceModule::create([
-                    'challenge_id'       => $challengeID,
+                $challengeResourceModule = ComponentAssociation::create([
+                    'challenge_id' => $challengeID,
                     'resource_module_id' => $CreateResourceModuleUsingAI->id,
                 ]);
 

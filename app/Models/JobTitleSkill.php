@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class JobSkill extends Model
+class JobTitleSkill extends Model
 {
-    protected $table = 'job_skills';
+    protected $table = 'job_title_skills';
 
     protected $fillable = [
-        'job_id',
+        'job_title_id',
         'skill_id',
     ];
 

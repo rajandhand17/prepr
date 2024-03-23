@@ -10,17 +10,17 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('challenge_jobs', function (Blueprint $table) {
+        Schema::create('challenge_job_title_association', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('challenge_id')->unsigned();
-            $table->bigInteger('job_id')->unsigned();
+            $table->bigInteger('job_title_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('challenge_id')
                 ->references('id')->on('challenges')
                 ->onDelete('cascade');
 
-            $table->foreign('job_id')
+            $table->foreign('job_title_id')
                 ->references('id')->on('job_titles')
                 ->onDelete('cascade');
         });
@@ -31,6 +31,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('challenge_jobs');
+        Schema::dropIfExists('challenge_job_title_association');
     }
 };

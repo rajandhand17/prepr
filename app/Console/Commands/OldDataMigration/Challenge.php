@@ -147,7 +147,7 @@ class Challenge extends Command
                             break;
                     }
 
-                    switch ($challenge->is_ai_created) {
+                    switch ($challenge->is_ai_created ?? '0') {
                         case '0':
                             $challengeAiCreated = '0';
                             break;

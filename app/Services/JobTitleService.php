@@ -8,15 +8,15 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-class JobService
+class JobTitleService
 {
-    public static function getJobs($language = 'en', $search = null, $job_id = null)
+    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null)
     {
         try {
             if ($language == 'en') {
                 $job_list = JobTitle::select('id', 'title');
-                if ($job_id !== null) {
-                    $job_list = $job_list->whereIn('id', $job_id);
+                if ($job_title_id !== null) {
+                    $job_list = $job_list->whereIn('id', $job_title_id);
                 }
             } else {
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -42,48 +42,48 @@ class JobService
 
             return $job_list;
         } catch (Exception $e) {
-            Log::error('Error in getJobs in JobService.php: '.$e->getMessage());
+            Log::error('Error in getJobTitles in JobTitleService.php: '.$e->getMessage());
 
             return false;
         }
     }
 
-    public static function filterJobList($getJobsList, $job_column_name, $search)
+    public static function filterJobList($getJobTitlesList, $job_column_name, $search)
     {
         try {
-            $getJobsList = $getJobsList->where($job_column_name, 'like', '%'.$search.'%');
+            $getJobTitlesList = $getJobTitlesList->where($job_column_name, 'like', '%'.$search.'%');
 
-            return $getJobsList;
+            return $getJobTitlesList;
         } catch (Exception $e) {
-            Log::error('Error in filterJobList in JobService.php: '.$e->getMessage());
+            Log::error('Error in filterJobList in JobTitleService.php: '.$e->getMessage());
 
             return false;
         }
     }
 
-    public static function getJobBasedOnIds($job_ids)
-    {
-        try {
-            $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
-                ->whereIn('id', $job_ids)->get();
-
-            return $getJobsList;
-        } catch (Exception $e) {
-            Log::error('Error in getJobBasedOnIds in JobService.php: '.$e->getMessage());
-
-            return false;
-        }
-    }
-
-    public static function getJobBasedOnId($job_id)
+    public static function getJobBasedOnIdArray($job_title_ids)
     {
         try {
             $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
-                ->where('id', $job_id)->first();
+                ->whereIn('id', $job_title_ids)->get();
 
             return $getJobsList;
         } catch (Exception $e) {
-            Log::error('Error in getJobBasedOnId in JobService.php: '.$e->getMessage());
+            Log::error('Error in getJobBasedOnIdArray in JobTitleService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public static function getJobBasedOnId($job_title_id)
+    {
+        try {
+            $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+                ->where('id', $job_title_id)->first();
+
+            return $getJobsList;
+        } catch (Exception $e) {
+            Log::error('Error in getJobBasedOnId in JobTitleService.php: '.$e->getMessage());
 
             return false;
         }

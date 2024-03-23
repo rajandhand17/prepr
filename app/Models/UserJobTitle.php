@@ -4,20 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserJob extends Model
+class UserJobTitle extends Model
 {
-    protected $table = 'user_jobs';
+    protected $table = 'user_job_titles';
     protected $guarded = [];
     public $timestamps = true;
 
     protected $fillable = [
         'user_id',
-        'job_id',
+        'job_title_id',
         'pinned',
     ];
 
     public function jobID()
     {
-        return $this->belongsTo(Job::class, 'job_id');
+        return $this->belongsTo(JobTitle::class, 'job_title_id');
     }
 }
