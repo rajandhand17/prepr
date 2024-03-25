@@ -73,7 +73,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function CreateResourceModuleUsingAI($request, $upload_cover_image)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image) {
+            $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image) {
                 $CreateResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $CreateResourceModuleUsingAI->id);
 
@@ -83,7 +83,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 ];
             });
 
-            return $createLabProgram['CreateResourceModuleUsingAI'];
+            return $createdResourceModule['CreateResourceModuleUsingAI'];
         } catch (Exception $e) {
             Log::error('Error in CreateResourceModuleUsingAI in ResourceModuleRepository.php: '.$e->getMessage());
 
@@ -107,12 +107,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function createResourceModuleUsingAIPreview($request)
     {
         try {
-            $startTimeOverall = microtime(true);
-
             $createResourceModuleUsingAIPreview = $this->aiService->createResourceModuleUsingAIPreview($request);
-
-            $endTimeOverall = microtime(true);
-            // Log::info('Overall duration for RM: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
             return $createResourceModuleUsingAIPreview;
         } catch (Exception $e) {

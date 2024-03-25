@@ -973,7 +973,7 @@
     "responses.jobs_required": "The jobs field is required!",
     "responses.challenges_previews_created_successfully": "Challenges' previews created successfully!",
     "responses.challenge_created_successfully": "Challenge created successfully!",
-    "responses.resource_module_previews_created_successfully": "Resource modules' previews created successfully!",
+    "responses.resource_modules_previews_created_successfully": "Resource modules' previews created successfully!",
     "responses.resource_module_created_successfully": "Resource module created successfully!",
     "responses.server_failed": "There was an error from our end. Please try again later!",
     "responses.steps_required": "The steps field is required!",
@@ -1039,5 +1039,9 @@
     "responses.project_join_successfully": "Your request to join this Project has been sent successfully!",
     "responses.project_unjoined_successfully": "Your request to un-joined this Project has been sent successfully!",
     "responses.project_join_request_already_sent": "Your request to join this Project has been already sent!",
-    "responses.project_unjoined_failed": "Failed to un-join the Project"
+    "responses.project_unjoined_failed": "Failed to un-join the Project",
+    "responses.labs_previews_created_successfully": "Labs' previews created successfully!",
+    "responses.lab_created_successfully": "Lab created successfully!",
+    "responses.lab_title_required": "The lab title field is required!",
+    "responses.lab_description_required": "The lab desctiption field is required!"
 }

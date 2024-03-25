@@ -12,7 +12,10 @@ use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
 use App\Services\Manage\MemberManagementService;
 use App\Services\SkillService;
+use App\Services\Manage\AIService;
 use DB;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class LabRepository implements LabInterface
 {
@@ -25,10 +28,10 @@ class LabRepository implements LabInterface
     private $labAcheivementService;
     private $skillService;
     private $componentAssociationService;
-
     private $durationService;
+    private $aiService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService)
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -40,6 +43,7 @@ class LabRepository implements LabInterface
         $this->skillService = $skillService;
         $this->componentAssociationService = $componentAssociationService;
         $this->durationService = $durationService;
+        $this->aiService = $aiService;
     }
 
     public function getLabList($request, $organization)
@@ -209,6 +213,44 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabListName($request, $organization);
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createLabUsingAIPreview($request)
+    {
+        try {
+            $createLabUsingAIPreview = $this->aiService->createLabUsingAIPreview($request);
+
+            return $createLabUsingAIPreview;
+        } catch (Exception $e) {
+            Log::error('Error in createLabUsingAIPreview in LabRepository.php: ' . $e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image)
+    {
+        try {
+            $createdLabUsingAI = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image) {
+                $createLabUsingAI = $this->labService->createLabUsingAI($request, $upload_profile_image);
+                $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLabUsingAI);
+                $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLabUsingAI);
+
+                return [
+                    'createdLabUsingAI'           => $createLabUsingAI,
+                    'createdLabSkillAssociations' => $createdLabSkillAssociations,
+                    'createdLabAssociations'      => $createdLabAssociations,
+                ];
+            });
+
+            return $createdLabUsingAI['createdLabUsingAI'];
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
+
             return false;
         }
     }

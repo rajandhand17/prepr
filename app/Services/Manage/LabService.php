@@ -29,7 +29,7 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
+                $lab_list = $lab_list->where('labs.title', 'like', '%' . $request->search . '%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -118,7 +118,7 @@ class LabService
     {
         $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
         $status = config('constants.lab_status.draft');
-        switch($request->request_type) {
+        switch ($request->request_type) {
             case 'draft':
                 $status = config('constants.lab_status.draft');
                 break;
@@ -134,7 +134,7 @@ class LabService
         }
 
         $type = config('constants.lab_type.na');
-        switch($request->type) {
+        switch ($request->type) {
             case 'assess':
                 $type = config('constants.lab_type.assess');
                 break;
@@ -153,7 +153,7 @@ class LabService
         }
 
         $privacy = config('constants.lab_privacy.no');
-        switch($request->privacy) {
+        switch ($request->privacy) {
             case 'yes':
                 $privacy = config('constants.lab_privacy.yes');
                 break;
@@ -164,6 +164,22 @@ class LabService
                 $privacy = config('constants.lab_privacy.yes');
                 break;
         }
+
+        $is_ai_created = config('constants.challenge_ai_created.no');
+        if ($request->has('is_ai_created')) {
+            switch ($request->is_ai_created) {
+                case 'yes':
+                    $is_ai_created = config('constants.challenge_ai_created.yes');
+                    break;
+                case 'no':
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+                default:
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+            }
+        }
+
         $model = new Lab();
         $slug = UtilityHelper::generateSlug($request->title, $model);
 
@@ -188,11 +204,65 @@ class LabService
         $lab->total_share = 0;
 
         $lab->is_auto_created = '0';
-
+        $lab->$is_ai_created = $is_ai_created;
         $lab->is_resource_sequential = ($request->is_resource_sequential == 'yes') ? '1' : '0';
         $lab->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
         $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
         $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
+        $lab->is_verified = '0';
+        $lab->save();
+
+        return $lab;
+    }
+
+    public static function createLabUsingAI($request, $upload_cover_image)
+    {
+        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+        $status = config('constants.lab_status.publish');
+        $type = config('constants.lab_type.na');
+        $privacy = config('constants.lab_privacy.yes');
+
+        $is_ai_created = config('constants.challenge_ai_created.no');
+        if ($request->has('is_ai_created')) {
+            switch ($request->is_ai_created) {
+                case 'yes':
+                    $is_ai_created = config('constants.challenge_ai_created.yes');
+                    break;
+                case 'no':
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+                default:
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+            }
+        }
+
+        $model = new Lab();
+        $slug = UtilityHelper::generateSlug($request->labTitle, $model);
+
+        $lab = new Lab();
+        $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+        $lab->language = $request->language;
+        $lab->user_id = auth()->user()->id;
+        $lab->organization_id = $organization->id;
+        $lab->category_id = $request->category_id;
+        $lab->duration_id = $request->duration_id;
+        $lab->level_id = $request->level_id;
+        $lab->type = $type;
+        $lab->slug = $slug;
+        $lab->title = $request->labTitle;
+        $lab->description = $request->labDesc;
+        $lab->privacy = $privacy;
+        $lab->media_type = 'image';
+        $lab->media = $upload_cover_image;
+        $lab->status = $status;
+        $lab->total_share = 0;
+        $lab->is_auto_created = '0';
+        $lab->is_ai_created = $is_ai_created;
+        $lab->is_resource_sequential = '0';
+        $lab->is_sequential = '0';
+        $lab->is_achievement_enabled = '0';
+        $lab->is_notification_enabled = '0';
         $lab->is_verified = '0';
         $lab->save();
 
@@ -207,7 +277,7 @@ class LabService
             if ($lab !== null) {
                 $privacy = $lab->privacy;
                 if ($request->has('privacy')) {
-                    switch($request->privacy) {
+                    switch ($request->privacy) {
                         case 'yes':
                             $privacy = config('constants.lab_privacy.yes');
                             break;
@@ -221,7 +291,7 @@ class LabService
                 }
 
                 $type = config('constants.lab_type.na');
-                switch($request->type) {
+                switch ($request->type) {
                     case 'assess':
                         $type = config('constants.lab_type.assess');
                         break;
