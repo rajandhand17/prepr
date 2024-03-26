@@ -4,6 +4,8 @@ namespace App\Repositories\Api\ProjectMemberManagement;
 
 interface ProjectMemberManagementInterface
 {
+    public function getRoles();
+
     public function getProjectBasedParticipants($projectData, $request);
 
     public function getTemplate($requestLang);
@@ -15,6 +17,8 @@ interface ProjectMemberManagementInterface
     public function checkProjectJoinUnjoinStatus($userEmail, $projectData);
 
     public function acceptOrRejectProjectJoinRequest($request, $projectData, $action);
+
+    public function checkParticipantsUUID($projectId, $uuid);
 
     public function checkCurrentProjectRole($projectId, $uuid, $role);
 
