@@ -33,8 +33,10 @@ class ProjectMemberManagementController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
-            if (!in_array($request->access_level, ['team_leader', 'editor', 'viewer'])) {
-                return $this->sendError(__('responses.role_not_exists'), 422);
+            if ($request->access_level) {
+                if (!in_array($request->access_level, ['team_leader', 'editor', 'viewer'])) {
+                    return $this->sendError(__('responses.access_not_exists'), 422);
+                }
             }
 
             $projectMemberManagementListing = $this->projectMemberManagementRepository->getProjectBasedParticipants($checkProjectExistsOrNot, $request);

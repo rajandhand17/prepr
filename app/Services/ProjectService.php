@@ -485,10 +485,10 @@ class ProjectService
         try {
             $projectUpdate = Project::find($projectId);
             switch ($request->recruiting_status) {
-                case 'no':
+                case 'yes':
                     $recruiting_status = '0';
                     break;
-                case 'yes':
+                case 'no':
                     $recruiting_status = '1';
                     break;
                 default:
