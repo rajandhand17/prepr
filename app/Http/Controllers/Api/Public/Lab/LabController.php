@@ -28,7 +28,7 @@ class LabController extends AppBaseController
                 if (!$organization) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
                 }
-                $organization=$organization->pluck('id');
+                $organization = $organization->pluck('id');
                 $request->merge(['organization_id' => $organization]);
             }
             $lab = $this->labRepository->getList($request);
