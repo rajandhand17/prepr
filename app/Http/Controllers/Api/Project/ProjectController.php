@@ -524,18 +524,18 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            if ($checkProjectExistsOrNot->recruiting_status == '1') {
+            if ($checkProjectExistsOrNot->recruiting_status === '1') {
                 return $this->sendError(__('responses.project_join_not_allowed'), 404);
             }
 
             $userEmail = auth()->user()->email;
             $checkProjectJoinedStatus = $this->projectRepository->checkProjectJoinedStatus($checkProjectExistsOrNot->id, $userEmail);
             if ($checkProjectJoinedStatus != false) {
-                if ($checkProjectJoinedStatus->invite_status == '0') {
+                if ($checkProjectJoinedStatus->invite_status === '0') {
                     return $this->sendError(__('responses.project_join_invited'), 404);
                 }
 
-                if ($checkProjectJoinedStatus->invite_status == '2') {
+                if ($checkProjectJoinedStatus->invite_status === '2') {
                     return $this->sendError(__('responses.project_join_request_already_sent'), 404);
                 }
             }
