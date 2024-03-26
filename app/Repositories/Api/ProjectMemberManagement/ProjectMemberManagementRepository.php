@@ -15,6 +15,15 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         $this->projectMemberManagementService = $projectMemberManagementService;
     }
 
+    public function getRoles()
+    {
+        try {
+            return $this->projectMemberManagementService->getRoles();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getProjectBasedParticipants($projectData, $request)
     {
         try {
@@ -43,7 +52,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
                 'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
                 'Expires'             => '0',
             ];
-            $columns = ['Name', 'Email', 'Access (viewer/editor)'];
+            $columns = ['Name', 'Email', 'Role (viewer/editor)'];
             $callback = function () use ($columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
