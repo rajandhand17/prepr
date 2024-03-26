@@ -11,7 +11,6 @@ class OrganizationService
     {
         try {
             $organization_list = Organization::select()->where('organizations.status', '1');
-
             $organization_list = self::filterOrganizationList($request, $organization_list);
 
             return $organization_list->paginate(config('site-settings.pagination_per_page'));
