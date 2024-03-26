@@ -179,7 +179,10 @@ class ProjectResource extends JsonResource
         }
 
         if ($this->lab_id) {
-            $lab_details = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
+            $lab_details = LabService::getLabBasedOnId($this->lab_id);
+            if ($lab_details) {
+                $lab_details = $lab_details->only(['id', 'uuid', 'title', 'slug']);
+            }
         }
 
         switch ($this->privacy) {
