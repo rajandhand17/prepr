@@ -2,9 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Helpers\UtilityHelper;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -19,7 +16,7 @@ class ExploreControllerTest extends TestCase
         $this->parameters = [
             'language'               => 'en',
             'email'                  => 'schagparprepr@gmail.com',
-            'email2'                 =>'rajan@yupmail.com',
+            'email2'                 => 'rajan@yupmail.com',
             'password'               => 'Test@1234',
             'slug'                   => 'un-sdg-lab-1',
             'not_exists_slug'        => 'un-sdg-lab-2',
@@ -34,9 +31,10 @@ class ExploreControllerTest extends TestCase
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
     }
+
     public function test_explore_recommended_positive(): void
     {
-        $response = $this->get('/api/v1/explore/recommended?language=en',$this->headers);
+        $response = $this->get('/api/v1/explore/recommended?language=en', $this->headers);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success']) {
@@ -105,16 +103,15 @@ class ExploreControllerTest extends TestCase
         }
     }
 
-
     public function test_explore_recommended_without_language_negative(): void
     {
-        $response = $this->get('/api/v1/explore/recommended',$this->headers);
+        $response = $this->get('/api/v1/explore/recommended', $this->headers);
         $response->assertStatus(400);
     }
 
     public function test_explore_featured_positive(): void
     {
-        $response = $this->get('/api/v1/explore/featured?language=en',$this->headers);
+        $response = $this->get('/api/v1/explore/featured?language=en', $this->headers);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success']) {
@@ -154,16 +151,15 @@ class ExploreControllerTest extends TestCase
         }
     }
 
-
     public function test_explore_featured_without_language_negative(): void
     {
-        $response = $this->get('/api/v1/explore/featured',$this->headers);
+        $response = $this->get('/api/v1/explore/featured', $this->headers);
         $response->assertStatus(400);
     }
 
     public function test_explore_skill_positive(): void
     {
-        $response = $this->get('/api/v1/explore/recommended/skills?language=en',$this->headers);
+        $response = $this->get('/api/v1/explore/recommended/skills?language=en', $this->headers);
         $response->assertStatus(200);
         $data = $response->json();
         $this->assertArrayHasKey('id', $data['data'][0]);
@@ -171,9 +167,10 @@ class ExploreControllerTest extends TestCase
         $this->assertArrayHasKey('challenges', $data['data'][0]);
         $this->assertArrayHasKey('labs', $data['data'][0]);
     }
+
     public function test_explore_skill_without_language_negative(): void
     {
-        $response = $this->get('/api/v1/explore/recommended/skills',$this->headers);
+        $response = $this->get('/api/v1/explore/recommended/skills', $this->headers);
         $response->assertStatus(400);
     }
 
@@ -187,7 +184,7 @@ class ExploreControllerTest extends TestCase
             'Accept'        => 'application/json',
             'AUTHORIZATION' => 'Bearer '.$this->token,
         ];
-        $response = $this->get('/api/v1/explore/recommended/skills?language=en',$this->header);
+        $response = $this->get('/api/v1/explore/recommended/skills?language=en', $this->header);
         $response->assertStatus(200);
         $data = $response->json();
         if ($data['success']) {
@@ -255,10 +252,10 @@ class ExploreControllerTest extends TestCase
             $this->assertArrayHasKey('favourite', $data['data']['challenges'][0]);
         }
     }
+
     public function test_explore_skill_without_language_negatives(): void
     {
-        $response = $this->get('/api/v1/explore/recommended/skills',$this->headers);
+        $response = $this->get('/api/v1/explore/recommended/skills', $this->headers);
         $response->assertStatus(400);
     }
-
 }

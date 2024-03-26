@@ -79,6 +79,7 @@ class ExploreRepository implements ExploreInterface
         try {
             $response['labs'] = $this->labService->getTrendingLab();
             $response['challenge'] = $this->challengeService->getTrendingChallenge();
+
             return $response;
         } catch(\Exception $e) {
             return false;
