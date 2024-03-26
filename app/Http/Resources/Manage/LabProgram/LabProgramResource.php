@@ -41,8 +41,8 @@ class LabProgramResource extends JsonResource
             foreach ($this->component_association as $association) {
                 if ($association->lab_id) {
                     $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
-                    $componentAssociation[$association->lab_id]['liked'] = LabService::getLabBasedOnId($association->lab_id) ? LabService::getLabBasedOnId($association->lab_id)->liked():'No';
-                    $componentAssociation[$association->lab_id]['favourite'] =LabService::getLabBasedOnId($association->lab_id) ? LabService::getLabBasedOnId($association->lab_id)->favourite(): 'No';
+                    $componentAssociation[$association->lab_id]['liked'] = LabService::getLabBasedOnId($association->lab_id) ? LabService::getLabBasedOnId($association->lab_id)->liked():'no';
+                    $componentAssociation[$association->lab_id]['favourite'] =LabService::getLabBasedOnId($association->lab_id) ? LabService::getLabBasedOnId($association->lab_id)->favourite(): 'no';
                     $componentAssociation[$association->lab_id]['member_count'] = LabService::getLabBasedOnId($association->lab_id) ? LabService::getLabBasedOnId($association->lab_id)->members()->count(): 0;
                 }
             }
