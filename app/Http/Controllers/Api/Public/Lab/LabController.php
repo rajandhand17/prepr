@@ -24,10 +24,11 @@ class LabController extends AppBaseController
     {
         try {
             if ($request->organization_id && is_array($request->organization_id)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id);
                 if (!$organization) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
                 }
+                $organization=$organization->pluck('id');
                 $request->merge(['organization_id' => $organization]);
             }
             $lab = $this->labRepository->getList($request);
