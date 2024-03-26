@@ -1001,5 +1001,15 @@
     "responses.trending_labs_challenges_successfully": "The trending labs and challenges have been successfully retrieved",
     "responses.trending_labs_challenges_failed": "The list of trending labs and challenges has not been retrieved with success.",
     "responses.project_sender_cannot_accept_request": "You can't accept an invitation from a user to join the project if you've already sent them a request to join.",
-    "responses.project_member_invalid_uuid": "Invalid ID! please try again."
+    "responses.project_member_invalid_uuid": "Invalid ID! please try again.",
+    "responses.purpose_in": "This purpose can be between '<b>looking_employers</b>,<b>looking_team</b>,<b>looking_employees</b>,<b>looking_to_solve_problems<b>,<b>educator</b>,<b>mentor</b>' only.",
+    "responses.user_type_in": "This user type can be between '<b>learner</b>,<b>job_seeker</b>,<b>employee</b>,<b>educator</b>,<b>employer</b>,<b>mentor</b>' only",
+    "responses.project_joined_failed": "Failed to join the Project",
+    "responses.project_join_not_allowed": "Currently you can't join the Project",
+    "responses.project_join_invited": "You are already invited in this Project, please navigate to pending invitattions listing and accept the request",
+    "responses.project_unjoin_request_already": "Currently you are not associated with the Project",
+    "responses.project_join_successfully": "Your request to join this Project has been sent successfully!",
+    "responses.project_unjoined_successfully": "Your request to un-joined this Project has been sent successfully!",
+    "responses.project_join_request_already_sent": "Your request to join this Project has been already sent!",
+    "responses.project_unjoined_failed": "Failed to un-join the Project"
 }

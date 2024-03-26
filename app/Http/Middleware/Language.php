@@ -35,6 +35,8 @@ class Language
 
             return Response::json(ResponseUtil::makeError(__('responses.provide_language')), 400);
         } catch (\Exception $e) {
+            dd($e);
+
             return Response::json(ResponseUtil::makeError(__('responses.something_wrong_setup_language')), 500);
         }
     }
