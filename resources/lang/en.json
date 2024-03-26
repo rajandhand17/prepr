@@ -1011,5 +1011,6 @@
     "responses.project_join_successfully": "Your request to join this Project has been sent successfully!",
     "responses.project_unjoined_successfully": "Your request to un-joined this Project has been sent successfully!",
     "responses.project_join_request_already_sent": "Your request to join this Project has been already sent!",
-    "responses.project_unjoined_failed": "Failed to un-join the Project"
+    "responses.project_unjoined_failed": "Failed to un-join the Project",
+    "responses.access_not_exists": "Sorry, this access level is not available"    
 }
