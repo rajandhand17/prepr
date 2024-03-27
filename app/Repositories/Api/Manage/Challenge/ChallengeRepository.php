@@ -369,6 +369,7 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallengeTimelines = $this->challengeTimelinesService->cloneChallengeTimelines($originalChallenge->challenge_timelines, $cloneChallenge->id);
                 $cloneChallengeCustomTimelines = $this->challengeCustomTimelinesService->cloneChallengeCustomTimelines($originalChallenge->challenge_custom_timelines, $cloneChallenge->id);
                 $cloneChallengeExternalLink = $this->challengeExternalLinkService->cloneChallengeExternalLink($originalChallenge->external_links, $cloneChallenge->id);
+                $cloneChallengeAssociaton = $this->componentAssociationService->cloneChallengeAssociaton($originalChallenge->challenge_association, $cloneChallenge->id);
 
                 return [
                     'cloneChallenge'                             => $cloneChallenge,
@@ -387,6 +388,7 @@ class ChallengeRepository implements ChallengeInterface
                     'cloneChallengeTimelines'                    => $cloneChallengeTimelines,
                     'cloneChallengeCustomTimelines'              => $cloneChallengeCustomTimelines,
                     'cloneChallengeExternalLink'                 => $cloneChallengeExternalLink,
+                    'cloneChallengeAssociaton'                   => $cloneChallengeAssociaton,
                 ];
             });
 
@@ -406,7 +408,8 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallenge['cloneChallengeProjectTemplate'] &&
                 $cloneChallenge['cloneChallengeTimelines'] &&
                 $cloneChallenge['cloneChallengeCustomTimelines'] &&
-                $cloneChallenge['cloneChallengeExternalLink']
+                $cloneChallenge['cloneChallengeExternalLink'] &&
+                $cloneChallenge['cloneChallengeAssociaton']
             ) {
                 DB::commit();
 

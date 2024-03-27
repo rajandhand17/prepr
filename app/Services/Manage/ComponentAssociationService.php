@@ -1022,4 +1022,21 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public function cloneChallengeAssociaton($originalChallengeAssociation, $clonedChallengeId)
+    {
+        try {
+            $originalChallengeAssociation->each(function ($challenge_associated) use ($clonedChallengeId) {
+                if ($challenge_associated) {
+                    $cloneChallengeAssociaton = $challenge_associated->replicate();
+                    $cloneChallengeAssociaton->challenge_id = $clonedChallengeId;
+                    $cloneChallengeAssociaton->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
