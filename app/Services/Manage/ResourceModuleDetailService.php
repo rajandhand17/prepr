@@ -4,6 +4,8 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\ResourceModuleDetail;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ResourceModuleDetailService
 {
@@ -59,7 +61,7 @@ class ResourceModuleDetailService
             ResourceModuleDetail::where('resource_module_id', $resource_module_id)->delete();
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -103,7 +105,7 @@ class ResourceModuleDetailService
             ])->delete();
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -149,6 +151,33 @@ class ResourceModuleDetailService
 
             return true;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createResourceModuleDetailsAI($request, $resource_module_id)
+    {
+        try {
+            foreach ($request as $key => $item) {
+                if (is_numeric($key) && is_array($item)) {
+                    $resourceDetail = new ResourceModuleDetail([
+                        'title'              => $item['title'],
+                        'path'               => $item['url'],
+                        'resource_module_id' => $resource_module_id,
+                    ]);
+
+                    if (isset($item['embedHTML']) && !empty($item['embedHTML'])) {
+                        $resourceDetail->type = '3';
+                    }
+
+                    $resourceDetail->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: ', $e->getMessage());
+
             return false;
         }
     }
