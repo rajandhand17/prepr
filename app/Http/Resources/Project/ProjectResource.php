@@ -179,7 +179,10 @@ class ProjectResource extends JsonResource
         }
 
         if ($this->lab_id) {
-            $lab_details = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
+            $lab_details = LabService::getLabBasedOnId($this->lab_id);
+            if ($lab_details) {
+                $lab_details = $lab_details->only(['id', 'uuid', 'title', 'slug']);
+            }
         }
 
         switch ($this->privacy) {
@@ -233,7 +236,7 @@ class ProjectResource extends JsonResource
             'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
             'submit_enabled'        => $submit_enabled !== false ? 'yes' : 'no',
             'project_role'          => $project_role,
-            'recruiting_status'     => $this->recruiting_status !== '0' ? 'yes' : 'no',
+            'recruiting_status'     => $this->recruiting_status !== '0' ? 'no' : 'yes',
             'member_count'          => $this->getMembersCount(),
             'joined_status'         => $joined_status,
             'members'               => ProjectMemberResource::collection($this->members),
