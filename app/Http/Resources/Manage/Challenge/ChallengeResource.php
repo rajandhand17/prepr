@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\Manage\Challenge;
 
-use App\Services\JobTitleService;
 use App\Http\Resources\Project\SubmittedProjectResource;
+use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;

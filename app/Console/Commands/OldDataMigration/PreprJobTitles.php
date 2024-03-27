@@ -76,7 +76,7 @@ class PreprJobTitles extends Command
             $this->info('Migration of old data for table (titles) completed.');
         } catch (Exception $e) {
             DB::rollback();
-            $this->error('Migration failed: ' . $e->getMessage());
+            $this->error('Migration failed: '.$e->getMessage());
 
             return;
         }
@@ -92,12 +92,12 @@ class PreprJobTitles extends Command
                     }
 
                     $userJobs_details = [
-                        'id'          => $userJob->id,
-                        'user_id'     => $userJob->user_id,
+                        'id'                => $userJob->id,
+                        'user_id'           => $userJob->user_id,
                         'job_title_id'      => $userJob->title_id,
-                        'pinned'      => $userJob->pinned,
-                        'created_at'  => $userJob->created_at,
-                        'updated_at'  => $userJob->updated_at,
+                        'pinned'            => $userJob->pinned,
+                        'created_at'        => $userJob->created_at,
+                        'updated_at'        => $userJob->updated_at,
                     ];
 
                     $check_userJobs = UserJobTitle::find($userJob->id);
@@ -126,11 +126,11 @@ class PreprJobTitles extends Command
             DB::connection('mysql2')->table('related_titles')->chunkById(1000, function ($relatedJobs) use ($insertArr) {
                 foreach ($relatedJobs as $relatedJob) {
                     $relatedJobs_details = [
-                        'id'                => $relatedJob->id,
+                        'id'                      => $relatedJob->id,
                         'job_title_id'            => $relatedJob->title_id,
                         'related_job_title_id'    => $relatedJob->related_title_id,
-                        'created_at'        => Carbon::now(),
-                        'updated_at'        => Carbon::now(),
+                        'created_at'              => Carbon::now(),
+                        'updated_at'              => Carbon::now(),
                     ];
 
                     $check_relatedJobs = RelatedJobTitle::find($relatedJob->id);
@@ -156,11 +156,11 @@ class PreprJobTitles extends Command
             DB::connection('mysql2')->table('title_skills')->chunkById(1000, function ($jobSkills) use ($insertArr) {
                 foreach ($jobSkills as $jobSkill) {
                     $jobSkills_details = [
-                        'id'                => $jobSkill->id,
+                        'id'                      => $jobSkill->id,
                         'job_title_id'            => $jobSkill->title_id,
-                        'skill_id'          => $jobSkill->skill_id,
-                        'created_at'        => Carbon::now(),
-                        'updated_at'        => Carbon::now(),
+                        'skill_id'                => $jobSkill->skill_id,
+                        'created_at'              => Carbon::now(),
+                        'updated_at'              => Carbon::now(),
                     ];
 
                     $check_jobSkills = JobTitleSkill::find($jobSkill->id);

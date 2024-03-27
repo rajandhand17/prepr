@@ -20,7 +20,6 @@ use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
 use App\Traits\MagnetTrait;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends AppBaseController
 {
