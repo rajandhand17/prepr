@@ -10,6 +10,7 @@ use App\Services\Public\ChallengeSocialActivitiesService;
 use App\Services\Public\MemberManagementService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeService
 {
@@ -86,8 +87,8 @@ class ChallengeService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
                     $query->select('challenge_skills_groups_stacks.challenge_id')
-                    ->from('challenge_skills_groups_stacks')
-                    ->whereIn('challenge_skills_groups_stacks.foreign_id', $request->skills)
+                        ->from('challenge_skills_groups_stacks')
+                        ->whereIn('challenge_skills_groups_stacks.foreign_id', $request->skills)
                         ->where('challenge_skills_groups_stacks.type', '0')
                         ->whereNull('challenge_skills_groups_stacks.deleted_at')
                         ->distinct();
@@ -96,8 +97,8 @@ class ChallengeService
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
                     $query->select('challenge_tags_groups.challenge_id')
-                    ->from('challenge_tags_groups')
-                    ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
+                        ->from('challenge_tags_groups')
+                        ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
                         ->where('challenge_tags_groups.type', '0')
                         ->whereNull('challenge_tags_groups.deleted_at')
                         ->distinct();
@@ -109,7 +110,7 @@ class ChallengeService
                     $status_array = ['accepted', 'pending', 'declined'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
-                        ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
+                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
                         switch ($request->request_status) {
                             case 'accepted':
                                 $challenge_list->where('member_management.invite_status', '1');
@@ -184,7 +185,7 @@ class ChallengeService
                     $challenge_privacy = config('constants.challenge_privacy.no');
                     break;
                 default:
-                    $challenge_privacy = config('constants.challenge_privacy.yes');
+                    $challenge_privacy = config('constants.challenge_privacy.no');
                     break;
             }
 
@@ -197,7 +198,7 @@ class ChallengeService
                     $project_privacy = config('constants.challenge_privacy.no');
                     break;
                 default:
-                    $project_privacy = config('constants.challenge_privacy.yes');
+                    $project_privacy = config('constants.challenge_privacy.no');
                     break;
             }
 
@@ -210,7 +211,7 @@ class ChallengeService
                     $is_notification_enabled = config('constants.challenge_notification_enabled.no');
                     break;
                 default:
-                    $is_notification_enabled = config('constants.challenge_notification_enabled.yes');
+                    $is_notification_enabled = config('constants.challenge_notification_enabled.no');
                     break;
             }
 
@@ -223,7 +224,7 @@ class ChallengeService
                     $is_open = config('constants.challenge_open_close.no');
                     break;
                 default:
-                    $is_open = config('constants.challenge_open_close.yes');
+                    $is_open = config('constants.challenge_open_close.no');
                     break;
             }
 
@@ -236,9 +237,24 @@ class ChallengeService
                     $is_auto_created = config('constants.challenge_auto_created.no');
                     break;
                 default:
-                    $is_auto_created = config('constants.challenge_auto_created.yes');
+                    $is_auto_created = config('constants.challenge_auto_created.no');
                     break;
             }
+
+            $is_ai_created = config('constants.challenge_ai_created.no');
+            switch ($request->is_ai_created) {
+                case 'yes':
+                    $is_ai_created = config('constants.challenge_ai_created.yes');
+                    break;
+                case 'no':
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+                default:
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+            }
+
+            $source_link = $request->source_link ?? null;
 
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($request->title, $model);
@@ -258,16 +274,19 @@ class ChallengeService
             $challenge->media_type = 'image';
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
-            $challenge->source_link = $request->source_link;
+            $challenge->source_link = $source_link;
             $challenge->agreement = $request->agreement;
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;
             $challenge->is_open = $is_open;
             $challenge->is_auto_created = $is_auto_created;
+            $challenge->is_ai_created = $is_ai_created;
             $challenge->save();
 
             return $challenge;
         } catch (Exception $e) {
+            Log::error('Error in createChallenge in ChallengeService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -467,6 +486,19 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeIdBasedOnUUID($challenge_uuid)
+    {
+        try {
+            $challengeId = Challenge::where('uuid', $challenge_uuid)->value('id');
+
+            return $challengeId ?: false;
+        } catch (Exception $e) {
+            Log::error('Error in getChallengeIdBasedOnUUID in ChallengeService.php: '.$e->getMessage());
+
             return false;
         }
     }

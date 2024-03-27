@@ -8,6 +8,7 @@ use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResou
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
+use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\LabProgramService;
@@ -42,6 +43,7 @@ class ChallengeResource extends JsonResource
         $level = null;
         $level_id = null;
         $skills = null;
+        $jobs = null;
         $skill_groups = null;
         $skill_stacks = null;
         $tags = null;
@@ -78,6 +80,11 @@ class ChallengeResource extends JsonResource
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('foreign_id');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        }
+
+        if ($this->jobs) {
+            $associatedJobs = $this->jobs->pluck('foreign_id');
+            $jobs = JobTitleService::getJobBasedOnIdArray($associatedJobs)->pluck('title', 'uuid');
         }
 
         if ($this->skill_groups) {
@@ -126,9 +133,11 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_requirements) {
             $challenge_conditions = [];
-            foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
-                $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
-                $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+            if ($this->challenge_requirements->project_submission_requirement_ids !== ['false'] && is_array($this->challenge_requirements->project_submission_requirement_ids) && count($this->challenge_requirements->project_submission_requirement_ids) > 0) {
+                foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
+                    $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
+                    $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                }
             }
             switch ($this->challenge_requirements->allow_submit_project) {
                 case '0':
@@ -340,9 +349,11 @@ class ChallengeResource extends JsonResource
             'project_privacy'               => ($this->project_privacy == '1') ? 'yes' : 'no',
             'is_open'                       => ($this->is_open == '1') ? 'yes' : 'no',
             'is_auto_created'               => ($this->is_auto_created == '1') ? 'yes' : 'no',
+            'is_ai_created'                 => ($this->is_ai_created) ? 'yes' : 'no',
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
+            'jobs'                          => $jobs,
             'tags'                          => $tags,
             'tag_groups'                    => $tag_groups,
             'participation_achievement'     => $achievement,

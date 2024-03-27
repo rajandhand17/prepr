@@ -24,7 +24,7 @@ class ChallengeAssessmentService
         }
     }
 
-    public function createChallengeAssessment($request, $challenge, $upload_assessment_attachment)
+    public function createChallengeAssessment($request, $challenge, $upload_assessment_attachment = null)
     {
         try {
             $challengeAssessment = true;

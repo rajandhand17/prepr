@@ -7,7 +7,7 @@ use Exception;
 
 class ChallengeExternalLinkService
 {
-    public function createChallengeExternalLink($request, $challengeId)
+    public function createChallengeExternalLink($request, $challenge_id)
     {
         try {
             if ($request->has('external_links') && $request->get('external_link_ids')) {
@@ -15,7 +15,7 @@ class ChallengeExternalLinkService
                     foreach ($request->external_link_ids as $key => $value) {
                         if (!empty($request->external_links[$key]) && !empty($request->external_link_ids[$key])) {
                             $challengeExternalLink = new ChallengeExternalLink();
-                            $challengeExternalLink->challenge_id = $challengeId;
+                            $challengeExternalLink->challenge_id = $challenge_id;
                             $challengeExternalLink->social_media_link = $request->external_links[$key];
                             $challengeExternalLink->social_link_id = $value;
                             $challengeExternalLink->save();
