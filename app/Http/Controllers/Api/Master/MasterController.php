@@ -12,6 +12,7 @@ use App\Http\Resources\Master\CountryResource;
 use App\Http\Resources\Master\DurationsResource;
 use App\Http\Resources\Master\FlexibleDateDurationResource;
 use App\Http\Resources\Master\HostResource;
+use App\Http\Resources\Master\JobTitleResource;
 use App\Http\Resources\Master\LabConditionResource;
 use App\Http\Resources\Master\LevelsResource;
 use App\Http\Resources\Master\ProjectIndustryResource;
@@ -31,6 +32,7 @@ use App\Http\Resources\Master\TagResource;
 use App\Repositories\Api\Master\MasterRepository;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MasterController extends AppBaseController
 {
@@ -1318,6 +1320,69 @@ class MasterController extends AppBaseController
             return $this->sendError(__('responses.countries_fetched_failed'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/master/job-titles",
+     *     tags={"Master API -JobTitles"},
+     *     summary="Finds lists of job titles",
+     *     description="Get all the job titles lists",
+     *     operationId="getJobTitles",
+     *
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language values that needed to be considered for choose languages",
+     *         required=true,
+     *         explode=true,
+     *
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Search values that needed to be considered for filter",
+     *         required=false,
+     *         explode=true,
+     *
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request!",
+     *
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error!",
+     *
+     *     ),
+     * )
+     */
+    public function getJobTitles(Request $request)
+    {
+        try {
+            $jobTitles = $this->masterRepository->getJobTitles($request);
+            if ($jobTitles) {
+                return $this->sendResponse(JobTitleResource::collection($jobTitles), __('responses.found_job_list'));
+            }
+
+            return $this->sendResponse(null, __('responses.not_found_job_list'));
+        } catch (\Exception $e) {
+            Log::error('Error in getJobTitles in MasterController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
         }
     }
 }

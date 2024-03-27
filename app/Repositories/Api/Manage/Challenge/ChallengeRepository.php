@@ -3,12 +3,14 @@
 namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Models\Challenge;
+use App\Services\Manage\AIService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAnnouncementService;
 use App\Services\Manage\ChallengeAssessmentCriteriaService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeCustomTimelinesService;
 use App\Services\Manage\ChallengeExternalLinkService;
+use App\Services\Manage\ChallengeJobsService;
 use App\Services\Manage\ChallengeProjectTemplateService;
 use App\Services\Manage\ChallengeRequirementService;
 use App\Services\Manage\ChallengeService;
@@ -18,6 +20,7 @@ use App\Services\Manage\ChallengeTagsGroupsService;
 use App\Services\Manage\ChallengeTimelinesService;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeRepository implements ChallengeInterface
 {
@@ -25,6 +28,7 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeAchievementService;
     private $challengeSponsorService;
     private $challengeSkillsGroupsStackService;
+    private $challengeJobsService;
     private $challengeTagsGroupsService;
     private $challengeRequirementService;
     private $challengeAssessmentCriteriaService;
@@ -34,13 +38,15 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeCustomTimelinesService;
     private $challengeExternalLinkService;
     private $challengeAnnouncementService;
+    private $aiService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeJobsService $challengeJobsService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, AIService $aiService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
         $this->challengeSponsorService = $challengeSponsorService;
         $this->challengeSkillsGroupsStackService = $challengeSkillsGroupsStackService;
+        $this->challengeJobsService = $challengeJobsService;
         $this->challengeTagsGroupsService = $challengeTagsGroupsService;
         $this->challengeRequirementService = $challengeRequirementService;
         $this->challengeAssessmentCriteriaService = $challengeAssessmentCriteriaService;
@@ -50,6 +56,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeCustomTimelinesService = $challengeCustomTimelinesService;
         $this->challengeExternalLinkService = $challengeExternalLinkService;
         $this->challengeAnnouncementService = $challengeAnnouncementService;
+        $this->aiService = $aiService;
     }
 
     public function getChallengeList($request, $organization)
@@ -134,6 +141,58 @@ class ChallengeRepository implements ChallengeInterface
 
             return false;
         } catch (Exception $e) {
+            Log::error('Error in createChallenge in ChallengeRepository.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function createChallengeUsingAIPreview($request)
+    {
+        try {
+            // $startTimeOverall = microtime(true);
+
+            $createChallengeUsingAIPreview = $this->aiService->createChallengeUsingAIPreview($request);
+
+            // $endTimeOverall = microtime(true);
+            // Log::info('Overall duration: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
+
+            return $createChallengeUsingAIPreview;
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeUsingAIPreview in ChallengeRepository.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image)
+    {
+        try {
+            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image) {
+                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
+                $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
+                $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
+                $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
+                $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
+                // Challenge Pitch
+                // $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
+                $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
+
+                return [
+                    'createChallenge'                   => $createChallenge,
+                    'createChallengeAchievement'        => $createChallengeAchievement,
+                    'createChallengeSkillsGroupsStack'  => $createChallengeSkillsGroupsStack,
+                    'createChallengeRequirement'        => $createChallengeRequirement,
+                    'createChallengeJobs'               => $createChallengeJobs,
+                    // 'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
+                    'createChallengeTimelines'          => $createChallengeTimelines,
+                ];
+            });
+
+            return $createChallenge['createChallenge'];
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeUsingAI in ChallengeRepository.php: '.$e->getMessage());
+
             return false;
         }
     }

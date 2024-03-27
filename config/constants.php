@@ -178,6 +178,11 @@ return [
         'yes' => '1',
     ],
 
+    'challenge_ai_created' => [
+        'no'  => '0',
+        'yes' => '1',
+    ],
+
     'challenge_assessment_type' => [
         'null'  => '0',
         'open'  => '1',

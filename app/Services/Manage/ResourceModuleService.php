@@ -6,7 +6,9 @@ use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Facades\Log;
 
 class ResourceModuleService
 {
@@ -17,7 +19,7 @@ class ResourceModuleService
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -92,8 +94,8 @@ class ResourceModuleService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
                     $query->select('resource_module_skills_groups_stacks.resource_module_id')
-                    ->from('resource_module_skills_groups_stacks')
-                    ->whereIn('resource_module_skills_groups_stacks.foreign_id', $request->skills)
+                        ->from('resource_module_skills_groups_stacks')
+                        ->whereIn('resource_module_skills_groups_stacks.foreign_id', $request->skills)
                         ->where('resource_module_skills_groups_stacks.type', '0')
                         ->whereNull('resource_module_skills_groups_stacks.deleted_at')
                         ->distinct();
@@ -103,8 +105,8 @@ class ResourceModuleService
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
                     $query->select('resource_module_tags_groups.resource_module_id')
-                    ->from('resource_module_tags_groups')
-                    ->whereIn('resource_module_tags_groups.foreign_id', $request->tags)
+                        ->from('resource_module_tags_groups')
+                        ->whereIn('resource_module_tags_groups.foreign_id', $request->tags)
                         ->where('resource_module_tags_groups.type', '0')
                         ->whereNull('resource_module_tags_groups.deleted_at')
                         ->distinct();
@@ -120,7 +122,7 @@ class ResourceModuleService
             }
 
             return $resourceModule;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -129,7 +131,7 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::select()->where('slug', $slug)->first();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -145,7 +147,7 @@ class ResourceModuleService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -154,7 +156,7 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::where('title', $title)->first();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -163,8 +165,9 @@ class ResourceModuleService
     {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+
             $status = config('constants.resource_module_status.draft');
-            switch($request->status) {
+            switch ($request->status) {
                 case 'publish':
                     $status = config('constants.resource_module_status.publish');
                     break;
@@ -175,6 +178,8 @@ class ResourceModuleService
                     $status = config('constants.resource_module_status.draft');
                     break;
             }
+
+            $is_global = config('constants.resource_module_is_global.no');
             switch ($request->is_global) {
                 case 'no':
                     $is_global = config('constants.resource_module_is_global.no');
@@ -183,8 +188,10 @@ class ResourceModuleService
                     $is_global = config('constants.resource_module_is_global.yes');
                     break;
                 default:
-                    $is_global = null;
+                    $is_global = config('constants.resource_module_is_global.no');
             }
+
+            $privacy = null;
             switch ($request->privacy) {
                 case 'no':
                     $privacy = config('constants.resource_module_privacy.no');
@@ -195,6 +202,20 @@ class ResourceModuleService
                 default:
                     $privacy = null;
             }
+
+            $is_ai_created = config('constants.challenge_ai_created.no');
+            switch ($request->is_ai_created) {
+                case 'yes':
+                    $is_ai_created = config('constants.challenge_ai_created.yes');
+                    break;
+                case 'no':
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+                default:
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+            }
+
             $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $resourceModule = new ResourceModule();
@@ -211,10 +232,13 @@ class ResourceModuleService
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;
+            $resourceModule->is_ai_created = $is_ai_created;
             $resourceModule->save();
 
             return $resourceModule;
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
+            Log::error('Error in createResourceModule in ResourceModuleService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -239,7 +263,7 @@ class ResourceModuleService
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $status = config('constants.resource_module_status.draft');
-            switch($request->status) {
+            switch ($request->status) {
                 case 'publish':
                     $status = config('constants.resource_module_status.publish');
                     break;
@@ -333,7 +357,7 @@ class ResourceModuleService
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
