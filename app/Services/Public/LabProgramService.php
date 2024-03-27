@@ -28,10 +28,7 @@ class LabProgramService
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $labProgramList = $labProgramList->whereIn('organization_id', $getOrganizationIds);
-                }
+                $labProgramList = $labProgramList->whereIn('organization_id', $request->organization_id);
             }
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
