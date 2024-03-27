@@ -104,4 +104,16 @@ class UtilityHelper
 
         return true;
     }
+
+    /**
+     * Convert an object to an array using JSON encode/decode method.
+     *
+     * @param mixed $object The object to convert.
+     *
+     * @return array The object converted to an array.
+     */
+    public static function objectToArray($object): array
+    {
+        return json_decode(json_encode($object), true);
+    }
 }
