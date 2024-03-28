@@ -39,6 +39,7 @@ class UpdateOrganizationRequest extends FormRequest
             'category'        => 'required|numeric|exists:categories,id',
             'website'         => 'required|url',
             'status'          => 'required|in:draft,publish,archive',
+            'total_employees' => 'integer'
         ];
 
         if ($this->request->has('organization_address')) {
