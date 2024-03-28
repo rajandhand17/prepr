@@ -1370,7 +1370,6 @@ class MasterController extends AppBaseController
      *     ),
      * )
      */
-
     public function getJobTitles(Request $request)
     {
         try {

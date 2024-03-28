@@ -12,7 +12,6 @@ use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
-use App\Models\ChallengeResourceModule;
 use App\Models\ComponentAssociation;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
 use App\Services\Manage\ChallengeService;

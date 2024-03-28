@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\UtilityHelper;
+use App\Models\ProjectAccessLevel;
 use App\Models\ProjectMemberManagement;
 use App\Notifications\InviteMemberNotification;
 use App\Services\Manage\EmailTemplateService;
@@ -13,6 +14,17 @@ use Illuminate\Support\Facades\Notification;
 
 class ProjectMemberManagementService
 {
+    public function getRoles()
+    {
+        try {
+            $getRoles = ProjectAccessLevel::select('display_name')->get();
+
+            return $getRoles;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getProjectBasedParticipants($projectData, $request)
     {
         try {
@@ -35,16 +47,16 @@ class ProjectMemberManagementService
                 });
             }
 
-            if ($request->has('access_level') && !empty($request->access_level)) {
+            if ($request->has('role') && !empty($request->role)) {
                 $access_level = null;
-                switch ($request->access_level) {
-                    case 'team_leader':
+                switch ($request->role) {
+                    case 'Team Leader':
                         $access_level = config('constants.project_access_level.team_leader');
                         break;
-                    case 'viewer':
+                    case 'Viewer':
                         $access_level = config('constants.project_access_level.viewer');
                         break;
-                    case 'editor':
+                    case 'Editor':
                         $access_level = config('constants.project_access_level.editor');
                         break;
                     default:
@@ -140,10 +152,10 @@ class ProjectMemberManagementService
                 if (($handle = fopen($file->getPathname(), 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
                     $count_header = count($header);
-                    if ($count_header == 3 && in_array('Name', $header) && in_array('Email', $header) && in_array('Access', $header)) {
+                    if ($count_header == 3 && in_array('Name', $header) && in_array('Email', $header) && in_array('Role', $header)) {
                         $email_column = array_search('Email', $header);
                         $name_column = array_search('Name', $header);
-                        $access_column = array_search('Access', $header);
+                        $access_column = array_search('Role', $header);
                         if ($email_column === false || $name_column === false || $access_column === false) {
                             fclose($handle);
 
@@ -184,9 +196,9 @@ class ProjectMemberManagementService
     {
         try {
             $participantList = [];
-            if (is_array($request->invite_email) && is_array($request->access_level)) {
+            if (is_array($request->invite_email) && is_array($request->role)) {
                 foreach ($request->invite_email as $key => $email) {
-                    $access_level = $request->access_level[$key] ?? null;
+                    $role = $request->role[$key] ?? null;
 
                     $user = UserService::getUserByEmail($email);
                     $name = ($user != false) ? $user->full_name : ($request->name[$key] ?? null);
@@ -194,7 +206,7 @@ class ProjectMemberManagementService
                         'invite_type'   => config('constants.project_member_management_invite_type.email'),
                         'invitee_name'  => $name,
                         'invitee_email' => $email,
-                        'access_level'  => $access_level,
+                        'access_level'  => $role,
                     ];
                 }
                 if (!empty($participantList)) {
@@ -227,10 +239,10 @@ class ProjectMemberManagementService
                         $email_status = config('constants.project_member_management_email_status.scheduled');
 
                         switch ($pariticipateData['access_level']) {
-                            case 'editor':
+                            case 'Editor':
                                 $access_level = config('constants.project_access_level.editor');
                                 break;
-                            case 'viewer':
+                            case 'Viewer':
                                 $access_level = config('constants.project_access_level.viewer');
                                 break;
                             default:
@@ -381,13 +393,13 @@ class ProjectMemberManagementService
     {
         try {
             switch ($role) {
-                case 'team_leader':
+                case 'Team Leader':
                     $currentRole = '2';
                     break;
-                case 'editor':
+                case 'Editor':
                     $currentRole = '1';
                     break;
-                case 'viewer':
+                case 'Viewer':
                     $currentRole = '0';
                     break;
                 default:
@@ -410,13 +422,13 @@ class ProjectMemberManagementService
     {
         try {
             switch ($role) {
-                case 'team_leader':
+                case 'Team Leader':
                     $newtRole = '2';
                     break;
-                case 'editor':
+                case 'Editor':
                     $newtRole = '1';
                     break;
-                case 'viewer':
+                case 'Viewer':
                     $newtRole = '0';
                     break;
                 default:

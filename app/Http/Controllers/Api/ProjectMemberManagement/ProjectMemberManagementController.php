@@ -7,6 +7,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\ProjectMemberManagement\CreateProjectMemberManagementRequest;
 use App\Http\Requests\ProjectMemberManagement\DeleteProjectMemberManagementRequest;
 use App\Http\Resources\EmailTemplate\EmailTemplateResource;
+use App\Http\Resources\ProjectMemberManagement\ProjectAccessLevelResource;
 use App\Http\Resources\ProjectMemberManagement\ProjectMemberManagementResource;
 use App\Repositories\Api\Project\ProjectRepository;
 use App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementRepository;
@@ -25,6 +26,20 @@ class ProjectMemberManagementController extends AppBaseController
         $this->projectRepository = $projectRepository;
     }
 
+    public function getRoles()
+    {
+        try {
+            $getRoles = $this->projectMemberManagementRepository->getRoles();
+            if ($getRoles) {
+                return $this->sendResponse(ProjectAccessLevelResource::collection($getRoles), __('responses.found_role_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_role_list'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function index($slug, Request $request)
     {
         try {
@@ -33,8 +48,10 @@ class ProjectMemberManagementController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
-            if (!in_array($request->access_level, ['team_leader', 'editor', 'viewer'])) {
-                return $this->sendError(__('responses.role_not_exists'), 422);
+            if ($request->role) {
+                if (!in_array($request->role, ['Team Leader', 'Editor', 'Viewer'])) {
+                    return $this->sendError(__('responses.access_not_exists'), 422);
+                }
             }
 
             $projectMemberManagementListing = $this->projectMemberManagementRepository->getProjectBasedParticipants($checkProjectExistsOrNot, $request);
@@ -133,29 +150,29 @@ class ProjectMemberManagementController extends AppBaseController
         }
     }
 
-    public function changeRole($slug, $uuid, $role)
+    public function changeRole(Request $request)
     {
         try {
-            if (!in_array($role, ['team_leader', 'editor', 'viewer'])) {
+            if (!in_array($request->role, ['Team Leader', 'Editor', 'Viewer'])) {
                 return $this->sendError(__('responses.role_not_exists'), 422);
             }
 
-            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
+            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $request->slug);
             if ($checkProjectExistsOrNot == false) {
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
-            $checkParticipantsUUID = $this->projectMemberManagementRepository->checkParticipantsUUID($checkProjectExistsOrNot->id, $uuid);
+            $checkParticipantsUUID = $this->projectMemberManagementRepository->checkParticipantsUUID($checkProjectExistsOrNot->id, $request->uuid);
             if ($checkParticipantsUUID == false) {
                 return $this->sendError(__('responses.project_member_invalid_uuid'), 404);
             }
 
-            $checkCurrentProjectRole = $this->projectMemberManagementRepository->checkCurrentProjectRole($checkProjectExistsOrNot->id, $uuid, $role);
+            $checkCurrentProjectRole = $this->projectMemberManagementRepository->checkCurrentProjectRole($checkProjectExistsOrNot->id, $request->uuid, $request->role);
             if ($checkCurrentProjectRole == false) {
                 return $this->sendError(__('responses.project_already_same_role'), 400);
             }
 
-            $updateProjectRole = $this->projectMemberManagementRepository->updateProjectRole($checkProjectExistsOrNot->id, $uuid, $role);
+            $updateProjectRole = $this->projectMemberManagementRepository->updateProjectRole($checkProjectExistsOrNot->id, $request->uuid, $request->role);
             if ($updateProjectRole) {
                 return $this->sendResponse(null, __('responses.project_role_update'), 200);
             }
