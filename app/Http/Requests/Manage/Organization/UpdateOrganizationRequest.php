@@ -125,6 +125,7 @@ class UpdateOrganizationRequest extends FormRequest
             'organization_members.*.image.image'             => __('response.type_image'),
             'organization_members.*.image.max'               => __('responses.mimes_image_max'),
             'organization_members.*.image.dimensions'        => __('responses.dimensions'),
+            'total_employees.integer'                         =>__('responses.total_employees_integer'),
         ];
     }
 }
