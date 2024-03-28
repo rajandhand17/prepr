@@ -1044,5 +1044,5 @@
     "responses.lab_created_successfully": "Lab created successfully!",
     "responses.lab_title_required": "The lab title field is required!",
     "responses.lab_description_required": "The lab desctiption field is required!",
-    "responses.access_not_exists": "Sorry, this access level is not available"    
+    "responses.access_not_exists": "Sorry, this access level is not available",
 }
