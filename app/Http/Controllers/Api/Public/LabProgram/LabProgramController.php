@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Public\LabProgram;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\LabProgram\LabProgramResource;
 use App\Repositories\Api\Public\LabProgram\LabProgramRepository;
-use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
