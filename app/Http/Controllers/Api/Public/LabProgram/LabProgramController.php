@@ -20,13 +20,6 @@ class LabProgramController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if ($request->organization_id && is_array($request->organization_id)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
-                }
-                $request->merge(['organization_id' => $organization]);
-            }
             $labProgram = $this->labProgramRepository->getList($request);
             if ($labProgram !== false) {
                 $response = [
