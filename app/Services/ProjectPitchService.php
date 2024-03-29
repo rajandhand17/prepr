@@ -39,7 +39,7 @@ class ProjectPitchService
                         $createPitch = self::insertPitchData($projectId, $templateId, $pitchId, $pitchAnswer);
                         if ($createPitch) {
                             $getPitch = ChallengePitch::where('id', $pitchId)->first();
-                            $activity = auth()->user()->full_name . ' ' . __('responses.project_pitch_activty') . ' ' . $getPitch->title;
+                            $activity = auth()->user()->full_name.' '.__('responses.project_pitch_activty').' '.$getPitch->title;
                             ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
                         }
 
@@ -59,7 +59,7 @@ class ProjectPitchService
                         $createTask = self::insertTaskData($projectId, $templateId, $taskId, $taskAnswer);
                         if ($createTask) {
                             $getTask = ChallengeTask::where('id', $taskId)->first();
-                            $activity = auth()->user()->full_name . ' ' . __('responses.project_task_activty') . ' ' . $getTask->title;
+                            $activity = auth()->user()->full_name.' '.__('responses.project_task_activty').' '.$getTask->title;
                             ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
                         }
 
@@ -154,7 +154,7 @@ class ProjectPitchService
                 if (!$column_name_description || !Schema::hasColumn('challenge_pitches', $column_name_description)) {
                     return false;
                 }
-                $challenge_pitch = ChallengePitch::select('id', $column_name_title . ' as title', $column_name_description . ' as description')->where('id', $pitchData->id)->first();
+                $challenge_pitch = ChallengePitch::select('id', $column_name_title.' as title', $column_name_description.' as description')->where('id', $pitchData->id)->first();
             }
 
             $checkPitchAnswer = ProjectPitchValue::where(['project_id' => $projectId, 'pitch_template_id' => $pitchData->template_id, 'project_pitch_id' => $pitchData->id])->first();
@@ -183,7 +183,7 @@ class ProjectPitchService
                 if (!$column_name || !Schema::hasColumn('challenge_tasks', $column_name)) {
                     return false;
                 }
-                $challenge_task = ChallengeTask::select('id', $column_name . ' as title')->where('id', $taskData->id)->first();
+                $challenge_task = ChallengeTask::select('id', $column_name.' as title')->where('id', $taskData->id)->first();
             }
 
             $checkTaskAnswer = ProjectTaskValue::where(['project_id' => $projectId, 'task_template_id' => $taskData->template_id, 'project_task_id' => $taskData->id])->first();
@@ -269,11 +269,11 @@ class ProjectPitchService
 
             foreach ($request['reflections'] as $reflection) {
                 $challengePitchData = [
-                    'template_id' => $pitchTemplate->id,
-                    'title' => $request['language'] === 'en' ? $reflection : "",
-                    'description' => $request['language'] === 'en' ? 'Write your answer here...' : "",
-                    'fr_CA_title' => $request['language'] === 'fr_CA' ? $reflection : "",
-                    'fr_CA_description' => $request['language'] === 'fr_CA' ? 'Écrivez la réponse ici...' : "",
+                    'template_id'       => $pitchTemplate->id,
+                    'title'             => $request['language'] === 'en' ? $reflection : '',
+                    'description'       => $request['language'] === 'en' ? 'Write your answer here...' : '',
+                    'fr_CA_title'       => $request['language'] === 'fr_CA' ? $reflection : '',
+                    'fr_CA_description' => $request['language'] === 'fr_CA' ? 'Écrivez la réponse ici...' : '',
                 ];
 
                 ChallengePitch::create($challengePitchData);
@@ -281,7 +281,7 @@ class ProjectPitchService
 
             return $pitchTemplate;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeAIProjectPitch in ProjectPitchService.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeAIProjectPitch in ProjectPitchService.php: '.$e->getMessage());
 
             return false;
         }

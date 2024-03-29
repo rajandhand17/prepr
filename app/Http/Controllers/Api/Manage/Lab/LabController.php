@@ -14,8 +14,8 @@ use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\OrganizationService;
 use App\Services\Manage\ResourceModuleService;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class LabController extends AppBaseController
@@ -213,7 +213,7 @@ class LabController extends AppBaseController
                 throw new Exception('createLabUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAIPreview in LabController.php: ' . $e->getMessage());
+            Log::error('Error in createLabUsingAIPreview in LabController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
         }
@@ -226,7 +226,6 @@ class LabController extends AppBaseController
             $upload_achievement_image = null;
 
             if ($request->has('challenges') && count($request->challenges) > 0) {
-
                 $challengeIDs = [];
 
                 foreach ($request->challenges as $uuid) {
@@ -252,7 +251,7 @@ class LabController extends AppBaseController
                 throw new Exception('createLabUsingAI has no value!');
             }
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAI in LabController.php: ' . $e->getMessage());
+            Log::error('Error in createLabUsingAI in LabController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
         }

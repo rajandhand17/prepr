@@ -22,7 +22,7 @@ class ChallengeProjectTemplateService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeProjectTemplate in ChallengeProjectTemplateService.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeProjectTemplate in ChallengeProjectTemplateService.php: '.$e->getMessage());
 
             return false;
         }
