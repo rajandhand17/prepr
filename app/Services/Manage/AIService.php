@@ -185,17 +185,17 @@ class AIService
                             $skillIds = UtilityHelper::objectToArray(Skill::whereIn('title', $updatedSkills)->get(['id'])->pluck('id'));
 
                             $challenge = array_merge($challenge, [
-                                'level' => $levelTitle,
-                                'level_id' => Levels::where('title', $levelTitle)->pluck('id')->first(),
-                                'duration' => $durationTitle,
-                                'duration_id' => Duration::where('title', $durationTitle)->pluck('id')->first(),
+                                'level'         => $levelTitle,
+                                'level_id'      => Levels::where('title', $levelTitle)->pluck('id')->first(),
+                                'duration'      => $durationTitle,
+                                'duration_id'   => Duration::where('title', $durationTitle)->pluck('id')->first(),
                                 'is_ai_created' => $request->is_ai_created,
-                                'skill_titles' => $updatedSkills,
-                                'skills' => $skillIds,
-                                'job_titles' => $jobTitlesArray,
-                                'jobs' => $request->jobs,
-                                'category_id' => Category::where('title', $challenge['category'])->pluck('id')->first(),
-                                'added' => true
+                                'skill_titles'  => $updatedSkills,
+                                'skills'        => $skillIds,
+                                'job_titles'    => $jobTitlesArray,
+                                'jobs'          => $request->jobs,
+                                'category_id'   => Category::where('title', $challenge['category'])->pluck('id')->first(),
+                                'added'         => true,
                             ]);
 
                             $processedChallenges[] = $challenge;
@@ -203,25 +203,25 @@ class AIService
 
                         if ($allChallengesValid && !empty($processedChallenges) && $skillIds) {
                             $validLabs[] = [
-                                'labTitle' => $lab['labTitle'],
-                                'labDesc' => $lab['labDesc'],
-                                'level' => $levelTitle,
-                                'level_id' => Levels::where('title', $levelTitle)->pluck('id')->first(),
-                                'duration' => $durationTitle,
-                                'duration_id' => Duration::where('title', $durationTitle)->pluck('id')->first(),
-                                'is_ai_created' => $request->is_ai_created,
-                                'skill_titles' => $updatedSkills,
-                                'skills' => $skillIds,
-                                'job_titles' => $jobTitlesArray,
-                                'jobs' => $request->jobs,
-                                'category_id' => Category::where('title', $challenge['category'])->pluck('id')->first(),
-                                'resource_modules' => $request->resource_modules,
-                                'resource_module_prepr' => $request->resource_module_prepr,
-                                'resource_module_openai' => $request->resource_module_openai,
-                                'resource_module_go1' => $request->resource_module_go1,
+                                'labTitle'                     => $lab['labTitle'],
+                                'labDesc'                      => $lab['labDesc'],
+                                'level'                        => $levelTitle,
+                                'level_id'                     => Levels::where('title', $levelTitle)->pluck('id')->first(),
+                                'duration'                     => $durationTitle,
+                                'duration_id'                  => Duration::where('title', $durationTitle)->pluck('id')->first(),
+                                'is_ai_created'                => $request->is_ai_created,
+                                'skill_titles'                 => $updatedSkills,
+                                'skills'                       => $skillIds,
+                                'job_titles'                   => $jobTitlesArray,
+                                'jobs'                         => $request->jobs,
+                                'category_id'                  => Category::where('title', $challenge['category'])->pluck('id')->first(),
+                                'resource_modules'             => $request->resource_modules,
+                                'resource_module_prepr'        => $request->resource_module_prepr,
+                                'resource_module_openai'       => $request->resource_module_openai,
+                                'resource_module_go1'          => $request->resource_module_go1,
                                 'openai_resource_module_types' => $request->openai_resource_module_types,
-                                'go1_resource_module_types' => $request->go1_resource_module_types,
-                                'challenges' => $processedChallenges
+                                'go1_resource_module_types'    => $request->go1_resource_module_types,
+                                'challenges'                   => $processedChallenges,
                             ];
                         }
                     }
@@ -234,7 +234,8 @@ class AIService
 
             return $validLabs;
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAIPreview: ' . $e->getMessage());
+            Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
+
             return false;
         }
     }
@@ -294,7 +295,7 @@ class AIService
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational lab with 5 challenges for the careers: "' . $jobTitles . '", with skills: "' . $skillTitles . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the lab to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
+                            Please design an educational lab with 5 challenges for the careers: "'.$jobTitles.'", with skills: "'.$skillTitles.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the lab to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
                             1. **Title**: Craft a brief title for the challenge without counting it (ex. without saying challenge 1, challenge 2, or similar). Write just the title.
                             2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
                             3. **Steps**: Write the exact same steps mentioned in description in an array as well.
@@ -334,7 +335,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchLabsFromOpenAI in AIService.php: ' . $e->getMessage());
+            Log::error('Error in fetchLabsFromOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -413,7 +414,7 @@ class AIService
                     if ($collectArticles && !$articlesCollected) {
                         try {
                             $articleResponse = $this->bingArticleClient->request('GET', '', [
-                                'query' => ['q' => 'Articles about ' . $title . ' for level ' . $levelTitle, 'count' => 20],
+                                'query' => ['q' => 'Articles about '.$title.' for level '.$levelTitle, 'count' => 20],
                             ]);
                             $articleResponse = json_decode($articleResponse->getBody(), true);
 
@@ -438,7 +439,7 @@ class AIService
                     if ($collectVideos && !$videosCollected) {
                         try {
                             $videoResponse = $this->bingVideoClient->request('GET', '', [
-                                'query' => ['q' => 'Videos about ' . $title . ' for level ' . $levelTitle, 'count' => 20],
+                                'query' => ['q' => 'Videos about '.$title.' for level '.$levelTitle, 'count' => 20],
                             ]);
                             $videoResponse = json_decode($videoResponse->getBody(), true);
 

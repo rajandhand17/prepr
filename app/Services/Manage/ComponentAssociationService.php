@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Models\ComponentAssociation;
 use App\Models\Lab;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class ComponentAssociationService
 {

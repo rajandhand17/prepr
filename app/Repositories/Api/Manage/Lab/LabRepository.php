@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Manage\Lab;
 
 use App\Services\DurationService;
+use App\Services\Manage\AIService;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
@@ -12,7 +13,6 @@ use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
 use App\Services\Manage\MemberManagementService;
 use App\Services\SkillService;
-use App\Services\Manage\AIService;
 use DB;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -224,7 +224,7 @@ class LabRepository implements LabInterface
 
             return $createLabUsingAIPreview;
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAIPreview in LabRepository.php: ' . $e->getMessage());
+            Log::error('Error in createLabUsingAIPreview in LabRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -233,7 +233,7 @@ class LabRepository implements LabInterface
     public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image)
     {
         try {
-            $createdLabUsingAI = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image) {
+            $createdLabUsingAI = DB::transaction(function () use ($request, $upload_profile_image) {
                 $createLabUsingAI = $this->labService->createLabUsingAI($request, $upload_profile_image);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLabUsingAI);
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLabUsingAI);
