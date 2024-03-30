@@ -13,6 +13,7 @@ class JobTitle extends Model
         'title',
         'fr_CA_title',
         'lightcast_id',
+        'pathway_id',
     ];
 
     protected $hidden = ['created_at', 'updated_at'];
