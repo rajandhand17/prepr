@@ -2,13 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\JobTitle;
 use App\Models\JobTitlePathway;
 use App\Models\RelatedPathway;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class JobTitlesAndPathwaysSeeder extends Seeder
@@ -18,7 +16,7 @@ class JobTitlesAndPathwaysSeeder extends Seeder
      */
     public function run()
     {
-        $jsonPath = base_path('jobTitlePathways.json');
+        $jsonPath = base_path('database/jobTitlePathways.json');
         $jsonData = json_decode(File::get($jsonPath), true);
 
         foreach ($jsonData['data'] as $item) {
@@ -33,7 +31,7 @@ class JobTitlesAndPathwaysSeeder extends Seeder
             );
         }
 
-        $jsonPath = base_path('jobTitles.json');
+        $jsonPath = base_path('database/jobTitles.json');
         $jsonData = json_decode(File::get($jsonPath), true);
 
         foreach ($jsonData['data'] as $item) {
@@ -50,7 +48,7 @@ class JobTitlesAndPathwaysSeeder extends Seeder
             );
         }
 
-        $jsonPath = base_path('jobTitlePathways.json');
+        $jsonPath = base_path('database/jobTitlePathways.json');
         $jsonData = json_decode(File::get($jsonPath), true);
 
         foreach ($jsonData['data'] as $item) {
