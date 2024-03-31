@@ -535,6 +535,10 @@ class ProjectController extends AppBaseController
                     return $this->sendError(__('responses.project_join_invited'), 404);
                 }
 
+                if ($checkProjectJoinedStatus->invite_status === '1') {
+                    return $this->sendError(__('responses.project_join_member_already'), 404);
+                }
+
                 if ($checkProjectJoinedStatus->invite_status === '2') {
                     return $this->sendError(__('responses.project_join_request_already_sent'), 404);
                 }
