@@ -110,8 +110,8 @@ class UserAchievement extends Command
                     $userAchievement->module_title = $single_user_achievement->module_title;
                     $userAchievement->module_parent_id = $single_user_achievement->module_parent_id;
                     $userAchievement->module_parent_title = $single_user_achievement->module_parent_title;
-                    $userAchievement->achievement_prize = $single_user_achievement->achievement_prize;
-                    $userAchievement->achievement_points = $single_user_achievement->achievement_points;
+                    $userAchievement->achievement_prize = ($single_user_achievement->achievement_prize != null) ? $single_user_achievement->achievement_prize : null;
+                    $userAchievement->achievement_points = ($single_user_achievement->achievement_points != null) ? $single_user_achievement->achievement_points : null;
                     $userAchievement->achievement_image = $single_user_achievement->achievement_image;
                     $userAchievement->issue_date = $single_user_achievement->issue_date;
                     $userAchievement->valid_date = $single_user_achievement->valid_date;
