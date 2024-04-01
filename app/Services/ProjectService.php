@@ -483,18 +483,23 @@ class ProjectService
     public function updateProjectRecruitingStatus($projectId, $request)
     {
         try {
+            $projectUpdate = Project::find($projectId);
             switch ($request->recruiting_status) {
-                case 'no':
+                case 'yes':
                     $recruiting_status = '0';
                     break;
-                case 'yes':
+                case 'no':
                     $recruiting_status = '1';
                     break;
                 default:
                     $recruiting_status = '0';
                     break;
             }
-            $projectUpdate = Project::find($projectId);
+
+            if ($projectUpdate->recruiting_status !== $recruiting_status) {
+                $activity = auth()->user()->full_name.' '.__('responses.project_updated_recruiting');
+                ProjectHistoryService::storeHistory($projectUpdate->id, auth()->user()->id, $activity);
+            }
             $projectUpdate->recruiting_status = $recruiting_status;
             $projectUpdate->save();
 

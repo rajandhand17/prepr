@@ -372,6 +372,11 @@ class MemberManagementService
                             $subject = $request->subject_line;
                             $emailBody = $request->email_body;
                             $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
+
+                            if ($emailBody) {
+                                $emailBody = str_replace('user_name', $user_name, str_replace('component_title', $componentCollectionObject->title, $emailBody));
+                            }
+
                             if (empty($request->subject_line) || empty($request->email_body)) {
                                 $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
 

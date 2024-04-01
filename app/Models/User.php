@@ -169,6 +169,11 @@ class User extends Authenticatable
         return $this->hasMany(UserSkills::class)->where('pinned', '0');
     }
 
+    public function userJobs()
+    {
+        return $this->hasMany(UserJob::class)->where('pinned', '0');
+    }
+
     public function userTags()
     {
         return $this->hasMany(UserTag::class, 'user_id', 'id');
@@ -187,6 +192,11 @@ class User extends Authenticatable
     public function userPersonalFiles()
     {
         return $this->hasMany(UserPersonalFile::class);
+    }
+
+    public function userResume()
+    {
+        return $this->hasOne(UserPersonalFile::class)->where('type', '0');
     }
 
     /**login apis */

@@ -9,6 +9,7 @@ use App\Services\Manage\LabAddressService;
 use App\Services\Manage\LabExternalLinksService;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use App\Services\Public\FeaturedModuleService;
 
 class HandleDeleteLabAssociatedData
 {
@@ -55,6 +56,10 @@ class HandleDeleteLabAssociatedData
             }
             $labAddress = LabAddressService::deleteLabAddress($lab_id);
             if (!$labAddress) {
+                return false;
+            }
+            $featuredLab = FeaturedModuleService::deleteFeaturedLab($lab_id);
+            if (!$featuredLab) {
                 return false;
             }
 

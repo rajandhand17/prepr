@@ -27,7 +27,6 @@ class SkillResource extends JsonResource
             'related_skills'         => $key !== false ? $key : [],
             'related_skill_url'      => $relatedKeyUrl,
             'is_saved'               => (!empty(UserSkillsService::checkUserSkillExists($this->id))) ? 'yes' : 'no',
-            'related_jobs'           => [],
         ];
         if (isset($this->user_pinned->pinned)) {
             $data['pinned'] = $this->user_pinned->pinned == 1 ? 'yes' : 'no';

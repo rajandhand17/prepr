@@ -26,7 +26,6 @@ class ResourceCollectionService
             if ($request->has('search') && !empty($request->search)) {
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
             }
-
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
                 if (!empty($getOrganizationIds)) {

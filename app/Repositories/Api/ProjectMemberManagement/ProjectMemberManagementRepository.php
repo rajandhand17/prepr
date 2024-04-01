@@ -15,6 +15,15 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         $this->projectMemberManagementService = $projectMemberManagementService;
     }
 
+    public function getRoles()
+    {
+        try {
+            return $this->projectMemberManagementService->getRoles();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getProjectBasedParticipants($projectData, $request)
     {
         try {
@@ -43,7 +52,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
                 'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
                 'Expires'             => '0',
             ];
-            $columns = ['Name', 'Email', 'Access (viewer/editor)'];
+            $columns = ['Name', 'Email', 'Role (viewer/editor)'];
             $callback = function () use ($columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -98,10 +107,10 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         }
     }
 
-    public function checkProjectJoinUnjoinStatus($request, $projectData)
+    public function checkProjectJoinUnjoinStatus($userEmail, $projectData)
     {
         try {
-            return $this->projectMemberManagementService->checkProjectJoinUnjoinStatus($request, $projectData);
+            return $this->projectMemberManagementService->checkProjectJoinUnjoinStatus($userEmail, $projectData);
         } catch (Exception $e) {
             return false;
         }
@@ -111,6 +120,15 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
     {
         try {
             return $this->projectMemberManagementService->acceptOrRejectProjectJoinRequest($request, $projectData, $action);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkParticipantsUUID($projectId, $uuid)
+    {
+        try {
+            return $this->projectMemberManagementService->checkParticipantsUUID($projectId, $uuid);
         } catch (Exception $e) {
             return false;
         }
@@ -143,10 +161,19 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         }
     }
 
-    public function participantAcceptOrRejectJoinRequest($request, $projectData, $action)
+    public function checkParticipantProjectJoinUnjoinStatus($userEmail, $projectData)
     {
         try {
-            return $this->projectMemberManagementService->participantAcceptOrRejectJoinRequest($request, $projectData, $action);
+            return $this->projectMemberManagementService->checkParticipantProjectJoinUnjoinStatus($userEmail, $projectData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action)
+    {
+        try {
+            return $this->projectMemberManagementService->participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action);
         } catch (Exception $e) {
             return false;
         }

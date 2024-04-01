@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
 
             $this->mapProfileRoutes();
             $this->mapDiscussionsRoute();
+            $this->mapExploreRoutes();
             $this->mapSettingRoutes();
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
@@ -72,6 +73,11 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapProfileRoutes()
     {
         Route::prefix('api/v1/profile/')->middleware('api')->group(base_path('routes/v1/profile.php'));
+    }
+
+    protected function mapExploreRoutes()
+    {
+        Route::prefix('api/v1/explore/')->middleware('api')->group(base_path('routes/v1/explore.php'));
     }
 
     public function mapDiscussionsRoute()

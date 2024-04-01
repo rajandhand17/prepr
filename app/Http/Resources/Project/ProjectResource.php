@@ -89,15 +89,19 @@ class ProjectResource extends JsonResource
         switch ($this->media_type) {
             case '0':
                 $media = $this->media;
+                $media_type = 'image';
                 break;
             case '1':
                 $media = $this->getRawOriginal('media');
+                $media_type = 'embedded';
                 break;
             case '2':
                 $media = $this->media;
+                $media_type = 'video';
                 break;
             default:
                 $media = $this->media;
+                $media_type = 'image';
                 break;
         }
 
@@ -112,6 +116,7 @@ class ProjectResource extends JsonResource
                     'uuid'              => $fetchChallenge->uuid,
                     'title'             => $fetchChallenge->title,
                     'slug'              => $fetchChallenge->slug,
+                    'agreement'         => $fetchChallenge->agreement,
                     'template_id'       => $getTemplate,
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
@@ -174,7 +179,10 @@ class ProjectResource extends JsonResource
         }
 
         if ($this->lab_id) {
-            $lab_details = LabService::getLabBasedOnId($this->lab_id)->only(['id', 'uuid', 'title', 'slug']);
+            $lab_details = LabService::getLabBasedOnId($this->lab_id);
+            if ($lab_details) {
+                $lab_details = $lab_details->only(['id', 'uuid', 'title', 'slug']);
+            }
         }
 
         switch ($this->privacy) {
@@ -215,7 +223,7 @@ class ProjectResource extends JsonResource
             'description'           => $this->description,
             'is_view_enabled'       => $view_enabled,
             'is_download_enabled'   => $download_enabled,
-            'media_type'            => $this->media_type,
+            'media_type'            => $media_type,
             'media'                 => $media,
             'privacy'               => $privacy,
             'liked'                 => $liked,
@@ -228,7 +236,7 @@ class ProjectResource extends JsonResource
             'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
             'submit_enabled'        => $submit_enabled !== false ? 'yes' : 'no',
             'project_role'          => $project_role,
-            'recruiting_status'     => $this->recruiting_status !== '0' ? 'yes' : 'no',
+            'recruiting_status'     => $this->recruiting_status !== '0' ? 'no' : 'yes',
             'member_count'          => $this->getMembersCount(),
             'joined_status'         => $joined_status,
             'members'               => ProjectMemberResource::collection($this->members),
@@ -247,6 +255,7 @@ class ProjectResource extends JsonResource
             'is_assess_enabled'     => $is_assess_enabled,
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
             'assessment_data'       => AssessedProjectResource::make($this),
+            'history'               => ProjectHistoryResource::collection($this->history),
             'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }

@@ -34,7 +34,6 @@ class LabResource extends JsonResource
         $tags = [];
         $tag_groups = [];
         $achievement = [];
-        $address = [];
 
         if ($this->getCategory) {
             $category_id = $this->getCategory->id;
@@ -64,7 +63,6 @@ class LabResource extends JsonResource
                 $skill_groups = $this->skill_groups->pluck('foreign_id');
             }
         }
-
         if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
@@ -78,16 +76,6 @@ class LabResource extends JsonResource
         if ($this->tag_groups) {
             $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
             $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->address) {
-            $address = [
-                'latitude'  => $this->address->latitude,
-                'longitude' => $this->address->longitude,
-                'address'   => $this->address->address,
-                'city'      => $this->address->city,
-                'country'   => $this->address->country,
-            ];
         }
 
         if ($this->achievement) {
@@ -150,8 +138,8 @@ class LabResource extends JsonResource
             'media'                         => $media,
             'category_id'                   => $category_id,
             'category'                      => $category,
-            'organization_id'               => $this->organization->uuid,
-            'organization'                  => $this->organization->title,
+            'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
+            'organization'                  => isset($this->organization->title) ? $this->organization->title : null,
             'duration'                      => $duration,
             'duration_id'                   => $duration_id,
             'level'                         => $level,
@@ -159,7 +147,6 @@ class LabResource extends JsonResource
             'status'                        => $this->status,
             'member_count'                  => $this->members()->count(),
             'skills'                        => $skills,
-            'address'                       => $address,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
             'tags'                          => $tags,

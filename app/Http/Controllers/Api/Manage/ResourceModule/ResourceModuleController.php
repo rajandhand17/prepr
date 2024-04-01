@@ -5,14 +5,20 @@ namespace App\Http\Controllers\Api\Manage\ResourceModule;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
+use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleUsingAIPreviewRequest;
+use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleUsingAIRequest;
 use App\Http\Requests\Manage\ResourceModule\DeleteMediaResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
+use App\Models\ComponentAssociation;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\OrganizationService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ResourceModuleController extends AppBaseController
 {
@@ -48,7 +54,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_resource_module_list'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -65,7 +71,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -85,12 +91,13 @@ class ResourceModuleController extends AppBaseController
                 $upload_cover_image = $uploaded_cover_image;
             }
             $createResourceModule = $this->resourceModuleRepository->createResourceModule($request, $upload_cover_image);
+
             if ($createResourceModule) {
                 return $this->sendResponse(ResourceModuleResource::make($createResourceModule), __('responses.resource_module_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_module_stored_failed'), 403);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -119,7 +126,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.resource_module_stored_failed'), 403);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -136,7 +143,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.resource_module_name_available'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -153,7 +160,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.resource_module_slug_available'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -182,7 +189,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleSlugExistsOrNot), __('responses.add_links_success'), 200);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -204,7 +211,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.file_upload_failed'), 500);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -225,7 +232,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.resource_module_not_delete'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -246,7 +253,7 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.resource_module_media_not_delete'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -264,8 +271,61 @@ class ResourceModuleController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function CreateResourceModuleUsingAIPreview(CreateResourceModuleUsingAIPreviewRequest $request)
+    {
+        try {
+            $createResourceModuleUsingAIPreview = $this->resourceModuleRepository->createResourceModuleUsingAIPreview($request);
+
+            if ($createResourceModuleUsingAIPreview) {
+                return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_module_previews_created_successfully'), 200);
+            } else {
+                throw new Exception('createResourceModuleUsingAIPreview has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in CreateResourceModuleUsingAIPreview in ResourceModuleController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function CreateResourceModuleUsingAI(CreateResourceModuleUsingAIRequest $request)
+    {
+        try {
+            $upload_cover_image = config('site-settings.default_resource_module_cover_image');
+            $CreateResourceModuleUsingAI = $this->resourceModuleRepository->CreateResourceModuleUsingAI($request, $upload_cover_image);
+
+            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $CreateResourceModuleUsingAI->id);
+
+            if ($request['challenge_id']) {
+                $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request['challenge_id']);
+                $challengeResourceModule = ComponentAssociation::create([
+                    'challenge_id'       => $challengeID,
+                    'resource_module_id' => $CreateResourceModuleUsingAI->id,
+                ]);
+
+                if (!$challengeResourceModule) {
+                    throw new Exception('challengeResourceModule has no value!');
+                }
+            }
+
+            if (!$createResourceModuleDetailsAI) {
+                throw new Exception('createResourceModuleDetailsAI has no value!');
+            }
+
+            if ($CreateResourceModuleUsingAI) {
+                return $this->sendResponse(ResourceModuleResource::make($CreateResourceModuleUsingAI), __('responses.resource_module_created_successfully'), 200);
+            } else {
+                throw new Exception('CreateResourceModuleUsingAI has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in CreateResourceModuleUsingAI in ResourceModuleController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
         }
     }
 }

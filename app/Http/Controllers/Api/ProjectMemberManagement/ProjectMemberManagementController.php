@@ -7,6 +7,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\ProjectMemberManagement\CreateProjectMemberManagementRequest;
 use App\Http\Requests\ProjectMemberManagement\DeleteProjectMemberManagementRequest;
 use App\Http\Resources\EmailTemplate\EmailTemplateResource;
+use App\Http\Resources\ProjectMemberManagement\ProjectAccessLevelResource;
 use App\Http\Resources\ProjectMemberManagement\ProjectMemberManagementResource;
 use App\Repositories\Api\Project\ProjectRepository;
 use App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementRepository;
@@ -25,12 +26,32 @@ class ProjectMemberManagementController extends AppBaseController
         $this->projectRepository = $projectRepository;
     }
 
+    public function getRoles()
+    {
+        try {
+            $getRoles = $this->projectMemberManagementRepository->getRoles();
+            if ($getRoles) {
+                return $this->sendResponse(ProjectAccessLevelResource::collection($getRoles), __('responses.found_role_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_role_list'), 400);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function index($slug, Request $request)
     {
         try {
             $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
             if ($checkProjectExistsOrNot == false) {
                 return $this->sendError(__('responses.project_not_found'), 404);
+            }
+
+            if ($request->role) {
+                if (!in_array($request->role, ['Team Leader', 'Editor', 'Viewer'])) {
+                    return $this->sendError(__('responses.access_not_exists'), 422);
+                }
             }
 
             $projectMemberManagementListing = $this->projectMemberManagementRepository->getProjectBasedParticipants($checkProjectExistsOrNot, $request);
@@ -112,7 +133,10 @@ class ProjectMemberManagementController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
-            $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request, $checkProjectExistsOrNot);
+            $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request->email, $checkProjectExistsOrNot);
+            if ($checkProjectStatus == false) {
+                return $this->sendError(__('responses.project_sender_cannot_accept_request'), 404);
+            }
             if ($checkProjectStatus) {
                 $projectMemberManagement = $this->projectMemberManagementRepository->acceptOrRejectProjectJoinRequest($request, $checkProjectExistsOrNot, $action);
                 if ($projectMemberManagement) {
@@ -126,20 +150,29 @@ class ProjectMemberManagementController extends AppBaseController
         }
     }
 
-    public function changeRole($slug, $uuid, $role)
+    public function changeRole(Request $request)
     {
         try {
-            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
+            if (!in_array($request->role, ['Team Leader', 'Editor', 'Viewer'])) {
+                return $this->sendError(__('responses.role_not_exists'), 422);
+            }
+
+            $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $request->slug);
             if ($checkProjectExistsOrNot == false) {
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
-            $checkCurrentProjectRole = $this->projectMemberManagementRepository->checkCurrentProjectRole($checkProjectExistsOrNot->id, $uuid, $role);
+            $checkParticipantsUUID = $this->projectMemberManagementRepository->checkParticipantsUUID($checkProjectExistsOrNot->id, $request->uuid);
+            if ($checkParticipantsUUID == false) {
+                return $this->sendError(__('responses.project_member_invalid_uuid'), 404);
+            }
+
+            $checkCurrentProjectRole = $this->projectMemberManagementRepository->checkCurrentProjectRole($checkProjectExistsOrNot->id, $request->uuid, $request->role);
             if ($checkCurrentProjectRole == false) {
                 return $this->sendError(__('responses.project_already_same_role'), 400);
             }
 
-            $updateProjectRole = $this->projectMemberManagementRepository->updateProjectRole($checkProjectExistsOrNot->id, $uuid, $role);
+            $updateProjectRole = $this->projectMemberManagementRepository->updateProjectRole($checkProjectExistsOrNot->id, $request->uuid, $request->role);
             if ($updateProjectRole) {
                 return $this->sendResponse(null, __('responses.project_role_update'), 200);
             }
@@ -169,7 +202,7 @@ class ProjectMemberManagementController extends AppBaseController
         }
     }
 
-    public function participantAcceptOrRejectJoinRequest(Request $request, $slug, $action)
+    public function participantAcceptOrRejectJoinRequest($slug, $action)
     {
         try {
             $checkProjectExistsOrNot = UtilityHelper::checkComponentSlugExistOrNot('project', $slug);
@@ -177,9 +210,10 @@ class ProjectMemberManagementController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 404);
             }
 
-            $checkProjectStatus = $this->projectMemberManagementRepository->checkProjectJoinUnjoinStatus($request, $checkProjectExistsOrNot);
+            $userEmail = auth()->user()->email;
+            $checkProjectStatus = $this->projectMemberManagementRepository->checkParticipantProjectJoinUnjoinStatus($userEmail, $checkProjectExistsOrNot);
             if ($checkProjectStatus) {
-                $projectMemberManagement = $this->projectMemberManagementRepository->participantAcceptOrRejectJoinRequest($request, $checkProjectExistsOrNot, $action);
+                $projectMemberManagement = $this->projectMemberManagementRepository->participantAcceptOrRejectJoinRequest($userEmail, $checkProjectExistsOrNot, $action);
                 if ($projectMemberManagement) {
                     return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }
