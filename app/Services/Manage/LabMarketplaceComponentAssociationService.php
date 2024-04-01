@@ -272,7 +272,6 @@ class LabMarketplaceComponentAssociationService
                         $newChallengeAssociation->resource_collection_id = $challengeTemplateComponentAssociation->resource_collection_id;
                     }
                     $newChallengeAssociation->save();
-
                 }
             }
 
