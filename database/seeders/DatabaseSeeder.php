@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
+        $classes = [
             SocialConnectTableSeeder::class,
             PermissionSeeder::class,
             RolesSeeder::class,
@@ -24,6 +24,15 @@ class DatabaseSeeder extends Seeder
             DurationsSeeder::class,
             ProjectSubmissionRequirementTableSeeder::class,
             ChallengeAnnouncementRecipientSeeder::class,
-        ]);
+        ];
+
+        if (app()->environment('testing')) {
+            $classes[] = UserSeeder::class;
+            $classes[] = LanguageSeeder::class;
+            $classes[] = SkillSeeder::class;
+            $classes[] = TagSeeder::class;
+        }
+
+        $this->call($classes);
     }
 }
