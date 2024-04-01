@@ -20,3 +20,6 @@ sendgrid.env
 ddev
 .ddev
 .env.testing
+/docker-compose-local.yml
+/docker
+/sql
