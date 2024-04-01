@@ -284,9 +284,14 @@ class ChallengeController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
+
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->organization_id !== $organization->id) {
+                return $this->sendError(__('responses.organization_challlenge_not_same'), 404);
             }
             $cloneChallenge = $this->challengeRepository->cloneChallenge($checkComponentBasedOnSlug->id, $organization);
 
