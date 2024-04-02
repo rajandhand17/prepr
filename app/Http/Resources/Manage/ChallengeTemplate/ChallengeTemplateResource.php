@@ -2,10 +2,20 @@
 
 namespace App\Http\Resources\Manage\ChallengeTemplate;
 
+use App\Http\Resources\Manage\Lab\LabListNameResource;
+use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
+use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTemplateService;
+use App\Services\Manage\LabProgramService;
+use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
+use App\Services\Manage\ResourceCollectionService;
+use App\Services\Manage\ResourceGroupService;
+use App\Services\Manage\ResourceModuleService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -45,6 +55,11 @@ class ChallengeTemplateResource extends JsonResource
         $challenge_assessment = null;
         $challenge_timelines = null;
         $challenge_custom_timelines = null;
+        $labs = [];
+        $lab_programs = [];
+        $resource_modules = [];
+        $resource_collections = [];
+        $resource_groups = [];
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -254,10 +269,40 @@ class ChallengeTemplateResource extends JsonResource
         if ($request->has('organization_id')) {
             $organizationCheck = $request->organization_id;
         }
+
         $organization = OrganizationService::getOrganizationExistBasedOnUuid($organizationCheck);
         $checkChallengeRedeem = ChallengeTemplateService::checkChallengeRedeemedOrNot($this->id, $organization->id);
         if ($checkChallengeRedeem) {
             $is_redeemed = 'no';
+        }
+
+        if (!empty($this->challenge_association)) {
+            foreach ($this->challenge_association as $challenge_association) {
+                if ($challenge_association->lab_marketplace_id) {
+                    $getLab = LabService::getLabBasedOnId($challenge_association->lab_marketplace_id);
+                    $labs[$challenge_association->lab_marketplace_id] = LabListNameResource::make($getLab);
+                }
+
+                if ($challenge_association->lab_program_id) {
+                    $getLabProgram = LabProgramService::getLabProgramBasedOnId($challenge_association->lab_program_id);
+                    $lab_programs[$challenge_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
+                }
+
+                if ($challenge_association->resource_module_id) {
+                    $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($challenge_association->resource_module_id);
+                    $resource_modules[$challenge_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
+                }
+
+                if ($challenge_association->resource_collection_id) {
+                    $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($challenge_association->resource_collection_id);
+                    $resource_collections[$challenge_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                }
+
+                if ($challenge_association->resource_group_id) {
+                    $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($challenge_association->resource_group_id);
+                    $resource_groups[$challenge_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                }
+            }
         }
 
         return [
@@ -302,6 +347,11 @@ class ChallengeTemplateResource extends JsonResource
             'external_links'                => ChallengeTemplateExternalLinkResource::collection($this->external_links),
             'is_redeemed'                   => $is_redeemed,
             'credit_score'                  => '1',
+            'labs'                          => $labs,
+            'lab_programs'                  => $lab_programs,
+            'resource_modules'              => $resource_modules,
+            'resource_collections'          => $resource_collections,
+            'resource_groups'               => $resource_groups,
         ];
     }
 }

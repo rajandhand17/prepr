@@ -192,4 +192,9 @@ class Challenge extends Model
     {
         return $this->hasMany(Project::class, 'challenge_id', 'id')->where('is_submitted', '1');
     }
+
+    public function challenge_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'challenge_id', 'id');
+    }
 }

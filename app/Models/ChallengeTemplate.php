@@ -148,4 +148,9 @@ class ChallengeTemplate extends Model
     {
         return $this->hasMany(ChallengeTemplateAnnouncement::class, 'challenge_template_id', 'id');
     }
+
+    public function challenge_association()
+    {
+        return $this->hasMany(LabMarketplaceComponentAssociations::class, 'challenge_template_id', 'id');
+    }
 }

@@ -200,13 +200,9 @@ class ChallengeAssessmentService
     {
         try {
             if ($originalChallengeAssessment) {
-                $originalChallengeAssessment->each(function ($challenge_assessment) use ($clonedChallengeId) {
-                    if ($challenge_assessment) {
-                        $cloneAssessment = $challenge_assessment->replicate();
-                        $cloneAssessment->challenge_id = $clonedChallengeId;
-                        $cloneAssessment->save();
-                    }
-                });
+                $cloneAssessment = $originalChallengeAssessment->replicate();
+                $cloneAssessment->challenge_id = $clonedChallengeId;
+                $cloneAssessment->save();
             }
 
             return true;
