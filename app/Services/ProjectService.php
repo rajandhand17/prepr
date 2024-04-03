@@ -20,14 +20,13 @@ class ProjectService
     {
         try {
             $getMyProjects = Project::where('user_id', $userId)->pluck('id');
-
             return $getMyProjects;
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public function getProjectList($getProjectIds, $request)
+    public static function getProjectList($getProjectIds, $request)
     {
         try {
             $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
@@ -455,7 +454,7 @@ class ProjectService
         }
     }
 
-    public function getPendingProjectIds($getAllChallengeIds, $userData)
+    public static function getPendingProjectIds($getAllChallengeIds, $userData)
     {
         try {
             $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
@@ -531,6 +530,36 @@ class ProjectService
 
             return $project_role;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectListingBasedOnSkills($getUsersSkills){
+        try {
+            $projects=Project::whereIn('id',$getUsersSkills)->get();
+            $pushedProjectIds=array();
+            foreach($projects as $project){
+                $getChallenges=ChallengeService::getChallengeBasedOnId($project->challenge_id);
+                $projectDate = UtilityHelper::formatDateTime($project->created_at);
+                $dueDate=ChallengeService::fetchChallengeDueDate($getChallenges,$projectDate);
+                $currentDateTime = new \DateTime();
+                $givenDateTime = new \DateTime($dueDate['submission_deadline_date']);
+                if ($givenDateTime < $currentDateTime) {
+                    array_push($pushedProjectIds,$project);
+                }
+            }
+            return $pushedProjectIds;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getMatchedTeams(){
+        try{
+            $getProjectIds=ProjectMemberManagementService::getMatchedTeams();
+            $getMyProjects = Project::whereIn('id',$getProjectIds);
+            return $getMyProjects->paginate(config('site-settings.pagination_per_page'));
+        }catch (\Exception $e){
             return false;
         }
     }

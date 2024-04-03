@@ -74,7 +74,6 @@ class UserSkillsService
     {
         try {
             $userSkills = UserSkills::where('user_id', auth()->user()->id)->pluck('skill');
-
             return $userSkills;
         } catch (\Exception $e) {
             return false;

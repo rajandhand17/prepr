@@ -65,7 +65,7 @@ class LabController extends AppBaseController
         }
     }
 
-    public function socialActivity($slug, $action)
+    public function socialActivity($slug, $action,Request $request)
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
