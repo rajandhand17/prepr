@@ -42,6 +42,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
     public function getBrowsersList($request){
         try {
             $getBrowsersIds=$this->projectService->getBrowsersListing($request);
+            return $getBrowsersIds;
         }catch (\Exception $e){
             return false;
         }

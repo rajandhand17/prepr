@@ -535,10 +535,53 @@ class ProjectService
 
     public static function getBrowsersListing($request){
         try {
-            $getProjectMemberManagementList=ProjectMemberManagementService::g
-            $getProjectList=Project::select()
-
+            $getProjectList = Project::where('recruiting_status', '0')
+                ->whereNotIn('user_id', [auth()->user()->id])
+                ->whereHas('members', function ($query) {
+                    $query->whereNotIn('inviter_id', [auth()->user()->id]);
+                });
+            $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
+            return $getProjectList->paginate(config('site-settings.pagination_per_page'));
         }catch (Exception $e){
+            return false;
+        }
+    }
+
+    public static function filterTeamMatesProjectList($project_list, $request){
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
+            }
+            if ($request->has('privacy') && !empty($request->privacy)) {
+                switch ($request->privacy) {
+                    case 'public':
+                        $project_list = $project_list->where('projects.privacy', '0');
+                        break;
+                    case 'private':
+                        $project_list = $project_list->where('projects.privacy', '1');
+                        break;
+                    default:
+                        $project_list = $project_list;
+                }
+            }
+
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $project_list = $project_list->orderBy('projects.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $project_list = $project_list->orderBy('projects.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $project_list = $project_list->orderBy('projects.created_at', 'ASC');
+                        break;
+                    default:
+                        $project_list = $project_list->orderBy('projects.id', 'ASC');
+                }
+            }
+            return $project_list;
+        }catch (\Exception $e){
             return false;
         }
     }

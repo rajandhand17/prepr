@@ -52,7 +52,21 @@ class TeamMatchingController extends AppBaseController
             switch ($action) {
                 case 'browse':
                     $getBrowserRequest=$this->teamMatchingRepository->getBrowsersList($request);
-                    dd($getBrowserRequest);
+                    if($getBrowserRequest){
+                        $response= [
+                            'total_count'  => $getBrowserRequest->total(),
+                            'per_page'     => $getBrowserRequest->perPage(),
+                            'count'        => $getBrowserRequest->count(),
+                            'current_page' => $getBrowserRequest->currentPage(),
+                            'total_pages'  => $getBrowserRequest->lastPage(),
+                            'list'         => TeamMatchingResource::collection($getBrowserRequest),
+                        ];
+                        $message=__('responses.team_matching_list_successfully');
+                    }else{
+                        $response=[];
+                        $message=__('responses.team_matching_list_successfully');
+                    }
+                    break;
                 case 'pending':
                      $getPendingRequests=$this->teamMatchingRepository->getPendingRequests($request);
                      if(!empty($getPendingRequests)){
@@ -88,7 +102,7 @@ class TeamMatchingController extends AppBaseController
                     }
                     break;
             }
-            return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
+            return $this->sendResponse($response,$message);
 
         }catch (\Exception $e){
             return $this->sendError(__('responses.send_error'), 500);
