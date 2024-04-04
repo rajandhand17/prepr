@@ -2,20 +2,20 @@
 
 namespace App\Http\Resources\Public\Challenge;
 
-use App\Http\Resources\Manage\Lab\LabListNameResource;
-use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
-use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
-use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
+use App\Http\Resources\Public\Lab\LabNameListResource;
+use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
+use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
-use App\Services\Manage\LabProgramService;
-use App\Services\Manage\LabService;
-use App\Services\Manage\ResourceCollectionService;
-use App\Services\Manage\ResourceGroupService;
-use App\Services\Manage\ResourceModuleService;
 use App\Services\ProjectSubmissionRequirementService;
+use App\Services\Public\LabProgramService;
+use App\Services\Public\LabService;
+use App\Services\Public\ResourceCollectionService;
+use App\Services\Public\ResourceGroupService;
+use App\Services\Public\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -289,7 +289,7 @@ class ChallengeResource extends JsonResource
             foreach ($this->challenge_association as $challenge_association) {
                 if ($challenge_association->lab_id) {
                     $getLab = LabService::getLabBasedOnId($challenge_association->lab_id);
-                    $labs[$challenge_association->lab_id] = LabListNameResource::make($getLab);
+                    $labs[$challenge_association->lab_id] = LabNameListResource::make($getLab);
                 }
 
                 if ($challenge_association->lab_program_id) {
