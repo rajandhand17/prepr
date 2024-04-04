@@ -151,6 +151,8 @@ class LabResource extends JsonResource
             'skill_stacks'                  => $skill_stacks,
             'tags'                          => $tags,
             'tag_groups'                    => $tag_groups,
+            'challenge_count'               => 0,
+            'resource_count'                => 0,
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'joined'                        => $join_status,
