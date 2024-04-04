@@ -47,7 +47,7 @@ class LabResource extends JsonResource
         $tag_groups = [];
         $achievement = [];
         $lab_programs = [];
-        $chalenges = [];
+        $challenges = [];
         $challenge_paths = [];
         $resource_modules = [];
         $resource_collections = [];
@@ -153,7 +153,7 @@ class LabResource extends JsonResource
 
                 if ($lab_association->challenge_id) {
                     $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
-                    $chalenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallenge);
+                    $challenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallenge);
                 }
 
                 if ($lab_association->challenge_path_id) {
@@ -212,13 +212,13 @@ class LabResource extends JsonResource
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),
             'lab_program_count'             => count($lab_programs),
-            'challenge_count'               => count($chalenges),
+            'challenge_count'               => count($challenges),
             'challenge_path_count'          => count($challenge_paths),
             'resource_module_count'         => count($resource_modules),
             'resource_collection_count'     => count($resource_collections),
             'resource_group_count'          => count($resource_groups),
             'lab_program'                   => $lab_programs,
-            'challenge'                     => $chalenges,
+            'challenge'                     => $challenges,
             'challenge_path'                => $challenge_paths,
             'resource_module'               => $resource_modules,
             'resource_collection'           => $resource_collections,
