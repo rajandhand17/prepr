@@ -368,4 +368,27 @@ class ChallengePathService
             return false;
         }
     }
+
+    public static function getChallengePathBasedOnUUID($uuid)
+    {
+        try {
+            return ChallengePath::where('UUID', $uuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnUUIDArray($challengePathUUIDArray)
+    {
+        try {
+            $challengePathIds = ChallengePath::whereIn('uuid', $challengePathUUIDArray)->pluck('id')->all();
+            if ($challengePathIds != null) {
+                return $challengePathIds;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
