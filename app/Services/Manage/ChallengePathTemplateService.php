@@ -2,9 +2,12 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
 use App\Models\ChallengePathTemplate;
+use App\Models\Organization;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
 
 class ChallengePathTemplateService
 {
@@ -33,6 +36,58 @@ class ChallengePathTemplateService
             $challengesPathTemplate->save();
 
             return $challengesPathTemplate;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function redeemChallengePathTemplateToChallengePath($challengePathTemplateId, $organizationId)
+    {
+        try {
+            $challengePathTemplateData = ChallengePathTemplate::find($challengePathTemplateId);
+            $organisationName = Organization::where('id', $organizationId)->pluck('title')->first();
+
+            $model = new ChallengePath();
+            $slug = UtilityHelper::generateSlug($organisationName . '-' . $challengePathTemplateData->slug, $model);
+
+            $title = $title_format = $organisationName . ' ' . $challengePathTemplateData->title;
+            $next = 1;
+            while (ChallengePath::where('title', '=', $title)->first()) {
+                $title = "{$title_format} {$next}";
+                $next++;
+            }
+
+            $challengePath = new ChallengePath();
+            $challengePath->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $challengePath->language = $challengePathTemplateData->language;
+            $challengePath->slug = $slug;
+            $challengePath->title = $challengePathTemplateData->title;
+            $challengePath->description = $challengePathTemplateData->description;
+            $challengePath->user_id = auth()->user()->id;
+            $challengePath->organization_id = $organizationId;
+            $challengePath->category_id = $challengePathTemplateData->category_id;
+            $challengePath->duration_id = $challengePathTemplateData->duration_id;
+            $challengePath->level_id = $challengePathTemplateData->level_id;
+            $challengePath->media_type = $challengePathTemplateData->media_type;
+            $challengePath->media = $challengePathTemplateData->getRawOriginal('media');
+            $challengePath->privacy = $challengePathTemplateData->privacy;
+            $challengePath->status = $challengePathTemplateData->status;
+            $challengePath->is_achievement_enabled = $challengePathTemplateData->is_achievement_enabled;
+            $challengePath->is_sequential = $challengePathTemplateData->is_sequential;
+            $challengePath->is_auto_created = $challengePathTemplateData->is_auto_created;
+            $challengePath->save();
+
+            return $challengePath;
+
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnId($id)
+    {
+        try {
+            return ChallengePathTemplate::where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }

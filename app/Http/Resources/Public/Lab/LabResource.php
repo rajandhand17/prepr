@@ -3,7 +3,19 @@
 namespace App\Http\Resources\Public\Lab;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
+use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
+use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
+use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Services\AchievementConditionListService;
+use App\Services\Manage\ChallengePathService;
+use App\Services\Manage\ChallengeService;
+use App\Services\Manage\LabProgramService;
+use App\Services\Manage\ResourceCollectionService;
+use App\Services\Manage\ResourceGroupService;
+use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -34,6 +46,12 @@ class LabResource extends JsonResource
         $tags = [];
         $tag_groups = [];
         $achievement = [];
+        $lab_programs = [];
+        $chalenges = [];
+        $challenge_paths = [];
+        $resource_modules = [];
+        $resource_collections = [];
+        $resource_groups = [];
 
         if ($this->getCategory) {
             $category_id = $this->getCategory->id;
@@ -126,6 +144,40 @@ class LabResource extends JsonResource
                 break;
         }
 
+        if (!empty($this->component_association)) {
+            foreach ($this->component_association as $lab_association) {
+                if ($lab_association->lab_program_id) {
+                    $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
+                    $lab_programs[$lab_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
+                }
+
+                if ($lab_association->challenge_id) {
+                    $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
+                    $chalenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallenge);
+                }
+
+                if ($lab_association->challenge_path_id) {
+                    $getChallengePath = ChallengePathService::getChallengePathBasedOnId($lab_association->challenge_path_id);
+                    $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
+                }
+
+                if ($lab_association->resource_module_id) {
+                    $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($lab_association->resource_module_id);
+                    $resource_modules[$lab_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
+                }
+
+                if ($lab_association->resource_collection_id) {
+                    $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($lab_association->resource_collection_id);
+                    $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                }
+
+                if ($lab_association->resource_group_id) {
+                    $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
+                    $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                }
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -159,6 +211,12 @@ class LabResource extends JsonResource
             'lab_address'                   => LabAddressResource::make($this->address),
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),
+            'lab_program'                   => $lab_programs,
+            'challenge'                     => $chalenges,
+            'challenge_path'                => $challenge_paths,
+            'resource_module'               => $resource_modules,
+            'resource_collection'           => $resource_collections,
+            'resource_group'                => $resource_groups,
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }

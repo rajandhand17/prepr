@@ -58,4 +58,39 @@ class ChallengePathTemplateRepository implements ChallengePathTemplateInterface
             return false;
         }
     }
+
+    public function redeemChallengePath($challengePathTemplateId, $organizationId)
+    {
+        try {
+            $redeemChallengePathTemplate = DB::transaction(function () use ($challengePathTemplateId, $organizationId){
+                $redeemChallengePathTemplateToChallengePath = $this->challengePathTemplateService->redeemChallengePathTemplateToChallengePath($challengePathTemplateId, $organizationId);
+                $redeemChallengePathTemplateToChallengePathAchievement = $this->challengePathTemplateAchievementsService->redeemChallengePathTemplateToChallengePathAchievement($challengePathTemplateId, $redeemChallengePathTemplateToChallengePath->id);
+                $redeemChallengePathTemplateToChallengePathSkillsGroupsStack = $this->challengePathTemplateSkillsGroupsStackService->redeemChallengePathTemplateToChallengePathSkillsGroupsStack($challengePathTemplateId, $redeemChallengePathTemplateToChallengePath->id);
+                $redeemChallengePathTemplateToChallengePathTagsGroupsService = $this->challengePathTemplateTagsGroupsService->redeemChallengePathTemplateToChallengePathTagsGroupsService($challengePathTemplateId, $redeemChallengePathTemplateToChallengePath->id);
+
+                return [
+                    'redeemChallengePathTemplateToChallengePath'                    => $redeemChallengePathTemplateToChallengePath,
+                    'redeemChallengePathTemplateToChallengePathAchievement'         => $redeemChallengePathTemplateToChallengePathAchievement,
+                    'redeemChallengePathTemplateToChallengePathSkillsGroupsStack'   => $redeemChallengePathTemplateToChallengePathSkillsGroupsStack,
+                    'redeemChallengePathTemplateToChallengePathTagsGroupsService'   => $redeemChallengePathTemplateToChallengePathTagsGroupsService,
+                ];
+            });
+
+            if (
+                $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePath'] &&
+                $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePathAchievement'] &&
+                $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePathSkillsGroupsStack'] &&
+                $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePathTagsGroupsService']
+                ) {
+                DB::commit();
+
+                return $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePath'];
+            }
+            DB::rollBack();
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

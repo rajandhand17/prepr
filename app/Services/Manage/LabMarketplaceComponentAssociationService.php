@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Models\Challenge;
 use App\Models\ChallengePath;
+use App\Models\ChallengePathTemplate;
 use App\Models\ChallengeTemplate;
 use App\Models\ComponentAssociation;
 use App\Models\LabMarketplaceComponentAssociations;
@@ -67,9 +68,29 @@ class LabMarketplaceComponentAssociationService
                     if ($labMarketplaceComponentAssociation->challenge_id !== null) {
                         $getChallenge = ChallengeTemplate::where('id', $labMarketplaceComponentAssociation->challenge_template_id)->first();
                         if ($getChallenge) {
-                            $challengeTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($getChallenge->id, $organizationId);
+                            $challengeTemplate = $this->challengeTemplateRepository->challengeRedeem($getChallenge->id, $organizationId);
                             self::createRedeemChallenge($redeemLabId, $challengeTemplate->id, $labMarketplaceComponentAssociation->sequence);
                         }
+                    }
+
+                    if ($labMarketplaceComponentAssociation->challenge_path_template_id !== null) {
+                        $getChallengePathTemplate = ChallengePathTemplate::where('id', $labMarketplaceComponentAssociation->challenge_path_template_id)->first();
+                        if ($getChallengePathTemplate) {
+                            $challengePathTemplate = $this->challengePathTemplateRepository->redeemChallengePath($getChallengePathTemplate->id, $organizationId);
+                            self::createRedeemChallengePath($redeemLabId, $challengePathTemplate->id, $labMarketplaceComponentAssociation->sequence);
+                        }
+                    }
+
+                    if ($labMarketplaceComponentAssociation->resource_module_id !== null) {
+                        self::createRedeemResourceModule($redeemLabId, $labMarketplaceComponentAssociation->resource_module_id, $labMarketplaceComponentAssociation->sequence);
+                    }
+
+                    if ($labMarketplaceComponentAssociation->resource_collection_id !== null) {
+                        self::createRedeemResourceCollection($redeemLabId, $labMarketplaceComponentAssociation->resource_collection_id, $labMarketplaceComponentAssociation->sequence);
+                    }
+
+                    if ($labMarketplaceComponentAssociation->resource_group_id !== null) {
+                        self::createRedeemResourceGroup($redeemLabId, $labMarketplaceComponentAssociation->resource_group_id, $labMarketplaceComponentAssociation->sequence);
                     }
                 }
             }
@@ -85,12 +106,59 @@ class LabMarketplaceComponentAssociationService
         try {
             $challengeRedeem = new ComponentAssociation();
             $challengeRedeem->lab_id = $labRedeemId;
-            $challengeRedeem->lab_program_id = null;
             $challengeRedeem->challenge_id = $challengeRedeemId;
-            $challengeRedeem->challenge_path_id = null;
-            $challengeRedeem->resource_module_id = null;
-            $challengeRedeem->resource_collection_id = null;
-            $challengeRedeem->resource_group_id = null;
+            $challengeRedeem->sequence = $sequenceNumber;
+            $challengeRedeem->save();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createRedeemChallengePath($labRedeemId, $challengePathRedeemId, $sequenceNumber)
+    {
+        try {
+            $challengeRedeem = new ComponentAssociation();
+            $challengeRedeem->lab_id = $labRedeemId;
+            $challengeRedeem->challenge_path_id = $challengePathRedeemId;
+            $challengeRedeem->sequence = $sequenceNumber;
+            $challengeRedeem->save();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createRedeemResourceModule($labRedeemId, $resourceModuleId, $sequenceNumber)
+    {
+        try {
+            $challengeRedeem = new ComponentAssociation();
+            $challengeRedeem->lab_id = $labRedeemId;
+            $challengeRedeem->resource_module_id = $resourceModuleId;
+            $challengeRedeem->sequence = $sequenceNumber;
+            $challengeRedeem->save();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createRedeemResourceCollection($labRedeemId, $resourceCollectionId, $sequenceNumber)
+    {
+        try {
+            $challengeRedeem = new ComponentAssociation();
+            $challengeRedeem->lab_id = $labRedeemId;
+            $challengeRedeem->resource_collection_id = $resourceCollectionId;
+            $challengeRedeem->sequence = $sequenceNumber;
+            $challengeRedeem->save();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createRedeemResourceGroup($labRedeemId, $resourceGroupId, $sequenceNumber)
+    {
+        try {
+            $challengeRedeem = new ComponentAssociation();
+            $challengeRedeem->lab_id = $labRedeemId;
+            $challengeRedeem->resource_group_id = $resourceGroupId;
             $challengeRedeem->sequence = $sequenceNumber;
             $challengeRedeem->save();
         } catch (Exception $e) {
@@ -103,12 +171,7 @@ class LabMarketplaceComponentAssociationService
         try {
             $labMarketPlaceChallenge = new LabMarketplaceComponentAssociations();
             $labMarketPlaceChallenge->lab_marketplace_id = $labMarketplaceId;
-            $labMarketPlaceChallenge->lab_program_id = null;
             $labMarketPlaceChallenge->challenge_template_id = $challengeTemplateId;
-            $labMarketPlaceChallenge->challenge_path_template_id = null;
-            $labMarketPlaceChallenge->resource_module_id = null;
-            $labMarketPlaceChallenge->resource_collection_id = null;
-            $labMarketPlaceChallenge->resource_group_id = null;
             $labMarketPlaceChallenge->sequence = $sequenceNumber;
             $labMarketPlaceChallenge->save();
         } catch (Exception $e) {
@@ -121,12 +184,7 @@ class LabMarketplaceComponentAssociationService
         try {
             $labMarketPlaceModule = new LabMarketplaceComponentAssociations();
             $labMarketPlaceModule->lab_marketplace_id = $labMarketplaceId;
-            $labMarketPlaceModule->lab_program_id = null;
-            $labMarketPlaceModule->challenge_template_id = null;
-            $labMarketPlaceModule->challenge_path_template_id = null;
             $labMarketPlaceModule->resource_module_id = $resourceModuleId;
-            $labMarketPlaceModule->resource_collection_id = null;
-            $labMarketPlaceModule->resource_group_id = null;
             $labMarketPlaceModule->sequence = $sequenceNumber;
             $labMarketPlaceModule->save();
         } catch (Exception $e) {
@@ -139,12 +197,7 @@ class LabMarketplaceComponentAssociationService
         try {
             $labMarketPlaceCollection = new LabMarketplaceComponentAssociations();
             $labMarketPlaceCollection->lab_marketplace_id = $labMarketplaceId;
-            $labMarketPlaceCollection->lab_program_id = null;
-            $labMarketPlaceCollection->challenge_template_id = null;
-            $labMarketPlaceCollection->challenge_path_template_id = null;
-            $labMarketPlaceCollection->resource_module_id = null;
             $labMarketPlaceCollection->resource_collection_id = $resourceCollectionId;
-            $labMarketPlaceCollection->resource_group_id = null;
             $labMarketPlaceCollection->sequence = $sequenceNumber;
             $labMarketPlaceCollection->save();
         } catch (Exception $e) {
@@ -157,11 +210,6 @@ class LabMarketplaceComponentAssociationService
         try {
             $labMarketPlaceGroup = new LabMarketplaceComponentAssociations();
             $labMarketPlaceGroup->lab_marketplace_id = $labMarketplaceId;
-            $labMarketPlaceGroup->lab_program_id = null;
-            $labMarketPlaceGroup->challenge_template_id = null;
-            $labMarketPlaceGroup->challenge_path_template_id = null;
-            $labMarketPlaceGroup->resource_module_id = null;
-            $labMarketPlaceGroup->resource_collection_id = null;
             $labMarketPlaceGroup->resource_group_id = $resourceGroupId;
             $labMarketPlaceGroup->sequence = $sequenceNumber;
             $labMarketPlaceGroup->save();
@@ -175,12 +223,7 @@ class LabMarketplaceComponentAssociationService
         try {
             $labMarketPlaceChallengePath = new LabMarketplaceComponentAssociations();
             $labMarketPlaceChallengePath->lab_marketplace_id = $labMarketplaceId;
-            $labMarketPlaceChallengePath->lab_program_id = null;
-            $labMarketPlaceChallengePath->challenge_template_id = null;
             $labMarketPlaceChallengePath->challenge_path_template_id = $challengePathTemplateId;
-            $labMarketPlaceChallengePath->resource_module_id = null;
-            $labMarketPlaceChallengePath->resource_collection_id = null;
-            $labMarketPlaceChallengePath->resource_group_id = null;
             $labMarketPlaceChallengePath->sequence = $sequenceNumber;
             $labMarketPlaceChallengePath->save();
         } catch (Exception $e) {
