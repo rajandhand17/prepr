@@ -48,9 +48,9 @@ class ChallengePathTemplateService
             $organisationName = Organization::where('id', $organizationId)->pluck('title')->first();
 
             $model = new ChallengePath();
-            $slug = UtilityHelper::generateSlug($organisationName . '-' . $challengePathTemplateData->slug, $model);
+            $slug = UtilityHelper::generateSlug($organisationName.'-'.$challengePathTemplateData->slug, $model);
 
-            $title = $title_format = $organisationName . ' ' . $challengePathTemplateData->title;
+            $title = $title_format = $organisationName.' '.$challengePathTemplateData->title;
             $next = 1;
             while (ChallengePath::where('title', '=', $title)->first()) {
                 $title = "{$title_format} {$next}";
@@ -78,7 +78,6 @@ class ChallengePathTemplateService
             $challengePath->save();
 
             return $challengePath;
-
         } catch (Exception $e) {
             return false;
         }

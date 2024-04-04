@@ -62,7 +62,7 @@ class ChallengePathTemplateRepository implements ChallengePathTemplateInterface
     public function redeemChallengePath($challengePathTemplateId, $organizationId)
     {
         try {
-            $redeemChallengePathTemplate = DB::transaction(function () use ($challengePathTemplateId, $organizationId){
+            $redeemChallengePathTemplate = DB::transaction(function () use ($challengePathTemplateId, $organizationId) {
                 $redeemChallengePathTemplateToChallengePath = $this->challengePathTemplateService->redeemChallengePathTemplateToChallengePath($challengePathTemplateId, $organizationId);
                 $redeemChallengePathTemplateToChallengePathAchievement = $this->challengePathTemplateAchievementsService->redeemChallengePathTemplateToChallengePathAchievement($challengePathTemplateId, $redeemChallengePathTemplateToChallengePath->id);
                 $redeemChallengePathTemplateToChallengePathSkillsGroupsStack = $this->challengePathTemplateSkillsGroupsStackService->redeemChallengePathTemplateToChallengePathSkillsGroupsStack($challengePathTemplateId, $redeemChallengePathTemplateToChallengePath->id);
@@ -81,7 +81,7 @@ class ChallengePathTemplateRepository implements ChallengePathTemplateInterface
                 $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePathAchievement'] &&
                 $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePathSkillsGroupsStack'] &&
                 $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePathTagsGroupsService']
-                ) {
+            ) {
                 DB::commit();
 
                 return $redeemChallengePathTemplate['redeemChallengePathTemplateToChallengePath'];
