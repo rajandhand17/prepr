@@ -169,7 +169,7 @@ class ComponentAssociationService
             if ($request->has('challenges')) {
                 $sequence = 1;
                 if (count($request->challenges) > 0) {
-                    $getChallengeIds =ChallengeService::getChallengeBasedOnUUIDArray($request->challenges);
+                    $getChallengeIds = ChallengeService::getChallengeBasedOnUUIDArray($request->challenges);
                     $existComponentAssociationchallenge = ComponentAssociation::where([
                         ['lab_id', '=', $lab_id],
                         ['challenge_id', '!=', null],
