@@ -20,13 +20,21 @@ class TeamMatchingController extends AppBaseController
         $this->teamMatchingRepository=$teamMatchingRepository;
     }
 
-    public function index(){
+    public function index(Request $request){
         try {
             $getUsersSkills=UserSkillsService::getUserSkills();
             if($getUsersSkills){
-                $getProjectListing=$this->teamMatchingRepository->getProjectListingBasedOnSkills($getUsersSkills);
+                $getProjectListing=$this->teamMatchingRepository->getProjectListingBasedOnSkills($getUsersSkills,$request);
                 if($getProjectListing){
-                    return $this->sendResponse(TeamMatchingResource::collection($getProjectListing),__('responses.team_matching_list_successfully'));
+                    $response= [
+                        'total_count'  => $getProjectListing->total(),
+                        'per_page'     => $getProjectListing->perPage(),
+                        'count'        => $getProjectListing->count(),
+                        'current_page' => $getProjectListing->currentPage(),
+                        'total_pages'  => $getProjectListing->lastPage(),
+                        'list'         => TeamMatchingResource::collection($getProjectListing),
+                    ];
+                    return $this->sendResponse($response,__('responses.team_matching_list_successfully'));
                 }
                 return $this->sendResponse([],__('responses.team_matching_list_successfully'));
             }
@@ -38,10 +46,13 @@ class TeamMatchingController extends AppBaseController
 
     public function pendingRequests($action,Request $request){
         try {
-            if (!in_array($action, ['pending', 'matched'])) {
+            if (!in_array($action, ['browse','pending', 'matched'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             switch ($action) {
+                case 'browse':
+                    $getBrowserRequest=$this->teamMatchingRepository->getBrowsersList($request);
+                    dd($getBrowserRequest);
                 case 'pending':
                      $getPendingRequests=$this->teamMatchingRepository->getPendingRequests($request);
                      if(!empty($getPendingRequests)){
@@ -60,7 +71,7 @@ class TeamMatchingController extends AppBaseController
                      }
                     break;
                 case 'matched':
-                    $getMatchingRequest=$this->teamMatchingRepository->getMatchingTeams();
+                    $getMatchingRequest=$this->teamMatchingRepository->getMatchingTeams($request);
                     if(!empty($getMatchingRequest)){
                         $response= [
                             'total_count'  => $getMatchingRequest->total(),

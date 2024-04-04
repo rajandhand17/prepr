@@ -29,18 +29,23 @@ class TeamMatchingRepository implements TeamMatchingInterface
         $this->userService=$userService;
     }
 
-    public function getProjectListingBasedOnSkills($getUsersSkills){
+    public function getProjectListingBasedOnSkills($getUsersSkills,$request){
         try {
             $getProjectsIds=$this->projectSkillsService->getProjectsListingBasedOnSkills($getUsersSkills);
-            $getChallengeIds=$this->projectService->getProjectListingBasedOnSkills($getProjectsIds);
+            $getChallengeIds=$this->projectService->getProjectListingBasedOnSkills($getProjectsIds,$request);
             return $getChallengeIds;
-          //  $getChallengesDueOrNot=ChallengeService::fetchChallengeDueDate();
-            //return $getProjectsList;
         }catch (\Exception $e){
             return false;
         }
     }
 
+    public function getBrowsersList($request){
+        try {
+            $getBrowsersIds=$this->projectService->getBrowsersListing($request);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
     public function getPendingRequests($request){
         try {
           $getProjectsPendingList=$this->userService->getUsersBasedOnProjectMemberManagement($request);
@@ -50,9 +55,9 @@ class TeamMatchingRepository implements TeamMatchingInterface
         }
     }
 
-    public function getMatchingTeams(){
+    public function getMatchingTeams($request){
         try {
-            $getProjectsPendingList=$this->projectService->getMatchedTeams();
+            $getProjectsPendingList=$this->projectService->getMatchedTeams($request);
             return $getProjectsPendingList;
         }catch (\Exception $e){
             return false;

@@ -45,7 +45,6 @@ class ProjectService
             if ($request->has('search') && !empty($request->search)) {
                 $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
             }
-
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
                     case 'public':
@@ -534,7 +533,16 @@ class ProjectService
         }
     }
 
-    public function getProjectListingBasedOnSkills($getUsersSkills){
+    public static function getBrowsersListing($request){
+        try {
+            $getProjectMemberManagementList=ProjectMemberManagementService::g
+            $getProjectList=Project::select()
+
+        }catch (Exception $e){
+            return false;
+        }
+    }
+    public function getProjectListingBasedOnSkills($getUsersSkills,$request){
         try {
             $projects=Project::whereIn('id',$getUsersSkills)->get();
             $pushedProjectIds=array();
@@ -545,20 +553,24 @@ class ProjectService
                 $currentDateTime = new \DateTime();
                 $givenDateTime = new \DateTime($dueDate['submission_deadline_date']);
                 if ($givenDateTime < $currentDateTime) {
-                    array_push($pushedProjectIds,$project);
+                    array_push($pushedProjectIds,$project->id);
                 }
             }
-            return $pushedProjectIds;
+            $getProjects=Project::whereIn('id',$pushedProjectIds);
+            $getProjects = self::filterProjectList($getProjects, $request);
+            return $getProjects->paginate(config('site-settings.pagination_per_page'));
         }catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getMatchedTeams(){
+    public static function getMatchedTeams($request){
         try{
             $getProjectIds=ProjectMemberManagementService::getMatchedTeams();
             $getMyProjects = Project::whereIn('id',$getProjectIds);
-            return $getMyProjects->paginate(config('site-settings.pagination_per_page'));
+            $project_list = self::filterProjectList($getMyProjects, $request);
+
+            return $project_list->paginate(config('site-settings.pagination_per_page'));
         }catch (\Exception $e){
             return false;
         }
