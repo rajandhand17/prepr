@@ -54,7 +54,7 @@ class UserResource extends JsonResource
                 'apple'         => 'inactive',
             ],
 
-            'resume'                            => $this->userResume ? 'true' : 'false',
+            'resume'           => $this->userResume ? 'yes' : 'no',
         ];
     }
 }
