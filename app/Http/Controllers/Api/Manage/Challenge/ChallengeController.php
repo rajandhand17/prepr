@@ -6,7 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\createChallengeUsingAIPreviewRequest;
-use App\Http\Requests\Manage\Challenge\createChallengeUsingAIRequest;
+use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
@@ -457,7 +457,7 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function createChallengeUsingAI(createChallengeUsingAIRequest $request)
+    public function createChallengeUsingAI(CreateChallengeUsingAIRequest $request)
     {
         try {
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
