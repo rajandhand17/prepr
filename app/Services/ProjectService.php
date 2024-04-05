@@ -613,28 +613,6 @@ class ProjectService
             return false;
         }
     }
-    public function getProjectListingBasedOnSkills($getUsersSkills,$request){
-        try {
-            $projects=Project::whereIn('id',$getUsersSkills)->get();
-            $pushedProjectIds=array();
-            foreach($projects as $project){
-                $getChallenges=ChallengeService::getChallengeBasedOnId($project->challenge_id);
-                $projectDate = UtilityHelper::formatDateTime($project->created_at);
-                $dueDate=ChallengeService::fetchChallengeDueDate($getChallenges,$projectDate);
-                $currentDateTime = new \DateTime();
-                $givenDateTime = new \DateTime($dueDate['submission_deadline_date']);
-                if ($givenDateTime < $currentDateTime) {
-                    array_push($pushedProjectIds,$project->id);
-                }
-            }
-            $getProjects=Project::whereIn('id',$pushedProjectIds);
-            $getProjects = self::filterProjectList($getProjects, $request);
-            return $getProjects->paginate(config('site-settings.pagination_per_page'));
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public static function getMatchedTeams($request){
         try{
             $getProjectIds=ProjectMemberManagementService::getMatchedTeams();

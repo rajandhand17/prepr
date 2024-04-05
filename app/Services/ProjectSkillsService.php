@@ -39,12 +39,4 @@ class ProjectSkillsService
         }
     }
 
-    public static function getProjectsListingBasedOnSkills($getUsersSkills){
-        try {
-            $projectsSkills=ProjectSkill::whereIn('skill_id',$getUsersSkills)->pluck('project_id')->unique();
-            return $projectsSkills;
-        }catch (Exception $e){
-            return false;
-        }
-    }
 }

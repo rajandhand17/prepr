@@ -19,31 +19,6 @@ class TeamMatchingController extends AppBaseController
     public function __construct(TeamMatchingRepository $teamMatchingRepository){
         $this->teamMatchingRepository=$teamMatchingRepository;
     }
-
-    public function index(Request $request){
-        try {
-            $getUsersSkills=UserSkillsService::getUserSkills();
-            if($getUsersSkills){
-                $getProjectListing=$this->teamMatchingRepository->getProjectListingBasedOnSkills($getUsersSkills,$request);
-                if($getProjectListing){
-                    $response= [
-                        'total_count'  => $getProjectListing->total(),
-                        'per_page'     => $getProjectListing->perPage(),
-                        'count'        => $getProjectListing->count(),
-                        'current_page' => $getProjectListing->currentPage(),
-                        'total_pages'  => $getProjectListing->lastPage(),
-                        'list'         => TeamMatchingResource::collection($getProjectListing),
-                    ];
-                    return $this->sendResponse($response,__('responses.team_matching_list_successfully'));
-                }
-                return $this->sendResponse([],__('responses.team_matching_list_successfully'));
-            }
-            return $this->sendError(__('responses.skills_list_failed'), 403);
-        }catch (\Exception $e){
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
     public function pendingRequests($action,Request $request){
         try {
             if (!in_array($action, ['browse','pending', 'matched'])) {

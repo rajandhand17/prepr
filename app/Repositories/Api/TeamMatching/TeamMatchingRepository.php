@@ -28,17 +28,6 @@ class TeamMatchingRepository implements TeamMatchingInterface
         $this->projectMemberManagementService=$projectMemberManagementService;
         $this->userService=$userService;
     }
-
-    public function getProjectListingBasedOnSkills($getUsersSkills,$request){
-        try {
-            $getProjectsIds=$this->projectSkillsService->getProjectsListingBasedOnSkills($getUsersSkills);
-            $getChallengeIds=$this->projectService->getProjectListingBasedOnSkills($getProjectsIds,$request);
-            return $getChallengeIds;
-        }catch (\Exception $e){
-            return false;
-        }
-    }
-
     public function getBrowsersList($request){
         try {
             $getBrowsersIds=$this->projectService->getBrowsersListing($request);
