@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RelatedPathway extends Model
@@ -10,8 +9,8 @@ class RelatedPathway extends Model
     protected $table = 'related_pathways';
 
     protected $fillable = [
-        'lightcast_pathway_id', 
-        'related_lightcast_pathway_id', 
+        'lightcast_pathway_id',
+        'related_lightcast_pathway_id',
         'category',
     ];
 

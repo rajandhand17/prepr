@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\JobTitle;
 use App\Models\JobTitlePathway;
 use App\Models\RelatedPathway;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -23,9 +23,9 @@ class JobTitlesAndPathwaysSeeder extends Seeder
             JobTitlePathway::updateOrCreate(
                 ['lightcast_pathway_id' => $item['id']],
                 [
-                    'name' => $item['name'],
-                    'fr_CA_name' => $item['fr_CA_name'] ?? null,
-                    'job_level' => $item['jobLevel'],
+                    'name'        => $item['name'],
+                    'fr_CA_name'  => $item['fr_CA_name'] ?? null,
+                    'job_level'   => $item['jobLevel'],
                     'mean_salary' => $item['meanSalary'],
                 ]
             );
@@ -40,10 +40,10 @@ class JobTitlesAndPathwaysSeeder extends Seeder
             JobTitle::updateOrCreate(
                 ['lightcast_id' => $item['id']],
                 [
-                    'uuid' => Str::uuid(),
-                    'title' => $item['name'],
+                    'uuid'        => Str::uuid(),
+                    'title'       => $item['name'],
                     'fr_CA_title' => $item['fr_CA_name'] ?? null,
-                    'pathway_id' => $pathway ? $pathway->id : null,
+                    'pathway_id'  => $pathway ? $pathway->id : null,
                 ]
             );
         }
@@ -65,9 +65,9 @@ class JobTitlesAndPathwaysSeeder extends Seeder
 
                         if ($mainPathwayExists && $relatedPathwayExists && !$relationshipExists) {
                             RelatedPathway::create([
-                                'lightcast_pathway_id' => $item['id'],
+                                'lightcast_pathway_id'         => $item['id'],
                                 'related_lightcast_pathway_id' => $id,
-                                'category' => $category,
+                                'category'                     => $category,
                             ]);
                         }
                     }
