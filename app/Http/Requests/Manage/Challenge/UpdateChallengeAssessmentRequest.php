@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests\Manage\Challenge;
 
-use App\Services\Manage\ChallengeService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateChallengeAssessmentRequest extends FormRequest
 {
