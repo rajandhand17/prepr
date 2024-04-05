@@ -76,7 +76,7 @@ class TeamMatchingController extends AppBaseController
                                     'count'        => $getPendingRequests->count(),
                                     'current_page' => $getPendingRequests->currentPage(),
                                     'total_pages'  => $getPendingRequests->lastPage(),
-                                    'list'         => PendingRequestsResource::collection($getPendingRequests),
+                                    'list'         => TeamMatchingResource::collection($getPendingRequests),
                                 ];
                      $message=__('responses.team_matching_list_successfully');
                     }else{

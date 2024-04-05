@@ -3,8 +3,10 @@
 namespace App\Http\Resources\TeamMatching;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\User\UserResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -41,10 +43,11 @@ class TeamMatchingResource extends JsonResource
             $associatedSkills = $this->skills->pluck('skill_id');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         }
+        $getUsersDetails=UserService::getUserById($this->user_id);
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
-            'user_id'               => $this->user_id,
+            'user_details'          => UserResource::make($getUsersDetails),
             'title'                 => $this->title,
             'slug'                  => $this->slug,
             'description'           => $this->description,

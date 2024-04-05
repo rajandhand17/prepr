@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\LabProgram;
+use App\Models\Project;
 use App\Models\ProjectMemberManagement;
 use App\Models\User;
 use Exception;
@@ -175,19 +176,6 @@ class UserService
         try {
             $fetchUsers=User::whereIn('id',$ids)->get();
             return  $fetchUsers;
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function getUsersBasedOnProjectMemberManagement($request){
-        try {
-            $getMyProjectIds = ProjectService::getMyProjectIds(auth()->user()->id);
-            $getMyProjectIdsTeamLead=ProjectMemberManagementService::getProjectsInTeamLead(auth()->user()->id);
-            $projectIds = $getMyProjectIds->merge($getMyProjectIdsTeamLead)->unique();
-            $getUsersIds=ProjectMemberManagementService::getInviterIdBasedOnProjectIds($projectIds);
-            $usersDetails=User::select()->whereIn('id', $getUsersIds);
-            return $usersDetails->paginate(config('site-settings.pagination_per_page'));
         }catch (\Exception $e) {
             return false;
         }

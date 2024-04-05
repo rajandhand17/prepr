@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Project;
 use App\Models\ProjectMemberManagement;
+use App\Models\ProjectSkill;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
@@ -562,9 +563,34 @@ class ProjectService
                         break;
                     default:
                         $project_list = $project_list;
+
                 }
             }
-
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
+                $project_list = $project_list->whereIn('projects.id', function ($query) use ($request) {
+                    $query->select('project_id')
+                        ->from('project_skills')
+                        ->whereIn('project_skills.skill_id', $request->skills)
+                        ->whereNull('project_skills.deleted_at')
+                        ->distinct(); // Move distinct() here
+                });
+            }
+            if ($request->has('challenge_duration') && !empty($request->challenge_duration) && is_array($request->challenge_duration)){
+                $project_list=$project_list->whereIn('projects.challenge_id',function ($query) use ($request){
+                    $query->select('challenges.id')
+                        ->from('challenges')
+                        ->whereIn('challenges.duration_id',$request->challenge_duration)
+                       ->whereNull('challenges.deleted_at');
+                });
+            }
+            if ($request->has('challenge_level') && !empty($request->challenge_level) && is_array($request->challenge_level)){
+                $project_list=$project_list->whereIn('projects.challenge_id',function ($query) use ($request){
+                    $query->select('challenges.id')
+                        ->from('challenges')
+                        ->whereIn('challenges.level_id',$request->challenge_level)
+                        ->whereNull('challenges.deleted_at');
+                });
+            }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
@@ -580,6 +606,8 @@ class ProjectService
                         $project_list = $project_list->orderBy('projects.id', 'ASC');
                 }
             }
+
+
             return $project_list;
         }catch (\Exception $e){
             return false;
@@ -614,6 +642,18 @@ class ProjectService
             $project_list = self::filterProjectList($getMyProjects, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public static function getUsersBasedOnProjectMemberManagement($request){
+        try {
+            $getMyProjectIds = self::getMyProjectIds(auth()->user()->id);
+            $getMyProjectIdsTeamLead=ProjectMemberManagementService::getProjectsInTeamLead(auth()->user()->id);
+            $projectIds = $getMyProjectIds->merge($getMyProjectIdsTeamLead)->unique();
+            $usersDetails=Project::whereIn('id',$projectIds);
+            return $usersDetails->paginate(config('site-settings.pagination_per_page'));
         }catch (\Exception $e){
             return false;
         }

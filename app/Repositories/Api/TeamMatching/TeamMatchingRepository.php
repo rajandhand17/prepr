@@ -49,7 +49,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
     }
     public function getPendingRequests($request){
         try {
-          $getProjectsPendingList=$this->userService->getUsersBasedOnProjectMemberManagement($request);
+            $getProjectsPendingList=$this->projectService->getUsersBasedOnProjectMemberManagement($request);
             return $getProjectsPendingList;
         }catch (\Exception $e){
             return false;

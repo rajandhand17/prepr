@@ -618,7 +618,7 @@ class ProjectMemberManagementService
 
     public static function getInviterIdBasedOnProjectIds($projectIds){
         try {
-          $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['invite_type' =>'3', 'invite_status' => '2'])->whereIn('project_id', $projectIds)->pluck('inviter_id');
+          $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['invite_type' =>'3', 'invite_status' => '2'])->whereIn('project_id', $projectIds)->whereNotIn('inviter_id', [auth()->user()->id])->pluck('inviter_id');
             return $getAcceptedInvitesProjectIds;
         }catch (\Exception $e){
             return false;
