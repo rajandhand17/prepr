@@ -60,6 +60,7 @@ class PreprJobTitles extends Command
                         'title'             => $job->name,
                         'fr_CA_title'       => $job->fr_CA_name,
                         'lightcast_id'      => $job->lc_id,
+                        'pathway_id'        => null,
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now(),
                     ];
