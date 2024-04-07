@@ -617,7 +617,7 @@ class ProjectService
         try{
             $getProjectIds=ProjectMemberManagementService::getMatchedTeams();
             $getMyProjects = Project::whereIn('id',$getProjectIds);
-            $project_list = self::filterProjectList($getMyProjects, $request);
+            $project_list = self::filterTeamMatesProjectList($getMyProjects, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         }catch (\Exception $e){
@@ -630,8 +630,9 @@ class ProjectService
             $getMyProjectIds = self::getMyProjectIds(auth()->user()->id);
             $getMyProjectIdsTeamLead=ProjectMemberManagementService::getProjectsInTeamLead(auth()->user()->id);
             $projectIds = $getMyProjectIds->merge($getMyProjectIdsTeamLead)->unique();
-            $usersDetails=Project::whereIn('id',$projectIds);
-            return $usersDetails->paginate(config('site-settings.pagination_per_page'));
+            $getProjectList=Project::whereIn('id',$projectIds);
+            $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
+            return $getProjectList->paginate(config('site-settings.pagination_per_page'));
         }catch (\Exception $e){
             return false;
         }
