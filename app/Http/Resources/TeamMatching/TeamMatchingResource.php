@@ -26,16 +26,16 @@ class TeamMatchingResource extends JsonResource
                 $projectDate = UtilityHelper::formatDateTime($this->created_at);
                 $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($fetchChallenge, $projectDate);
                 $challenge_details = [
-                    'id' => $fetchChallenge->id,
-                    'uuid' => $fetchChallenge->uuid,
-                    'title' => $fetchChallenge->title,
-                    'slug' => $fetchChallenge->slug,
-                    'agreement' => $fetchChallenge->agreement,
-                    'template_id' => $getTemplate,
-                    'challenge_type' => $fetchChallengeDueDate['timeline_type'],
-                    'due_date' => $fetchChallengeDueDate['submission_deadline_date'],
+                    'id'                => $fetchChallenge->id,
+                    'uuid'              => $fetchChallenge->uuid,
+                    'title'             => $fetchChallenge->title,
+                    'slug'              => $fetchChallenge->slug,
+                    'agreement'         => $fetchChallenge->agreement,
+                    'template_id'       => $getTemplate,
+                    'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
+                    'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
                     'submission_status' => $fetchChallengeDueDate['submission_status'],
-                    'challenge_status' => $fetchChallengeDueDate['challenge_status'],
+                    'challenge_status'  => $fetchChallengeDueDate['challenge_status'],
                 ];
             }
         }
@@ -43,7 +43,8 @@ class TeamMatchingResource extends JsonResource
             $associatedSkills = $this->skills->pluck('skill_id');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         }
-        $getUsersDetails=UserService::getUserById($this->user_id);
+        $getUsersDetails = UserService::getUserById($this->user_id);
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,

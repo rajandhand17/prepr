@@ -8,7 +8,6 @@ use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Project;
 use App\Models\ProjectMemberManagement;
-use App\Models\ProjectSkill;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
@@ -21,6 +20,7 @@ class ProjectService
     {
         try {
             $getMyProjects = Project::where('user_id', $userId)->pluck('id');
+
             return $getMyProjects;
         } catch (Exception $e) {
             return false;
@@ -534,7 +534,8 @@ class ProjectService
         }
     }
 
-    public static function getBrowsersListing($request){
+    public static function getBrowsersListing($request)
+    {
         try {
             $getProjectList = Project::where('recruiting_status', '0')
                 ->whereNotIn('user_id', [auth()->user()->id])
@@ -542,13 +543,15 @@ class ProjectService
                     $query->whereNotIn('inviter_id', [auth()->user()->id]);
                 });
             $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
+
             return $getProjectList->paginate(config('site-settings.pagination_per_page'));
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function filterTeamMatesProjectList($project_list, $request){
+    public static function filterTeamMatesProjectList($project_list, $request)
+    {
         try {
             if ($request->has('search') && !empty($request->search)) {
                 $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
@@ -563,7 +566,6 @@ class ProjectService
                         break;
                     default:
                         $project_list = $project_list;
-
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
@@ -575,19 +577,19 @@ class ProjectService
                         ->distinct(); // Move distinct() here
                 });
             }
-            if ($request->has('challenge_duration') && !empty($request->challenge_duration) && is_array($request->challenge_duration)){
-                $project_list=$project_list->whereIn('projects.challenge_id',function ($query) use ($request){
+            if ($request->has('challenge_duration') && !empty($request->challenge_duration) && is_array($request->challenge_duration)) {
+                $project_list = $project_list->whereIn('projects.challenge_id', function ($query) use ($request) {
                     $query->select('challenges.id')
                         ->from('challenges')
-                        ->whereIn('challenges.duration_id',$request->challenge_duration)
+                        ->whereIn('challenges.duration_id', $request->challenge_duration)
                        ->whereNull('challenges.deleted_at');
                 });
             }
-            if ($request->has('challenge_level') && !empty($request->challenge_level) && is_array($request->challenge_level)){
-                $project_list=$project_list->whereIn('projects.challenge_id',function ($query) use ($request){
+            if ($request->has('challenge_level') && !empty($request->challenge_level) && is_array($request->challenge_level)) {
+                $project_list = $project_list->whereIn('projects.challenge_id', function ($query) use ($request) {
                     $query->select('challenges.id')
                         ->from('challenges')
-                        ->whereIn('challenges.level_id',$request->challenge_level)
+                        ->whereIn('challenges.level_id', $request->challenge_level)
                         ->whereNull('challenges.deleted_at');
                 });
             }
@@ -607,33 +609,36 @@ class ProjectService
                 }
             }
 
-
             return $project_list;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
-    public static function getMatchedTeams($request){
-        try{
-            $getProjectIds=ProjectMemberManagementService::getMatchedTeams();
-            $getMyProjects = Project::whereIn('id',$getProjectIds);
+
+    public static function getMatchedTeams($request)
+    {
+        try {
+            $getProjectIds = ProjectMemberManagementService::getMatchedTeams();
+            $getMyProjects = Project::whereIn('id', $getProjectIds);
             $project_list = self::filterTeamMatesProjectList($getMyProjects, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getUsersBasedOnProjectMemberManagement($request){
+    public static function getUsersBasedOnProjectMemberManagement($request)
+    {
         try {
             $getMyProjectIds = self::getMyProjectIds(auth()->user()->id);
-            $getMyProjectIdsTeamLead=ProjectMemberManagementService::getProjectsInTeamLead(auth()->user()->id);
+            $getMyProjectIdsTeamLead = ProjectMemberManagementService::getProjectsInTeamLead(auth()->user()->id);
             $projectIds = $getMyProjectIds->merge($getMyProjectIdsTeamLead)->unique();
-            $getProjectList=Project::whereIn('id',$projectIds);
+            $getProjectList = Project::whereIn('id', $projectIds);
             $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
+
             return $getProjectList->paginate(config('site-settings.pagination_per_page'));
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

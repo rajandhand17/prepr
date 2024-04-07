@@ -153,7 +153,8 @@ class Project extends Model
         return $this->hasMany(ProjectHistory::class, 'project_id', 'id');
     }
 
-    public function challenge(){
-        return $this->hasOne(Challenge::class,'id', 'challenge_id');
+    public function challenge()
+    {
+        return $this->hasOne(Challenge::class, 'id', 'challenge_id');
     }
 }

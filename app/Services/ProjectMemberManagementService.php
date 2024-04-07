@@ -595,41 +595,48 @@ class ProjectMemberManagementService
     public function getPendingRequests($request)
     {
         try {
-            $userData=auth()->user();
+            $userData = auth()->user();
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id)->toArray();
-            $getMyProjectIdsTeamLead=ProjectMemberManagement::where(['invite_status'=>'1','inviter_access_level'=>'2'])->pluck('project_id')->toArray();
-            $projectIds=array_unique(array_merge($getMyProjectIds,$getMyProjectIdsTeamLead));
+            $getMyProjectIdsTeamLead = ProjectMemberManagement::where(['invite_status'=>'1', 'inviter_access_level'=>'2'])->pluck('project_id')->toArray();
+            $projectIds = array_unique(array_merge($getMyProjectIds, $getMyProjectIdsTeamLead));
             $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['invite_type' =>'3', 'invite_status' => '2'])->whereIn('project_id', $projectIds)->pluck('inviter_id');
-            $getUsers=UserService::getUsersByIds($getAcceptedInvitesProjectIds);
+            $getUsers = UserService::getUsersByIds($getAcceptedInvitesProjectIds);
+
             return $getUsers;
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function getProjectsInTeamLead($userId){
+    public static function getProjectsInTeamLead($userId)
+    {
         try {
-            $getMyProjectIdsTeamLead=ProjectMemberManagement::where(['invite_status'=>'1','inviter_access_level'=>'2','inviter_id'=>$userId])->pluck('project_id');
+            $getMyProjectIdsTeamLead = ProjectMemberManagement::where(['invite_status'=>'1', 'inviter_access_level'=>'2', 'inviter_id'=>$userId])->pluck('project_id');
+
             return $getMyProjectIdsTeamLead;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getInviterIdBasedOnProjectIds($projectIds){
+    public static function getInviterIdBasedOnProjectIds($projectIds)
+    {
         try {
-          $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['invite_type' =>'3', 'invite_status' => '2'])->whereIn('project_id', $projectIds)->whereNotIn('inviter_id', [auth()->user()->id])->pluck('inviter_id');
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['invite_type' =>'3', 'invite_status' => '2'])->whereIn('project_id', $projectIds)->whereNotIn('inviter_id', [auth()->user()->id])->pluck('inviter_id');
+
             return $getAcceptedInvitesProjectIds;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getMatchedTeams(){
+    public static function getMatchedTeams()
+    {
         try {
-            $getMatchedTeams = ProjectMemberManagement::where(['invite_status'=>'1','inviter_id'=>auth()->user()->id])->pluck('project_id');
+            $getMatchedTeams = ProjectMemberManagement::where(['invite_status'=>'1', 'inviter_id'=>auth()->user()->id])->pluck('project_id');
+
             return $getMatchedTeams;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
