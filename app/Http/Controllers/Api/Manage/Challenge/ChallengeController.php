@@ -7,6 +7,7 @@ use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
+use App\Http\Requests\Manage\Challenge\UpdateChallengeAssessmentRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
@@ -247,7 +248,7 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function updateAssessment($slug, Request $request)
+    public function updateAssessment($slug, UpdateChallengeAssessmentRequest $request)
     {
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
