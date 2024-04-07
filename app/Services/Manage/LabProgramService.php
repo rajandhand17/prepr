@@ -15,6 +15,7 @@ class LabProgramService
     {
         $getLabProgramList = LabProgram::select()->where('organization_id', '=', $organization->id);
         $getLabProgramList = self::filterLabProgramList($getLabProgramList, $request);
+
         return $getLabProgramList->paginate(config('site-settings.pagination_per_page'));
     }
 

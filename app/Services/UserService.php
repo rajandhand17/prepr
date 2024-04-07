@@ -2,9 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\LabProgram;
-use App\Models\Project;
-use App\Models\ProjectMemberManagement;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
@@ -172,11 +169,13 @@ class UserService
         }
     }
 
-    public static function getUsersByIds($ids){
+    public static function getUsersByIds($ids)
+    {
         try {
-            $fetchUsers=User::whereIn('id',$ids)->get();
+            $fetchUsers = User::whereIn('id', $ids)->get();
+
             return  $fetchUsers;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
