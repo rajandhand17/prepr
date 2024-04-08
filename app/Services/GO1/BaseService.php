@@ -77,7 +77,6 @@ class BaseService
 
             return $existingToken;
         } catch (\Exception $exception) {
-            Log::error($exception);
 
             return false;
         }

@@ -28,7 +28,6 @@ class UserService extends BaseService
 
             return $response->json();
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }

@@ -32,7 +32,6 @@ class RegisterGO1Webhook extends Command
             $webhook = new WebhookService();
             $webhook->registerWebhookToGO1($this->option('url') ?? '');
         } catch (Exception $exception) {
-            Log::error($exception);
             $this->error($exception->getMessage());
         }
     }

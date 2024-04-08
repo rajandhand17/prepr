@@ -33,7 +33,6 @@ class GO1Repository implements GO1Interface
                 'list'         => data_get($data, 'hits'),
             ];
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -57,7 +56,6 @@ class GO1Repository implements GO1Interface
                 return false;
             });
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -92,7 +90,6 @@ class GO1Repository implements GO1Interface
                 'providers' => $providers,
             ];
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -103,7 +100,6 @@ class GO1Repository implements GO1Interface
         try {
             return ResourceModule::query()->where('slug', $slug)->first();
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -126,7 +122,6 @@ class GO1Repository implements GO1Interface
 
             return $this->resourceService->playResource($user->go1_id, $go1CourseId);
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -139,7 +134,6 @@ class GO1Repository implements GO1Interface
 
             return true;
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }

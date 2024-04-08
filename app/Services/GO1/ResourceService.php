@@ -60,7 +60,6 @@ class ResourceService extends BaseService
 
             return $finalQueryParams;
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -88,7 +87,6 @@ class ResourceService extends BaseService
 
             return $resourceModule;
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -115,7 +113,6 @@ class ResourceService extends BaseService
 
             return true;
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -136,7 +133,6 @@ class ResourceService extends BaseService
 
             return $response->json();
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -157,7 +153,6 @@ class ResourceService extends BaseService
 
             return $response->json();
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }

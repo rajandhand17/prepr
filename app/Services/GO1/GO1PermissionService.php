@@ -23,7 +23,6 @@ class GO1PermissionService
 
             return true;
         } catch (\Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -38,7 +37,6 @@ class GO1PermissionService
 
             return $this->isUserBelongToPrepr();
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -59,7 +57,6 @@ class GO1PermissionService
 
             return auth()->user()->hasRole(['resource_manager', 'organization_manager', 'organization_owner']);
         } catch (\Exception $exception) {
-            Log::error($exception);
 
             return false;
         }

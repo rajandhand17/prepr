@@ -27,7 +27,6 @@ class AuthenticationService
 
             return $response->json();
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }

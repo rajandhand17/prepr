@@ -59,7 +59,6 @@ class WebhookService extends BaseService
 
             return true;
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
@@ -122,7 +121,6 @@ class WebhookService extends BaseService
 
             return $response->json();
         } catch (Exception $exception) {
-            Log::error($exception);
 
             return false;
         }
