@@ -17,14 +17,14 @@ class MessageResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'         => $this->id,
-            'uuid'       => $this->uuid,
-            'message'    => $this->message,
+            'id'          => $this->id,
+            'uuid'        => $this->uuid,
+            'message'     => $this->message,
             'attachments' => $this->attachments,
-            'sender'     => UserSearchResource::make($this->sender),
-            'is_sender'  => $this->is_sender ? 'yes' : 'no',
-            'seen_users' => UserSearchResource::collection($this->chat_seen_user),
-            'sent_at'    => UtilityHelper::formatDateTime($this->created_at),
+            'sender'      => UserSearchResource::make($this->sender),
+            'is_sender'   => $this->is_sender ? 'yes' : 'no',
+            'seen_users'  => UserSearchResource::collection($this->chat_seen_user),
+            'sent_at'     => UtilityHelper::formatDateTime($this->created_at),
         ];
     }
 }
