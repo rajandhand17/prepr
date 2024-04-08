@@ -51,6 +51,8 @@ class User extends Authenticatable
         'is_profile_completed',
         'remember_token',
         'is_deactivated',
+        'go1_id',
+        'go1_user_metadata'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -61,6 +63,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $casts = ['go1_user_metadata' => 'object'];
 
     public function receivesBroadcastNotificationsOn(): string
     {

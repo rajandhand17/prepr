@@ -29,12 +29,28 @@ class ResourceModule extends Model
         'is_auto_created',
         'status',
         'is_global',
+        'go1_course_id',
+        'go1_metadata'
     ];
+
+    protected $casts = ["go1_metadata" => 'object'];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
+    public function getIsGO1Attribute()
+    {
+        if($this->go1_course_id) {
+            return true;
+        }
+
+        return false;
+    }
     public function getMediaAttribute($value)
     {
+        if($this->is_go1) {
+            return data_get($this->go1_metadata, 'image');
+        }
+
         return config('site-settings.aws_url').$value;
     }
 
