@@ -198,11 +198,8 @@ class LabService
         $lab->privacy = $privacy;
         $lab->media_type = 'image';
         $lab->media = $upload_cover_image;
-
         $lab->status = $status;
-
         $lab->total_share = 0;
-
         $lab->is_auto_created = '0';
         $lab->$is_ai_created = $is_ai_created;
         $lab->is_resource_sequential = ($request->is_resource_sequential == 'yes') ? '1' : '0';

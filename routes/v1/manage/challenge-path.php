@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/', [ChallengePathController::class, 'index']);
-    Route::get('/{slug}', [ChallengePathController::class, 'show']);
+    Route::get('/get-list', [ChallengePathController::class, 'getList']);
+    Route::get('{slug}', [ChallengePathController::class, 'show']);
     Route::post('/create', [ChallengePathController::class, 'create']);
     Route::post('/{slug}/update', [ChallengePathController::class, 'update']);
     Route::get('/check-slug/{slug}', [ChallengePathController::class, 'checkSlug']);

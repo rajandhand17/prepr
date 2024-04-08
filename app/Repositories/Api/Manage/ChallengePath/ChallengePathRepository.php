@@ -164,4 +164,13 @@ class ChallengePathRepository implements ChallengePathInterface
             return false;
         }
     }
+
+    public function getChallengePathListName($request, $organization)
+    {
+        try {
+            return $this->challengePathService->getChallengePathListName($request, $organization);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

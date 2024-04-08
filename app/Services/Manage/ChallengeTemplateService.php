@@ -223,4 +223,13 @@ class ChallengeTemplateService
             return false;
         }
     }
+
+    public static function getChallengeTemplateBasedOnId($id)
+    {
+        try {
+            return ChallengeTemplate::where('id', $id)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

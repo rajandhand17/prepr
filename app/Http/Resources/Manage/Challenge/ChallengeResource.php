@@ -2,10 +2,20 @@
 
 namespace App\Http\Resources\Manage\Challenge;
 
+use App\Http\Resources\Manage\Lab\LabListNameResource;
+use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
+use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
+use App\Services\Manage\LabProgramService;
+use App\Services\Manage\LabService;
+use App\Services\Manage\ResourceCollectionService;
+use App\Services\Manage\ResourceGroupService;
+use App\Services\Manage\ResourceModuleService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -46,6 +56,11 @@ class ChallengeResource extends JsonResource
         $challenge_assessment = null;
         $challenge_timelines = null;
         $challenge_custom_timelines = null;
+        $labs = [];
+        $lab_programs = [];
+        $resource_modules = [];
+        $resource_collections = [];
+        $resource_groups = [];
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -279,6 +294,35 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        if (!empty($this->challenge_association)) {
+            foreach ($this->challenge_association as $challenge_association) {
+                if ($challenge_association->lab_id) {
+                    $getLab = LabService::getLabBasedOnId($challenge_association->lab_id);
+                    $labs[$challenge_association->lab_id] = LabListNameResource::make($getLab);
+                }
+
+                if ($challenge_association->lab_program_id) {
+                    $getLabProgram = LabProgramService::getLabProgramBasedOnId($challenge_association->lab_program_id);
+                    $lab_programs[$challenge_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
+                }
+
+                if ($challenge_association->resource_module_id) {
+                    $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($challenge_association->resource_module_id);
+                    $resource_modules[$challenge_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
+                }
+
+                if ($challenge_association->resource_collection_id) {
+                    $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($challenge_association->resource_collection_id);
+                    $resource_collections[$challenge_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                }
+
+                if ($challenge_association->resource_group_id) {
+                    $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($challenge_association->resource_group_id);
+                    $resource_groups[$challenge_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                }
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -330,6 +374,16 @@ class ChallengeResource extends JsonResource
             'submissions_count'             => $this->submitted_projects()->count(),
             'project_submitted'             => SubmittedProjectResource::collection($this->submitted_projects),
             'external_links'                => ChallengeExternalLinkResource::collection($this->external_links),
+            'lab_count'                     => count($labs),
+            'lab_program_count'             => count($lab_programs),
+            'resource_module_count'         => count($resource_modules),
+            'resource_collection_count'     => count($resource_collections),
+            'resource_group_count'          => count($resource_groups),
+            'labs'                          => $labs,
+            'lab_programs'                  => $lab_programs,
+            'resource_modules'              => $resource_modules,
+            'resource_collections'          => $resource_collections,
+            'resource_groups'               => $resource_groups,
         ];
     }
 }

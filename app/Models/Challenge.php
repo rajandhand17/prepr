@@ -34,6 +34,7 @@ class Challenge extends Model
         'is_pre_build',
         'is_open',
         'is_auto_created',
+        'is_ai_created'
     ];
 
     public function getMediaAttribute($value)
@@ -191,5 +192,10 @@ class Challenge extends Model
     public function submitted_projects()
     {
         return $this->hasMany(Project::class, 'challenge_id', 'id')->where('is_submitted', '1');
+    }
+
+    public function challenge_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'challenge_id', 'id');
     }
 }
