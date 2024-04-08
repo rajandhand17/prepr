@@ -16,7 +16,6 @@ use App\Services\Manage\ChallengeTemplateSkillsGroupsStackService;
 use App\Services\Manage\ChallengeTemplateSponsorService;
 use App\Services\Manage\ChallengeTemplateTagsGroupsService;
 use App\Services\Manage\ChallengeTemplateTimelinesService;
-use App\Services\Manage\LabMarketplaceComponentAssociationService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
