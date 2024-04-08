@@ -4,7 +4,6 @@ namespace App\Services\GO1;
 
 use App\Models\GO1AccessToken;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class BaseService
 {
@@ -77,7 +76,6 @@ class BaseService
 
             return $existingToken;
         } catch (\Exception $exception) {
-
             return false;
         }
     }

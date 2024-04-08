@@ -5,7 +5,6 @@ namespace App\Console\Commands\GO1;
 use App\Services\GO1\WebhookService;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class RegisterGO1Webhook extends Command
 {

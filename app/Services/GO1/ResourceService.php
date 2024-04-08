@@ -9,7 +9,6 @@ use App\Models\Skill;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class ResourceService extends BaseService
 {
@@ -60,7 +59,6 @@ class ResourceService extends BaseService
 
             return $finalQueryParams;
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -87,7 +85,6 @@ class ResourceService extends BaseService
 
             return $resourceModule;
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -113,7 +110,6 @@ class ResourceService extends BaseService
 
             return true;
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -133,7 +129,6 @@ class ResourceService extends BaseService
 
             return $response->json();
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -153,7 +148,6 @@ class ResourceService extends BaseService
 
             return $response->json();
         } catch (Exception $exception) {
-
             return false;
         }
     }

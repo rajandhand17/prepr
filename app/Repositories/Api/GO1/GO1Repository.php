@@ -9,7 +9,6 @@ use App\Services\GO1\UserService;
 use App\Services\GO1\WebhookService;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class GO1Repository implements GO1Interface
 {
@@ -33,7 +32,6 @@ class GO1Repository implements GO1Interface
                 'list'         => data_get($data, 'hits'),
             ];
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -56,7 +54,6 @@ class GO1Repository implements GO1Interface
                 return false;
             });
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -90,7 +87,6 @@ class GO1Repository implements GO1Interface
                 'providers' => $providers,
             ];
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -100,7 +96,6 @@ class GO1Repository implements GO1Interface
         try {
             return ResourceModule::query()->where('slug', $slug)->first();
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -122,7 +117,6 @@ class GO1Repository implements GO1Interface
 
             return $this->resourceService->playResource($user->go1_id, $go1CourseId);
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -134,7 +128,6 @@ class GO1Repository implements GO1Interface
 
             return true;
         } catch (Exception $exception) {
-
             return false;
         }
     }

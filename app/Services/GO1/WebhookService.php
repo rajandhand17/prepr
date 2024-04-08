@@ -9,7 +9,6 @@ use App\Models\UserResourceProgressTracking;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class WebhookService extends BaseService
 {
@@ -59,7 +58,6 @@ class WebhookService extends BaseService
 
             return true;
         } catch (Exception $exception) {
-
             return false;
         }
     }
@@ -121,7 +119,6 @@ class WebhookService extends BaseService
 
             return $response->json();
         } catch (Exception $exception) {
-
             return false;
         }
     }

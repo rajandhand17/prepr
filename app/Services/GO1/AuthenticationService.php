@@ -4,7 +4,6 @@ namespace App\Services\GO1;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class AuthenticationService
 {
@@ -27,7 +26,6 @@ class AuthenticationService
 
             return $response->json();
         } catch (Exception $exception) {
-
             return false;
         }
     }

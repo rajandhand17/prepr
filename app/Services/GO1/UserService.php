@@ -4,7 +4,6 @@ namespace App\Services\GO1;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class UserService extends BaseService
 {
@@ -28,7 +27,6 @@ class UserService extends BaseService
 
             return $response->json();
         } catch (Exception $exception) {
-
             return false;
         }
     }
