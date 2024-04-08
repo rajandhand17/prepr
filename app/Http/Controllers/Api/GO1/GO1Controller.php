@@ -6,7 +6,6 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\GO1\CreateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\GO1\GO1Interface;
-use App\Repositories\Api\GO1\GO1Repository;
 use App\Services\GO1\GO1PermissionService;
 use Exception;
 use Illuminate\Support\Facades\Request;
@@ -17,15 +16,15 @@ class GO1Controller extends AppBaseController
     {
     }
 
-
     public function index()
     {
         try {
             $data = $this->go1Repository->getCourseLists();
             if (!$data) {
-                return $this->sendError(__("responses.go1_courses_fetched_failed"), 400);
+                return $this->sendError(__('responses.go1_courses_fetched_failed'), 400);
             }
-            return $this->sendResponse($data, __("responses.go1_courses_fetched_successfully"));
+
+            return $this->sendResponse($data, __('responses.go1_courses_fetched_successfully'));
         } catch (Exception $exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -38,9 +37,10 @@ class GO1Controller extends AppBaseController
             $go1Course = $body['go1_course'];
             $resource = $this->go1Repository->createResourceModule($go1Course);
             if (!$resource) {
-                return $this->sendResponse(__("responses.go1_resource_creation_failed"), 400);
+                return $this->sendResponse(__('responses.go1_resource_creation_failed'), 400);
             }
-            return $this->sendResponse(ResourceModuleResource::make($resource), __("responses.go1_resource_creation_successful"));
+
+            return $this->sendResponse(ResourceModuleResource::make($resource), __('responses.go1_resource_creation_successful'));
         } catch (Exception $exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -49,14 +49,15 @@ class GO1Controller extends AppBaseController
     public function listFilters($type)
     {
         try {
-            $availableTypes = ["topics", "providers"];
+            $availableTypes = ['topics', 'providers'];
 
             if (!in_array($type, $availableTypes, true)) {
-                return $this->sendError(__("responses.invalid_type"), 404);
+                return $this->sendError(__('responses.invalid_type'), 404);
             }
 
             $data = $this->go1Repository->listFilters($type);
-            return $this->sendResponse($data[$type], __("responses." . $type . "_list_successfully"));
+
+            return $this->sendResponse($data[$type], __('responses.'.$type.'_list_successfully'));
         } catch (Exception $exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -65,7 +66,7 @@ class GO1Controller extends AppBaseController
     public function playCourse($slug)
     {
         if (!$this->go1PermissionService->canPlayGO1Resoruces()) {
-            return $this->sendError(__("responses.go1_play_content_denied"), 400);
+            return $this->sendError(__('responses.go1_play_content_denied'), 400);
         }
 
         try {
@@ -75,15 +76,15 @@ class GO1Controller extends AppBaseController
             }
 
             if (!$resourceModule->is_go1) {
-                return $this->sendError(__("responses.not_a_go1_resource"), 400);
+                return $this->sendError(__('responses.not_a_go1_resource'), 400);
             }
 
             $authenticatedLink = $this->go1Repository->playCourse($resourceModule->go1_course_id);
             if (!$authenticatedLink) {
-                return $this->sendError(__("responses.play_course_failed"), 400);
+                return $this->sendError(__('responses.play_course_failed'), 400);
             }
 
-            return $this->sendResponse($authenticatedLink, __("responses.authenticated_link_fetched_successfully"));
+            return $this->sendResponse($authenticatedLink, __('responses.authenticated_link_fetched_successfully'));
         } catch (Exception $exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -95,10 +96,10 @@ class GO1Controller extends AppBaseController
             $payload = request()->all();
             $webhook = $this->go1Repository->webhook($payload);
             if (!$webhook) {
-                return $this->sendError(__("responses.webhook_failed"), 400);
+                return $this->sendError(__('responses.webhook_failed'), 400);
             }
 
-            return $this->sendResponse(null, __("responses.webhook_success"));
+            return $this->sendResponse(null, __('responses.webhook_success'));
         } catch (Exception $exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }

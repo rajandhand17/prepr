@@ -18,18 +18,17 @@ class ResourceService extends BaseService
         parent::__construct();
     }
 
-
     public function getPage()
     {
         $requestQuery = request()->query();
-        return isset($requestQuery['page']) ? (int)$requestQuery['page'] : 1;
-    }
 
+        return isset($requestQuery['page']) ? (int) $requestQuery['page'] : 1;
+    }
 
     public function prepareGO1Query()
     {
         try {
-            $unwantedParams = ['page', "language"];
+            $unwantedParams = ['page', 'language'];
 
             $dataLimit = 10000;
             $defaultPerPage = 9;
@@ -47,8 +46,8 @@ class ResourceService extends BaseService
 
             $offset = ($currentPage - 1) * $limit;
             $defaultQueryParams = [
-                'limit' => $limit,
-                'offset' => $offset
+                'limit'  => $limit,
+                'offset' => $offset,
             ];
 
             $finalQueryParams = array_merge($requestQuery, $defaultQueryParams);
@@ -62,13 +61,14 @@ class ResourceService extends BaseService
             return $finalQueryParams;
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
 
     public function createResourceModule($body)
     {
-        $slug = UtilityHelper::generateSlug($body["title"], ResourceModule::class);
+        $slug = UtilityHelper::generateSlug($body['title'], ResourceModule::class);
         $resourceModule = new ResourceModule();
         $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
         $resourceModule->language = request()->language;
@@ -91,7 +91,8 @@ class ResourceService extends BaseService
     public function storeSkills($resourceModuleId, $skills = [])
     {
         $skillsIds = array_map(function ($item) {
-            $data = Skill::firstOrCreate(["title" => $item["name"]]);
+            $data = Skill::firstOrCreate(['title' => $item['name']]);
+
             return $data->id;
         }, $skills);
 
@@ -114,8 +115,8 @@ class ResourceService extends BaseService
             $accessToken = $this->getAccessToken();
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken
-            ])->get("$this->endPointBaseUrl/learning-objects?" . $queryParams);
+                'Authorization' => 'Bearer '.$accessToken,
+            ])->get("$this->endPointBaseUrl/learning-objects?".$queryParams);
 
             if ($response->status() >= 400) {
                 throw new Exception("Status: {$response->status()}--{$response->body()}");
@@ -124,6 +125,7 @@ class ResourceService extends BaseService
             return $response->json();
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
@@ -133,8 +135,8 @@ class ResourceService extends BaseService
         try {
             $accessToken = $this->getAccessToken();
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Accept' => 'application/json'
+                'Authorization' => 'Bearer '.$accessToken,
+                'Accept'        => 'application/json',
             ])->post("https://api.go1.com/v2/users/{$id}/login?redirect_url=/play/$courseId");
 
             if ($response->status() >= 400) {
@@ -144,6 +146,7 @@ class ResourceService extends BaseService
             return $response->json();
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }

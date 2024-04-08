@@ -9,7 +9,7 @@ class GO1AccessToken extends Model
 {
     use HasFactory;
 
-    protected $table = "go1_access_token";
+    protected $table = 'go1_access_token';
 
-    protected $fillable = ["access_token"];
+    protected $fillable = ['access_token'];
 }

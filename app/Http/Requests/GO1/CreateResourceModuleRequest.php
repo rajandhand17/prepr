@@ -3,7 +3,6 @@
 namespace App\Http\Requests\GO1;
 
 use App\Http\Requests\BaseRequest;
-use Illuminate\Foundation\Http\FormRequest;
 
 class CreateResourceModuleRequest extends BaseRequest
 {
@@ -23,17 +22,17 @@ class CreateResourceModuleRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'go1_course.id' => 'required',
-            "go1_course.title" => "required|unique:resource_modules,title"
+            'go1_course.id'    => 'required',
+            'go1_course.title' => 'required|unique:resource_modules,title',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'go1_course.id.required' => __("responses.go1_course_id_required"),
-            'go1_course.title.required' => __("responses.go1_course_title_required"),
-            'go1_course.title.unique' => __("responses.go1_course_title_unique"),
+            'go1_course.id.required'    => __('responses.go1_course_id_required'),
+            'go1_course.title.required' => __('responses.go1_course_title_required'),
+            'go1_course.title.unique'   => __('responses.go1_course_title_unique'),
         ];
     }
 }

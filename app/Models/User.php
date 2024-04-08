@@ -52,7 +52,7 @@ class User extends Authenticatable
         'remember_token',
         'is_deactivated',
         'go1_id',
-        'go1_user_metadata'
+        'go1_user_metadata',
     ];
     /**
      * The attributes that should be hidden for serialization.

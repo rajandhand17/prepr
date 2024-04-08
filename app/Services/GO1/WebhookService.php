@@ -21,11 +21,11 @@ class WebhookService extends BaseService
             $user = User::where('go1_id', $go1UserId)->first();
             $resource = ResourceModule::where('go1_course_id', $go1ResourceId)->first();
             if (!$user) {
-                throw new Exception("User does not exists");
+                throw new Exception('User does not exists');
             }
 
             if (!$resource) {
-                throw new Exception("Resources does not exists");
+                throw new Exception('Resources does not exists');
             }
 
             $type = $payload['type'];
@@ -36,30 +36,31 @@ class WebhookService extends BaseService
 
             $data = UserResourceProgressTracking::query()->updateOrCreate([
                 'resource_module_id' => $resource->id,
-                'user_id' => $user->id
+                'user_id'            => $user->id,
             ], [
                 'completion_status' => data_get($payload, 'data.status'),
-                'lesson_status' => data_get($payload, 'data.pass') === 1 ? 'pass' : 'fail',
-                'score_raw' => data_get($payload, 'data.result'),
-                'session_time' => data_get($payload, 'data.completed_time'),
+                'lesson_status'     => data_get($payload, 'data.pass') === 1 ? 'pass' : 'fail',
+                'score_raw'         => data_get($payload, 'data.result'),
+                'session_time'      => data_get($payload, 'data.completed_time'),
             ]);
 
             $parentData = $data->first();
 
             if (!$parentData) {
-                throw new Exception("No parent data");
+                throw new Exception('No parent data');
             }
 
             Go1WebhookMetadata::create([
-                'type' => $type,
-                'fired_at' => Carbon::parse($payload['fired_at'] ?? Carbon::now()),
-                'metadata' => $payload,
-                'user_resource_progress_tracking_id' => $parentData['id']
+                'type'                               => $type,
+                'fired_at'                           => Carbon::parse($payload['fired_at'] ?? Carbon::now()),
+                'metadata'                           => $payload,
+                'user_resource_progress_tracking_id' => $parentData['id'],
             ]);
 
             return true;
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
@@ -74,13 +75,15 @@ class WebhookService extends BaseService
         if (substr($url, -1) === '/') {
             $url = substr($url, 0, -1);
         }
+
         return $url;
     }
 
     private function getDefaultUrl()
     {
         $appUrl = $this->removeLastSlash(config('app.url'));
-        return $appUrl . "/api/v1/go1/webhook";
+
+        return $appUrl.'/api/v1/go1/webhook';
     }
 
     public function registerWebhookToGO1($url = '')
@@ -91,26 +94,26 @@ class WebhookService extends BaseService
             }
 
             if (!$this->isValidUrl($url)) {
-                throw new Exception("Not a valid webhook url");
+                throw new Exception('Not a valid webhook url');
             }
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Accept' => 'application/json'
+                'Authorization' => 'Bearer '.$this->accessToken,
+                'Accept'        => 'application/json',
             ])->post("$this->endPointBaseUrl/webhooks", [
-                "enrollment_create" => true,
-                "enrollment_delete" => true,
-                "enrollment_update" => true,
-                "lo_create" => false,
-                "lo_delete" => false,
-                "lo_update" => false,
-                "enabled" => true,
-                "url" => $url,
-                "user_create" => false,
-                "user_delete" => false,
-                "user_update" => false,
-                "content_update" => false,
-                "content_decommission" => false
+                'enrollment_create'    => true,
+                'enrollment_delete'    => true,
+                'enrollment_update'    => true,
+                'lo_create'            => false,
+                'lo_delete'            => false,
+                'lo_update'            => false,
+                'enabled'              => true,
+                'url'                  => $url,
+                'user_create'          => false,
+                'user_delete'          => false,
+                'user_update'          => false,
+                'content_update'       => false,
+                'content_decommission' => false,
             ]);
 
             if ($response->status() >= 400) {
@@ -120,6 +123,7 @@ class WebhookService extends BaseService
             return $response->json();
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }

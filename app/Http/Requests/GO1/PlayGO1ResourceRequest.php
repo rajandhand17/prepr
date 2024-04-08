@@ -22,14 +22,14 @@ class PlayGO1ResourceRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'go1_course_id' => 'required'
+            'go1_course_id' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            "go1_course_id.required" => __("responses.go1_course_id_required")
+            'go1_course_id.required' => __('responses.go1_course_id_required'),
         ];
     }
 }

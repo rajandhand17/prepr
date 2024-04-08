@@ -240,7 +240,7 @@ return [
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
 
         /* GO1 */
-        App\Repositories\Api\GO1\GO1ServiceProvider::class
+        App\Repositories\Api\GO1\GO1ServiceProvider::class,
     ],
 
     /*

@@ -13,11 +13,11 @@ class Go1WebhookMetadata extends Model
         'type',
         'fired_at',
         'metadata',
-        'user_resource_progress_tracking_id'
+        'user_resource_progress_tracking_id',
     ];
 
     protected $casts = [
         'fired_at' => 'datetime',
-        'metadata' => 'object'
+        'metadata' => 'object',
     ];
 }

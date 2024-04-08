@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class GO1Repository implements GO1Interface
 {
-
     public function __construct(private ResourceService $resourceService, private UserService $userService, private WebhookService $webhookService)
     {
     }
@@ -26,15 +25,16 @@ class GO1Repository implements GO1Interface
             $totalCount = min($data['total'], 10000);
 
             return [
-                "total_count" => $totalCount,
-                "per_page" => 9,
-                "count" => count(data_get($data, 'hits')),
-                "current_page" => $this->resourceService->getPage(),
-                "total_pages" => ceil($totalCount / 9),
-                "list" => data_get($data, 'hits'),
+                'total_count'  => $totalCount,
+                'per_page'     => 9,
+                'count'        => count(data_get($data, 'hits')),
+                'current_page' => $this->resourceService->getPage(),
+                'total_pages'  => ceil($totalCount / 9),
+                'list'         => data_get($data, 'hits'),
             ];
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
@@ -43,12 +43,13 @@ class GO1Repository implements GO1Interface
     {
         try {
             return DB::transaction(function () use ($body) {
-                $skills = data_get($body, "skills") ?? [];
+                $skills = data_get($body, 'skills') ?? [];
                 $resourceModule = $this->resourceService->createResourceModule($body);
                 $resourceSkills = $this->resourceService->storeSkills($resourceModule->id, $skills);
 
                 if ($resourceModule && $resourceSkills) {
                     DB::commit();
+
                     return $resourceModule;
                 }
                 DB::rollBack();
@@ -57,6 +58,7 @@ class GO1Repository implements GO1Interface
             });
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
@@ -65,32 +67,33 @@ class GO1Repository implements GO1Interface
     {
         try {
             $params = [
-                "topics" => "facets=topics&limit=0",
-                "providers" => "facets=instance&limit=0"
+                'topics'    => 'facets=topics&limit=0',
+                'providers' => 'facets=instance&limit=0',
             ];
 
             $response = $this->resourceService->listResources($params[$type]);
-            $topics = data_get($response, "facets.topics.buckets") ?? [];
-            $providers = data_get($response, "facets.instance.buckets") ?? [];
+            $topics = data_get($response, 'facets.topics.buckets') ?? [];
+            $providers = data_get($response, 'facets.instance.buckets') ?? [];
 
             $topics = array_map(function ($item) {
-                return ["label" => $item['key'], "doc_count" => $item['doc_count']];
+                return ['label' => $item['key'], 'doc_count' => $item['doc_count']];
             }, $topics);
 
             $providers = array_map(function ($item) {
                 return [
-                    "name" => $item['name'] ?? '',
-                    "doc_count" => $item['doc_count'] ?? '',
-                    "key" => $item['key'] ?? ''
+                    'name'      => $item['name'] ?? '',
+                    'doc_count' => $item['doc_count'] ?? '',
+                    'key'       => $item['key'] ?? '',
                 ];
             }, $providers);
 
             return [
-                "topics" => $topics,
-                "providers" => $providers
+                'topics'    => $topics,
+                'providers' => $providers,
             ];
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
@@ -101,6 +104,7 @@ class GO1Repository implements GO1Interface
             return ResourceModule::query()->where('slug', $slug)->first();
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
@@ -110,18 +114,20 @@ class GO1Repository implements GO1Interface
         try {
             if (!auth()->user()->go1_id) {
                 $response = $this->userService->createUser([
-                    "email" => explode('@', auth()->user()->email)[0] . config('go1.email_prefix') . '@prepr.org',
-                    "first_name" => auth()->user()->first_name,
-                    "last_name" => auth()->user()->last_name
+                    'email'      => explode('@', auth()->user()->email)[0].config('go1.email_prefix').'@prepr.org',
+                    'first_name' => auth()->user()->first_name,
+                    'last_name'  => auth()->user()->last_name,
                 ]);
                 $go1UserId = $response['id'];
                 User::query()->where('id', auth()->user()->id)->update(['go1_id' => $go1UserId, 'go1_user_metadata' => $response]);
             }
 
             $user = User::query()->where('id', auth()->user()->id)->first();
+
             return $this->resourceService->playResource($user->go1_id, $go1CourseId);
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
@@ -130,11 +136,12 @@ class GO1Repository implements GO1Interface
     {
         try {
             $this->webhookService->webhook($payload);
+
             return true;
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
-
 }

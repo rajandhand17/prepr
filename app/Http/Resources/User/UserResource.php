@@ -49,7 +49,7 @@ class UserResource extends JsonResource
             'roles'                       => $roles,
             'go1'                         => [
                 'can_create_resource'     => $go1PermissionService->canCreateGO1Resource(),
-                'can_play_resource'       =>   $go1PermissionService->canPlayGO1Resoruces()
+                'can_play_resource'       => $go1PermissionService->canPlayGO1Resoruces(),
             ],
             'notification'                => UserNotificationResource::make($this->userSetting),
             'privacy'                     => UserPrivacyResource::make($this->userSetting),

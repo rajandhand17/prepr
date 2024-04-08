@@ -19,7 +19,7 @@ class UserService extends BaseService
             $accessToken = $this->getAccessToken();
             $endPoint = "$this->endPointBaseUrl/users";
             $response = Http::withHeaders([
-                'Authorization' => "Bearer $accessToken"
+                'Authorization' => "Bearer $accessToken",
             ])->post($endPoint, array_merge($user, ['send_login_email' => false, 'password' => config('go1.default_user_password')]));
 
             if ($response->status() >= 400) {
@@ -29,6 +29,7 @@ class UserService extends BaseService
             return $response->json();
         } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }

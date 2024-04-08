@@ -2,13 +2,10 @@
 
 namespace App\Repositories\Api\GO1;
 
-
-
 use Carbon\Laravel\ServiceProvider;
 
 class GO1ServiceProvider extends ServiceProvider
 {
-
     public function boot()
     {
     }

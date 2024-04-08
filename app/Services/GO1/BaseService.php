@@ -2,7 +2,6 @@
 
 namespace App\Services\GO1;
 
-
 use App\Models\GO1AccessToken;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -27,7 +26,7 @@ class BaseService
 
     public function __construct()
     {
-        $this->endPointBaseUrl = $this->baseUrl . '/' . $this->version;
+        $this->endPointBaseUrl = $this->baseUrl.'/'.$this->version;
         $this->auth = new AuthenticationService();
         $this->accessToken = $this->getAccessToken();
     }
@@ -53,8 +52,8 @@ class BaseService
                 $responseData = $this->auth->fetchToken();
                 GO1AccessToken::query()->create([
                     'access_token' => $responseData['access_token'],
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
+                    'created_at'   => Carbon::now(),
+                    'updated_at'   => Carbon::now(),
                 ]);
 
                 return $responseData['access_token'];
@@ -70,7 +69,7 @@ class BaseService
                 }
 
                 GO1AccessToken::query()->where('id', $data->id)->update([
-                    'access_token' => $responseData['access_token']
+                    'access_token' => $responseData['access_token'],
                 ]);
 
                 return $responseData['access_token'];
@@ -79,6 +78,7 @@ class BaseService
             return $existingToken;
         } catch (\Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }
