@@ -28,7 +28,7 @@ class CreateResourceModuleRequest extends BaseRequest
         ];
     }
 
-    public function message(): array
+    public function messages(): array
     {
         return [
             'go1_course.id.required' => __("responses.go1_course_id_required"),
