@@ -51,8 +51,8 @@ final class SettingControllerTest extends BaseTestCase
                 'two_factor_verification' => 'yes',
             ],
             'valid_password_body_params' => [
-                'password'              => 'Test@1234Changed',
-                'password_confirmation' => 'Test@1234Changed',
+                'password'              => 'Test@1234New',
+                'password_confirmation' => 'Test@1234New',
             ],
             'valid_privacy_update_params' => [
                 'profile_visibility'     => 'public',

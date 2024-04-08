@@ -7,7 +7,6 @@ use Tests\BaseTestCase;
 
 class ChatTestCase extends BaseTestCase
 {
-    use RefreshDatabase;
 
     protected $parameters;
 

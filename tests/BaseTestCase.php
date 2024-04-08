@@ -2,12 +2,12 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 
 class BaseTestCase extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected $parameters;
 
