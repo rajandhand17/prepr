@@ -230,4 +230,13 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengeBasedOnId($id)
+    {
+        try {
+            return Challenge::where('id', $id)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

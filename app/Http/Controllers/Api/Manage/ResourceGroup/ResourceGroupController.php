@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
 use App\Services\Manage\OrganizationService;
@@ -167,6 +168,24 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 400);
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getList(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $getResourceGroupListName = $this->resourceGroupRepository->getResourceGroupListName($request, $organization);
+            if ($getResourceGroupListName) {
+                $response = ResourceGroupListNameResource::collection($getResourceGroupListName);
+            }
+
+            return $this->sendResponse($getResourceGroupListName, __('responses.found_resource_group_list'));
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -144,4 +144,13 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public static function getResourceGroupBasedOnId($id)
+    {
+        try {
+            return ResourceGroup::where('id', $id)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

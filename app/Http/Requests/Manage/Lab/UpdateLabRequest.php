@@ -63,8 +63,8 @@ class UpdateLabRequest extends FormRequest
             'is_achievement_enabled' => 'in:yes,no',
             'is_sequential'          => 'in:yes,no',
             'is_resource_sequential' => 'in:yes,no',
-            'external_links'         => 'array|required',
-            'external_link_ids'      => 'array|exists:social_links,id|required',
+            'external_links'         => 'array',
+            'external_link_ids'      => 'array|exists:social_links,id',
             'external_links.*'       => 'url',
             'external_link_ids.*'    => 'numeric',
         ];
@@ -78,32 +78,32 @@ class UpdateLabRequest extends FormRequest
 
         if ($this->request->has('lab_programs')) {
             $base_rules['lab_programs'] = 'array';
-            $base_rules['lab_programs.*'] = 'numeric';
+            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
         }
 
         if ($this->request->has('challenges')) {
             $base_rules['challenges'] = 'array';
-            $base_rules['challenges.*'] = 'numeric';
+            $base_rules['challenges.*'] = 'exists:challenges,uuid';
         }
 
         if ($this->request->has('challenge_paths')) {
             $base_rules['challenge_paths'] = 'array';
-            $base_rules['challenge_paths.*'] = 'numeric';
+            $base_rules['challenge_paths.*'] = 'exists:challenge_paths,uuid';
         }
 
         if ($this->request->has('resource_modules')) {
             $base_rules['resource_modules'] = 'array';
-            $base_rules['resource_modules.*'] = 'numeric';
+            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
         }
 
         if ($this->request->has('resource_groups')) {
             $base_rules['resource_groups'] = 'array';
-            $base_rules['resource_groups.*'] = 'numeric';
+            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
         }
 
         if ($this->request->has('resource_collections')) {
             $base_rules['resource_collections'] = 'array';
-            $base_rules['resource_collections.*'] = 'numeric';
+            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
         }
 
         if ($this->request->has('invite_type')) {

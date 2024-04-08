@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\LabProgram;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
 use App\Http\Requests\Manage\LabProgram\UpdateLabProgramRequest;
+use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
 use App\Repositories\Api\Manage\LabProgram\LabProgramRepository;
 use App\Repositories\Api\Manage\LabProgramAchievement\LabProgramAchievementRepository;
@@ -170,6 +171,24 @@ class LabProgramController extends AppBaseController
             }
 
             return $this->sendError(__('responses.lab_program_not_delete'), 400);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getList(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $getLabProgramListName = $this->labProgramRepository->getLabProgramListName($request, $organization);
+            if ($getLabProgramListName) {
+                $response = LabProgramListNameResource::collection($getLabProgramListName);
+            }
+
+            return $this->sendResponse($getLabProgramListName, __('responses.found_lab_program_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
