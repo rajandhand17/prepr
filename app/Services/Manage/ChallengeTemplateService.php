@@ -233,7 +233,6 @@ class ChallengeTemplateService
         }
     }
 
-
     public function addChallengeTemplateComponentAssociation($challengeId, $templateChallengeId)
     {
         try {
