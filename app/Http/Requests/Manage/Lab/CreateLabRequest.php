@@ -64,7 +64,7 @@ class CreateLabRequest extends FormRequest
 
         if ($achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
-            $base_rules['achievement_points'] = 'required';
+            $base_rules['achievement_points'] = 'required|integer';
             $base_rules['achievement_conditions'] = 'required|array';
             $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
         }

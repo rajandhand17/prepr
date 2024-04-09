@@ -207,11 +207,16 @@ class ComponentAssociationService
                     ])->pluck('challenge_path_id')->all();
                     $nonExistingIdsChallengePathId = array_diff($existComponentAssociationChallengePathId, $getChallengePathIds);
                     $deleteNonExistingComponentAssociationChallengesPath = ComponentAssociation::where('lab_id', $lab_id)->whereIn('challenge_path_id', $nonExistingIdsChallengePathId)->delete();
-                    $newComponentAssociationChallengePathId = array_diff($getChallengePathIds, $existComponentAssociationchallenge);
-                    $sequence = ComponentAssociation::where([
+                    $newComponentAssociationChallengePathId = array_diff($getChallengePathIds, $existComponentAssociationChallengePathId);
+                    $sequences = ComponentAssociation::where([
                         ['lab_id', '=', $lab_id],
                         ['challenge_id', '!=', null],
-                    ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if ($sequences) {
+                        $sequence = $sequences->sequence;
+                    } else {
+                        $sequence = 0;
+                    }
                     foreach ($newComponentAssociationChallengePathId as $challenge_path) {
                         $sequence++;
                         $labSkillsGroupsStack = new ComponentAssociation();
