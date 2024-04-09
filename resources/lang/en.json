@@ -1042,6 +1042,9 @@
     "responses.project_join_member_already": "You are already member of this Project.",
     "responses.project_unjoined_failed": "Failed to un-join the Project",
     "responses.access_not_exists": "Sorry, this access level is not available",
-    "responses.total_employees_integer": "The total employees field must be an integer."
-
+    "responses.total_employees_integer": "The total employees field must be an integer.",
+    "responses.choose_open_closed": "This can be between '<b>closed</b> or <b>open</b>' only.",
+    "responses.choose_users_hidden": "This can be between '<b>users</b> or <b>hidden</b>' only.",
+    "responses.guidelines_required": "This guidelines field is required",
+    "responses.organization_challlenge_not_same": "Sorry, this Challenge can't be cloned to other Organization."
 }

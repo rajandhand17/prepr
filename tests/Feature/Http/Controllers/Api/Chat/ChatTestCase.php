@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Http\Controllers\Api\Chat;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\BaseTestCase;
 
 class ChatTestCase extends BaseTestCase
 {
-    use RefreshDatabase;
-
     protected $parameters;
 
     public function setUp(): void

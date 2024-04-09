@@ -7,6 +7,7 @@ use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
+use App\Http\Requests\Manage\Challenge\UpdateChallengeAssessmentRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
@@ -247,7 +248,7 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function updateAssessment($slug, Request $request)
+    public function updateAssessment($slug, UpdateChallengeAssessmentRequest $request)
     {
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
@@ -284,9 +285,14 @@ class ChallengeController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
+
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->organization_id !== $organization->id) {
+                return $this->sendError(__('responses.organization_challlenge_not_same'), 404);
             }
             $cloneChallenge = $this->challengeRepository->cloneChallenge($checkComponentBasedOnSlug->id, $organization);
 

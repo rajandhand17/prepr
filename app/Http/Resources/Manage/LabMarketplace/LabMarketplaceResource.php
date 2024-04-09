@@ -3,9 +3,19 @@
 namespace App\Http\Resources\Manage\LabMarketplace;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
+use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
+use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Services\AchievementConditionListService;
+use App\Services\Manage\ChallengePathTemplateService;
+use App\Services\Manage\ChallengeTemplateService;
 use App\Services\Manage\LabMarketplaceService;
 use App\Services\Manage\OrganizationService;
+use App\Services\Manage\ResourceCollectionService;
+use App\Services\Manage\ResourceGroupService;
+use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -36,6 +46,11 @@ class LabMarketplaceResource extends JsonResource
         $duration_id = null;
         $level = null;
         $level_id = null;
+        $chalenges = [];
+        $challenge_paths = [];
+        $resource_modules = [];
+        $resource_collections = [];
+        $resource_groups = [];
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -148,6 +163,35 @@ class LabMarketplaceResource extends JsonResource
             $is_redeemed = 'no';
         }
 
+        if (!empty($this->component_association)) {
+            foreach ($this->component_association as $lab_association) {
+                if ($lab_association->challenge_id) {
+                    $getChallengeTemplate = ChallengeTemplateService::getChallengeTemplateBasedOnId($lab_association->challenge_template_id);
+                    $chalenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallengeTemplate);
+                }
+
+                if ($lab_association->challenge_path_id) {
+                    $getChallengePath = ChallengePathTemplateService::getChallengePathBasedOnId($lab_association->challenge_path_id);
+                    $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
+                }
+
+                if ($lab_association->resource_module_id) {
+                    $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($lab_association->resource_module_id);
+                    $resource_modules[$lab_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
+                }
+
+                if ($lab_association->resource_collection_id) {
+                    $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($lab_association->resource_collection_id);
+                    $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                }
+
+                if ($lab_association->resource_group_id) {
+                    $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
+                    $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                }
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
             'type'                          => $type,
@@ -182,12 +226,11 @@ class LabMarketplaceResource extends JsonResource
             'skill_stacks'                  => $skill_stacks,
             'tags'                          => $tags,
             'tag_groups'                    => $tag_groups,
-            'lab_program_count'             => 0,
-            'challenge_count'               => 0,
-            'challenge_path_count'          => 0,
-            'resource_module_count'         => 0,
-            'resource_collection_count'     => 0,
-            'resource_group_count'          => 0,
+            'challenge'                     => $chalenges,
+            'challenge_path'                => $challenge_paths,
+            'resource_module'               => $resource_modules,
+            'resource_collection'           => $resource_collections,
+            'resource_group'                => $resource_groups,
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
             'is_redeemed'                   => $is_redeemed,
             'credit_score'                  => '1',

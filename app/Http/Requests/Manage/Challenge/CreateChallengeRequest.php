@@ -109,11 +109,11 @@ class CreateChallengeRequest extends FormRequest
 
         if ($this->request->has('assessment_type')) {
             $base_rules['assessment_type'] = 'in:open,closed';
-            $base_rules['visibility'] = 'required_if:assessment_type,open,closed|in:users,hidden';
             $base_rules['guidelines'] = 'required_if:assessment_type,open,closed';
             $base_rules['attachments'] = 'required_if:assessment_type,open,closed|mimes:jpeg,jpg,png,webp|max:1024';
 
             if ($this->request->get('assessment_type') == 'closed') {
+                $base_rules['visibility'] = 'in:users,hidden';
                 $base_rules['members_email'] = 'array|required';
                 $base_rules['members_email.*'] = 'email';
             }
@@ -134,6 +134,31 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
             $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+        }
+
+        if ($this->request->has('labs')) {
+            $base_rules['labs'] = 'array';
+            $base_rules['labs.*'] = 'exists:labs,uuid';
+        }
+
+        if ($this->request->has('lab_programs')) {
+            $base_rules['lab_programs'] = 'array';
+            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
+        }
+
+        if ($this->request->has('resource_modules')) {
+            $base_rules['resource_modules'] = 'array';
+            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
+        }
+
+        if ($this->request->has('resource_collections')) {
+            $base_rules['resource_collections'] = 'array';
+            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
+        }
+
+        if ($this->request->has('resource_groups')) {
+            $base_rules['resource_groups'] = 'array';
+            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
         }
 
         return $base_rules;

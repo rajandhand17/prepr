@@ -223,4 +223,89 @@ class ChallengeTemplateService
             return false;
         }
     }
+
+    public static function getChallengeTemplateBasedOnId($id)
+    {
+        try {
+            return ChallengeTemplate::where('id', $id)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function addChallengeTemplateComponentAssociation($challengeId, $templateChallengeId)
+    {
+        try {
+            $getChallengeAssociations = ComponentAssociation::where('challenge_id', $challengeId)->get();
+            if ($getChallengeAssociations->isNotEmpty()) {
+                foreach ($getChallengeAssociations as $challengeAssociation) {
+                    $newChallengeTemplateAssociation = new LabMarketplaceComponentAssociations();
+                    $newChallengeTemplateAssociation->challenge_template_id = $templateChallengeId;
+                    $newChallengeTemplateAssociation->sequence = $challengeAssociation->sequence;
+
+                    // Commented for temporary current time being
+                    // if ($challengeAssociation->lab_id != null) {
+                    //     $newChallengeTemplateAssociation->lab_marketplace_id = $challengeAssociation->lab_id;
+                    // } elseif ($challengeAssociation->lab_program_id != null) {
+                    //     $newChallengeTemplateAssociation->lab_program_id = $challengeAssociation->lab_program_id;
+                    // } elseif ($challengeAssociation->resource_module_id != null) {
+                    //     $newChallengeTemplateAssociation->resource_module_id = $challengeAssociation->resource_module_id;
+                    // } elseif ($challengeAssociation->resource_collection_id != null) {
+                    //     $newChallengeTemplateAssociation->resource_collection_id = $challengeAssociation->resource_collection_id;
+                    // } elseif ($challengeAssociation->resource_group_id != null) {
+                    //     $newChallengeTemplateAssociation->resource_group_id = $challengeAssociation->resource_group_id;
+                    // }
+
+                    if ($challengeAssociation->resource_module_id != null) {
+                        $newChallengeTemplateAssociation->resource_module_id = $challengeAssociation->resource_module_id;
+                    } elseif ($challengeAssociation->resource_collection_id != null) {
+                        $newChallengeTemplateAssociation->resource_collection_id = $challengeAssociation->resource_collection_id;
+                    }
+                    $newChallengeTemplateAssociation->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function redeemChallengeTemplateComponentAssociation($redeemChallengeId, $challengeTemplateId)
+    {
+        try {
+            $checkChallengeTemplateComponentAssociations = LabMarketplaceComponentAssociations::where('challenge_template_id', $challengeTemplateId)->get();
+            if ($checkChallengeTemplateComponentAssociations->isNotEmpty()) {
+                foreach ($checkChallengeTemplateComponentAssociations as $challengeTemplateComponentAssociation) {
+                    $newChallengeAssociation = new ComponentAssociation();
+                    $newChallengeAssociation->challenge_id = $redeemChallengeId;
+                    $newChallengeAssociation->sequence = $challengeTemplateComponentAssociation->sequence;
+
+                    // Commented for temporary current time being
+                    // if ($challengeTemplateComponentAssociation->lab_marketplace_id != null) {
+                    //     $newChallengeAssociation->lab_id = $challengeTemplateComponentAssociation->lab_marketplace_id;
+                    // } elseif ($challengeTemplateComponentAssociation->lab_program_id != null) {
+                    //     $newChallengeAssociation->lab_program_id = $challengeTemplateComponentAssociation->lab_program_id;
+                    // } elseif ($challengeTemplateComponentAssociation->resource_module_id != null) {
+                    //     $newChallengeAssociation->resource_module_id = $challengeTemplateComponentAssociation->resource_module_id;
+                    // } elseif ($challengeTemplateComponentAssociation->resource_collection_id != null) {
+                    //     $newChallengeAssociation->resource_collection_id = $challengeTemplateComponentAssociation->resource_collection_id;
+                    // } elseif ($challengeTemplateComponentAssociation->resource_group_id != null) {
+                    //     $newChallengeAssociation->resource_group_id = $challengeTemplateComponentAssociation->resource_group_id;
+                    // }
+
+                    if ($challengeTemplateComponentAssociation->resource_module_id != null) {
+                        $newChallengeAssociation->resource_module_id = $challengeTemplateComponentAssociation->resource_module_id;
+                    } elseif ($challengeTemplateComponentAssociation->resource_collection_id != null) {
+                        $newChallengeAssociation->resource_collection_id = $challengeTemplateComponentAssociation->resource_collection_id;
+                    }
+                    $newChallengeAssociation->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

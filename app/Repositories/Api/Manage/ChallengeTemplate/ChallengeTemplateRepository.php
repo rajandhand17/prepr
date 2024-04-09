@@ -98,6 +98,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeTemplateTimelines = $this->challengeTemplateTimelinesService->addChallengeTemplateTimelines($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateCustomTimelines = $this->challengeTemplateCustomTimelinesService->addChallengeTemplateCustomTimeLines($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateExternalLink = $this->challengeTemplateExternalLinkService->addChallengeTemplateExternalLink($challengeId, $addChallengeTemplate->id);
+                $addChallengeTemplateComponentAssociation = $this->challengeTemplateService->addChallengeTemplateComponentAssociation($challengeId, $addChallengeTemplate->id);
                 $updateChallenge = $this->challengeService->updatePreBuilt($challengeId, '1');
 
                 return [
@@ -114,6 +115,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                     'addChallengeTemplateCustomTimelines'               => $addChallengeTemplateCustomTimelines,
                     'addChallengeTemplateExternalLink'                  => $addChallengeTemplateExternalLink,
                     'updateChallenge'                                   => $updateChallenge,
+                    'addChallengeTemplateComponentAssociation'          => $addChallengeTemplateComponentAssociation,
                 ];
             });
 
@@ -130,7 +132,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeToTemplate['addChallengeTemplateTimelines'] &&
                 $addChallengeToTemplate['addChallengeTemplateCustomTimelines'] &&
                 $addChallengeToTemplate['addChallengeTemplateExternalLink'] &&
-                $addChallengeToTemplate['updateChallenge']
+                $addChallengeToTemplate['updateChallenge'] &&
+                $addChallengeToTemplate['addChallengeTemplateComponentAssociation']
             ) {
                 self::addChallengeRedeemData($challengeId, $addChallengeToTemplate['addChallengeTemplate']->organization_id, $addChallengeToTemplate['addChallengeTemplate']->id);
                 DB::commit();
@@ -199,20 +202,22 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $redeemChallengeTemplateTimeline = $this->challengeTemplateTimelinesService->redeemChallengeTemplateTimeline($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateCustomTimelines = $this->challengeTemplateCustomTimelinesService->redeemChallengeTemplateCustomTimelines($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateExternalLink = $this->challengeTemplateExternalLinkService->redeemChallengeTemplateExternalLink($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
+                $redeemChallengeTemplateComponentAssociation = $this->challengeTemplateService->redeemChallengeTemplateComponentAssociation($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
 
                 return [
-                    'redeemChallengeTemplateToChallenge'        => $redeemChallengeTemplateToChallenge,
-                    'redeemChallengeTemplateAchievement'        => $redeemChallengeTemplateAchievement,
-                    'redeemChallengeTemplateSkillGroupStack'    => $redeemChallengeTemplateSkillGroupStack,
-                    'redeemChallengeTemplateTagGroup'           => $redeemChallengeTemplateTagGroup,
-                    'redeemChallengeTemplateSponsor'            => $redeemChallengeTemplateSponsor,
-                    'redeemChallengeTemplateRequirement'        => $redeemChallengeTemplateRequirement,
-                    'redeemChallengeTemplateAssessmentCriteria' => $redeemChallengeTemplateAssessmentCriteria,
-                    'redeemChallengeTemplateAssessment'         => $redeemChallengeTemplateAssessment,
-                    'redeemChallengeTemplateProjectTemplate'    => $redeemChallengeTemplateProjectTemplate,
-                    'redeemChallengeTemplateTimeline'           => $redeemChallengeTemplateTimeline,
-                    'redeemChallengeTemplateCustomTimelines'    => $redeemChallengeTemplateCustomTimelines,
-                    'redeemChallengeTemplateExternalLink'       => $redeemChallengeTemplateExternalLink,
+                    'redeemChallengeTemplateToChallenge'            => $redeemChallengeTemplateToChallenge,
+                    'redeemChallengeTemplateAchievement'            => $redeemChallengeTemplateAchievement,
+                    'redeemChallengeTemplateSkillGroupStack'        => $redeemChallengeTemplateSkillGroupStack,
+                    'redeemChallengeTemplateTagGroup'               => $redeemChallengeTemplateTagGroup,
+                    'redeemChallengeTemplateSponsor'                => $redeemChallengeTemplateSponsor,
+                    'redeemChallengeTemplateRequirement'            => $redeemChallengeTemplateRequirement,
+                    'redeemChallengeTemplateAssessmentCriteria'     => $redeemChallengeTemplateAssessmentCriteria,
+                    'redeemChallengeTemplateAssessment'             => $redeemChallengeTemplateAssessment,
+                    'redeemChallengeTemplateProjectTemplate'        => $redeemChallengeTemplateProjectTemplate,
+                    'redeemChallengeTemplateTimeline'               => $redeemChallengeTemplateTimeline,
+                    'redeemChallengeTemplateCustomTimelines'        => $redeemChallengeTemplateCustomTimelines,
+                    'redeemChallengeTemplateExternalLink'           => $redeemChallengeTemplateExternalLink,
+                    'redeemChallengeTemplateComponentAssociation'   => $redeemChallengeTemplateComponentAssociation,
                 ];
             });
 
@@ -228,7 +233,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $redeemChallengeTemplate['redeemChallengeTemplateProjectTemplate'] &&
                 $redeemChallengeTemplate['redeemChallengeTemplateTimeline'] &&
                 $redeemChallengeTemplate['redeemChallengeTemplateCustomTimelines'] &&
-                $redeemChallengeTemplate['redeemChallengeTemplateExternalLink']
+                $redeemChallengeTemplate['redeemChallengeTemplateExternalLink'] &&
+                $redeemChallengeTemplate['redeemChallengeTemplateComponentAssociation']
             ) {
                 self::addChallengeRedeemed($challengeTemplateId, $redeemChallengeTemplate['redeemChallengeTemplateToChallenge']->organization_id, $redeemChallengeTemplate['redeemChallengeTemplateToChallenge']->id);
                 DB::commit();
