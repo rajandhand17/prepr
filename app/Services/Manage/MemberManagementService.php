@@ -420,7 +420,6 @@ class MemberManagementService
                     }
                 }
                 DB::commit();
-
                 if (count($invalid_emails) > 0 || count($already_members) > 0) {
                     if (count($invited_emails) < 1) {
                         switch ($component) {
