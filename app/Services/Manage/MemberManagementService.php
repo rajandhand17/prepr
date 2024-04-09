@@ -522,9 +522,8 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->get();
-            if ($member_manger) {
+            if ($member_manger->isNotEmpty()) {
                 return true;
             }
 
