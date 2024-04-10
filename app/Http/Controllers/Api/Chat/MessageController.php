@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Api\Chat;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateMessageRequest;
 use App\Http\Resources\Chat\MessageResource;
-use App\Repositories\Api\Chat\Conversation\ConversationInterface;
 use App\Repositories\Api\Chat\Conversation\ConversationRepository;
-use App\Repositories\Api\Chat\Message\MessageInterface;
 use App\Repositories\Api\Chat\Message\MessageRepository;
 use Exception;
 
