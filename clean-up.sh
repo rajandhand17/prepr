@@ -7,4 +7,6 @@ php artisan clear-compiled
 php artisan optimize:clear
 php artisan config:cache
 chmod -R 777 storage/
+systemctl start supervisord
 /usr/bin/supervisord -c /etc/supervisord.d/supervisord.conf
+systemctl restart supervisord
