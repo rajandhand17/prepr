@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\GO1;
 
-use App\Services\GO1\WebhookService;
+use App\Helpers\GO1Helper;
 use Exception;
 use Illuminate\Console\Command;
 
@@ -28,8 +28,7 @@ class RegisterGO1Webhook extends Command
     public function handle()
     {
         try {
-            $webhook = new WebhookService();
-            $webhook->registerWebhookToGO1($this->option('url') ?? '');
+            GO1Helper::registerWebhookToGO1($this->option('url') ?? '');
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }

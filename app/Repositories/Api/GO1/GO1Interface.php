@@ -15,4 +15,6 @@ interface GO1Interface
     public function playCourse($go1CourseId);
 
     public function webhook($payload);
+
+    public function canPlayGO1Resoruces();
 }

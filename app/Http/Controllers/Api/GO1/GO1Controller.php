@@ -6,13 +6,11 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\GO1\CreateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\GO1\GO1Interface;
-use App\Services\GO1\GO1PermissionService;
 use Exception;
-use Illuminate\Support\Facades\Request;
 
 class GO1Controller extends AppBaseController
 {
-    public function __construct(public GO1Interface $go1Repository, public GO1PermissionService $go1PermissionService)
+    public function __construct(public GO1Interface $go1Repository)
     {
     }
 
@@ -33,9 +31,7 @@ class GO1Controller extends AppBaseController
     public function create(CreateResourceModuleRequest $request)
     {
         try {
-            $body = $request->all();
-            $go1Course = $body['go1_course'];
-            $resource = $this->go1Repository->createResourceModule($go1Course);
+            $resource = $this->go1Repository->createResourceModule($request->go1_course);
             if (!$resource) {
                 return $this->sendResponse(__('responses.go1_resource_creation_failed'), 400);
             }
@@ -65,7 +61,7 @@ class GO1Controller extends AppBaseController
 
     public function playCourse($slug)
     {
-        if (!$this->go1PermissionService->canPlayGO1Resoruces()) {
+        if (!$this->go1Repository->canPlayGO1Resoruces()) {
             return $this->sendError(__('responses.go1_play_content_denied'), 400);
         }
 
@@ -90,11 +86,10 @@ class GO1Controller extends AppBaseController
         }
     }
 
-    public function webhook(Request $request)
+    public function webhook()
     {
         try {
-            $payload = request()->all();
-            $webhook = $this->go1Repository->webhook($payload);
+            $webhook = $this->go1Repository->webhook(request()->all());
             if (!$webhook) {
                 return $this->sendError(__('responses.webhook_failed'), 400);
             }

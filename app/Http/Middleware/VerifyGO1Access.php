@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\GO1\GO1PermissionService;
+use App\Services\Manage\MemberManagementService;
 use Closure;
 use Illuminate\Http\Request;
 use InfyOm\Generator\Utils\ResponseUtil;
@@ -17,8 +17,8 @@ class VerifyGO1Access
      */
     public function handle(Request $request, Closure $next)
     {
-        $go1PermissionService = new GO1PermissionService();
-        if (!$go1PermissionService->canCreateGO1Resource()) {
+        $memberManagement = new MemberManagementService();
+        if (!$memberManagement->canCreateGO1Resource()) {
             return Response::json(ResponseUtil::makeError(__('responses.go1_access_denied')), 400);
         }
 

@@ -7,6 +7,7 @@ use App\Models\MemberManagement;
 use App\Notifications\InviteMemberNotification;
 use App\Services\UserService;
 use DB;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Notification;
 use stdClass;
@@ -52,7 +53,7 @@ class MemberManagementService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -147,7 +148,7 @@ class MemberManagementService
             }
 
             return $componentCollectionObject;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -175,7 +176,7 @@ class MemberManagementService
             }
 
             return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -222,7 +223,7 @@ class MemberManagementService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -253,7 +254,7 @@ class MemberManagementService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -278,7 +279,7 @@ class MemberManagementService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -454,7 +455,7 @@ class MemberManagementService
             DB::rollBack();
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
 
             return false;
@@ -471,7 +472,7 @@ class MemberManagementService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -499,7 +500,7 @@ class MemberManagementService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
@@ -527,7 +528,7 @@ class MemberManagementService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return false;
         }
     }
@@ -565,7 +566,7 @@ class MemberManagementService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -597,7 +598,7 @@ class MemberManagementService
             DB::rollBack();
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
 
             return false;
@@ -621,7 +622,7 @@ class MemberManagementService
                 'invitee_name',
                 'email_status'
             )->where($filterData)->get();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -640,7 +641,58 @@ class MemberManagementService
             $requestedData->email_status = 'NA';
 
             return $requestedData;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function isUserBelongToPrepr()
+    {
+        try {
+            $user =  MemberManagement::query()
+                ->where('module_id', config('go1.prepr_id'))
+                ->where('module_type', config('constants.member_management_component_type.organization'))
+                ->where('email', auth()->user()->email)
+                ->first();
+
+            if (!$user) {
+                return false;
+            }
+
+            return true;
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public function canPlayGO1Resoruces()
+    {
+        try {
+            if (auth()->user()->hasRole('super_admin')) {
+                return true;
+            }
+
+            return $this->isUserBelongToPrepr();
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public function canCreateGO1Resource()
+    {
+        try {
+            if (auth()->user()->hasRole('super_admin')) {
+                return true;
+            }
+
+            $isPreprUser = $this->isUserBelongToPrepr();
+
+            if (!$isPreprUser) {
+                return false;
+            }
+
+            return auth()->user()->hasRole(['resource_manager', 'organization_manager', 'organization_owner']);
+        } catch (\Exception $exception) {
             return false;
         }
     }

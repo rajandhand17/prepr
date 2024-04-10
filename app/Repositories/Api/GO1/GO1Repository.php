@@ -2,34 +2,34 @@
 
 namespace App\Repositories\Api\GO1;
 
+use App\Helpers\GO1Helper;
 use App\Models\ResourceModule;
 use App\Models\User;
-use App\Services\GO1\ResourceService;
-use App\Services\GO1\UserService;
-use App\Services\GO1\WebhookService;
+use App\Services\Manage\MemberManagementService;
+use App\Services\Manage\ResourceModuleService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class GO1Repository implements GO1Interface
 {
-    public function __construct(private ResourceService $resourceService, private UserService $userService, private WebhookService $webhookService)
+    public function __construct(private ResourceModuleService $resourceModuleService, private MemberManagementService $memberManagementService)
     {
     }
 
     public function getCourseLists()
     {
         try {
-            $queryParams = http_build_query($this->resourceService->prepareGO1Query());
-            $data = $this->resourceService->listResources($queryParams);
-            $totalCount = min($data['total'], 10000);
+            $queryParams = http_build_query(GO1Helper::prepareGO1Query());
+            $data = GO1Helper::listResources($queryParams);
+            $totalCount = min($data['total'], config('go1.total_resource_data'));
 
             return [
-                'total_count'  => $totalCount,
-                'per_page'     => 9,
-                'count'        => count(data_get($data, 'hits')),
-                'current_page' => $this->resourceService->getPage(),
-                'total_pages'  => ceil($totalCount / 9),
-                'list'         => data_get($data, 'hits'),
+                'total_count' => $totalCount,
+                'per_page' => config('go1.per_page'),
+                'count' => count(data_get($data, 'hits')),
+                'current_page' => GO1Helper::getPage(),
+                'total_pages' => ceil($totalCount / config('go1.per_page')),
+                'list' => data_get($data, 'hits'),
             ];
         } catch (Exception $exception) {
             return false;
@@ -41,8 +41,8 @@ class GO1Repository implements GO1Interface
         try {
             return DB::transaction(function () use ($body) {
                 $skills = data_get($body, 'skills') ?? [];
-                $resourceModule = $this->resourceService->createResourceModule($body);
-                $resourceSkills = $this->resourceService->storeSkills($resourceModule->id, $skills);
+                $resourceModule = $this->resourceModuleService->createFromGO1($body);
+                $resourceSkills = $this->resourceModuleService->storeGO1Skills($resourceModule->id, $skills);
 
                 if ($resourceModule && $resourceSkills) {
                     DB::commit();
@@ -62,11 +62,11 @@ class GO1Repository implements GO1Interface
     {
         try {
             $params = [
-                'topics'    => 'facets=topics&limit=0',
+                'topics' => 'facets=topics&limit=0',
                 'providers' => 'facets=instance&limit=0',
             ];
 
-            $response = $this->resourceService->listResources($params[$type]);
+            $response = GO1Helper::listResources($params[$type]);
             $topics = data_get($response, 'facets.topics.buckets') ?? [];
             $providers = data_get($response, 'facets.instance.buckets') ?? [];
 
@@ -76,14 +76,14 @@ class GO1Repository implements GO1Interface
 
             $providers = array_map(function ($item) {
                 return [
-                    'name'      => $item['name'] ?? '',
+                    'name' => $item['name'] ?? '',
                     'doc_count' => $item['doc_count'] ?? '',
-                    'key'       => $item['key'] ?? '',
+                    'key' => $item['key'] ?? '',
                 ];
             }, $providers);
 
             return [
-                'topics'    => $topics,
+                'topics' => $topics,
                 'providers' => $providers,
             ];
         } catch (Exception $exception) {
@@ -94,7 +94,16 @@ class GO1Repository implements GO1Interface
     public function getResourceModuleBySlug($slug)
     {
         try {
-            return ResourceModule::query()->where('slug', $slug)->first();
+            return ResourceModuleService::getResourceModuleBasedOnSlug($slug);
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public function canPlayGO1Resoruces()
+    {
+        try {
+            return $this->memberManagementService->canPlayGO1Resoruces();
         } catch (Exception $exception) {
             return false;
         }
@@ -104,10 +113,10 @@ class GO1Repository implements GO1Interface
     {
         try {
             if (!auth()->user()->go1_id) {
-                $response = $this->userService->createUser([
-                    'email'      => explode('@', auth()->user()->email)[0].config('go1.email_prefix').'@prepr.org',
+                $response = GO1Helper::createUser([
+                    'email' => explode('@', auth()->user()->email)[0] . config('go1.email_prefix') . '@prepr.org',
                     'first_name' => auth()->user()->first_name,
-                    'last_name'  => auth()->user()->last_name,
+                    'last_name' => auth()->user()->last_name,
                 ]);
                 $go1UserId = $response['id'];
                 User::query()->where('id', auth()->user()->id)->update(['go1_id' => $go1UserId, 'go1_user_metadata' => $response]);
@@ -115,7 +124,7 @@ class GO1Repository implements GO1Interface
 
             $user = User::query()->where('id', auth()->user()->id)->first();
 
-            return $this->resourceService->playResource($user->go1_id, $go1CourseId);
+            return GO1Helper::playResource($user->go1_id, $go1CourseId);
         } catch (Exception $exception) {
             return false;
         }
@@ -124,7 +133,7 @@ class GO1Repository implements GO1Interface
     public function webhook($payload)
     {
         try {
-            $this->webhookService->webhook($payload);
+            GO1Helper::webhook($payload);
 
             return true;
         } catch (Exception $exception) {

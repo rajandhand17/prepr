@@ -5,7 +5,7 @@ namespace App\Http\Resources\User;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Settings\UserNotificationResource;
 use App\Http\Resources\Settings\UserPrivacyResource;
-use App\Services\GO1\GO1PermissionService;
+use App\Services\Manage\MemberManagementService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -26,7 +26,7 @@ class UserResource extends JsonResource
             $roles = [];
         }
 
-        $go1PermissionService = new GO1PermissionService();
+        $memberManagement = new MemberManagementService();
 
         return [
             'id'                          => $this->id,
@@ -48,8 +48,8 @@ class UserResource extends JsonResource
             'member_since'                => UtilityHelper::formatDateTime($this->created_at),
             'roles'                       => $roles,
             'go1'                         => [
-                'can_create_resource'     => $go1PermissionService->canCreateGO1Resource(),
-                'can_play_resource'       => $go1PermissionService->canPlayGO1Resoruces(),
+                'can_create_resource'     => $memberManagement->canCreateGO1Resource(),
+                'can_play_resource'       => $memberManagement->canPlayGO1Resoruces(),
             ],
             'notification'                => UserNotificationResource::make($this->userSetting),
             'privacy'                     => UserPrivacyResource::make($this->userSetting),

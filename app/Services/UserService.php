@@ -10,7 +10,7 @@ class UserService
 {
     public static function joinName($firstName, $lastName)
     {
-        return $firstName.' '.$lastName;
+        return $firstName . ' ' . $lastName;
     }
 
     public static function getUserByEmail($email)
@@ -44,6 +44,15 @@ class UserService
         }
     }
 
+    public static function getUserByGO1Id($go1UserId)
+    {
+        try {
+            return User::where('go1_id', $go1UserId)->first();
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
     public static function getUserByUsername($username)
     {
         try {
@@ -66,7 +75,7 @@ class UserService
         try {
             $user = User::select();
             if ($request->search) {
-                $user = $user->orWhere('full_name', 'like', '%'.$request->search.'%')->orWhere('username', 'like', '%'.$request->search.'%')->orWhere('email', 'like', '%'.$request->search.'%');
+                $user = $user->orWhere('full_name', 'like', '%' . $request->search . '%')->orWhere('username', 'like', '%' . $request->search . '%')->orWhere('email', 'like', '%' . $request->search . '%');
             }
             $user = $user->take(config('site-settings.pagination_per_page'))->get();
 
@@ -95,7 +104,7 @@ class UserService
             $user = auth()->user();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
-            $user->full_name = $request->first_name.' '.$request->last_name;
+            $user->full_name = $request->first_name . ' ' . $request->last_name;
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone_number = $request->phone_number;
@@ -105,7 +114,7 @@ class UserService
             $user->save();
 
             return $user;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -120,7 +129,7 @@ class UserService
             }
 
             return false;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

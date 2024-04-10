@@ -6,6 +6,8 @@ use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use App\Models\ResourceModuleSkillsGroupsStack;
+use App\Models\Skill;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +30,7 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
+                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%' . $request->search . '%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -237,7 +239,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (Exception $e) {
-            Log::error('Error in createResourceModule in ResourceModuleService.php: '.$e->getMessage());
+            Log::error('Error in createResourceModule in ResourceModuleService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -362,11 +364,71 @@ class ResourceModuleService
         }
     }
 
+    public static function getResourceModuleBasedOnGO1Id($go1CourseId)
+    {
+        try {
+            return ResourceModule::where('go1_course_id', $go1CourseId)->first();
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
     public static function getResourceModuleBasedOnUUID($uUID)
     {
         try {
             return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createFromGO1($body)
+    {
+        try {
+            $slug = UtilityHelper::generateSlug($body['title'], ResourceModule::class);
+            $resourceModule = new ResourceModule();
+            $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $resourceModule->language = request()->language;
+            $resourceModule->user_id = auth()->user()->id;
+            $resourceModule->organization_id = config('go1.prepr_id');
+            $resourceModule->title = $body['title'];
+            $resourceModule->slug = $slug;
+            $resourceModule->description = $body['description'];
+            $resourceModule->privacy = config('constants.resource_module_privacy.yes');
+            $resourceModule->status = config('constants.resource_module_status.draft');
+            $resourceModule->is_global = config('constants.resource_module_is_global.no');
+            $resourceModule->is_ai_created = config('constants.challenge_ai_created.no');
+            $resourceModule->go1_course_id = $body['id'];
+            $resourceModule->go1_metadata = $body;
+            $resourceModule->save();
+
+            return $resourceModule;
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public function storeGO1Skills($resourceModuleId, $skills = [])
+    {
+        try {
+            $skillsIds = array_map(function ($item) {
+                $data = Skill::firstOrCreate(['title' => $item['name']]);
+
+                return $data->id;
+            }, $skills);
+
+            if (count($skills) > 0) {
+                foreach ($skillsIds as $id) {
+                    $ResourceModuleGroupsStack = new ResourceModuleSkillsGroupsStack();
+                    $ResourceModuleGroupsStack->resource_module_id = $resourceModuleId;
+                    $ResourceModuleGroupsStack->foreign_id = $id;
+                    $ResourceModuleGroupsStack->type = '0';
+                    $ResourceModuleGroupsStack->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $exception) {
             return false;
         }
     }
