@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class CheckEmailRequest extends FormRequest
 {
@@ -35,18 +35,17 @@ class CheckEmailRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()
     {
         return[
-            'email.required' => __('notification.notification_peeief'),
-            'email.unique'=>__('responses.unique_email'), 
-            'email.email'=>__('notification.notification_iea'),
-            'email.max'=>__('responses.max_email'),
+            'email.required' => __('responses.email_field_required'),
+            'email.unique'   => __('responses.unique_email'),
+            'email.email'    => __('responses.valid_email_pattern'),
+            'email.max'      => __('responses.max_content_50'),
         ];
     }
-
 }

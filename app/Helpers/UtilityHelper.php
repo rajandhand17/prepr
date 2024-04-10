@@ -1,20 +1,119 @@
 <?php
+
 namespace App\Helpers;
 
-use App\Models\Organization;
+use App\Services\Manage\ChallengeService;
+use App\Services\Manage\LabProgramService;
+use App\Services\Manage\LabService;
+use App\Services\Manage\OrganizationService;
+use App\Services\ProjectService;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class UtilityHelper{
-    
-    public static function generateSlug($name,$model)
-    {       
-            $name=preg_replace('/[^A-Za-z0-9\-]/', '', $name);
-            $slug=$slug_format=Str::slug($name);
-            $next=1;
-            while($model::where("slug",'=',$slug)->pluck("name")->first()){
-                $slug="{$slug_format}-{$next}";
-                $next++;
+class UtilityHelper
+{
+    public static function generateSlug($name, $model)
+    {
+        $name = preg_replace('/[^A-Za-z0-9\-]/', '-', $name);
+        $slug = $slug_format = Str::slug($name);
+        $next = 1;
+        while ($model::where('slug', '=', $slug)->pluck('title')->first()) {
+            $slug = "{$slug_format}-{$next}";
+            $next++;
+        }
+
+        return $slug;
+    }
+
+    public static function checkComponentSlugExistOrNot($component, $slug)
+    {
+        try {
+            $checkComponentSlugExistOrNot = false;
+            switch ($component) {
+                case 'organization':
+                    $checkComponentSlugExistOrNot = OrganizationService::getOrganizationBasedOnSlug($slug);
+                    break;
+                case 'lab':
+                    $checkComponentSlugExistOrNot = LabService::getLabBasedOnSlug($slug);
+                    break;
+                case 'lab-program':
+                    $checkComponentSlugExistOrNot = LabProgramService::getLabProgramBasedOnSlug($slug);
+                    break;
+                case 'challenge':
+                    $checkComponentSlugExistOrNot = ChallengeService::getChallengeBasedOnSlug($slug);
+                    break;
+                case 'project':
+                    $checkComponentSlugExistOrNot = ProjectService::getProjectBasedOnSlug($slug);
+                    break;
+                default:
+                    $checkComponentSlugExistOrNot = false;
             }
-            return $slug;
+            if ($checkComponentSlugExistOrNot != false) {
+                return $checkComponentSlugExistOrNot;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function formatDateTime($date, $time = 0)
+    {
+        $carbonDate = Carbon::parse($date);
+        //getting preferred TimeZone
+        $desiredTimezone = isset(auth()->user()->preferred_timezone) ? auth()->user()->preferred_timezone : 'UTC';
+        //getting server timezone
+        $defaultTimeZone = config('app.timezone');
+        /*set default timezone is utc and convert that according to user timezone*/
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', $carbonDate, $defaultTimeZone)
+            ->setTimezone($desiredTimezone);
+        if ($time == 0) {
+            return $date->format('M d, Y H:i:s');
+        }
+
+        return $date->format('M d, Y H:i:s');
+    }
+
+    public static function validEmail($email)
+    {
+        // First, we check that there's one @ symbol, and that the lengths are right
+        if (!preg_match('/^[^@]{1,64}@[^@]{1,255}$/', $email)) {
+            // Email invalid because wrong number of characters in one section, or wrong number of @ symbols.
+            return false;
+        }
+        // Split it into sections to make life easier
+        $email_array = explode('@', $email);
+        $local_array = explode('.', $email_array[0]);
+        for ($i = 0; $i < sizeof($local_array); $i++) {
+            if (!preg_match("/^(([A-Za-z0-9!#$%&'*+\/=?^_`{|}~-][A-Za-z0-9!#$%&'*+\/=?^_`{|}~\.-]{0,63})|(\"[^(\\|\")]{0,62}\"))$/", $local_array[$i])) {
+                return false;
+            }
+        }
+        if (!preg_match("/^\[?[0-9\.]+\]?$/", $email_array[1])) { // Check if domain is IP. If not, it should be valid domain name
+            $domain_array = explode('.', $email_array[1]);
+            if (sizeof($domain_array) < 2) {
+                return false; // Not enough parts to domain
+            }
+            for ($i = 0; $i < sizeof($domain_array); $i++) {
+                if (!preg_match('/^(([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|([A-Za-z0-9]+))$/', $domain_array[$i])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Convert an object to an array using JSON encode/decode method.
+     *
+     * @param mixed $object The object to convert.
+     *
+     * @return array The object converted to an array.
+     */
+    public static function objectToArray($object): array
+    {
+        return json_decode(json_encode($object), true);
     }
 }

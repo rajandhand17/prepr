@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -14,9 +13,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-
             $table->bigIncrements('id');
             $table->string('preferred_language')->default('en');
+            $table->string('preferred_timezone')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('full_name')->nullable();
@@ -28,17 +27,17 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->enum('two_factor_verification', ['0', '1'])->comment('0 -> disabled, 1 -> enabled')->default('0');
             $table->string('otp')->nullable();
-            $table->string('profile_image')->nullable();
+            $table->text('profile_image')->nullable();
             $table->integer('user_points')->nullable();
             $table->integer('user_rank')->nullable();
             $table->enum('verified_user', ['0', '1'])->comment('0 -> no, 1 -> yes')->default('0');
             $table->string('verify_token')->nullable();
-            $table->string('referal_code')->nullable();
-            $table->enum('is_profile_completed', ['0', '1'])->comment('0 -> incomplete, 1 for complete')->default('0');
+            $table->string('referral_code')->nullable();
+            $table->enum('is_profile_completed', ['0', '1'])->comment('0 -> incomplete, 1 -> complete')->default('0');
             $table->rememberToken();
+            $table->enum('is_deactivated', ['0', '1'])->comment('0->activated, 1->deactivated')->default('0');
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 

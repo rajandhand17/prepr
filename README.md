@@ -64,3 +64,22 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Setup Instructions
+1. # System Requirements:
+    PHP version: 8.2
+    MySQL version: 8.0.34
+    Old Legacy DB (For migrating the data)
+<!-- Process setup -->
+2. #  Process
+    2.1. Clone the latest version of "preprlabs_central_api" repository.
+    2.2. After cloning, create a duplicate file of .env.example and rename it to .env. Make sure to update the necessary variables like database (DB) details in the .env file.
+    2.3. Run the following command to install the required dependencies using Composer:
+        composer install
+    2.4. Once the dependency installation is complete, run the following commands to set up the database:
+        php artisan migrate --seed
+        ./migrate-old-data.sh (Before executing the command its mandate to gave old legacy database, without databse this command is non for the use.)
+        
+        After completing the above step, new database tables will be created, and the necessary data will be seeded into the database.
+3. # Note
+    Please note that these steps are specifically for setting up the "preprlabs_central_api" and assume you have the necessary PHP and MySQL versions installed on your system. Make sure to follow the instructions carefully, and if any errors occur during the process, troubleshoot them accordingly.

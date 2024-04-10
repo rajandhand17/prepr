@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class CheckPhoneRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class CheckPhoneRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone_number' => 'required|numeric|unique:users'
+            'phone_number' => 'required|numeric|unique:users',
         ];
     }
 
@@ -35,16 +35,16 @@ class CheckPhoneRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()
     {
         return[
-            'phone_number.required' => __("notification.notification_ypnie"),
-            'phone_number.numeric'=>__("responses.numeric"),
-            'phone_number.unique'=>__("responses.already_number"),
+            'phone_number.required' => __('responses.phone_field_required'),
+            'phone_number.numeric'  => __('responses.phone_number_numeric_allowed'),
+            'phone_number.unique'   => __('responses.unique_phone_number'),
         ];
     }
 }

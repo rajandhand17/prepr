@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -15,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('fr_CA_name')->nullable();
-            $table->string('tag_image')->nullable();
-            $table->string('fr_CA_tag_image')->nullable();
+            $table->string('title');
+            $table->string('fr_CA_title')->nullable();
+            $table->text('tag_image')->nullable();
+            $table->text('fr_CA_tag_image')->nullable();
             $table->string('components')->nullable();
             $table->timestamps();
             $table->softDeletes();

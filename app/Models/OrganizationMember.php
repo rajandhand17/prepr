@@ -12,7 +12,7 @@ class OrganizationMember extends Model
     use SoftDeletes;
 
     protected $table = 'organization_members';
-    
+
     protected $fillable = [
         'organization_id',
         'name',
@@ -20,4 +20,9 @@ class OrganizationMember extends Model
         'position',
         'image',
     ];
+
+    public function getImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
 }

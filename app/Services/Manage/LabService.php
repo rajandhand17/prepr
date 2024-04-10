@@ -1,0 +1,392 @@
+<?php
+
+namespace App\Services\Manage;
+
+use App\Events\Labs\DeleteLabAssociatedData;
+use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
+use App\Models\Lab;
+use App\Models\LabChallengeRedeem;
+use Exception;
+use HiFolks\RandoPhp\Randomize;
+
+class LabService
+{
+    public static function getLabList($request, $organization)
+    {
+        try {
+            $lab_list = Lab::select()->where('organization_id', '=', $organization->id);
+
+            $lab_list = self::filterLabList($lab_list, $request);
+
+            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function filterLabList($lab_list, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
+            }
+
+            if ($request->has('status') && !empty($request->status)) {
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated' || $request->status == 'archived') ? '2' : '3'));
+                $lab_list = $lab_list->where('labs.status', $status);
+            } else {
+                $lab_list = $lab_list->where('labs.status', '1');
+            }
+
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $lab_list = $lab_list->whereIn('labs.category_id', $request->category);
+            }
+
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $lab_list = $lab_list->orderBy('labs.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $lab_list = $lab_list->orderBy('labs.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $lab_list = $lab_list->orderBy('labs.created_at', 'ASC');
+                        break;
+                    default:
+                        $lab_list = $lab_list->orderBy('labs.id', 'ASC');
+                }
+            }
+
+            if ($request->has('privacy')) {
+                $privacy = null;
+                switch ($request->privacy) {
+                    case 'yes':
+                        $privacy = config('constants.lab_privacy.yes');
+                        break;
+                    case 'no':
+                        $privacy = config('constants.lab_privacy.no');
+                        break;
+                    default:
+                        $privacy = null;
+                }
+                if ($privacy != null) {
+                    $lab_list = $lab_list->where('privacy', $privacy);
+                }
+            }
+
+            return $lab_list;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnSlug($slug)
+    {
+        try {
+            return Lab::where('slug', $slug)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnId($Id)
+    {
+        try {
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function uploadLabCoverImage($image)
+    {
+        try {
+            $upload_lab_cover_image = FileUploadHelper::uploadImageToS3($image, 'lab');
+            if ($upload_lab_cover_image == false) {
+                return false;
+            }
+
+            return $upload_lab_cover_image;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createLab($request, $upload_cover_image)
+    {
+        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+        $status = config('constants.lab_status.draft');
+        switch($request->request_type) {
+            case 'draft':
+                $status = config('constants.lab_status.draft');
+                break;
+            case 'publish':
+                $status = config('constants.lab_status.publish');
+                break;
+            case 'archive':
+                $status = config('constants.lab_status.archive');
+                break;
+            default:
+                $status = config('constants.lab_status.draft');
+                break;
+        }
+
+        $type = config('constants.lab_type.na');
+        switch($request->type) {
+            case 'assess':
+                $type = config('constants.lab_type.assess');
+                break;
+            case 'onboard':
+                $type = config('constants.lab_type.onboard');
+                break;
+            case 'engage':
+                $type = config('constants.lab_type.engage');
+                break;
+            case 'grow':
+                $type = config('constants.lab_type.grow');
+                break;
+            default:
+                $type = config('constants.lab_type.na');
+                break;
+        }
+
+        $privacy = config('constants.lab_privacy.no');
+        switch($request->privacy) {
+            case 'yes':
+                $privacy = config('constants.lab_privacy.yes');
+                break;
+            case 'no':
+                $privacy = config('constants.lab_privacy.no');
+                break;
+            default:
+                $privacy = config('constants.lab_privacy.yes');
+                break;
+        }
+        $model = new Lab();
+        $slug = UtilityHelper::generateSlug($request->title, $model);
+
+        $lab = new Lab();
+        $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+        $lab->language = $request->language;
+        $lab->user_id = auth()->user()->id;
+        $lab->organization_id = $organization->id;
+        $lab->category_id = $request->category_id;
+        $lab->duration_id = $request->duration_id;
+        $lab->level_id = $request->level_id;
+        $lab->type = $type;
+        $lab->slug = $slug;
+        $lab->title = $request->title;
+        $lab->description = $request->description;
+        $lab->privacy = $privacy;
+        $lab->media_type = 'image';
+        $lab->media = $upload_cover_image;
+        $lab->status = $status;
+        $lab->total_share = 0;
+        $lab->is_auto_created = '0';
+        $lab->is_resource_sequential = ($request->is_resource_sequential == 'yes') ? '1' : '0';
+        $lab->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
+        $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
+        $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
+        $lab->is_verified = '0';
+        $lab->save();
+
+        return $lab;
+    }
+
+    public static function updateLab($slug, $request, $upload_cover_image)
+    {
+        try {
+            $lab = Lab::where('slug', $slug)->first();
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if ($lab !== null) {
+                $privacy = $lab->privacy;
+                if ($request->has('privacy')) {
+                    switch($request->privacy) {
+                        case 'yes':
+                            $privacy = config('constants.lab_privacy.yes');
+                            break;
+                        case 'no':
+                            $privacy = config('constants.lab_privacy.no');
+                            break;
+                        default:
+                            $privacy = config('constants.lab_privacy.yes');
+                            break;
+                    }
+                }
+
+                $type = config('constants.lab_type.na');
+                switch($request->type) {
+                    case 'assess':
+                        $type = config('constants.lab_type.assess');
+                        break;
+                    case 'onboard':
+                        $type = config('constants.lab_type.onboard');
+                        break;
+                    case 'engage':
+                        $type = config('constants.lab_type.engage');
+                        break;
+                    case 'grow':
+                        $type = config('constants.lab_type.grow');
+                        break;
+                    default:
+                        $type = config('constants.lab_type.na');
+                        break;
+                }
+
+                $lab->language = ($request->has('language')) ? $request->language : $lab->language;
+                $lab->organization_id = $organization->id;
+                $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
+                $lab->duration_id = ($request->has('duration_id')) ? $request->duration_id : $lab->duration_id;
+                $lab->level_id = ($request->has('level_id')) ? $request->level_id : $lab->level_id;
+                $lab->title = ($request->has('title')) ? $request->title : $lab->title;
+                $lab->description = ($request->has('description')) ? $request->description : $lab->description;
+                $lab->type = $type;
+                $lab->privacy = $privacy;
+                $lab->media_type = 'image';
+                $lab->media = ($upload_cover_image != null) ? $upload_cover_image : $lab->cover_image;
+                $lab->status = ($request->request_type == 'draft') ? '0' : (($request->request_type == 'publish') ? '1' : '2');
+                $lab->is_resource_sequential = ($request->has('is_resource_sequential')) ? (($request->is_resource_sequential == 'yes') ? '1' : '0') : $lab->is_resource_sequential;
+                $lab->is_sequential = ($request->has('is_sequential')) ? (($request->is_sequential == 'yes') ? '1' : '0') : $lab->is_sequential;
+                $lab->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_achievement_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
+                $lab->is_notification_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_notification_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
+                $lab->save();
+
+                return $lab;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteLab($lab_id)
+    {
+        try {
+            $lab = Lab::find($lab_id)->delete();
+            if ($lab) {
+                $associatedLabs = event(new DeleteLabAssociatedData($lab_id));
+
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkSlug($slug)
+    {
+        try {
+            $checklab = Lab::where('slug', $slug)->first();
+            if ($checklab) {
+                return $checklab;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $checklabName = Lab::where('title', $title)->first();
+            if ($checklabName) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getLabListName($request, $organization)
+    {
+        try {
+            $lab_list = Lab::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $lab_list = self::filterLabList($lab_list, $request);
+            $limit = config('site-settings.listing_limit');
+
+            return $lab_list->limit($limit)->get();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabIdBasedOnUUIDArray($uuid)
+    {
+        try {
+            $lab = Lab::whereIn('uuid', $uuid)->pluck('id')->all();
+            if ($lab != null) {
+                return $lab;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabIdBasedOnId($id)
+    {
+        try {
+            $lab = Lab::whereIn('id', $id)->pluck('id')->all();
+            if ($lab != null) {
+                return $lab;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updatePreBuilt($id, $is_pre_built)
+    {
+        try {
+            $lab = Lab::find($id);
+            $lab->is_pre_built = $is_pre_built;
+            $lab->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function labMarketplaceUpdatePreBuilt($labMarketplaceId)
+    {
+        try {
+            $labMarketplaceData = LabChallengeRedeem::where(['lab_marketplace_id' => $labMarketplaceId, 'is_redeemed' => '0'])->first();
+            if ($labMarketplaceData) {
+                $labUpdate = Lab::find($labMarketplaceData->lab_id);
+                if ($labUpdate) {
+                    $labUpdate->is_pre_built = '0';
+                    $labUpdate->save();
+                    if ($labMarketplaceData->delete()) {
+                        return true;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnUUID($uUID)
+    {
+        try {
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}

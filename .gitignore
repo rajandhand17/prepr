@@ -16,3 +16,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+sendgrid.env
+ddev
+.ddev
+.env.testing

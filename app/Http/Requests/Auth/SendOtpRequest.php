@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class SendOtpRequest extends FormRequest
 {
@@ -26,8 +26,8 @@ class SendOtpRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|max:50|exists:users,email',
-            'purpose'=>'required'
+            'email'  => 'required|email|max:50|exists:users,email',
+            'purpose'=> 'required|in:forget_password,verify_email,two_factor_verification',
         ];
     }
 
@@ -36,21 +36,19 @@ class SendOtpRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
-
 
     public function messages()
     {
         return [
-            'email.required' => __('notification.notification_peeief'),
-            'email.exists'=>__('responses.not_exists_email'), 
-            'email.email'=>__('notification.notification_iea'),
-            'email.max'=>__('responses.max_email'),
-            'purpose'=>__('responses.purpose'),
+            'email.required'          => __('responses.email_field_required'),
+            'email.email'             => __('responses.valid_email_pattern'),
+            'email.max'               => __('responses.max_content_50'),
+            'email.exists'            => __('responses.not_exists_email'),
+            'purpose.required'        => __('responses.purpose_required'),
 
         ];
     }
-
 }

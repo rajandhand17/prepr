@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Permission;
+use Illuminate\Database\Seeder;
+
 class PermissionSeeder extends Seeder
 {
     /**
@@ -14,283 +14,292 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $permission=[
+        $permission = [
             [
-                'name' => 'view_organization',
+                'name'         => 'change_organization_ownership',
+                'display_name' => 'Change Organization Ownership',
+                'description'  => 'Organization Owner can assign their ownership to another user with in the organization',
+            ],
+            [
+                'name'         => 'view_organization',
                 'display_name' => 'Organization View',
-                'description'=>'Organization view permission to who can view organization'
-            ],[
-                'name' => 'create_organization',
+                'description'  => 'Organization view permission to who can view organization',
+            ], [
+                'name'         => 'create_organization',
                 'display_name' => 'Create Organization',
-                'description'=>'Organization create permission to who can create organization'
+                'description'  => 'Organization create permission to who can create organization',
             ],
             [
-                'name' => 'edit_organization',
+                'name'         => 'edit_organization',
                 'display_name' => 'Edit Organization',
-                'description'=>'Organization edit permission to who can edit organization'
+                'description'  => 'Organization edit permission to who can edit organization',
             ],
             [
-                'name' => 'delete_organization',
+                'name'         => 'delete_organization',
                 'display_name' => 'Delete Organization',
-                'description'=>'Organization delete permission to who can delete organization'
+                'description'  => 'Organization delete permission to who can delete organization',
             ],
             [
-                'name' => 'view_organization_members',
+                'name'         => 'view_organization_members',
                 'display_name' => 'View Organization Member',
-                'description'=>'Allow to user to view organization member'
+                'description'  => 'Allow to user to view organization member',
             ],
             [
-                'name' => 'create_organization_members',
+                'name'         => 'create_organization_members',
                 'display_name' => 'Create Organization Member',
-                'description'=>'Allow to user to create organization member'
+                'description'  => 'Allow to user to create organization member',
             ],
             [
-                'name' => 'edit_organization_members',
+                'name'         => 'edit_organization_members',
                 'display_name' => 'Edit Organization Member',
-                'description'=>'Allow to user to edit organization member'
+                'description'  => 'Allow to user to edit organization member',
             ],
             [
-                'name' => 'delete_organization_members',
+                'name'         => 'delete_organization_members',
                 'display_name' => 'Delete Organization Member Manager',
-                'description'=>'Allow to user to delete organization member'
+                'description'  => 'Allow to user to delete organization member',
             ],
             [
-                'name' => 'view_lab',
+                'name'         => 'view_lab',
                 'display_name' => 'View Lab',
-                'description'=>'Allow to user to view lab'
+                'description'  => 'Allow to user to view lab',
             ],
             [
-                'name' => 'create_lab',
+                'name'         => 'create_lab',
                 'display_name' => 'Create Lab',
-                'description'=>'Allow to user to create lab'
+                'description'  => 'Allow to user to create lab',
             ],
             [
-                'name' => 'edit_lab',
+                'name'         => 'edit_lab',
                 'display_name' => 'Edit Lab',
-                'description'=>'Allow to user to edit lab'
+                'description'  => 'Allow to user to edit lab',
             ],
             [
-                'name' => 'delete_lab',
+                'name'         => 'delete_lab',
                 'display_name' => 'Delete Lab',
-                'description'=>'Allow to user to delete lab'
+                'description'  => 'Allow to user to delete lab',
             ],
             [
-                'name' => 'generate_lab_report',
+                'name'         => 'generate_lab_report',
                 'display_name' => 'Generate Lab Report',
-                'description'=>'Allow to user to generate lab report'
+                'description'  => 'Allow to user to generate lab report',
             ],
             [
-                'name' => 'view_lab_member',
+                'name'         => 'view_lab_member',
                 'display_name' => 'View Lab Member',
-                'description'=>'Allow to user to view lab member'
+                'description'  => 'Allow to user to view lab member',
             ],
             [
-                'name' => 'create_lab_member',
+                'name'         => 'create_lab_member',
                 'display_name' => 'Create Lab Member',
-                'description'=>'Allow to create lab member'
+                'description'  => 'Allow to create lab member',
             ],
             [
-                'name' => 'edit_lab_member',
+                'name'         => 'edit_lab_member',
                 'display_name' => 'Edit Lab Member',
-                'description'=>'Allow user to edit lab member'
+                'description'  => 'Allow user to edit lab member',
             ],
             [
-                'name' => 'delete_lab_member',
+                'name'         => 'delete_lab_member',
                 'display_name' => 'Delete Lab Memeber',
-                'description'=>'Allow user to delete lab member'
+                'description'  => 'Allow user to delete lab member',
             ], [
-                'name' => 'view_lab_programs',
+                'name'         => 'view_lab_programs',
                 'display_name' => 'View Lab Programs',
-                'description'=>'Allow user to view lab program'
+                'description'  => 'Allow user to view lab program',
             ],
             [
-                'name' => 'create_lab_programs',
+                'name'         => 'create_lab_programs',
                 'display_name' => 'Create Lab Programs',
-                'description'=>'Allow user to create lab program'
+                'description'  => 'Allow user to create lab program',
             ],
             [
-                'name' => 'edit_lab_programs',
+                'name'         => 'edit_lab_programs',
                 'display_name' => 'Edit Lab Programs',
-                'description'=>'Allow user to edit lab program'
+                'description'  => 'Allow user to edit lab program',
             ],
             [
-                'name' => 'delete_lab_programs',
+                'name'         => 'delete_lab_programs',
                 'display_name' => 'Delete Lab programs',
-                'description'=>'Allow user to delete lab program'
+                'description'  => 'Allow user to delete lab program',
             ],
             [
-                'name' => 'view_challenge',
+                'name'         => 'view_challenge',
                 'display_name' => 'View Challenge',
-                'description'=>'Allow to user to challenge'
+                'description'  => 'Allow to user to challenge',
             ],
             [
-                'name' => 'create_challenge',
+                'name'         => 'create_challenge',
                 'display_name' => 'Create Challenge',
-                'description'=>'Allow user to create challenge'
+                'description'  => 'Allow user to create challenge',
             ],
             [
-                'name' => 'edit_challenge',
+                'name'         => 'edit_challenge',
                 'display_name' => 'Edit Challenge',
-                'description'=>'Allow user to edit challenge'
+                'description'  => 'Allow user to edit challenge',
             ],
             [
-                'name' => 'delete_challenge',
+                'name'         => 'delete_challenge',
                 'display_name' => 'Delete Challenge',
-                'description'=>'Allow user to delete challenge'
+                'description'  => 'Allow user to delete challenge',
             ],
             [
-                'name' => 'generate_challenge_report',
+                'name'         => 'generate_challenge_report',
                 'display_name' => 'Generate Challenge Report',
-                'description'=>'Allow user to generate challenge report'
+                'description'  => 'Allow user to generate challenge report',
             ],
             [
-                'name' => 'clone_challenge',
+                'name'         => 'clone_challenge',
                 'display_name' => 'Clone Challenge',
-                'description'=>'Allow user to create clone challenge'
+                'description'  => 'Allow user to create clone challenge',
             ],
 
             [
-                'name' => 'create_challenge_annoucements',
+                'name'         => 'create_challenge_annoucements',
                 'display_name' => 'Create Challenge Annoucements',
-                'description'=>'Allow user to create challenge annoucements'
+                'description'  => 'Allow user to create challenge annoucements',
             ],
             [
-                'name' => 'edit_challenge_annoucements',
+                'name'         => 'edit_challenge_annoucements',
                 'display_name' => 'Edit Challenge Annoucements',
-                'description'=>'Allow user to edit challenge annoucements'
+                'description'  => 'Allow user to edit challenge annoucements',
             ],
             [
-                'name' => 'delete_challenge_annoucements',
+                'name'         => 'delete_challenge_annoucements',
                 'display_name' => 'Delete Challenge Annoucements',
-                'description'=>'Allow user to challenge annoucements'
+                'description'  => 'Allow user to challenge annoucements',
             ],
             [
-                'name' => 'create_challenge_assessment',
+                'name'         => 'create_challenge_assessment',
                 'display_name' => 'Create Challenge Assessment',
-                'description'=>'Allow user to create challenge assessment'
+                'description'  => 'Allow user to create challenge assessment',
             ],
             [
-                'name' => 'view_project_submission',
+                'name'         => 'view_project_submission',
                 'display_name' => 'View Project Submission',
-                'description'=>'Allow user to view project sumission',
+                'description'  => 'Allow user to view project sumission',
             ],
             [
-                'name' => 'remove_project_submission',
+                'name'         => 'remove_project_submission',
                 'display_name' => 'Remove Project Submission',
-                'description'=>'Allow user to remove project submission',
+                'description'  => 'Allow user to remove project submission',
             ],
             [
-                'name' => 'view_challenges_members',
+                'name'         => 'view_challenges_members',
                 'display_name' => 'View Challenges Members',
-                'description'=>'Allow user to view challenges members',
+                'description'  => 'Allow user to view challenges members',
             ],
 
             [
-                'name' => 'create_challenges_members',
+                'name'         => 'create_challenges_members',
                 'display_name' => 'Create Challenges Members',
-                'description'=>'Allow user to create challenges members',
+                'description'  => 'Allow user to create challenges members',
             ],
             [
-                'name' => 'edit_challenges_members',
+                'name'         => 'edit_challenges_members',
                 'display_name' => 'Edit Challenges Members',
-                'description'=>'Allow user to edit challenges members',
+                'description'  => 'Allow user to edit challenges members',
             ],
             [
-                'name' => 'delete_challenges_members',
+                'name'         => 'delete_challenges_members',
                 'display_name' => 'Delete Challenges Members',
-                'description'=>'Allow user to delete challenges members',
+                'description'  => 'Allow user to delete challenges members',
             ],
 
             [
-                'name' => 'view_challenges_path',
+                'name'         => 'view_challenges_path',
                 'display_name' => 'View Challenge Path',
-                'description'=>'Allow user to view challenge path',
+                'description'  => 'Allow user to view challenge path',
             ],
             [
-                'name' => 'create_challenges_path',
+                'name'         => 'create_challenges_path',
                 'display_name' => 'Create Challenge Path',
-                'description'=>'Allow user to create challenge path',
+                'description'  => 'Allow user to create challenge path',
             ],
             [
-                'name' => 'edit_challenges_path',
+                'name'         => 'edit_challenges_path',
                 'display_name' => 'Edit Challenge Path',
-                'description'=>'Allow user to edit challenge path',
+                'description'  => 'Allow user to edit challenge path',
             ],
             [
-                'name' => 'delete_challenges_path',
+                'name'         => 'delete_challenges_path',
                 'display_name' => 'Delete Challenge Path',
-                'description'=>'Allow user to delete challenge path',
+                'description'  => 'Allow user to delete challenge path',
             ],
             [
-                'name' => 'view_resource_module',
+                'name'         => 'view_resource_module',
                 'display_name' => 'View Resource Module',
-                'description'=>'Allow user to view resource module',
+                'description'  => 'Allow user to view resource module',
             ],
             [
-                'name' => 'create_resource_module',
+                'name'         => 'create_resource_module',
                 'display_name' => 'Create Resource Module',
-                'description'=>'Allow user to create resource module',
+                'description'  => 'Allow user to create resource module',
             ], [
-                'name' => 'edit_resource_module',
+                'name'         => 'edit_resource_module',
                 'display_name' => 'Edit Resource Module',
-                'description'=>'Allow user to edit resource module',
+                'description'  => 'Allow user to edit resource module',
             ],
             [
-                'name' => 'delete_resource_module',
+                'name'         => 'delete_resource_module',
                 'display_name' => 'Delete Resource Module',
-                'description'=>'Allow user to delete resource module',
+                'description'  => 'Allow user to delete resource module',
             ],
             [
-                'name' => 'view_resource_collection',
+                'name'         => 'view_resource_collection',
                 'display_name' => 'View Resource Collection',
-                'description'=>'Allow user to view resource collection',
+                'description'  => 'Allow user to view resource collection',
             ],
             [
-                'name' => 'create_resource_collection',
+                'name'         => 'create_resource_collection',
                 'display_name' => 'Create Resource Collection',
-                'description'=>'Allow user to create resource collection',
+                'description'  => 'Allow user to create resource collection',
             ], [
-                'name' => 'edit_resource_collection',
+                'name'         => 'edit_resource_collection',
                 'display_name' => 'Edit Resource Collection',
-                'description'=>'Allow user to edit resource Collection',
+                'description'  => 'Allow user to edit resource Collection',
             ],
             [
-                'name' => 'delete_resource_collection',
+                'name'         => 'delete_resource_collection',
                 'display_name' => 'Delete Resource Collection',
-                'description'=>'Allow user to delete resource collection',
+                'description'  => 'Allow user to delete resource collection',
             ],
             [
-                'name' => 'view_resource_group',
+                'name'         => 'view_resource_group',
                 'display_name' => 'View Resource Group',
-                'description'=>'Allow user to view resource group',
+                'description'  => 'Allow user to view resource group',
             ],
             [
-                'name' => 'create_resource_group',
+                'name'         => 'create_resource_group',
                 'display_name' => 'Create Resource Group',
-                'description'=>'Allow user to create resource group',
+                'description'  => 'Allow user to create resource group',
             ], [
-                'name' => 'edit_resource_group',
+                'name'         => 'edit_resource_group',
                 'display_name' => 'Edit Resource Group',
-                'description'=>'Allow user to edit resource group',
+                'description'  => 'Allow user to edit resource group',
             ],
             [
-                'name' => 'delete_resource_group',
+                'name'         => 'delete_resource_group',
                 'display_name' => 'Delete Resource Group',
-                'description'=>'Allow user to delete resource group',
+                'description'  => 'Allow user to delete resource group',
             ],
             [
-                'name' => 'impersonate_user',
+                'name'         => 'impersonate_user',
                 'display_name' => 'Impersonate User',
-                'description'=>"One User can switch login into another user's account",
+                'description'  => "One User can switch login into another user's account",
             ],
 
-           ];
+        ];
 
-           foreach ($permission as $key => $permission_array){
+        foreach ($permission as $key => $permission_array) {
             Permission::updateOrCreate(
-                ['name' =>  $permission_array['name']],
-                ['display_name' => $permission_array['display_name']],
-                ['description' => $permission_array['description']],
+                [
+                    'name' => $permission_array['name'],
+                ],
+                [
+                    'display_name' => $permission_array['display_name'],
+                    'description'  => $permission_array['description'],
+                ],
             );
         }
     }

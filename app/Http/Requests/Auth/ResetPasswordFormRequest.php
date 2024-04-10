@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class ResetPasswordFormRequest extends FormRequest
 {
@@ -26,10 +26,10 @@ class ResetPasswordFormRequest extends FormRequest
     public function rules()
     {
         return [
-              'email' => 'required|email|exists:users,email',
-              'password' => 'required|min:6',
-              'password_confirmation' => 'required|same:password',
-              'otp'=>'required'
+            'email'                 => 'required|email|exists:users,email',
+            'password'              => 'required|min:6',
+            'password_confirmation' => 'required|same:password',
+            'otp'                   => 'required',
         ];
     }
 
@@ -38,21 +38,21 @@ class ResetPasswordFormRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
 
     public function messages()
     {
         return [
-            'email.required' => __('notification.notification_peeief'),
-            'email.exists'=>__('responses.not_exists_email'), 
-            'email.email'=>__('notification.notification_iea'),
-            "password.required"=>__('notification.notification_reg_pass'),
-            "password.min"=>__('notification.min_password'),
-            "password_confirmation.required"=>__('notification.notification_reg_cpr'),
-            "password_confirmation.same"=>__('responses.password_confirm_password'),
-            'otp.required'=>__("responses.otp_required"),
+            'email.required'                 => __('responses.email_field_required'),
+            'email.email'                    => __('responses.valid_email_pattern'),
+            'email.exists'                   => __('responses.not_exists_email'),
+            'password.required'              => __('responses.password_required_field'),
+            'password.min'                   => __('responses.min_content_6'),
+            'password_confirmation.required' => __('responses.password_confirmation_required_field'),
+            'password_confirmation.same'     => __('responses.match_confirmed_password'),
+            'otp.required'                   => __('responses.required_otp'),
         ];
     }
 }

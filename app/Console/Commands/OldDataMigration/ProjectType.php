@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\ProjectType as Type;
+use DB;
+use Illuminate\Console\Command;
 
 class ProjectType extends Command
 {
@@ -40,34 +40,34 @@ class ProjectType extends Command
     public function handle()
     {
         try {
-
             $this->info('Migrating old data for project type table.');
             DB::beginTransaction();
 
             $project_type = DB::connection('mysql2')->table('project_type')->get();
-            if($project_type->count() > 0){
-
-                foreach ($project_type as $key => $single_type){
-                   $project_type_details=[
-                        'name' => $single_type->name,
-                        'fr_CA_name' => $single_type->fr_CA_name,
-                    ];
-                    $check_project_type = Type::where($project_type_details)->first();
-                    if(!$check_project_type){
-                        Type::create($project_type_details);
+            if ($project_type->count() > 0) {
+                foreach ($project_type as $key => $single_type) {
+                    $check_project_type = Type::where('title', $single_type->name)->first();
+                    if ($check_project_type) {
+                        $newProjectType = $check_project_type;
+                    } else {
+                        $newProjectType = new Type();
                     }
-
+                    $newProjectType->id = $single_type->id;
+                    $newProjectType->title = $single_type->name;
+                    $newProjectType->fr_CA_title = $single_type->fr_CA_name;
+                    $newProjectType->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project type table completed.');
+
                 return;
             }
             DB::rollback();
             $this->error('No project type found.');
-
         } catch (\Exception $e) {
-          DB::rollback();
+            DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

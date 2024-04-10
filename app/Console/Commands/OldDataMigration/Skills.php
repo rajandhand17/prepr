@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\Skill;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Console\Command;
 
 class Skills extends Command
 {
@@ -40,33 +41,34 @@ class Skills extends Command
     public function handle()
     {
         try {
-
+            $insertArr = [];
             $this->info('Migrating old data for skills table.');
             DB::beginTransaction();
 
-            $skills = DB::connection('mysql2')->table('skills')->get();
-            if($skills->count() > 0){
-
-                foreach ($skills as $key => $single_skill){
-                   $skills_details=[
-                        'name' => $single_skill->skill,
-                        'fr_CA_name' => $single_skill->fr_CA_skill,
+            DB::connection('mysql2')->table('skills')->chunkById(1000, function ($skills) use ($insertArr) {
+                foreach ($skills as $skill) {
+                    $skills_details = [
+                        'id'          => $skill->id,
+                        'title'       => $skill->skill,
+                        'fr_CA_title' => $skill->fr_CA_skill,
+                        'created_at'  => Carbon::now(),
+                        'updated_at'  => Carbon::now(),
                     ];
-                    $check_skills = Skill::where($skills_details)->first();
-                    if(!$check_skills){
-                        Skill::create($skills_details);
+                    $check_skills = Skill::find($skill->id);
+                    if (!$check_skills) {
+                        $insertArr[] = $skills_details;
                     }
                 }
-                DB::commit();
-                $this->info('Migrating of old data for skills table completed.');
-                return;
-            }
-            DB::rollback();
-            $this->error('No skill found.');
+                Skill::insert($insertArr);
+            });
+            DB::commit();
+            $this->info('Migrating of old data for skills table completed.');
 
+            return;
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

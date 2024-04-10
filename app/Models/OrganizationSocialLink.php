@@ -12,7 +12,7 @@ class OrganizationSocialLink extends Model
     use SoftDeletes;
 
     protected $table = 'organization_social_links';
-    
+
     protected $fillable = [
         'organization_id',
         'social_media_link',

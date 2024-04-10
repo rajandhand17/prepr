@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\ProjectVertical;
+use DB;
+use Illuminate\Console\Command;
 
 class ProjectVerticals extends Command
 {
@@ -40,34 +40,34 @@ class ProjectVerticals extends Command
     public function handle()
     {
         try {
-
             $this->info('Migrating old data for project verticals table.');
             DB::beginTransaction();
 
             $project_verticals = DB::connection('mysql2')->table('project_verticals')->get();
-            if($project_verticals->count() > 0){
-
-                foreach ($project_verticals as $key => $single_verticals){
-                   $project_verticals_details=[
-                        'name' => $single_verticals->name,
-                        'fr_CA_name' => $single_verticals->fr_CA_name,
-                    ];
-                    $check_project_verticals = ProjectVertical::where($project_verticals_details)->first();
-                    if(!$check_project_verticals){
-                        ProjectVertical::create($project_verticals_details);
+            if ($project_verticals->count() > 0) {
+                foreach ($project_verticals as $key => $single_verticals) {
+                    $check_project_verticals = ProjectVertical::where('title', $single_verticals->name)->first();
+                    if ($check_project_verticals) {
+                        $newProjectVertical = $check_project_verticals;
+                    } else {
+                        $newProjectVertical = new ProjectVertical();
                     }
-
+                    $newProjectVertical->id = $single_verticals->id;
+                    $newProjectVertical->title = $single_verticals->name;
+                    $newProjectVertical->fr_CA_title = $single_verticals->fr_CA_name;
+                    $newProjectVertical->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project verticals table completed.');
+
                 return;
             }
             DB::rollback();
-            $this->error('No project type found.');
-
+            $this->error('No project verticals found.');
         } catch (\Exception $e) {
-          DB::rollback();
+            DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }

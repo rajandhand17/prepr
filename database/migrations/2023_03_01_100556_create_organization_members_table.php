@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -15,11 +14,11 @@ return new class extends Migration
     {
         Schema::create('organization_members', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("organization_id");
-            $table->text("name");
-            $table->text("description")->nullable();
+            $table->unsignedBigInteger('organization_id');
+            $table->text('name');
+            $table->text('description')->nullable();
             $table->text('position')->nullable();
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');

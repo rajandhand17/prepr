@@ -2,13 +2,27 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use App\Observers\UserObserver;
+use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
+use App\Events\ChallengeTemplate\DeleteChallengeTemplateAssociatedData;
+use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
+use App\Events\Labs\DeleteLabAssociatedData;
+use App\Events\Organization\DeleteOrganizationAssociatedData;
+use App\Events\Project\DeleteProjectAssociatedData;
+use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
+use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
+use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
+use App\Listeners\ChallengePath\HandleDeleteChallengePathAssociatedData;
+use App\Listeners\ChallengeTemplate\HandleDeleteChallengeTemplateAssociatedData;
+use App\Listeners\Lab\HandleDeleteLabAssociatedData;
+use App\Listeners\LabMarketplace\HandleDeleteLabMarketplaceAssociatedData;
+use App\Listeners\Organization\HandleDeleteOrganizationAssociatedData;
+use App\Listeners\Project\HandleDeleteProjectAssociatedData;
+use App\Listeners\ResourceCollection\HandleDeleteResourceCollectionAssociatedData;
+use App\Listeners\ResourceGroup\HandleDeleteResourceGroupAssociatedData;
+use App\Listeners\ResourceModule\HandleDeleteResourceModuleAssociatedData;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
-
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -21,8 +35,33 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-
-
+        DeleteLabAssociatedData::class => [
+            HandleDeleteLabAssociatedData::class,
+        ],
+        DeleteResourceModuleAssociatedData::class => [
+            HandleDeleteResourceModuleAssociatedData::class,
+        ],
+        DeleteChallengePathAssociatedData::class => [
+            HandleDeleteChallengePathAssociatedData::class,
+        ],
+        DeleteResourceCollectionAssociatedData::class => [
+            HandleDeleteResourceCollectionAssociatedData::class,
+        ],
+        DeleteResourceGroupAssociatedData::class => [
+            HandleDeleteResourceGroupAssociatedData::class,
+        ],
+        DeleteLabMarketplaceAssociatedData::class => [
+            HandleDeleteLabMarketplaceAssociatedData::class,
+        ],
+        DeleteChallengeTemplateAssociatedData::class => [
+            HandleDeleteChallengeTemplateAssociatedData::class,
+        ],
+        DeleteProjectAssociatedData::class => [
+            HandleDeleteProjectAssociatedData::class,
+        ],
+        DeleteOrganizationAssociatedData::class=> [
+            HandleDeleteOrganizationAssociatedData::class,
+        ],
     ];
 
     /**
@@ -30,10 +69,6 @@ class EventServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-        User::observe(UserObserver::class);
-    }
 
     /**
      * Determine if events and listeners should be automatically discovered.

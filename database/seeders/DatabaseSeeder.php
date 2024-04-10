@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,11 +13,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
+        $classes = [
             SocialConnectTableSeeder::class,
             PermissionSeeder::class,
             RolesSeeder::class,
-            AssignPermissionToRolesSeeder::class
-        ]);
+            AssignPermissionToRolesSeeder::class,
+            EmailTemplateSeeder::class,
+            FlexibleDateDurationSeeder::class,
+            LevelsSeeder::class,
+            DurationsSeeder::class,
+            ProjectSubmissionRequirementTableSeeder::class,
+            ChallengeAnnouncementRecipientSeeder::class,
+        ];
+
+        if (app()->environment('testing')) {
+            $classes[] = UserSeeder::class;
+            $classes[] = LanguageSeeder::class;
+            $classes[] = SkillSeeder::class;
+            $classes[] = TagSeeder::class;
+        }
+
+        $this->call($classes);
     }
 }

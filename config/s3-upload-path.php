@@ -1,5 +1,22 @@
 <?php
+
 return [
-    "organization" => "organizations/upload/",    
+    'organization'              => 'organizations/upload/',
+    'lab'                       => 'lab/upload/',
+    'achievement'               => 'achievement/upload/',
+    'lab_program'               => 'lab_program/upload/',
+    'challenge'                 => 'challenge/upload/',
+    'assessment'                => 'assessment/upload/',
+    'resource_module'           => 'resource_modules/upload/',
+    'resource_file'             => 'resource_modules/upload',
+    'challenge_path'            => 'challenge_path/upload/',
+    'sponsor_host'              => 'uploads/hosts/',
+    'resource_collection'       => 'resource_collection/upload/',
+    'resource_group'            => 'resource_group/upload/',
+    'resource_group_achievement'=> 'resource_group_achievement/upload/',
+    'project'                   => 'project/upload/',
+    'project_file'              => 'project/upload_file',
+    'certificate'               => 'certificate/upload/',
+    'discussion'                => 'discussion/upload',
+    'chat'                      => 'chat/upload/',
 ];
-?>

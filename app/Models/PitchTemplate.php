@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
-use App\Helpers\LanguageColumnHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Schema;
 
 class PitchTemplate extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
-    
-    protected $table="pitch_templates";
 
+    protected $table = 'pitch_templates';
     protected $fillable = [
         'title',
         'challenge_id',
@@ -23,32 +19,13 @@ class PitchTemplate extends Model
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-    public function getPitchTemplates($language="en",$search=null)
+    public function challenge_pitch()
     {
-        
-        try{
-            
-                $pitch_temple_list = static::select('id','title');
-                  //Search Pitch templete based on user input
-            //Search categories based on user input
-            if($search!=null){
-                $column_name = isset($column_name) ? $column_name : "title";
-                $pitch_temple_list = $pitch_temple_list->where($column_name,"like",'%'.$search.'%');
-            }
-
-            //take 20 results based from the table
-            $pitch_temple_list = $pitch_temple_list->take(20)->get();
-
-            //check if there are any results
-            if(!$pitch_temple_list->isEmpty()){
-                return $pitch_temple_list;
-            }
-
-            return false;
-        }
-        catch (\Exception $e){
-            return false;
-        }
+        return $this->hasMany(ChallengePitch::class, 'template_id', 'id');
     }
 
+    public function challenge_task()
+    {
+        return $this->hasMany(ChallengeTask::class, 'template_id', 'id');
+    }
 }

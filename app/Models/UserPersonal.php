@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class UserPersonal extends Model
@@ -14,32 +14,34 @@ class UserPersonal extends Model
 
     use SoftDeletes;
 
-    protected $table="user_personal_details";
+    protected $table = 'user_personal_details';
 
-    protected $fillable =[
-'user_id','about','gender','date_of_birth','age','purpose','user_type','recent_immigrant','indigenous_group','visible_minority','disability',
-   ];
+    protected $fillable = [
+        'user_id', 'about', 'gender', 'date_of_birth', 'age', 'purpose', 'user_type', 'recent_immigrant', 'indigenous_group', 'visible_minority', 'disability',
+    ];
 
-   protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
     public static function create(User $user, $request)
     {
-        try{
+        try {
             DB::beginTransaction();
             $userpersonal = new UserPersonal();
             $userpersonal->user_id = $user->id;
-            $userpersonal->purpose = $request->purpose;
-            $userpersonal->user_type = $request->user_type;
+            $userpersonal->purpose = config('constants.purpose.'.$request->purpose);
+            $userpersonal->user_type = config('constants.user_types.'.$request->user_type);
             $userpersonal->save();
-            if ($userpersonal){
+            if ($userpersonal) {
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             DB::rollback();
+
             return false;
         }
     }

@@ -1,6 +1,7 @@
 <?php
+
 return [
-    "Chargebee_Site" => env("Chargebee_Site"),
-    "Chargebee_Key" => env("Chargebee_Key"),
+    'chargebee_site' => env('CHARGEBEE_SITE'),
+    'chargebee_key'  => env('CHARGEBEE_KEY'),
+    'base_plan'      => env('BASE_PLAN'),
 ];
-?>

@@ -5,21 +5,29 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^2.0",
+        "beyondcode/laravel-websockets": "^1.14",
         "chargebee/chargebee-php": "^3.16",
         "darkaonline/l5-swagger": "^8.4",
-        "doctrine/dbal": "^3.6",
+        "doctrine/dbal": "^3.0",
         "guzzlehttp/guzzle": "^7.5",
-        "infyomlabs/laravel-generator": "^5.4",
+        "hi-folks/rando-php": "^0.2.0",
+        "illuminate/support": "10.17.1",
+        "infyomlabs/laravel-generator": "10.x-dev",
         "infyomlabs/laravel-ui-adminlte": "^5.1",
         "intervention/image": "^2.7",
-        "laravel/framework": "^9.19",
+        "laravel/framework": "^10.0",
+        "laravel/horizon": "^5.20",
         "laravel/passport": "^11.3",
-        "laravel/sanctum": "^3.0",
+        "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
         "league/flysystem-aws-s3-v3": "^3.12",
         "predis/predis": "^2.0",
+        "pusher/pusher-php-server": "^7.2",
         "santigarcor/laratrust": "^7.2",
+        "sendgrid/sendgrid": "^7",
+        "spatie/pdf-to-image": "^2.2",
         "twilio/sdk": "^6.44"
     },
     "require-dev": {
@@ -29,7 +37,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.6",
-        "phpunitgen/console": "^4.2"
+        "phpunitgen/console": "4.2.0"
     },
     "autoload": {
         "psr-4": {

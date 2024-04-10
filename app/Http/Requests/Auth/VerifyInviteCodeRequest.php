@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class VerifyInviteCodeRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class VerifyInviteCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            "referal_code"=>"required|exists:users,referal_code"
+            'referral_code'=> 'required|exists:users,referral_code',
         ];
     }
 
@@ -35,17 +35,15 @@ class VerifyInviteCodeRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ],422));
+            'data'      => $validator->errors(),
+        ], 422));
     }
-
 
     public function messages()
     {
         return [
-            'referal_code.required'=>__("responses.mycode"),
-            'referal_code.exists'=>__("responses.not_mycode"),
-
+            'referral_code.required'=> __('responses.referral_code_required'),
+            'referral_code.exists'  => __('responses.responses.referral_code_not_exists'),
         ];
     }
 }

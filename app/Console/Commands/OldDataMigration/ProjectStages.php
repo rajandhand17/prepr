@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use Illuminate\Console\Command;
-use DB;
 use App\Models\ProjectStage;
+use DB;
+use Illuminate\Console\Command;
 
 class ProjectStages extends Command
 {
@@ -40,34 +40,34 @@ class ProjectStages extends Command
     public function handle()
     {
         try {
-
             $this->info('Migrating old data for project stages table.');
             DB::beginTransaction();
 
             $project_stages = DB::connection('mysql2')->table('project_stage')->get();
-            if($project_stages->count() > 0){
-
-                foreach ($project_stages as $key => $single_stages){
-                   $project_stages_details=[
-                        'name' => $single_stages->name,
-                        'fr_CA_name' => $single_stages->fr_CA_name,
-                    ];
-                    $check_project_stages = ProjectStage::where($project_stages_details)->first();
-                    if(!$check_project_stages){
-                        ProjectStage::create($project_stages_details);
+            if ($project_stages->count() > 0) {
+                foreach ($project_stages as $key => $single_stages) {
+                    $check_project_stages = ProjectStage::where('title', $single_stages->name)->first();
+                    if ($check_project_stages) {
+                        $newProjectStage = $check_project_stages;
+                    } else {
+                        $newProjectStage = new ProjectStage();
                     }
-
+                    $newProjectStage->id = $single_stages->id;
+                    $newProjectStage->title = $single_stages->name;
+                    $newProjectStage->fr_CA_title = $single_stages->fr_CA_name;
+                    $newProjectStage->save();
                 }
                 DB::commit();
                 $this->info('Migrating of old data for project stages table completed.');
+
                 return;
             }
             DB::rollback();
-            $this->error('No project type found.');
-
+            $this->error('No project stage found.');
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
