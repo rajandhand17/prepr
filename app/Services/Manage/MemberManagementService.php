@@ -420,7 +420,6 @@ class MemberManagementService
                     }
                 }
                 DB::commit();
-
                 if (count($invalid_emails) > 0 || count($already_members) > 0) {
                     if (count($invited_emails) < 1) {
                         switch ($component) {
@@ -522,9 +521,8 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->get();
-            if ($member_manger) {
+            if ($member_manger->isNotEmpty()) {
                 return true;
             }
 
