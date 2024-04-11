@@ -71,7 +71,7 @@ class Conversation extends Model
             if ($participantName) {
                 $participantName = "$participantName,$user->first_name";
             } else {
-                $participantName = "$user->first_name";
+                $participantName = $user->first_name;
             }
         }
 

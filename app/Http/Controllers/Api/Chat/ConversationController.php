@@ -21,7 +21,7 @@ class ConversationController extends AppBaseController
     public function index(string $type)
     {
         try {
-            if (!in_array($type, ['inbox', 'archieve'])) {
+            if (!in_array($type, ['inbox', 'archive'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
 
