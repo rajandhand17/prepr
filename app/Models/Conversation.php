@@ -80,7 +80,7 @@ class Conversation extends Model
 
     public function getDefaultConversationNameAttribute()
     {
-        if ($this->type === 'group_message') {
+        if ($this->type === 'group') {
             return $this->prepareGroupName($this->users()->get());
         }
 
