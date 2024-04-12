@@ -177,4 +177,13 @@ class UserService
             return false;
         }
     }
+
+    public static function mapGO1User($go1UserId, $response)
+    {
+        try {
+            return User::query()->where('id', auth()->user()->id)->update(['go1_id' => $go1UserId, 'go1_user_metadata' => $response]);
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
 }

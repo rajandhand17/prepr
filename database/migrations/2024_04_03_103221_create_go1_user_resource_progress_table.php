@@ -10,7 +10,7 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('user_resource_progress_tracking', function (Blueprint $table) {
+        Schema::create('go1_user_resource_progress', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('resource_module_id')->references('id')->on('resource_modules')->onDelete('cascade');
@@ -27,6 +27,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_resource_progress_tracking');
+        Schema::dropIfExists('go1_user_resource_progress');
     }
 };

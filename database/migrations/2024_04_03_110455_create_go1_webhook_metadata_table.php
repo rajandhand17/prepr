@@ -15,7 +15,7 @@ return new class() extends Migration {
             $table->string('type')->nullable();
             $table->dateTime('fired_at')->nullable();
             $table->json('metadata')->nullable();
-            $table->foreignId('user_resource_progress_tracking_id')->references('id')->on('user_resource_progress_tracking')->onDelete('cascade');
+            $table->foreignId('go1_user_resource_progress_id')->references('id')->on('go1_user_resource_progress')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -15,30 +15,43 @@ class GO1Helper
 
     private static function getAuthBaseUrl()
     {
-        return config('go1.auth_url');
+        try {
+
+            return config('go1.auth_url');
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     private static function getBaseUrl()
     {
-        return config('go1.base_url'). '/'. config('go1.api_version');
+        try {
+            return config('go1.base_url') . '/' . config('go1.api_version');
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     private static function isTokenExpired($token): bool
     {
-        if (!$token) {
-            return true;
+        try {
+            if (!$token) {
+                return true;
+            }
+
+            $payload = explode('.', $token)[1];
+            $decodedPayload = base64_decode($payload);
+
+            return time() > json_decode($decodedPayload)->exp;
+        } catch (Exception $exception) {
+            return false;
         }
-
-        $payload = explode('.', $token)[1];
-        $decodedPayload = base64_decode($payload);
-
-        return time() > json_decode($decodedPayload)->exp;
     }
 
     public static function getAccessToken(): string
     {
-        $accessTokenService = new GO1AccessTokenService();
         try {
+            $accessTokenService = new GO1AccessTokenService();
             $data = $accessTokenService->getAccessToken();
 
             if (!$data) {
@@ -96,7 +109,7 @@ class GO1Helper
     {
         try {
             $accessToken = self::getAccessToken();
-            $endPoint = "self::endPointBaseUrl/users";
+            $endPoint = self::getBaseUrl() . "/users";
             $response = Http::withHeaders([
                 'Authorization' => "Bearer $accessToken",
             ])->post($endPoint, array_merge($user, ['send_login_email' => false, 'password' => config('go1.default_user_password')]));
@@ -191,9 +204,12 @@ class GO1Helper
 
     public static function getPage()
     {
-        $requestQuery = request()->query();
-
-        return isset($requestQuery['page']) ? (int)$requestQuery['page'] : 1;
+        try {
+            $requestQuery = request()->query();
+            return isset($requestQuery['page']) ? (int)$requestQuery['page'] : 1;
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     public static function prepareGO1Query()
@@ -237,23 +253,36 @@ class GO1Helper
 
     public static function removeLastSlash($url)
     {
-        if (substr($url, -1) === '/') {
-            $url = substr($url, 0, -1);
-        }
+        try {
+            if (substr($url, -1) === '/') {
+                $url = substr($url, 0, -1);
+            }
 
-        return $url;
+            return $url;
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     public static function getDefaultUrl()
     {
-        $appUrl = self::removeLastSlash(config('app.url'));
+        try {
+            $appUrl = self::removeLastSlash(config('app.url'));
 
-        return $appUrl . '/api/v1/go1/webhook';
+            return $appUrl . '/api/v1/go1/webhook';
+        } catch (Exception $exception) {
+            return false;
+        }
+
     }
 
     public static function isValidUrl($url): bool
     {
-        return !empty($url) && filter_var($url, FILTER_VALIDATE_URL);
+        try {
+            return !empty($url) && filter_var($url, FILTER_VALIDATE_URL);
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     public static function webhook($payload)
@@ -266,14 +295,10 @@ class GO1Helper
                 return false;
             }
             $resource = ResourceModuleService::getResourceModuleBasedOnGO1Id($go1ResourceId);
-            if (!$user) {
-                return false;
-            }
 
             if (!$resource) {
                 return false;
             }
-
             $type = $payload['type'];
 
             if (!($type === 'enrolment.create' || $type === 'enrolment.update')) {
@@ -285,7 +310,6 @@ class GO1Helper
                 return false;
             }
             $parentData = $data->first();
-
             if (!$parentData) {
                 return false;
             }

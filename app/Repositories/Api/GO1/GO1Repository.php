@@ -3,10 +3,10 @@
 namespace App\Repositories\Api\GO1;
 
 use App\Helpers\GO1Helper;
-use App\Models\ResourceModule;
 use App\Models\User;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\ResourceModuleService;
+use App\Services\UserService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -119,12 +119,10 @@ class GO1Repository implements GO1Interface
                     'last_name' => auth()->user()->last_name,
                 ]);
                 $go1UserId = $response['id'];
-                User::query()->where('id', auth()->user()->id)->update(['go1_id' => $go1UserId, 'go1_user_metadata' => $response]);
+                UserService::mapGO1User($go1UserId, $response);
             }
 
-            $user = User::query()->where('id', auth()->user()->id)->first();
-
-            return GO1Helper::playResource($user->go1_id, $go1CourseId);
+            return GO1Helper::playResource(auth()->user()->go1_id, $go1CourseId);
         } catch (Exception $exception) {
             return false;
         }
@@ -133,8 +131,10 @@ class GO1Repository implements GO1Interface
     public function webhook($payload)
     {
         try {
-            GO1Helper::webhook($payload);
-
+            $webhook = GO1Helper::webhook($payload);
+            if(!$webhook) {
+                return false;
+            }
             return true;
         } catch (Exception $exception) {
             return false;

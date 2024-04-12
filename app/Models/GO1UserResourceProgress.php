@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserResourceProgressTracking extends Model
+class GO1UserResourceProgress extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_resource_progress_tracking';
+    protected $table = 'go1_user_resource_progress';
 
     protected $fillable = [
         'resource_module_id',

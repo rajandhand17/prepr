@@ -8,10 +8,6 @@ use Exception;
 
 class GO1AccessTokenService
 {
-    private $baseUrl = 'https://api.go1.com';
-
-    private $version = 'v2';
-
     /**
      * @var string
      */
@@ -21,7 +17,7 @@ class GO1AccessTokenService
 
     public function __construct()
     {
-        $this->endPointBaseUrl = $this->baseUrl . '/' . $this->version;
+        $this->endPointBaseUrl = config('go1.base_url') . '/' . config('go1.api_version');
     }
 
     public function getAccessToken()

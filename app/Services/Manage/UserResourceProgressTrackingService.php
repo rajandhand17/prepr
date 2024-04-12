@@ -2,14 +2,14 @@
 
 namespace App\Services\Manage;
 
-use App\Models\UserResourceProgressTracking;
+use App\Models\GO1UserResourceProgress;
 
 class UserResourceProgressTrackingService
 {
     public static function createOrUpdate($resourceId, $userId, $payload)
     {
         try {
-            return UserResourceProgressTracking::query()->updateOrCreate([
+            return GO1UserResourceProgress::query()->updateOrCreate([
                 'resource_module_id' => $resourceId,
                 'user_id' => $userId,
             ], [
