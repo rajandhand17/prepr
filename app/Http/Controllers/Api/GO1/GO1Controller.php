@@ -61,11 +61,11 @@ class GO1Controller extends AppBaseController
 
     public function playCourse($slug)
     {
-        if (!$this->go1Repository->canPlayGO1Resoruces()) {
-            return $this->sendError(__('responses.go1_play_content_denied'), 400);
-        }
-
         try {
+            if (!$this->go1Repository->canPlayGO1Resoruces()) {
+                return $this->sendError(__('responses.go1_play_content_denied'), 400);
+            }
+
             $resourceModule = $this->go1Repository->getResourceModuleBySlug($slug);
             if (!$resourceModule) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
