@@ -648,7 +648,7 @@ class MemberManagementService
     public function isUserBelongToPrepr()
     {
         try {
-            $user =  MemberManagement::query()
+            $user = MemberManagement::query()
                 ->where('module_id', config('go1.prepr_id'))
                 ->where('module_type', config('constants.member_management_component_type.organization'))
                 ->where('email', auth()->user()->email)

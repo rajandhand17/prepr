@@ -17,7 +17,7 @@ class GO1AccessTokenService
 
     public function __construct()
     {
-        $this->endPointBaseUrl = config('go1.base_url') . '/' . config('go1.api_version');
+        $this->endPointBaseUrl = config('go1.base_url').'/'.config('go1.api_version');
     }
 
     public function getAccessToken()
@@ -34,8 +34,8 @@ class GO1AccessTokenService
         try {
             return GO1AccessToken::query()->create([
                 'access_token' => $token,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'created_at'   => Carbon::now(),
+                'updated_at'   => Carbon::now(),
             ]);
         } catch (Exception $exception) {
             return false;

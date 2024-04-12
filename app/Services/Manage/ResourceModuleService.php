@@ -30,7 +30,7 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%' . $request->search . '%');
+                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -239,7 +239,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (Exception $e) {
-            Log::error('Error in createResourceModule in ResourceModuleService.php: ' . $e->getMessage());
+            Log::error('Error in createResourceModule in ResourceModuleService.php: '.$e->getMessage());
 
             return false;
         }

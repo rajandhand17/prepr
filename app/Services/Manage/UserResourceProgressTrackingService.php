@@ -11,12 +11,12 @@ class UserResourceProgressTrackingService
         try {
             return GO1UserResourceProgress::query()->updateOrCreate([
                 'resource_module_id' => $resourceId,
-                'user_id' => $userId,
+                'user_id'            => $userId,
             ], [
                 'completion_status' => data_get($payload, 'data.status'),
-                'lesson_status' => data_get($payload, 'data.pass') === 1 ? 'pass' : 'fail',
-                'score_raw' => data_get($payload, 'data.result'),
-                'session_time' => data_get($payload, 'data.completed_time'),
+                'lesson_status'     => data_get($payload, 'data.pass') === 1 ? 'pass' : 'fail',
+                'score_raw'         => data_get($payload, 'data.result'),
+                'session_time'      => data_get($payload, 'data.completed_time'),
             ]);
         } catch (\Exception $exception) {
             return false;
