@@ -5,19 +5,26 @@ namespace App\Http\Controllers\Api\Chat;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateConversationRequest;
 use App\Http\Resources\Chat\ConversationResource;
-use App\Repositories\Api\Chat\Conversation\ConversationInterface;
+use App\Repositories\Api\Chat\Conversation\ConversationRepository;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
 class ConversationController extends AppBaseController
 {
-    public function __construct(private readonly ConversationInterface $conversationRepository)
+    private $conversationRepository;
+
+    public function __construct(ConversationRepository $conversationRepository)
     {
+        $this->conversationRepository = $conversationRepository;
     }
 
     public function index(string $type)
     {
         try {
+            if (!in_array($type, ['inbox', 'archive'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
             $conversations = $this->conversationRepository->list($type);
 
             if ($conversations) {

@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Api\Chat;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateMessageRequest;
 use App\Http\Resources\Chat\MessageResource;
-use App\Repositories\Api\Chat\Conversation\ConversationInterface;
-use App\Repositories\Api\Chat\Message\MessageInterface;
+use App\Repositories\Api\Chat\Conversation\ConversationRepository;
+use App\Repositories\Api\Chat\Message\MessageRepository;
 use Exception;
 
 class MessageController extends AppBaseController
 {
-    public function __construct(private readonly MessageInterface $messageRepository, private readonly ConversationInterface $conversationRepository)
+    private $messageRepository;
+    private $conversationRepository;
+
+    public function __construct(MessageRepository $messageRepository, ConversationRepository $conversationRepository)
     {
+        $this->messageRepository = $messageRepository;
+        $this->conversationRepository = $conversationRepository;
     }
 
     public function index(string $conversation_uuid)

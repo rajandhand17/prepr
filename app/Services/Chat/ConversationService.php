@@ -252,9 +252,9 @@ class ConversationService
                 ->whereHas('users', function ($query) {
                     $query->where('user_id', auth()->user()->id);
                 })->orderByDesc(
-                    ConversationMessage::select('created_at')
+                    ConversationMessage::select('updated_at')
                         ->whereColumn('conversation_id', 'conversations.id')
-                        ->orderByDesc('created_at')
+                        ->orderByDesc('updated_at')
                         ->limit(1)
                 );
 
@@ -262,11 +262,11 @@ class ConversationService
                 case 'archive':
                     $conversation->where('is_archived', true);
                     break;
-                case 'non-archive':
+                case 'inbox':
                     $conversation->where('is_archived', false);
                     break;
                 default:
-                    return false;
+                    $conversation->where('is_archived', false);
             }
 
             if (request()->has('search')) {
