@@ -121,8 +121,11 @@ class GO1Repository implements GO1Interface
                 $go1UserId = $response['id'];
                 UserService::mapGO1User($go1UserId, $response);
             }
-
-            return GO1Helper::playResource(auth()->user()->go1_id, $go1CourseId);
+            $user = UserService::getUserById(auth()->user()->id);
+            if(!$user) {
+                return false;
+            }
+            return GO1Helper::playResource($user->go1_id, $go1CourseId);
         } catch (Exception $exception) {
             return false;
         }
