@@ -21,7 +21,7 @@ class ConversationController extends AppBaseController
     public function index(string $type)
     {
         try {
-            if (!in_array($type, ['inbox', 'archieve'])) {
+            if (!in_array($type, ['inbox', 'archive'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
 
@@ -61,10 +61,14 @@ class ConversationController extends AppBaseController
         }
     }
 
-    public function archiveOrSeenOrDelete(string $uuid, string $action)
+    public function archiveOrUnarchiveOrSeenOrDelete(string $uuid, string $action)
     {
         try {
-            $message = $this->conversationRepository->archiveOrSeenOrDelete($uuid, $action);
+            if (!in_array($action, ['archive', 'un-archive', 'seen', 'delete'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            $message = $this->conversationRepository->archiveOrUnarchiveOrSeenOrDelete($uuid, $action);
 
             if ($message) {
                 return $this->sendResponse(null, __('responses.conversation_'.$action.'_successfully'));
