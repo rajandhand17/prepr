@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Helpers;
+
+use ChargeBee\ChargeBee\Environment;
+use ChargeBee\ChargeBee\Models\Customer;
+use ChargeBee\ChargeBee\Models\Subscription;
+use Exception;
+
+class ChargeBeeSubscriptionHelper
+{
+    // create customer everytime when new organization user register
+    public static function createCustomer($user)
+    {
+        try {
+            Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            $result = Customer::create([
+                'firstName' => $user->first_name,
+                'lastName'  => $user->last_name,
+                'email'     => $user->email,
+                'locale'    => $user->preferred_language,
+            ]);
+            $customer = $result->customer();
+            $card = $result->card();
+
+            return $customer;
+        } catch(Exception $e) {
+            return false;
+        }
+    }
+
+    //assigning free plan to new user when he register or create new org
+    public static function subscribePlan($user, $org)
+    {
+        try {
+            Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            $result = Subscription::createWithItems($user->id, [
+                'subscriptionItems' => [[
+                    'itemPriceId' => $plan_name,
+                    'unitPrice'   => 0,
+                    'quantity'    => 1,
+                ],
+                ],
+                'cf_org_id'       => $org->id,
+                'cf_organisation' => $org->name,
+            ]);
+            $subscription = $result->subscription();
+        } catch(Exception $e) {
+            return false;
+        }
+    }
+}
