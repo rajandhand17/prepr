@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Chat\Message;
 
 use App\Services\Chat\MessageService;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class MessageRepository implements MessageInterface
 {
@@ -30,6 +31,36 @@ class MessageRepository implements MessageInterface
 
             return $this->messageService->send($payload);
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getByMessageUUID($uuid)
+    {
+        try {
+            return $this->messageService->getByMessageUUID($uuid);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteMessage($data)
+    {
+        try {
+            DB::beginTransaction();
+
+            $deleteMessage = $this->messageService->deleteMessage($data);
+            if ($deleteMessage == false) {
+                DB::rollBack();
+
+                return false;
+            }
+            DB::commit();
+
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
