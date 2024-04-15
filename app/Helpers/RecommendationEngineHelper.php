@@ -44,7 +44,8 @@ class RecommendationEngineHelper
 
             return false;
         } catch (Exception $e) {
-            Log::error('Error in getRelatedPreprSkills in RecommendationEngineHelper.php: ' . $e->getMessage());
+            Log::error('Error in getRelatedPreprSkills in RecommendationEngineHelper.php: '.$e->getMessage());
+
             return false;
         }
     }

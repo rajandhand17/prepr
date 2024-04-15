@@ -160,6 +160,7 @@ class ResourceModuleDetailService
         try {
             if (!isset($request['resource_module_items']) || !is_array($request['resource_module_items'])) {
                 Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: resource_module_items is neither set nor an array!');
+
                 return false;
             }
 
@@ -172,14 +173,15 @@ class ResourceModuleDetailService
                 ]);
 
                 if (!$resourceDetail->save()) {
-                    Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: Failed to save resource detail for title: ' . $item['title']);
+                    Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: Failed to save resource detail for title: '.$item['title']);
+
                     return false;
                 }
             }
 
             return true;
         } catch (Exception $e) {
-            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: ' . $e->getMessage());
+            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: '.$e->getMessage());
 
             return false;
         }

@@ -28,7 +28,7 @@ class ChallengeJobsService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeJobs in ChallengeJobsService.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeJobs in ChallengeJobsService.php: '.$e->getMessage());
 
             return false;
         }
