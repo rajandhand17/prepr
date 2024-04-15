@@ -649,7 +649,7 @@ class MemberManagementService
     {
         try {
             $user = MemberManagement::query()
-                ->where('module_id', config('go1.prepr_id'))
+                ->where('module_id', config('go1.go1_prepr_id'))
                 ->where('module_type', config('constants.member_management_component_type.organization'))
                 ->where('email', auth()->user()->email)
                 ->first();
@@ -667,10 +667,6 @@ class MemberManagementService
     public function canPlayGO1Resoruces()
     {
         try {
-            if (auth()->user()->hasRole('super_admin')) {
-                return true;
-            }
-
             return $this->isUserBelongToPrepr();
         } catch (\Exception $exception) {
             return false;
@@ -680,17 +676,12 @@ class MemberManagementService
     public function canCreateGO1Resource()
     {
         try {
-            if (auth()->user()->hasRole('super_admin')) {
+            $isPreprUser = $this->isUserBelongToPrepr();
+            if (auth()->user()->hasPermission('create_resource_module_from_go1') && $isPreprUser) {
                 return true;
             }
 
-            $isPreprUser = $this->isUserBelongToPrepr();
-
-            if (!$isPreprUser) {
-                return false;
-            }
-
-            return auth()->user()->hasRole(['resource_manager', 'organization_manager', 'organization_owner']);
+            return false;
         } catch (\Exception $exception) {
             return false;
         }

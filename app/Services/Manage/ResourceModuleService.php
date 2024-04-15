@@ -390,7 +390,7 @@ class ResourceModuleService
             $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = request()->language;
             $resourceModule->user_id = auth()->user()->id;
-            $resourceModule->organization_id = config('go1.prepr_id');
+            $resourceModule->organization_id = config('go1.go1_prepr_id');
             $resourceModule->title = $body['title'];
             $resourceModule->slug = $slug;
             $resourceModule->description = $body['description'];

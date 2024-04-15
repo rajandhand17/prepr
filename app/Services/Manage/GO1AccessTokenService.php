@@ -17,7 +17,7 @@ class GO1AccessTokenService
 
     public function __construct()
     {
-        $this->endPointBaseUrl = config('go1.base_url').'/'.config('go1.api_version');
+        $this->endPointBaseUrl = config('go1.go1_base_url').'/'.config('go1.go1_api_version');
     }
 
     public function getAccessToken()

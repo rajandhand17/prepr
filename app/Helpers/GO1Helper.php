@@ -15,7 +15,7 @@ class GO1Helper
     private static function getAuthBaseUrl()
     {
         try {
-            return config('go1.auth_url');
+            return config('go1.go1_auth_url');
         } catch (Exception $exception) {
             return false;
         }
@@ -24,7 +24,7 @@ class GO1Helper
     private static function getBaseUrl()
     {
         try {
-            return config('go1.base_url').'/'.config('go1.api_version');
+            return config('go1.go1_base_url').'/'.config('go1.go1_api_version');
         } catch (Exception $exception) {
             return false;
         }
@@ -85,8 +85,8 @@ class GO1Helper
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
             ])->post(self::getAuthBaseUrl().'/oauth/token', [
-                'client_id'     => config('go1.client_id'),
-                'client_secret' => config('go1.client_secret'),
+                'client_id'     => config('go1.go1_client_id'),
+                'client_secret' => config('go1.go1_client_secret'),
                 'grant_type'    => 'client_credentials',
             ]);
 
@@ -213,8 +213,8 @@ class GO1Helper
         try {
             $unwantedParams = ['page', 'language'];
 
-            $dataLimit = config('go1.total_resource_data');
-            $defaultPerPage = config('go1.per_page');
+            $dataLimit = config('go1.go1_total_resource_data');
+            $defaultPerPage = config('site-settings.pagination_per_page');
             $lastPage = ceil($dataLimit / $defaultPerPage);
             $currentPage = self::getPage();
 
