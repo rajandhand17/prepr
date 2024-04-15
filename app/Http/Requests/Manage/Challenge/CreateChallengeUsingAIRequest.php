@@ -24,8 +24,8 @@ class CreateChallengeUsingAIRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'title'                                 => 'required_if:request_type,publish|unique:challenges,title',
-            'description'                           => 'required_if:request_type,publish',
+            'challengeTitle'                        => 'required_if:request_type,publish|unique:challenges,title',
+            'challengeDescription'                  => 'required_if:request_type,publish',
             'category_id'                           => 'required|exists:categories,id',
             'organization_id'                       => 'required|exists:organizations,uuid',
             'duration_id'                           => 'required|exists:durations,id',
@@ -42,7 +42,7 @@ class CreateChallengeUsingAIRequest extends FormRequest
             'achievement_prize'                     => 'required',
             'achievement_points'                    => 'required|numeric',
             'timeline_type'                         => 'required|in:flexible,restricted',
-            'resource_modules'                      => 'nullable|boolean',
+            'resource_modules'                      => 'nullable|array',
             'resource_module_openai'                => 'nullable|boolean',
             'openai_resource_module_types'          => 'nullable|array',
             'resource_module_go1'                   => 'nullable|boolean',

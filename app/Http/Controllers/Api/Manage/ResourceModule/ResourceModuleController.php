@@ -299,7 +299,7 @@ class ResourceModuleController extends AppBaseController
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             $CreateResourceModuleUsingAI = $this->resourceModuleRepository->CreateResourceModuleUsingAI($request, $upload_cover_image);
 
-            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $CreateResourceModuleUsingAI->id);
+            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request, $CreateResourceModuleUsingAI->id);
 
             if ($request['challenge_id']) {
                 $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request['challenge_id']);
