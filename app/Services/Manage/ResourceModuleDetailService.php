@@ -158,25 +158,30 @@ class ResourceModuleDetailService
     public function createResourceModuleDetailsAI($request, $resource_module_id)
     {
         try {
-            foreach ($request as $key => $item) {
-                if (is_numeric($key) && is_array($item)) {
-                    $resourceDetail = new ResourceModuleDetail([
-                        'title'              => $item['title'],
-                        'path'               => $item['url'],
-                        'resource_module_id' => $resource_module_id,
-                    ]);
+            if (!isset($request['resource_module_items']) || !is_array($request['resource_module_items'])) {
+                Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: resource_module_items is neither set nor an array!');
 
-                    if (isset($item['embedHTML']) && !empty($item['embedHTML'])) {
-                        $resourceDetail->type = '3';
-                    }
+                return false;
+            }
 
-                    $resourceDetail->save();
+            foreach ($request['resource_module_items'] as $item) {
+                $resourceDetail = new ResourceModuleDetail([
+                    'title'              => $item['title'],
+                    'path'               => $item['url'],
+                    'resource_module_id' => $resource_module_id,
+                    'type'               => (isset($item['embedHTML']) && !empty($item['embedHTML'])) ? '3' : '1',
+                ]);
+
+                if (!$resourceDetail->save()) {
+                    Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: Failed to save resource detail for title: '.$item['title']);
+
+                    return false;
                 }
             }
 
             return true;
         } catch (Exception $e) {
-            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: ', $e->getMessage());
+            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: '.$e->getMessage());
 
             return false;
         }

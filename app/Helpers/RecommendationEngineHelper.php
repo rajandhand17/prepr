@@ -22,29 +22,27 @@ class RecommendationEngineHelper
                 'authorizationToken' => $token,
             ])->post($endpointUrl, $data);
 
-            if ($response->failed()) {
-                $responseStatus = false;
-            }
-            if ($response->serverError()) {
-                $responseStatus = false;
-            }
-            if ($response->clientError()) {
-                $responseStatus = false;
+            if ($response->failed() || $response->serverError() || $response->clientError()) {
+                return false;
             }
 
             if ($response->getStatusCode() == 200) {
-                $decodedResponse = json_decode($response->body(), true);
+                $jsonString = str_replace('NaN', 'null', $response->body());
+                $decodedResponse = json_decode($jsonString, true);
 
                 if (json_last_error() === JSON_ERROR_NONE && !is_null($decodedResponse)) {
-                    $responseStatus = $decodedResponse;
-                } else {
-                    $responseStatus = $response;
+                    // Filter out key-value pairs where any value is null
+                    foreach ($decodedResponse as $key => $value) {
+                        if (is_array($value) && in_array(null, $value, true)) {
+                            unset($decodedResponse[$key]);
+                        }
+                    }
+
+                    return $decodedResponse;
                 }
-            } else {
-                $responseStatus = false;
             }
 
-            return $responseStatus;
+            return false;
         } catch (Exception $e) {
             Log::error('Error in getRelatedPreprSkills in RecommendationEngineHelper.php: '.$e->getMessage());
 
