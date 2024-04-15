@@ -1088,5 +1088,14 @@
     "responses.added_jobs_successfully": "You have successfully add this job",
     "responses.related_career_successfully": "you have successfully retrieved related jobs list",
     "responses.team_matching_list_successfully": "Team Matching List has been successfully retrieved",
-    "responses.team_matching_list_failed": "Team Matching List has not been retrieved"
+    "responses.team_matching_list_failed": "Team Matching List has not been retrieved",
+    "responses.resource_doesn_t_have_a_scorm_file": "Resource doesn't have a scorm file.",
+    "responses.failed_to_get_scorm_url": "Failed to get scorm url.",
+    "responses.scorm_file_has_been_uploaded": "Scorm file has been uploaded.",
+    "responses.failed_to_upload_scorm_file": "Failed to upload scorm file.",
+    "responses.failed_to_track_progress": "Failed to track progress.",
+    "responses.progress_tracking_success": "Progress Tracking success.",
+    "responses.scorm_details": "Scorm details.",
+    "responses.failed_to_fetch_scorm_details": "Failed to fetch scorm details.",
+    "responses.scorm_player_link": "Scorm player link."
 }

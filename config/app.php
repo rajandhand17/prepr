@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -211,6 +211,9 @@ return [
         App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementServiceProvider::class,
         App\Repositories\Api\Chat\Conversation\ConversationServiceProvider::class,
         App\Repositories\Api\Chat\Message\MessageServiceProvider::class,
+        /* Scorm */
+        App\Repositories\Api\Scorm\ScormServiceProvider::class,
+        App\Repositories\Api\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
@@ -257,7 +260,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'PDF'   => Barryvdh\DomPDF\Facade::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ])->toArray(),
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Web\ScormPlayerController;
+use App\Http\Controllers\Web\ScormProxyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+/*** SCORM PROXY URL */
+Route::get('scorm/{url}', [ScormProxyController::class, 'scormFileLink'])->name('scormFileLink')->where('url', '.*');
+
+/** SCORM PLAYER */
+Route::get('/scorm-player/{scorm_uuid}', ScormPlayerController::class)->middleware('scorm.userIdentifier');
