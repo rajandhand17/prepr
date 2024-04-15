@@ -107,12 +107,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function createResourceModuleUsingAIPreview($request)
     {
         try {
-            $startTimeOverall = microtime(true);
-
             $createResourceModuleUsingAIPreview = $this->aiService->createResourceModuleUsingAIPreview($request);
-
-            $endTimeOverall = microtime(true);
-            // Log::info('Overall duration for RM: ' . ($endTimeOverall - $startTimeOverall) . ' seconds');
 
             return $createResourceModuleUsingAIPreview;
         } catch (Exception $e) {
