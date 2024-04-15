@@ -877,6 +877,7 @@
     "responses.conversation_seen_successfully": "Conversation is marked as seen successfully",
     "responses.conversation_delete_successfully": "Conversation is deleted successfully",
     "responses.conversation_archive_successfully": "Conversation is archived successfully",
+    "responses.conversation_un-archive_successfully": "Conversation is un-archived successfully",
     "responses.conversation_seen_failed": "Conversation has not been seen successfully",
     "responses.conversation_delete_failed": "Deletion of Conversation failed.",
     "responses.conversation_archive_failed": "Conversation archived is failed",
