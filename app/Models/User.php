@@ -12,7 +12,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Laratrust\Traits\LaratrustUserTrait;
 use Laravel\Passport\HasApiTokens;
