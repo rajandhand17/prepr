@@ -14,14 +14,14 @@ class ChargeBeeSubscriptionHelper
     {
         try {
             Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
-            $result = Customer::create([
+            $createCustomer = Customer::create([
                 'firstName' => $user->first_name,
                 'lastName'  => $user->last_name,
                 'email'     => $user->email,
                 'locale'    => $user->preferred_language,
             ]);
-            $customer = $result->customer();
-            $card = $result->card();
+            $customer = $createCustomer->customer();
+            $card = $createCustomer->card();
 
             return $customer;
         } catch(Exception $e) {
@@ -34,7 +34,7 @@ class ChargeBeeSubscriptionHelper
     {
         try {
             Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
-            $result = Subscription::createWithItems($user->id, [
+            $subscribePlan = Subscription::createWithItems($user->id, [
                 'subscriptionItems' => [[
                     'itemPriceId' => $plan_name,
                     'unitPrice'   => 0,
@@ -44,7 +44,7 @@ class ChargeBeeSubscriptionHelper
                 'cf_org_id'       => $org->id,
                 'cf_organisation' => $org->name,
             ]);
-            $subscription = $result->subscription();
+            $subscription = $subscribePlan->subscription();
         } catch(Exception $e) {
             return false;
         }
