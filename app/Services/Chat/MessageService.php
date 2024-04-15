@@ -38,7 +38,7 @@ class MessageService
                 } else {
                     $files = FileUploadHelper::uploadDocToS3($item, 'chat');
                 }
-                
+
                 if (!$files) {
                     return false;
                 }
@@ -129,6 +129,7 @@ class MessageService
             if ($conversationMessage) {
                 return $conversationMessage;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -139,6 +140,7 @@ class MessageService
     {
         try {
             ConversationMessage::find($data->id)->delete();
+
             return true;
         } catch (Exception $e) {
             return false;
