@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
-use App\Notifications\ChargeBeeNotification;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -321,8 +320,6 @@ class User extends Authenticatable
                     $user = User::find($user->id);
                     $user->attachRole('organization_owner', $organization->id);
                     $request->user_type = 'employee';
-
-                    Notification::route('mail', $user->email)->notify(new ChargeBeeNotification($user, $organization));
                 }
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
