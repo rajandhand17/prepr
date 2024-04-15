@@ -291,7 +291,7 @@ class PermissionSeeder extends Seeder
             [
                 'name'         => 'create_resource_module_from_go1',
                 'display_name' => 'Create Resource Module From go1',
-                'description'  => "Allow user to create resource from go1",
+                'description'  => 'Allow user to create resource from go1',
             ],
         ];
 

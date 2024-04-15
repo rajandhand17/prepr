@@ -71,7 +71,7 @@ class AssignPermissionToRolesSeeder extends Seeder
                     'create_organization_members',
                     'edit_organization_members',
                     'delete_organization_members',
-                    'create_resource_module_from_go1'
+                    'create_resource_module_from_go1',
                 ];
                 $final_permissions = $all_permissions;
                 foreach ($remove_permissions as $permission) {
@@ -109,7 +109,7 @@ class AssignPermissionToRolesSeeder extends Seeder
                     'create_lab_programs',
                     'edit_lab_programs',
                     'delete_lab_programs',
-                    'create_resource_module_from_go1'
+                    'create_resource_module_from_go1',
                 ];
                 $final_permissions = $all_permissions;
                 foreach ($remove_permissions as $permission) {
