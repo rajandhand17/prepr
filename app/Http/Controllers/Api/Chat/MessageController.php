@@ -69,4 +69,24 @@ class MessageController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function delete($message_uuid)
+    {
+        try {
+            $message = $this->messageRepository->getByMessageUUID($message_uuid);
+
+            if (!$message) {
+                return $this->sendError(__('responses.message_not_found'), 404);
+            }
+
+            $message = $this->messageRepository->deleteMessage($message);
+            if (!$message) {
+                return $this->sendError(__('responses.message_not_deleted'), 409);
+            }
+
+            return $this->sendResponse([], __('responses.message_deleted'));
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
