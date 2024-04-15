@@ -17,14 +17,16 @@ class SubscribePlanJob implements ShouldQueue
     use SerializesModels;
     protected $user;
     protected $organization;
+    protected $planDetail;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($user, $organization)
+    public function __construct($user, $organization, $planDetail)
     {
         $this->user = $user;
         $this->organization = $organization;
+        $this->planDetail = $planDetail;
     }
 
     /**
@@ -32,6 +34,6 @@ class SubscribePlanJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $subscribePlan = ChargeBeeSubscriptionHelper::subscribePlan($this->user, $this->organization);
+        $subscribePlan = ChargeBeeSubscriptionHelper::subscribePlan($this->user, $this->organization, $this->planDetail);
     }
 }
