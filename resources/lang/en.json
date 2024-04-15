@@ -228,7 +228,7 @@
     "responses.challenge_paths_numeric": "This challenge paths should be in numeric!",
     "responses.challenge_paths_array": "The challenge paths should be an array!",
     "responses.resource_modules_numeric": "This resource modules should be in numeric!",
-    "responses.resource_modules_array": "The resource modules field field must be an array!",
+    "responses.resource_modules_array": "The resource modules field must be an array!",
     "responses.resource_groups_numeric": "This resource groups should be in numeric!",
     "responses.resource_groups_array": "The resource groups should be an array!",
     "responses.resource_collections_numeric": "This resource collections should be in numeric!",
