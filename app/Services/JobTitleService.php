@@ -88,4 +88,17 @@ class JobTitleService
             return false;
         }
     }
+
+    public static function getJobsBasedOnUsers($request){
+        try {
+            $getUsersJobsIds=UserJobTitlesService::getUsersJobs();
+            $getJobs=null;
+            if($getUsersJobsIds!==false){
+                $getJobs=JobTitle::whereIn('id',$getUsersJobsIds)->get();
+            }
+            return $getJobs;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
 }
