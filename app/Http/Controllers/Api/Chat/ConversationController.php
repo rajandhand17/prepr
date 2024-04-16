@@ -5,19 +5,26 @@ namespace App\Http\Controllers\Api\Chat;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Chat\CreateConversationRequest;
 use App\Http\Resources\Chat\ConversationResource;
-use App\Repositories\Api\Chat\Conversation\ConversationInterface;
+use App\Repositories\Api\Chat\Conversation\ConversationRepository;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
 class ConversationController extends AppBaseController
 {
-    public function __construct(private readonly ConversationInterface $conversationRepository)
+    private $conversationRepository;
+
+    public function __construct(ConversationRepository $conversationRepository)
     {
+        $this->conversationRepository = $conversationRepository;
     }
 
     public function index(string $type)
     {
         try {
+            if (!in_array($type, ['inbox', 'archive'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
             $conversations = $this->conversationRepository->list($type);
 
             if ($conversations) {
@@ -54,10 +61,14 @@ class ConversationController extends AppBaseController
         }
     }
 
-    public function archiveOrSeenOrDelete(string $uuid, string $action)
+    public function archiveOrUnarchiveOrSeenOrDelete(string $uuid, string $action)
     {
         try {
-            $message = $this->conversationRepository->archiveOrSeenOrDelete($uuid, $action);
+            if (!in_array($action, ['archive', 'un-archive', 'seen', 'delete'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            $message = $this->conversationRepository->archiveOrUnarchiveOrSeenOrDelete($uuid, $action);
 
             if ($message) {
                 return $this->sendResponse(null, __('responses.conversation_'.$action.'_successfully'));

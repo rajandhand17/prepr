@@ -33,12 +33,12 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'title'                                 => 'required',
+            'challengeTitle'                        => 'required',
             'organization_id'                       => 'required|exists:organizations,uuid',
             'description'                           => 'nullable',
             'category_id'                           => 'nullable|exists:categories,id',
-            'duration_id'                           => 'nullable|exists:durations,id',
-            'level_id'                              => 'nullable|exists:levels,id',
+            'duration_id'                           => 'required|exists:durations,id',
+            'level_id'                              => 'required|exists:levels,id',
             'skills'                                => 'required|array',
             'skills.*'                              => 'numeric|exists:skills,id',
             'jobs'                                  => 'required|array',
@@ -68,7 +68,9 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
             'organization_id.required'              => __('responses.organization_id_required'),
             'organization_id.exists'                => __('responses.organization_not_found'),
             'category_id.exists'                    => __('responses.category_not_found'),
+            'duration_id.required'                  => __('responses.duration_id_required'),
             'duration_id.exists'                    => __('responses.duration_id_exists'),
+            'level_id.required'                     => __('responses.level_id_required'),
             'level_id.exists'                       => __('responses.level_id_exists'),
             'skills.array'                          => __('responses.skills_array'),
             'skills.*.numeric'                      => __('responses.skills_numeric'),

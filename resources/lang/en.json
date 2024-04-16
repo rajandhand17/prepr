@@ -228,7 +228,7 @@
     "responses.challenge_paths_numeric": "This challenge paths should be in numeric!",
     "responses.challenge_paths_array": "The challenge paths should be an array!",
     "responses.resource_modules_numeric": "This resource modules should be in numeric!",
-    "responses.resource_modules_array": "The resource modules field field must be an array!",
+    "responses.resource_modules_array": "The resource modules field must be an array!",
     "responses.resource_groups_numeric": "This resource groups should be in numeric!",
     "responses.resource_groups_array": "The resource groups should be an array!",
     "responses.resource_collections_numeric": "This resource collections should be in numeric!",
@@ -877,6 +877,7 @@
     "responses.conversation_seen_successfully": "Conversation is marked as seen successfully",
     "responses.conversation_delete_successfully": "Conversation is deleted successfully",
     "responses.conversation_archive_successfully": "Conversation is archived successfully",
+    "responses.conversation_un-archive_successfully": "Conversation is un-archived successfully",
     "responses.conversation_seen_failed": "Conversation has not been seen successfully",
     "responses.conversation_delete_failed": "Deletion of Conversation failed.",
     "responses.conversation_archive_failed": "Conversation archived is failed",
@@ -1046,5 +1047,8 @@
     "responses.choose_open_closed": "This can be between '<b>closed</b> or <b>open</b>' only.",
     "responses.choose_users_hidden": "This can be between '<b>users</b> or <b>hidden</b>' only.",
     "responses.guidelines_required": "This guidelines field is required",
-    "responses.organization_challlenge_not_same": "Sorry, this Challenge can't be cloned to other Organization."
+    "responses.organization_challlenge_not_same": "Sorry, this Challenge can't be cloned to other Organization.",
+    "responses.message_not_found": "Message not found",
+    "responses.message_not_deleted": "Oops! The deletion of message has failed",
+    "responses.message_deleted": "you have successfully deleted message"
 }
