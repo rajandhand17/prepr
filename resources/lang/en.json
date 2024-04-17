@@ -1053,5 +1053,8 @@
     "responses.guidelines_required": "This guidelines field is required",
     "responses.organization_challlenge_not_same": "Sorry, this Challenge can't be cloned to other Organization.",
     "responses.challenge_title_required": "The challenge title field is required",
-    "responses.challenge_description_required": "The challenge description field is required"
+    "responses.challenge_description_required": "The challenge description field is required",
+    "responses.message_not_found": "Message not found",
+    "responses.message_not_deleted": "Oops! The deletion of message has failed",
+    "responses.message_deleted": "you have successfully deleted message"
 }
