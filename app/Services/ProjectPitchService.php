@@ -264,7 +264,7 @@ class ProjectPitchService
     {
         try {
             $pitchTemplate = PitchTemplate::create([
-                'title' => $request['title'],
+                'title' => $request['challengeTitle'],
             ]);
 
             foreach ($request['reflections'] as $reflection) {

@@ -14,7 +14,11 @@ class LabSkillsGroupsStackService
                     foreach ($request->skills as $skill) {
                         $LabSkillsGroupsStack = new LabSkillsGroupsStack();
                         $LabSkillsGroupsStack->lab_id = $lab->id;
-                        $LabSkillsGroupsStack->foreign_id = $skill;
+                        if (is_array($skill) && isset($skill['key'])) {
+                            $LabSkillsGroupsStack->foreign_id = $skill['key'];
+                        } elseif (is_numeric($skill)) {
+                            $LabSkillsGroupsStack->foreign_id = $skill;
+                        }
                         $LabSkillsGroupsStack->type = '0';
                         $LabSkillsGroupsStack->save();
                     }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\Manage\Lab;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
-use App\Http\Requests\Manage\Lab\createLabUsingAIPreviewRequest;
-use App\Http\Requests\Manage\Lab\createLabUsingAIRequest;
+use App\Http\Requests\Manage\Lab\CreateLabUsingAIPreviewRequest;
+use App\Http\Requests\Manage\Lab\CreateLabUsingAIRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
@@ -202,7 +202,7 @@ class LabController extends AppBaseController
         }
     }
 
-    public function createLabUsingAIPreview(createLabUsingAIPreviewRequest $request)
+    public function createLabUsingAIPreview(CreateLabUsingAIPreviewRequest $request)
     {
         try {
             $createLabUsingAIPreview = $this->labRepository->createLabUsingAIPreview($request);
@@ -219,11 +219,11 @@ class LabController extends AppBaseController
         }
     }
 
-    public function createLabUsingAI(createLabUsingAIRequest $request)
+    public function createLabUsingAI(CreateLabUsingAIRequest $request)
     {
         try {
             $upload_cover_image = config('site-settings.default_lab_cover_image');
-            $upload_achievement_image = null;
+            $upload_achievement_image = config('site-settings.default_achievement_image');
 
             if ($request->has('challenges') && count($request->challenges) > 0) {
                 $challengeIDs = [];

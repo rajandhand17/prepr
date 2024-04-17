@@ -257,7 +257,7 @@ class ChallengeService
             $source_link = $request->source_link ?? null;
 
             $model = new Challenge();
-            $slug = UtilityHelper::generateSlug($request->title, $model);
+            $slug = UtilityHelper::generateSlug($request->challengeTitle, $model);
 
             $challenge = new Challenge();
             $challenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -268,14 +268,14 @@ class ChallengeService
             $challenge->category_id = $request->category_id;
             $challenge->duration_id = $request->duration_id;
             $challenge->level_id = $request->level_id;
-            $challenge->title = $request->title;
-            $challenge->description = $request->description;
+            $challenge->title = $request->challengeTitle;
+            $challenge->description = $request->challengeDescription;
             $challenge->privacy = $challenge_privacy;
             $challenge->media_type = 'image';
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
             $challenge->source_link = $source_link;
-            $challenge->agreement = $request->agreement;
+            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : "No Terms and Conditions.";
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;
             $challenge->is_open = $is_open;

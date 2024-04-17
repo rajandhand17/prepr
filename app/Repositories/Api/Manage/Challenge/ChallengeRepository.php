@@ -182,7 +182,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeProjectPitch = $this->projectPitchService->createChallengeAIProjectPitch($request);
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id, $createChallengeProjectPitch);
                 $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
-                $createChallengeAssociations = $this->componentAssociationService->challengeAssociation($request, $createChallenge);
+                $createChallengeAssociations = $this->componentAssociationService->createChallengeComponentAssociation($request, $createChallenge->id);
 
                 return [
                     'createChallenge'                   => $createChallenge,

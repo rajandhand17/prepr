@@ -44,7 +44,7 @@ class CreateResourceModuleUsingAIRequest extends FormRequest
             'skill_titles'                   => 'nullable|array',
             'level'                          => 'nullable',
             'duration'                       => 'nullable',
-            'resource_modules'               => 'required|array',
+            'resource_module_items'          => 'required|array',
         ];
 
         return $base_rules;
@@ -66,10 +66,10 @@ class CreateResourceModuleUsingAIRequest extends FormRequest
             'duration_id.exists'             => __('responses.duration_id_exists'),
             'level_id.required'              => __('responses.level_id_required'),
             'level_id.exists'                => __('responses.level_id_exists'),
-            'is_ai_created'                  => __('responses.choose_yes_no'),
-            'skill_titles'                   => __('responses.skill_titles_array'),
-            'resource_modules.required'      => __('responses.resource_modules_required'),
-            'resource_modules.array'         => __('responses.resource_modules_array'),
+            'is_ai_created.boolean'          => __('responses.choose_yes_no'),
+            'skill_titles.array'             => __('responses.skill_titles_array'),
+            'resource_module_items.required' => __('responses.resource_module_items_required'),
+            'resource_module_items.array'    => __('responses.resource_module_items_array'),
         ];
     }
 }

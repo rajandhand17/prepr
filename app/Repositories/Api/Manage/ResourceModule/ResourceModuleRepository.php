@@ -74,16 +74,16 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image) {
-                $CreateResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
-                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $CreateResourceModuleUsingAI->id);
+                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModuleUsingAI->id);
 
                 return [
-                    'CreateResourceModuleUsingAI'           => $CreateResourceModuleUsingAI,
+                    'createResourceModuleUsingAI'           => $createResourceModuleUsingAI,
                     'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
                 ];
             });
 
-            return $createdResourceModule['CreateResourceModuleUsingAI'];
+            return $createdResourceModule['createResourceModuleUsingAI'];
         } catch (Exception $e) {
             Log::error('Error in CreateResourceModuleUsingAI in ResourceModuleRepository.php: '.$e->getMessage());
 

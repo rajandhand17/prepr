@@ -465,11 +465,6 @@ class ChallengeController extends AppBaseController
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
             $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
 
-            if ($request->has('resource_modules') && count($request->resource_modules) > 0) {
-                $resourceModuleIDs = ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_modules);
-                $request->merge(['resource_modules' => $resourceModuleIDs]);
-            }
-
             $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image);
 
             if ($createChallengeUsingAI) {

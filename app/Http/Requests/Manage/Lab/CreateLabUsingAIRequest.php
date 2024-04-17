@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class createLabUsingAIRequest extends FormRequest
+class CreateLabUsingAIRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class createLabUsingAIRequest extends FormRequest
     {
         $base_rules = [
             'labTitle'                              => 'required|unique:labs,title',
-            'labDesc'                               => 'required',
+            'labDescription'                        => 'required',
             'organization_id'                       => 'required|exists:organizations,uuid',
             'duration_id'                           => 'required|exists:durations,id',
             'duration'                              => 'nullable',
@@ -40,12 +40,14 @@ class createLabUsingAIRequest extends FormRequest
             'jobs.*'                                => 'numeric|exists:job_titles,id',
             'job_titles'                            => 'nullable|array',
             'resource_modules'                      => 'nullable|array',
+            'resource_modules.*'                    => 'required_if:resource_modules,exists|exists:resource_modules,uuid',
             'resource_module_openai'                => 'nullable|boolean',
             'openai_resource_module_types'          => 'nullable|array',
             'resource_module_go1'                   => 'nullable|boolean',
             'go1_resource_module_types'             => 'nullable|array',
             'resource_module_prepr'                 => 'nullable|boolean',
             'challenges'                            => 'nullable|array',
+            'challenges.*'                          => 'required_if:challenges,exists|exists:challenges,uuid',
         ];
 
         return $base_rules;
@@ -63,33 +65,37 @@ class createLabUsingAIRequest extends FormRequest
     public function message()
     {
         return [
-            'labTitle.required'                         => __('responses.lab_title_required'),
-            'labTitle.unique'                           => __('responses.lab_title_unique'),
-            'labDesc.required'                          => __('responses.lab_description_required'),
-            'organization_id.required'                  => __('responses.organization_id_required'),
-            'organization_id.exists'                    => __('responses.organization_not_found'),
-            'duration_id.required'                      => __('responses.duration_id_required'),
-            'duration_id.exists'                        => __('responses.duration_id_exists'),
-            'level_id.required'                         => __('responses.level_id_required'),
-            'level_id.exists'                           => __('responses.level_id_exists'),
-            'is_ai_created'                             => __('responses.true_or_false'),
-            'skills.array'                              => __('responses.skills_array'),
-            'skills.*.numeric'                          => __('responses.skills_numeric'),
-            'skills.*.exists'                           => __('responses.skill_not_exists'),
-            'skills.required'                           => __('responses.skills_required'),
-            'skill_titles.array'                        => __('responses.skill_titles_array'),
-            'jobs.array'                                => __('responses.jobs_array'),
-            'jobs.*.numeric'                            => __('responses.jobs_numeric'),
-            'jobs.*.exists'                             => __('responses.job_not_exists'),
-            'jobs.required'                             => __('responses.jobs_required'),
-            'job_titles.array'                          => __('responses.job_titles_array'),
-            'resource_modules.boolean'                  => __('responses.true_or_false'),
-            'resource_module_openai'                    => __('responses.true_or_false'),
-            'openai_resource_module_types'              => __('responses.openai_resource_module_types_array'),
-            'resource_module_go1'                       => __('responses.true_or_false'),
-            'go1_resource_module_types'                 => __('responses.go1_resource_module_types_array'),
-            'resource_module_prepr'                     => __('responses.true_or_false'),
-            'challenges.array'                          => __('responses.challenges_array'),
+            'labTitle.required'                             => __('responses.lab_title_required'),
+            'labTitle.unique'                               => __('responses.lab_title_unique'),
+            'labDescription.required'                       => __('responses.lab_description_required'),
+            'organization_id.required'                      => __('responses.organization_id_required'),
+            'organization_id.exists'                        => __('responses.organization_not_found'),
+            'category_id.required'                          => __('responses.category_id_required'),
+            'category_id.exists'                            => __('responses.category_not_found'),
+            'duration_id.required'                          => __('responses.duration_id_required'),
+            'duration_id.exists'                            => __('responses.duration_id_exists'),
+            'level_id.required'                             => __('responses.level_id_required'),
+            'level_id.exists'                               => __('responses.level_id_exists'),
+            'is_ai_created.boolean'                         => __('responses.true_or_false'),
+            'skills.array'                                  => __('responses.skills_array'),
+            'skills.*.numeric'                              => __('responses.skills_numeric'),
+            'skills.*.exists'                               => __('responses.skill_not_exists'),
+            'skills.required'                               => __('responses.skills_required'),
+            'skill_titles.array'                            => __('responses.skill_titles_array'),
+            'jobs.array'                                    => __('responses.jobs_array'),
+            'jobs.*.numeric'                                => __('responses.jobs_numeric'),
+            'jobs.*.exists'                                 => __('responses.job_not_exists'),
+            'jobs.required'                                 => __('responses.jobs_required'),
+            'job_titles.array'                              => __('responses.job_titles_array'),
+            'resource_modules.array'                        => __('responses.resource_modules_array'),
+            'resource_modules.*.exists'                     => __('responses.resource_ids_array_not_exists'),
+            'resource_module_openai.boolean'                => __('responses.true_or_false'),
+            'openai_resource_module_types.array'            => __('responses.openai_resource_module_types_array'),
+            'resource_module_go1.boolean'                   => __('responses.true_or_false'),
+            'go1_resource_module_types.array'               => __('responses.go1_resource_module_types_array'),
+            'resource_module_prepr.boolean'                 => __('responses.true_or_false'),
+            'challenges.array'                              => __('responses.challenges_array'),
+            'challenges.*.exists'                           => __('responses.challenge_not_exists'),
         ];
     }
 }

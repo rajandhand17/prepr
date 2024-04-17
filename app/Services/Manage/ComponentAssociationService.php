@@ -801,25 +801,6 @@ class ComponentAssociationService
         }
     }
 
-    public function challengeAssociation($request, $challenge)
-    {
-        if ($request->has('resource_modules') && $request->resource_modules != false) {
-            $sequence = 1;
-            if (count($request->resource_modules) > 0) {
-                foreach ($request->resource_modules as $resource_module) {
-                    $challengeSkillsGroupsStack = new ComponentAssociation();
-                    $challengeSkillsGroupsStack->lab_id = $challenge->id;
-                    $challengeSkillsGroupsStack->resource_module_id = $resource_module;
-                    $challengeSkillsGroupsStack->sequence = $sequence;
-                    $challengeSkillsGroupsStack->save();
-                    $sequence++;
-                }
-            }
-        }
-
-        return true;
-    }
-
     public function createChallengeComponentAssociation($request, $challengeId)
     {
         try {

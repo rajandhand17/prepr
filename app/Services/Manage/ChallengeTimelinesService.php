@@ -13,6 +13,10 @@ class ChallengeTimelinesService
     {
         try {
             $time_line = config('constants.challenge_timeline_type.flexible');
+            if (!$request->has('timeline_type')) {
+                $request->timeline_type = 'flexible';
+            }
+
             switch ($request->timeline_type) {
                 case 'restricted':
                     $time_line = config('constants.challenge_timeline_type.restricted');
@@ -67,7 +71,7 @@ class ChallengeTimelinesService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeTimelines in ChallengeTimelinesService.php: '.$e->getMessage());
+            Log::error('Error in createChallengeTimelines in ChallengeTimelinesService.php: ' . $e->getMessage());
 
             return false;
         }

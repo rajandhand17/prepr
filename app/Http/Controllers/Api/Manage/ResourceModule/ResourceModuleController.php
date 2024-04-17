@@ -12,7 +12,9 @@ use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
+use App\Models\ComponentAssociation;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
@@ -297,7 +299,19 @@ class ResourceModuleController extends AppBaseController
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             $createResourceModuleUsingAI = $this->resourceModuleRepository->CreateResourceModuleUsingAI($request, $upload_cover_image);
 
-            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $createResourceModuleUsingAI->id);
+            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request, $createResourceModuleUsingAI->id);
+
+            if ($request['challenge_id']) {
+                $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request['challenge_id']);
+                $challengeResourceModule = ComponentAssociation::create([
+                    'challenge_id'       => $challengeID,
+                    'resource_module_id' => $createResourceModuleUsingAI->id,
+                ]);
+
+                if (!$challengeResourceModule) {
+                    throw new Exception('challengeResourceModule has no value!');
+                }
+            }
 
             if (!$createResourceModuleDetailsAI) {
                 throw new Exception('createResourceModuleDetailsAI has no value!');
