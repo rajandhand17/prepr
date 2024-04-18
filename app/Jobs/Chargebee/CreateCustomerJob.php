@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\ChargeBeeSubscription;
+namespace App\Jobs\Chargebee;
 
-use App\Helpers\ChargeBeeSubscriptionHelper;
+use App\Helpers\ChargebeeHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -30,6 +30,6 @@ class CreateCustomerJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $createCustomer = ChargeBeeSubscriptionHelper::createCustomer($this->user);
+        $createCustomer = ChargebeeHelper::createCustomer($this->user);
     }
 }

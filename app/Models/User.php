@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
-use App\Jobs\ChargeBeeSubscription\CreateCustomerJob;
-use App\Jobs\ChargeBeeSubscription\SubscribePlanJob;
+use App\Jobs\Chargebee\CreateCustomerJob;
+use App\Jobs\Chargebee\SubscribePlanJob;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

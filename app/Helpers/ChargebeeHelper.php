@@ -7,7 +7,7 @@ use ChargeBee\ChargeBee\Models\Customer;
 use ChargeBee\ChargeBee\Models\Subscription;
 use Exception;
 
-class ChargeBeeSubscriptionHelper
+class ChargebeeHelper
 {
     // create customer everytime when new organization user register
     public static function createCustomer($user)

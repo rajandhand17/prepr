@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\ChargeBeeSubscription;
+namespace App\Jobs\Chargebee;
 
-use App\Helpers\ChargeBeeSubscriptionHelper;
+use App\Helpers\ChargebeeHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,6 +34,6 @@ class SubscribePlanJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $subscribePlan = ChargeBeeSubscriptionHelper::subscribePlan($this->user, $this->organization, $this->planDetail);
+        $subscribePlan = ChargebeeHelper::subscribePlan($this->user, $this->organization, $this->planDetail);
     }
 }
