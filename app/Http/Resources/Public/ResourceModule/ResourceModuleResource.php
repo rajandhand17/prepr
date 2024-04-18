@@ -158,8 +158,10 @@ class ResourceModuleResource extends JsonResource
         }
 
         $rating = intval('0');
-        if ($this->resource_rating) {
-            $rating = intval($this->resource_rating->rating);
+        if (auth('api')->check()) {
+            if ($this->resource_rating) {
+                $rating = intval($this->resource_rating->rating);
+            }
         }
 
         return [
