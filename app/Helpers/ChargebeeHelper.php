@@ -95,7 +95,6 @@ class ChargebeeHelper
         }
     }
 
-
     // get features limits like (created lab, challenge, group count etc)
     public static function getFeatureLimits($organizationId)
     {
