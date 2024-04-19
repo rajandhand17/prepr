@@ -12,4 +12,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::delete('/{slug}/delete', [LabController::class, 'delete']);
     Route::get('/check-slug/{slug}', [LabController::class, 'checkSlug']);
     Route::get('/check-title/{title}', [LabController::class, 'checkName']);
+    Route::post('/ai/create/preview', [LabController::class, 'createLabUsingAIPreview'])->middleware('permission:create_lab');
+    Route::post('/ai/create', [LabController::class, 'createLabUsingAI'])->middleware('permission:create_lab');
 });

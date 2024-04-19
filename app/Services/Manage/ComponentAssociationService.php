@@ -70,7 +70,7 @@ class ComponentAssociationService
                 }
             }
 
-            if ($request->has('resource_modules')) {
+            if ($request->has('resource_modules') && $request->resource_modules != false) {
                 $sequence = 1;
                 if (count($request->resource_modules) > 0) {
                     foreach ($request->resource_modules as $resource_module) {

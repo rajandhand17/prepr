@@ -5,11 +5,13 @@ namespace App\Services;
 use App\Helpers\LanguageColumnHelper;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
+use App\Models\PitchTemplate;
 use App\Models\ProjectPitchValue;
 use App\Models\ProjectTaskValue;
 use App\Models\ProjectTemplate;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class ProjectPitchService
@@ -254,6 +256,33 @@ class ProjectPitchService
 
             return true;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function createChallengeAIProjectPitch($request)
+    {
+        try {
+            $pitchTemplate = PitchTemplate::create([
+                'title' => $request['challengeTitle'],
+            ]);
+
+            foreach ($request['reflections'] as $reflection) {
+                $challengePitchData = [
+                    'template_id'       => $pitchTemplate->id,
+                    'title'             => $request['language'] === 'en' ? $reflection : '',
+                    'description'       => $request['language'] === 'en' ? 'Write your answer here...' : '',
+                    'fr_CA_title'       => $request['language'] === 'fr_CA' ? $reflection : '',
+                    'fr_CA_description' => $request['language'] === 'fr_CA' ? 'Écrivez la réponse ici...' : '',
+                ];
+
+                ChallengePitch::create($challengePitchData);
+            }
+
+            return $pitchTemplate;
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeAIProjectPitch in ProjectPitchService.php: '.$e->getMessage());
+
             return false;
         }
     }
