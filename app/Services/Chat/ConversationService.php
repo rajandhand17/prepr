@@ -2,6 +2,7 @@
 
 namespace App\Services\Chat;
 
+use App\Http\Resources\Chat\ConversationResource;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\ConversationSeenMessage;
@@ -124,6 +125,12 @@ class ConversationService
             }
 
             $conversation = $this->getById($conversationId);
+            if ($conversation) {
+                $conversation = collect(ConversationResource::make($conversation));
+            } else {
+                $conversation = ['uuid' => request()->route()->parameter('uuid')];
+            }
+
             $userIds = array_filter($conversationUserIds, function ($item) {
                 return $item !== auth()->user()->id;
             });
