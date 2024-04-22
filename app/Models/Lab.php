@@ -31,6 +31,7 @@ class Lab extends Model
         'status',
         'total_share',
         'is_auto_created',
+        'is_ai_created',
         'is_resource_sequential',
         'is_sequential',
         'is_achievement_enabled',

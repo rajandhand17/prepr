@@ -3,6 +3,7 @@
 namespace App\Services\Chat;
 
 use App\Helpers\FileUploadHelper;
+use App\Http\Resources\Chat\MessageResource;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Notifications\MessageCreated;
@@ -29,7 +30,16 @@ class MessageService
             $files = request()->file('attachment');
 
             foreach ($files as $item) {
-                $files = FileUploadHelper::uploadImageToS3($item, 'chat');
+                if (false !== mb_strpos($item->getMimeType(), 'image')) {
+                    $files = FileUploadHelper::uploadImageToS3($item, 'chat');
+                } elseif (false !== mb_strpos($item->getMimeType(), 'video')) {
+                    $files = FileUploadHelper::uploadVideoToS3($item, 'chat');
+                } elseif (false !== mb_strpos($item->getMimeType(), 'audio')) {
+                    $files = FileUploadHelper::uploadDocToS3($item, 'chat');
+                } else {
+                    $files = FileUploadHelper::uploadDocToS3($item, 'chat');
+                }
+
                 if (!$files) {
                     return false;
                 }
@@ -86,7 +96,7 @@ class MessageService
     {
         try {
             $conversation = Conversation::where('id', $conversationId)->first();
-            Notification::send($conversation, new MessageCreated($message, $conversationId));
+            Notification::send($conversation, new MessageCreated(collect(MessageResource::make($message)), $conversationId));
 
             return true;
         } catch (Exception $e) {
@@ -109,6 +119,31 @@ class MessageService
         } catch (Exception $exception) {
             DB::rollBack();
 
+            return false;
+        }
+    }
+
+    public function getByMessageUUID($uuid)
+    {
+        try {
+            $conversationMessage = ConversationMessage::where('uuid', $uuid)->first();
+            if ($conversationMessage) {
+                return $conversationMessage;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteMessage($data)
+    {
+        try {
+            ConversationMessage::find($data->id)->delete();
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }
