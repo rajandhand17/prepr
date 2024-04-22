@@ -19,6 +19,7 @@ return new class() extends Migration {
             $table->string('fr_CA_title');
             $table->string('lightcast_id')->unique()->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('user_job_titles', function (Blueprint $table) {
@@ -29,6 +30,7 @@ return new class() extends Migration {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('job_title_id')->references('id')->on('job_titles')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('related_job_titles', function (Blueprint $table) {
@@ -38,6 +40,7 @@ return new class() extends Migration {
             $table->foreign('job_title_id')->references('id')->on('job_titles')->onDelete('cascade');
             $table->foreign('related_job_title_id')->references('id')->on('job_titles')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('job_title_skills', function (Blueprint $table) {
@@ -47,6 +50,7 @@ return new class() extends Migration {
             $table->foreign('job_title_id')->references('id')->on('job_titles')->onDelete('cascade');
             $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

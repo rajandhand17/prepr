@@ -28,4 +28,18 @@ class JobTitle extends Model
         return $this->belongsToMany(Skill::class, 'job_title_skills', 'job_title_id', 'skill_id')
             ->withTimestamps();
     }
+
+    public function related_labs()
+    {
+        return $this->hasMany(LabSkillsGroupsStack::class,'foreign_id','id')->where('type','0');
+    }
+
+    public function related_challenge()
+    {
+        return $this->hasMany(ChallengeSkillsGroupsStack::class,'foreign_id','id')->where('type','0');
+    }
+
+    public function related_resource(){
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class,'foreign_id','id')->where('type','0');
+    }
 }
