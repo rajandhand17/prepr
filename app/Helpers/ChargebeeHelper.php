@@ -73,7 +73,7 @@ class ChargebeeHelper
         }
     }
 
-    // get organization plan details using organization id
+    // get organization plan details using organization id and also this function would be called and update in the learnlab db
     public static function getSubscribedPlanDetailForOrganization($organizationId)
     {
         try {
