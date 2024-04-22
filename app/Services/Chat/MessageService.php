@@ -3,6 +3,7 @@
 namespace App\Services\Chat;
 
 use App\Helpers\FileUploadHelper;
+use App\Http\Resources\Chat\MessageResource;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Notifications\MessageCreated;
@@ -95,7 +96,7 @@ class MessageService
     {
         try {
             $conversation = Conversation::where('id', $conversationId)->first();
-            Notification::send($conversation, new MessageCreated($message, $conversationId));
+            Notification::send($conversation, new MessageCreated(collect(MessageResource::make($message)), $conversationId));
 
             return true;
         } catch (Exception $e) {

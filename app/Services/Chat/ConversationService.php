@@ -2,6 +2,7 @@
 
 namespace App\Services\Chat;
 
+use App\Http\Resources\Chat\ConversationResource;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\ConversationSeenMessage;
@@ -124,6 +125,12 @@ class ConversationService
             }
 
             $conversation = $this->getById($conversationId);
+            if($conversation) {
+                $conversation = collect(ConversationResource::make($conversation));
+            } else {
+                $conversation = ['uuid' => request()->route()->parameter('uuid')];
+            }
+
             $userIds = array_filter($conversationUserIds, function ($item) {
                 return $item !== auth()->user()->id;
             });
@@ -169,11 +176,11 @@ class ConversationService
             DB::beginTransaction();
             $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $conversation = Conversation::create([
-                'uuid'        => $uuid,
-                'name'        => null,
-                'type'        => $data['type'],
+                'uuid' => $uuid,
+                'name' => null,
+                'type' => $data['type'],
                 'group_photo' => $data['group_photo'] ?? null,
-                'created_by'  => auth()->user()->id,
+                'created_by' => auth()->user()->id,
             ]);
             $conversationUsers = $this->addMembers($conversation, $data['users']);
 
@@ -289,7 +296,7 @@ class ConversationService
                 $searchText = request()->search;
                 $conversation->where(function ($query) use ($searchText) {
                     $query->WhereHas('users', function ($query) use ($searchText) {
-                        $query->whereRaw('LOWER(first_name) LIKE ?', ['%'.strtolower($searchText).'%']);
+                        $query->whereRaw('LOWER(first_name) LIKE ?', ['%' . strtolower($searchText) . '%']);
                     });
                 });
             }
