@@ -212,7 +212,7 @@ class GO1Helper
     {
         try {
             $unwantedParams = ['page', 'language'];
-            $languageMap = ["en" => 'en', 'fr-CA' => 'fr'];
+            $languageMap = ['en' => 'en', 'fr-CA' => 'fr'];
 
             $dataLimit = config('go1.go1_total_resource_data');
             $defaultPerPage = config('site-settings.pagination_per_page');
@@ -230,9 +230,9 @@ class GO1Helper
 
             $offset = ($currentPage - 1) * $limit;
             $defaultQueryParams = [
-                'limit'  => $limit,
-                'offset' => $offset,
-                'language[]' => $languageMap[request()->language]
+                'limit'      => $limit,
+                'offset'     => $offset,
+                'language[]' => $languageMap[request()->language],
             ];
 
             $finalQueryParams = array_merge($requestQuery, $defaultQueryParams);
