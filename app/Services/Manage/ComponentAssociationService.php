@@ -379,23 +379,28 @@ class ComponentAssociationService
                     $nonExistingIds = array_diff($existComponentAssociation, $request->lab_ids);
                     $deleteNonExistingComponentAssociation = ComponentAssociation::where('lab_program_id', $lab_programs)->whereIn('lab_id', $nonExistingIds)->delete();
                     $newComponentAssociation = array_diff($request->lab_ids, $existComponentAssociation);
+
                     $sequence = ComponentAssociation::where([
                         ['lab_program_id', '=', $lab_programs],
                         ['lab_id', '!=', null],
-                    ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
-                    foreach ($newComponentAssociation as $lab_id) {
-                        $sequence++;
-                        $labSkillsGroupsStack = new ComponentAssociation();
-                        $labSkillsGroupsStack->lab_program_id = $lab_programs;
-                        $labSkillsGroupsStack->lab_id = $lab_id;
-                        $labSkillsGroupsStack->sequence = $sequence;
-                        $labSkillsGroupsStack->save();
+                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    if($sequence!==null){
+                        $sequence=$sequence->sequence;
+                        foreach ($newComponentAssociation as $lab_id) {
+                            $sequence++;
+                            $labSkillsGroupsStack = new ComponentAssociation();
+                            $labSkillsGroupsStack->lab_program_id = $lab_programs;
+                            $labSkillsGroupsStack->lab_id = $lab_id;
+                            $labSkillsGroupsStack->sequence = $sequence;
+                            $labSkillsGroupsStack->save();
+                        }
                     }
                 }
             }
 
             return true;
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }
