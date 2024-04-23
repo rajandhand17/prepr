@@ -7,7 +7,6 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleSkillsGroupsStack;
-use App\Models\Skill;
 use App\Services\SkillService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -31,7 +30,7 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%' . $request->search . '%');
+                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -227,7 +226,7 @@ class ResourceModuleService
             if ($is_go1) {
                 $title = data_get($go1Course, 'title');
                 $organizationId = config('go1.go1_prepr_id');
-                $description = data_get($go1Course , 'description');
+                $description = data_get($go1Course, 'description');
                 $privacy = config('constants.resource_module_privacy.yes');
                 $status = config('constants.resource_module_status.draft');
                 $is_global = config('constants.resource_module_is_global.no');
@@ -257,7 +256,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (Exception $e) {
-            Log::error('Error in createResourceModule in ResourceModuleService.php: ' . $e->getMessage());
+            Log::error('Error in createResourceModule in ResourceModuleService.php: '.$e->getMessage());
 
             return false;
         }
