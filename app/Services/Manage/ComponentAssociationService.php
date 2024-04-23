@@ -387,15 +387,14 @@ class ComponentAssociationService
                     if ($sequences !== null) {
                         $sequence = $sequence->sequence;
                     }
-                        foreach ($newComponentAssociation as $lab_id) {
-                            $sequence++;
-                            $labSkillsGroupsStack = new ComponentAssociation();
-                            $labSkillsGroupsStack->lab_program_id = $lab_programs;
-                            $labSkillsGroupsStack->lab_id = $lab_id;
-                            $labSkillsGroupsStack->sequence = $sequence;
-                            $labSkillsGroupsStack->save();
-                        }
-
+                    foreach ($newComponentAssociation as $lab_id) {
+                        $sequence++;
+                        $labSkillsGroupsStack = new ComponentAssociation();
+                        $labSkillsGroupsStack->lab_program_id = $lab_programs;
+                        $labSkillsGroupsStack->lab_id = $lab_id;
+                        $labSkillsGroupsStack->sequence = $sequence;
+                        $labSkillsGroupsStack->save();
+                    }
                 }
             }
 
