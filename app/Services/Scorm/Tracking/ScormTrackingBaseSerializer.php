@@ -13,6 +13,7 @@ class ScormTrackingBaseSerializer
 
     /**
      * @param string $key
+     *
      * @return string|null
      */
     public function getField(string $key): ?string
@@ -20,11 +21,13 @@ class ScormTrackingBaseSerializer
         if (!array_key_exists($key, $this->FIELDS)) {
             return null;
         }
+
         return $this->FIELDS[$key];
     }
 
     /**
      * @param array|Collection|null $track
+     *
      * @return array
      */
     public function getCmiData(array|Collection|null $track = null): array
@@ -50,7 +53,7 @@ class ScormTrackingBaseSerializer
                 $trackingData[$this->FIELDS[$key]] = $value;
             }
         }
+
         return $trackingData;
     }
-
 }

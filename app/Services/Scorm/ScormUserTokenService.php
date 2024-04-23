@@ -11,6 +11,7 @@ class ScormUserTokenService
 {
     /**
      * @param User $user
+     *
      * @return false|ScormUserToken
      */
     public function getUserScormToken(User $user): false|ScormUserToken
@@ -27,8 +28,10 @@ class ScormUserTokenService
             /** IF TOKEN IS EXPIRED THEN NEW TOKEN IS GENERATED */
             if (!$this->checkValid(
                 Carbon::now()->addHours(2), // IF THE TOKEN IS GOING TO EXPIRE WITHIN NEXT TWO HOURS REGENERATE TOKEN
-                Carbon::parse($existing->expires_at))) {
+                Carbon::parse($existing->expires_at)
+            )) {
                 $existing->delete(); // DELETES THE OLD TOKEN
+
                 return $this->createToken($user);
             }
 
@@ -41,6 +44,7 @@ class ScormUserTokenService
 
     /**
      * @param User $user
+     *
      * @return ScormUserToken|false
      */
     public function createToken(User $user): false|ScormUserToken
@@ -56,8 +60,8 @@ class ScormUserTokenService
              * @var ScormUserToken $token
              */
             $token = ScormUserToken::query()->create([
-                'token' => $generateToken,
-                'user_id' => $user->id
+                'token'   => $generateToken,
+                'user_id' => $user->id,
             ]);
 
             return $token;
@@ -68,12 +72,14 @@ class ScormUserTokenService
 
     /**
      * @param string $username
+     *
      * @return false|string
      */
     public function generateUniqueTokenHash(string $username): false|string
     {
         try {
             $salt = sprintf('%s-%s-%s', $username, Str::uuid(), time());
+
             return hash('sha256', $salt);
         } catch (\Exception $exception) {
             return false;
@@ -82,6 +88,7 @@ class ScormUserTokenService
 
     /**
      * @param string $token
+     *
      * @return User|false
      */
     public function getTokenUser(string $token): false|User
@@ -92,7 +99,7 @@ class ScormUserTokenService
 
             if ($scormUserToken && $this->checkValid(Carbon::now(), Carbon::parse($scormUserToken->expires_at))) {
                 return $scormUserToken->user;
-            };
+            }
 
             return false;
         } catch (\Exception $exception) {
@@ -103,11 +110,11 @@ class ScormUserTokenService
     /**
      * @param Carbon $current
      * @param Carbon $expiry
+     *
      * @return bool
      */
     public function checkValid(Carbon $current, Carbon $expiry): bool
     {
         return $current < $expiry;
     }
-
 }

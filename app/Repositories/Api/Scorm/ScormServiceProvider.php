@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Scorm;
 
 use Illuminate\Support\ServiceProvider;
 
-class ScormServiceProvider  extends ServiceProvider
+class ScormServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

@@ -10,25 +10,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property int $id
- * @property string $uuid
- * @property int $scorm_id
- * @property int $sco_parent_id
- * @property string $entry_url
- * @property string $identifier
- * @property string $title
- * @property int $visible
- * @property string $sco_parameters
- * @property string $launch_data
- * @property string $max_time_allowed
- * @property string $time_limit_action
- * @property string $block
- * @property int $score_int
- * @property double $score_decimal
- * @property double $completion_threshold
- * @property string $prerequisites
- * @property ?string $scorm_entry_url
- * @property Scorm $scorm
+ * @property int               $id
+ * @property string            $uuid
+ * @property int               $scorm_id
+ * @property int               $sco_parent_id
+ * @property string            $entry_url
+ * @property string            $identifier
+ * @property string            $title
+ * @property int               $visible
+ * @property string            $sco_parameters
+ * @property string            $launch_data
+ * @property string            $max_time_allowed
+ * @property string            $time_limit_action
+ * @property string            $block
+ * @property int               $score_int
+ * @property float             $score_decimal
+ * @property float             $completion_threshold
+ * @property string            $prerequisites
+ * @property ?string           $scorm_entry_url
+ * @property Scorm             $scorm
  * @property ?ScormScoTracking $scoTracking
  */
 class ScormSco extends Model
@@ -87,7 +87,8 @@ class ScormSco extends Model
             return null;
         }
         $url = sprintf('%s/%s', data_get($this->scorm, 'uuid'), $this->entry_url);
-        return sprintf('%s/scorm/%s', UtilityHelper::sanitizeUrl(config('scorm.scorm_app_base_url','')), $url);
+
+        return sprintf('%s/scorm/%s', UtilityHelper::sanitizeUrl(config('scorm.scorm_app_base_url', '')), $url);
     }
 
     /**
@@ -97,5 +98,4 @@ class ScormSco extends Model
     {
         return $this->hasOne(ScormScoTracking::class, 'sco_id');
     }
-
 }

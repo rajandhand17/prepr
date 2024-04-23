@@ -16,16 +16,19 @@ class ScormTrackingController extends AppBaseController
 
     /**
      * @param ScormTrackingRequest $request
+     *
      * @return JsonResponse
      */
     public function trackProgress(ScormTrackingRequest $request): JsonResponse
     {
         try {
             $scormUser = $request->get('scormUser');
-            $tracking = $this->scormTrackingRepository->store($scormUser->id,
+            $tracking = $this->scormTrackingRepository->store(
+                $scormUser->id,
                 $request->validated('sco_uuid'),
                 $request->validated('version'),
-                $request->validated('cmi', []));
+                $request->validated('cmi', [])
+            );
 
             if ($tracking) {
                 return $this->sendResponse($tracking, __('responses.progress_tracking_success'));

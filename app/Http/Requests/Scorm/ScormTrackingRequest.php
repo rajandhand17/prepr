@@ -25,9 +25,9 @@ class ScormTrackingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cmi' => ['required', 'array'],
+            'cmi'      => ['required', 'array'],
             'sco_uuid' => ['required', 'string', Rule::exists('scorm_sco', 'uuid')],
-            'version' => ['required', Rule::in(collect(ScormVersions::cases())->pluck('value')->toArray())]
+            'version'  => ['required', Rule::in(collect(ScormVersions::cases())->pluck('value')->toArray())],
         ];
     }
 }

@@ -47,8 +47,8 @@ class ScormScoTracking extends Model
     {
         static::creating(function (ScormScoTracking $scormScoTracking) {
             $scormScoTracking->uuid = Str::uuid();
+
             return $scormScoTracking;
         });
     }
-
 }

@@ -19,14 +19,14 @@ class ScormResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'uuid' => $this->uuid,
-            "title" => $this->title,
-            "version" => $this->version,
-            "hash_name" => $this->hash_name,
-            "origin_file" => $this->origin_file,
-            "origin_file_mime" => $this->origin_file_mime,
-            "entry_url" => $this->scorm_entry_url,
-            "scos" => ScormScoResource::collection($this->whenLoaded('scos'))
+            'uuid'             => $this->uuid,
+            'title'            => $this->title,
+            'version'          => $this->version,
+            'hash_name'        => $this->hash_name,
+            'origin_file'      => $this->origin_file,
+            'origin_file_mime' => $this->origin_file_mime,
+            'entry_url'        => $this->scorm_entry_url,
+            'scos'             => ScormScoResource::collection($this->whenLoaded('scos')),
         ];
     }
 }

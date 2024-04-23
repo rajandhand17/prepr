@@ -7,15 +7,15 @@ use App\Models\ScormScoTracking;
 use App\Services\Scorm\Enum\ScormVersions;
 use App\Services\Scorm\Tracking\Scorm12Serializer;
 use App\Services\Scorm\Tracking\Scorm2004Serializer;
-use Illuminate\Support\Str;
 
 class ScormScoTrackingService
 {
     /**
-     * @param int $userId
+     * @param int    $userId
      * @param string $scoUUID
      * @param string $version
-     * @param array $data
+     * @param array  $data
+     *
      * @return false|ScormScoTracking
      */
     public function store(int $userId, string $scoUUID, string $version, array $data): false|ScormScoTracking
@@ -24,15 +24,15 @@ class ScormScoTrackingService
             $preparedData = $this->prepareTrackingData($version, $data);
             $scoId = $this->getScoIdViaUUID($scoUUID);
 
-            if(!$scoId || !$preparedData){
+            if (!$scoId || !$preparedData) {
                 return false;
             }
 
             /** @var ScormScoTracking $scoTracking */
             $scoTracking = ScormScoTracking::query()->updateOrCreate([
                 'user_id' => $userId,
-                'sco_id' => $scoId
-            ],$preparedData);
+                'sco_id'  => $scoId,
+            ], $preparedData);
 
             return $scoTracking;
         } catch (\Exception $exception) {
@@ -42,30 +42,31 @@ class ScormScoTrackingService
 
     /**
      * @param string $version
-     * @param $data
+     * @param        $data
+     *
      * @return array|false
      */
     public function prepareTrackingData(string $version, $data): array|false
     {
-        try{
+        try {
             return match ($version) {
                 ScormVersions::SCORM_2004->value => (new Scorm2004Serializer())->getTrackingData($data),
-                ScormVersions::SCORM_12->value => (new Scorm12Serializer())->getTrackingData($data),
-                default => [],
+                ScormVersions::SCORM_12->value   => (new Scorm12Serializer())->getTrackingData($data),
+                default                          => [],
             };
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return false;
         }
     }
 
     public function getScoIdViaUUID(string $uuid)
     {
-        try{
+        try {
             $sco = ScormSco::query()->where('uuid', '=', $uuid)->firstOrFail();
+
             return $sco->id;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return false;
         }
-
     }
 }

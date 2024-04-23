@@ -10,8 +10,7 @@ class ScormProxyController extends Controller
 {
     public function __construct(
         protected ScormRepository $scormRepository,
-    )
-    {
+    ) {
     }
 
     public function scormFileLink(string $url)
@@ -29,6 +28,7 @@ class ScormProxyController extends Controller
                 if ($contentType) {
                     $response->header('Content-Type', $contentType);
                 }
+
                 return $response;
             }
 

@@ -14,7 +14,6 @@ use Illuminate\Support\Str;
 
 class ScormArchiver
 {
-
     /**
      * @var string
      */
@@ -51,14 +50,15 @@ class ScormArchiver
         $scormUuid = Str::uuid();
         $scormDom = $this->getScormManifestContent($file);
         $scos = $this->scormLib->parseOrganizationsNode($scormDom);
+
         /** FORMATTED PARSED CONTENT */
         return [
-            "uuid" => $scormUuid,
-            "title" => $this->getCourseTitle($scormDom),
-            "file_path" => $this->generateFilePath($scormUuid),
-            "version" => $this->getScormVersion($scormDom),
-            "entry_url" => data_get($scos, '0.entryUrl') ?? data_get($scos, '0.scoChildren.0.entryUrl'),
-            "scos" => $scos
+            'uuid'      => $scormUuid,
+            'title'     => $this->getCourseTitle($scormDom),
+            'file_path' => $this->generateFilePath($scormUuid),
+            'version'   => $this->getScormVersion($scormDom),
+            'entry_url' => data_get($scos, '0.entryUrl') ?? data_get($scos, '0.scoChildren.0.entryUrl'),
+            'scos'      => $scos,
         ];
     }
 
@@ -83,9 +83,9 @@ class ScormArchiver
         }
 
         $zip->close();
+
         return $dom;
     }
-
 
     /**
      * @throws InvalidScormArchiveException
@@ -103,7 +103,7 @@ class ScormArchiver
             ScormManifestVersions::SCORM_2004_3RD_EDITION->value,
             ScormManifestVersions::CAM_1_3->value,
             ScormManifestVersions::SCORM_2004_4TH_EDITION->value => ScormVersions::SCORM_2004->value,
-            default => null,
+            default                                              => null,
         };
 
         if (!$version) {
@@ -113,18 +113,17 @@ class ScormArchiver
         return $version;
     }
 
-
     public function storeScormContent(string $filepath, UploadedFile $file)
     {
         try {
             $zip = new \ZipArchive();
             $zip->open($file);
 
-            $zip->extractTo(sys_get_temp_dir() . '/' . $filepath);
+            $zip->extractTo(sys_get_temp_dir().'/'.$filepath);
 
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $fileName = $zip->getNameIndex($i);
-                $f = sys_get_temp_dir() . '/' . $filepath . '/' . $fileName;
+                $f = sys_get_temp_dir().'/'.$filepath.'/'.$fileName;
                 if (is_file($f) && !is_dir($f)) {
                     $this->storage->putFileAs($filepath, new File($f), $fileName);
                 }
@@ -132,6 +131,7 @@ class ScormArchiver
             }
 
             $zip->close();
+
 //            $this->storage->putFileAs($filepath, $file, 'scorm.zip');
             return true;
         } catch (\Exception $exception) {
@@ -141,16 +141,19 @@ class ScormArchiver
 
     /**
      * @param \DOMDocument $scormData
+     *
      * @return string
      */
     public function getCourseTitle(\DOMDocument $scormData): string
     {
         $element = $scormData->getElementsByTagName('title');
+
         return Str::of($element->item(0)->textContent)->trim('/n')->trim();
     }
 
     /**
      * @param string $hash
+     *
      * @return string
      */
     public function generateFilePath(string $hash): string
@@ -160,6 +163,7 @@ class ScormArchiver
 
     /**
      * @param string $path
+     *
      * @return void
      */
     public function deleteScormFolder(string $path): void
@@ -172,6 +176,7 @@ class ScormArchiver
 
     /**
      * @param string $url
+     *
      * @return string
      */
     protected function sanitizeUrl(string $url): string
@@ -179,7 +184,7 @@ class ScormArchiver
         if (Str::substr($url, -1) === '/') {
             return substr($url, 0, -1);
         }
+
         return $url;
     }
-
 }

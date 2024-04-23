@@ -23,7 +23,7 @@ class UploadScormRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'scorm_file' => ['file', 'mimes:zip', 'max:500000']
+            'scorm_file' => ['file', 'mimes:zip', 'max:500000'],
         ];
     }
 }

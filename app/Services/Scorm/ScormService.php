@@ -11,28 +11,27 @@ use Illuminate\Support\Facades\DB;
 
 class ScormService
 {
-
     /**
-     * @param ScormArchiver $scormArchiver
-     * @param ScormScoService $scormScoService
+     * @param ScormArchiver         $scormArchiver
+     * @param ScormScoService       $scormScoService
      * @param ScormUserTokenService $scormUserTokenService
      */
     public function __construct(
-        protected ScormArchiver         $scormArchiver,
-        protected ScormScoService       $scormScoService,
+        protected ScormArchiver $scormArchiver,
+        protected ScormScoService $scormScoService,
         protected ScormUserTokenService $scormUserTokenService
-    )
-    {
+    ) {
     }
 
     public function upload(string $modelType, int $modelId, UploadedFile $file, ?Scorm $existing = null): false|Scorm
     {
         DB::beginTransaction();
+
         try {
             $scormData = $this->scormArchiver->parseScormArchive($file);
 
             /**
-             * REMOVES THE OLD SCORM FILE IF EXISTS
+             * REMOVES THE OLD SCORM FILE IF EXISTS.
              */
             if ($existing) {
                 $this->delete($existing);
@@ -42,34 +41,38 @@ class ScormService
              * @var Scorm $scorm
              */
             $scorm = Scorm::query()->create([
-                "model_id" => $modelId,
-                "model_type" => $modelType,
-                "uuid" => data_get($scormData, 'uuid'),
-                "title" => data_get($scormData, 'title'),
-                "version" => data_get($scormData, 'version'),
-                "origin_file" => $file->getClientOriginalName(),
-                "origin_file_mime" => $file->getClientMimeType(),
-                "entry_url" => data_get($scormData, 'entry_url'),
+                'model_id'         => $modelId,
+                'model_type'       => $modelType,
+                'uuid'             => data_get($scormData, 'uuid'),
+                'title'            => data_get($scormData, 'title'),
+                'version'          => data_get($scormData, 'version'),
+                'origin_file'      => $file->getClientOriginalName(),
+                'origin_file_mime' => $file->getClientMimeType(),
+                'entry_url'        => data_get($scormData, 'entry_url'),
             ]);
 
             /*** STORE SCORM SCOS */
             $content = $this->scormScoService->bulkStore($scorm, data_get($scormData, 'scos', []));
             $file = $this->scormArchiver->storeScormContent(data_get($scormData, 'file_path'), $file);
 
-            if(!$file || !$content){
+            if (!$file || !$content) {
                 DB::rollBack();
+
                 return false;
             }
         } catch (\Exception $exception) {
             DB::rollBack();
+
             return false;
         }
         DB::commit();
+
         return $scorm;
     }
 
     /**
      * @param Scorm $scorm
+     *
      * @return void
      */
     public function delete(Scorm $scorm): void
@@ -80,7 +83,8 @@ class ScormService
 
     /**
      * @param string $uuid
-     * @param User $scormUser
+     * @param User   $scormUser
+     *
      * @return Scorm|false|null
      */
     public function getScorm(string $uuid, User $scormUser): null|Scorm|false
@@ -105,20 +109,22 @@ class ScormService
 
     /**
      * @param string $url
+     *
      * @return array|false
      */
     public function generateScormProxy(string $url): false|array
     {
         try {
             /**
-             * ADDING THE SCORM FILE DIRECTOR
+             * ADDING THE SCORM FILE DIRECTOR.
              */
             $url = sprintf('%s/%s', $this->scormArchiver->scormRootDirectory, $url);
 
-            if (!$this->checkExtension($url, ['js']) && !$this->checkExtension($url, ['json']) && str_contains($url, "html") === false) {
+            if (!$this->checkExtension($url, ['js']) && !$this->checkExtension($url, ['json']) && str_contains($url, 'html') === false) {
                 logger()->info($this->scormArchiver->storage->url($url));
+
                 return [
-                    'url' => $this->scormArchiver->storage->url($url)
+                    'url' => $this->scormArchiver->storage->url($url),
                 ];
             }
 
@@ -132,8 +138,8 @@ class ScormService
             }
 
             return [
-                'binary' => $this->scormArchiver->storage->get($url),
-                'content_type' => $contentType
+                'binary'       => $this->scormArchiver->storage->get($url),
+                'content_type' => $contentType,
             ];
         } catch (\Exception $exception) {
             return false;
@@ -141,8 +147,9 @@ class ScormService
     }
 
     /**
-     * @param $url
+     * @param       $url
      * @param array $allowed
+     *
      * @return bool
      */
     public function checkExtension($url, array $allowed = []): bool
@@ -152,6 +159,7 @@ class ScormService
             if (isset($parsedUrl['path'])) {
                 $path = pathinfo($parsedUrl['path'], PATHINFO_BASENAME);
                 $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
                 return in_array($extension, $allowed);
             }
 
@@ -163,6 +171,7 @@ class ScormService
 
     /**
      * @param Scorm $scorm
+     *
      * @return false|string
      */
     public function generateScormPlayerUrl(Scorm $scorm): false|string
@@ -177,10 +186,12 @@ class ScormService
                 return false;
             }
 
-            return sprintf('%s/scorm-player/%s?tracking_id=%s',
+            return sprintf(
+                '%s/scorm-player/%s?tracking_id=%s',
                 UtilityHelper::sanitizeUrl(config('scorm.scorm_app_base_url', '')),
-                $scorm->uuid, $scormUserToken->token);
-
+                $scorm->uuid,
+                $scormUserToken->token
+            );
         } catch (\Exception $exception) {
             return false;
         }

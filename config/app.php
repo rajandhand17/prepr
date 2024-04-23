@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'debug' => (bool)env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -260,7 +260,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'PDF'   => Barryvdh\DomPDF\Facade::class,
 
     ])->toArray(),
 

@@ -110,6 +110,7 @@ class UtilityHelper
         if (Str::substr($url, -1) === '/') {
             return substr($url, 0, -1);
         }
+
         return $url;
     }
 }

@@ -66,9 +66,9 @@ class ScormLib
     /**
      * Creates defined structure of SCOs.
      *
-     * @return array of Sco
-     *
      * @throws InvalidScormArchiveException
+     *
+     * @return array of Sco
      */
     private function parseItemNodes(\DOMNode $source, \DOMNodeList $resources, $parentSco = null): array
     {
@@ -224,9 +224,9 @@ class ScormLib
     /**
      * Searches for the resource with the given id and retrieve URL to its content.
      *
-     * @return string URL to the resource associated to the SCO
-     *
      * @throws InvalidScormArchiveException
+     *
+     * @return string URL to the resource associated to the SCO
      */
     public function findEntryUrl($identifierref, \DOMNodeList $resources)
     {
@@ -247,6 +247,7 @@ class ScormLib
                 }
             }
         }
+
         throw new InvalidScormArchiveException('sco_without_resource_message');
     }
 }

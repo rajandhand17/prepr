@@ -7,18 +7,17 @@ use App\Models\ScormSco;
 
 class ScormScoService
 {
-
     /**
-     * @param Scorm $scorm
-     * @param array $scos
+     * @param Scorm    $scorm
+     * @param array    $scos
      * @param int|null $parent_id
+     *
      * @return ScormSco|false
      */
     public function bulkStore(Scorm $scorm, array $scos, ?int $parent_id = null): ScormSco|false
     {
         try {
             /** @var ScormSco $sco */
-
             foreach ($scos as $data) {
                 $sco = new ScormSco();
                 $sco->scorm_id = data_get($scorm, 'id');
@@ -47,6 +46,7 @@ class ScormScoService
         } catch (\Exception $exception) {
             return false;
         }
+
         return $sco;
     }
 }

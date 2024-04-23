@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $user_id
+ * @property int    $user_id
  * @property string $token
  * @property string $expires_at
- * @property User $user
+ * @property User   $user
  */
 class ScormUserToken extends Model
 {
@@ -35,7 +35,7 @@ class ScormUserToken extends Model
      * @var string[]
      */
     protected $casts = [
-        'expires_at' => 'datetime'
+        'expires_at' => 'datetime',
     ];
 
     /**
@@ -50,6 +50,7 @@ class ScormUserToken extends Model
     {
         static::creating(function (ScormUserToken $scormUserToken) {
             $scormUserToken->expires_at = Carbon::now()->addHours(config('scorm.scorm_token_expiry_duration_hour', 24));
+
             return $scormUserToken;
         });
     }

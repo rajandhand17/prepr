@@ -14,12 +14,12 @@ class ScormRepository implements ScormInterface
      */
     public function __construct(protected ScormService $scormService)
     {
-
     }
 
     /**
      * @param string $uuid
-     * @param User $scormUser
+     * @param User   $scormUser
+     *
      * @return Scorm|false|null
      */
     public function getScorm(string $uuid, User $scormUser): false|Scorm|null
@@ -33,6 +33,7 @@ class ScormRepository implements ScormInterface
 
     /**
      * @param string $url
+     *
      * @return false|array
      */
     public function generateScormProxy(string $url): false|array
@@ -45,10 +46,11 @@ class ScormRepository implements ScormInterface
     }
 
     /**
-     * @param string $modelType
-     * @param int $modelId
+     * @param string       $modelType
+     * @param int          $modelId
      * @param UploadedFile $file
-     * @param Scorm|null $existing
+     * @param Scorm|null   $existing
+     *
      * @return false|Scorm
      */
     public function upload(string $modelType, int $modelId, UploadedFile $file, ?Scorm $existing = null): false|Scorm
@@ -62,6 +64,7 @@ class ScormRepository implements ScormInterface
 
     /**
      * @param Scorm $scorm
+     *
      * @return false|string
      */
     public function generateScormPlayerUrl(Scorm $scorm): false|string

@@ -13,13 +13,13 @@ class ScormController extends AppBaseController
 {
     public function __construct(
         protected ScormRepository $scormRepository,
-    )
-    {
+    ) {
     }
 
     /**
-     * @param string $uuid
+     * @param string  $uuid
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function show(Request $request, string $uuid): JsonResponse
@@ -29,17 +29,12 @@ class ScormController extends AppBaseController
             $scormDetails = $this->scormRepository->getScorm($uuid, $scormUser);
 
             if ($scormDetails) {
-                return $this->sendResponse(new ScormResource($scormDetails), __("responses.scorm_details"));
+                return $this->sendResponse(new ScormResource($scormDetails), __('responses.scorm_details'));
             }
 
-            return $this->sendError(__("responses.failed_to_fetch_scorm_details"), Response::HTTP_NOT_FOUND);
-
+            return $this->sendError(__('responses.failed_to_fetch_scorm_details'), Response::HTTP_NOT_FOUND);
         } catch (\Exception $exception) {
-            return $this->sendError(__("responses.failed_to_fetch_scorm_details"), Response::HTTP_BAD_REQUEST);
+            return $this->sendError(__('responses.failed_to_fetch_scorm_details'), Response::HTTP_BAD_REQUEST);
         }
     }
-
-
-
-
 }

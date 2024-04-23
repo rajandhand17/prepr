@@ -36,5 +36,5 @@ return [
       |--------------------------------------------------------------------------
       | BASE URL FOR SCORM PLAYER
       */
-    'scorm_app_base_url' => env('SCORM_APP_BASE_URL', 'http://scorm.localhost:8080/')
+    'scorm_app_base_url' => env('SCORM_APP_BASE_URL', 'http://scorm.localhost:8080/'),
 ];

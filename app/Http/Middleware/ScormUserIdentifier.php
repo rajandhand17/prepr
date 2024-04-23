@@ -30,6 +30,7 @@ class ScormUserIdentifier
             if ($scormUser) {
                 /** PASSING THE USER IN THE REQUEST */
                 $request->merge(['scormUser' => $scormUser]);
+
                 return $next($request);
             }
         }
@@ -42,6 +43,7 @@ class ScormUserIdentifier
         try {
             /* @var ScormUserTokenService $scormService */
             $scormService = app()->make(ScormUserTokenService::class);
+
             return $scormService;
         } catch (\Exception $exception) {
             return false;
@@ -50,6 +52,7 @@ class ScormUserIdentifier
 
     /**
      * @param Request $request
+     *
      * @return View|JsonResponse
      */
     public function handleMiddlewareVerificationFail(Request $request): View|JsonResponse
