@@ -3,9 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class MessageDeleted extends Notification
@@ -15,7 +13,7 @@ class MessageDeleted extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public $message , public $conversationId)
+    public function __construct(public $message, public $conversationId)
     {
         //
     }
