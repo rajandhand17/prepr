@@ -7,6 +7,7 @@ use App\Http\Resources\Chat\MessageResource;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Notifications\MessageCreated;
+use App\Notifications\MessageDeleted;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\DB;
@@ -65,11 +66,11 @@ class MessageService
             }
 
             $message = ConversationMessage::create([
-                'uuid'            => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 'conversation_id' => $data['conversation_id'],
-                'message'         => $data['message'],
-                'attachments'     => $messageFiles,
-                'sender_id'       => auth()->user()->id,
+                'message' => $data['message'],
+                'attachments' => $messageFiles,
+                'sender_id' => auth()->user()->id,
             ]);
             DB::commit();
 
@@ -140,7 +141,9 @@ class MessageService
     public function deleteMessage($data)
     {
         try {
+            $conversation = $data->conversation()->first();
             ConversationMessage::find($data->id)->delete();
+            Notification::send($conversation, new MessageDeleted(['uuid' => $data->uuid], $conversation->id));
 
             return true;
         } catch (Exception $e) {
