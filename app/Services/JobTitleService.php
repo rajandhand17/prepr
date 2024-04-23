@@ -103,18 +103,6 @@ class JobTitleService
             return false;
         }
     }
-    public static function getJob($id){
-        try {
-            $getJobsDetail=JobTitle::where('uuid',$id)->first();
-            if($getJobsDetail){
-                return $getJobsDetail;
-            }
-            return false;
-        }catch (\Exception $e){
-            return false;
-        }
-    }
-
     public static function getRelatedCareer(){
         try {
             $getCurrentUsersSkills=UserSkillsService::getUserSkills();

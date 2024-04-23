@@ -27,19 +27,6 @@ class CareerController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
-    public function getJob($id){
-        try {
-            $getJobsList=$this->careerRepository->getJob($id);
-            if($getJobsList){
-                return $this->sendResponse(careerResource::make($getJobsList),__('response.job_listing_successfully'));
-            }
-            return $this->sendResponse([],__('response.job_listing_successfully'));
-        }catch(\Exception $e){
-            return $this->sendError(__('responses.send_error'),500);
-        }
-    }
-
     public function addJobs(Request $request){
         try {
             $checkJobsExistsOrNot=UserJobTitlesService::checkJobsExistsInUsers($request->job_title_id);

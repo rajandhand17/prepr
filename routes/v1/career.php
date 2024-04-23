@@ -10,5 +10,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/jobs/{id}/pinned', [CareerController::class, 'addJobPinned']);
     Route::delete('/{id}/delete', [CareerController::class, 'deleteJob']);
     Route::get('/related/careers', [CareerController::class, 'getRelatedCareer']);
-    //   Route::get('/jobs/{id}', [CareerController::class, 'getJob']);
 });

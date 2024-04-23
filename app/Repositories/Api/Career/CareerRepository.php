@@ -28,15 +28,6 @@ class CareerRepository implements CareerInterface
             return false;
         }
     }
-
-    public function getJob($id){
-        try {
-            return $this->jobTitleService->getJob($id);
-        }catch(\Exception $e){
-            return false;
-        }
-    }
-
     public function addJobs($request){
         try {
             return $this->userJobTitleService->addJobs($request);
