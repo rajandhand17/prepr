@@ -384,8 +384,8 @@ class ComponentAssociationService
                         ['lab_program_id', '=', $lab_programs],
                         ['lab_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first();
-                    if($sequence!==null){
-                        $sequence=$sequence->sequence;
+                    if ($sequence !== null) {
+                        $sequence = $sequence->sequence;
                         foreach ($newComponentAssociation as $lab_id) {
                             $sequence++;
                             $labSkillsGroupsStack = new ComponentAssociation();
