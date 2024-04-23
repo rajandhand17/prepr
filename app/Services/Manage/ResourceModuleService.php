@@ -30,7 +30,7 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
+                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%' . $request->search . '%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -218,15 +218,12 @@ class ResourceModuleService
                     break;
             }
 
-            $title = $request->title ?? null;
-            $organizationId = $organization->id ?? null;
-            $description = $request->description ?? null;
-            $go1Course = $request->go1_course ?? null;
+            $go1Course = $is_go1 ? $request->go1_course : null;
+            $title = $is_go1 ? data_get($go1Course, 'title') : $request->title;
+            $organizationId = $is_go1 ? config('go1.go1_prepr_id') : $organization->id;
+            $description = $is_go1 ? data_get($go1Course, 'description') : $request->description;
 
             if ($is_go1) {
-                $title = data_get($go1Course, 'title');
-                $organizationId = config('go1.go1_prepr_id');
-                $description = data_get($go1Course, 'description');
                 $privacy = config('constants.resource_module_privacy.yes');
                 $status = config('constants.resource_module_status.draft');
                 $is_global = config('constants.resource_module_is_global.no');
@@ -256,7 +253,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (Exception $e) {
-            Log::error('Error in createResourceModule in ResourceModuleService.php: '.$e->getMessage());
+            Log::error('Error in createResourceModule in ResourceModuleService.php: ' . $e->getMessage());
 
             return false;
         }
