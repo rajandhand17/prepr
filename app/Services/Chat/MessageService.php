@@ -3,9 +3,11 @@
 namespace App\Services\Chat;
 
 use App\Helpers\FileUploadHelper;
+use App\Http\Resources\Chat\MessageResource;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Notifications\MessageCreated;
+use App\Notifications\MessageDeleted;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\DB;
@@ -95,7 +97,7 @@ class MessageService
     {
         try {
             $conversation = Conversation::where('id', $conversationId)->first();
-            Notification::send($conversation, new MessageCreated($message, $conversationId));
+            Notification::send($conversation, new MessageCreated(collect(MessageResource::make($message)), $conversationId));
 
             return true;
         } catch (Exception $e) {
@@ -139,7 +141,9 @@ class MessageService
     public function deleteMessage($data)
     {
         try {
+            $conversation = $data->conversation()->first();
             ConversationMessage::find($data->id)->delete();
+            Notification::send($conversation, new MessageDeleted(['uuid' => $data->uuid], $conversation->id));
 
             return true;
         } catch (Exception $e) {

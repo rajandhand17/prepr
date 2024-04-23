@@ -4,13 +4,19 @@ namespace App\Http\Controllers\Api\Manage\Lab;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
+use App\Http\Requests\Manage\Lab\CreateLabUsingAIPreviewRequest;
+use App\Http\Requests\Manage\Lab\CreateLabUsingAIRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\OrganizationService;
+use App\Services\Manage\ResourceModuleService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LabController extends AppBaseController
 {
@@ -45,7 +51,7 @@ class LabController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_labs_list'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -193,6 +199,61 @@ class LabController extends AppBaseController
             return $this->sendResponse($getLabListName, __('responses.found_labs_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function createLabUsingAIPreview(CreateLabUsingAIPreviewRequest $request)
+    {
+        try {
+            $createLabUsingAIPreview = $this->labRepository->createLabUsingAIPreview($request);
+
+            if ($createLabUsingAIPreview) {
+                return $this->sendResponse($createLabUsingAIPreview, __('responses.labs_previews_created_successfully'), 200);
+            } else {
+                throw new Exception('createLabUsingAIPreview has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in createLabUsingAIPreview in LabController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function createLabUsingAI(CreateLabUsingAIRequest $request)
+    {
+        try {
+            $upload_cover_image = config('site-settings.default_lab_cover_image');
+            $upload_achievement_image = config('site-settings.default_achievement_image');
+
+            if ($request->has('challenges') && count($request->challenges) > 0) {
+                $challengeIDs = [];
+
+                foreach ($request->challenges as $uuid) {
+                    $id = ChallengeService::getChallengeIdBasedOnUUID($uuid);
+                    if ($id) {
+                        $challengeIDs[] = $id;
+                    }
+                }
+
+                $request->merge(['challenges' => $challengeIDs]);
+            }
+
+            if ($request->has('resource_modules') && count($request->resource_modules) > 0) {
+                $resourceModuleIDs = ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_modules);
+                $request->merge(['resource_modules' => $resourceModuleIDs]);
+            }
+
+            $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image);
+
+            if ($createLabUsingAI) {
+                return $this->sendResponse(LabResource::make($createLabUsingAI), __('responses.lab_created_successfully'), 200);
+            } else {
+                throw new Exception('createLabUsingAI has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in createLabUsingAI in LabController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
         }
     }
 }

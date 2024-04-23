@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Manage\Challenge;
+namespace App\Http\Requests\Manage\Lab;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CreateChallengeUsingAIPreviewRequest extends FormRequest
+class CreateLabUsingAIPreviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
