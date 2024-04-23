@@ -4,11 +4,9 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\JobTitle;
-use App\Models\UserJobTitle;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use phpDocumentor\Reflection\Types\Self_;
 
 class JobTitleService
 {
@@ -16,7 +14,7 @@ class JobTitleService
     {
         try {
             if ($language == 'en') {
-                $job_list = JobTitle::select('id', 'title','uuid');
+                $job_list = JobTitle::select('id', 'title', 'uuid');
                 if ($job_title_id !== null) {
                     $job_list = $job_list->whereIn('id', $job_title_id);
                 }
@@ -26,7 +24,7 @@ class JobTitleService
                 if (!$column_name || !Schema::hasColumn('jobs', $column_name)) {
                     return false;
                 }
-                $job_list = JobTitle::select('id', $column_name.' as title','uuid');
+                $job_list = JobTitle::select('id', $column_name.' as title', 'uuid');
             }
 
             if ($search != null) {
@@ -91,40 +89,47 @@ class JobTitleService
         }
     }
 
-    public static function getJobsBasedOnUsers($request){
+    public static function getJobsBasedOnUsers($request)
+    {
         try {
-            $getUsersJobsIds=UserJobTitlesService::getUsersJobs();
-            $getJobs=null;
-            if($getUsersJobsIds!==false){
-                $getJobs=self::getJobTitles($request->language, $request->search, $getUsersJobsIds);
+            $getUsersJobsIds = UserJobTitlesService::getUsersJobs();
+            $getJobs = null;
+            if ($getUsersJobsIds !== false) {
+                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds);
             }
+
             return $getJobs;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
-    public static function getRelatedCareer(){
-        try {
-            $getCurrentUsersSkills=UserSkillsService::getUserSkills();
-            $getJobsIdsBasedOnSkills=JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
-            $getCurrentUsersJobs=UserJobTitlesService::getUsersJobs();
-            $getJobIds=array_diff($getJobsIdsBasedOnSkills,$getCurrentUsersJobs);
-            $getJobTitle=JobTitle::whereIn('id',$getJobIds)->get();
 
-            if($getJobTitle){
+    public static function getRelatedCareer()
+    {
+        try {
+            $getCurrentUsersSkills = UserSkillsService::getUserSkills();
+            $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
+            $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
+            $getJobIds = array_diff($getJobsIdsBasedOnSkills, $getCurrentUsersJobs);
+            $getJobTitle = JobTitle::whereIn('id', $getJobIds)->get();
+
+            if ($getJobTitle) {
                 return $getJobTitle;
             }
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getJobDetails($id){
+    public static function getJobDetails($id)
+    {
         try {
-            $getJobDetails=JobTitle::where('id',$id)->first();
+            $getJobDetails = JobTitle::where('id', $id)->first();
+
             return $getJobDetails;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
