@@ -31,6 +31,7 @@ class ScormService
                 $deletePrevious = $this->delete($existing);
                 if (!$deletePrevious) {
                     DB::rollBack();
+
                     return false;
                 }
             }
