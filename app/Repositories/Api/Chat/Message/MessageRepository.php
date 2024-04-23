@@ -5,7 +5,6 @@ namespace App\Repositories\Api\Chat\Message;
 use App\Services\Chat\MessageService;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 
 class MessageRepository implements MessageInterface
 {

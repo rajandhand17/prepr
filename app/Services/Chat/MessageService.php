@@ -66,11 +66,11 @@ class MessageService
             }
 
             $message = ConversationMessage::create([
-                'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'uuid'            => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 'conversation_id' => $data['conversation_id'],
-                'message' => $data['message'],
-                'attachments' => $messageFiles,
-                'sender_id' => auth()->user()->id,
+                'message'         => $data['message'],
+                'attachments'     => $messageFiles,
+                'sender_id'       => auth()->user()->id,
             ]);
             DB::commit();
 
