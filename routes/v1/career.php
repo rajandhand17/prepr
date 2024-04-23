@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\career\CareerController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/jobs/my', [CareerController::class, 'getMyJobs']);

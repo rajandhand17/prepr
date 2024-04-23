@@ -359,11 +359,11 @@ class ResourceCollectionService
         }
     }
 
-    public static function getResourceCollectionsBasedOnIds($ids){
+    public static function getResourceCollectionsBasedOnIds($ids)
+    {
         try {
-            return ResourceCollection::select()->whereIn('id',$ids)->get();
-
-        }catch (\Exception $e) {
+            return ResourceCollection::select()->whereIn('id', $ids)->get();
+        } catch (\Exception $e) {
             return false;
         }
     }
