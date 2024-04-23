@@ -31,7 +31,7 @@ class GO1Controller extends AppBaseController
     public function create(CreateResourceModuleRequest $request)
     {
         try {
-            $resource = $this->go1Repository->createResourceModule($request->go1_course);
+            $resource = $this->go1Repository->createResourceModule($request);
             if (!$resource) {
                 return $this->sendResponse(__('responses.go1_resource_creation_failed'), 400);
             }

@@ -22,7 +22,7 @@ class SkillService
                     if (gettype($skill_id) == 'string') {
                         $skill_list = $skill_list->where('id', $skill_id);
                     } else {
-                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
+                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw('FIELD(id, ' . $skill_id->implode(',') . ')');
                     }
                 }
             } else {
@@ -33,7 +33,7 @@ class SkillService
                 if (!$column_name || !Schema::hasColumn('skills', $column_name)) {
                     return false;
                 }
-                $skill_list = Skill::select('id', $column_name.' as title');
+                $skill_list = Skill::select('id', $column_name . ' as title');
             }
 
             //Search categories based on user input
@@ -77,7 +77,7 @@ class SkillService
     public static function filterSKillList($getSkillsList, $sKill_column_name, $search)
     {
         try {
-            $getSkillsList = $getSkillsList->where($sKill_column_name, 'like', '%'.$search.'%');
+            $getSkillsList = $getSkillsList->where($sKill_column_name, 'like', '%' . $search . '%');
             if ($getSkillsList) {
                 return $getSkillsList;
             }
@@ -91,7 +91,7 @@ class SkillService
     public static function getSkillBasedOnIds($skill_ids)
     {
         try {
-            $getSkillsList = Skill::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+            $getSkillsList = Skill::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title') . ' as title')
                 ->whereIn('id', $skill_ids)->get();
             if ($getSkillsList) {
                 return $getSkillsList;
@@ -106,7 +106,7 @@ class SkillService
     public static function getSkillBasedOnId($skill_id)
     {
         try {
-            $getSkillsList = Skill::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+            $getSkillsList = Skill::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title') . ' as title')
                 ->where('id', $skill_id)->first();
             if ($getSkillsList) {
                 return $getSkillsList;
@@ -142,5 +142,14 @@ class SkillService
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public static function createSkillFromGO1($skills)
+    {
+        return array_map(function ($item) {
+            $data = Skill::firstOrCreate(['title' => $item['name']]);
+
+            return $data->id;
+        }, $skills);
     }
 }

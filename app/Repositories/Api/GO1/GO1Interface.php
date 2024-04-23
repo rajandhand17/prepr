@@ -6,7 +6,7 @@ interface GO1Interface
 {
     public function getCourseLists();
 
-    public function createResourceModule($body);
+    public function createResourceModule($request);
 
     public function listFilters($type);
 

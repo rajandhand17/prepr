@@ -23,24 +23,25 @@ class GO1Repository implements GO1Interface
             $totalCount = min($data['total'], config('go1.go1_total_resource_data'));
 
             return [
-                'total_count'  => $totalCount,
-                'per_page'     => config('site-settings.pagination_per_page'),
-                'count'        => count(data_get($data, 'hits')),
+                'total_count' => $totalCount,
+                'per_page' => config('site-settings.pagination_per_page'),
+                'count' => count(data_get($data, 'hits')),
                 'current_page' => GO1Helper::getPage(),
-                'total_pages'  => ceil($totalCount / config('site-settings.pagination_per_page')),
-                'list'         => data_get($data, 'hits'),
+                'total_pages' => ceil($totalCount / config('site-settings.pagination_per_page')),
+                'list' => data_get($data, 'hits'),
             ];
         } catch (Exception $exception) {
             return false;
         }
     }
 
-    public function createResourceModule($body)
+    public function createResourceModule($request)
     {
         try {
-            return DB::transaction(function () use ($body) {
+            return DB::transaction(function () use ($request) {
+                $body = $request->go1_course;
                 $skills = data_get($body, 'skills') ?? [];
-                $resourceModule = $this->resourceModuleService->createFromGO1($body);
+                $resourceModule = $this->resourceModuleService->createResourceModule($request, null, true);
                 $resourceSkills = $this->resourceModuleService->storeGO1Skills($resourceModule->id, $skills);
 
                 if ($resourceModule && $resourceSkills) {
@@ -61,7 +62,7 @@ class GO1Repository implements GO1Interface
     {
         try {
             $params = [
-                'topics'    => 'facets=topics&limit=0',
+                'topics' => 'facets=topics&limit=0',
                 'providers' => 'facets=instance&limit=0',
             ];
 
@@ -75,14 +76,14 @@ class GO1Repository implements GO1Interface
 
             $providers = array_map(function ($item) {
                 return [
-                    'name'      => $item['name'] ?? '',
+                    'name' => $item['name'] ?? '',
                     'doc_count' => $item['doc_count'] ?? '',
-                    'key'       => $item['key'] ?? '',
+                    'key' => $item['key'] ?? '',
                 ];
             }, $providers);
 
             return [
-                'topics'    => $topics,
+                'topics' => $topics,
                 'providers' => $providers,
             ];
         } catch (Exception $exception) {
@@ -113,9 +114,9 @@ class GO1Repository implements GO1Interface
         try {
             if (!auth()->user()->go1_id) {
                 $response = GO1Helper::createUser([
-                    'email'      => explode('@', auth()->user()->email)[0].config('go1.go1_email_prefix').'@prepr.org',
+                    'email' => explode('@', auth()->user()->email)[0] . config('go1.go1_email_prefix') . '@prepr.org',
                     'first_name' => auth()->user()->first_name,
-                    'last_name'  => auth()->user()->last_name,
+                    'last_name' => auth()->user()->last_name,
                 ]);
                 $go1UserId = $response['id'];
                 UserService::mapGO1User($go1UserId, $response);

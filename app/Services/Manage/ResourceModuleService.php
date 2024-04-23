@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleSkillsGroupsStack;
 use App\Models\Skill;
+use App\Services\SkillService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Log;
@@ -30,7 +31,7 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
+                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%' . $request->search . '%');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -163,7 +164,7 @@ class ResourceModuleService
         }
     }
 
-    public function createResourceModule($request, $upload_cover_image)
+    public function createResourceModule($request, $upload_cover_image, $is_go1 = false)
     {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
@@ -218,28 +219,45 @@ class ResourceModuleService
                     break;
             }
 
+            $title = $request->title ?? null;
+            $organizationId = $organization->id ?? null;
+            $description = $request->description ?? null;
+            $go1Course = $request->go1_course ?? null;
+
+            if ($is_go1) {
+                $title = data_get($go1Course, 'title');
+                $organizationId = config('go1.go1_prepr_id');
+                $description = data_get($go1Course , 'description');
+                $privacy = config('constants.resource_module_privacy.yes');
+                $status = config('constants.resource_module_status.draft');
+                $is_global = config('constants.resource_module_is_global.no');
+                $is_ai_created = config('constants.challenge_ai_created.no');
+            }
+
             $model = new ResourceModule();
-            $slug = UtilityHelper::generateSlug($request->title, $model);
+            $slug = UtilityHelper::generateSlug($title, $model);
             $resourceModule = new ResourceModule();
             $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
             $resourceModule->user_id = auth()->user()->id;
-            $resourceModule->organization_id = $organization->id;
+            $resourceModule->organization_id = $organizationId;
             $resourceModule->duration_id = $request->duration_id;
             $resourceModule->level_id = $request->level_id;
-            $resourceModule->title = $request->title;
+            $resourceModule->title = $title;
             $resourceModule->slug = $slug;
-            $resourceModule->description = $request->description;
+            $resourceModule->description = $description;
             $resourceModule->media = $upload_cover_image;
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;
             $resourceModule->is_ai_created = $is_ai_created;
+            $resourceModule->go1_course_id = $is_go1 ? $go1Course['id'] : null;
+            $resourceModule->go1_metadata = $is_go1 ? $go1Course : null;
             $resourceModule->save();
 
             return $resourceModule;
         } catch (Exception $e) {
-            Log::error('Error in createResourceModule in ResourceModuleService.php: '.$e->getMessage());
+            Log::error('Error in createResourceModule in ResourceModuleService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -411,11 +429,7 @@ class ResourceModuleService
     public function storeGO1Skills($resourceModuleId, $skills = [])
     {
         try {
-            $skillsIds = array_map(function ($item) {
-                $data = Skill::firstOrCreate(['title' => $item['name']]);
-
-                return $data->id;
-            }, $skills);
+            $skillsIds = SkillService::createSkillFromGO1($skills);
 
             if (count($skills) > 0) {
                 foreach ($skillsIds as $id) {
