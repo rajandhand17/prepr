@@ -23,8 +23,8 @@ class GO1Repository implements GO1Interface
             $totalCount = min($data['total'], config('go1.go1_total_resource_data'));
 
             return [
-                'total_count' => $totalCount,
-                'per_page' => config('site-settings.pagination_per_page'),
+                'total_count' => (int)$totalCount,
+                'per_page' => (int)config('site-settings.pagination_per_page'),
                 'count' => count(data_get($data, 'hits')),
                 'current_page' => GO1Helper::getPage(),
                 'total_pages' => ceil($totalCount / config('site-settings.pagination_per_page')),
