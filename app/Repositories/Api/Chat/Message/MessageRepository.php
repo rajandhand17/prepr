@@ -48,7 +48,6 @@ class MessageRepository implements MessageInterface
     {
         try {
             DB::beginTransaction();
-
             $deleteMessage = $this->messageService->deleteMessage($data);
             if ($deleteMessage == false) {
                 DB::rollBack();
