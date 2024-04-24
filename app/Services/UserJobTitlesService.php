@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\UserJobTitle;
+use App\Models\UserSkills;
 
 class UserJobTitlesService
 {
@@ -23,13 +24,16 @@ class UserJobTitlesService
     public static function addJobs($request)
     {
         try {
-            $addedJobs = new UserJobTitle();
-            $addedJobs->user_id = auth()->user()->id;
-            $addedJobs->job_title_id = $request->job_title_id;
-            if ($addedJobs->save()) {
-                return true;
+            $getAllSkillsOfJobs=JobTitleSkillServices::getJobSkillsBasedOnJobId($request->job_title_id);
+            $addedUsersInSkills=UserSkillsService::addMultipleSkills($getAllSkillsOfJobs);
+            if($addedUsersInSkills){
+                $addedJobs = new UserJobTitle();
+                $addedJobs->user_id = auth()->user()->id;
+                $addedJobs->job_title_id = $request->job_title_id;
+                if ($addedJobs->save()) {
+                    return true;
+                }
             }
-
             return false;
         } catch(\Exception $e) {
             return false;
@@ -53,16 +57,22 @@ class UserJobTitlesService
         }
     }
 
-    public static function addJobPinned($jobId)
+    public static function addJobPinned($request)
     {
         try {
-            $userJobTitle = UserJobTitle::where(['user_id'=>auth()->user()->id, 'job_title_id'=>$jobId])->first();
+            $pinned = $request->pinned == 'yes' ? '1' : '0';
+            $userJobTitle = UserJobTitle::where(['user_id'=>auth()->user()->id, 'job_title_id'=>$request->job_id])->first();
             if ($userJobTitle) {
-                $userJobTitle->pinned = '1';
+                $userJobTitle->pinned = $pinned;
                 $userJobTitle->save();
+            }else {
+                $userJobTitle = UserJobTitle::create([
+                    'user_id' => auth()->user()->id,
+                    'job_title_id'=> $request->job_id,
+                    'pinned'  => $pinned,
+                ]);
             }
-
-            return false;
+            return $userJobTitle;
         } catch (\Exception $e) {
             return false;
         }
@@ -74,12 +84,22 @@ class UserJobTitlesService
             $job = UserJobTitle::where('id', $jobId)->first();
             if ($job) {
                 UserJobTitle::where('id', $jobId)->delete();
-
                 return true;
             }
-
             return false;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkJobExistsOrNot($jobId) {
+        try {
+            $job = UserJobTitle::where('id', $jobId)->first();
+            if($job){
+                return $job;
+            }
+            return false;
+        }catch (\Exception $e) {
             return false;
         }
     }

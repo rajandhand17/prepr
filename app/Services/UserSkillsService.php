@@ -123,4 +123,22 @@ class UserSkillsService
             return false;
         }
     }
+
+    public static function addMultipleSkills($skills){
+        try {
+            $userId = auth()->user()->id;
+            foreach ($skills as $value) {
+                $existingSkill = UserSkills::where(['user_id' => $userId, 'skill' => $value])->first();
+                if (!$existingSkill) {
+                    UserSkills::create([
+                        'user_id' => $userId,
+                        'skill'   => $value,
+                    ]);
+                }
+            }
+            return true;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

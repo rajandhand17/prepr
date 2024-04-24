@@ -1056,5 +1056,15 @@
     "responses.challenge_description_required": "The challenge description field is required",
     "responses.message_not_found": "Message not found",
     "responses.message_not_deleted": "Oops! The deletion of message has failed",
-    "responses.message_deleted": "you have successfully deleted message"
+    "responses.message_deleted": "you have successfully deleted message",
+    "responses.job_listing_successfully": "The job listing has been successfully retrieved",
+    "responses.already_added_job": "This job has been already added into your profile",
+    "responses.added_job_pinned_successfully": "This Job has been successfully pinned",
+    "responses.delete_job_successfully": "This Job has been successfully deleted",
+    "responses.delete_job_failed": "This Job has been failed to be deleted",
+    "responses.pinned_jobs_successfully": "You have successfully pinned this job",
+    "responses.pinned_jobs_successfully_removed": "You have successfully removed pinned job",
+    "responses.pinned_job_failed": "You have failed pinned this job",
+    "responses.job_id_required": "The Job field is required",
+    "responses.job_id_exists": "This job id is not exists"
 }

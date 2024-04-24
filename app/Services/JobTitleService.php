@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 
 class JobTitleService
 {
-    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null)
+    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null,$sortBy = null)
     {
         try {
             if ($language == 'en') {
@@ -32,6 +32,21 @@ class JobTitleService
                 $job_list = self::filterJobList($job_list, $column_name, $search);
             }
 
+            if ($sortBy !== null) {
+                switch ($sortBy) {
+                    case 'name-a-to-z':
+                        $job_list = $job_list->orderBy('job_titles.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $job_list = $job_list->orderBy('job_titles.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $job_list = $job_list->orderBy('job_titles.created_at', 'ASC');
+                        break;
+                    default:
+                        $job_list = $job_list->orderBy('job_titles.id', 'ASC');
+                }
+            }
             $job_list = $job_list->take(config('site-settings.dropdown_listing_limit'));
 
             if (auth()->user()) {
@@ -95,7 +110,7 @@ class JobTitleService
             $getUsersJobsIds = UserJobTitlesService::getUsersJobs();
             $getJobs = null;
             if ($getUsersJobsIds !== false) {
-                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds);
+                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds,$request->sort_by);
             }
 
             return $getJobs;

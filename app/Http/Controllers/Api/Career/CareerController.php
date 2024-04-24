@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api\Career;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Career\AddJobPinnedRequest;
+use App\Http\Resources\Career\AddJobResource;
 use App\Http\Resources\Career\careerResource;
 use App\Http\Resources\Career\JobDetailedResource;
+use App\Http\Resources\Public\Skill\AddSkillResource;
 use App\Repositories\Api\Career\CareerRepository;
 use App\Services\UserJobTitlesService;
 use Illuminate\Http\Request;
@@ -22,10 +25,17 @@ class CareerController extends AppBaseController
     {
         try {
             $getJobs = $this->careerRepository->getMyJobsListing($request);
-            if ($getJobs) {
-                return $this->sendResponse(careerResource::collection($getJobs), __('response.job_listing_successfully'));
+            if ($getJobs){
+                $response = [
+                    'total_count'  => $getJobs->total(),
+                    'per_page'     => $getJobs->perPage(),
+                    'count'        => $getJobs->count(),
+                    'current_page' => $getJobs->currentPage(),
+                    'total_pages'  => $getJobs->lastPage(),
+                    'list'         => careerResource::collection($getJobs),
+                ];
+                return $this->sendResponse($response, __('response.job_listing_successfully'));
             }
-
             return $this->sendResponse([], __('response.job_listing_successfully'));
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -50,15 +60,15 @@ class CareerController extends AppBaseController
         }
     }
 
-    public function addJobPinned($jobId)
+    public function jobPinned(AddJobPinnedRequest $request)
     {
         try {
-            $addedJobs = $this->careerRepository->addJobPinned($jobId);
-            if ($addedJobs) {
-                return $this->sendResponse($addedJobs, __('responses.added_jobs_successfully'));
+            $addedPinnedJobs = $this->careerRepository->addJobPinned($request);
+            if ($addedPinnedJobs) {
+                $message = $request->pinned == 'yes' ? __('responses.pinned_jobs_successfully') : __('responses.pinned_jobs_successfully_removed');
+                return $this->sendResponse(AddJobResource::make($addedPinnedJobs), $message);
             }
-
-            return $this->sendResponse([], __('responses.added_jobs_successfully'));
+            return $this->sendError(__('responses.pinned_job_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -67,9 +77,13 @@ class CareerController extends AppBaseController
     public function deleteJob($jobId)
     {
         try {
+            $checkJobExistsOrNot=UserJobTitlesService::checkJobExistsOrNot($jobId);
+            if(!$checkJobExistsOrNot){
+                return $this->sendError(__('responses.job_not_exists'),404);
+            }
             $deleteJob = $this->careerRepository->deleteJob($jobId);
             if ($deleteJob) {
-                return  $this->sendResponse([], __('responses.send_error'));
+                return  $this->sendResponse([], __('responses.delete_job_successfully'));
             }
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

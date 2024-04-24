@@ -39,10 +39,10 @@ class CareerRepository implements CareerInterface
         }
     }
 
-    public function addJobPinned($jobId)
+    public function addJobPinned($request)
     {
         try {
-            return $this->userJobTitleService->addJobPinned($jobId);
+            return $this->userJobTitleService->addJobPinned($request);
         } catch(\Exception $e) {
             return false;
         }
