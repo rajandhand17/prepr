@@ -48,8 +48,8 @@ class UserResource extends JsonResource
             'member_since'                => UtilityHelper::formatDateTime($this->created_at),
             'roles'                       => $roles,
             'go1'                         => [
-                'can_create_resource'     => $memberManagement->canCreateGO1Resource(),
-                'can_play_resource'       => $memberManagement->canPlayGO1Resoruces(),
+                'can_create_resource'     => $memberManagement->canCreateGO1Resource($this),
+                'can_play_resource'       => $memberManagement->canPlayGO1Resoruces($this),
             ],
             'notification'                => UserNotificationResource::make($this->userSetting),
             'privacy'                     => UserPrivacyResource::make($this->userSetting),
