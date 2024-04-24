@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Chat;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,6 +28,7 @@ class ConversationResource extends JsonResource
             'is_private'                => $this->is_private ? 'yes' : 'no',
             'users_count'               => $this->users()->count() ?? '0',
             'created_at'                => UtilityHelper::formatDateTime($this->created_at),
+            'members'                   => UserSearchResource::collection($this->users),
         ];
     }
 }
