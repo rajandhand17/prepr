@@ -644,4 +644,46 @@ class MemberManagementService
             return false;
         }
     }
+
+    public function isUserBelongToPrepr()
+    {
+        try {
+            $user = MemberManagement::query()
+                ->where('module_id', config('go1.go1_prepr_id'))
+                ->where('module_type', config('constants.member_management_component_type.organization'))
+                ->where('email', auth()->user()->email)
+                ->first();
+
+            if (!$user) {
+                return false;
+            }
+
+            return true;
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public function canPlayGO1Resoruces()
+    {
+        try {
+            return $this->isUserBelongToPrepr();
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public function canCreateGO1Resource()
+    {
+        try {
+            $isPreprUser = $this->isUserBelongToPrepr();
+            if (auth()->user() && auth()->user()->hasPermission('create_resource_module_from_go1') && $isPreprUser) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
 }

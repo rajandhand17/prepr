@@ -288,7 +288,11 @@ class PermissionSeeder extends Seeder
                 'display_name' => 'Impersonate User',
                 'description'  => "One User can switch login into another user's account",
             ],
-
+            [
+                'name'         => 'create_resource_module_from_go1',
+                'display_name' => 'Create Resource Module From go1',
+                'description'  => 'Allow user to create resource from go1',
+            ],
         ];
 
         foreach ($permission as $key => $permission_array) {
