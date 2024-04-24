@@ -20,5 +20,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{slug}/announcement/list', [ChallengeController::class, 'listAnnouncement']);
     Route::post('/ai/create/preview', [ChallengeController::class, 'createChallengeUsingAIPreview'])->middleware('permission:create_challenge');
     Route::post('/ai/create', [ChallengeController::class, 'createChallengeUsingAI'])->middleware('permission:create_challenge');
-    Route::get('/plan/Subscrption', [ChallengeController::class, 'planSubscrption']);
 });

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
-use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
@@ -474,23 +473,6 @@ class ChallengeController extends AppBaseController
             }
         } catch (Exception $e) {
             Log::error('Error in createChallengeUsingAI in ChallengeController.php: '.$e->getMessage());
-
-            return $this->sendError(__('responses.server_failed'), 500);
-        }
-    }
-
-    public function planSubscrption(Request $request)
-    {
-        try {
-            $organizationDetails = 19;
-
-            $planSubscrption = ChargebeeHelper::createChargebeePlanDetails($organizationDetails);
-            if ($planSubscrption) {
-                return $this->sendResponse([], __('responses.challenge_created_successfully'), 200);
-            }
-        } catch (\Exception $e) {
-            dd($e);
-            Log::error('Error in getJobTitles in MasterController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
         }
