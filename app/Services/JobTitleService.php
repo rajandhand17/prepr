@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 
 class JobTitleService
 {
-    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null,$sortBy = null)
+    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null, $sortBy = null)
     {
         try {
             if ($language == 'en') {
@@ -110,7 +110,7 @@ class JobTitleService
             $getUsersJobsIds = UserJobTitlesService::getUsersJobs();
             $getJobs = null;
             if ($getUsersJobsIds !== false) {
-                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds,$request->sort_by);
+                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds, $request->sort_by);
             }
 
             return $getJobs;

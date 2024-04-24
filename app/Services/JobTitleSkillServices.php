@@ -20,14 +20,16 @@ class JobTitleSkillServices
         }
     }
 
-    public static function getJobSkillsBasedOnJobId($jobId){
+    public static function getJobSkillsBasedOnJobId($jobId)
+    {
         try {
-            $getJobSKills=JobTitleSkill::where('job_title_id',$jobId)->pluck('skill_id')->unique();
-            if($getJobSKills){
+            $getJobSKills = JobTitleSkill::where('job_title_id', $jobId)->pluck('skill_id')->unique();
+            if ($getJobSKills) {
                 return $getJobSKills;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
