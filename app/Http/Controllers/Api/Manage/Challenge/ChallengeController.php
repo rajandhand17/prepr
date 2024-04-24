@@ -488,10 +488,9 @@ class ChallengeController extends AppBaseController
             if ($planSubscrption) {
                 return $this->sendResponse([], __('responses.challenge_created_successfully'), 200);
             }
-            
         } catch (\Exception $e) {
             dd($e);
-            Log::error('Error in getJobTitles in MasterController.php: ' . $e->getMessage());
+            Log::error('Error in getJobTitles in MasterController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
         }
