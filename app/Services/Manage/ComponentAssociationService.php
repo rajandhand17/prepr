@@ -385,7 +385,7 @@ class ComponentAssociationService
                         ['lab_id', '!=', null],
                     ])->select('sequence')->orderBy('id', 'desc')->first();
                     if ($sequences !== null) {
-                        $sequence = $sequence->sequence;
+                        $sequence = $sequences->sequence;
                     }
                     foreach ($newComponentAssociation as $lab_id) {
                         $sequence++;
