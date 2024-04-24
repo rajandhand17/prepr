@@ -25,17 +25,17 @@ class JobDetailedResource extends JsonResource
     {
         $getChallenges = null;
         $getAllLabs = null;
-        $getAllChallenges = $this->related_challenge->pluck('challenge_id')->take(4);
+        $getAllChallenges = $this->related_challenge->pluck('challenge_id')->take(config('site-settings.jobs_details_par_module_limit'));
         if ($getAllChallenges) {
             $getChallenges = ChallengeService::getChallengeBasedOnIds($getAllChallenges);
         }
-        $getAllLabs = $this->related_labs->pluck('lab_id')->take(4);
+        $getAllLabs = $this->related_labs->pluck('lab_id')->take(config('site-settings.jobs_details_par_module_limit'));
         if ($getAllLabs) {
             $getAllLabs = LabService::getLabsBasedOnIds($getAllLabs);
         }
 
         $getResources = $this->related_resources;
-        $getAllResources = $getResources->pluck('resource_collection_id')->take(4);
+        $getAllResources = $getResources->pluck('resource_collection_id')->take(config('site-settings.jobs_details_par_module_limit'));
         if ($getAllResources) {
             $resources = ResourceCollectionService::getResourceCollectionsBasedOnIds($getAllResources);
         }
