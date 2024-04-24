@@ -16,7 +16,7 @@ return new class() extends Migration {
             $table->string('related_lightcast_pathway_id');
             $table->string('category');
             $table->timestamps();
-
+            $table->softDeletes();
             $table->foreign('lightcast_pathway_id')->references('lightcast_pathway_id')->on('job_title_pathways')->onDelete('cascade');
             $table->foreign('related_lightcast_pathway_id')->references('lightcast_pathway_id')->on('job_title_pathways')->onDelete('cascade');
         });

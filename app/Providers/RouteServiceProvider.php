@@ -38,6 +38,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapProfileRoutes();
             $this->mapDiscussionsRoute();
             $this->mapExploreRoutes();
+            $this->mapCareerRoutes();
             $this->mapSettingRoutes();
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
@@ -79,6 +80,11 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapExploreRoutes()
     {
         Route::prefix('api/v1/explore/')->middleware('api')->group(base_path('routes/v1/explore.php'));
+    }
+
+    protected function mapCareerRoutes()
+    {
+        Route::prefix('api/v1/career/')->middleware('api')->group(base_path('routes/v1/career.php'));
     }
 
     public function mapDiscussionsRoute()

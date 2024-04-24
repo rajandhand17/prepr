@@ -1,14 +1,15 @@
 <?php
 
 return [
-    'pagination_per_page'    => '15',
-    'message_per_page'       => '30',
-    'listing_limit'          => '20',
-    'dropdown_listing_limit' => '20',
-    'explore_page_limit_max' => '12',
-    'explore_page_limit_min' => '6',
-    'aws_url'                => env('CDN_URL'),
-    'frontend_site_url'      => env('FRONTEND_SITE_URL'),
+    'pagination_per_page'          => '15',
+    'message_per_page'             => '30',
+    'listing_limit'                => '20',
+    'dropdown_listing_limit'       => '20',
+    'explore_page_limit_max'       => '12',
+    'explore_page_limit_min'       => '6',
+    'jobs_details_par_module_limit'=> '4',
+    'aws_url'                      => env('CDN_URL'),
+    'frontend_site_url'            => env('FRONTEND_SITE_URL'),
 
     'default_user_profile_image' => 'default_images/user.webp',
 
