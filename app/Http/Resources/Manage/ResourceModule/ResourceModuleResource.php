@@ -180,6 +180,7 @@ class ResourceModuleResource extends JsonResource
             'privacy'                                 => $privacy,
             'status'                                  => $status,
             'is_global'                               => $is_global,
+            'is_go1_resource'                         => $this->is_go1 ? 'yes' : 'no',
             'skills'                                  => $skills,
             'skill_groups'                            => $skill_groups,
             'skill_stacks'                            => $skill_stacks,
