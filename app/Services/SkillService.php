@@ -154,7 +154,7 @@ class SkillService
             return false;
         }
     }
-    
+
     public static function createSkillFromGO1($skills)
     {
         return array_map(function ($item) {

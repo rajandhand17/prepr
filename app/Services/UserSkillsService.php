@@ -124,7 +124,8 @@ class UserSkillsService
         }
     }
 
-    public static function addMultipleSkills($skills){
+    public static function addMultipleSkills($skills)
+    {
         try {
             $userId = auth()->user()->id;
             foreach ($skills as $value) {
@@ -136,8 +137,9 @@ class UserSkillsService
                     ]);
                 }
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

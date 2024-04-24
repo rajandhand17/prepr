@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Career;
 
 use App\Services\JobTitleService;
-use App\Services\SkillService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +15,8 @@ class AddJobResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $job=JobTitleService::getJobBasedOnId($this->job_id);
+        $job = JobTitleService::getJobBasedOnId($this->job_id);
+
         return [
             'id'     => $this->id,
             'skill'  => $job,
