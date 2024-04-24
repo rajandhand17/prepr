@@ -677,7 +677,7 @@ class MemberManagementService
     {
         try {
             $isPreprUser = $this->isUserBelongToPrepr();
-            if (auth()->user()->hasPermission('create_resource_module_from_go1') && $isPreprUser) {
+            if (auth()->user() && auth()->user()->hasPermission('create_resource_module_from_go1') && $isPreprUser) {
                 return true;
             }
 
