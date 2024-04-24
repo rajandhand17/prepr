@@ -166,7 +166,12 @@ class ResourceModuleService
     public function createResourceModule($request, $upload_cover_image, $is_go1 = false)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if($is_go1) {
+                $organizationId = config('go1.go1_prepr_id');
+            } else {
+                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+                $organizationId = $organization->id;
+            }
 
             $status = config('constants.resource_module_status.draft');
             switch ($request->status) {
@@ -220,7 +225,6 @@ class ResourceModuleService
 
             $go1Course = $is_go1 ? $request->go1_course : null;
             $title = $is_go1 ? data_get($go1Course, 'title') : $request->title;
-            $organizationId = $is_go1 ? config('go1.go1_prepr_id') : $organization->id;
             $description = $is_go1 ? data_get($go1Course, 'description') : $request->description;
 
             if ($is_go1) {
