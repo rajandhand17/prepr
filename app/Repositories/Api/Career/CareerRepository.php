@@ -3,7 +3,6 @@
 namespace App\Repositories\Api\Career;
 
 use App\Services\JobTitleService;
-use App\Services\RelatedJobTitleService;
 use App\Services\UserJobTitlesService;
 
 class CareerRepository implements CareerInterface
@@ -12,13 +11,11 @@ class CareerRepository implements CareerInterface
 
     private $userJobTitleService;
 
-    private $relatedJobTitleService;
 
-    public function __construct(RelatedJobTitleService $relatedJobTitleService, JobTitleService $jobTitleService, UserJobTitlesService $userJobTitleService)
+    public function __construct(JobTitleService $jobTitleService, UserJobTitlesService $userJobTitleService)
     {
         $this->jobTitleService = $jobTitleService;
         $this->userJobTitleService = $userJobTitleService;
-        $this->relatedJobTitleService = $relatedJobTitleService;
     }
 
     public function getMyJobsListing($request)
@@ -30,6 +27,13 @@ class CareerRepository implements CareerInterface
         }
     }
 
+    public function checkJobsExistsInUsers($job_id){
+      try{
+          return $this->userJobTitleService->checkJobsExistsInUsers($job_id);
+      }catch(\Exception $e){
+          return false;
+      }
+    }
     public function addJobs($request)
     {
         try {
@@ -48,6 +52,14 @@ class CareerRepository implements CareerInterface
         }
     }
 
+    public function checkJobExistsOrNot($jobId)
+    {
+        try {
+            return $this->userJobTitleService->checkJobExistsOrNot($jobId);
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
     public function deleteJob($jobId)
     {
         try {

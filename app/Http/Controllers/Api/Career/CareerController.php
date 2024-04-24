@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Career;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Career\AddJobPinnedRequest;
 use App\Http\Resources\Career\AddJobResource;
-use App\Http\Resources\Career\careerResource;
+use App\Http\Resources\Career\CareerResource;
 use App\Http\Resources\Career\JobDetailedResource;
 use App\Repositories\Api\Career\CareerRepository;
 use App\Services\UserJobTitlesService;
@@ -46,7 +46,7 @@ class CareerController extends AppBaseController
     public function addJobs(Request $request)
     {
         try {
-            $checkJobsExistsOrNot = UserJobTitlesService::checkJobsExistsInUsers($request->job_title_id);
+            $checkJobsExistsOrNot = $this->careerRepository->checkJobsExistsInUsers($request->job_id);
             if ($checkJobsExistsOrNot !== false) {
                 return $this->sendResponse($checkJobsExistsOrNot, __('responses.already_added_job'));
             }
@@ -80,7 +80,7 @@ class CareerController extends AppBaseController
     public function deleteJob($jobId)
     {
         try {
-            $checkJobExistsOrNot = UserJobTitlesService::checkJobExistsOrNot($jobId);
+            $checkJobExistsOrNot = $this->careerRepository->checkJobExistsOrNot($jobId);
             if (!$checkJobExistsOrNot) {
                 return $this->sendError(__('responses.job_not_exists'), 404);
             }
@@ -98,7 +98,7 @@ class CareerController extends AppBaseController
         try {
             $relatedCareer = $this->careerRepository->getRelatedCareer();
             if ($relatedCareer) {
-                return $this->sendResponse(careerResource::collection($relatedCareer), __('responses.get_related_career'));
+                return $this->sendResponse(CareerResource::collection($relatedCareer), __('responses.get_related_career'));
             }
 
             return $this->sendResponse([], __('responses.get_related_career'));

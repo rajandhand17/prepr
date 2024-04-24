@@ -23,12 +23,12 @@ class UserJobTitlesService
     public static function addJobs($request)
     {
         try {
-            $getAllSkillsOfJobs = JobTitleSkillServices::getJobSkillsBasedOnJobId($request->job_title_id);
+            $getAllSkillsOfJobs = JobTitleSkillServices::getJobSkillsBasedOnJobId($request->job_id);
             $addedUsersInSkills = UserSkillsService::addMultipleSkills($getAllSkillsOfJobs);
             if ($addedUsersInSkills) {
                 $addedJobs = new UserJobTitle();
                 $addedJobs->user_id = auth()->user()->id;
-                $addedJobs->job_title_id = $request->job_title_id;
+                $addedJobs->job_title_id = $request->job_id;
                 if ($addedJobs->save()) {
                     return true;
                 }

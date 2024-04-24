@@ -38,12 +38,6 @@ class JobTitle extends Model
     {
         return $this->hasMany(ChallengeSkillsGroupsStack::class, 'foreign_id', 'id')->where('type', '0');
     }
-
-    public function related_resource()
-    {
-        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'foreign_id', 'id')->where('type', '0');
-    }
-
     public function related_resources()
     {
         return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'foreign_id', 'id')->where('type', '0');
