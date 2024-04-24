@@ -645,16 +645,17 @@ class MemberManagementService
         }
     }
 
-    public function isUserBelongToPrepr()
+    public function isUserBelongToPrepr($user = null)
     {
         try {
-            $user = MemberManagement::query()
+            $user = $user ?? auth()->user();
+            $invitedUser = MemberManagement::query()
                 ->where('module_id', config('go1.go1_prepr_id'))
                 ->where('module_type', config('constants.member_management_component_type.organization'))
-                ->where('email', auth()->user()->email)
+                ->where('email', $user->email)
                 ->first();
 
-            if (!$user) {
+            if (!$invitedUser) {
                 return false;
             }
 
@@ -664,20 +665,24 @@ class MemberManagementService
         }
     }
 
-    public function canPlayGO1Resoruces()
+    public function canPlayGO1Resoruces($user = null)
     {
         try {
-            return $this->isUserBelongToPrepr();
+            $user = $user ?? auth()->user();
+
+            return $this->isUserBelongToPrepr($user);
         } catch (\Exception $exception) {
             return false;
         }
     }
 
-    public function canCreateGO1Resource()
+    public function canCreateGO1Resource($user = null)
     {
         try {
-            $isPreprUser = $this->isUserBelongToPrepr();
-            if (auth()->user() && auth()->user()->hasPermission('create_resource_module_from_go1') && $isPreprUser) {
+            $user = $user ?? auth()->user();
+
+            $isPreprUser = $this->isUserBelongToPrepr($user);
+            if ($user && $user->hasPermission('create_resource_module_from_go1') && $isPreprUser) {
                 return true;
             }
 

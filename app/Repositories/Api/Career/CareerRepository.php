@@ -11,7 +11,6 @@ class CareerRepository implements CareerInterface
 
     private $userJobTitleService;
 
-
     public function __construct(JobTitleService $jobTitleService, UserJobTitlesService $userJobTitleService)
     {
         $this->jobTitleService = $jobTitleService;
@@ -27,13 +26,15 @@ class CareerRepository implements CareerInterface
         }
     }
 
-    public function checkJobsExistsInUsers($job_id){
-      try{
-          return $this->userJobTitleService->checkJobsExistsInUsers($job_id);
-      }catch(\Exception $e){
-          return false;
-      }
+    public function checkJobsExistsInUsers($job_id)
+    {
+        try {
+            return $this->userJobTitleService->checkJobsExistsInUsers($job_id);
+        } catch(\Exception $e) {
+            return false;
+        }
     }
+
     public function addJobs($request)
     {
         try {
@@ -56,10 +57,11 @@ class CareerRepository implements CareerInterface
     {
         try {
             return $this->userJobTitleService->checkJobExistsOrNot($jobId);
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
+
     public function deleteJob($jobId)
     {
         try {

@@ -8,7 +8,6 @@ use App\Http\Resources\Career\AddJobResource;
 use App\Http\Resources\Career\CareerResource;
 use App\Http\Resources\Career\JobDetailedResource;
 use App\Repositories\Api\Career\CareerRepository;
-use App\Services\UserJobTitlesService;
 use Illuminate\Http\Request;
 
 class CareerController extends AppBaseController
