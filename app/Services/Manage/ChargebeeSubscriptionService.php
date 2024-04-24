@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\ChargebeeSubscription;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class ChargebeeSubscriptionService
 {

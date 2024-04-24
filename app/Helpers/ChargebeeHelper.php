@@ -161,7 +161,6 @@ class ChargebeeHelper
             } else {
                 return $data = [];
             }
-            
         } catch (Exception $e) {
             return false;
         }
