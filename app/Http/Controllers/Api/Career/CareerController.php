@@ -31,7 +31,7 @@ class CareerController extends AppBaseController
                     'count'        => $getJobs->count(),
                     'current_page' => $getJobs->currentPage(),
                     'total_pages'  => $getJobs->lastPage(),
-                    'list'         => careerResource::collection($getJobs),
+                    'list'         => CareerResource::collection($getJobs),
                 ];
 
                 return $this->sendResponse($response, __('response.job_listing_successfully'));
