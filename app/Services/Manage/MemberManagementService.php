@@ -658,6 +658,7 @@ class MemberManagementService
             if (!$invitedUser) {
                 return false;
             }
+
             return true;
         } catch (\Exception $exception) {
             return false;
@@ -668,6 +669,7 @@ class MemberManagementService
     {
         try {
             $user = $user ?? auth()->user();
+
             return $this->isUserBelongToPrepr($user);
         } catch (\Exception $exception) {
             return false;
