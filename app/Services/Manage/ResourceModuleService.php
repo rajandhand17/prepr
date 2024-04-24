@@ -166,7 +166,7 @@ class ResourceModuleService
     public function createResourceModule($request, $upload_cover_image, $is_go1 = false)
     {
         try {
-            if($is_go1) {
+            if ($is_go1) {
                 $organizationId = config('go1.go1_prepr_id');
             } else {
                 $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
