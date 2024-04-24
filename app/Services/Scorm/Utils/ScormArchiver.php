@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Services\Scorm\Utils;
+
 use App\Exceptions\Scrom\InvalidScormArchiveException;
 use App\Services\Scorm\Enum\ScormConstant;
 use App\Services\Scorm\Enum\ScormManifestVersions;
@@ -9,6 +11,7 @@ use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
 class ScormArchiver
 {
     /**
@@ -23,6 +26,7 @@ class ScormArchiver
      * @var Filesystem|Storage
      */
     public Filesystem|Storage $storage;
+
     /**
      * @param ScormLib $scormLib
      */
@@ -32,6 +36,7 @@ class ScormArchiver
         $this->scormFilesystemDisk = config('scorm.scorm_filesystem_disk');
         $this->storage = Storage::disk($this->scormFilesystemDisk);
     }
+
     /**
      * @throws InvalidScormArchiveException
      */
@@ -43,6 +48,7 @@ class ScormArchiver
         $scormUuid = Str::uuid();
         $scormDom = $this->getScormManifestContent($file);
         $scos = $this->scormLib->parseOrganizationsNode($scormDom);
+
         /** FORMATTED PARSED CONTENT */
         return [
             'uuid'      => $scormUuid,
@@ -53,6 +59,7 @@ class ScormArchiver
             'scos'      => $scos,
         ];
     }
+
     /**
      * @throws InvalidScormArchiveException
      */
@@ -71,8 +78,10 @@ class ScormArchiver
             throw new InvalidScormArchiveException('cannot_load_imsmanifest_message');
         }
         $zip->close();
+
         return $dom;
     }
+
     /**
      * @throws InvalidScormArchiveException
      */
@@ -93,8 +102,10 @@ class ScormArchiver
         if (!$version) {
             throw new InvalidScormArchiveException('cannot_load_imsmanifest_message');
         }
+
         return $version;
     }
+
     public function storeScormContent(string $filepath, UploadedFile $file)
     {
         try {
@@ -110,12 +121,14 @@ class ScormArchiver
                 $this->storage->delete($f);
             }
             $zip->close();
+
 //            $this->storage->putFileAs($filepath, $file, 'scorm.zip');
             return true;
         } catch (\Exception $exception) {
             return false;
         }
     }
+
     /**
      * @param \DOMDocument $scormData
      *
@@ -124,8 +137,10 @@ class ScormArchiver
     public function getCourseTitle(\DOMDocument $scormData): string
     {
         $element = $scormData->getElementsByTagName('title');
+
         return Str::of($element->item(0)->textContent)->trim('/n')->trim();
     }
+
     /**
      * @param string $hash
      *
@@ -135,6 +150,7 @@ class ScormArchiver
     {
         return sprintf('%s/%s/', $this->scormRootDirectory, $hash);
     }
+
     /**
      * @param string $path
      *
@@ -147,11 +163,13 @@ class ScormArchiver
             if ($this->storage->directoryExists($directory)) {
                 return $this->storage->deleteDirectory($directory);
             }
+
             return true;
         } catch (\Exception $exception) {
             return false;
         }
     }
+
     /**
      * @param string $url
      *
@@ -162,6 +180,7 @@ class ScormArchiver
         if (Str::substr($url, -1) === '/') {
             return substr($url, 0, -1);
         }
+
         return $url;
     }
 }
