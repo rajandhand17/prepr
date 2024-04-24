@@ -15,7 +15,7 @@ return new class() extends Migration {
             $table->bigInteger('challenge_id')->unsigned();
             $table->bigInteger('job_title_id')->unsigned();
             $table->timestamps();
-
+            $table->softDeletes();
             $table->foreign('challenge_id')
                 ->references('id')->on('challenges')
                 ->onDelete('cascade');

@@ -144,6 +144,17 @@ class SkillService
         }
     }
 
+    public static function getCurrentUsersMatchedSkills($skills)
+    {
+        try {
+            $getCurrentUsersSkills = UserSkillsService::getUserSkills();
+            if ($getCurrentUsersSkills) {
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function createSkillFromGO1($skills)
     {
         return array_map(function ($item) {
