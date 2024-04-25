@@ -105,6 +105,7 @@ class CareerController extends AppBaseController
                     'total_pages'  => $relatedCareer->lastPage(),
                     'list'         => CareerResource::collection($relatedCareer),
                 ];
+
                 return $this->sendResponse($response, __('responses.related_career_successfully'));
             }
 
