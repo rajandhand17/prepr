@@ -107,7 +107,7 @@ class JobTitleService
     public static function getJobsBasedOnUsers($request)
     {
         try {
-            $getUsersJobsIds = UserJobTitlesService::getUsersJobs();
+            $getUsersJobsIds = UserJobTitlesService::getUsersJobs($request->pinned);
             $getJobs = null;
             if ($getUsersJobsIds !== false) {
                 $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds, $request->sort_by);
@@ -124,7 +124,7 @@ class JobTitleService
         try {
             $getCurrentUsersSkills = UserSkillsService::getUserSkills();
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
-            $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
+            $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs()->toArray();
             $getJobIds = array_diff($getJobsIdsBasedOnSkills, $getCurrentUsersJobs);
             $getJobTitle = JobTitle::whereIn('id', $getJobIds)->get();
 
