@@ -126,8 +126,8 @@ class JobTitleService
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
             $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs()->toArray();
             $getJobIds = array_diff($getJobsIdsBasedOnSkills, $getCurrentUsersJobs);
-            $getJobTitle = JobTitle::whereIn('id', $getJobIds)->get();
-
+            $getJobTitle = JobTitle::whereIn('id', $getJobIds)->take(config('site-settings.dropdown_listing_limit'));
+            $getJobTitle = $getJobTitle->paginate(config('site-settings.pagination_per_page'));
             if ($getJobTitle) {
                 return $getJobTitle;
             }

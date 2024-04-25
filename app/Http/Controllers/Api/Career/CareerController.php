@@ -97,7 +97,15 @@ class CareerController extends AppBaseController
         try {
             $relatedCareer = $this->careerRepository->getRelatedCareer();
             if ($relatedCareer) {
-                return $this->sendResponse(CareerResource::collection($relatedCareer), __('responses.related_career_successfully'));
+                $response = [
+                    'total_count'  => $relatedCareer->total(),
+                    'per_page'     => $relatedCareer->perPage(),
+                    'count'        => $relatedCareer->count(),
+                    'current_page' => $relatedCareer->currentPage(),
+                    'total_pages'  => $relatedCareer->lastPage(),
+                    'list'         => CareerResource::collection($relatedCareer),
+                ];
+                return $this->sendResponse($response, __('responses.related_career_successfully'));
             }
 
             return $this->sendResponse([], __('responses.related_career_successfully'));
