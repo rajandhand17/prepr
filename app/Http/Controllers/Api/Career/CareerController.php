@@ -113,6 +113,7 @@ class CareerController extends AppBaseController
             if ($jobDetailed) {
                 return $this->sendResponse(JobDetailedResource::make($jobDetailed), __('responses.get_job_details'));
             }
+
             return $this->sendError(__('responses.job_not_exists'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
