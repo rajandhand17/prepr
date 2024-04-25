@@ -42,7 +42,6 @@ class CareerController extends AppBaseController
         }
     }
 
-
     public function addJobs(Request $request)
     {
         try {
