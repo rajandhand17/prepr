@@ -257,7 +257,7 @@ class ChallengeService
             $source_link = $request->source_link ?? null;
 
             $model = new Challenge();
-            $slug = UtilityHelper::generateSlug($request->challengeTitle, $model);
+            $slug = UtilityHelper::generateSlug($request->title, $model);
 
             $challenge = new Challenge();
             $challenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
