@@ -268,8 +268,8 @@ class ChallengeService
             $challenge->category_id = $request->category_id;
             $challenge->duration_id = $request->duration_id;
             $challenge->level_id = $request->level_id;
-            $challenge->title = $request->challengeTitle;
-            $challenge->description = $request->challengeDescription;
+            $challenge->title = $request->title;
+            $challenge->description = $request->description;
             $challenge->privacy = $challenge_privacy;
             $challenge->media_type = 'image';
             $challenge->media = $upload_cover_image;
