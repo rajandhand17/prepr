@@ -23,20 +23,6 @@ class UserJobTitlesService
             return false;
         }
     }
-
-    public static function getUsersPinnedJobs()
-    {
-        try {
-            $getCurrentUsersJobs = UserJobTitle::where(['user_id'=>auth()->user()->id,'pinned'=>'1'])->pluck('job_title_id')->unique();
-            if (!empty($getCurrentUsersJobs)) {
-                return $getCurrentUsersJobs;
-            }
-
-            return false;
-        } catch(\Exception $e) {
-            return false;
-        }
-    }
     public static function addJobs($request)
     {
         try {
