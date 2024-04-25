@@ -431,7 +431,7 @@ class ChallengeService
     public static function getChallengeBasedOnId($id)
     {
         try {
-            return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $id)->first();
+            return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'is_open')->where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }
