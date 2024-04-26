@@ -36,7 +36,8 @@ class Skill extends Model
         return $this->hasMany(LabSkillsGroupsStack::class, 'foreign_id', 'id')->where('type', '0');
     }
 
-    public  function getRelatedResources(){
+    public function getRelatedResources()
+    {
         return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'foreign_id', 'id')->where('type', '0');
     }
 }

@@ -19,9 +19,9 @@ class SkillResource extends JsonResource
             'id'                     => $this->id,
             'title'                  => $this->title,
             'relatedSkills'          => WikipediaHelper::fetchRelatedSkills(config('wikipedia.SKILLS_RECOMMENDATION_ENGINE_URL').strtolower($this->title)),
-            'challenges'             => $this->getChallenges!=null ? $this->getChallenges->count() : '0',
-            'labs'                   => $this->getLabs!=null ? $this->getLabs->count() : '0',
-            'related_resources'      =>$this->getLlatedResources!=null ? $this->getLlatedResources->count() : '0',
+            'challenges'             => $this->getChallenges != null ? $this->getChallenges->count() : '0',
+            'labs'                   => $this->getLabs != null ? $this->getLabs->count() : '0',
+            'related_resources'      => $this->getLlatedResources != null ? $this->getLlatedResources->count() : '0',
         ];
     }
 }
