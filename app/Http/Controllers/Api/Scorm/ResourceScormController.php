@@ -60,6 +60,11 @@ class ResourceScormController extends AppBaseController
     {
         try {
             $resource = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+
+            if (!$resource) {
+                return $this->sendError(__('responses.resource_module_not_found'), Response::HTTP_NOT_FOUND);
+            }
+
             $scorm = $resource->scorm;
 
             if (!$scorm) {

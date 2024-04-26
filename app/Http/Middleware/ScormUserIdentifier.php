@@ -4,9 +4,6 @@ namespace App\Http\Middleware;
 
 use App\Services\Scorm\ScormUserTokenService;
 use Closure;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,7 +47,6 @@ class ScormUserIdentifier
             return false;
         }
     }
-
 
     public function handleMiddlewareVerificationFail(Request $request)
     {
