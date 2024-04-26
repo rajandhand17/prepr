@@ -16,7 +16,7 @@ interface CareerInterface
 
     public function deleteJob($jobId);
 
-    public function getRelatedCareer();
+    public function getRelatedCareer($request);
 
     public function getJobDetails($id);
 }

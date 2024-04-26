@@ -71,10 +71,10 @@ class CareerRepository implements CareerInterface
         }
     }
 
-    public function getRelatedCareer()
+    public function getRelatedCareer($request)
     {
         try {
-            return $this->jobTitleService->getRelatedCareer();
+            return $this->jobTitleService->getRelatedCareer($request);
         } catch(\Exception $e) {
             return false;
         }

@@ -2,6 +2,7 @@
 
 return [
     'pagination_per_page'          => '15',
+    'pagination_per_page_career'   => '3',
     'message_per_page'             => '30',
     'listing_limit'                => '20',
     'dropdown_listing_limit'       => '20',
