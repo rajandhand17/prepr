@@ -109,7 +109,7 @@ class Project extends Model
     public function votes()
     {
         if (auth('api')->check()) {
-            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'vote' => '1'])->count();
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['vote' => '1'])->count();
         }
 
         return 0;
@@ -118,7 +118,7 @@ class Project extends Model
     public function shares()
     {
         if (auth('api')->check()) {
-            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['user_id' => auth('api')->user()->id, 'share' => '1'])->count();
+            return $this->hasMany(ProjectSocialActivity::class, 'project_id', 'id')->where(['share' => '1'])->count();
         }
 
         return 0;

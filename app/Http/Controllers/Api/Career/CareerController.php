@@ -97,10 +97,19 @@ class CareerController extends AppBaseController
         try {
             $relatedCareer = $this->careerRepository->getRelatedCareer();
             if ($relatedCareer) {
-                return $this->sendResponse(CareerResource::collection($relatedCareer), __('responses.get_related_career'));
+                $response = [
+                    'total_count'  => $relatedCareer->total(),
+                    'per_page'     => $relatedCareer->perPage(),
+                    'count'        => $relatedCareer->count(),
+                    'current_page' => $relatedCareer->currentPage(),
+                    'total_pages'  => $relatedCareer->lastPage(),
+                    'list'         => CareerResource::collection($relatedCareer),
+                ];
+
+                return $this->sendResponse($response, __('responses.related_career_successfully'));
             }
 
-            return $this->sendResponse([], __('responses.get_related_career'));
+            return $this->sendResponse([], __('responses.related_career_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -113,6 +122,8 @@ class CareerController extends AppBaseController
             if ($jobDetailed) {
                 return $this->sendResponse(JobDetailedResource::make($jobDetailed), __('responses.get_job_details'));
             }
+
+            return $this->sendError(__('responses.job_not_exists'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
