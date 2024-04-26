@@ -2,6 +2,7 @@ import {createContext, useState} from "react";
 import {useQuery} from "react-query";
 import ScormService from "../../core/services/scorm.service";
 import useComputed from "../../core/hooks/useComputed";
+import Modal from "../../components/modal";
 
 /**
  * Scorm context
@@ -16,6 +17,9 @@ const ScormContextWrapper = ({children}) => {
      */
     const [scormUUID] = useState(window?.scorm_uuid || null)
     const [activeSco, setActiveSco] = useState(null);
+    const [showErrorModal, setShowErrorModal] = useState(false)
+    const [errorMessage, setErrorMessage] = useState(null)
+
     /**
      * TRACKING ID
      */
@@ -41,7 +45,17 @@ const ScormContextWrapper = ({children}) => {
             } else {
                 setActiveSco(fistsco?.children[0])
             }
-        }
+        },
+        onError(error) {
+            if(error?.response?.status === 401){
+                setShowErrorModal(true)
+                setErrorMessage(window?.scorm_translations?.session_expired || 'Session expired !')
+            }else if(error?.response?.status === 404){
+                setShowErrorModal(true)
+                setErrorMessage(window?.scorm_translations?.not_found || "The scorm file doesn't exist !")
+            }
+        },
+        retry: false,
     })
 
     /**
@@ -54,9 +68,9 @@ const ScormContextWrapper = ({children}) => {
     /**
      * SCORM PREVIOUS TRACK
      */
-    const scormTracking = useComputed(()=>{
+    const scormTracking = useComputed(() => {
         return activeSco?.tracking || null
-    },[activeSco])
+    }, [activeSco])
 
 
     return (
@@ -69,9 +83,22 @@ const ScormContextWrapper = ({children}) => {
                 scormVersion,
                 setActiveSco,
                 trackingId,
-                scormTracking
+                scormTracking,
+                setShowErrorModal,
+                setErrorMessage
             }}>
-                {children}
+
+                {/*Error modal*/}
+                {
+                    showErrorModal && errorMessage ?
+                        <Modal>
+                            {errorMessage ?? ''}
+                        </Modal> :
+                        <>
+                            {children}
+                        </>
+                }
+                {/*Error modal*/}
             </ScormContext.Provider>
         </>
     )

@@ -9,7 +9,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** UPLOAD SCORM FILE IN RESOURCE MODULE */
     Route::post('/resource-module/upload/{slug}', [ResourceScormController::class, 'upload']);
     /** SCORM PLAYER URL */
-    Route::get('/resource-module/player-url/{slug}', [ResourceScormController::class, 'scormUrl']);
+    Route::get('/resource-module/player-url/{slug}', [ResourceScormController::class, 'scormUrl'])->middleware('language');
 });
 
 Route::group(['middleware' => 'scorm.userIdentifier'], function () {

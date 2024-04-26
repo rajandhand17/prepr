@@ -193,10 +193,11 @@ class ScormService
             }
 
             return sprintf(
-                '%s/scorm-player/%s?tracking_id=%s',
+                '%s/scorm-player/%s?tracking_id=%s&language=%s',
                 UtilityHelper::sanitizeUrl(config('scorm.scorm_app_base_url', '')),
                 $scorm->uuid,
-                $scormUserToken->token
+                $scormUserToken->token,
+                app()->getLocale()
             );
         } catch (\Exception $exception) {
             return false;

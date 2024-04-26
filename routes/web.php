@@ -23,4 +23,4 @@ Route::get('/', function () {
 Route::get('scorm/{url}', [ScormProxyController::class, 'scormFileLink'])->name('scormFileLink')->where('url', '.*');
 
 /** SCORM PLAYER */
-Route::get('/scorm-player/{scorm_uuid}', ScormPlayerController::class)->middleware('scorm.userIdentifier');
+Route::get('/scorm-player/{scorm_uuid}', ScormPlayerController::class)->middleware(['scorm.userIdentifier', 'language']);

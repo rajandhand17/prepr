@@ -2,7 +2,7 @@ import ScormService from "../services/scorm.service"
 import {useCallback, useEffect, useState} from "react"
 import scormVersionsConstant from "../constant/scorm-versions.constant";
 
-const useScormApi = (activeSco, scormVersion, trackingId, progress = null) => {
+const useScormApi = (activeSco, scormVersion, trackingId, trackingCallback, progress = null) => {
 
     /**
      * STATE
@@ -42,13 +42,11 @@ const useScormApi = (activeSco, scormVersion, trackingId, progress = null) => {
         if (activeSco) {
             const data = {}
             data[key] = value
-            if (activeSco?.uuid) {
-                ScormService.trackProgress(activeSco?.uuid, scormVersion, data, trackingId)
-            }
+            trackingCallback(data)
         }
         // console.log({key,value})
         return ""
-    }, [activeSco])
+    }, [activeSco, trackingCallback])
 
     /**
      *
@@ -131,7 +129,7 @@ const useScormApi = (activeSco, scormVersion, trackingId, progress = null) => {
                 setPlayerReady(true)
             })
         }
-    }, [activeSco]);
+    }, [activeSco, trackingCallback]);
 
     return {
         isPlayerReady: playerReady

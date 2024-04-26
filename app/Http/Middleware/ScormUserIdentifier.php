@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Services\Scorm\ScormUserTokenService;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ class ScormUserIdentifier
      *
      * @param Closure(Request): (Response) $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         $tracking_id = $request->get('tracking_id');
         if (!$tracking_id) {
@@ -50,17 +51,12 @@ class ScormUserIdentifier
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return View|JsonResponse
-     */
-    public function handleMiddlewareVerificationFail(Request $request): View|JsonResponse
+
+    public function handleMiddlewareVerificationFail(Request $request)
     {
         if ($request->expectsJson()) {
             return response()->json(['message' => __('Unauthorized.')], 401);
         }
-
-        return view('404');
+        abort(403);
     }
 }
