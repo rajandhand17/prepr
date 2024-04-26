@@ -188,7 +188,7 @@ class UserService
             return false;
         }
     }
-    
+
     public static function mapGO1User($go1UserId, $response)
     {
         try {

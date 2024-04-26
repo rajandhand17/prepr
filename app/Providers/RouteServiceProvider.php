@@ -155,7 +155,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api/v1/team/matching/')->middleware('api')->group(base_path('routes/v1/team-matching.php'));
     }
-    
+
     public function mapGO1Routes()
     {
         Route::prefix('api/v1/go1')->middleware('api')->group(base_path('routes/v1/go1.php'));
