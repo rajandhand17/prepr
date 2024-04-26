@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Career;
 
+use App\Helpers\WikipediaHelper;
 use App\Http\Resources\Master\SkillResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,6 +20,7 @@ class CareerResource extends JsonResource
             'id'               => $this->id,
             'uuid'             => $this->uuid,
             'title'            => $this->title,
+            'description'      => WikipediaHelper::fetchSkillDescription($this->title, $request->language),
             'skills'           => SkillResource::collection($this->skills),
             'lightcast_id'     => $this->lightcast_id,
             'related_challenge'=> $this->related_resource == null ? 0 : $this->related_challenge->count(),
