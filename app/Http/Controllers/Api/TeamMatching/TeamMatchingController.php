@@ -24,59 +24,29 @@ class TeamMatchingController extends AppBaseController
             }
             switch ($action) {
                 case 'browse':
-                    $getBrowserRequest = $this->teamMatchingRepository->getBrowsersList($request);
-                    if ($getBrowserRequest) {
-                        $response = [
-                            'total_count'  => $getBrowserRequest->total(),
-                            'per_page'     => $getBrowserRequest->perPage(),
-                            'count'        => $getBrowserRequest->count(),
-                            'current_page' => $getBrowserRequest->currentPage(),
-                            'total_pages'  => $getBrowserRequest->lastPage(),
-                            'list'         => TeamMatchingResource::collection($getBrowserRequest),
-                        ];
-                        $message = __('responses.team_matching_list_successfully');
-                    } else {
-                        $response = [];
-                        $message = __('responses.team_matching_list_successfully');
-                    }
+                    $getlist = $this->teamMatchingRepository->getBrowsersList($request);
                     break;
                 case 'pending':
-                    $getPendingRequests = $this->teamMatchingRepository->getPendingRequests($request);
-                    if (!empty($getPendingRequests)) {
-                        $response = [
-                            'total_count'  => $getPendingRequests->total(),
-                            'per_page'     => $getPendingRequests->perPage(),
-                            'count'        => $getPendingRequests->count(),
-                            'current_page' => $getPendingRequests->currentPage(),
-                            'total_pages'  => $getPendingRequests->lastPage(),
-                            'list'         => TeamMatchingResource::collection($getPendingRequests),
-                        ];
-                        $message = __('responses.team_matching_list_successfully');
-                    } else {
-                        $response = [];
-                        $message = __('responses.team_matching_list_successfully');
-                    }
+                    $getlist = $this->teamMatchingRepository->getPendingRequests($request);
                     break;
                 case 'matched':
-                    $getMatchingRequest = $this->teamMatchingRepository->getMatchingTeams($request);
-                    if (!empty($getMatchingRequest)) {
-                        $response = [
-                            'total_count'  => $getMatchingRequest->total(),
-                            'per_page'     => $getMatchingRequest->perPage(),
-                            'count'        => $getMatchingRequest->count(),
-                            'current_page' => $getMatchingRequest->currentPage(),
-                            'total_pages'  => $getMatchingRequest->lastPage(),
-                            'list'         => TeamMatchingResource::collection($getMatchingRequest),
-                        ];
-                        $message = __('responses.team_matching_list_successfully');
-                    } else {
-                        $response = [];
-                        $message = __('responses.team_matching_list_successfully');
-                    }
+                    $getlist = $this->teamMatchingRepository->getMatchingTeams($request);
+
                     break;
             }
-
-            return $this->sendResponse($response, $message);
+            if ($getlist) {
+                $response = [
+                    'total_count'  => $getlist->total(),
+                    'per_page'     => $getlist->perPage(),
+                    'count'        => $getlist->count(),
+                    'current_page' => $getlist->currentPage(),
+                    'total_pages'  => $getlist->lastPage(),
+                    'list'         => TeamMatchingResource::collection($getlist),
+                ];
+            } else {
+                $response = [];
+            }
+            return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
