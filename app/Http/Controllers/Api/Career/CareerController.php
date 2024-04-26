@@ -92,10 +92,10 @@ class CareerController extends AppBaseController
         }
     }
 
-    public function getRelatedCareer()
+    public function getRelatedCareer(Request $request)
     {
         try {
-            $relatedCareer = $this->careerRepository->getRelatedCareer();
+            $relatedCareer = $this->careerRepository->getRelatedCareer($request);
             if ($relatedCareer) {
                 $response = [
                     'total_count'  => $relatedCareer->total(),

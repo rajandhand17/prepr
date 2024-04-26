@@ -50,7 +50,7 @@ class JobTitleService
             $job_list = $job_list->take(config('site-settings.dropdown_listing_limit'));
 
             if (auth()->user()) {
-                $job_list = $job_list->paginate(config('site-settings.pagination_per_page'));
+                $job_list = $job_list->paginate(config('site-settings.pagination_per_page_career'));
             } else {
                 $job_list = $job_list->get();
             }
@@ -119,15 +119,14 @@ class JobTitleService
         }
     }
 
-    public static function getRelatedCareer()
+    public static function getRelatedCareer($request)
     {
         try {
             $getCurrentUsersSkills = UserSkillsService::getUserSkills();
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
             $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs()->toArray();
             $getJobIds = array_diff($getJobsIdsBasedOnSkills, $getCurrentUsersJobs);
-            $getJobTitle = JobTitle::whereIn('id', $getJobIds)->take(config('site-settings.dropdown_listing_limit'));
-            $getJobTitle = $getJobTitle->paginate(config('site-settings.pagination_per_page'));
+            $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
             if ($getJobTitle) {
                 return $getJobTitle;
             }
