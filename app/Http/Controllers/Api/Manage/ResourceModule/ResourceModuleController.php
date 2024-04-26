@@ -282,7 +282,7 @@ class ResourceModuleController extends AppBaseController
             $createResourceModuleUsingAIPreview = $this->resourceModuleRepository->createResourceModuleUsingAIPreview($request);
 
             if ($createResourceModuleUsingAIPreview) {
-                return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_module_previews_created_successfully'), 200);
+                return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_modules_previews_created_successfully'), 200);
             } else {
                 throw new Exception('createResourceModuleUsingAIPreview has no value!');
             }
@@ -297,15 +297,15 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
-            $CreateResourceModuleUsingAI = $this->resourceModuleRepository->CreateResourceModuleUsingAI($request, $upload_cover_image);
+            $createResourceModuleUsingAI = $this->resourceModuleRepository->CreateResourceModuleUsingAI($request, $upload_cover_image);
 
-            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request->all(), $CreateResourceModuleUsingAI->id);
+            $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request, $createResourceModuleUsingAI->id);
 
             if ($request['challenge_id']) {
                 $challengeID = ChallengeService::getChallengeIdBasedOnUUID($request['challenge_id']);
                 $challengeResourceModule = ComponentAssociation::create([
                     'challenge_id'       => $challengeID,
-                    'resource_module_id' => $CreateResourceModuleUsingAI->id,
+                    'resource_module_id' => $createResourceModuleUsingAI->id,
                 ]);
 
                 if (!$challengeResourceModule) {
@@ -317,8 +317,8 @@ class ResourceModuleController extends AppBaseController
                 throw new Exception('createResourceModuleDetailsAI has no value!');
             }
 
-            if ($CreateResourceModuleUsingAI) {
-                return $this->sendResponse(ResourceModuleResource::make($CreateResourceModuleUsingAI), __('responses.resource_module_created_successfully'), 200);
+            if ($createResourceModuleUsingAI) {
+                return $this->sendResponse(ResourceModuleResource::make($createResourceModuleUsingAI), __('responses.resource_module_created_successfully'), 200);
             } else {
                 throw new Exception('CreateResourceModuleUsingAI has no value!');
             }

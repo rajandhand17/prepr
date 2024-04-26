@@ -385,7 +385,7 @@ return [
     ],
     'conversation_type_id' => [
         '0' => 'direct_message',
-        '1' => 'group_message',
+        '1' => 'group',
         '2' => 'announcement',
     ],
 

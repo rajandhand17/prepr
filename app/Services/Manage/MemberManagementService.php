@@ -409,7 +409,7 @@ class MemberManagementService
                                 'email_body'    => $emailBody,
                             ]);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
-                            $email_detail = ['invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                             $invited_emails[] = $member['invitee_email'];
                         } else {
@@ -420,7 +420,6 @@ class MemberManagementService
                     }
                 }
                 DB::commit();
-
                 if (count($invalid_emails) > 0 || count($already_members) > 0) {
                     if (count($invited_emails) < 1) {
                         switch ($component) {
@@ -522,9 +521,8 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->get();
-            if ($member_manger) {
+            if ($member_manger->isNotEmpty()) {
                 return true;
             }
 
@@ -643,6 +641,53 @@ class MemberManagementService
 
             return $requestedData;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function isUserBelongToPrepr($user = null)
+    {
+        try {
+            $user = $user ?? auth()->user();
+            $invitedUser = MemberManagement::query()
+                ->where('module_id', config('go1.go1_prepr_id'))
+                ->where('module_type', config('constants.member_management_component_type.organization'))
+                ->where('email', $user->email)
+                ->first();
+
+            if (!$invitedUser) {
+                return false;
+            }
+
+            return true;
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public function canPlayGO1Resoruces($user = null)
+    {
+        try {
+            $user = $user ?? auth()->user();
+
+            return $this->isUserBelongToPrepr($user);
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public function canCreateGO1Resource($user = null)
+    {
+        try {
+            $user = $user ?? auth()->user();
+
+            $isPreprUser = $this->isUserBelongToPrepr($user);
+            if ($user && $user->hasPermission('create_resource_module_from_go1') && $isPreprUser) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $exception) {
             return false;
         }
     }

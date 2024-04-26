@@ -46,10 +46,10 @@ class ConversationRepository implements ConversationInterface
         }
     }
 
-    public function archiveOrSeenOrDelete(string $uuid, string $action)
+    public function archiveOrUnarchiveOrSeenOrDelete(string $uuid, string $action)
     {
         try {
-            return $this->conversationService->archiveOrSeenOrDelete($uuid, $action);
+            return $this->conversationService->archiveOrUnarchiveOrSeenOrDelete($uuid, $action);
         } catch (Exception $e) {
             return false;
         }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Chat;
 
+use App\Http\Resources\Chat\ConversationResource;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\ConversationSeenMessage;
@@ -9,6 +10,7 @@ use App\Models\User;
 use App\Notifications\ConversationArchived;
 use App\Notifications\ConversationCreated;
 use App\Notifications\ConversationDeleted;
+use App\Notifications\ConversationUnArchived;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\DB;
@@ -116,13 +118,19 @@ class ConversationService
         try {
             if ($type === 'delete') {
                 $conversationUserIds = $deletedUserIds;
-            } elseif ($type === 'archived' || $type === 'created') {
+            } elseif ($type === 'archived' || $type === 'created' || $type === 'unarchived') {
                 $conversationUserIds = $this->getConversationUsersId($conversationId);
             } else {
                 return false;
             }
 
             $conversation = $this->getById($conversationId);
+            if ($conversation) {
+                $conversation = collect(ConversationResource::make($conversation));
+            } else {
+                $conversation = ['uuid' => request()->route()->parameter('uuid')];
+            }
+
             $userIds = array_filter($conversationUserIds, function ($item) {
                 return $item !== auth()->user()->id;
             });
@@ -137,6 +145,9 @@ class ConversationService
                     break;
                 case 'archived':
                     Notification::send($users, new ConversationArchived($conversation, $userIds));
+                    break;
+                case 'unarchived':
+                    Notification::send($users, new ConversationUnArchived($conversation, $userIds));
                     break;
                 default:
                     return false;
@@ -216,6 +227,18 @@ class ConversationService
         }
     }
 
+    private function unarchive(int $id)
+    {
+        try {
+            Conversation::where('id', $id)->update(['is_archived' => false]);
+            $this->notify($id, 'unarchived');
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     private function delete(int $id)
     {
         try {
@@ -252,9 +275,9 @@ class ConversationService
                 ->whereHas('users', function ($query) {
                     $query->where('user_id', auth()->user()->id);
                 })->orderByDesc(
-                    ConversationMessage::select('created_at')
+                    ConversationMessage::select('updated_at')
                         ->whereColumn('conversation_id', 'conversations.id')
-                        ->orderByDesc('created_at')
+                        ->orderByDesc('updated_at')
                         ->limit(1)
                 );
 
@@ -262,11 +285,11 @@ class ConversationService
                 case 'archive':
                     $conversation->where('is_archived', true);
                     break;
-                case 'non-archive':
+                case 'inbox':
                     $conversation->where('is_archived', false);
                     break;
                 default:
-                    return false;
+                    $conversation->where('is_archived', false);
             }
 
             if (request()->has('search')) {
@@ -299,7 +322,7 @@ class ConversationService
         }
     }
 
-    public function archiveOrSeenOrDelete(string $uuid, $action)
+    public function archiveOrUnarchiveOrSeenOrDelete(string $uuid, $action)
     {
         try {
             $conversation = $this->getByUUID($uuid);
@@ -310,6 +333,9 @@ class ConversationService
             switch ($action) {
                 case 'archive':
                     $this->archive($conversation->id);
+                    break;
+                case 'un-archive':
+                    $this->unarchive($conversation->id);
                     break;
                 case 'seen':
                     $this->markAsSeen($conversation->id, auth()->user()->id, data_get($conversation->lastMessage()->first(), 'id'));

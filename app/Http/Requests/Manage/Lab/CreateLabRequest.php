@@ -64,39 +64,39 @@ class CreateLabRequest extends FormRequest
 
         if ($achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
-            $base_rules['achievement_points'] = 'required';
+            $base_rules['achievement_points'] = 'required|integer';
             $base_rules['achievement_conditions'] = 'required|array';
             $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
         }
 
         if ($this->request->has('lab_programs')) {
             $base_rules['lab_programs'] = 'array';
-            $base_rules['lab_programs.*'] = 'numeric';
+            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
         }
 
         if ($this->request->has('challenges')) {
             $base_rules['challenges'] = 'array';
-            $base_rules['challenges.*'] = 'numeric';
+            $base_rules['challenges.*'] = 'exists:challenges,uuid';
         }
 
         if ($this->request->has('challenge_paths')) {
             $base_rules['challenge_paths'] = 'array';
-            $base_rules['challenge_paths.*'] = 'numeric';
+            $base_rules['challenge_paths.*'] = 'exists:challenge_paths,uuid';
         }
 
         if ($this->request->has('resource_modules')) {
             $base_rules['resource_modules'] = 'array';
-            $base_rules['resource_modules.*'] = 'numeric';
+            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
         }
 
         if ($this->request->has('resource_groups')) {
             $base_rules['resource_groups'] = 'array';
-            $base_rules['resource_groups.*'] = 'numeric';
+            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
         }
 
         if ($this->request->has('resource_collections')) {
             $base_rules['resource_collections'] = 'array';
-            $base_rules['resource_collections.*'] = 'numeric';
+            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
         }
 
         if ($this->request->has('invite_type')) {

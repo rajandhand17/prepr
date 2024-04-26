@@ -36,7 +36,7 @@ class Conversation extends Model
 
     public function lastMessage()
     {
-        return $this->hasOne(ConversationMessage::class, 'conversation_id', 'id')->orderBy('created_at', 'DESC');
+        return $this->hasOne(ConversationMessage::class, 'conversation_id', 'id')->orderBy('updated_at', 'DESC');
     }
 
     public function users(): BelongsToMany
@@ -71,7 +71,7 @@ class Conversation extends Model
             if ($participantName) {
                 $participantName = "$participantName,$user->first_name";
             } else {
-                $participantName = "$user->first_name";
+                $participantName = $user->first_name;
             }
         }
 
@@ -80,7 +80,7 @@ class Conversation extends Model
 
     public function getDefaultConversationNameAttribute()
     {
-        if ($this->type === 'group_message') {
+        if ($this->type === 'group') {
             return $this->prepareGroupName($this->users()->get());
         }
 

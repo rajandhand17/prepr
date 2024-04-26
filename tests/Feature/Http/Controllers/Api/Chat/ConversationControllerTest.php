@@ -36,7 +36,7 @@ final class ConversationControllerTest extends ChatTestCase
 
     public function test_list_conversation_with_conversation_type_non_archive_positive()
     {
-        $this->get('/api/v1/chat/conversation/non-archive?language=en')
+        $this->get('/api/v1/chat/conversation/inbox?language=en')
             ->assertOk()
             ->assertJson(
                 fn (AssertableJson $json) => $json->where('success', true)
@@ -49,9 +49,9 @@ final class ConversationControllerTest extends ChatTestCase
     {
         $this
             ->get('/api/v1/chat/conversation/type-that-does-not-exists?language=en')
-            ->assertBadRequest()
+            ->assertStatus(402)
             ->assertJson(
-                fn (AssertableJson $json) => $json->where('message', __('responses.not_found_conversation_list'))->etc()
+                fn (AssertableJson $json) => $json->where('message', __('responses.handler_bad_request'))->etc()
             );
     }
 
@@ -78,7 +78,7 @@ final class ConversationControllerTest extends ChatTestCase
             ->assertJson(
                 fn (AssertableJson $json) => $json->hasAll(['success', 'data', 'message', 'data.id', 'data.uuid', 'data.type'])
                     ->where('message', __('responses.conversation_created'))
-                    ->where('data.type', 'group_message')
+                    ->where('data.type', 'group')
             );
     }
 

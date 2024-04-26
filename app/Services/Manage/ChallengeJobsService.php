@@ -16,7 +16,11 @@ class ChallengeJobsService
                     foreach ($request->jobs as $job) {
                         $ChallengeJobsGroupsStack = new ChallengeJobTitles();
                         $ChallengeJobsGroupsStack->challenge_id = $challenge_id;
-                        $ChallengeJobsGroupsStack->job_title_id = $job;
+                        if (is_array($job) && isset($job['key'])) {
+                            $ChallengeJobsGroupsStack->job_title_id = $job['key'];
+                        } elseif (is_numeric($job)) {
+                            $ChallengeJobsGroupsStack->job_title_id = $job;
+                        }
                         $ChallengeJobsGroupsStack->save();
                     }
                 }
@@ -24,7 +28,7 @@ class ChallengeJobsService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeJobs in ChallengeJobs.php: '.$e->getMessage());
+            Log::error('Error in createChallengeJobs in ChallengeJobsService.php: '.$e->getMessage());
 
             return false;
         }

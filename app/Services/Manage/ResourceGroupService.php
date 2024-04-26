@@ -265,4 +265,40 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public function getResourceGroupListName($request, $organization)
+    {
+        try {
+            $resourceGroupList = ResourceGroup::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
+            $limit = config('site-settings.listing_limit');
+
+            return $resourceGroupList->limit($limit)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnUUID($uUID)
+    {
+        try {
+            return ResourceGroup::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnUUIDArray($resourceGroupUUIDArray)
+    {
+        try {
+            $resourceGroupIds = ResourceGroup::whereIn('uuid', $resourceGroupUUIDArray)->pluck('id')->all();
+            if ($resourceGroupIds != null) {
+                return $resourceGroupIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -238,6 +238,9 @@ return [
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
+
+        /* GO1 */
+        App\Repositories\Api\GO1\GO1ServiceProvider::class,
     ],
 
     /*

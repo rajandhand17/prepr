@@ -275,7 +275,7 @@ class ChallengeService
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
             $challenge->source_link = $source_link;
-            $challenge->agreement = $request->agreement;
+            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;
             $challenge->is_open = $is_open;
@@ -431,7 +431,7 @@ class ChallengeService
     public static function getChallengeBasedOnId($id)
     {
         try {
-            return Challenge::where('id', $id)->first();
+            return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'is_open')->where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }
@@ -689,6 +689,20 @@ class ChallengeService
 
             return $challenges->get();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnIds($id)
+    {
+        try {
+            $challenge = Challenge::whereIn('id', $id)->get();
+            if ($challenge != null) {
+                return $challenge;
+            }
+
+            return false;
+        } catch (Exception $e) {
             return false;
         }
     }

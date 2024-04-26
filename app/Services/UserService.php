@@ -44,6 +44,15 @@ class UserService
         }
     }
 
+    public static function getUserByGO1Id($go1UserId)
+    {
+        try {
+            return User::where('go1_id', $go1UserId)->first();
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
     public static function getUserByUsername($username)
     {
         try {
@@ -105,7 +114,7 @@ class UserService
             $user->save();
 
             return $user;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -120,7 +129,7 @@ class UserService
             }
 
             return false;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -176,6 +185,15 @@ class UserService
 
             return  $fetchUsers;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+    
+    public static function mapGO1User($go1UserId, $response)
+    {
+        try {
+            return User::query()->where('id', auth()->user()->id)->update(['go1_id' => $go1UserId, 'go1_user_metadata' => $response]);
+        } catch (Exception $exception) {
             return false;
         }
     }

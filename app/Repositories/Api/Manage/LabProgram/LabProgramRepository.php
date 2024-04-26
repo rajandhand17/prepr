@@ -151,4 +151,13 @@ class LabProgramRepository implements LabProgramInterface
             return false;
         }
     }
+
+    public function getLabProgramListName($request, $organization)
+    {
+        try {
+            return $this->labProgramService->getLabProgramListName($request, $organization);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

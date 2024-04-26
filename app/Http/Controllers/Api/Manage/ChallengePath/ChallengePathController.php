@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\ChallengePath;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ChallengePath\CreateChallengePathRequest;
 use App\Http\Requests\Manage\ChallengePath\UpdateChallengePathRequest;
+use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathResource;
 use App\Repositories\Api\Manage\ChallengePath\ChallengePathRepository;
 use App\Services\Manage\OrganizationService;
@@ -172,6 +173,24 @@ class ChallengePathController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_challenge_path_view'), 404);
+        } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getList(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $getChallengePathListName = $this->challengePathRepository->getChallengePathListName($request, $organization);
+            if ($getChallengePathListName) {
+                $response = ChallengePathListNameResource::collection($getChallengePathListName);
+            }
+
+            return $this->sendResponse($getChallengePathListName, __('responses.found_challenge_path_list'));
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

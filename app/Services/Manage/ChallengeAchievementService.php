@@ -29,9 +29,9 @@ class ChallengeAchievementService
             $challengeAchievement = new ChallengeAchievement();
             $challengeAchievement->challenge_id = $challenge;
             $challengeAchievement->achievement_type = '0';
-            $challengeAchievement->achievement_name = $request->achievement_name;
-            $challengeAchievement->achievement_prize = $request->achievement_prize;
-            $challengeAchievement->achievement_points = $request->achievement_points;
+            $challengeAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : 'Participant';
+            $challengeAchievement->achievement_prize = ($request->has('achievement_prize')) ? $request->achievement_prize : 'Points';
+            $challengeAchievement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : 100;
             $challengeAchievement->achievement_image = $upload_achievement_image;
             $challengeAchievement->save();
 

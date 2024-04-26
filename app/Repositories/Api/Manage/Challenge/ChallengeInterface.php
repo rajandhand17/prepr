@@ -26,10 +26,6 @@ interface ChallengeInterface
 
     public function createChallengeRequirement($request, $challenge);
 
-    public function createChallengeAssessmentCriteria($request, $challenge);
-
-    public function createChallengeAssessment($request, $challenge);
-
     public function createChallengeProjectTemplate($request, $challenge);
 
     public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment);

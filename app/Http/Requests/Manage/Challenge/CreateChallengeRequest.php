@@ -25,13 +25,13 @@ class CreateChallengeRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
+            'request_type'                          => 'required|in:draft,publish,archive',
             'organization_id'                       => 'required|exists:organizations,uuid',
             'category_id'                           => 'required|exists:categories,id',
             'duration_id'                           => 'required|exists:durations,id',
             'level_id'                              => 'required|exists:levels,id',
             'title'                                 => 'required_if:request_type,publish|unique:challenges,title',
             'description'                           => 'required_if:request_type,publish',
-            'request_type'                          => 'required|in:draft,publish,archive',
             'privacy'                               => 'required_if:request_type,publish|in:yes,no',
             'cover_image'                           => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'source_link'                           => 'nullable|url',
@@ -134,6 +134,31 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
             $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+        }
+
+        if ($this->request->has('labs')) {
+            $base_rules['labs'] = 'array';
+            $base_rules['labs.*'] = 'exists:labs,uuid';
+        }
+
+        if ($this->request->has('lab_programs')) {
+            $base_rules['lab_programs'] = 'array';
+            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
+        }
+
+        if ($this->request->has('resource_modules')) {
+            $base_rules['resource_modules'] = 'array';
+            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
+        }
+
+        if ($this->request->has('resource_collections')) {
+            $base_rules['resource_collections'] = 'array';
+            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
+        }
+
+        if ($this->request->has('resource_groups')) {
+            $base_rules['resource_groups'] = 'array';
+            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
         }
 
         return $base_rules;

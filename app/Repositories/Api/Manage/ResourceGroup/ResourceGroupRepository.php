@@ -157,4 +157,13 @@ class ResourceGroupRepository implements ResourceGroupInterface
             return false;
         }
     }
+
+    public function getResourceGroupListName($request, $organization)
+    {
+        try {
+            return $this->resourceGroupService->getResourceGroupListName($request, $organization);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

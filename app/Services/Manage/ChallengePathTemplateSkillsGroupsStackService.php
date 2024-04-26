@@ -25,4 +25,22 @@ class ChallengePathTemplateSkillsGroupsStackService
             return false;
         }
     }
+
+    public function redeemChallengePathTemplateToChallengePathSkillsGroupsStack($challengePathTemplateId, $redeemChallengePathId)
+    {
+        try {
+            $getChallengePathTemplateSkillsGroupsStack = ChallengePathTemplateSkillsGroupsStack::where('challenge_path_template_id', $challengePathTemplateId)->get();
+            if ($getChallengePathTemplateSkillsGroupsStack->isNotEmpty()) {
+                $newChallengePathSkillsGroupsStack = new ChallengePathSkillGroupStack();
+                $newChallengePathSkillsGroupsStack->challenge_path_id = $redeemChallengePathId;
+                $newChallengePathSkillsGroupsStack->foreign_id = $getChallengePathTemplateSkillsGroupsStack->foreign_id;
+                $newChallengePathSkillsGroupsStack->type = $getChallengePathTemplateSkillsGroupsStack->type;
+                $newChallengePathSkillsGroupsStack->save();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

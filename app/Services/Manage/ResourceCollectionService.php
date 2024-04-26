@@ -349,4 +349,22 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function getResourceCollectionBasedOnUUID($uUID)
+    {
+        try {
+            return ResourceCollection::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionsBasedOnIds($ids)
+    {
+        try {
+            return ResourceCollection::select()->whereIn('id', $ids)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -15,7 +15,11 @@ class ChallengeSkillsGroupsStackService
                     foreach ($request->skills as $skill) {
                         $ChallengeSkillsGroupsStack = new ChallengeSkillsGroupsStack();
                         $ChallengeSkillsGroupsStack->challenge_id = $challenge;
-                        $ChallengeSkillsGroupsStack->foreign_id = $skill;
+                        if (is_array($skill) && isset($skill['key'])) {
+                            $ChallengeSkillsGroupsStack->foreign_id = $skill['key'];
+                        } elseif (is_numeric($skill)) {
+                            $ChallengeSkillsGroupsStack->foreign_id = $skill;
+                        }
                         $ChallengeSkillsGroupsStack->type = '0';
                         $ChallengeSkillsGroupsStack->save();
                     }

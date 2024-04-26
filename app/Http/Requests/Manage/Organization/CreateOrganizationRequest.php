@@ -26,14 +26,15 @@ class CreateOrganizationRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'title'           => 'required|max:255|unique:organizations,title',
-            'description'     => 'required',
-            'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'category'        => 'required|numeric|exists:categories,id',
-            'website'         => 'required|url',
-            'slug'            => 'required|max:255|unique:organizations,slug',
-            'status'          => 'required|in:draft,publish,archive',
+            'title'             => 'required|max:255|unique:organizations,title',
+            'description'       => 'required',
+            'profile_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'cover_image'       => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'category'          => 'required|numeric|exists:categories,id',
+            'website'           => 'required|url',
+            'slug'              => 'required|max:255|unique:organizations,slug',
+            'status'            => 'required|in:draft,publish,archive',
+            'total_employees'   => 'integer',
         ];
         if ($this->request->has('organization_address')) {
             $base_rules['organization_address'] = 'array';
