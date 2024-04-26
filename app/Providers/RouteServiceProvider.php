@@ -46,11 +46,8 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapProjectRoutes();
             $this->mapProjectMemberManagementRoutes();
             $this->mapDashboardRoutes();
-<<<<<<< HEAD
             $this->mapTeamMatchingRoutes();
-=======
             $this->mapGO1Routes();
->>>>>>> BetaDevelopment
         });
     }
 
@@ -154,14 +151,13 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/dashboard/user')->middleware('api')->group(base_path('routes/v1/dashboard/user.php'));
     }
 
-<<<<<<< HEAD
     protected function mapTeamMatchingRoutes()
     {
         Route::prefix('api/v1/team/matching/')->middleware('api')->group(base_path('routes/v1/team-matching.php'));
-=======
+    }
+    
     public function mapGO1Routes()
     {
         Route::prefix('api/v1/go1')->middleware('api')->group(base_path('routes/v1/go1.php'));
->>>>>>> BetaDevelopment
     }
 }
