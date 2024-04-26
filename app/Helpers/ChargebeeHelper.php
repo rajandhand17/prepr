@@ -166,6 +166,7 @@ class ChargebeeHelper
         }
     }
 
+    // below function is used to create the entries in the local db when new organization plans are registered
     public static function createChargebeePlanDetails($organizationId)
     {
         try {
