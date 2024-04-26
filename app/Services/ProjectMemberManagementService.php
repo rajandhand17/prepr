@@ -239,10 +239,10 @@ class ProjectMemberManagementService
                         $email_status = config('constants.project_member_management_email_status.scheduled');
 
                         switch ($pariticipateData['access_level']) {
-                            case 'Editor':
+                            case 'editor':
                                 $access_level = config('constants.project_access_level.editor');
                                 break;
-                            case 'Viewer':
+                            case 'viewer':
                                 $access_level = config('constants.project_access_level.viewer');
                                 break;
                             default:

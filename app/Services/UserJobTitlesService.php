@@ -6,10 +6,15 @@ use App\Models\UserJobTitle;
 
 class UserJobTitlesService
 {
-    public static function getUsersJobs()
+    public static function getUsersJobs($pinned = null)
     {
         try {
-            $getCurrentUsersJobs = UserJobTitle::where('user_id', auth()->user()->id)->pluck('job_title_id')->unique();
+            $pin = ($pinned == 'yes') ? '1' : '0';
+            $getCurrentUsersJobs = UserJobTitle::where('user_id', auth()->user()->id);
+            if ($pinned !== null) {
+                $getCurrentUsersJobs = $getCurrentUsersJobs->where('pinned', $pin);
+            }
+            $getCurrentUsersJobs = $getCurrentUsersJobs->pluck('job_title_id')->unique();
             if (!empty($getCurrentUsersJobs)) {
                 return $getCurrentUsersJobs;
             }
