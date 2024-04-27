@@ -6,7 +6,7 @@ use App\Helpers\RecommendationEngineHelper;
 use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Duration;
-use App\Models\Lab;
+// use App\Models\Lab;
 use App\Models\Levels;
 use App\Models\ResourceModule;
 use App\Models\Skill;
@@ -30,7 +30,7 @@ class AIService
             'base_uri' => 'https://api.openai.com/v1/chat/completions',
             'headers'  => [
                 'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer '.$openAIAPIKey,
+                'Authorization' => 'Bearer ' . $openAIAPIKey,
             ],
         ]);
 
@@ -90,12 +90,12 @@ class AIService
                 foreach ($openAIResponse['choices'] as $choice) {
                     $challenge = json_decode($choice['message']['content'], true);
 
-                    // Checks for duplicate names in all challenges so no duplicate titles would exist
-                    if (is_array($challenge) && isset($challenge['challengeTitle'])) {
-                        if (Challenge::where('title', $challenge['challengeTitle'])->exists()) {
-                            continue;
-                        }
-                    }
+                    // // Checks for duplicate names in all challenges so no duplicate titles would exist
+                    // if (is_array($challenge) && isset($challenge['challengeTitle'])) {
+                    //     if (Challenge::where('title', $challenge['challengeTitle'])->exists()) {
+                    //         continue;
+                    //     }
+                    // }
 
                     if (empty($challenge['skills'])) {
                         continue;
@@ -145,7 +145,7 @@ class AIService
 
             return $validChallenges;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
+            Log::error('Error in createChallengeUsingAIPreview in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -190,12 +190,12 @@ class AIService
 
                 foreach ($openAIResponse['choices'] as $choice) {
                     $lab = json_decode($choice['message']['content'], true);
-                    // Checks for duplicate names in all challenges so no duplicate titles would exist
-                    if (is_array($lab) && isset($lab['labTitle'])) {
-                        if (Lab::where('title', $lab['labTitle'])->exists()) {
-                            continue;
-                        }
-                    }
+                    // // Checks for duplicate names in all labs so no duplicate titles would exist
+                    // if (is_array($lab) && isset($lab['labTitle'])) {
+                    //     if (Lab::where('title', $lab['labTitle'])->exists()) {
+                    //         continue;
+                    //     }
+                    // }
 
                     if (isset($lab['challenges']) && is_array($lab['challenges'])) {
                         $allChallengesValid = true;
@@ -291,7 +291,7 @@ class AIService
 
             return $validLabs;
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
+            Log::error('Error in createLabUsingAIPreview: ' . $e->getMessage());
 
             return false;
         }
@@ -340,7 +340,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: '.$e->getMessage());
+            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -400,7 +400,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: '.$e->getMessage());
+            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -424,7 +424,7 @@ class AIService
 
             return $updatedSkills;
         } catch (Exception $e) {
-            Log::error('Error in processSkills in AIService.php: '.$e->getMessage());
+            Log::error('Error in processSkills in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -445,7 +445,7 @@ class AIService
 
             return ['skill' => $highestScoreSkill, 'score' => $highestScore];
         } catch (Exception $e) {
-            Log::error('Error in selectHighestScoreSkill in AIService.php: '.$e->getMessage());
+            Log::error('Error in selectHighestScoreSkill in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -485,7 +485,7 @@ class AIService
                     if ($collectArticles && !$articlesCollected) {
                         try {
                             $articleResponse = $this->bingArticleClient->request('GET', '', [
-                                'query' => ['q' => 'Articles about '.$title.' for level '.$levelTitle, 'count' => 20],
+                                'query' => ['q' => 'Articles about ' . $title . ' for level ' . $levelTitle, 'count' => 20],
                             ]);
                             $articleResponse = json_decode($articleResponse->getBody(), true);
 
@@ -510,7 +510,7 @@ class AIService
                     if ($collectVideos && !$videosCollected) {
                         try {
                             $videoResponse = $this->bingVideoClient->request('GET', '', [
-                                'query' => ['q' => 'Videos about '.$title.' for level '.$levelTitle, 'count' => 20],
+                                'query' => ['q' => 'Videos about ' . $title . ' for level ' . $levelTitle, 'count' => 20],
                             ]);
                             $videoResponse = json_decode($videoResponse->getBody(), true);
 
@@ -622,7 +622,7 @@ class AIService
 
                                 $descriptionParts[] = "{$rmTitle} - {$rmDescription}";
                             }
-                            $chunkGroupDescriptions[] = 'Group '.($groupIndex + 1).': '.implode(', ', $descriptionParts);
+                            $chunkGroupDescriptions[] = 'Group ' . ($groupIndex + 1) . ': ' . implode(', ', $descriptionParts);
                         }
 
                         $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
@@ -652,10 +652,10 @@ class AIService
                             if (isset($contentArray['results'])) {
                                 $allAiResults = array_merge($allAiResults, $contentArray['results']);
                             } else {
-                                Log::error('The parsed AI response did not contain the expected "results" key for chunk '.$chunkIndex);
+                                Log::error('The parsed AI response did not contain the expected "results" key for chunk ' . $chunkIndex);
                             }
                         } else {
-                            Log::error('The AI response structure is not as expected for chunk '.$chunkIndex);
+                            Log::error('The AI response structure is not as expected for chunk ' . $chunkIndex);
                         }
                     }
 
@@ -667,24 +667,21 @@ class AIService
                             $newResourceModule = [];
 
                             if (is_array($resourceModule) && isset($resourceModule['title'])) {
-                                // Convert the title to lowercase and check if it already exists in ResourceModule
-                                if (ResourceModule::where('title', $resourceModule['title'])->exists()) {
-                                    // If the title already exists, set title and description to 'Resource Module'
-                                    $newResourceModule['title'] = 'Resource Module';
-                                    $newResourceModule['description'] = 'Resource Module';
-                                } else {
-                                    // If the title does not exist, use the title and description from $allAiResults[$index]
-                                    $newResourceModule['title'] = $resourceModule['title'];
-                                    $newResourceModule['description'] = $resourceModule['description'];
-                                }
+                                // // Convert the title to lowercase and check if it already exists in ResourceModule
+                                // if (ResourceModule::where('title', $resourceModule['title'])->exists()) {
+                                //     // If the title already exists, set title to 'Resource Module'
+                                //     $newResourceModule['title'] = 'Resource Module';
+                                // } else {
+                                //     // If the title does not exist, use the title from $allAiResults[$index]
+                                $newResourceModule['title'] = $resourceModule['title'];
+                                // }
                             } else {
                                 // If $resourceModule is not an array or does not have a title, use default 'Resource Module'
                                 $newResourceModule['title'] = 'Resource Module';
-                                $newResourceModule['description'] = 'Resource Module';
                             }
 
                             $group['title'] = $newResourceModule['title'];
-                            $group['description'] = $newResourceModule['description'];
+                            $group['description'] = $resourceModule['description'] || 'Resource Module';
                         }
 
                         $group['skill_titles'] = $request->skill_titles;
@@ -697,7 +694,7 @@ class AIService
                     }
                     unset($group);
                 } catch (Exception $e) {
-                    Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
+                    Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: ' . $e->getMessage());
                 }
             }
         }
