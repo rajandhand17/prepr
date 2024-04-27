@@ -777,16 +777,17 @@ class AIService
 
             $filteredModules = $modules->filter(function ($module) use ($firstThreeSkills) {
                 $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
+
                 return count(array_intersect($moduleSkills, $firstThreeSkills)) >= 2;
             });
 
             $sortedModules = $filteredModules->sortByDesc(function ($module) use ($firstThreeSkills) {
                 $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
+
                 return count(array_intersect($moduleSkills, $firstThreeSkills));
             });
 
             $topModules = $sortedModules->take(6);
-
 
             foreach ($topModules as $module) {
                 $skillIds = $module->skills->pluck('foreign_id')->toArray();
@@ -795,18 +796,18 @@ class AIService
                 $duration = Duration::find($module->duration_id);
 
                 $prepr_resource_modules[] = [
-                    'uuid' => $module->uuid,
-                    'title' => $module->title,
-                    'description' => $module->description,
+                    'uuid'         => $module->uuid,
+                    'title'        => $module->title,
+                    'description'  => $module->description,
                     'skill_titles' => $skillTitles,
-                    'skills' => $skillIds,
-                    'level' => $level ? $level->title : null,
-                    'level_id' => $module->level_id,
-                    'duration' => $duration ? $duration->title : null,
-                    'duration_id' => $module->duration_id,
-                    'slug' => $module->slug,
-                    'cover_image' => !Str::endsWith($module->media, config('site-settings.default_resource_module_cover_image')) ? $module->media : null,
-                    'from_prepr' => true,
+                    'skills'       => $skillIds,
+                    'level'        => $level ? $level->title : null,
+                    'level_id'     => $module->level_id,
+                    'duration'     => $duration ? $duration->title : null,
+                    'duration_id'  => $module->duration_id,
+                    'slug'         => $module->slug,
+                    'cover_image'  => !Str::endsWith($module->media, config('site-settings.default_resource_module_cover_image')) ? $module->media : null,
+                    'from_prepr'   => true,
                 ];
             }
         }
