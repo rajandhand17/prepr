@@ -1056,5 +1056,6 @@
     "responses.challenge_description_required": "The challenge description field is required",
     "responses.message_not_found": "Message not found",
     "responses.message_not_deleted": "Oops! The deletion of message has failed",
-    "responses.message_deleted": "you have successfully deleted message"
+    "responses.message_deleted": "you have successfully deleted message",
+    "responses.resource_modules_previews_failed": "Resource modules' previews could not be found or created!"
 }

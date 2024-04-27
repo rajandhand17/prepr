@@ -284,7 +284,8 @@ class ResourceModuleController extends AppBaseController
             if ($createResourceModuleUsingAIPreview) {
                 return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_modules_previews_created_successfully'), 200);
             } else {
-                throw new Exception('createResourceModuleUsingAIPreview has no value!');
+                return $this->sendResponse([], "", 200);
+                Log::warning('Warning in CreateResourceModuleUsingAIPreview in ResourceModuleController.php: Resource modules\' previews could not be found or created!');
             }
         } catch (Exception $e) {
             Log::error('Error in CreateResourceModuleUsingAIPreview in ResourceModuleController.php: '.$e->getMessage());

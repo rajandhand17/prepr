@@ -3,17 +3,17 @@
 namespace App\Services\Manage;
 
 use App\Helpers\RecommendationEngineHelper;
-use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Duration;
-use App\Models\JobTitle;
+use App\Models\Lab;
 use App\Models\Levels;
 use App\Models\ResourceModule;
 use App\Models\Skill;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class AIService
 {
@@ -104,12 +104,15 @@ class AIService
                     $updatedSkills = $this->processSkills($challenge['skills']);
                     $updatedSkills = array_values($updatedSkills);
                     $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
+
                     // Making sure each challenge has more than 5 verified skill
                     if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                         continue;
                     }
 
-                    $skills = Skill::whereIn('title', $mergedSkills)->get(['id', 'title']);
+                    $skills = Skill::whereIn('title', $mergedSkills)
+                        ->orderByRaw("FIELD(title, '" . implode("','", $mergedSkills) . "')")
+                        ->get(['id', 'title']);
                     $skillIds = $skills->pluck('id')->toArray();
                     $skillTitles = array_unique($skills->pluck('title')->toArray());
 
@@ -187,6 +190,13 @@ class AIService
 
                 foreach ($openAIResponse['choices'] as $choice) {
                     $lab = json_decode($choice['message']['content'], true);
+                    // Checks for duplicate names in all challenges so no duplicate titles would exist
+                    if (is_array($lab) && isset($lab['labTitle'])) {
+                        if (Lab::where('title', $lab['labTitle'])->exists()) {
+                            continue;
+                        }
+                    }
+
                     if (isset($lab['challenges']) && is_array($lab['challenges'])) {
                         $allChallengesValid = true;
                         $processedChallenges = [];
@@ -194,12 +204,12 @@ class AIService
                         foreach ($lab['challenges'] as $challenge) {
                             if (isset($challenge['challengeTitle']) && Challenge::where('title', $challenge['challengeTitle'])->exists()) {
                                 $allChallengesValid = false;
-                                break;
+                                continue;
                             }
 
                             if (empty($challenge['skills']) || count($challenge['skills']) < 4) {
                                 $allChallengesValid = false;
-                                break;
+                                continue;
                             }
 
                             $updatedSkills = $this->processSkills($challenge['skills']);
@@ -211,7 +221,15 @@ class AIService
                                 continue;
                             }
 
-                            $skills = Skill::whereIn('title', $mergedSkills)->get(['id', 'title']);
+                            // Escape single quotes in each element of $mergedSkills
+                            $escapedSkills = array_map(function ($skill) {
+                                return addslashes($skill);
+                            }, $mergedSkills);
+
+                            // Now, build your query using escaped skills
+                            $skills = Skill::whereIn('title', $escapedSkills)
+                                ->orderByRaw("FIELD(title, '" . implode("','", $escapedSkills) . "')")
+                                ->get(['id', 'title']);
                             $skillIds = $skills->pluck('id')->toArray();
                             $skillTitles = array_unique($skills->pluck('title')->toArray());
 
@@ -282,6 +300,10 @@ class AIService
     protected function fetchChallengesFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
     {
         try {
+            $jobTitlesStr = is_array($jobTitles) ? implode(', ', $jobTitles) : $jobTitles;
+            $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
+            $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
+
             $payload = [
                 'model'    => 'gpt-3.5-turbo',
                 'n'        => 10,
@@ -289,12 +311,12 @@ class AIService
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational challenge for the careers: "' . $jobTitles . '", with skills: "' . $skillTitles . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the challenge to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '").
-                            1. **Title**: Craft a brief title for the challenge.
+                            Please design an educational challenge for the careers: "' . $jobTitlesStr . '", with skills: "' . $skillTitlesStr . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the challenge to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '").
+                            1. **Title**: Craft a brief creative title for the challenge.
                             2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
                             3. **Steps**: Write the exact same steps mentioned in description in an array as well.
-                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitles . '".
+                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
+                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitlesStr . '".
                             6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
                 
                             Output format (Make sure you exactly follow it):
@@ -327,6 +349,10 @@ class AIService
     protected function fetchChallengesForLabFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
     {
         try {
+            $jobTitlesStr = is_array($jobTitles) ? implode(', ', $jobTitles) : $jobTitles;
+            $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
+            $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
+
             $payload = [
                 'model'    => 'gpt-3.5-turbo',
                 'n'        => 10,
@@ -334,12 +360,12 @@ class AIService
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational lab with 5 challenges for the careers: "' . $jobTitles . '", with skills: "' . $skillTitles . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the lab to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
-                            1. **Title**: Craft a brief title for the challenge without counting it (ex. without saying challenge 1, challenge 2, or similar). Write just the title.
+                            Please design an educational lab with 5 challenges for the careers: "' . $jobTitlesStr . '", with skills: "' . $skillTitlesStr . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the lab to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
+                            1. **Title**: Craft a brief creative title for the challenge without counting it (ex. without saying challenge 1, challenge 2, or similar). Write just the title.
                             2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
                             3. **Steps**: Write the exact same steps mentioned in description in an array as well.
-                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitles . '".
+                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
+                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitlesStr . '".
                             6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
                             6. **Lab Title**: Craft a brief title for the lab.
                             6. **Lab Description**: Provide a paragraph description about the lab and what it focuses on.
@@ -350,7 +376,7 @@ class AIService
                                     "labDescription": "Lab Description"
                                     "challenges": [
                                         {
-                                            "challengeTitle": "Challenge Title",
+                                            "challengeTitle": "Creative Challenge Title",
                                             "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so on)",
                                             "category": "Selected Category",
                                             "steps": ["Step 1", "Step 2", (all the steps)],
@@ -438,6 +464,8 @@ class AIService
         $levelID = $request->level_id;
         $levelTitle = $request->level;
 
+        $aiCombinedGroups = [];
+
         if ($request->resource_module_openai && $title) {
             $data = ['articles' => [], 'videos' => []];
 
@@ -521,7 +549,7 @@ class AIService
                     throw new Exception('Error in gathering enough data!');
                 }
             } catch (Exception $e) {
-                Log::warning("Error in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: " . $e->getMessage());
+                Log::warning("Warning in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: " . $e->getMessage());
             }
 
             function makeResourceGroups($data, $request)
@@ -549,8 +577,6 @@ class AIService
                         return empty($video['embedHTML']);
                     })
                 );
-
-                $aiCombinedGroups = [];
 
                 while (!empty($allArticles) || !empty($allVideos)) {
                     $group = [];
@@ -601,7 +627,7 @@ class AIService
 
                         $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
 
-                        $prompt = "For each group described below, generate a title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: " . $combinedChunkDescription .
+                        $prompt = "For each group described below, generate a creative title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: " . $combinedChunkDescription .
                             ' Example format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                         $payload = [
@@ -669,83 +695,73 @@ class AIService
                         $group['duration_id'] = $durationID;
                         $group['is_ai_created'] = $request->is_ai_created;
                     }
-                    unset($group); // Unset the reference to the last element
+                    unset($group);
                 } catch (Exception $e) {
                     Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: ' . $e->getMessage());
                 }
             }
         }
 
+        $prepr_resource_modules = [];
+
         if ($request->resource_module_prepr) {
-            Log::info('Starting to fetch resource modules.', [
-                'criteria' => [
-                    'language'        => $language,
-                    'level_id'        => $levelID,
-                    'skills_required' => $skillIDsArray,
-                    'duration_id'     => $durationID,
-                ],
-            ]);
+            $firstThreeSkills = array_slice($skillIDsArray, 0, 3);
 
-            $foundModules = collect();
-            $skillSubset = $skillIDsArray;
+            $modules = ResourceModule::whereNull('deleted_at')
+                ->where('is_global', 1)
+                ->where('language', $language)
+                ->where('level_id', $levelID)
+                ->whereHas('skills', function ($query) use ($firstThreeSkills) {
+                    $query->whereIn('foreign_id', $firstThreeSkills)
+                        ->where('type', '0');
+                })
+                ->with(['skills'])
+                ->get();
 
-            while ($foundModules->isEmpty() && !empty($skillSubset)) {
-                try {
-                    // Attempt to fetch modules with current skill subset
-                    $foundModules = ResourceModule::whereNull('deleted_at')
-                        ->where('is_global', 1)
-                        ->where('language', $language)
-                        ->where('level_id', $levelID)
-                        ->whereHas('skills', function ($query) use ($skillSubset) {
-                            $query->whereIn('foreign_id', $skillSubset)
-                                ->where('type', '0'); // Assuming type '0' is for skills
-                        }, '>=', count($skillSubset) >= 3 ? 3 : 1) // Require at least 3 or just 1 matching skill, depending on subset size
-                        ->with(['skills' => function ($query) {
-                            $query->where('type', '0');
-                        }])
-                        ->when($durationID, function ($query) use ($durationID) {
-                            // If duration_id is provided, prioritize matching modules
-                            return $query->orderByRaw("FIELD(duration_id, {$durationID}) DESC");
-                        })
-                        ->get();
+            Log::info($modules);
 
-                    if ($foundModules->isEmpty() && count($skillSubset) > 1) {
-                        // Reduce the skill subset by removing the last skill
-                        array_pop($skillSubset);
-                        Log::info('Reducing skill requirements.', ['new_skill_subset' => $skillSubset]);
-                    } else {
-                        break; // Modules found or only one skill left
-                    }
-                } catch (Exception $e) {
-                    Log::error('Error in fetchResourceModules: ' . $e->getMessage());
+            $filteredModules = $modules->filter(function ($module) use ($firstThreeSkills) {
+                $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
+                return count(array_intersect($moduleSkills, $firstThreeSkills)) >= 2;
+            });
 
-                    return;
-                }
-            }
+            $sortedModules = $filteredModules->sortByDesc(function ($module) use ($firstThreeSkills) {
+                $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
+                return count(array_intersect($moduleSkills, $firstThreeSkills));
+            });
 
-            if ($foundModules->isEmpty()) {
-                Log::warning('No modules found even after reducing skill requirements.');
-            } else {
-                Log::info('Fetched resource modules successfully.', ['count' => $foundModules->count()]);
-            }
+            $topModules = $sortedModules->take(6);
 
-            // Assuming $foundModules contains the modules fetched successfully with the skill subset [1,5]
-            foreach ($foundModules as $module) {
-                // Assuming the module has a relationship 'skills' that can fetch its skills
-                $moduleSkills = $module->skills->where('type', '0')->pluck('foreign_id')->toArray();
 
-                // Log the details of the module, including its title and the skills it actually has
-                Log::info('Detailed module information:', [
-                    'title'          => $module->title,
-                    'module_id'      => $module->id, // Assuming the module has an identifiable attribute like 'id'
-                    'actual_skills'  => $moduleSkills,
-                    'matched_skills' => array_intersect($moduleSkills, [1, 5]), // Intersection of actual skills with the final skill subset used
-                ]);
+            foreach ($topModules as $module) {
+                $skillIds = $module->skills->pluck('foreign_id')->toArray();
+                $skillTitles = Skill::findMany($skillIds)->pluck('title')->toArray();
+                $level = Levels::find($module->level_id);
+                $duration = Duration::find($module->duration_id);
+
+                $prepr_resource_modules[] = [
+                    'uuid' => $module->uuid,
+                    'title' => $module->title,
+                    'description' => $module->description,
+                    'skill_titles' => $skillTitles,
+                    'skills' => $skillIds,
+                    'level' => $level ? $level->title : null,
+                    'level_id' => $module->level_id,
+                    'duration' => $duration ? $duration->title : null,
+                    'duration_id' => $module->duration_id,
+                    'slug' => $module->slug,
+                    'cover_image' => !Str::endsWith($module->media, config('site-settings.default_resource_module_cover_image')) ? $module->media : null,
+                    'from_prepr' => true,
+                ];
             }
         }
 
-        // Log::info($aiCombinedGroups);
+        $combinedModules = array_merge($prepr_resource_modules, $aiCombinedGroups);
 
-        return $aiCombinedGroups;
+        shuffle($combinedModules);
+
+        $shuffledModules = $combinedModules;
+
+        return $shuffledModules;
     }
 }
