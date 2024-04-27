@@ -30,7 +30,7 @@ class AIService
             'base_uri' => 'https://api.openai.com/v1/chat/completions',
             'headers'  => [
                 'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $openAIAPIKey,
+                'Authorization' => 'Bearer '.$openAIAPIKey,
             ],
         ]);
 
@@ -146,7 +146,7 @@ class AIService
 
             return $validChallenges;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeUsingAIPreview in AIService.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -289,7 +289,7 @@ class AIService
 
             return $validLabs;
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAIPreview: ' . $e->getMessage());
+            Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
 
             return false;
         }
@@ -309,12 +309,12 @@ class AIService
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational challenge for the careers: "' . $jobTitlesStr . '", with skills: "' . $skillTitlesStr . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the challenge to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '").
+                            Please design an educational challenge for the careers: "'.$jobTitlesStr.'", with skills: "'.$skillTitlesStr.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the challenge to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'").
                             1. **Title**: Craft a brief creative title for the challenge.
                             2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
                             3. **Steps**: Write the exact same steps mentioned in description in an array as well.
                             4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitlesStr . '".
+                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitlesStr.'".
                             6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
                 
                             Output format (Make sure you exactly follow it):
@@ -338,7 +338,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: ' . $e->getMessage());
+            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -358,12 +358,12 @@ class AIService
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational lab with 5 challenges for the careers: "' . $jobTitlesStr . '", with skills: "' . $skillTitlesStr . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the lab to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
+                            Please design an educational lab with 5 challenges for the careers: "'.$jobTitlesStr.'", with skills: "'.$skillTitlesStr.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the lab to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
                             1. **Title**: Craft a brief creative title for the challenge without counting it (ex. without saying challenge 1, challenge 2, or similar). Write just the title.
                             2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
                             3. **Steps**: Write the exact same steps mentioned in description in an array as well.
                             4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitlesStr . '".
+                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitlesStr.'".
                             6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
                             6. **Lab Title**: Craft a brief title for the lab.
                             6. **Lab Description**: Provide a paragraph description about the lab and what it focuses on.
@@ -398,7 +398,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: ' . $e->getMessage());
+            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -422,7 +422,7 @@ class AIService
 
             return $updatedSkills;
         } catch (Exception $e) {
-            Log::error('Error in processSkills in AIService.php: ' . $e->getMessage());
+            Log::error('Error in processSkills in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -443,7 +443,7 @@ class AIService
 
             return ['skill' => $highestScoreSkill, 'score' => $highestScore];
         } catch (Exception $e) {
-            Log::error('Error in selectHighestScoreSkill in AIService.php: ' . $e->getMessage());
+            Log::error('Error in selectHighestScoreSkill in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -483,7 +483,7 @@ class AIService
                     if ($collectArticles && !$articlesCollected) {
                         try {
                             $articleResponse = $this->bingArticleClient->request('GET', '', [
-                                'query' => ['q' => 'Articles about ' . $title . ' for level ' . $levelTitle, 'count' => 20],
+                                'query' => ['q' => 'Articles about '.$title.' for level '.$levelTitle, 'count' => 20],
                             ]);
                             $articleResponse = json_decode($articleResponse->getBody(), true);
 
@@ -508,7 +508,7 @@ class AIService
                     if ($collectVideos && !$videosCollected) {
                         try {
                             $videoResponse = $this->bingVideoClient->request('GET', '', [
-                                'query' => ['q' => 'Videos about ' . $title . ' for level ' . $levelTitle, 'count' => 20],
+                                'query' => ['q' => 'Videos about '.$title.' for level '.$levelTitle, 'count' => 20],
                             ]);
                             $videoResponse = json_decode($videoResponse->getBody(), true);
 
@@ -547,7 +547,7 @@ class AIService
                     throw new Exception('Error in gathering enough data!');
                 }
             } catch (Exception $e) {
-                Log::warning("Warning in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: " . $e->getMessage());
+                Log::warning("Warning in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: ".$e->getMessage());
             }
 
             function makeResourceGroups($data, $request)
@@ -620,12 +620,12 @@ class AIService
 
                                 $descriptionParts[] = "{$rmTitle} - {$rmDescription}";
                             }
-                            $chunkGroupDescriptions[] = 'Group ' . ($groupIndex + 1) . ': ' . implode(', ', $descriptionParts);
+                            $chunkGroupDescriptions[] = 'Group '.($groupIndex + 1).': '.implode(', ', $descriptionParts);
                         }
 
                         $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
 
-                        $prompt = "For each group described below, generate a creative title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: " . $combinedChunkDescription .
+                        $prompt = "For each group described below, generate a creative title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: ".$combinedChunkDescription.
                             ' Example format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                         $payload = [
@@ -650,10 +650,10 @@ class AIService
                             if (isset($contentArray['results'])) {
                                 $allAiResults = array_merge($allAiResults, $contentArray['results']);
                             } else {
-                                Log::error('The parsed AI response did not contain the expected "results" key for chunk ' . $chunkIndex);
+                                Log::error('The parsed AI response did not contain the expected "results" key for chunk '.$chunkIndex);
                             }
                         } else {
-                            Log::error('The AI response structure is not as expected for chunk ' . $chunkIndex);
+                            Log::error('The AI response structure is not as expected for chunk '.$chunkIndex);
                         }
                     }
 
@@ -672,7 +672,7 @@ class AIService
                                 // } else {
                                 //     // If the title does not exist, use the title from $allAiResults[$index]
                                 $newResourceModule['title'] = $resourceModule['title'];
-                                // }
+                            // }
                             } else {
                                 // If $resourceModule is not an array or does not have a title, use default 'Resource Module'
                                 $newResourceModule['title'] = 'Resource Module';
@@ -692,7 +692,7 @@ class AIService
                     }
                     unset($group);
                 } catch (Exception $e) {
-                    Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: ' . $e->getMessage());
+                    Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
                 }
             }
         }
@@ -717,16 +717,17 @@ class AIService
 
             $filteredModules = $modules->filter(function ($module) use ($firstThreeSkills) {
                 $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
+
                 return count(array_intersect($moduleSkills, $firstThreeSkills)) >= 2;
             });
 
             $sortedModules = $filteredModules->sortByDesc(function ($module) use ($firstThreeSkills) {
                 $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
+
                 return count(array_intersect($moduleSkills, $firstThreeSkills));
             });
 
             $topModules = $sortedModules->take(6);
-
 
             foreach ($topModules as $module) {
                 $skillIds = $module->skills->pluck('foreign_id')->toArray();
@@ -735,18 +736,18 @@ class AIService
                 $duration = Duration::find($module->duration_id);
 
                 $prepr_resource_modules[] = [
-                    'uuid' => $module->uuid,
-                    'title' => $module->title,
-                    'description' => $module->description,
+                    'uuid'         => $module->uuid,
+                    'title'        => $module->title,
+                    'description'  => $module->description,
                     'skill_titles' => $skillTitles,
-                    'skills' => $skillIds,
-                    'level' => $level ? $level->title : null,
-                    'level_id' => $module->level_id,
-                    'duration' => $duration ? $duration->title : null,
-                    'duration_id' => $module->duration_id,
-                    'slug' => $module->slug,
-                    'cover_image' => !Str::endsWith($module->media, config('site-settings.default_resource_module_cover_image')) ? $module->media : null,
-                    'from_prepr' => true,
+                    'skills'       => $skillIds,
+                    'level'        => $level ? $level->title : null,
+                    'level_id'     => $module->level_id,
+                    'duration'     => $duration ? $duration->title : null,
+                    'duration_id'  => $module->duration_id,
+                    'slug'         => $module->slug,
+                    'cover_image'  => !Str::endsWith($module->media, config('site-settings.default_resource_module_cover_image')) ? $module->media : null,
+                    'from_prepr'   => true,
                 ];
             }
         }
