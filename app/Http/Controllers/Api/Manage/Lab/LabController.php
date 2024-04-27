@@ -11,9 +11,7 @@ use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
-use App\Services\Manage\ChallengeService;
 use App\Services\Manage\OrganizationService;
-use App\Services\Manage\ResourceModuleService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -224,24 +222,6 @@ class LabController extends AppBaseController
         try {
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = config('site-settings.default_achievement_image');
-
-            if ($request->has('challenges') && count($request->challenges) > 0) {
-                $challengeIDs = [];
-
-                foreach ($request->challenges as $uuid) {
-                    $id = ChallengeService::getChallengeIdBasedOnUUID($uuid);
-                    if ($id) {
-                        $challengeIDs[] = $id;
-                    }
-                }
-
-                $request->merge(['challenges' => $challengeIDs]);
-            }
-
-            if ($request->has('resource_modules') && count($request->resource_modules) > 0) {
-                $resourceModuleIDs = ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_modules);
-                $request->merge(['resource_modules' => $resourceModuleIDs]);
-            }
 
             $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image);
 
