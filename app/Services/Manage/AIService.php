@@ -110,8 +110,9 @@ class AIService
                         continue;
                     }
 
+                    $orderedTitles = implode(',', array_fill(0, count($mergedSkills), '?'));
                     $skills = Skill::whereIn('title', $mergedSkills)
-                        ->orderByRaw("FIELD(title, '" . implode("','", $mergedSkills) . "')")
+                        ->orderByRaw("FIELD(title, $orderedTitles)", $mergedSkills)
                         ->get(['id', 'title']);
                     $skillIds = $skills->pluck('id')->toArray();
                     $skillTitles = array_unique($skills->pluck('title')->toArray());
@@ -221,14 +222,11 @@ class AIService
                                 continue;
                             }
 
-                            // Escape single quotes in each element of $mergedSkills
-                            $escapedSkills = array_map(function ($skill) {
-                                return addslashes($skill);
-                            }, $mergedSkills);
+                            $escapedSkills = array_map('addslashes', $mergedSkills);
 
-                            // Now, build your query using escaped skills
+                            $orderedTitles = implode(',', array_fill(0, count($escapedSkills), '?'));
                             $skills = Skill::whereIn('title', $escapedSkills)
-                                ->orderByRaw("FIELD(title, '" . implode("','", $escapedSkills) . "')")
+                                ->orderByRaw("FIELD(title, $orderedTitles)", $escapedSkills)
                                 ->get(['id', 'title']);
                             $skillIds = $skills->pluck('id')->toArray();
                             $skillTitles = array_unique($skills->pluck('title')->toArray());
