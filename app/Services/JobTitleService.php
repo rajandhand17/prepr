@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Schema;
 
 class JobTitleService
 {
-    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null)
+    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null, $sortBy = null)
     {
         try {
             if ($language == 'en') {
-                $job_list = JobTitle::select('id', 'title');
+                $job_list = JobTitle::select('id', 'title', 'uuid');
                 if ($job_title_id !== null) {
                     $job_list = $job_list->whereIn('id', $job_title_id);
                 }
@@ -24,7 +24,7 @@ class JobTitleService
                 if (!$column_name || !Schema::hasColumn('jobs', $column_name)) {
                     return false;
                 }
-                $job_list = JobTitle::select('id', $column_name.' as title');
+                $job_list = JobTitle::select('id', $column_name.' as title', 'uuid');
             }
 
             if ($search != null) {
@@ -32,10 +32,25 @@ class JobTitleService
                 $job_list = self::filterJobList($job_list, $column_name, $search);
             }
 
+            if ($sortBy !== null) {
+                switch ($sortBy) {
+                    case 'name-a-to-z':
+                        $job_list = $job_list->orderBy('job_titles.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $job_list = $job_list->orderBy('job_titles.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $job_list = $job_list->orderBy('job_titles.created_at', 'ASC');
+                        break;
+                    default:
+                        $job_list = $job_list->orderBy('job_titles.id', 'ASC');
+                }
+            }
             $job_list = $job_list->take(config('site-settings.dropdown_listing_limit'));
 
             if (auth()->user()) {
-                $job_list = $job_list->paginate(config('site-settings.pagination_per_page'));
+                $job_list = $job_list->paginate(config('site-settings.pagination_per_page_career'));
             } else {
                 $job_list = $job_list->get();
             }
@@ -85,6 +100,50 @@ class JobTitleService
         } catch (Exception $e) {
             Log::error('Error in getJobBasedOnId in JobTitleService.php: '.$e->getMessage());
 
+            return false;
+        }
+    }
+
+    public static function getJobsBasedOnUsers($request)
+    {
+        try {
+            $getUsersJobsIds = UserJobTitlesService::getUsersJobs($request->pinned);
+            $getJobs = null;
+            if ($getUsersJobsIds !== false) {
+                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds, $request->sort_by);
+            }
+
+            return $getJobs;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getRelatedCareer($request)
+    {
+        try {
+            $getCurrentUsersSkills = UserSkillsService::getUserSkills();
+            $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
+            $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs()->toArray();
+            $getJobIds = array_diff($getJobsIdsBasedOnSkills, $getCurrentUsersJobs);
+            $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
+            if ($getJobTitle) {
+                return $getJobTitle;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getJobDetails($id)
+    {
+        try {
+            $getJobDetails = JobTitle::where('id', $id)->first();
+
+            return $getJobDetails;
+        } catch (\Exception $e) {
             return false;
         }
     }

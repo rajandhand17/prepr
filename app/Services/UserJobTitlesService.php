@@ -1,0 +1,116 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\UserJobTitle;
+
+class UserJobTitlesService
+{
+    public static function getUsersJobs($pinned = null)
+    {
+        try {
+            $pin = ($pinned == 'yes') ? '1' : '0';
+            $getCurrentUsersJobs = UserJobTitle::where('user_id', auth()->user()->id);
+            if ($pinned !== null) {
+                $getCurrentUsersJobs = $getCurrentUsersJobs->where('pinned', $pin);
+            }
+            $getCurrentUsersJobs = $getCurrentUsersJobs->pluck('job_title_id')->unique();
+            if (!empty($getCurrentUsersJobs)) {
+                return $getCurrentUsersJobs;
+            }
+
+            return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addJobs($request)
+    {
+        try {
+            $getAllSkillsOfJobs = JobTitleSkillServices::getJobSkillsBasedOnJobId($request->job_id);
+            $addedUsersInSkills = UserSkillsService::addMultipleSkills($getAllSkillsOfJobs);
+            if ($addedUsersInSkills) {
+                $addedJobs = new UserJobTitle();
+                $addedJobs->user_id = auth()->user()->id;
+                $addedJobs->job_title_id = $request->job_id;
+                if ($addedJobs->save()) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkJobsExistsInUsers($jobId)
+    {
+        try {
+            $getJobs = UserJobTitle::where([
+                'user_id'     => auth()->user()->id,
+                'job_title_id'=> $jobId,
+            ])->first();
+            if ($getJobs) {
+                return $getJobs;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addJobPinned($request)
+    {
+        try {
+            $pinned = $request->pinned == 'yes' ? '1' : '0';
+            $userJobTitle = UserJobTitle::where(['user_id'=>auth()->user()->id, 'job_title_id'=>$request->job_id])->first();
+            if ($userJobTitle) {
+                $userJobTitle->pinned = $pinned;
+                $userJobTitle->save();
+            } else {
+                $userJobTitle = UserJobTitle::create([
+                    'user_id'     => auth()->user()->id,
+                    'job_title_id'=> $request->job_id,
+                    'pinned'      => $pinned,
+                ]);
+            }
+
+            return $userJobTitle;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteJob($jobId)
+    {
+        try {
+            $job = UserJobTitle::where('id', $jobId)->first();
+            if ($job) {
+                UserJobTitle::where('id', $jobId)->delete();
+
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkJobExistsOrNot($jobId)
+    {
+        try {
+            $job = UserJobTitle::where('id', $jobId)->first();
+            if ($job) {
+                return $job;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}

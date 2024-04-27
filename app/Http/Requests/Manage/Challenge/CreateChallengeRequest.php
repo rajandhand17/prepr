@@ -25,13 +25,13 @@ class CreateChallengeRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
+            'request_type'                          => 'required|in:draft,publish,archive',
             'organization_id'                       => 'required|exists:organizations,uuid',
             'category_id'                           => 'required|exists:categories,id',
             'duration_id'                           => 'required|exists:durations,id',
             'level_id'                              => 'required|exists:levels,id',
             'title'                                 => 'required_if:request_type,publish|unique:challenges,title',
             'description'                           => 'required_if:request_type,publish',
-            'request_type'                          => 'required|in:draft,publish,archive',
             'privacy'                               => 'required_if:request_type,publish|in:yes,no',
             'cover_image'                           => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'source_link'                           => 'nullable|url',

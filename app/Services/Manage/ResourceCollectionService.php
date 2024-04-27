@@ -358,4 +358,13 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function getResourceCollectionsBasedOnIds($ids)
+    {
+        try {
+            return ResourceCollection::select()->whereIn('id', $ids)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

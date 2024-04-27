@@ -143,4 +143,24 @@ class SkillService
             return false;
         }
     }
+
+    public static function getCurrentUsersMatchedSkills($skills)
+    {
+        try {
+            $getCurrentUsersSkills = UserSkillsService::getUserSkills();
+            if ($getCurrentUsersSkills) {
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createSkillFromGO1($skills)
+    {
+        return array_map(function ($item) {
+            $data = Skill::firstOrCreate(['title' => $item['name']]);
+
+            return $data->id;
+        }, $skills);
+    }
 }

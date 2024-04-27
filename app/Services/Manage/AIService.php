@@ -30,7 +30,7 @@ class AIService
             'base_uri' => 'https://api.openai.com/v1/chat/completions',
             'headers'  => [
                 'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $openAIAPIKey,
+                'Authorization' => 'Bearer '.$openAIAPIKey,
             ],
         ]);
 
@@ -145,7 +145,7 @@ class AIService
 
             return $validChallenges;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeUsingAIPreview in AIService.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -291,7 +291,7 @@ class AIService
 
             return $validLabs;
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAIPreview: ' . $e->getMessage());
+            Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
 
             return false;
         }
@@ -340,7 +340,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: ' . $e->getMessage());
+            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -400,7 +400,7 @@ class AIService
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: ' . $e->getMessage());
+            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -424,7 +424,7 @@ class AIService
 
             return $updatedSkills;
         } catch (Exception $e) {
-            Log::error('Error in processSkills in AIService.php: ' . $e->getMessage());
+            Log::error('Error in processSkills in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -445,7 +445,7 @@ class AIService
 
             return ['skill' => $highestScoreSkill, 'score' => $highestScore];
         } catch (Exception $e) {
-            Log::error('Error in selectHighestScoreSkill in AIService.php: ' . $e->getMessage());
+            Log::error('Error in selectHighestScoreSkill in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -485,7 +485,7 @@ class AIService
                     if ($collectArticles && !$articlesCollected) {
                         try {
                             $articleResponse = $this->bingArticleClient->request('GET', '', [
-                                'query' => ['q' => 'Articles about ' . $title . ' for level ' . $levelTitle, 'count' => 20],
+                                'query' => ['q' => 'Articles about '.$title.' for level '.$levelTitle, 'count' => 20],
                             ]);
                             $articleResponse = json_decode($articleResponse->getBody(), true);
 
@@ -510,7 +510,7 @@ class AIService
                     if ($collectVideos && !$videosCollected) {
                         try {
                             $videoResponse = $this->bingVideoClient->request('GET', '', [
-                                'query' => ['q' => 'Videos about ' . $title . ' for level ' . $levelTitle, 'count' => 20],
+                                'query' => ['q' => 'Videos about '.$title.' for level '.$levelTitle, 'count' => 20],
                             ]);
                             $videoResponse = json_decode($videoResponse->getBody(), true);
 
@@ -622,7 +622,7 @@ class AIService
 
                                 $descriptionParts[] = "{$rmTitle} - {$rmDescription}";
                             }
-                            $chunkGroupDescriptions[] = 'Group ' . ($groupIndex + 1) . ': ' . implode(', ', $descriptionParts);
+                            $chunkGroupDescriptions[] = 'Group '.($groupIndex + 1).': '.implode(', ', $descriptionParts);
                         }
 
                         $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
@@ -652,10 +652,10 @@ class AIService
                             if (isset($contentArray['results'])) {
                                 $allAiResults = array_merge($allAiResults, $contentArray['results']);
                             } else {
-                                Log::error('The parsed AI response did not contain the expected "results" key for chunk ' . $chunkIndex);
+                                Log::error('The parsed AI response did not contain the expected "results" key for chunk '.$chunkIndex);
                             }
                         } else {
-                            Log::error('The AI response structure is not as expected for chunk ' . $chunkIndex);
+                            Log::error('The AI response structure is not as expected for chunk '.$chunkIndex);
                         }
                     }
 
@@ -697,7 +697,7 @@ class AIService
                     }
                     unset($group);
                 } catch (Exception $e) {
-                    Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: ' . $e->getMessage());
+                    Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
                 }
             }
         }

@@ -71,7 +71,7 @@ class ChallengeTimelinesService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeTimelines in ChallengeTimelinesService.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeTimelines in ChallengeTimelinesService.php: '.$e->getMessage());
 
             return false;
         }

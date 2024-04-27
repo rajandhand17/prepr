@@ -257,7 +257,7 @@ class ChallengeService
             $source_link = $request->source_link ?? null;
 
             $model = new Challenge();
-            $slug = UtilityHelper::generateSlug($request->challengeTitle, $model);
+            $slug = UtilityHelper::generateSlug($request->title, $model);
 
             $challenge = new Challenge();
             $challenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -268,14 +268,14 @@ class ChallengeService
             $challenge->category_id = $request->category_id;
             $challenge->duration_id = $request->duration_id;
             $challenge->level_id = $request->level_id;
-            $challenge->title = $request->challengeTitle;
-            $challenge->description = $request->challengeDescription;
+            $challenge->title = $request->title;
+            $challenge->description = $request->description;
             $challenge->privacy = $challenge_privacy;
             $challenge->media_type = 'image';
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
             $challenge->source_link = $source_link;
-            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : "No Terms and Conditions.";
+            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;
             $challenge->is_open = $is_open;
@@ -431,7 +431,7 @@ class ChallengeService
     public static function getChallengeBasedOnId($id)
     {
         try {
-            return Challenge::where('id', $id)->first();
+            return Challenge::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'is_open')->where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }
@@ -689,6 +689,20 @@ class ChallengeService
 
             return $challenges->get();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnIds($id)
+    {
+        try {
+            $challenge = Challenge::whereIn('id', $id)->get();
+            if ($challenge != null) {
+                return $challenge;
+            }
+
+            return false;
+        } catch (Exception $e) {
             return false;
         }
     }
