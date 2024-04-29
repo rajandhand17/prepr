@@ -9,7 +9,7 @@ class JobTitleSkillServices
     public static function getJobTitleBasedOnSkills($skills)
     {
         try {
-            $getJobTitleBasedOnSKills = JobTitleSkill::whereIn('skill_id', $skills)->pluck('job_title_id')->unique();
+            $getJobTitleBasedOnSKills = JobTitleSkill::whereIn('skill_id', $skills)->distinct()->pluck('job_title_id');
             if ($getJobTitleBasedOnSKills) {
                 return $getJobTitleBasedOnSKills;
             }

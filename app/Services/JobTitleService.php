@@ -26,7 +26,6 @@ class JobTitleService
                 }
                 $job_list = JobTitle::select('id', $column_name.' as title', 'uuid','created_at');
             }
-
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
                 $job_list = self::filterJobList($job_list, $column_name, $search);
@@ -49,7 +48,7 @@ class JobTitleService
             }
             $job_list = $job_list->take(config('site-settings.dropdown_listing_limit'));
 
-            if (auth()->user() && $pagination==null) {
+            if (auth()->user()) {
                 $job_list = $job_list->paginate(config('site-settings.pagination_per_page_career'));
             } else {
                 $job_list = $job_list->get();
@@ -58,7 +57,7 @@ class JobTitleService
             return $job_list;
         } catch (Exception $e) {
             Log::error('Error in getJobTitles in JobTitleService.php: '.$e->getMessage());
-
+            dd($e);
             return false;
         }
     }
@@ -124,14 +123,17 @@ class JobTitleService
             $getCurrentUsersSkills = UserSkillsService::getUserSkills();
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
             $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
-            $getJobIds= $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs);
+            $getJobIdsDiff = $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs)->all();
+            $getJobIds = array_slice($getJobIdsDiff, 0, 100);
             $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
+
             if ($getJobTitle) {
                 return $getJobTitle;
             }
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }
