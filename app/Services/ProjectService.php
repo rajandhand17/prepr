@@ -537,11 +537,13 @@ class ProjectService
     public static function getBrowsersListing($request)
     {
         try {
-            $getProjectList = Project::where('recruiting_status', '0')
-                ->whereNotIn('user_id', [auth()->user()->id])
-                ->whereHas('members', function ($query) {
-                    $query->whereNotIn('inviter_id', [auth()->user()->id]);
-                });
+            $userId = auth()->user();
+            $myProjectIds = self::getMyProjectIds($userId->id);
+            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userId);
+            $pending=ProjectMemberManagementService::getPendingInvitesProjectIds($userId);
+            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
+            $ids=$mergedIds->unique();
+            $getProjectList=Project::whereNotIn('id',$ids);
             $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
 
             return $getProjectList->paginate(config('site-settings.pagination_per_page'));
@@ -631,9 +633,8 @@ class ProjectService
     public static function getUsersBasedOnProjectMemberManagement($request)
     {
         try {
-            $getMyProjectIds = self::getMyProjectIds(auth()->user()->id);
-            $getMyProjectIdsTeamLead = ProjectMemberManagementService::getProjectsInTeamLead(auth()->user()->id);
-            $projectIds = $getMyProjectIds->merge($getMyProjectIdsTeamLead)->unique();
+            $user=auth()->user();
+            $projectIds=ProjectMemberManagementService::getPendingInvitesProjectIds($user);
             $getProjectList = Project::whereIn('id', $projectIds);
             $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
 

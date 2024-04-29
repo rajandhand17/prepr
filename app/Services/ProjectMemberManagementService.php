@@ -458,7 +458,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public function getAcceptedInvitesProjectIds($userData)
+    public static function getAcceptedInvitesProjectIds($userData)
     {
         try {
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
@@ -470,7 +470,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public function getPendingInvitesProjectIds($userData)
+    public static function getPendingInvitesProjectIds($userData)
     {
         try {
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
