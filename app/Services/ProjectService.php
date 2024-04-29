@@ -539,9 +539,10 @@ class ProjectService
         try {
             $myProjectIds = self::getMyProjectIds($userData->id);
             $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
-            $pending=ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
+            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
             $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-            $projectIds=$mergedIds->unique();
+            $projectIds = $mergedIds->unique();
+
             return $projectIds;
         } catch (Exception $e) {
             return false;
