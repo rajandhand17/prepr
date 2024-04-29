@@ -618,12 +618,13 @@ class ProjectMemberManagementService
             return false;
         }
     }
+
     public static function getMatchedTeams()
     {
         try {
             $getMatchedTeams = ProjectMemberManagement::where([
-                'invite_status'=>'1',
-                'inviter_id'=>auth()->user()->id
+                'invite_status'=> '1',
+                'inviter_id'   => auth()->user()->id,
             ])->pluck('project_id');
 
             return $getMatchedTeams;

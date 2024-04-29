@@ -22,7 +22,7 @@ class TeamMatchingController extends AppBaseController
             if (!in_array($action, ['browse', 'pending', 'matched'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            $userData=auth()->user();
+            $userData = auth()->user();
             $response = [];
             switch ($action) {
                 case 'browse':
