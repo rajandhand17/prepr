@@ -40,10 +40,22 @@ class TeamMatchingRepository implements TeamMatchingInterface
         }
     }
 
-    public function getPendingRequests($request)
+    public function getPendingRequests($userData)
     {
         try {
-            $getProjectsPendingList = $this->projectService->getUsersBasedOnProjectMemberManagement($request);
+         //  $getProjectsPendingList = $this->projectService->getUsersBasedOnProjectMemberManagement($request);
+            $getProjectsIds=$this->projectMemberManagementService->getPendingInvitesProjectIds($userData);
+            return $getProjectsIds;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getMatchingTeams()
+    {
+        try {
+            //$getProjectsPendingList = $this->projectService->getMatchedTeams($request);
+            $getProjectsPendingList = $this->projectMemberManagementService->getMatchedTeams();
 
             return $getProjectsPendingList;
         } catch (\Exception $e) {
@@ -51,12 +63,10 @@ class TeamMatchingRepository implements TeamMatchingInterface
         }
     }
 
-    public function getMatchingTeams($request)
+    public function getProjectList($getProjectIds, $request)
     {
         try {
-            $getProjectsPendingList = $this->projectService->getMatchedTeams($request);
-
-            return $getProjectsPendingList;
+            return $this->projectService->getProjectList($getProjectIds, $request);
         } catch (\Exception $e) {
             return false;
         }

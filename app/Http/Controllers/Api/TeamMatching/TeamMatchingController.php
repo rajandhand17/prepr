@@ -22,27 +22,31 @@ class TeamMatchingController extends AppBaseController
             if (!in_array($action, ['browse', 'pending', 'matched'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
+            $userData=auth()->user();
             switch ($action) {
                 case 'browse':
-                    $getlist = $this->teamMatchingRepository->getBrowsersList($request);
+                    $getProjectIds = $this->teamMatchingRepository->getBrowsersList($userData);
                     break;
                 case 'pending':
-                    $getlist = $this->teamMatchingRepository->getPendingRequests($request);
+                    $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData);
                     break;
                 case 'matched':
-                    $getlist = $this->teamMatchingRepository->getMatchingTeams($request);
+                    $getProjectIds = $this->teamMatchingRepository->getMatchingTeams();
 
                     break;
             }
-            if ($getlist) {
-                $response = [
-                    'total_count'  => $getlist->total(),
-                    'per_page'     => $getlist->perPage(),
-                    'count'        => $getlist->count(),
-                    'current_page' => $getlist->currentPage(),
-                    'total_pages'  => $getlist->lastPage(),
-                    'list'         => TeamMatchingResource::collection($getlist),
-                ];
+            if ($getProjectIds) {
+                $project = $this->teamMatchingRepository->getProjectList($getProjectIds, $request);
+                if ($project !== false) {
+                    $response = [
+                        'total_count' => $project->total(),
+                        'per_page' => $project->perPage(),
+                        'count' => $project->count(),
+                        'current_page' => $project->currentPage(),
+                        'total_pages' => $project->lastPage(),
+                        'list' => TeamMatchingResource::collection($project),
+                    ];
+                }
             } else {
                 $response = [];
             }

@@ -534,19 +534,19 @@ class ProjectService
         }
     }
 
-    public static function getBrowsersListing($request)
+    public static function getBrowsersListing($userData)
     {
         try {
-            $userId = auth()->user();
-            $myProjectIds = self::getMyProjectIds($userId->id);
-            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userId);
-            $pending=ProjectMemberManagementService::getPendingInvitesProjectIds($userId);
+            $myProjectIds = self::getMyProjectIds($userData->id);
+            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
+            $pending=ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
             $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-            $ids=$mergedIds->unique();
-            $getProjectList=Project::whereNotIn('id',$ids);
-            $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
-
-            return $getProjectList->paginate(config('site-settings.pagination_per_page'));
+            $projectIds=$mergedIds->unique();
+            return $projectIds;
+//            $getProjectList=Project::whereNotIn('id',$ids);
+//            $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
+//
+//            return $getProjectList->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
             return false;
         }
@@ -635,10 +635,11 @@ class ProjectService
         try {
             $user=auth()->user();
             $projectIds=ProjectMemberManagementService::getPendingInvitesProjectIds($user);
-            $getProjectList = Project::whereIn('id', $projectIds);
-            $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
-
-            return $getProjectList->paginate(config('site-settings.pagination_per_page'));
+            return $projectIds;
+//            $getProjectList = Project::whereIn('id', $projectIds);
+//            $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
+//
+//            return $getProjectList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;
         }
