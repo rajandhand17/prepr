@@ -123,12 +123,8 @@ class JobTitleService
             $getCurrentUsersSkills = UserSkillsService::getUserSkills();
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
             $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
-<<<<<<< HEAD
             $getJobIdsDiff = $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs)->all();
             $getJobIds = array_slice($getJobIdsDiff, 0, 100);
-=======
-            $getJobIds = $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs);
->>>>>>> ec8ad4789a8ac01cd7dab783658a46c7e1cf7145
             $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
 
             if ($getJobTitle) {
