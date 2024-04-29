@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Schema;
 
 class JobTitleService
 {
-    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null, $sortBy = null, $pagination=null)
+    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null, $sortBy = null, $pagination = null)
     {
         try {
             if ($language == 'en') {
-                $job_list = JobTitle::select('id', 'title', 'uuid','created_at');
+                $job_list = JobTitle::select('id', 'title', 'uuid', 'created_at');
                 if ($job_title_id !== null) {
                     $job_list = $job_list->whereIn('id', $job_title_id);
                 }
@@ -24,7 +24,7 @@ class JobTitleService
                 if (!$column_name || !Schema::hasColumn('jobs', $column_name)) {
                     return false;
                 }
-                $job_list = JobTitle::select('id', $column_name.' as title', 'uuid','created_at');
+                $job_list = JobTitle::select('id', $column_name.' as title', 'uuid', 'created_at');
             }
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
@@ -48,7 +48,7 @@ class JobTitleService
             }
             $job_list = $job_list->take(config('site-settings.dropdown_listing_limit'));
 
-            if (auth()->user()) {
+            if (auth()->user() && $pagination == null) {
                 $job_list = $job_list->paginate(config('site-settings.pagination_per_page_career'));
             } else {
                 $job_list = $job_list->get();
@@ -57,7 +57,6 @@ class JobTitleService
             return $job_list;
         } catch (Exception $e) {
             Log::error('Error in getJobTitles in JobTitleService.php: '.$e->getMessage());
-            dd($e);
             return false;
         }
     }
@@ -109,8 +108,9 @@ class JobTitleService
             $getUsersJobsIds = UserJobTitlesService::getUsersJobs($request->pinned);
             $getJobs = null;
             if ($getUsersJobsIds !== false) {
-                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds, $request->sort_by,'yes');
+                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds, $request->sort_by, 'yes');
             }
+
             return $getJobs;
         } catch (\Exception $e) {
             return false;
@@ -123,8 +123,12 @@ class JobTitleService
             $getCurrentUsersSkills = UserSkillsService::getUserSkills();
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
             $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
+<<<<<<< HEAD
             $getJobIdsDiff = $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs)->all();
             $getJobIds = array_slice($getJobIdsDiff, 0, 100);
+=======
+            $getJobIds = $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs);
+>>>>>>> ec8ad4789a8ac01cd7dab783658a46c7e1cf7145
             $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
 
             if ($getJobTitle) {

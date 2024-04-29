@@ -44,11 +44,13 @@ class JobTitle extends Model
         return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'foreign_id', 'id')->where('type', '0');
     }
 
-    public function saved_jobs(){
+    public function saved_jobs()
+    {
         if (auth('api')->check()) {
             return ($this->hasOne(UserJobTitle::class, 'job_title_id', 'id')->where('user_id', auth('api')->user()->id)->count() > 0) ? 'Yes' : 'No';
         }
+
         return 'NA';
-      //  return $this->hasOne(UserJobTitle::class,'job_title_id','id')->where('user_id',auth()->user()->id);
+        //  return $this->hasOne(UserJobTitle::class,'job_title_id','id')->where('user_id',auth()->user()->id);
     }
 }

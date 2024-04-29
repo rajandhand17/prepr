@@ -5,7 +5,6 @@ namespace App\Http\Resources\Career;
 use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
 use App\Http\Resources\Master\SkillResource;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,7 +29,7 @@ class CareerResource extends JsonResource
             'related_resource' => $this->related_resource == null ? 0 : $this->related_resource->count(),
             'saved_on'         => $this->created_at == null ? '' : UtilityHelper::formatDateTime($this->created_at),
             'pinned'           => $this->pinned == null ? 0 : $this->pinned,
-            'saved'            =>$this->saved_jobs(),
+            'saved'            => $this->saved_jobs(),
         ];
     }
 }

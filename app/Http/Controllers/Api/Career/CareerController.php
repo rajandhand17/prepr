@@ -24,9 +24,10 @@ class CareerController extends AppBaseController
         try {
             $getJobs = $this->careerRepository->getMyJobsListing($request);
             if ($getJobs) {
-                return $this->sendResponse(CareerResource::collection($getJobs),
-                    __('response.job_listing_successfully'));
-
+                return $this->sendResponse(
+                    CareerResource::collection($getJobs),
+                    __('response.job_listing_successfully')
+                );
             }
 
             return $this->sendResponse([], __('response.job_listing_successfully'));
