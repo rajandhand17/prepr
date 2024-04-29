@@ -618,22 +618,13 @@ class ProjectMemberManagementService
             return false;
         }
     }
-
-    public static function getInviterIdBasedOnProjectIds($projectIds)
-    {
-        try {
-            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['invite_type' =>'3', 'invite_status' => '2'])->whereIn('project_id', $projectIds)->whereNotIn('inviter_id', [auth()->user()->id])->pluck('inviter_id');
-
-            return $getAcceptedInvitesProjectIds;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public static function getMatchedTeams()
     {
         try {
-            $getMatchedTeams = ProjectMemberManagement::where(['invite_status'=>'1', 'inviter_id'=>auth()->user()->id])->pluck('project_id');
+            $getMatchedTeams = ProjectMemberManagement::where([
+                'invite_status'=>'1',
+                'inviter_id'=>auth()->user()->id
+            ])->pluck('project_id');
 
             return $getMatchedTeams;
         } catch (\Exception $e) {

@@ -706,4 +706,31 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengeDetailedBasedOnChallenges($challengeId,$created_at,$getProjectIdBasedTemplate=null)
+    {
+        try {
+            $fetchChallenge = self::getChallengeBasedOnId($challengeId);
+            if ($fetchChallenge) {
+                $getTemplate = ($getProjectIdBasedTemplate !== null) ? $getProjectIdBasedTemplate->template_id : ($fetchChallenge->challenge_project_template->template_id ?? 0);
+                $projectDate = UtilityHelper::formatDateTime($created_at);
+                $fetchChallengeDueDate = self::fetchChallengeDueDate($fetchChallenge, $projectDate);
+                $challenge_details = [
+                    'id' => $fetchChallenge->id,
+                    'uuid' => $fetchChallenge->uuid,
+                    'title' => $fetchChallenge->title,
+                    'slug' => $fetchChallenge->slug,
+                    'agreement' => $fetchChallenge->agreement,
+                    'template_id' => $getTemplate,
+                    'challenge_type' => $fetchChallengeDueDate['timeline_type'],
+                    'due_date' => $fetchChallengeDueDate['submission_deadline_date'],
+                    'submission_status' => $fetchChallengeDueDate['submission_status'],
+                    'challenge_status' => $fetchChallengeDueDate['challenge_status'],
+                ];
+                return $challenge_details;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

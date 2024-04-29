@@ -19,25 +19,10 @@ class TeamMatchingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $challenge_details=null;
+        $skills=null;
         if ($this->challenge_id) {
-            $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
-            if ($fetchChallenge) {
-                $getTemplate = ($this->getProjectIdBasedTemplate !== null) ? $this->getProjectIdBasedTemplate->template_id : ($fetchChallenge->challenge_project_template->template_id ?? 0);
-                $projectDate = UtilityHelper::formatDateTime($this->created_at);
-                $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($fetchChallenge, $projectDate);
-                $challenge_details = [
-                    'id'                => $fetchChallenge->id,
-                    'uuid'              => $fetchChallenge->uuid,
-                    'title'             => $fetchChallenge->title,
-                    'slug'              => $fetchChallenge->slug,
-                    'agreement'         => $fetchChallenge->agreement,
-                    'template_id'       => $getTemplate,
-                    'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
-                    'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
-                    'submission_status' => $fetchChallengeDueDate['submission_status'],
-                    'challenge_status'  => $fetchChallengeDueDate['challenge_status'],
-                ];
-            }
+            $challenge_details=ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id,$this->created_at,$this->getProjectIdBasedTemplate);
         }
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('skill_id');

@@ -106,26 +106,9 @@ class ProjectResource extends JsonResource
         }
 
         if ($this->challenge_id) {
+            $challenge_details=ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id,$this->created_at,$this->getProjectIdBasedTemplate);
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
-            if ($fetchChallenge) {
-                $getTemplate = ($this->getProjectIdBasedTemplate !== null) ? $this->getProjectIdBasedTemplate->template_id : ($fetchChallenge->challenge_project_template->template_id ?? 0);
-                $projectDate = UtilityHelper::formatDateTime($this->created_at);
-                $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($fetchChallenge, $projectDate);
-                $challenge_details = [
-                    'id'                => $fetchChallenge->id,
-                    'uuid'              => $fetchChallenge->uuid,
-                    'title'             => $fetchChallenge->title,
-                    'slug'              => $fetchChallenge->slug,
-                    'agreement'         => $fetchChallenge->agreement,
-                    'template_id'       => $getTemplate,
-                    'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
-                    'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
-                    'submission_status' => $fetchChallengeDueDate['submission_status'],
-                    'challenge_status'  => $fetchChallengeDueDate['challenge_status'],
-                ];
-            }
-
-            if ($fetchChallenge->participation_achievement) {
+            if ($fetchChallenge && $fetchChallenge->participation_achievement) {
                 $achievement = [
                     'achievement_name'      => $fetchChallenge->participation_achievement->achievement_name,
                     'achievement_points'    => $fetchChallenge->participation_achievement->achievement_points,
