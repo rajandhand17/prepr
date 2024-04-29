@@ -24,7 +24,7 @@ class CreateChallengeUsingAIRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'challengeTitle'                        => 'required|unique:challenges,title',
+            'challengeTitle'                        => 'required',
             'challengeDescription'                  => 'required',
             'category_id'                           => 'required|exists:categories,id',
             'organization_id'                       => 'required|exists:organizations,uuid',

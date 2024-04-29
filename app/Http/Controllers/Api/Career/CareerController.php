@@ -24,16 +24,10 @@ class CareerController extends AppBaseController
         try {
             $getJobs = $this->careerRepository->getMyJobsListing($request);
             if ($getJobs) {
-                $response = [
-                    'total_count'  => $getJobs->total(),
-                    'per_page'     => $getJobs->perPage(),
-                    'count'        => $getJobs->count(),
-                    'current_page' => $getJobs->currentPage(),
-                    'total_pages'  => $getJobs->lastPage(),
-                    'list'         => CareerResource::collection($getJobs),
-                ];
-
-                return $this->sendResponse($response, __('response.job_listing_successfully'));
+                return $this->sendResponse(
+                    CareerResource::collection($getJobs),
+                    __('response.job_listing_successfully')
+                );
             }
 
             return $this->sendResponse([], __('response.job_listing_successfully'));
@@ -92,10 +86,10 @@ class CareerController extends AppBaseController
         }
     }
 
-    public function getRelatedCareer()
+    public function getRelatedCareer(Request $request)
     {
         try {
-            $relatedCareer = $this->careerRepository->getRelatedCareer();
+            $relatedCareer = $this->careerRepository->getRelatedCareer($request);
             if ($relatedCareer) {
                 $response = [
                     'total_count'  => $relatedCareer->total(),
