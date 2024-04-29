@@ -7,9 +7,9 @@ use Response;
 
 class AppBaseController extends Controller
 {
-    public function sendResponse($result, $message)
+    public function sendResponse($result, $message, $code = 200)
     {
-        return Response::json(ResponseUtil::makeResponse($message, $result));
+        return Response::json(ResponseUtil::makeResponse($message, $result), $code);
     }
 
     public function sendError($error, $code = 404)
