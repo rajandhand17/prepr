@@ -543,10 +543,6 @@ class ProjectService
             $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
             $projectIds=$mergedIds->unique();
             return $projectIds;
-//            $getProjectList=Project::whereNotIn('id',$ids);
-//            $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
-//
-//            return $getProjectList->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
             return false;
         }
@@ -625,21 +621,6 @@ class ProjectService
             $project_list = self::filterTeamMatesProjectList($getMyProjects, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public static function getUsersBasedOnProjectMemberManagement($request)
-    {
-        try {
-            $user=auth()->user();
-            $projectIds=ProjectMemberManagementService::getPendingInvitesProjectIds($user);
-            return $projectIds;
-//            $getProjectList = Project::whereIn('id', $projectIds);
-//            $getProjectList = self::filterTeamMatesProjectList($getProjectList, $request);
-//
-//            return $getProjectList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             return false;
         }

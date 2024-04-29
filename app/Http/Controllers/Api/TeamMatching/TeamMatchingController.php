@@ -32,7 +32,6 @@ class TeamMatchingController extends AppBaseController
                     break;
                 case 'matched':
                     $getProjectIds = $this->teamMatchingRepository->getMatchingTeams();
-
                     break;
             }
             if ($getProjectIds) {
