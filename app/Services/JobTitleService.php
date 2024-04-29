@@ -57,6 +57,7 @@ class JobTitleService
             return $job_list;
         } catch (Exception $e) {
             Log::error('Error in getJobTitles in JobTitleService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -134,6 +135,7 @@ class JobTitleService
             return false;
         } catch (\Exception $e) {
             dd($e);
+
             return false;
         }
     }
