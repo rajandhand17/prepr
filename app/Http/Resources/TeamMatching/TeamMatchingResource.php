@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\TeamMatching;
 
-use App\Helpers\UtilityHelper;
 use App\Http\Resources\User\UserResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillService;
@@ -19,10 +18,10 @@ class TeamMatchingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $challenge_details=null;
-        $skills=null;
+        $challenge_details = null;
+        $skills = null;
         if ($this->challenge_id) {
-            $challenge_details=ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id,$this->created_at,$this->getProjectIdBasedTemplate);
+            $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $this->getProjectIdBasedTemplate);
         }
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('skill_id');
