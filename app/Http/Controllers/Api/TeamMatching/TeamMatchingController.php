@@ -39,15 +39,16 @@ class TeamMatchingController extends AppBaseController
                 $project = $this->teamMatchingRepository->getProjectList($getProjectIds, $request);
                 if ($project !== false) {
                     $response = [
-                        'total_count' => $project->total(),
-                        'per_page' => $project->perPage(),
-                        'count' => $project->count(),
+                        'total_count'  => $project->total(),
+                        'per_page'     => $project->perPage(),
+                        'count'        => $project->count(),
                         'current_page' => $project->currentPage(),
-                        'total_pages' => $project->lastPage(),
-                        'list' => TeamMatchingResource::collection($project),
+                        'total_pages'  => $project->lastPage(),
+                        'list'         => TeamMatchingResource::collection($project),
                     ];
                 }
             }
+
             return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
