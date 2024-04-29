@@ -15,8 +15,7 @@ class ResourceScormController extends AppBaseController
     public function __construct(
         protected ResourceModuleRepository $resourceModuleRepository,
         protected ScormRepository $scormRepository
-    )
-    {
+    ) {
     }
 
     /**
