@@ -87,9 +87,9 @@ class UserJobTitlesService
     public static function deleteJob($jobId)
     {
         try {
-            $job = UserJobTitle::where('id', $jobId)->first();
+            $job = UserJobTitle::where(['user_id'=>auth()->user()->id, 'job_title_id'=>$jobId])->first();
             if ($job) {
-                UserJobTitle::where('id', $jobId)->delete();
+                UserJobTitle::where(['user_id'=>auth()->user()->id, 'job_title_id'=>$jobId])->delete();
 
                 return true;
             }
@@ -103,7 +103,7 @@ class UserJobTitlesService
     public static function checkJobExistsOrNot($jobId)
     {
         try {
-            $job = UserJobTitle::where('id', $jobId)->first();
+            $job = UserJobTitle::where(['user_id'=>auth()->user()->id, 'job_title_id'=>$jobId])->first();
             if ($job) {
                 return $job;
             }
