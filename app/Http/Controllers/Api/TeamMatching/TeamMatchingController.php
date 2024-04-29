@@ -22,7 +22,7 @@ class TeamMatchingController extends AppBaseController
             if (!in_array($action, ['browse', 'pending', 'matched'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
-            $userData=auth()->user();
+            $userData = auth()->user();
             switch ($action) {
                 case 'browse':
                     $getProjectIds = $this->teamMatchingRepository->getBrowsersList($userData);
@@ -38,17 +38,18 @@ class TeamMatchingController extends AppBaseController
                 $project = $this->teamMatchingRepository->getProjectList($getProjectIds, $request);
                 if ($project !== false) {
                     $response = [
-                        'total_count' => $project->total(),
-                        'per_page' => $project->perPage(),
-                        'count' => $project->count(),
+                        'total_count'  => $project->total(),
+                        'per_page'     => $project->perPage(),
+                        'count'        => $project->count(),
                         'current_page' => $project->currentPage(),
-                        'total_pages' => $project->lastPage(),
-                        'list' => TeamMatchingResource::collection($project),
+                        'total_pages'  => $project->lastPage(),
+                        'list'         => TeamMatchingResource::collection($project),
                     ];
                 }
             } else {
                 $response = [];
             }
+
             return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
