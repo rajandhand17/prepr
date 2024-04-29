@@ -1057,6 +1057,7 @@
     "responses.message_not_found": "Message not found",
     "responses.message_not_deleted": "Oops! The deletion of message has failed",
     "responses.message_deleted": "you have successfully deleted message",
+    "responses.resource_modules_previews_failed": "Resource modules' previews could not be found or created!",
     "responses.invalid_type": "The type can be either topics or providers.",
     "responses.topics_list_successfully": "Topics list fetched from go1 successfully",
     "responses.providers_list_successfully": "Providers list fetched from go1 successfully",

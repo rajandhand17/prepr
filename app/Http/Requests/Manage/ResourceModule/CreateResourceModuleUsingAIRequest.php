@@ -33,7 +33,7 @@ class CreateResourceModuleUsingAIRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'title'                          => 'required|unique:resource_modules,title',
+            'title'                          => 'required',
             'organization_id'                => 'required|exists:organizations,uuid',
             'description'                    => 'required',
             'duration_id'                    => 'required|exists:durations,id',

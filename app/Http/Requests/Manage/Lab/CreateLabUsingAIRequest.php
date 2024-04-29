@@ -24,7 +24,7 @@ class CreateLabUsingAIRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'labTitle'                              => 'required|unique:labs,title',
+            'labTitle'                              => 'required',
             'labDescription'                        => 'required',
             'organization_id'                       => 'required|exists:organizations,uuid',
             'duration_id'                           => 'required|exists:durations,id',
