@@ -17,7 +17,7 @@ class CareerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $response= [
+        $response = [
             'id'                => $this->id,
             'uuid'              => $this->uuid,
             'title'             => $this->title,
@@ -30,9 +30,10 @@ class CareerResource extends JsonResource
             'saved_on'          => $this->created_at == null ? '' : UtilityHelper::formatDateTime($this->created_at),
             'saved'             => $this->saved_jobs(),
         ];
-        if(isset($this->pinned->pinned)){
-            $response['pinned'] =$this->pinned->pinned == 0 ? 'no' : 'yes';
+        if (isset($this->pinned->pinned)) {
+            $response['pinned'] = $this->pinned->pinned == 0 ? 'no' : 'yes';
         }
+
         return $response;
     }
 }
