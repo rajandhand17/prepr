@@ -34,16 +34,18 @@ class JobTitleSkillServices
         }
     }
 
-    public static function getPercentagesOfMatchedSkills($jobId){
+    public static function getPercentagesOfMatchedSkills($jobId)
+    {
         try {
             $usersSkills = UserSkillsService::getUserSkills();
-            $requiredSKills=self::getJobSkillsBasedOnJobId($jobId);
-            $commonSkills=$usersSkills->intersect($requiredSKills);
-            $getCountOfRequiredSkills=$requiredSKills->count();
-            $countOfMatchedSkills=$commonSkills->count();
+            $requiredSKills = self::getJobSkillsBasedOnJobId($jobId);
+            $commonSkills = $usersSkills->intersect($requiredSKills);
+            $getCountOfRequiredSkills = $requiredSKills->count();
+            $countOfMatchedSkills = $commonSkills->count();
             $percentage = ($countOfMatchedSkills / $getCountOfRequiredSkills) * 100;
+
             return $percentage;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
