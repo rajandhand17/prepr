@@ -30,7 +30,7 @@ class CareerResource extends JsonResource
             'saved_on'          => $this->created_at == null ? '' : UtilityHelper::formatDateTime($this->created_at),
             'saved'             => $this->saved_jobs(),
         ];
-        if(isset($this->pinned->pinned)){
+        if($this->pinned && isset($this->pinned->pinned)){
             $response['pinned'] =$this->pinned->pinned == 0 ? 'no' : 'yes';
         }
         return $response;
