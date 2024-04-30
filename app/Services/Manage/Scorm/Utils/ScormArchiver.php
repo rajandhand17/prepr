@@ -159,7 +159,7 @@ class ScormArchiver
     public function deleteScormFolder(string $path): bool
     {
         try {
-            $directory = sprintf('/%s/%s', $this->scormRootDirectory, $path);
+            $directory = sprintf('/%s/%s/', $this->scormRootDirectory, $path);
             if ($this->storage->directoryExists($directory)) {
                 return $this->storage->deleteDirectory($directory);
             }
