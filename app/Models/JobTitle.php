@@ -61,8 +61,4 @@ class JobTitle extends Model
 
         return 'NA';
     }
-
-    public function matched_skill_percentage()
-    {
-    }
 }
