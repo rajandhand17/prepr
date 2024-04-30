@@ -27,7 +27,7 @@ class ProjectService
         }
     }
 
-    public function getProjectList($getProjectIds, $request)
+    public static function getProjectList($getProjectIds, $request)
     {
         try {
             $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
@@ -46,7 +46,6 @@ class ProjectService
             if ($request->has('search') && !empty($request->search)) {
                 $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
             }
-
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
                     case 'public':
@@ -455,7 +454,7 @@ class ProjectService
         }
     }
 
-    public function getPendingProjectIds($getAllChallengeIds, $userData)
+    public static function getPendingProjectIds($getAllChallengeIds, $userData)
     {
         try {
             $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
@@ -531,6 +530,99 @@ class ProjectService
 
             return $project_role;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getBrowsersListing($userData)
+    {
+        try {
+            $myProjectIds = self::getMyProjectIds($userData->id);
+            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
+            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
+            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
+            $projectIds = $mergedIds->unique();
+
+            return $projectIds;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function filterTeamMatesProjectList($project_list, $request)
+    {
+        try {
+            if ($request->has('search') && !empty($request->search)) {
+                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
+            }
+            if ($request->has('privacy') && !empty($request->privacy)) {
+                switch ($request->privacy) {
+                    case 'public':
+                        $project_list = $project_list->where('projects.privacy', '0');
+                        break;
+                    case 'private':
+                        $project_list = $project_list->where('projects.privacy', '1');
+                        break;
+                    default:
+                        $project_list = $project_list;
+                }
+            }
+            if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
+                $project_list = $project_list->whereIn('projects.id', function ($query) use ($request) {
+                    $query->select('project_id')
+                        ->from('project_skills')
+                        ->whereIn('project_skills.skill_id', $request->skills)
+                        ->whereNull('project_skills.deleted_at')
+                        ->distinct(); // Move distinct() here
+                });
+            }
+            if ($request->has('challenge_duration') && !empty($request->challenge_duration) && is_array($request->challenge_duration)) {
+                $project_list = $project_list->whereIn('projects.challenge_id', function ($query) use ($request) {
+                    $query->select('challenges.id')
+                        ->from('challenges')
+                        ->whereIn('challenges.duration_id', $request->challenge_duration)
+                       ->whereNull('challenges.deleted_at');
+                });
+            }
+            if ($request->has('challenge_level') && !empty($request->challenge_level) && is_array($request->challenge_level)) {
+                $project_list = $project_list->whereIn('projects.challenge_id', function ($query) use ($request) {
+                    $query->select('challenges.id')
+                        ->from('challenges')
+                        ->whereIn('challenges.level_id', $request->challenge_level)
+                        ->whereNull('challenges.deleted_at');
+                });
+            }
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $project_list = $project_list->orderBy('projects.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $project_list = $project_list->orderBy('projects.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $project_list = $project_list->orderBy('projects.created_at', 'ASC');
+                        break;
+                    default:
+                        $project_list = $project_list->orderBy('projects.id', 'ASC');
+                }
+            }
+
+            return $project_list;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getMatchedTeams($request)
+    {
+        try {
+            $getProjectIds = ProjectMemberManagementService::getMatchedTeams();
+            $getMyProjects = Project::whereIn('id', $getProjectIds);
+            $project_list = self::filterTeamMatesProjectList($getMyProjects, $request);
+
+            return $project_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
             return false;
         }
     }
