@@ -355,9 +355,9 @@ class OrganizationController extends AppBaseController
                 if ($request->has('organization_members') && !empty($request->organization_members)) {
                     $this->organizationRepository->createOrganizationMembers($request, $organization->id);
                 }
-                $detailsPlan = config('chargebee.chargebee_plan.seed_plan_yearly');
-                $cust_id = UserService::getUserByEmail(auth()->user()->email);
-                dispatch(new SubscribePlanJob($cust_id, $organization, $detailsPlan));
+                $detailsPlan = config('chargebee.chargebee_plan.bloom_plan_yearly');
+                $userData = auth()->user();
+                dispatch(new SubscribePlanJob($userData, $organization, $detailsPlan));
                 $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_stored_success'));

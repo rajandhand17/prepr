@@ -32,11 +32,11 @@ class ChargebeeHelper
     }
 
     //assigning free plan to new user when he register or create new org
-    public static function subscribePlan($user, $organization, $planDetail)
+    public static function subscribePlan($customerDetails, $organization, $planDetail)
     {
         try {
             Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
-            $subscribePlan = Subscription::createWithItems($user->id, [
+            $subscribePlan = Subscription::createWithItems($customerDetails->id, [
                 'subscriptionItems' => [[
                     'itemPriceId' => $planDetail,
                 ],

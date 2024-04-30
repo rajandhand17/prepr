@@ -34,6 +34,7 @@ class SubscribePlanJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $subscribePlan = ChargebeeHelper::subscribePlan($this->user, $this->organization, $this->planDetail);
+        $customerDetails = ChargebeeHelper::getCustomer($this->user->email);
+        $subscribePlan = ChargebeeHelper::subscribePlan($customerDetails, $this->organization, $this->planDetail);
     }
 }
