@@ -26,7 +26,6 @@ class JobTitleService
                 }
                 $job_list = JobTitle::select('id', $column_name.' as title', 'uuid', 'created_at');
             }
-
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
                 $job_list = self::filterJobList($job_list, $column_name, $search);
@@ -125,8 +124,10 @@ class JobTitleService
             $getCurrentUsersSkills = UserSkillsService::getUserSkills();
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
             $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
-            $getJobIds = $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs);
+            $getJobIdsDiff = $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs)->all();
+            $getJobIds = array_slice($getJobIdsDiff, 0, 100);
             $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
+
             if ($getJobTitle) {
                 return $getJobTitle;
             }

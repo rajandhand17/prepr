@@ -14,7 +14,7 @@ class UserJobTitlesService
             if ($pinned !== null) {
                 $getCurrentUsersJobs = $getCurrentUsersJobs->where('pinned', $pin);
             }
-            $getCurrentUsersJobs = $getCurrentUsersJobs->pluck('job_title_id')->unique();
+            $getCurrentUsersJobs = $getCurrentUsersJobs->distinct()->pluck('job_title_id');
             if (!empty($getCurrentUsersJobs)) {
                 return $getCurrentUsersJobs;
             }
