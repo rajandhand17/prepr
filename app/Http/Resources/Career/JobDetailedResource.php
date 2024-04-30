@@ -7,6 +7,7 @@ use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Master\SkillResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
+use App\Services\JobTitleSkillServices;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Public\LabService;
@@ -39,13 +40,13 @@ class JobDetailedResource extends JsonResource
         if ($getAllResources) {
             $resources = ResourceCollectionService::getResourceCollectionsBasedOnIds($getAllResources);
         }
-        $requiredSkills = UserSkillsService::getUserSkills();
+        $getPercentageOfSkills=JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
 
         return [
             'id'            => $this->id,
             'uuid'          => $this->uuid,
             'title'         => $this->title,
-            'matched_skills'=> $this->skills,
+            'related_skills'=> $this->skills,
             'description'   => WikipediaHelper::fetchSkillDescription($this->title, $request->language),
             'skills'        => SkillResource::collection($this->skills),
             'lightcast_id'  => $this->lightcast_id,
@@ -56,6 +57,7 @@ class JobDetailedResource extends JsonResource
             'resources'     => ResourceCollectionResource::collection($resources),
             'related_jobs'  => $this->related_jobs,
             'live_jobs'     => $this->job_posting,
+            'skills_percentage'=>$getPercentageOfSkills,
         ];
     }
 }
