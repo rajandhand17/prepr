@@ -206,6 +206,11 @@ class User extends Authenticatable
         return $this->hasOne(UserPersonalFile::class)->where('type', '0');
     }
 
+    public function userProjects()
+    {
+        return $this->hasMany(Project::class, 'user_id', 'id');
+    }
+
     /**login apis */
     public function login($request)
     {
