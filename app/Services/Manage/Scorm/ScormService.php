@@ -83,6 +83,7 @@ class ScormService
             $scorm->delete();
             $scormFolderDelete = $this->scormArchiver->deleteScormFolder($scorm->uuid);
             if (!$scormFolderDelete) {
+                DB::rollBack();
                 return false;
             }
             DB::commit();
