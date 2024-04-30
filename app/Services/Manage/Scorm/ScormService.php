@@ -79,17 +79,21 @@ class ScormService
     public function delete(Scorm $scorm): bool
     {
         DB::beginTransaction();
+
         try {
             $scorm->delete();
             $scormFolderDelete = $this->scormArchiver->deleteScormFolder($scorm->uuid);
             if (!$scormFolderDelete) {
                 DB::rollBack();
+
                 return false;
             }
             DB::commit();
+
             return true;
         } catch (\Exception $exception) {
             DB::rollBack();
+
             return false;
         }
     }
