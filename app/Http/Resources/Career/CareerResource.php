@@ -17,7 +17,7 @@ class CareerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $response= [
+        $response = [
             'id'                => $this->id,
             'uuid'              => $this->uuid,
             'title'             => $this->title,
@@ -33,6 +33,7 @@ class CareerResource extends JsonResource
         if($this->pinned && isset($this->pinned->pinned)){
             $response['pinned'] =$this->pinned->pinned == 0 ? 'no' : 'yes';
         }
+
         return $response;
     }
 }
