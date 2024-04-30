@@ -53,14 +53,16 @@ class JobTitle extends Model
         return 'NA';
     }
 
-    public function pinned(){
+    public function pinned()
+    {
         if (auth('api')->check()) {
             return $this->hasOne(UserJobTitle::class, 'job_title_id', 'id')->where('user_id', auth('api')->user()->id);
         }
+
         return 'NA';
     }
 
-    public function matched_skill_percentage(){
-
+    public function matched_skill_percentage()
+    {
     }
 }
