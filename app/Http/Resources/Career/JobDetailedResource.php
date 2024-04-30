@@ -58,6 +58,7 @@ class JobDetailedResource extends JsonResource
             'related_jobs'  => $this->related_jobs,
             'live_jobs'     => $this->job_posting,
             'skills_percentage'=>$getPercentageOfSkills,
+            'job_trends'    =>[],
         ];
     }
 }
