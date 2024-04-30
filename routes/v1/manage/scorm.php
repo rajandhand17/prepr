@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\Manage\ResourceModule\ResourceModuleScormController;
 use App\Http\Controllers\Api\Manage\Scorm\ScormController;
 use App\Http\Controllers\Api\Manage\Scorm\ScormTrackingController;
 use Illuminate\Support\Facades\Route;

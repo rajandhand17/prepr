@@ -24,4 +24,3 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     /** SCORM PLAYER URL */
     Route::get('/scorm/player-url/{slug}', [ResourceModuleScormController::class, 'scormUrl']);
 });
-
