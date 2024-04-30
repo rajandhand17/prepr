@@ -51,6 +51,14 @@ class JobTitle extends Model
         }
 
         return 'NA';
-        //  return $this->hasOne(UserJobTitle::class,'job_title_id','id')->where('user_id',auth()->user()->id);
+    }
+
+    public function pinned()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(UserJobTitle::class, 'job_title_id', 'id')->where('user_id', auth('api')->user()->id);
+        }
+
+        return 'NA';
     }
 }
