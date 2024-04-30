@@ -11,7 +11,6 @@ use App\Services\JobTitleSkillServices;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Public\LabService;
-use App\Services\UserSkillsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -40,25 +39,25 @@ class JobDetailedResource extends JsonResource
         if ($getAllResources) {
             $resources = ResourceCollectionService::getResourceCollectionsBasedOnIds($getAllResources);
         }
-        $getPercentageOfSkills=JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
+        $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
 
         return [
-            'id'            => $this->id,
-            'uuid'          => $this->uuid,
-            'title'         => $this->title,
-            'related_skills'=> $this->skills,
-            'description'   => WikipediaHelper::fetchSkillDescription($this->title, $request->language),
-            'skills'        => SkillResource::collection($this->skills),
-            'lightcast_id'  => $this->lightcast_id,
-            'challenges'    => ChallengeResource::collection($getChallenges),
-            'saved_on'      => $this->created_on,
-            'pinned'        => $this->pinned,
-            'labs'          => LabResource::collection($getAllLabs),
-            'resources'     => ResourceCollectionResource::collection($resources),
-            'related_jobs'  => $this->related_jobs,
-            'live_jobs'     => $this->job_posting,
-            'skills_percentage'=>$getPercentageOfSkills,
-            'job_trends'    =>[],
+            'id'               => $this->id,
+            'uuid'             => $this->uuid,
+            'title'            => $this->title,
+            'related_skills'   => $this->skills,
+            'description'      => WikipediaHelper::fetchSkillDescription($this->title, $request->language),
+            'skills'           => SkillResource::collection($this->skills),
+            'lightcast_id'     => $this->lightcast_id,
+            'challenges'       => ChallengeResource::collection($getChallenges),
+            'saved_on'         => $this->created_on,
+            'pinned'           => $this->pinned,
+            'labs'             => LabResource::collection($getAllLabs),
+            'resources'        => ResourceCollectionResource::collection($resources),
+            'related_jobs'     => $this->related_jobs,
+            'live_jobs'        => $this->job_posting,
+            'skills_percentage'=> $getPercentageOfSkills,
+            'job_trends'       => [],
         ];
     }
 }
