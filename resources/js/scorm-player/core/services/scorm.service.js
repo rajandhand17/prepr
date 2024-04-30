@@ -9,7 +9,7 @@ class ScormService {
      */
     static async getDetails(identifier,trackingId) {
         try {
-            const response = await axios.get(`/api/v1/scorm/details/${identifier}?tracking_id=${trackingId}`)
+            const response = await axios.get(`/api/v1/manage/scorm/details/${identifier}?tracking_id=${trackingId}`)
             return response?.data?.data || null;
         } catch (exception) {
             throw exception;
@@ -26,7 +26,7 @@ class ScormService {
      */
     static async trackProgress(scoUUID, version, data, trackingId) {
         try {
-            const response = await axios.post(`/api/v1/scorm/progress-tracking?tracking_id=${trackingId}`, {
+            const response = await axios.post(`/api/v1/manage/scorm/progress-tracking?tracking_id=${trackingId}`, {
                 'sco_uuid': scoUUID,
                 'version': version,
                 'cmi': data

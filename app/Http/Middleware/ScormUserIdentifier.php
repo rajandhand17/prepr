@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Scorm\ScormUserTokenService;
+use App\Services\Manage\Scorm\ScormUserTokenService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,8 +51,8 @@ class ScormUserIdentifier
     public function handleMiddlewareVerificationFail(Request $request)
     {
         if ($request->expectsJson()) {
-            return response()->json(['message' => __('Unauthorized.')], 401);
+            return response()->json(['message' => __('response.unauthorized')], Response::HTTP_UNAUTHORIZED);
         }
-        abort(403);
+        abort(Response::HTTP_UNAUTHORIZED);
     }
 }

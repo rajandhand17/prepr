@@ -212,8 +212,8 @@ return [
         App\Repositories\Api\Chat\Conversation\ConversationServiceProvider::class,
         App\Repositories\Api\Chat\Message\MessageServiceProvider::class,
         /* Scorm */
-        App\Repositories\Api\Scorm\ScormServiceProvider::class,
-        App\Repositories\Api\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
+        \App\Repositories\Api\Manage\Scorm\ScormServiceProvider::class,
+        \App\Repositories\Api\Manage\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,

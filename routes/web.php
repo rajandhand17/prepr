@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Web\ScormPlayerController;
-use App\Http\Controllers\Web\ScormProxyController;
+use App\Http\Controllers\Web\Scorm\ScormPlayerController;
+use App\Http\Controllers\Web\Scorm\ScormProxyController;
 use Illuminate\Support\Facades\Route;
 
 /*

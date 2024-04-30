@@ -3,9 +3,9 @@
 namespace App\Http\Resources\Scorm;
 
 use App\Models\ScormSco;
-use App\Services\Scorm\Enum\ScormVersions;
-use App\Services\Scorm\Tracking\Scorm12Serializer;
-use App\Services\Scorm\Tracking\Scorm2004Serializer;
+use App\Services\Manage\Scorm\Enum\ScormVersions;
+use App\Services\Manage\Scorm\Tracking\Scorm12Serializer;
+use App\Services\Manage\Scorm\Tracking\Scorm2004Serializer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

@@ -1099,5 +1099,6 @@
     "responses.failed_to_fetch_scorm_details": "Failed to fetch scorm details.",
     "responses.scorm_player_link": "Scorm player link.",
     "responses.scorm_session_expired":"Session has expired, Please refresh the page.",
-    "responses.scorm_not_found": "The scorm file doesn't exist."
+    "responses.scorm_not_found": "The scorm file doesn't exist.",
+    "response.unauthorized": "Unauthorized."
 }

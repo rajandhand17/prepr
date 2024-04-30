@@ -43,7 +43,6 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
             $this->mapChatRoutes();
-            $this->mapScormRoutes();
             $this->mapProjectRoutes();
             $this->mapProjectMemberManagementRoutes();
             $this->mapDashboardRoutes();
@@ -100,11 +99,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/chat/conversation')->middleware('api')->group(base_path('routes/v1/chat/message.php'));
     }
 
-    protected function mapScormRoutes()
-    {
-        Route::prefix('api/v1/scorm/')->group(base_path('routes/v1/scorm/scorm.php'));
-    }
-
     protected function mapSettingRoutes()
     {
         Route::prefix('api/v1/setting/')->middleware('api')->group(base_path('routes/v1/setting.php'));
@@ -133,6 +127,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/resource-group/')->middleware('api')->group(base_path('routes/v1/manage/resource-group.php'));
         Route::prefix('api/v1/manage/lab-marketplace/')->middleware('api')->group(base_path('routes/v1/manage/lab-marketplace.php'));
         Route::prefix('api/v1/manage/challenge-template/')->middleware('api')->group(base_path('routes/v1/manage/challenge-template.php'));
+        Route::prefix('api/v1/manage/scorm/')->middleware('api')->group(base_path('routes/v1/manage/scorm.php'));
     }
 
     protected function mapPublicRoutes()
