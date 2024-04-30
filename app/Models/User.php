@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
@@ -327,11 +328,12 @@ class User extends Authenticatable
                     $request->user_type = 'employee';
 
                     // Jobs for creating customer and subscribe plan
-                    $planDetail = config('chargebee.base_plan'); //Default plan selected
+                    $planDetail = config('chargebee.chargebee_plan.seed_plan_yearly'); //Default plan selected
                     CreateCustomerJob::withChain([
                         new SubscribePlanJob($user, $organization, $planDetail),
                     ])->dispatch($user);
                 }
+                $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
                 if ($userpersonal && $usersetting) {

@@ -28,7 +28,7 @@ class UserAchievement extends Command
     public function handle()
     {
         try {
-            $this->info('Migrating old data for users table.');
+            $this->info('Migrating old data for users achievement table.');
             DB::beginTransaction();
             DB::connection('mysql2')->table('user_achievements')->chunkById(1000, function ($userAchievement, $key) {
                 $certificate_date = (int) date('ymd');
