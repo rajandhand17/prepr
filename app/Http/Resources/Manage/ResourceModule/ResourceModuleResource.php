@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\ResourceModule;
 
+use App\Http\Resources\Manage\Scorm\ScormResource;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -181,6 +182,7 @@ class ResourceModuleResource extends JsonResource
             'status'                                  => $status,
             'is_global'                               => $is_global,
             'is_go1_resource'                         => $this->is_go1 ? 'yes' : 'no',
+            'scorm'                                   => new ScormResource($this->scorm->select(['uuid', 'title', 'version'])->first()),
             'skills'                                  => $skills,
             'skill_groups'                            => $skill_groups,
             'skill_stacks'                            => $skill_stacks,
