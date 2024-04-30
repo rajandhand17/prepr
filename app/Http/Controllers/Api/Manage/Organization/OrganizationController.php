@@ -9,7 +9,6 @@ use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
 use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
-use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class OrganizationController extends AppBaseController
