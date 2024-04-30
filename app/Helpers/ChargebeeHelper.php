@@ -45,8 +45,6 @@ class ChargebeeHelper
                 'cf_organisation' => $organization->title,
             ]);
             $subscription = $subscribePlan->subscription();
-
-            self::createChargebeePlanDetails($organization->id);
         } catch(Exception $e) {
             return false;
         }
