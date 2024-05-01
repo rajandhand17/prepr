@@ -61,5 +61,4 @@ class JobTitle extends Model
 
         return 'NA';
     }
-
 }

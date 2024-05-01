@@ -6,15 +6,14 @@ use App\Models\JobTitleSkill;
 
 class JobTitleSkillServices
 {
-    public static function getJobTitleBasedOnSkills($skills,$jobId=null)
+    public static function getJobTitleBasedOnSkills($skills, $jobId = null)
     {
         try {
             $getJobTitleBasedOnSkills = JobTitleSkill::whereIn('skill_id', $skills);
-            if($jobId!==null){
+            if ($jobId !== null) {
                 $getJobTitleBasedOnSkills = $getJobTitleBasedOnSkills->where('job_title_id', '!=', $jobId);
-
             }
-            $getJobTitleBasedOnSkills=$getJobTitleBasedOnSkills->distinct()->pluck('job_title_id');
+            $getJobTitleBasedOnSkills = $getJobTitleBasedOnSkills->distinct()->pluck('job_title_id');
             if ($getJobTitleBasedOnSkills) {
                 return $getJobTitleBasedOnSkills;
             }
