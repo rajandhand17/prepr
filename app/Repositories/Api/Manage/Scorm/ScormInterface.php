@@ -3,12 +3,10 @@
 namespace App\Repositories\Api\Manage\Scorm;
 
 use App\Models\Scorm;
-use App\Models\User;
 use Illuminate\Http\UploadedFile;
 
 interface ScormInterface
 {
-
     /**
      * @param string       $modelType
      * @param int          $modelId

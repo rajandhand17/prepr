@@ -243,7 +243,6 @@ return [
         App\Repositories\Api\Public\Scorm\ScormServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
 
-
         /* GO1 */
         App\Repositories\Api\GO1\GO1ServiceProvider::class,
     ],

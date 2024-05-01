@@ -3,7 +3,6 @@
 namespace App\Repositories\Api\Manage\Scorm;
 
 use App\Models\Scorm;
-use App\Models\User;
 use App\Services\Manage\Scorm\ScormService;
 use Illuminate\Http\UploadedFile;
 
@@ -32,5 +31,4 @@ class ScormRepository implements ScormInterface
             return false;
         }
     }
-
 }
