@@ -9,6 +9,7 @@ use App\Services\Manage\WebhookMetadataService;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class GO1Helper
 {
@@ -208,7 +209,7 @@ class GO1Helper
         }
     }
 
-    public static function prepareGO1Query()
+    public static function prepareGO1Query($request)
     {
         try {
             $unwantedParams = ['page', 'language'];
@@ -218,8 +219,7 @@ class GO1Helper
             $defaultPerPage = config('site-settings.pagination_per_page');
             $lastPage = ceil($dataLimit / $defaultPerPage);
             $currentPage = self::getPage();
-
-            $requestQuery = request()->query();
+            $requestQuery = $request->query();
 
             $remainder = ($dataLimit % $defaultPerPage);
             $dataOnLastPage = $remainder > 0 ? $remainder : $defaultPerPage;
@@ -232,7 +232,7 @@ class GO1Helper
             $defaultQueryParams = [
                 'limit'      => $limit,
                 'offset'     => $offset,
-                'language[]' => $languageMap[request()->language],
+                'language[]' => $languageMap[$request->language],
             ];
 
             $finalQueryParams = array_merge($requestQuery, $defaultQueryParams);
@@ -242,9 +242,9 @@ class GO1Helper
                     unset($finalQueryParams[$key]);
                 }
             }
-
             return $finalQueryParams;
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
+            Log::error("Error in prepareGO1Query in GO1Helper.php: " . $e->getMessage());
             return false;
         }
     }
