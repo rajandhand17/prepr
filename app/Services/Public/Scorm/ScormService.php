@@ -11,16 +11,15 @@ use App\Services\Manage\Scorm\Utils\ScormArchiver;
 class ScormService
 {
     /**
-     * @param ScormArchiver $scormArchiver
-     * @param ScormScoService $scormScoService
+     * @param ScormArchiver         $scormArchiver
+     * @param ScormScoService       $scormScoService
      * @param ScormUserTokenService $scormUserTokenService
      */
     public function __construct(
-        protected ScormArchiver         $scormArchiver,
-        protected ScormScoService       $scormScoService,
+        protected ScormArchiver $scormArchiver,
+        protected ScormScoService $scormScoService,
         protected ScormUserTokenService $scormUserTokenService
-    )
-    {
+    ) {
     }
 
     /**
@@ -136,4 +135,3 @@ class ScormService
         }
     }
 }
-

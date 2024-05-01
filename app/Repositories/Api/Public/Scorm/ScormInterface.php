@@ -4,7 +4,6 @@ namespace App\Repositories\Api\Public\Scorm;
 
 use App\Models\Scorm;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
 
 interface ScormInterface
 {
@@ -22,7 +21,6 @@ interface ScormInterface
      * @return mixed
      */
     public function generateScormProxy(string $url);
-
 
     /**
      * @param Scorm $scorm

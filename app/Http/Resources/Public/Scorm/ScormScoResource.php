@@ -24,24 +24,24 @@ class ScormScoResource extends JsonResource
         $scormVersion = $this->scorm?->version;
 
         return [
-            'uuid' => $this->uuid,
-            'scorm_id' => $this->scorm_id,
-            'sco_parent_id' => $this->sco_parent_id,
-            'entry_url' => $this->scorm_entry_url,
-            'identifier' => $this->identifier,
-            'title' => $this->title,
-            'visible' => $this->visible,
-            'sco_parameters' => $this->sco_parameters,
-            'launch_data' => $this->launch_data,
-            'max_time_allowed' => $this->max_time_allowed,
-            'time_limit_action' => $this->time_limit_action,
-            'block' => $this->block,
-            'score_int' => $this->score_int,
-            'score_decimal' => $this->score_decimal,
+            'uuid'                 => $this->uuid,
+            'scorm_id'             => $this->scorm_id,
+            'sco_parent_id'        => $this->sco_parent_id,
+            'entry_url'            => $this->scorm_entry_url,
+            'identifier'           => $this->identifier,
+            'title'                => $this->title,
+            'visible'              => $this->visible,
+            'sco_parameters'       => $this->sco_parameters,
+            'launch_data'          => $this->launch_data,
+            'max_time_allowed'     => $this->max_time_allowed,
+            'time_limit_action'    => $this->time_limit_action,
+            'block'                => $this->block,
+            'score_int'            => $this->score_int,
+            'score_decimal'        => $this->score_decimal,
             'completion_threshold' => $this->completion_threshold,
-            'prerequisites' => $this->prerequisites,
-            'tracking' => $this->scoTracking ? $this->getScormTracking($scormVersion) : null,
-            'children' => self::collection($this->whenLoaded('children')),
+            'prerequisites'        => $this->prerequisites,
+            'tracking'             => $this->scoTracking ? $this->getScormTracking($scormVersion) : null,
+            'children'             => self::collection($this->whenLoaded('children')),
         ];
     }
 
@@ -56,8 +56,8 @@ class ScormScoResource extends JsonResource
     {
         return match ($version) {
             ScormVersions::SCORM_2004->value => (new Scorm2004Serializer())->getCmiData($this->scoTracking->toArray() ?: []),
-            ScormVersions::SCORM_12->value => (new Scorm12Serializer())->getCmiData($this->scoTracking->toArray() ?: []),
-            default => null
+            ScormVersions::SCORM_12->value   => (new Scorm12Serializer())->getCmiData($this->scoTracking->toArray() ?: []),
+            default                          => null
         };
     }
 }

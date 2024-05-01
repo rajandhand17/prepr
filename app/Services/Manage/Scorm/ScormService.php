@@ -11,16 +11,15 @@ use Illuminate\Support\Facades\DB;
 class ScormService
 {
     /**
-     * @param ScormArchiver $scormArchiver
-     * @param ScormScoService $scormScoService
+     * @param ScormArchiver         $scormArchiver
+     * @param ScormScoService       $scormScoService
      * @param ScormUserTokenService $scormUserTokenService
      */
     public function __construct(
-        protected ScormArchiver         $scormArchiver,
-        protected ScormScoService       $scormScoService,
+        protected ScormArchiver $scormArchiver,
+        protected ScormScoService $scormScoService,
         protected ScormUserTokenService $scormUserTokenService
-    )
-    {
+    ) {
     }
 
     public function upload(string $modelType, int $modelId, UploadedFile $file, ?Scorm $existing = null): false|Scorm
@@ -44,14 +43,14 @@ class ScormService
              * @var Scorm $scorm
              */
             $scorm = Scorm::query()->create([
-                'model_id' => $modelId,
-                'model_type' => $modelType,
-                'uuid' => data_get($scormData, 'uuid'),
-                'title' => data_get($scormData, 'title'),
-                'version' => data_get($scormData, 'version'),
-                'origin_file' => $file->getClientOriginalName(),
+                'model_id'         => $modelId,
+                'model_type'       => $modelType,
+                'uuid'             => data_get($scormData, 'uuid'),
+                'title'            => data_get($scormData, 'title'),
+                'version'          => data_get($scormData, 'version'),
+                'origin_file'      => $file->getClientOriginalName(),
                 'origin_file_mime' => $file->getClientMimeType(),
-                'entry_url' => data_get($scormData, 'entry_url'),
+                'entry_url'        => data_get($scormData, 'entry_url'),
             ]);
             /*** STORE SCORM SCOS */
             $content = $this->scormScoService->bulkStore($scorm, data_get($scormData, 'scos', []));
