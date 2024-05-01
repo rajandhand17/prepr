@@ -451,10 +451,17 @@ class AIService
 
     public function createResourceModuleUsingAIPreview($request)
     {
-        $title = $request->challengeTitle ? $request->challengeTitle : $request->labTitle;
+        $title = $request->challengeTitle ?? $request->labTitle ?? '';
+
         $language = $request->language;
 
         $skillIDsArray = $request->skills;
+
+        $skillTitles = is_array($request->skill_titles) ? implode(', ', $request->skill_titles) : '';
+
+        $jobTitles = is_array($request->job_titles) ? implode(', ', $request->job_titles) : '';
+
+        $additionalInformation = $request['additional_information'] ?? '';
 
         $durationID = $request->duration_id;
         $durationTitle = $request->duration;
@@ -464,7 +471,7 @@ class AIService
 
         $aiCombinedGroups = [];
 
-        if ($request->resource_module_openai && $title) {
+        if ($request->resource_module_openai) {
             $data = ['articles' => [], 'videos' => []];
 
             $maxAttempts = 3;
@@ -482,8 +489,35 @@ class AIService
 
                     if ($collectArticles && !$articlesCollected) {
                         try {
+                            $queryParts = [];
+
+                            // Only add to query if the value is not empty
+                            if (!empty($title)) {
+                                $queryParts[] = 'Articles about '.$title;
+                            }
+                            if (!empty($levelTitle)) {
+                                $queryParts[] = 'for level '.$levelTitle;
+                            }
+                            if (!empty($durationTitle)) {
+                                $queryParts[] = 'and duration '.$durationTitle;
+                            }
+                            if (!empty($skillTitles)) {
+                                $queryParts[] = 'for skills '.$skillTitles;
+                            }
+                            if (!empty($jobTitles)) {
+                                $queryParts[] = 'for jobs '.$jobTitles;
+                            }
+                            if (!empty($additionalInformation)) {
+                                $queryParts[] = '('.$additionalInformation.')';
+                            }
+
+                            $queryString = implode(' ', $queryParts);
+
                             $articleResponse = $this->bingArticleClient->request('GET', '', [
-                                'query' => ['q' => 'Articles about '.$title.' for level '.$levelTitle, 'count' => 20],
+                                'query' => [
+                                    'q'     => $queryString,
+                                    'count' => 20,
+                                ],
                             ]);
                             $articleResponse = json_decode($articleResponse->getBody(), true);
 
@@ -507,9 +541,37 @@ class AIService
 
                     if ($collectVideos && !$videosCollected) {
                         try {
+                            $videoQueryParts = [];
+
+                            // Only add to query if the value is not empty
+                            if (!empty($title)) {
+                                $videoQueryParts[] = 'Videos about '.$title;
+                            }
+                            if (!empty($levelTitle)) {
+                                $videoQueryParts[] = 'for level '.$levelTitle;
+                            }
+                            if (!empty($durationTitle)) {
+                                $videoQueryParts[] = 'and duration '.$durationTitle;
+                            }
+                            if (!empty($skillTitles)) {
+                                $videoQueryParts[] = 'for skills '.$skillTitles;
+                            }
+                            if (!empty($jobTitles)) {
+                                $videoQueryParts[] = 'for jobs '.$jobTitles;
+                            }
+                            if (!empty($additionalInformation)) {
+                                $queryParts[] = '('.$additionalInformation.')';
+                            }
+
+                            $videoQueryString = implode(' ', $videoQueryParts);
+
                             $videoResponse = $this->bingVideoClient->request('GET', '', [
-                                'query' => ['q' => 'Videos about '.$title.' for level '.$levelTitle, 'count' => 20],
+                                'query' => [
+                                    'q'     => $videoQueryString,
+                                    'count' => 20,
+                                ],
                             ]);
+
                             $videoResponse = json_decode($videoResponse->getBody(), true);
 
                             foreach ($videoResponse['value'] as $video) {
@@ -679,7 +741,7 @@ class AIService
                             }
 
                             $group['title'] = $newResourceModule['title'];
-                            $group['description'] = $resourceModule['description'] || 'Resource Module';
+                            $group['description'] = $resourceModule['description'] ?? 'Resource Module';
                         }
 
                         $group['skill_titles'] = $request->skill_titles;
@@ -712,8 +774,6 @@ class AIService
                 })
                 ->with(['skills'])
                 ->get();
-
-            Log::info($modules);
 
             $filteredModules = $modules->filter(function ($module) use ($firstThreeSkills) {
                 $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
