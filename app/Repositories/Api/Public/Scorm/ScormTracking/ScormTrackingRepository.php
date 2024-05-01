@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Api\Manage\Scorm\ScormTracking;
+namespace App\Repositories\Api\Public\Scorm\ScormTracking;
 
-use App\Services\Manage\Scorm\ScormScoTrackingService;
+use App\Services\Public\Scorm\ScormScoTrackingService;
 
 class ScormTrackingRepository implements ScormTrackingInterface
 {

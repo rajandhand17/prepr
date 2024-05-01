@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Manage\Scorm\ScormUserTokenService;
+use App\Services\Public\Scorm\ScormUserTokenService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

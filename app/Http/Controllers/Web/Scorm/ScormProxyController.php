@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Web\Scorm;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Api\Manage\Scorm\ScormRepository;
+use App\Repositories\Api\Public\Scorm\ScormRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class ScormProxyController extends Controller

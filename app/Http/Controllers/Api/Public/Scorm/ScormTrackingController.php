@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Manage\Scorm;
+namespace App\Http\Controllers\Api\Public\Scorm;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Manage\Scorm\ScormTrackingRequest;
-use App\Repositories\Api\Manage\Scorm\ScormTracking\ScormTrackingRepository;
+use App\Http\Requests\Public\Scorm\ScormTrackingRequest;
+use App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingRepository;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 

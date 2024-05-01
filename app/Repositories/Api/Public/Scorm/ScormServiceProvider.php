@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Api\Manage\Scorm\ScormTracking;
+namespace App\Repositories\Api\Public\Scorm;
 
 use Illuminate\Support\ServiceProvider;
 
-class ScormTrackingServiceProvider extends ServiceProvider
+class ScormServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -22,6 +22,6 @@ class ScormTrackingServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Manage\Scorm\ScormTracking\ScormTrackingInterface', 'App\Repositories\Api\Manage\Scorm\ScormTracking\ScormTrackingRepository');
+        $this->app->bind('App\Repositories\Api\Public\Scorm\ScormInterface', 'App\Repositories\Api\Public\Scorm\ScormRepository');
     }
 }

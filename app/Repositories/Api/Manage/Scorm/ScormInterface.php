@@ -8,20 +8,6 @@ use Illuminate\Http\UploadedFile;
 
 interface ScormInterface
 {
-    /**
-     * @param string $uuid
-     * @param User   $scormUser
-     *
-     * @return mixed
-     */
-    public function getScorm(string $uuid, User $scormUser);
-
-    /**
-     * @param string $url
-     *
-     * @return mixed
-     */
-    public function generateScormProxy(string $url);
 
     /**
      * @param string       $modelType
@@ -32,11 +18,4 @@ interface ScormInterface
      * @return mixed
      */
     public function upload(string $modelType, int $modelId, UploadedFile $file, ?Scorm $existing = null);
-
-    /**
-     * @param Scorm $scorm
-     *
-     * @return mixed
-     */
-    public function generateScormPlayerUrl(Scorm $scorm);
 }

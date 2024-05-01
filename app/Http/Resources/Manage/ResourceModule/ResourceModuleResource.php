@@ -182,7 +182,7 @@ class ResourceModuleResource extends JsonResource
             'status'                                  => $status,
             'is_global'                               => $is_global,
             'is_go1_resource'                         => $this->is_go1 ? 'yes' : 'no',
-            'scorm'                                   => new ScormResource($this->scorm->select(['uuid', 'title', 'version'])->first()),
+            'scorm'                                   => new ScormResource($this->scorm),
             'skills'                                  => $skills,
             'skill_groups'                            => $skill_groups,
             'skill_stacks'                            => $skill_stacks,

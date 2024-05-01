@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Api\Manage\Scorm\ScormTracking;
+namespace App\Repositories\Api\Public\Scorm\ScormTracking;
 
 interface ScormTrackingInterface
 {

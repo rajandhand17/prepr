@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Manage\Scorm;
+namespace App\Services\Public\Scorm;
 
 use App\Models\ScormSco;
 use App\Models\ScormScoTracking;
@@ -11,10 +11,10 @@ use App\Services\Manage\Scorm\Tracking\Scorm2004Serializer;
 class ScormScoTrackingService
 {
     /**
-     * @param int    $userId
+     * @param int $userId
      * @param string $scoUUID
      * @param string $version
-     * @param array  $data
+     * @param array $data
      *
      * @return false|ScormScoTracking
      */
@@ -24,14 +24,14 @@ class ScormScoTrackingService
             $preparedData = $this->prepareTrackingData($version, $data);
             $scoId = $this->getScoIdViaUUID($scoUUID);
 
-            if (!$scoId || !$preparedData) {
+            if ($scoId === false || $preparedData === false) {
                 return false;
             }
 
             /** @var ScormScoTracking $scoTracking */
             $scoTracking = ScormScoTracking::query()->updateOrCreate([
                 'user_id' => $userId,
-                'sco_id'  => $scoId,
+                'sco_id' => $scoId,
             ], $preparedData);
 
             return $scoTracking;
@@ -51,8 +51,8 @@ class ScormScoTrackingService
         try {
             return match ($version) {
                 ScormVersions::SCORM_2004->value => (new Scorm2004Serializer())->getTrackingData($data),
-                ScormVersions::SCORM_12->value   => (new Scorm12Serializer())->getTrackingData($data),
-                default                          => [],
+                ScormVersions::SCORM_12->value => (new Scorm12Serializer())->getTrackingData($data),
+                default => [],
             };
         } catch (\Exception $exception) {
             return false;

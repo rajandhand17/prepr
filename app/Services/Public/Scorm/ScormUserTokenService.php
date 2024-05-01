@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Manage\Scorm;
+namespace App\Services\Public\Scorm;
 
 use App\Models\ScormUserToken;
 use App\Models\User;

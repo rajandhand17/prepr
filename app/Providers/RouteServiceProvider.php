@@ -127,11 +127,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/resource-group/')->middleware('api')->group(base_path('routes/v1/manage/resource-group.php'));
         Route::prefix('api/v1/manage/lab-marketplace/')->middleware('api')->group(base_path('routes/v1/manage/lab-marketplace.php'));
         Route::prefix('api/v1/manage/challenge-template/')->middleware('api')->group(base_path('routes/v1/manage/challenge-template.php'));
-        Route::prefix('api/v1/manage/scorm/')->middleware('api')->group(base_path('routes/v1/manage/scorm.php'));
     }
 
     protected function mapPublicRoutes()
     {
+        Route::prefix('api/v1/public/scorm/')->middleware('api')->group(base_path('routes/v1/public/scorm.php'));
         Route::prefix('api/v1/public/organization/')->middleware('api')->group(base_path('routes/v1/public/organization.php'));
         Route::prefix('api/v1/public/lab/')->middleware('api')->group(base_path('routes/v1/public/lab.php'));
         Route::prefix('api/v1/public/invitation-management/')->middleware('api')->group(base_path('routes/v1/public/invitation-management.php'));

@@ -17,35 +17,6 @@ class ScormRepository implements ScormInterface
     }
 
     /**
-     * @param string $uuid
-     * @param User   $scormUser
-     *
-     * @return Scorm|false|null
-     */
-    public function getScorm(string $uuid, User $scormUser): false|Scorm|null
-    {
-        try {
-            return $this->scormService->getScorm($uuid, $scormUser);
-        } catch (\Exception $exception) {
-            return false;
-        }
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return false|array
-     */
-    public function generateScormProxy(string $url): false|array
-    {
-        try {
-            return $this->scormService->generateScormProxy($url);
-        } catch (\Exception $exception) {
-            return false;
-        }
-    }
-
-    /**
      * @param string       $modelType
      * @param int          $modelId
      * @param UploadedFile $file
@@ -62,17 +33,4 @@ class ScormRepository implements ScormInterface
         }
     }
 
-    /**
-     * @param Scorm $scorm
-     *
-     * @return false|string
-     */
-    public function generateScormPlayerUrl(Scorm $scorm): false|string
-    {
-        try {
-            return $this->scormService->generateScormPlayerUrl($scorm);
-        } catch (\Exception $exception) {
-            return false;
-        }
-    }
 }

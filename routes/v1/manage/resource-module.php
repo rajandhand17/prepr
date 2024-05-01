@@ -21,6 +21,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
 
     /** UPLOAD SCORM FILE IN RESOURCE MODULE */
     Route::post('/scorm/upload/{slug}', [ResourceModuleScormController::class, 'upload']);
-    /** SCORM PLAYER URL */
-    Route::get('/scorm/player-url/{slug}', [ResourceModuleScormController::class, 'scormUrl']);
 });

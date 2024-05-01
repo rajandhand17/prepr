@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Manage\Scorm;
+namespace App\Http\Requests\Public\Scorm;
 
 use App\Http\Requests\BaseRequest;
 use App\Services\Manage\Scorm\Enum\ScormVersions;
