@@ -9,7 +9,7 @@ class JobTitleSkillServices
     public static function getJobTitleBasedOnSkills($skills)
     {
         try {
-            $getJobTitleBasedOnSKills = JobTitleSkill::whereIn('skill_id', $skills)->pluck('job_title_id')->unique()->toArray();
+            $getJobTitleBasedOnSKills = JobTitleSkill::whereIn('skill_id', $skills)->distinct()->pluck('job_title_id');
             if ($getJobTitleBasedOnSKills) {
                 return $getJobTitleBasedOnSKills;
             }
@@ -29,6 +29,22 @@ class JobTitleSkillServices
             }
 
             return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getPercentagesOfMatchedSkills($jobId)
+    {
+        try {
+            $usersSkills = UserSkillsService::getUserSkills();
+            $requiredSKills = self::getJobSkillsBasedOnJobId($jobId);
+            $commonSkills = $usersSkills->intersect($requiredSKills);
+            $getCountOfRequiredSkills = $requiredSKills->count();
+            $countOfMatchedSkills = $commonSkills->count();
+            $percentage = ($countOfMatchedSkills / $getCountOfRequiredSkills) * 100;
+
+            return $percentage;
         } catch (\Exception $e) {
             return false;
         }

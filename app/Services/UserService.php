@@ -178,6 +178,17 @@ class UserService
         }
     }
 
+    public static function getUsersByIds($ids)
+    {
+        try {
+            $fetchUsers = User::whereIn('id', $ids)->get();
+
+            return  $fetchUsers;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function mapGO1User($go1UserId, $response)
     {
         try {

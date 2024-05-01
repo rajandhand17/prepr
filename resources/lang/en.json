@@ -1088,5 +1088,7 @@
     "responses.job_id_required": "The Job field is required",
     "responses.job_id_exists": "This job id is not exists",
     "responses.added_jobs_successfully": "You have successfully add this job",
-    "responses.related_career_successfully": "you have successfully retrieved related jobs list"
+    "responses.related_career_successfully": "you have successfully retrieved related jobs list",
+    "responses.team_matching_list_successfully": "Team Matching List has been successfully retrieved",
+    "responses.team_matching_list_failed": "Team Matching List has not been retrieved"
 }
