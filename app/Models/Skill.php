@@ -40,4 +40,13 @@ class Skill extends Model
     {
         return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'foreign_id', 'id')->where('type', '0');
     }
+
+    public function saved_skill()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(UserSkills::class, 'skill', 'id')->where('user_id', auth('api')->user()->id);
+        }
+
+        return 'NA';
+    }
 }

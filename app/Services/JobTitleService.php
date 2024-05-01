@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Schema;
 
 class JobTitleService
 {
-    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null, $sortBy = null)
+    public static function getJobTitles($language = 'en', $search = null, $job_title_id = null, $sortBy = null, $pagination = null)
     {
         try {
             if ($language == 'en') {
-                $job_list = JobTitle::select('id', 'title', 'uuid');
+                $job_list = JobTitle::select('id', 'title', 'uuid', 'created_at');
                 if ($job_title_id !== null) {
                     $job_list = $job_list->whereIn('id', $job_title_id);
                 }
@@ -24,9 +24,8 @@ class JobTitleService
                 if (!$column_name || !Schema::hasColumn('jobs', $column_name)) {
                     return false;
                 }
-                $job_list = JobTitle::select('id', $column_name.' as title', 'uuid');
+                $job_list = JobTitle::select('id', $column_name.' as title', 'uuid', 'created_at');
             }
-
             if ($search != null) {
                 $column_name = isset($column_name) ? $column_name : 'title';
                 $job_list = self::filterJobList($job_list, $column_name, $search);
@@ -49,7 +48,7 @@ class JobTitleService
             }
             $job_list = $job_list->take(config('site-settings.dropdown_listing_limit'));
 
-            if (auth()->user()) {
+            if (auth()->user() && $pagination == null) {
                 $job_list = $job_list->paginate(config('site-settings.pagination_per_page_career'));
             } else {
                 $job_list = $job_list->get();
@@ -110,7 +109,7 @@ class JobTitleService
             $getUsersJobsIds = UserJobTitlesService::getUsersJobs($request->pinned);
             $getJobs = null;
             if ($getUsersJobsIds !== false) {
-                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds, $request->sort_by);
+                $getJobs = self::getJobTitles($request->language, $request->search, $getUsersJobsIds, $request->sort_by, 'yes');
             }
 
             return $getJobs;
@@ -124,9 +123,11 @@ class JobTitleService
         try {
             $getCurrentUsersSkills = UserSkillsService::getUserSkills();
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
-            $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs()->toArray();
-            $getJobIds = array_diff($getJobsIdsBasedOnSkills, $getCurrentUsersJobs);
+            $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
+            $getJobIdsDiff = $getJobsIdsBasedOnSkills->diff($getCurrentUsersJobs)->all();
+            $getJobIds = array_slice($getJobIdsDiff, 0, 100);
             $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
+
             if ($getJobTitle) {
                 return $getJobTitle;
             }

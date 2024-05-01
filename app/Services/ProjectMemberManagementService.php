@@ -458,7 +458,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public function getAcceptedInvitesProjectIds($userData)
+    public static function getAcceptedInvitesProjectIds($userData)
     {
         try {
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
@@ -470,7 +470,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public function getPendingInvitesProjectIds($userData)
+    public static function getPendingInvitesProjectIds($userData)
     {
         try {
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
@@ -588,6 +588,20 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getMatchedTeams()
+    {
+        try {
+            $getMatchedTeams = ProjectMemberManagement::where([
+                'invite_status'=> '1',
+                'inviter_id'   => auth()->user()->id,
+            ])->pluck('project_id');
+
+            return $getMatchedTeams;
+        } catch (\Exception $e) {
             return false;
         }
     }
