@@ -242,9 +242,11 @@ class GO1Helper
                     unset($finalQueryParams[$key]);
                 }
             }
+
             return $finalQueryParams;
         } catch (Exception $e) {
-            Log::error("Error in prepareGO1Query in GO1Helper.php: " . $e->getMessage());
+            Log::error('Error in prepareGO1Query in GO1Helper.php: '.$e->getMessage());
+
             return false;
         }
     }
