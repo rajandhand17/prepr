@@ -45,8 +45,10 @@ class CreateChallengeUsingAIRequest extends FormRequest
             'resource_modules.*'                    => 'required_if:resource_modules,exists|exists:resource_modules,uuid',
             'resource_module_openai'                => 'nullable|boolean',
             'openai_resource_module_types'          => 'nullable|array',
+            'openai_resource_module_types.*'        => 'in:links,videos',
             'resource_module_go1'                   => 'nullable|boolean',
             'go1_resource_module_types'             => 'nullable|array',
+            'go1_resource_module_types.*'           => 'in:course,award,playlist,document,link,interactive,text,video,audio,integration',
             'resource_module_prepr'                 => 'nullable|boolean',
         ];
 
@@ -95,8 +97,10 @@ class CreateChallengeUsingAIRequest extends FormRequest
             'resource_modules.*.exists'                   => __('responses.resource_ids_array_not_exists'),
             'resource_module_openai.boolean'              => __('responses.true_or_false'),
             'openai_resource_module_types.array'          => __('responses.openai_resource_module_types_array'),
+            'openai_resource_module_types.*'              => __('responses.openai_resource_module_types_incorrect'),
             'resource_module_go1.boolean'                 => __('responses.true_or_false'),
             'go1_resource_module_types.array'             => __('responses.go1_resource_module_types_array'),
+            'go1_resource_module_types.*'                 => __('responses.go1_resource_module_types_incorrect'),
             'resource_module_prepr.boolean'               => __('responses.true_or_false'),
         ];
     }

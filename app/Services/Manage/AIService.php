@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\GO1Helper;
 use App\Helpers\RecommendationEngineHelper;
 use App\Models\Category;
 use App\Models\Challenge;
@@ -12,6 +13,7 @@ use App\Models\ResourceModule;
 use App\Models\Skill;
 use Exception;
 use GuzzleHttp\Client;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -20,6 +22,7 @@ class AIService
     protected $openAIClient;
     protected $bingArticleClient;
     protected $bingVideoClient;
+    protected $go1ResourceModuleClient;
 
     public function __construct()
     {
@@ -404,7 +407,7 @@ class AIService
         }
     }
 
-    protected function processSkills($skills)
+    protected function processSkills($skills, $score = 0.92)
     {
         $updatedSkills = [];
         $lowercaseSkills = array_map('strtolower', $skills);
@@ -414,7 +417,7 @@ class AIService
             foreach ($recommendationResponse as $skill) {
                 if (is_array($skill)) {
                     $highestScoreSkill = $this->selectHighestScoreSkill($skill);
-                    if ($highestScoreSkill['score'] >= 0.92) {
+                    if ($highestScoreSkill['score'] >= $score) {
                         $updatedSkills[] = $highestScoreSkill['skill'];
                     }
                 }
@@ -812,7 +815,134 @@ class AIService
             }
         }
 
-        $combinedModules = array_merge($prepr_resource_modules, $aiCombinedGroups);
+        $go1_resource_modules = [];
+
+        if ($request->resource_module_go1) {
+            $memberManagement = new MemberManagementService();
+            if (!$memberManagement->canCreateGO1Resource()) {
+                throw new Exception('No go1 access!');
+            }
+
+            $response = null;
+
+            try {
+                $queryParts = [
+                    'Challenge Title: '.($request['challengeTitle'] ?? 'N/A'),
+                    'Category: '.($request['category'] ?? 'N/A'),
+                    'Level: '.($request['level'] ?? 'N/A'),
+                    'Duration: '.($request['duration'] ?? 'N/A'),
+                ];
+
+                if (!empty($request['skill_titles'])) {
+                    $queryParts[] = 'Skills: ('.implode(', ', $request['skill_titles']).')';
+                }
+                if (!empty($request['job_titles'])) {
+                    $queryParts[] = 'Jobs: ('.implode(', ', $request['job_titles']).')';
+                }
+                if (!empty($request['steps'])) {
+                    $queryParts[] = 'Steps: ('.implode(', ', $request['steps']).')';
+                }
+
+                $fullQueryString = implode(', ', $queryParts).'.';
+                $payload = [
+                    'model'    => 'gpt-3.5-turbo',
+                    'n'        => 1,
+                    'messages' => [
+                        [
+                            'role'    => 'user',
+                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. '.$fullQueryString.' Output format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
+                        ],
+                    ],
+                ];
+
+                $apiResponse = $this->openAIClient->post('', ['json' => $payload]);
+                $response = json_decode($apiResponse->getBody()->getContents(), true);
+
+                if (!$response || empty($response['choices'])) {
+                    throw new Exception('No choices in the response');
+                }
+
+                $responseContent = json_decode($response['choices'][0]['message']['content'], true);
+                $keywords = $responseContent['keywords'] ?? [];
+
+                foreach ($request->go1_resource_module_types as $type) {
+                    foreach ($keywords as $keyword) {
+                        try {
+                            $queryParams = http_build_query(
+                                [
+                                    'keyword'    => $keyword,
+                                    'sort'       => 'relevance',
+                                    'type'       => $type,
+                                    'limit'      => '15',
+                                    'offset'     => 0,
+                                    'language[]' => 'en',
+                                ]
+                            );
+
+                            $response = GO1Helper::listResources($queryParams);
+
+                            if (is_array($response) && isset($response['hits']) && is_array($response['hits'])) {
+                                $count = 0;
+                                foreach ($response['hits'] as $item) {
+                                    if ($count < 3) {
+                                        $module = [];
+
+                                        $module['id'] = $item['id'] ?? null;
+                                        $module['type'] = $item['type'] ?? null;
+                                        $module['title'] = $item['title'] ?? null;
+                                        $module['published'] = $item['published'] ?? null;
+                                        $module['description'] = $item['description'] ?? null;
+                                        $module['image'] = $item['image'] ?? null;
+                                        $module['created_time'] = $item['created_time'] ?? null;
+                                        $module['updated_time'] = $item['updated_time'] ?? null;
+                                        $module['decommission_time'] = $item['decommission_time'] ?? null;
+                                        $module['remove_time'] = $item['remove_time'] ?? null;
+                                        $module['language'] = $item['language'] ?? null;
+                                        $module['tags'] = $item['tags'] ?? null;
+                                        $module['delivery'] = $item['delivery'] ?? null;
+                                        $module['pricing'] = $item['pricing'] ?? null;
+                                        $module['provider'] = $item['provider'] ?? null;
+                                        $module['subscription'] = $item['subscription'] ?? null;
+                                        $module['items'] = $item['items'] ?? null;
+                                        $module['items_count'] = $item['items_count'] ?? null;
+                                        $module['assessable'] = $item['assessable'] ?? null;
+                                        $module['collections'] = $item['collections'] ?? null;
+                                        $module['attributes'] = $item['attributes'] ?? null;
+                                        $module['summary'] = $item['summary'] ?? null;
+                                        $module['previewable'] = $item['previewable'] ?? null;
+                                        $module['authors'] = $item['authors'] ?? null;
+                                        $module['ratings'] = $item['ratings'] ?? null;
+                                        $module['from_go1'] = true;
+
+                                        $skills = Arr::pluck($item['skills'] ?? [], 'name');
+                                        $processedSkills = $this->processSkills($skills, 0.75);
+
+                                        $item['skills'] = array_map(function ($name) {
+                                            return ['name' => $name];
+                                        }, $processedSkills);
+
+                                        $module['skills'] = $item['skills'] ?? null;
+                                        $go1_resource_modules[] = $module;
+                                        $count++;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            }
+                        } catch (Exception $e) {
+                            Log::error("API call failed for type {$type} and keyword {$keyword}: ".$e->getMessage());
+                            continue;
+                        }
+                    }
+                }
+            } catch (Exception $e) {
+                Log::warning('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
+
+                return false;
+            }
+        }
+
+        $combinedModules = array_merge($prepr_resource_modules, $aiCombinedGroups, $go1_resource_modules);
 
         shuffle($combinedModules);
 
