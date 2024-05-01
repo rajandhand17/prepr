@@ -2,15 +2,18 @@
 
 namespace App\Http\Resources\Career;
 
+use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Master\SkillResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
+use App\Services\JobTitleService;
 use App\Services\JobTitleSkillServices;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Public\LabService;
+use App\Services\UserJobTitlesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -33,14 +36,24 @@ class JobDetailedResource extends JsonResource
         if ($getAllLabs) {
             $getAllLabs = LabService::getLabsBasedOnIds($getAllLabs);
         }
-
+        $resources=[];
         $getResources = $this->related_resources;
         $getAllResources = $getResources->pluck('resource_collection_id')->take(config('site-settings.jobs_details_par_module_limit'));
         if ($getAllResources) {
             $resources = ResourceCollectionService::getResourceCollectionsBasedOnIds($getAllResources);
         }
         $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
-
+        $checkSavedOrNot=UserJobTitlesService::checkJobExistsOrNot($this->id);
+        $saved=($checkSavedOrNot==false)? 'no' : 'yes';
+        $pinned='no';
+        if($saved!=='no'){
+          $pinned=($checkSavedOrNot->pinned=='1') ? 'yes' : 'no';
+        }
+        $saved_on=$this->created_at;
+        if($saved=='yes'){
+            $saved_on=$checkSavedOrNot->created_at;
+        }
+        $getRelatedJobs=JobTitleService::getRelatedJobs($this->id);
         return [
             'id'               => $this->id,
             'uuid'             => $this->uuid,
@@ -50,13 +63,14 @@ class JobDetailedResource extends JsonResource
             'skills'           => SkillResource::collection($this->skills),
             'lightcast_id'     => $this->lightcast_id,
             'challenges'       => ChallengeResource::collection($getChallenges),
-            'saved_on'         => $this->created_on,
-            'pinned'           => $this->pinned,
+            'saved_on'         => UtilityHelper::formatDateTime($saved_on),
+            'pinned'           => $pinned,
             'labs'             => LabResource::collection($getAllLabs),
             'resources'        => ResourceCollectionResource::collection($resources),
-            'related_jobs'     => $this->related_jobs,
-            'live_jobs'        => $this->job_posting,
-            'skills_percentage'=> $getPercentageOfSkills,
+            'related_jobs'     => CareerResource::collection($getRelatedJobs),
+            'live_jobs'        => [],
+            'skills_percentage'=> intval($getPercentageOfSkills),
+            'saved'            =>$saved,
             'job_trends'       => [],
         ];
     }

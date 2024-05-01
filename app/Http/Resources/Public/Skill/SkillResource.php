@@ -35,7 +35,7 @@ class SkillResource extends JsonResource
             'related_resources'      => $this->getLlatedResources != null ? $this->getLlatedResources->count() : '0',
         ];
         if (auth('api')->check()) {
-            $data['saved_on'] = isset($this->saved_skill->created_at) ? '' : UtilityHelper::formatDateTime($this->saved_skill->created_at);
+            $data['saved_on'] = isset($this->saved_skill->created_at) ? UtilityHelper::formatDateTime($this->saved_skill->created_at) : null ;
         }
         if (isset($this->user_pinned->pinned)) {
             $data['pinned'] = $this->user_pinned->pinned == 1 ? 'yes' : 'no';

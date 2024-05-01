@@ -5,6 +5,7 @@ namespace App\Http\Resources\Career;
 use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
 use App\Http\Resources\Master\SkillResource;
+use App\Services\JobTitleSkillServices;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,6 +18,7 @@ class CareerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
         $response = [
             'id'                => $this->id,
             'uuid'              => $this->uuid,
@@ -29,6 +31,7 @@ class CareerResource extends JsonResource
             'related_resources' => $this->related_resource == null ? 0 : $this->related_resource->count(),
             'saved_on'          => $this->created_at == null ? '' : UtilityHelper::formatDateTime($this->created_at),
             'saved'             => $this->saved_jobs(),
+            'skills_percentage' =>intval($getPercentageOfSkills),
         ];
         if ($this->pinned && isset($this->pinned->pinned)) {
             $response['pinned'] = $this->pinned->pinned == 0 ? 'no' : 'yes';

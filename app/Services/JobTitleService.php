@@ -148,4 +148,17 @@ class JobTitleService
             return false;
         }
     }
+
+    public static function getRelatedJobs($id)
+    {
+        try {
+            $getJobSkills=JobTitleSkillServices::getJobSkillsBasedOnJobId($id);
+            $getJobsBasedOnSkills=JobTitleSkillServices::getJobTitleBasedOnSkills($getJobSkills,$id)->all();
+            $getJobIds = array_slice($getJobsBasedOnSkills, 0, 20);
+            $getJobDetails = JobTitle::whereIn('id', $getJobIds)->get();
+            return $getJobDetails;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
