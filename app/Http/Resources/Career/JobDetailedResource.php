@@ -56,13 +56,14 @@ class JobDetailedResource extends JsonResource
         $getRelatedJobs=JobTitleService::getRelatedJobs($this->id);
         $getTrendingJobs=JobTitleService::gettrendingJobs($this);
         $getJobLiveTrending=JobTitleService::getLiveJobs($this);
+
         return [
             'id'               => $this->id,
             'uuid'             => $this->uuid,
             'title'            => $this->title,
-            'related_skills'   => $this->skills,
+            'related_skills'   => $this->skills->take(config('site-settings.jobs_details_par_module_limit')),
             'description'      => WikipediaHelper::fetchSkillDescription($this->title, $request->language),
-            'skills'           => SkillResource::collection($this->skills),
+            'skills'           => SkillResource::collection($this->skills->take(config('site-settings.jobs_details_par_module_limit'))),
             'lightcast_id'     => $this->lightcast_id,
             'challenges'       => ChallengeResource::collection($getChallenges),
             'saved_on'         => UtilityHelper::formatDateTime($saved_on),

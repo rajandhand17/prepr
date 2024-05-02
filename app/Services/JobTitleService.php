@@ -155,7 +155,7 @@ class JobTitleService
         try {
             $getJobSkills = JobTitleSkillServices::getJobSkillsBasedOnJobId($id);
             $getJobsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getJobSkills, $id)->all();
-            $getJobIds = array_slice($getJobsBasedOnSkills, 0, 20);
+            $getJobIds = array_slice($getJobsBasedOnSkills, 0, 3);
             $getJobDetails = JobTitle::whereIn('id', $getJobIds)->get();
 
             return $getJobDetails;

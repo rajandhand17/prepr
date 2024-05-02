@@ -7,6 +7,8 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
+use App\Models\LabSkillsGroupsStack;
+use App\Models\LabSocialActivity;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -461,6 +463,16 @@ class LabService
         try {
             return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnSkills($skills){
+        try {
+            $getLabIdsBasedOnSkills=LabSkillsGroupsStackService::getLabIdBasedOnSkill([$skills]);
+            $labs=Lab::whereIn('id',$getLabIdsBasedOnSkills)->take(config('site-settings.jobs_details_par_module_limit'))->get();
+            return $labs;
+        }catch (\Exception $e) {
             return false;
         }
     }
