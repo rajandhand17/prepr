@@ -90,6 +90,7 @@ class ResourceGroup extends Command
                     $newResourceGroup->duration = '1';
                     $newResourceGroup->privacy = $privacy;
                     $newResourceGroup->status = $status;
+                    $newResourceGroup->is_accessible = $singleResourceGroup->is_accessable;
                     $newResourceGroup->save();
 
                     /*Add resource module Id*/
