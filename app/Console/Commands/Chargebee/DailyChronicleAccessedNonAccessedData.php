@@ -85,8 +85,9 @@ class DailyChronicleAccessedNonAccessedData extends Command
                                 $resourceModule = ResourceModule::where('organization_id', $organizationId)->update(['is_accessible' => '1']);
                                 $resourceCollection = ResourceCollection::where('organization_id', $organizationId)->update(['is_accessible' => '1']);
                                 $resourceGroup = ResourceGroup::where('organization_id', $organizationId)->update(['is_accessible' => '1']);
-                                $feedChargebeePlanDetails = ChargebeeHelper::createChargebeePlanDetails($organizationId);
                             }
+                            // Feeding into local database with the current pack status and feature
+                            $feedChargebeePlanDetails = ChargebeeHelper::createChargebeePlanDetails($organizationId);
                         }
                     }
 
