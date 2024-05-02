@@ -104,4 +104,13 @@ class UtilityHelper
 
         return true;
     }
+
+    public static function sanitizeUrl(string $url): string
+    {
+        if (Str::substr($url, -1) === '/') {
+            return substr($url, 0, -1);
+        }
+
+        return $url;
+    }
 }

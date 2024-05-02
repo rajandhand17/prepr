@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ResourceModule extends Model
@@ -171,5 +172,13 @@ class ResourceModule extends Model
     public function tag_groups()
     {
         return $this->hasMany(ResourceModuleTagsGroups::class, 'resource_module_id', 'id')->where('type', '1');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function scorm(): MorphOne
+    {
+        return $this->morphOne(Scorm::class, 'model')->latest();
     }
 }

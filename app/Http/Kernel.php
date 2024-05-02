@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ScormUserIdentifier;
 use App\Http\Middleware\VerifyGO1Access;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'language'                => \App\Http\Middleware\Language::class,
         'check.component'         => \App\Http\Middleware\CheckComponentMiddleware::class,
         'verify-go1-access'       => VerifyGO1Access::class,
+        'scorm.userIdentifier'    => ScormUserIdentifier::class,
     ];
 }
