@@ -11,6 +11,9 @@ class ChargebeeSubscriptionService
     {
         try {
             $checkChargebeeDetail = ChargebeeSubscription::where('organizatin_id', $organizationId)->first();
+            if ($checkChargebeeDetail->plan === $chargebeeDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId) {
+                return true; //marking true if no change in plan subscription
+            }
             if ($checkChargebeeDetail) {
                 $chargebeeDetail = $checkChargebeeDetail;
                 $chargebeeDetail->delete();

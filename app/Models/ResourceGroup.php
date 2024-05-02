@@ -27,6 +27,7 @@ class ResourceGroup extends Model
         'duration',
         'privacy',
         'status',
+        'is_auto_created',
         'is_accessible',
     ];
 

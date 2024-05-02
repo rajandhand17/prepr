@@ -13,4 +13,18 @@ return [
         'bloom_plan_yearly'  => 'Bloom-Plan-CAD-Yearly',
         'unlimited_plan'     => 'Unlimited-Plan-CAD-Yearly',
     ],
+
+    // Addon Yearly Keys
+    'chargebee_addon' => [
+        'challenge_addon_yearly' => 'challenge-creation-CAD-Yearly',
+        'challenge_path_addon_yearly' => 'Challenge-Path-Creation-CAD-Yearly',
+        'lab_addon_yearly' => 'Lab-Creation-CAD-Yearly',
+        'lab_program_addon_yearly' => 'Lab-Program-Creation-CAD-Yearly',
+        'resource_module_addon_yearly' => 'Resource-Creation-CAD-Yearly',
+        'resource_collection_addon_yearly' => 'Resource-Collection-Creation-CAD-Yearly',
+        'resource_group_addon_yearly' => 'Resource-Group-Creation-CAD-Yearly',
+        'paid_lab_addon_yearly' => 'Paid-Lab-CAD-Yearly',
+        'manager_addon_yearly' => 'Manager-Invite-CAD-Yearly',
+        'user_addon_yearly' => 'User-Invite-CAD-Yearly',
+    ],
 ];
