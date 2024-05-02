@@ -54,6 +54,8 @@ class JobDetailedResource extends JsonResource
             $saved_on=$checkSavedOrNot->created_at;
         }
         $getRelatedJobs=JobTitleService::getRelatedJobs($this->id);
+        $getTrendingJobs=JobTitleService::gettrendingJobs($this);
+        $getJobLiveTrending=JobTitleService::getLiveJobs($this);
         return [
             'id'               => $this->id,
             'uuid'             => $this->uuid,
@@ -68,10 +70,10 @@ class JobDetailedResource extends JsonResource
             'labs'             => LabResource::collection($getAllLabs),
             'resources'        => ResourceCollectionResource::collection($resources),
             'related_jobs'     => CareerResource::collection($getRelatedJobs),
-            'live_jobs'        => [],
+            'live_jobs'        => $getJobLiveTrending['jobPostings'],
             'skills_percentage'=> intval($getPercentageOfSkills),
             'saved'            =>$saved,
-            'job_trends'       => [],
+            'job_trends'       => $getTrendingJobs,
         ];
     }
 }
