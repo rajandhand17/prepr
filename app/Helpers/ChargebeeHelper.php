@@ -155,19 +155,19 @@ class ChargebeeHelper
     {
         try {
             Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
-            $allSubscriptions = Subscription::all(array(
-                "cf_org_id[is]" => $organizationId
-            ));
+            $allSubscriptions = Subscription::all([
+                'cf_org_id[is]' => $organizationId,
+            ]);
             $addon = [];
             if ($allSubscriptions->count() > 0) {
                 $subscription = $allSubscriptions[0]->subscription();
                 foreach ($subscription->subscriptionItems as $item) {
                     if ($item->itemType === 'addon') {
-                        if ($item->itemPriceId ==  config('chargebee.chargebee_addon.challenge_addon_yearly')) {
+                        if ($item->itemPriceId == config('chargebee.chargebee_addon.challenge_addon_yearly')) {
                             $addon['challenge'] = $item->quantity;
-                        } elseif ($item->itemPriceId ==  config('chargebee.chargebee_addon.resource_module_addon_yearly')) {
+                        } elseif ($item->itemPriceId == config('chargebee.chargebee_addon.resource_module_addon_yearly')) {
                             $addon['resourceModule'] = $item->quantity;
-                        } elseif ($item->itemPriceId ==  config('chargebee.chargebee_addon.lab_addon_yearly')) {
+                        } elseif ($item->itemPriceId == config('chargebee.chargebee_addon.lab_addon_yearly')) {
                             $addon['lab'] = $item->quantity;
                         } elseif ($item->itemPriceId == config('chargebee.chargebee_addon.user_addon_yearly')) {
                             $addon['userInvite'] = $item->quantity;
@@ -187,6 +187,7 @@ class ChargebeeHelper
                     }
                 }
             }
+
             return $addon;
         } catch (Exception $e) {
             return false;
@@ -240,13 +241,14 @@ class ChargebeeHelper
             $addonsLimit = self::getAddonsLimits($organizationId);
             $totalLimit = [];
             if ($featuresLimit || $addonsLimit != []) {
-                $featuresLimit[$component] = array_key_exists($component, $featuresLimit) ? $featuresLimit[$component] : "0";
+                $featuresLimit[$component] = array_key_exists($component, $featuresLimit) ? $featuresLimit[$component] : '0';
                 if ($featuresLimit[$component] != 'Unlimited') {
-                    $totalLimit = ($featuresLimit[$component]) + (array_key_exists($component, $addonsLimit) ?  $addonsLimit[$component] : 0);
+                    $totalLimit = $featuresLimit[$component] + (array_key_exists($component, $addonsLimit) ? $addonsLimit[$component] : 0);
                 } else {
                     $totalLimit = 'Unlimited';
                 }
             }
+
             return $totalLimit;
         } catch (Exception $e) {
             return false;
