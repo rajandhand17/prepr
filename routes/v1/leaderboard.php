@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LeaderBoard\LeaderBoardController;
+use App\Http\Controllers\LeaderBoard\LeaderboardController;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::get('/', [LeaderBoardController::class, 'index']);
+    Route::get('/', [LeaderboardController::class, 'index']);
 });

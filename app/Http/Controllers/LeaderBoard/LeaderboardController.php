@@ -5,7 +5,7 @@ namespace App\Http\Controllers\LeaderBoard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class LeaderBoardController extends Controller
+class LeaderboardController extends Controller
 {
     public function __construct(){
 
