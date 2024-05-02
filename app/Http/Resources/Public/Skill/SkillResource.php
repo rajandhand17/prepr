@@ -4,8 +4,6 @@ namespace App\Http\Resources\Public\Skill;
 
 use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
-use App\Http\Resources\Career\CareerResource;
-use App\Http\Resources\Career\JobDetailedResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Services\JobTitleService;
 use App\Services\JobTitleSkillServices;
@@ -13,7 +11,6 @@ use App\Services\Manage\LabService;
 use App\Services\UserSkillsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class SkillResource extends JsonResource
 {
@@ -29,9 +26,9 @@ class SkillResource extends JsonResource
         $key = gettype($relatedSkills) == 'array' ? array_keys($relatedSkills) : [];
         $count_related_skills = (is_array($relatedSkills)) ? count($relatedSkills) : '0';
         $relatedKeyUrl = isset($key[0]) ? config('wikipedia.WIKIPEDIA_URL').str_replace(' ', '_', $key[0]) : [];
-        $getJobIds=JobTitleSkillServices::getJobTitleBasedOnSkills([$this->id]);
-        $getJobIdsBasedOnSkills=JobTitleService::getJobTitles('en',$this->search,$getJobIds)->take(config('site-settings.jobs_details_par_module_limit'));
-        $getLabIdsBasedOnSKills=LabService::getLabBasedOnSkills($this->id);
+        $getJobIds = JobTitleSkillServices::getJobTitleBasedOnSkills([$this->id]);
+        $getJobIdsBasedOnSkills = JobTitleService::getJobTitles('en', $this->search, $getJobIds)->take(config('site-settings.jobs_details_par_module_limit'));
+        $getLabIdsBasedOnSKills = LabService::getLabBasedOnSkills($this->id);
         $data = [
             'id'                     => $this->id,
             'title'                  => $this->title,
