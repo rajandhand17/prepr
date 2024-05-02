@@ -58,7 +58,7 @@ class JobTitleService
             return $job_list;
         } catch (Exception $e) {
             Log::error('Error in getJobTitles in JobTitleService.php: '.$e->getMessage());
-
+            dd($e);
             return false;
         }
     }

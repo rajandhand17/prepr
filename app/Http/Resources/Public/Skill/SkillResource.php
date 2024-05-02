@@ -4,9 +4,14 @@ namespace App\Http\Resources\Public\Skill;
 
 use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
+use App\Http\Resources\Career\CareerResource;
+use App\Http\Resources\Career\JobDetailedResource;
+use App\Services\JobTitleService;
+use App\Services\JobTitleSkillServices;
 use App\Services\UserSkillsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class SkillResource extends JsonResource
 {
@@ -22,6 +27,8 @@ class SkillResource extends JsonResource
         $key = gettype($relatedSkills) == 'array' ? array_keys($relatedSkills) : [];
         $count_related_skills = (is_array($relatedSkills)) ? count($relatedSkills) : '0';
         $relatedKeyUrl = isset($key[0]) ? config('wikipedia.WIKIPEDIA_URL').str_replace(' ', '_', $key[0]) : [];
+        $getJobIds=JobTitleSkillServices::getJobTitleBasedOnSkills([$this->id]);
+        $getJobIdsBasedOnSkills=JobTitleService::getJobTitles('en',$this->search,$getJobIds)->take(config('site-settings.jobs_details_par_module_limit'));
         $data = [
             'id'                     => $this->id,
             'title'                  => $this->title,
@@ -33,6 +40,7 @@ class SkillResource extends JsonResource
             'related_challenges'     => $this->getChallenges != null ? $this->getChallenges->count() : '0',
             'related_labs'           => $this->getLabs != null ? $this->getLabs->count() : '0',
             'related_resources'      => $this->getLlatedResources != null ? $this->getLlatedResources->count() : '0',
+            'related_jobs'           =>$getJobIdsBasedOnSkills,
         ];
         if (auth('api')->check()) {
             $data['saved_on'] = isset($this->saved_skill->created_at) ? UtilityHelper::formatDateTime($this->saved_skill->created_at) : null;
