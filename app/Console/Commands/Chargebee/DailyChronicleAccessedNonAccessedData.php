@@ -46,11 +46,11 @@ class DailyChronicleAccessedNonAccessedData extends Command
             $oneMinuteAgo = time() - 60;
             $currentTimestamp = time();
             Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
-            $allSubscriptions = Subscription::all(array(
-                "updated_at[after]" => $oneMinuteAgo, // Subscriptions updated after the past minute
-                "updated_at[before]" => $currentTimestamp, // Subscriptions updated before the current time
-                "sort_by[desc]" => "updated_at" // Sort by updated_at field in descending order
-            ));
+            $allSubscriptions = Subscription::all([
+                'updated_at[after]'  => $oneMinuteAgo, // Subscriptions updated after the past minute
+                'updated_at[before]' => $currentTimestamp, // Subscriptions updated before the current time
+                'sort_by[desc]'      => 'updated_at', // Sort by updated_at field in descending order
+            ]);
             $organizationIds = [];
             foreach ($allSubscriptions as $subscription) {
                 $organizationIds[] = $subscription->subscription()->cfOrgId;
@@ -64,7 +64,7 @@ class DailyChronicleAccessedNonAccessedData extends Command
                     foreach ($organizationIds as $organizationId) {
                         if ($organizationId) {
                             $planDetails = ChargebeeHelper::getSubscribedPlanDetailForOrganization($organizationId);
-                            if (!empty($planDetails) && $planDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId !=  config('chargebee.chargebee_plan.unlimited_plan')) {
+                            if (!empty($planDetails) && $planDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId != config('chargebee.chargebee_plan.unlimited_plan')) {
                                 $totalLimit = ChargebeeHelper::getTotalLimits($organizationId, $component);
                                 $createdComponentIds = ChargebeeHelper::getComponentUsage($organizationId, $component);
                                 if ($createdComponentIds->count() != 0 && $totalLimit != []) {
@@ -160,6 +160,7 @@ class DailyChronicleAccessedNonAccessedData extends Command
             }
             DB::commit();
             $this->info('Command completed successfully');
+
             return 0;
         } catch (Exception $e) {
             DB::rollback();
