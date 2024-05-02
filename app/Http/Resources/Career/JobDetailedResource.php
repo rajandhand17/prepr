@@ -73,7 +73,7 @@ class JobDetailedResource extends JsonResource
             'related_jobs'     => CareerResource::collection($getRelatedJobs),
             'live_jobs'        => $getJobLiveTrending['jobPostings'],
             'skills_percentage'=> intval($getPercentageOfSkills),
-            'saved'            =>$saved,
+            'saved'            => $saved,
             'job_trends'       => $getTrendingJobs,
         ];
     }

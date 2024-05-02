@@ -4,11 +4,12 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\JobTitle;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
+
 class JobTitleService
 {
     public static function getJobTitles($language = 'en', $search = null, $job_title_id = null, $sortBy = null, $pagination = null)
@@ -164,14 +165,15 @@ class JobTitleService
         }
     }
 
-    public static function gettrendingJobs($job){
+    public static function gettrendingJobs($job)
+    {
         try {
             // call lightcast api for job trends
             $data = Http::post('https://lightcast.io/api/jpa/job-postings-trend', [
-                'skillId' => null,
-                'titleId' => $job->lc_id,
+                'skillId'      => null,
+                'titleId'      => $job->lc_id,
                 'occupationId' => null,
-                'country' => 'us',
+                'country'      => 'us',
             ]);
             $data = json_decode($data, true);
 
@@ -200,26 +202,27 @@ class JobTitleService
 
                 $shortMonth = $monthNames[$month];
 
-                $formattedLabel = $shortMonth . ' ' . $year;
+                $formattedLabel = $shortMonth.' '.$year;
                 $currArray[] = [
-                    'date' => $formattedLabel,
-                    'trends' => $item['curr']
+                    'date'   => $formattedLabel,
+                    'trends' => $item['curr'],
                 ];
             }
+
             return $currArray;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-
-    public static function getLiveJobs($job){
+    public static function getLiveJobs($job)
+    {
         try {
             $postData = [
-                'skillId' => null,
-                'titleId' => $job->lc_id,
+                'skillId'      => null,
+                'titleId'      => $job->lc_id,
                 'occupationId' => null,
-                'country' => 'ca'
+                'country'      => 'ca',
             ];
             // Making the POST request
             $response = Http::post('https://lightcast.io/api/jpa/live-job-postings', $postData);
@@ -232,15 +235,16 @@ class JobTitleService
                 $datePosted = $postedDate->diffForHumans();
 
                 $jobPostings['jobPostings'][] = [
-                    'name' => $jobPosting['title_raw'],
-                    'company' => $jobPosting['company_name'],
-                    'location' => $jobPosting['city_name'],
+                    'name'       => $jobPosting['title_raw'],
+                    'company'    => $jobPosting['company_name'],
+                    'location'   => $jobPosting['city_name'],
                     'datePosted' => $datePosted,
-                    'url' => $jobPosting['url'][0] ?? null
+                    'url'        => $jobPosting['url'][0] ?? null,
                 ];
             }
+
             return $jobPostings;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
