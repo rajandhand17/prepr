@@ -102,7 +102,7 @@ class ResourceGroup extends Command
                     $newResourceGroup->duration = '1';
                     $newResourceGroup->privacy = $privacy;
                     $newResourceGroup->status = $status;
-                    $newChallengePath->is_auto_created = $is_auto_created_resourceGroup;
+                    $newResourceGroup->is_auto_created = $is_auto_created_resourceGroup;
                     $newResourceGroup->is_accessible = $singleResourceGroup->is_accessable;
                     $newResourceGroup->save();
 
