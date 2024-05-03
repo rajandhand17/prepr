@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Models\JobTitle;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
@@ -144,6 +146,104 @@ class JobTitleService
             $getJobDetails = JobTitle::where('id', $id)->first();
 
             return $getJobDetails;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getRelatedJobs($id)
+    {
+        try {
+            $getJobSkills = JobTitleSkillServices::getJobSkillsBasedOnJobId($id);
+            $getJobsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getJobSkills, $id)->all();
+            $getJobIds = array_slice($getJobsBasedOnSkills, 0, 3);
+            $getJobDetails = JobTitle::whereIn('id', $getJobIds)->get();
+
+            return $getJobDetails;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function gettrendingJobs($job)
+    {
+        try {
+            // call lightcast api for job trends
+            $data = Http::post('https://lightcast.io/api/jpa/job-postings-trend', [
+                'skillId'      => null,
+                'titleId'      => $job->lc_id,
+                'occupationId' => null,
+                'country'      => 'us',
+            ]);
+            $data = json_decode($data, true);
+
+            $labelArray = [];
+            $currArray = [];
+
+            // Define an array of month names
+            $monthNames = [
+                '01' => 'Jan',
+                '02' => 'Feb',
+                '03' => 'Mar',
+                '04' => 'Apr',
+                '05' => 'May',
+                '06' => 'Jun',
+                '07' => 'Jul',
+                '08' => 'Aug',
+                '09' => 'Sep',
+                '10' => 'Oct',
+                '11' => 'Nov',
+                '12' => 'Dec',
+            ];
+            foreach ($data as $item) {
+                $yearMonth = explode('-', $item['label']);
+                $year = $yearMonth[0];
+                $month = $yearMonth[1];
+
+                $shortMonth = $monthNames[$month];
+
+                $formattedLabel = $shortMonth.' '.$year;
+                $currArray[] = [
+                    'date'   => $formattedLabel,
+                    'trends' => $item['curr'],
+                ];
+            }
+
+            return $currArray;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLiveJobs($job)
+    {
+        try {
+            $postData = [
+                'skillId'      => null,
+                'titleId'      => $job->lc_id,
+                'occupationId' => null,
+                'country'      => 'ca',
+            ];
+            // Making the POST request
+            $response = Http::post('https://lightcast.io/api/jpa/live-job-postings', $postData);
+            // Decoding the JSON response
+            $responseBody = json_decode($response->body(), true);
+            // Process the response and format it
+            $jobPostings = ['jobPostings' => []];
+            foreach ($responseBody as $jobPosting) {
+                $postedDate = Carbon::createFromFormat('Y-m-d', $jobPosting['posted']);
+                $datePosted = $postedDate->diffForHumans();
+
+                $jobPostings['jobPostings'][] = [
+                    'name'       => $jobPosting['title_raw'],
+                    'company'    => $jobPosting['company_name'],
+                    'location'   => $jobPosting['city_name'],
+                    'datePosted' => $datePosted,
+                    'url'        => $jobPosting['url'][0] ?? null,
+                ];
+            }
+
+            return $jobPostings;
         } catch (\Exception $e) {
             return false;
         }

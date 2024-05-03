@@ -211,6 +211,8 @@ return [
         App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementServiceProvider::class,
         App\Repositories\Api\Chat\Conversation\ConversationServiceProvider::class,
         App\Repositories\Api\Chat\Message\MessageServiceProvider::class,
+        /* Scorm */
+        App\Repositories\Api\Manage\Scorm\ScormServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
@@ -238,6 +240,8 @@ return [
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
+        App\Repositories\Api\Public\Scorm\ScormServiceProvider::class,
+        App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
 
         /* GO1 */
         App\Repositories\Api\GO1\GO1ServiceProvider::class,
