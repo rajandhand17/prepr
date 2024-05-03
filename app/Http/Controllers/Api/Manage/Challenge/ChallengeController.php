@@ -60,9 +60,6 @@ class ChallengeController extends AppBaseController
     public function create(CreateChallengeRequest $request)
     {
         try {
-            // if (!auth()->user()->isAbleTo('create_challenge')) {
-            //     return $this->sendError(__('responses.permission_forbidden'), 403);
-            // }
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
@@ -106,9 +103,6 @@ class ChallengeController extends AppBaseController
     {
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
-            // if (!auth()->user()->isAbleTo('view_challenge', $challenge)) {
-            //     return $this->sendError(__('responses.permission_forbidden'), 403);
-            // }
             if ($challenge) {
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_detail'), 200);
             }
@@ -171,9 +165,6 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
-            // if (!auth()->user()->isAbleTo('delete_challenge', $checkComponentBasedOnSlug)) {
-            //     return $this->sendError(__('responses.challenge_delete_access_denied'), 403);
-            // }
             $challenge = $this->challengeRepository->deleteChallenge($checkComponentBasedOnSlug->id, $request);
             if ($challenge) {
                 return $this->sendResponse(null, __('responses.challenge_delete'));
