@@ -18,7 +18,7 @@ class GO1Repository implements GO1Interface
     public function getCourseLists()
     {
         try {
-            $queryParams = http_build_query(GO1Helper::prepareGO1Query());
+            $queryParams = http_build_query(GO1Helper::prepareGO1Query(request()));
             $data = GO1Helper::listResources($queryParams);
             $totalCount = min($data['total'], config('go1.go1_total_resource_data'));
 
