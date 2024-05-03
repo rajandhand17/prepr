@@ -220,7 +220,6 @@ class PermissionSeeder extends Seeder
                 'display_name' => 'Delete Challenges Members',
                 'description'  => 'Allow user to delete challenges members',
             ],
-
             [
                 'name'         => 'view_challenges_path',
                 'display_name' => 'View Challenge Path',
