@@ -172,7 +172,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSkills::class)->where('pinned', '0');
     }
-
+    public function userEmails()
+    {
+        return $this->hasMany(UserEmails::class);
+    }
     public function userJobs()
     {
         return $this->hasMany(UserJob::class)->where('pinned', '0');
