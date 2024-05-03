@@ -159,7 +159,7 @@ class ResourceModuleController extends AppBaseController
                 return $this->sendError(__('responses.resource_module_slug_not_available'));
             }
 
-            return $this->sendResponse([], __('responses.resource_module_slug_available'), 400);
+            return $this->sendResponse([], __('responses.resource_module_slug_available'), 200);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
