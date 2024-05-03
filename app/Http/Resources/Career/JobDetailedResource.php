@@ -53,9 +53,9 @@ class JobDetailedResource extends JsonResource
         if ($saved == 'yes') {
             $saved_on = $checkSavedOrNot->created_at;
         }
-        $getRelatedJobs=JobTitleService::getRelatedJobs($this->id);
-        $getTrendingJobs=JobTitleService::gettrendingJobs($this);
-        $getJobLiveTrending=JobTitleService::getLiveJobs($this);
+        $getRelatedJobs = JobTitleService::getRelatedJobs($this->id);
+        $getTrendingJobs = JobTitleService::gettrendingJobs($this);
+        $getJobLiveTrending = JobTitleService::getLiveJobs($this);
 
         return [
             'id'               => $this->id,

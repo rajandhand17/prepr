@@ -7,8 +7,6 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
-use App\Models\LabSkillsGroupsStack;
-use App\Models\LabSocialActivity;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -467,12 +465,14 @@ class LabService
         }
     }
 
-    public static function getLabBasedOnSkills($skills){
+    public static function getLabBasedOnSkills($skills)
+    {
         try {
-            $getLabIdsBasedOnSkills=LabSkillsGroupsStackService::getLabIdBasedOnSkill([$skills]);
-            $labs=Lab::whereIn('id',$getLabIdsBasedOnSkills)->take(config('site-settings.skills_par_module_limit'))->get();
+            $getLabIdsBasedOnSkills = LabSkillsGroupsStackService::getLabIdBasedOnSkill([$skills]);
+            $labs = Lab::whereIn('id', $getLabIdsBasedOnSkills)->take(config('site-settings.skills_par_module_limit'))->get();
+
             return $labs;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

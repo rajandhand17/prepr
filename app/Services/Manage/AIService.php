@@ -33,7 +33,7 @@ class AIService
             'base_uri' => 'https://api.openai.com/v1/chat/completions',
             'headers'  => [
                 'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer '.$openAIAPIKey,
+                'Authorization' => 'Bearer ' . $openAIAPIKey,
             ],
         ]);
 
@@ -149,7 +149,7 @@ class AIService
 
             return $validChallenges;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
+            Log::error('Error in createChallengeUsingAIPreview in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -292,7 +292,7 @@ class AIService
 
             return $validLabs;
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
+            Log::error('Error in createLabUsingAIPreview: ' . $e->getMessage());
 
             return false;
         }
@@ -312,12 +312,12 @@ class AIService
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational challenge for the careers: "'.$jobTitlesStr.'", with skills: "'.$skillTitlesStr.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the challenge to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'").
+                            Please design an educational challenge for the careers: "' . $jobTitlesStr . '", with skills: "' . $skillTitlesStr . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the challenge to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '").
                             1. **Title**: Craft a brief creative title for the challenge.
                             2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
                             3. **Steps**: Write the exact same steps mentioned in description in an array as well.
                             4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitlesStr.'".
+                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitlesStr . '".
                             6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
                 
                             Output format (Make sure you exactly follow it):
@@ -333,15 +333,26 @@ class AIService
                 ],
             ];
 
-            try {
-                $response = $this->openAIClient->post('', ['json' => $payload]);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
+            $retry = 0;
+            $maxRetries = 1;
+
+            do {
+                try {
+                    $response = $this->openAIClient->post('', ['json' => $payload]);
+                    break;
+                } catch (Exception $e) {
+                    if ($retry >= $maxRetries) {
+                        throw new Exception("OpenAI call failed: " . $e->getMessage());
+                    }
+                    $retry++;
+
+                    usleep(500000);
+                }
+            } while ($retry <= $maxRetries);
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: '.$e->getMessage());
+            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -361,12 +372,12 @@ class AIService
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational lab with 5 challenges for the careers: "'.$jobTitlesStr.'", with skills: "'.$skillTitlesStr.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the lab to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
+                            Please design an educational lab with 5 challenges for the careers: "' . $jobTitlesStr . '", with skills: "' . $skillTitlesStr . '", at level: "' . $levelTitle . '", for the duration of "' . $durationTitle . '" for the lab to finish. Additional information that needs to be prioritize would be ("' . $additionalInformation . '"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
                             1. **Title**: Craft a brief creative title for the challenge without counting it (ex. without saying challenge 1, challenge 2, or similar). Write just the title.
                             2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
                             3. **Steps**: Write the exact same steps mentioned in description in an array as well.
                             4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitlesStr.'".
+                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "' . $categoryTitlesStr . '".
                             6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
                             6. **Lab Title**: Craft a brief title for the lab.
                             6. **Lab Description**: Provide a paragraph description about the lab and what it focuses on.
@@ -393,15 +404,26 @@ class AIService
                 ],
             ];
 
-            try {
-                $response = $this->openAIClient->post('', ['json' => $payload]);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
+            $retry = 0;
+            $maxRetries = 1;
+
+            do {
+                try {
+                    $response = $this->openAIClient->post('', ['json' => $payload]);
+                    break;
+                } catch (Exception $e) {
+                    if ($retry >= $maxRetries) {
+                        throw new Exception("OpenAI call failed: " . $e->getMessage());
+                    }
+                    $retry++;
+
+                    usleep(500000);
+                }
+            } while ($retry <= $maxRetries);
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: '.$e->getMessage());
+            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -425,7 +447,7 @@ class AIService
 
             return $updatedSkills;
         } catch (Exception $e) {
-            Log::error('Error in processSkills in AIService.php: '.$e->getMessage());
+            Log::error('Error in processSkills in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -446,7 +468,7 @@ class AIService
 
             return ['skill' => $highestScoreSkill, 'score' => $highestScore];
         } catch (Exception $e) {
-            Log::error('Error in selectHighestScoreSkill in AIService.php: '.$e->getMessage());
+            Log::error('Error in selectHighestScoreSkill in AIService.php: ' . $e->getMessage());
 
             return false;
         }
@@ -496,22 +518,22 @@ class AIService
 
                             // Only add to query if the value is not empty
                             if (!empty($title)) {
-                                $queryParts[] = 'Articles about '.$title;
+                                $queryParts[] = 'Articles about ' . $title;
                             }
                             if (!empty($levelTitle)) {
-                                $queryParts[] = 'for level '.$levelTitle;
+                                $queryParts[] = 'for level ' . $levelTitle;
                             }
                             if (!empty($durationTitle)) {
-                                $queryParts[] = 'and duration '.$durationTitle;
+                                $queryParts[] = 'and duration ' . $durationTitle;
                             }
                             if (!empty($skillTitles)) {
-                                $queryParts[] = 'for skills '.$skillTitles;
+                                $queryParts[] = 'for skills ' . $skillTitles;
                             }
                             if (!empty($jobTitles)) {
-                                $queryParts[] = 'for jobs '.$jobTitles;
+                                $queryParts[] = 'for jobs ' . $jobTitles;
                             }
                             if (!empty($additionalInformation)) {
-                                $queryParts[] = '('.$additionalInformation.')';
+                                $queryParts[] = '(' . $additionalInformation . ')';
                             }
 
                             $queryString = implode(' ', $queryParts);
@@ -548,22 +570,22 @@ class AIService
 
                             // Only add to query if the value is not empty
                             if (!empty($title)) {
-                                $videoQueryParts[] = 'Videos about '.$title;
+                                $videoQueryParts[] = 'Videos about ' . $title;
                             }
                             if (!empty($levelTitle)) {
-                                $videoQueryParts[] = 'for level '.$levelTitle;
+                                $videoQueryParts[] = 'for level ' . $levelTitle;
                             }
                             if (!empty($durationTitle)) {
-                                $videoQueryParts[] = 'and duration '.$durationTitle;
+                                $videoQueryParts[] = 'and duration ' . $durationTitle;
                             }
                             if (!empty($skillTitles)) {
-                                $videoQueryParts[] = 'for skills '.$skillTitles;
+                                $videoQueryParts[] = 'for skills ' . $skillTitles;
                             }
                             if (!empty($jobTitles)) {
-                                $videoQueryParts[] = 'for jobs '.$jobTitles;
+                                $videoQueryParts[] = 'for jobs ' . $jobTitles;
                             }
                             if (!empty($additionalInformation)) {
-                                $queryParts[] = '('.$additionalInformation.')';
+                                $queryParts[] = '(' . $additionalInformation . ')';
                             }
 
                             $videoQueryString = implode(' ', $videoQueryParts);
@@ -606,13 +628,13 @@ class AIService
                         $data = $currentData;
                         break;
                     }
-                }
 
-                if (($collectArticles ? $articlesCollected : true) && ($collectVideos ? $videosCollected : true)) {
-                    throw new Exception('Error in gathering enough data!');
+                    if (($collectArticles ? $articlesCollected : true) && ($collectVideos ? $videosCollected : true)) {
+                        throw new Exception('Error in gathering enough data!');
+                    }
                 }
             } catch (Exception $e) {
-                Log::warning("Warning in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: ".$e->getMessage());
+                Log::warning("Warning in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: " . $e->getMessage());
             }
 
             function makeResourceGroups($data, $request)
@@ -685,12 +707,12 @@ class AIService
 
                                 $descriptionParts[] = "{$rmTitle} - {$rmDescription}";
                             }
-                            $chunkGroupDescriptions[] = 'Group '.($groupIndex + 1).': '.implode(', ', $descriptionParts);
+                            $chunkGroupDescriptions[] = 'Group ' . ($groupIndex + 1) . ': ' . implode(', ', $descriptionParts);
                         }
 
                         $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
 
-                        $prompt = "For each group described below, generate a creative title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: ".$combinedChunkDescription.
+                        $prompt = "For each group described below, generate a creative title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: " . $combinedChunkDescription .
                             ' Example format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                         $payload = [
@@ -704,7 +726,23 @@ class AIService
                             ],
                         ];
 
-                        $response = $this->openAIClient->post('', ['json' => $payload]);
+                        $retry = 0;
+                        $maxRetries = 1;
+
+                        do {
+                            try {
+                                $response = $this->openAIClient->post('', ['json' => $payload]);
+                                break;
+                            } catch (Exception $e) {
+                                if ($retry >= $maxRetries) {
+                                    throw new Exception("OpenAI call failed: " . $e->getMessage());
+                                }
+                                $retry++;
+
+                                usleep(500000);
+                            }
+                        } while ($retry <= $maxRetries);
+                        
                         $responseBody = $response->getBody()->getContents();
                         $responseArray = json_decode($responseBody, true);
 
@@ -715,10 +753,10 @@ class AIService
                             if (isset($contentArray['results'])) {
                                 $allAiResults = array_merge($allAiResults, $contentArray['results']);
                             } else {
-                                Log::error('The parsed AI response did not contain the expected "results" key for chunk '.$chunkIndex);
+                                Log::error('The parsed AI response did not contain the expected "results" key for chunk ' . $chunkIndex);
                             }
                         } else {
-                            Log::error('The AI response structure is not as expected for chunk '.$chunkIndex);
+                            Log::error('The AI response structure is not as expected for chunk ' . $chunkIndex);
                         }
                     }
 
@@ -737,7 +775,7 @@ class AIService
                                 // } else {
                                 //     // If the title does not exist, use the title from $allAiResults[$index]
                                 $newResourceModule['title'] = $resourceModule['title'];
-                            // }
+                                // }
                             } else {
                                 // If $resourceModule is not an array or does not have a title, use default 'Resource Module'
                                 $newResourceModule['title'] = 'Resource Module';
@@ -757,7 +795,7 @@ class AIService
                     }
                     unset($group);
                 } catch (Exception $e) {
-                    Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
+                    Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: ' . $e->getMessage());
                 }
             }
         }
@@ -818,45 +856,60 @@ class AIService
         $go1_resource_modules = [];
 
         if ($request->resource_module_go1) {
-            $memberManagement = new MemberManagementService();
-            if (!$memberManagement->canCreateGO1Resource()) {
-                throw new Exception('No go1 access!');
-            }
-
             $response = null;
 
             try {
+                $memberManagement = new MemberManagementService();
+                if (!$memberManagement->canCreateGO1Resource()) {
+                    throw new Exception('No go1 access!');
+                }
+
                 $queryParts = [
-                    'Challenge Title: '.($request['challengeTitle'] ?? 'N/A'),
-                    'Category: '.($request['category'] ?? 'N/A'),
-                    'Level: '.($request['level'] ?? 'N/A'),
-                    'Duration: '.($request['duration'] ?? 'N/A'),
+                    'Challenge Title: ' . ($request['challengeTitle'] ?? 'N/A'),
+                    'Category: ' . ($request['category'] ?? 'N/A'),
+                    'Level: ' . ($request['level'] ?? 'N/A'),
+                    'Duration: ' . ($request['duration'] ?? 'N/A'),
                 ];
 
                 if (!empty($request['skill_titles'])) {
-                    $queryParts[] = 'Skills: ('.implode(', ', $request['skill_titles']).')';
+                    $queryParts[] = 'Skills: (' . implode(', ', $request['skill_titles']) . ')';
                 }
                 if (!empty($request['job_titles'])) {
-                    $queryParts[] = 'Jobs: ('.implode(', ', $request['job_titles']).')';
+                    $queryParts[] = 'Jobs: (' . implode(', ', $request['job_titles']) . ')';
                 }
                 if (!empty($request['steps'])) {
-                    $queryParts[] = 'Steps: ('.implode(', ', $request['steps']).')';
+                    $queryParts[] = 'Steps: (' . implode(', ', $request['steps']) . ')';
                 }
 
-                $fullQueryString = implode(', ', $queryParts).'.';
+                $fullQueryString = implode(', ', $queryParts) . '.';
                 $payload = [
                     'model'    => 'gpt-3.5-turbo',
                     'n'        => 1,
                     'messages' => [
                         [
                             'role'    => 'user',
-                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. '.$fullQueryString.' Output format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
+                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. ' . $fullQueryString . ' Output format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
                         ],
                     ],
                 ];
 
-                $apiResponse = $this->openAIClient->post('', ['json' => $payload]);
-                $response = json_decode($apiResponse->getBody()->getContents(), true);
+                $retry = 0;
+                $maxRetries = 1;
+
+                do {
+                    try {
+                        $apiResponse = $this->openAIClient->post('', ['json' => $payload]);
+                        $response = json_decode($apiResponse->getBody()->getContents(), true);
+                        break;
+                    } catch (Exception $e) {
+                        if ($retry >= $maxRetries) {
+                            throw new Exception($e->getMessage());
+                        }
+                        $retry++;
+
+                        usleep(500000);
+                    }
+                } while ($retry <= $maxRetries);
 
                 if (!$response || empty($response['choices'])) {
                     throw new Exception('No choices in the response');
@@ -887,11 +940,15 @@ class AIService
                                     if ($count < 3) {
                                         $module = [];
 
+                                        if (!isset($item['title']) || !isset($item['description']) || !isset($item['skills'])) {
+                                            break;
+                                        }
+
                                         $module['id'] = $item['id'] ?? null;
                                         $module['type'] = $item['type'] ?? null;
-                                        $module['title'] = $item['title'] ?? null;
+                                        $module['title'] = $item['title'];
                                         $module['published'] = $item['published'] ?? null;
-                                        $module['description'] = $item['description'] ?? null;
+                                        $module['description'] = $item['description'];
                                         $module['image'] = $item['image'] ?? null;
                                         $module['created_time'] = $item['created_time'] ?? null;
                                         $module['updated_time'] = $item['updated_time'] ?? null;
@@ -930,13 +987,13 @@ class AIService
                                 }
                             }
                         } catch (Exception $e) {
-                            Log::error("API call failed for type {$type} and keyword {$keyword}: ".$e->getMessage());
+                            Log::error("API call failed for type {$type} and keyword {$keyword}: " . $e->getMessage());
                             continue;
                         }
                     }
                 }
             } catch (Exception $e) {
-                Log::warning('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
+                Log::warning('Error in createResourceModuleUsingAIPreview in AIService.php: ' . $e->getMessage());
 
                 return false;
             }

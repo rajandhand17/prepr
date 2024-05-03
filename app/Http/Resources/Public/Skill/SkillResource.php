@@ -4,8 +4,6 @@ namespace App\Http\Resources\Public\Skill;
 
 use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
-use App\Http\Resources\Career\CareerResource;
-use App\Http\Resources\Career\JobDetailedResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Services\JobTitleService;
 use App\Services\JobTitleSkillServices;
@@ -13,7 +11,6 @@ use App\Services\Manage\LabService;
 use App\Services\UserSkillsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class SkillResource extends JsonResource
 {
