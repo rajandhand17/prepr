@@ -64,12 +64,11 @@ class ChallengeController extends AppBaseController
         try {
             // checks creation limits of the Challenge
             $checkChallengeChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
-            if ($checkChallengeChallengeLimit['fetchOrganizationPlanDetails'] !== "Unlimited") {
+            if ($checkChallengeChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = Challenge::where(['organization_id' => $checkChallengeChallengeLimit['organizationId'], 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
                 if ($checkChallengeChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
-
             }
 
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
