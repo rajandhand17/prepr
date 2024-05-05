@@ -74,6 +74,7 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
     public function getChallengeList($request, $organization)
     {
         try {

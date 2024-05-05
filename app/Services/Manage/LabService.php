@@ -22,6 +22,7 @@ class LabService
             return false;
         }
     }
+
     public static function getLabList($request, $organization)
     {
         try {

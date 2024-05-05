@@ -24,6 +24,7 @@ class ResourceModuleService
             return false;
         }
     }
+
     public static function getResourceModuleList($request, $organization)
     {
         try {

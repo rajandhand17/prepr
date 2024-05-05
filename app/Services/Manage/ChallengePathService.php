@@ -22,6 +22,7 @@ class ChallengePathService
             return false;
         }
     }
+
     public function getChallengePathList($request, $organization)
     {
         $getChallengePathList = ChallengePath::select()->where('organization_id', '=', $organization->id);

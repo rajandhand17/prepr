@@ -42,6 +42,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
+
     public function getResourceModuleList($request, $organization)
     {
         try {

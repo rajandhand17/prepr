@@ -24,6 +24,7 @@ class ChallengeService
             return false;
         }
     }
+
     public static function getChallengeList($request, $organization)
     {
         try {

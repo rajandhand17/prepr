@@ -23,6 +23,7 @@ class ResourceGroupService
             return false;
         }
     }
+
     public static function uploadResourceGroupCoverImage($cover_image)
     {
         try {
