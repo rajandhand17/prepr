@@ -335,7 +335,7 @@ class ChargebeeHelper
                         break;
                     case 'resourceGroup':
                         $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->resource_group_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->resource_group_limits;
-                        break;                    
+                        break;
                     default:
                         $fetchOrganizationPlanDetails = 0;
                         break;
@@ -345,6 +345,7 @@ class ChargebeeHelper
             }
 
             $data = ['organizationId' => $organization->id, 'fetchOrganizationPlanDetails' => $fetchOrganizationPlanDetails];
+
             return $data;
         } catch (Exception $e) {
             return false;
