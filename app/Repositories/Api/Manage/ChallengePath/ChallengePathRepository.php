@@ -35,6 +35,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return false;
         }
     }
+
     public function getChallengePathList($request, $organization)
     {
         try {

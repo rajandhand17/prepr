@@ -54,6 +54,7 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
     public function getLabList($request, $organization)
     {
         try {
