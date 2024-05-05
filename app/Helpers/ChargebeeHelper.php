@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Challenge;
 use App\Models\ChallengePath;
+use App\Models\ChargebeeSubscription;
 use App\Models\Lab;
 use App\Models\LabProgram;
 use App\Models\MemberManagement;
@@ -11,6 +12,7 @@ use App\Models\ResourceCollection;
 use App\Models\ResourceGroup;
 use App\Models\ResourceModule;
 use App\Services\Manage\ChargebeeSubscriptionService;
+use App\Services\Manage\OrganizationService;
 use ChargeBee\ChargeBee\Environment;
 use ChargeBee\ChargeBee\Models\Customer;
 use ChargeBee\ChargeBee\Models\Subscription;
@@ -266,7 +268,7 @@ class ChargebeeHelper
             } elseif ($component === 'labPrograms') {
                 $componentUsage = LabProgram::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->pluck('id')->sortBy('created_at');
             } elseif ($component === 'challenges') {
-                $componentUsage = Challenge::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->pluck('id')->sortBy('created_at');
+                $componentUsage = Challenge::where(['organization_id' => $organizationId, 'is_pre_built' => '0', 'is_auto_created' => '0'])->pluck('id')->sortBy('created_at');
             } elseif ($component === 'challengePaths') {
                 $componentUsage = ChallengePath::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->pluck('id')->sortBy('created_at');
             } elseif ($component === 'resourceModules') {
@@ -301,6 +303,49 @@ class ChargebeeHelper
             }
 
             return $componentUsage;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkComponentLimitBasedOnOrganization($organizationUUID, $component)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($organizationUUID);
+            $fetchOrganizationPlan = ChargebeeSubscription::where('organization_id', $organization->id)->first();
+            if ($fetchOrganizationPlan) {
+                switch ($component) {
+                    case 'lab':
+                        $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->lab_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->lab_limits;
+                        break;
+                    case 'labProgram':
+                        $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->lab_program_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->lab_program_limits;
+                        break;
+                    case 'challenge':
+                        $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->challenge_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->challenge_limits;
+                        break;
+                    case 'challengePath':
+                        $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->challenge_path_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->challenge_path_limits;
+                        break;
+                    case 'resourceModule':
+                        $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->resource_module_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->resource_module_limits;
+                        break;
+                    case 'resourceCollection':
+                        $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->resource_collection_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->resource_collection_limits;
+                        break;
+                    case 'resourceGroup':
+                        $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->resource_group_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->resource_group_limits;
+                        break;                    
+                    default:
+                        $fetchOrganizationPlanDetails = 0;
+                        break;
+                }
+            } else {
+                $fetchOrganizationPlanDetails = self::getTotalLimits($organization->id, $component);
+            }
+
+            $data = ['organizationId' => $organization->id, 'fetchOrganizationPlanDetails' => $fetchOrganizationPlanDetails];
+            return $data;
         } catch (Exception $e) {
             return false;
         }

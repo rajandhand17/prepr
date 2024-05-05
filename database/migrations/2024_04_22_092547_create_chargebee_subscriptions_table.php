@@ -12,7 +12,7 @@ return new class() extends Migration {
     {
         Schema::create('chargebee_subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('organizatin_id');
+            $table->unsignedBigInteger('organization_id');
             $table->string('plan')->comment('name of plan');
             $table->enum('plan_validity', ['0', '1'])->default('0')->comment('0 -> monthly, 1 -> yearly');
             $table->enum('plan_limitations', ['0', '1'])->default('0')->comment('0 -> limited, 1 -> unlimited');
@@ -26,7 +26,7 @@ return new class() extends Migration {
             $table->integer('resource_group_limits')->nullable()->comment('Resource Group Creation Limit, if null then it has no limits in resource group');
             $table->integer('user_invite_limits')->nullable()->comment('The number of participants you can invite to your Organisation.');
             $table->integer('organization_invite_limits')->nullable()->comment('The number of managers you can invite under your Organisation.');
-            $table->foreign('organizatin_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

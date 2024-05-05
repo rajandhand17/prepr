@@ -10,8 +10,8 @@ class ChargebeeSubscriptionService
     public static function feedChargebeeDetails($organizationId, $chargebeeDetails)
     {
         try {
-            $checkChargebeeDetail = ChargebeeSubscription::where('organizatin_id', $organizationId)->first();
-            if ($checkChargebeeDetail->plan === $chargebeeDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId) {
+            $checkChargebeeDetail = ChargebeeSubscription::where('organization_id', $organizationId)->first();
+            if ($checkChargebeeDetail && $checkChargebeeDetail->plan === $chargebeeDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId) {
                 return true; //marking true if no change in plan subscription
             }
             if ($checkChargebeeDetail) {
@@ -32,7 +32,7 @@ class ChargebeeSubscriptionService
             $preBuiltLab = ($chargebeeDetails['featureLimits']['preBuiltLab'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['preBuiltLab'] ?? 0);
 
             $chargebeeSubscription = new ChargebeeSubscription();
-            $chargebeeSubscription->organizatin_id = $organizationId;
+            $chargebeeSubscription->organization_id = $organizationId;
             $chargebeeSubscription->plan = $chargebeeDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId;
             $chargebeeSubscription->plan_validity = '0';
             $chargebeeSubscription->plan_limitations = ($chargebeeDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId === 'Unlimited-Plan-CAD-Yearly') ? '1' : '0';

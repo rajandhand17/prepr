@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
@@ -13,6 +14,7 @@ use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
+use App\Models\Challenge;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
@@ -60,6 +62,16 @@ class ChallengeController extends AppBaseController
     public function create(CreateChallengeRequest $request)
     {
         try {
+            // checks creation limits of the Challenge
+            $checkChallengeChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            if ($checkChallengeChallengeLimit['fetchOrganizationPlanDetails'] !== "Unlimited") {
+                $checkChallengeCount = Challenge::where(['organization_id' => $checkChallengeChallengeLimit['organizationId'], 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
+                if ($checkChallengeChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+
+            }
+
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);

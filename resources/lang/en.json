@@ -1102,5 +1102,7 @@
     "responses.scorm_player_link": "Scorm player link.",
     "responses.scorm_session_expired":"Session has expired, Please refresh the page.",
     "responses.scorm_not_found": "The scorm file doesn't exist.",
-    "response.unauthorized": "Unauthorized."
+    "response.unauthorized": "Unauthorized.",
+    "responses.reached_challenge_limit": "You have reached the limit to create the Challenge.",
+    "responses.challenge_not_accessible": "Sorry, this Challenge is not accessible with your existing plan."
 }

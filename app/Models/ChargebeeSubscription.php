@@ -13,7 +13,7 @@ class ChargebeeSubscription extends Model
 
     protected $table = 'chargebee_subscriptions';
     protected $fillable = [
-        'organizatin_id',
+        'organization_id',
         'plan',
         'plan_validity',
         'plan_limitations',
