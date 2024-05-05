@@ -7,10 +7,22 @@ use App\Helpers\UtilityHelper;
 use App\Models\LabProgram;
 use App\Models\Organization;
 use App\Services\Public\LabProgramSocialActivitiesService;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class LabProgramService
 {
+    public function getLabProgramCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $labProgram_count = LabProgram::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+
+            return $labProgram_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getLabProgramList($request, $organization)
     {
         $getLabProgramList = LabProgram::select()->where('organization_id', '=', $organization->id);

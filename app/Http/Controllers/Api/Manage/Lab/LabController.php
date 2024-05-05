@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\Lab;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
 use App\Http\Requests\Manage\Lab\CreateLabUsingAIPreviewRequest;
@@ -71,6 +72,15 @@ class LabController extends AppBaseController
     public function create(CreateLabRequest $request)
     {
         try {
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_lab_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = null;
             if ($request->cover_image !== null) {

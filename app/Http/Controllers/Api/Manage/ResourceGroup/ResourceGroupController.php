@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
@@ -24,6 +25,15 @@ class ResourceGroupController extends AppBaseController
     public function create(CreateResourceGroupRequest $request)
     {
         try {
+            // checks creation limits of the Resource Group
+            $checkResourceGroupLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceGroup');
+            if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkResourceGroupCount = $this->resourceGroupRepository->getResourceGroupCountBasedOnOrganization($checkResourceGroupLimit['organizationId']);
+                if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] <= $checkResourceGroupCount) {
+                    return $this->sendError(__('responses.reached_resource_group_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_resource_group_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);

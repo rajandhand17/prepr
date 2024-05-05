@@ -12,6 +12,16 @@ use HiFolks\RandoPhp\Randomize;
 
 class LabService
 {
+    public function getLabCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $lab_count = Lab::where(['organization_id' => $organizationId, 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
+
+            return $lab_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function getLabList($request, $organization)
     {
         try {

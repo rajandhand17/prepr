@@ -12,6 +12,16 @@ use HiFolks\RandoPhp\Randomize;
 
 class ChallengePathService
 {
+    public function getChallengePathCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $challengePath_count = ChallengePath::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+
+            return $challengePath_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public function getChallengePathList($request, $organization)
     {
         $getChallengePathList = ChallengePath::select()->where('organization_id', '=', $organization->id);

@@ -1104,5 +1104,11 @@
     "responses.scorm_not_found": "The scorm file doesn't exist.",
     "response.unauthorized": "Unauthorized.",
     "responses.reached_challenge_limit": "You have reached the limit to create the Challenge.",
+    "responses.reached_challenge_path_limit": "You have reached the limit to create the Challenge Path.",
+    "responses.reached_lab_limit": "You have reached the limit to create the Lab.",
+    "responses.reached_lab_program_limit": "You have reached the limit to create the Lab Program.",
+    "responses.reached_resource_module_limit": "You have reached the limit to create the Resource Module.",
+    "responses.reached_resource_collection_limit": "You have reached the limit to create the Resource Collection.",
+    "responses.reached_resource_group_limit": "You have reached the limit to create the Resource Group.",
     "responses.challenge_not_accessible": "Sorry, this Challenge is not accessible with your existing plan."
 }

@@ -34,6 +34,14 @@ class ResourceModuleRepository implements ResourceModuleInterface
         $this->aiService = $aiService;
     }
 
+    public function getResourceModuleCountBasedOnOrganization($organizationId)
+    {
+        try {
+            return $this->resourceModuleService->getResourceModuleCountBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public function getResourceModuleList($request, $organization)
     {
         try {

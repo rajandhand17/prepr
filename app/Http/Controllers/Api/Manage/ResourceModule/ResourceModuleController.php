@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
@@ -77,9 +78,15 @@ class ResourceModuleController extends AppBaseController
     public function create(CreateResourceModuleRequest $request)
     {
         try {
-            if (!auth()->user()->isAbleTo('create_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
+            // checks creation limits of the Resource Module
+            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceModule');
+            if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkResourceModuleCount = $this->resourceModuleRepository->getResourceModuleCountBasedOnOrganization($checkResourceModuleLimit['organizationId']);
+                if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] <= $checkResourceModuleCount) {
+                    return $this->sendError(__('responses.reached_resource_module_limit'), 400);
+                }
             }
+
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ChallengePath;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ChallengePath\CreateChallengePathRequest;
 use App\Http\Requests\Manage\ChallengePath\UpdateChallengePathRequest;
@@ -52,6 +53,15 @@ class ChallengePathController extends AppBaseController
     public function create(CreateChallengePathRequest $request)
     {
         try {
+            // checks creation limits of the Challenge Path
+            $checkChallengePathLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challengePath');
+            if ($checkChallengePathLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengePathCount = $this->challengePathRepository->getChallengePathCountBasedOnOrganization($checkChallengePathLimit['organizationId']);
+                if ($checkChallengePathLimit['fetchOrganizationPlanDetails'] <= $checkChallengePathCount) {
+                    return $this->sendError(__('responses.reached_challenge_path_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_challenge_path_cover_image');
             if ($request->media !== null) {
                 $uploaded_cover_image = $this->challengePathRepository->uploadChallengePathMedia($request->media);

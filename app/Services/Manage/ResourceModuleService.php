@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Log;
 
 class ResourceModuleService
 {
+    public function getResourceModuleCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $resourceModule_count = ResourceModule::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+
+            return $resourceModule_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function getResourceModuleList($request, $organization)
     {
         try {

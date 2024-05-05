@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
@@ -23,6 +24,15 @@ class ResourceCollectionController extends AppBaseController
     public function create(CreateResourceCollectionRequest $request)
     {
         try {
+            // checks creation limits of the Resource Collection
+            $checkResourceCollectionLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceCollection');
+            if ($checkResourceCollectionLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkResourceCollectionCount = $this->resourceCollectionRepository->getResourceCollectionCountBasedOnOrganization($checkResourceCollectionLimit['organizationId']);
+                if ($checkResourceCollectionLimit['fetchOrganizationPlanDetails'] <= $checkResourceCollectionCount) {
+                    return $this->sendError(__('responses.reached_resource_collection_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_resource_collection_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);

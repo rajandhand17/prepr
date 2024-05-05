@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Log;
 
 class ChallengeService
 {
+    public function getChallengeCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $challenge_count = Challenge::where(['organization_id' => $organizationId, 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
+
+            return $challenge_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function getChallengeList($request, $organization)
     {
         try {

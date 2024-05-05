@@ -14,7 +14,6 @@ use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Models\Challenge;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
@@ -63,10 +62,10 @@ class ChallengeController extends AppBaseController
     {
         try {
             // checks creation limits of the Challenge
-            $checkChallengeChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
-            if ($checkChallengeChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
-                $checkChallengeCount = Challenge::where(['organization_id' => $checkChallengeChallengeLimit['organizationId'], 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
-                if ($checkChallengeChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
+                if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }

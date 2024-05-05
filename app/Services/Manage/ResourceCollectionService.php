@@ -9,10 +9,22 @@ use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
 use App\Services\Public\ResourceCollectionSocialActivitiesService;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceCollectionService
 {
+    public function getResourceCollectionCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $resourceCollection_count = ResourceCollection::where('organization_id', $organizationId)->count();
+
+            return $resourceCollection_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function createResourceCollection($request, $upload_cover_image)
     {
         try {

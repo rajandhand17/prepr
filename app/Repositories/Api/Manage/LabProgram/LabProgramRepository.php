@@ -7,6 +7,7 @@ use App\Services\Manage\LabProgramAchievementsService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabProgramSkillsGroupsStackService;
 use App\Services\Manage\LabProgramTagsGroupsService;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class LabProgramRepository implements LabProgramInterface
@@ -28,6 +29,15 @@ class LabProgramRepository implements LabProgramInterface
         $this->labProgramSkillsGroupsStackService = $labProgramSkillsGroupsStackService;
         $this->labProgramTagsGroupsService = $labProgramTagsGroupsService;
         $this->componentAssociationService = $componentAssociationService;
+    }
+
+    public function getLabProgramCountBasedOnOrganization($organizationId)
+    {
+        try {
+            return $this->labProgramService->getLabProgramCountBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function getLabProgramList($request, $organization)

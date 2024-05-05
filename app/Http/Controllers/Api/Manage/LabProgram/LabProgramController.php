@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\LabProgram;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
 use App\Http\Requests\Manage\LabProgram\UpdateLabProgramRequest;
@@ -69,6 +70,15 @@ class LabProgramController extends AppBaseController
     public function create(CreateLabProgramRequest $request)
     {
         try {
+            // checks creation limits of the Lab Program
+            $checkLabProgramLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'labProgram');
+            if ($checkLabProgramLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabProgramCount = $this->labProgramRepository->getLabProgramCountBasedOnOrganization($checkLabProgramLimit['organizationId']);
+                if ($checkLabProgramLimit['fetchOrganizationPlanDetails'] <= $checkLabProgramCount) {
+                    return $this->sendError(__('responses.reached_lab_program_limit'), 400);
+                }
+            }
+
             $upload_media = config('site-settings.default_lab_program_profile_image');
             if ($request->media !== null) {
                 $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);

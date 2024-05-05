@@ -8,10 +8,21 @@ use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceGroup;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceGroupService
 {
+    public function getResourceGroupCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $resourceGroup_count = ResourceGroup::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+
+            return $resourceGroup_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function uploadResourceGroupCoverImage($cover_image)
     {
         try {
