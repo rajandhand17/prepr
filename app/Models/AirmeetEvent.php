@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
- * @property int $id
+ * @property int    $id
  * @property string $model_type
- * @property int $model_id
+ * @property int    $model_id
  * @property string $airmeet_event_id
  * @property string $airmeet_event_url
  */
@@ -25,7 +25,7 @@ class AirmeetEvent extends Model
         'model_id',
         'airmeet_event_id',
         'airmeet_event_url',
-        'name'
+        'name',
     ];
 
     /**

@@ -219,7 +219,7 @@ class LabService
             $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
             $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
             $lab->is_verified = '0';
-            $lab->is_live_event_enabled = $request->get('is_live_event_enabled') === 'yes'?true:false;
+            $lab->is_live_event_enabled = $request->get('is_live_event_enabled') === 'yes' ? true : false;
             $lab->save();
 
             return $lab;

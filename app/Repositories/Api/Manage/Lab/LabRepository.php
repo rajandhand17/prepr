@@ -33,6 +33,7 @@ class LabRepository implements LabInterface
     private $durationService;
     private $aiService;
     private $airmeetEventService;
+
     public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, AirmeetEventService $airmeetEventService)
     {
         $this->labService = $labService;
@@ -104,10 +105,11 @@ class LabRepository implements LabInterface
                         Lab::class,
                         $createLab->id,
                         [
-                            'live_event_url' => $request->validated('live_event.url')
+                            'live_event_url' => $request->validated('live_event.url'),
                         ]
                     );
                 }
+
                 return [
                     'createdLab'                  => $createLab,
                     'createdLabAddress'           => $createdLabAddress,
@@ -116,7 +118,7 @@ class LabRepository implements LabInterface
                     'createdLabExternalLinks'     => $createdLabExternalLinks,
                     'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
                     'createdLabAssociations'      => $createdLabAssociations,
-                    'createdEvent'                => $request->boolean('is_live_event_enabled')? $createdEvent : true
+                    'createdEvent'                => $request->boolean('is_live_event_enabled') ? $createdEvent : true,
                 ];
             });
             if (

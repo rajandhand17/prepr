@@ -11,9 +11,8 @@ interface AirmeetEventInterface
 
     /**
      * @param string $model
-     * @param int $model_id
-     * @param array $data
+     * @param int    $model_id
+     * @param array  $data
      */
     public function createUpdateEvent(string $model, int $model_id, array $data);
-
 }

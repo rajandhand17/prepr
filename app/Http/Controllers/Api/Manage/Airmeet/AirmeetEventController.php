@@ -15,35 +15,35 @@ class AirmeetEventController extends AppBaseController
 
     /**
      * @param VerifyAirmeetEventRequest $request
+     *
      * @return JsonResponse
      */
     public function verifyEvent(VerifyAirmeetEventRequest $request): JsonResponse
     {
         try {
             /**
-             * FETCHING EVENT DETAILS
+             * FETCHING EVENT DETAILS.
              */
             $airmeetEventDetails = $this->airmeetEventRepository->getVerifiedEventDetails($request->validated('event_id'));
 
             /**
-             * INVALID EVENT
+             * INVALID EVENT.
              */
             if ($airmeetEventDetails === false) {
-                return $this->sendError(__("Invalid event !"));
+                return $this->sendError(__('Invalid event !'));
             }
 
             /**
-             * FORMATTED EVENT DETAILS
+             * FORMATTED EVENT DETAILS.
              */
             $eventDetails = [
-                'name' => data_get($airmeetEventDetails, 'name'),
-                'thumbnail' => data_get($airmeetEventDetails, 'master_img_url'),
+                'name'       => data_get($airmeetEventDetails, 'name'),
+                'thumbnail'  => data_get($airmeetEventDetails, 'master_img_url'),
                 'start_time' => data_get($airmeetEventDetails, 'start_time'),
-                'end_time' => data_get($airmeetEventDetails, 'end_time')
+                'end_time'   => data_get($airmeetEventDetails, 'end_time'),
             ];
-
         } catch (\Exception $exception) {
-            return $this->sendError(__("Invalid event !"));
+            return $this->sendError(__('Invalid event !'));
         }
 
         return $this->sendResponse($eventDetails, 'Event Details');

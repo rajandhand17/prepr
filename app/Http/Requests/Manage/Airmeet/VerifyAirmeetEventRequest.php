@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Manage\Airmeet;
 
 use App\Http\Requests\BaseRequest;
-use Illuminate\Foundation\Http\FormRequest;
 
 class VerifyAirmeetEventRequest extends BaseRequest
 {
@@ -23,7 +22,7 @@ class VerifyAirmeetEventRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'event_id' => ['required', 'string']
+            'event_id' => ['required', 'string'],
         ];
     }
 }

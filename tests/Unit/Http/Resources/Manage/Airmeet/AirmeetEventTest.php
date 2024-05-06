@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Resources\Manage\Airmeet;
 
-use App\Http\Resources\Manage\Airmeet\AirmeetEventResource;
 use Tests\TestCase;
 
 /**

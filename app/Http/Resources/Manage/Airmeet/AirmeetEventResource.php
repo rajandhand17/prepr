@@ -19,7 +19,7 @@ class AirmeetEventResource extends JsonResource
     {
         return [
             'event_id' => $this->airmeet_event_id,
-            'url' => $this->airmeet_event_url
+            'url'      => $this->airmeet_event_url,
         ];
     }
 }

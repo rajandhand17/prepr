@@ -10,7 +10,6 @@ use Illuminate\Http\Client\Response;
 
 class AirmeetEventRepository implements AirmeetEventInterface
 {
-
     /**
      * @param AirmeetEventService $airmeetEventService
      */
@@ -20,6 +19,7 @@ class AirmeetEventRepository implements AirmeetEventInterface
 
     /**
      * @param string $eventId
+     *
      * @return false|PromiseInterface|Response
      */
     public function getVerifiedEventDetails(string $eventId): false|PromiseInterface|Response
@@ -33,8 +33,9 @@ class AirmeetEventRepository implements AirmeetEventInterface
 
     /**
      * @param string $model
-     * @param int $model_id
-     * @param array $data
+     * @param int    $model_id
+     * @param array  $data
+     *
      * @return false|Builder|Model
      */
     public function createUpdateEvent(string $model, int $model_id, array $data): Model|Builder|false

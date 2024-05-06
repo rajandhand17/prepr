@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Manage\Airmeet;
 
-use App\Http\Requests\Manage\Airmeet\VerifyAirmeetEventRequest;
 use Tests\TestCase;
 
 /**

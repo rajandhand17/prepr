@@ -19,13 +19,13 @@ class AirmeetAuthToken extends Model
      */
     protected $fillable = [
         'token',
-        'expire_at'
+        'expire_at',
     ];
 
     /**
      * @var string[]
      */
     protected $casts = [
-        'expire_at' => 'datetime'
+        'expire_at' => 'datetime',
     ];
 }
