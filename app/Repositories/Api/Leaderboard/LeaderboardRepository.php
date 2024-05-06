@@ -9,14 +9,14 @@ use App\Services\UserService;
 
 class LeaderboardRepository implements LeaderboardInterface
 {
-    private $userService
+    private $userService;
         public function __construct(UserService $userService){
             $this->userService=$userService;
         }
 
-        public function index(){
+        public function getLeaderBoardList(){
             try {
-                $user=$this->userService->index();
+                $user=$this->userService->getLeaderBoardList();
                 return $user;
             }catch (\Exception $e){
                 return false;

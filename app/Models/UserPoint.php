@@ -11,7 +11,7 @@ class UserPoint extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'user_point';
+    protected $table = 'user_points';
 
     protected $fillable = [
         'user_id',

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\UserPoint;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 
@@ -194,6 +195,16 @@ class UserService
         try {
             return User::query()->where('id', auth()->user()->id)->update(['go1_id' => $go1UserId, 'go1_user_metadata' => $response]);
         } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function getLeaderBoardList(){
+        try {
+            $getTopUsers=UserPointService::getUsersBasedOnPoints();
+            $getUsers=User::whereIn('id',$getTopUsers)->get();
+            return $getUsers;
+        }catch (Exception $e){
             return false;
         }
     }
