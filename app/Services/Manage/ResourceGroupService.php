@@ -281,7 +281,7 @@ class ResourceGroupService
     public function getResourceGroupListName($request, $organization)
     {
         try {
-            $resourceGroupList = ResourceGroup::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $resourceGroupList = ResourceGroup::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
             $limit = config('site-settings.listing_limit');
 

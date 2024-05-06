@@ -64,9 +64,12 @@ class ResourceGroupController extends AppBaseController
     public function show($slug)
     {
         try {
-            $resourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($resourceGroup) {
-                return $this->sendResponse(ResourceGroupResource::make($resourceGroup), __('responses.found_resource_group_list'));
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+            if ($checkResourceGroupExistsOrNot) {
+                return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 404);
@@ -92,11 +95,14 @@ class ResourceGroupController extends AppBaseController
     public function delete($slug)
     {
         try {
-            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupSlugExistsOrNot == false) {
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
             }
-            $deleteResourceGroup = $this->resourceGroupRepository->deleteGroupModule($checkResourceGroupSlugExistsOrNot->id);
+            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+            $deleteResourceGroup = $this->resourceGroupRepository->deleteGroupModule($checkResourceGroupExistsOrNot->id);
             if ($deleteResourceGroup) {
                 return $this->sendResponse(null, __('responses.resource_group_delete'));
             }
@@ -124,11 +130,14 @@ class ResourceGroupController extends AppBaseController
     public function update($slug, UpdateResourceGroupRequest $request)
     {
         try {
-            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupSlugExistsOrNot == false) {
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
             }
-            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupSlugExistsOrNot->media);
+            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupExistsOrNot->media);
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
                 if (!$uploaded_cover_image) {
@@ -136,7 +145,7 @@ class ResourceGroupController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-            $upload_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupSlugExistsOrNot->achievement_image);
+            $upload_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupExistsOrNot->achievement_image);
             if ($request->achievement_image !== null) {
                 $uploaded_achievement_image = $this->resourceGroupRepository->uploadAchievementImage($request->achievement_image);
                 if (!$uploaded_achievement_image) {
