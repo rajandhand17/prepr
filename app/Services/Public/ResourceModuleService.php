@@ -146,4 +146,13 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public static function getResourceModuleBasedOnIds($ids)
+    {
+        try {
+            return ResourceModule::whereIn('id', $ids)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
