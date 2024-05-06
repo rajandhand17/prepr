@@ -25,7 +25,7 @@ class ChallengePathService
 
     public function getChallengePathList($request, $organization)
     {
-        $getChallengePathList = ChallengePath::select()->where('organization_id', '=', $organization->id);
+        $getChallengePathList = ChallengePath::where('organization_id', '=', $organization->id);
         $getChallengePathList = self::filterChallengePathList($getChallengePathList, $request);
 
         return $getChallengePathList->paginate(config('site-settings.pagination_per_page'));
@@ -370,7 +370,7 @@ class ChallengePathService
     public function getChallengePathListName($request, $organization)
     {
         try {
-            $challengePathList = ChallengePath::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $challengePathList = ChallengePath::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $challengePathList = self::filterChallengePathList($challengePathList, $request);
             $limit = config('site-settings.listing_limit');
 

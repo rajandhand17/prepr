@@ -98,6 +98,9 @@ class ChallengePathController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_path_not_found'), 403);
             }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
+            }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             if ($request->media !== null) {
                 $uploaded_cover_image = $this->challengePathRepository->uploadChallengePathMedia($request->media);
@@ -163,6 +166,9 @@ class ChallengePathController extends AppBaseController
             if ($checkChallengePathSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.challenge_path_not_found'), 404);
             }
+            if ($checkChallengePathSlugExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
+            }
             $deleteChallengePath = $this->challengePathRepository->delete($checkChallengePathSlugExistsOrNot->id);
             if ($deleteChallengePath) {
                 return $this->sendResponse(null, __('responses.challenge_path_delete'));
@@ -178,6 +184,9 @@ class ChallengePathController extends AppBaseController
     {
         try {
             $challengePath = $this->challengePathRepository->checkSlug($slug);
+            if ($challengePath->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
+            }
             if ($challengePath) {
                 return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));
             }
