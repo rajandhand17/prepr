@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Manage\Lab;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
@@ -219,6 +220,8 @@ class LabResource extends JsonResource
             'is_notification_enabled'       => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
             'is_verified'                   => ($this->is_verified == '1') ? 'yes' : 'no',
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'is_live_event_enabled' => $this->is_live_event_enabled ? 'yes' : 'no',
+            'live_event' => AirmeetEventResource::make($this->airmeet),
             'address'                       => $address,
             'achievement'                   => $achievement,
             'external_links'                => LabExternalLinkResource::collection($this->external_links),
