@@ -43,11 +43,14 @@ class JobTitleSkillServices
         try {
             $usersSkills = UserSkillsService::getUserSkills();
             $requiredSKills = self::getJobSkillsBasedOnJobId($jobId);
-            $commonSkills = $usersSkills->intersect($requiredSKills);
+            $countOfMatchedSkills=0;
+            if(isset(auth()->user()->id)){
+                $commonSkills = $usersSkills->intersect($requiredSKills);
+                $countOfMatchedSkills = $commonSkills->count();
+            }
             $getCountOfRequiredSkills = $requiredSKills->count();
-            $countOfMatchedSkills = $commonSkills->count();
-            $percentage = ($countOfMatchedSkills / $getCountOfRequiredSkills) * 100;
 
+            $percentage = ($countOfMatchedSkills / $getCountOfRequiredSkills) * 100;
             return $percentage;
         } catch (\Exception $e) {
             return false;

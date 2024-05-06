@@ -4,6 +4,7 @@ namespace App\Http\Resources\Public\Skill;
 
 use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
+use App\Http\Resources\Career\CareerResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Services\JobTitleService;
 use App\Services\JobTitleSkillServices;
@@ -40,7 +41,7 @@ class SkillResource extends JsonResource
             'related_challenges'     => $this->getChallenges != null ? $this->getChallenges->count() : '0',
             'related_labs_count'     => $this->getLabs != null ? $this->getLabs->count() : '0',
             'related_resources'      => $this->getLlatedResources != null ? $this->getLlatedResources->count() : '0',
-            'related_jobs'           => $getJobIdsBasedOnSkills,
+            'related_jobs'           => CareerResource::collection($getJobIdsBasedOnSkills),
             'related_labs'           => LabResource::collection($getLabIdsBasedOnSKills),
         ];
         if (auth('api')->check()) {
