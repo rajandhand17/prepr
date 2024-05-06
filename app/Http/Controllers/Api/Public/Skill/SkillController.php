@@ -45,7 +45,7 @@ class SkillController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_skill_list'), 404);
         } catch(\Exception $e) {
-           return $this->sendError(__('responses.send_error'), 500);
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
