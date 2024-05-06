@@ -150,7 +150,7 @@ class ResourceModuleService
     public static function getResourceModuleBasedOnIds($ids)
     {
         try {
-            return ResourceModule::select()->whereIn('id', $ids)->get();
+            return ResourceModule::whereIn('id', $ids)->get();
         } catch (\Exception $e) {
             return false;
         }
