@@ -333,11 +333,22 @@ class AIService
                 ],
             ];
 
-            try {
-                $response = $this->openAIClient->post('', ['json' => $payload]);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
+            $retry = 0;
+            $maxRetries = 1;
+
+            do {
+                try {
+                    $response = $this->openAIClient->post('', ['json' => $payload]);
+                    break;
+                } catch (Exception $e) {
+                    if ($retry >= $maxRetries) {
+                        throw new Exception('OpenAI call failed: '.$e->getMessage());
+                    }
+                    $retry++;
+
+                    usleep(500000);
+                }
+            } while ($retry <= $maxRetries);
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
@@ -393,11 +404,22 @@ class AIService
                 ],
             ];
 
-            try {
-                $response = $this->openAIClient->post('', ['json' => $payload]);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
+            $retry = 0;
+            $maxRetries = 1;
+
+            do {
+                try {
+                    $response = $this->openAIClient->post('', ['json' => $payload]);
+                    break;
+                } catch (Exception $e) {
+                    if ($retry >= $maxRetries) {
+                        throw new Exception('OpenAI call failed: '.$e->getMessage());
+                    }
+                    $retry++;
+
+                    usleep(500000);
+                }
+            } while ($retry <= $maxRetries);
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
@@ -606,10 +628,10 @@ class AIService
                         $data = $currentData;
                         break;
                     }
-                }
 
-                if (($collectArticles ? $articlesCollected : true) && ($collectVideos ? $videosCollected : true)) {
-                    throw new Exception('Error in gathering enough data!');
+                    if (($collectArticles ? $articlesCollected : true) && ($collectVideos ? $videosCollected : true)) {
+                        throw new Exception('Error in gathering enough data!');
+                    }
                 }
             } catch (Exception $e) {
                 Log::warning("Warning in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: ".$e->getMessage());
@@ -704,7 +726,23 @@ class AIService
                             ],
                         ];
 
-                        $response = $this->openAIClient->post('', ['json' => $payload]);
+                        $retry = 0;
+                        $maxRetries = 1;
+
+                        do {
+                            try {
+                                $response = $this->openAIClient->post('', ['json' => $payload]);
+                                break;
+                            } catch (Exception $e) {
+                                if ($retry >= $maxRetries) {
+                                    throw new Exception('OpenAI call failed: '.$e->getMessage());
+                                }
+                                $retry++;
+
+                                usleep(500000);
+                            }
+                        } while ($retry <= $maxRetries);
+
                         $responseBody = $response->getBody()->getContents();
                         $responseArray = json_decode($responseBody, true);
 
@@ -818,14 +856,14 @@ class AIService
         $go1_resource_modules = [];
 
         if ($request->resource_module_go1) {
-            $memberManagement = new MemberManagementService();
-            if (!$memberManagement->canCreateGO1Resource()) {
-                throw new Exception('No go1 access!');
-            }
-
             $response = null;
 
             try {
+                $memberManagement = new MemberManagementService();
+                if (!$memberManagement->canCreateGO1Resource()) {
+                    throw new Exception('No go1 access!');
+                }
+
                 $queryParts = [
                     'Challenge Title: '.($request['challengeTitle'] ?? 'N/A'),
                     'Category: '.($request['category'] ?? 'N/A'),
@@ -855,8 +893,23 @@ class AIService
                     ],
                 ];
 
-                $apiResponse = $this->openAIClient->post('', ['json' => $payload]);
-                $response = json_decode($apiResponse->getBody()->getContents(), true);
+                $retry = 0;
+                $maxRetries = 1;
+
+                do {
+                    try {
+                        $apiResponse = $this->openAIClient->post('', ['json' => $payload]);
+                        $response = json_decode($apiResponse->getBody()->getContents(), true);
+                        break;
+                    } catch (Exception $e) {
+                        if ($retry >= $maxRetries) {
+                            throw new Exception($e->getMessage());
+                        }
+                        $retry++;
+
+                        usleep(500000);
+                    }
+                } while ($retry <= $maxRetries);
 
                 if (!$response || empty($response['choices'])) {
                     throw new Exception('No choices in the response');
@@ -887,11 +940,15 @@ class AIService
                                     if ($count < 3) {
                                         $module = [];
 
+                                        if (!isset($item['title']) || !isset($item['description']) || !isset($item['skills'])) {
+                                            break;
+                                        }
+
                                         $module['id'] = $item['id'] ?? null;
                                         $module['type'] = $item['type'] ?? null;
-                                        $module['title'] = $item['title'] ?? null;
+                                        $module['title'] = $item['title'];
                                         $module['published'] = $item['published'] ?? null;
-                                        $module['description'] = $item['description'] ?? null;
+                                        $module['description'] = $item['description'];
                                         $module['image'] = $item['image'] ?? null;
                                         $module['created_time'] = $item['created_time'] ?? null;
                                         $module['updated_time'] = $item['updated_time'] ?? null;
