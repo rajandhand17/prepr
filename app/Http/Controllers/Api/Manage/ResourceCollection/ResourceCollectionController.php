@@ -83,9 +83,12 @@ class ResourceCollectionController extends AppBaseController
     public function show($slug)
     {
         try {
-            $responseCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($responseCollection) {
-                return $this->sendResponse(ResourceCollectionResource::make($responseCollection), __('responses.found_resource_collection_list'));
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+            }
+            if ($checkResourceCollectionExistsOrNot) {
+                return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
@@ -101,11 +104,14 @@ class ResourceCollectionController extends AppBaseController
             if ($checkOrganizationExistsOrNot == false) {
                 return $this->sendError(__('responses.organization_not_found'), 422);
             }
-            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionSlugExistsOrNot == false) {
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceCollectionSlugExistsOrNot->media);
+            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+            }
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceCollectionExistsOrNot->media);
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
                 if (!$uploaded_cover_image) {
@@ -151,11 +157,14 @@ class ResourceCollectionController extends AppBaseController
     public function delete($slug)
     {
         try {
-            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionSlugExistsOrNot == false) {
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            $responseCollectionDelete = $this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionSlugExistsOrNot->id);
+            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+            }
+            $responseCollectionDelete = $this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionExistsOrNot->id);
             if ($responseCollectionDelete) {
                 return $this->sendResponse(null, __('responses.resource_collection_delete'));
             }

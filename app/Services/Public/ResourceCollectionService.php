@@ -11,7 +11,7 @@ class ResourceCollectionService
     public function getResourceCollectionList($request)
     {
         try {
-            $resourceCollectionList = ResourceCollection::select();
+            $resourceCollectionList = ResourceCollection::where('is_accessible', '1');
             $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
