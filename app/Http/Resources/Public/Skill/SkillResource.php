@@ -27,9 +27,9 @@ class SkillResource extends JsonResource
         $key = gettype($relatedSkills) == 'array' ? array_keys($relatedSkills) : [];
         $count_related_skills = (is_array($relatedSkills)) ? count($relatedSkills) : '0';
         $relatedKeyUrl = isset($key[0]) ? config('wikipedia.WIKIPEDIA_URL').str_replace(' ', '_', $key[0]) : [];
-        $getJobIds=JobTitleSkillServices::getJobTitleBasedOnSkills([$this->id]);
-        $getJobIdsBasedOnSkills=JobTitleService::getJobTitles('en',$this->search,$getJobIds)->take(config('site-settings.skills_par_module_limit'));
-        $getLabIdsBasedOnSKills=LabService::getLabBasedOnSkills($this->id);
+        $getJobIds = JobTitleSkillServices::getJobTitleBasedOnSkills([$this->id]);
+        $getJobIdsBasedOnSkills = JobTitleService::getJobTitles('en', $this->search, $getJobIds)->take(config('site-settings.skills_par_module_limit'));
+        $getLabIdsBasedOnSKills = LabService::getLabBasedOnSkills($this->id);
         $data = [
             'id'                     => $this->id,
             'title'                  => $this->title,
