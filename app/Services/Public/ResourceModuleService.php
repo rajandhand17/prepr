@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Models\ResourceCollection;
 use App\Models\ResourceModule;
 
 class ResourceModuleService
@@ -142,6 +143,15 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $id)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceModuleBasedOnIds($ids)
+    {
+        try {
+            return ResourceModule::select()->whereIn('id', $ids)->get();
         } catch (\Exception $e) {
             return false;
         }

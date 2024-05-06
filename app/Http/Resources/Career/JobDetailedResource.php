@@ -13,6 +13,7 @@ use App\Services\JobTitleSkillServices;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Public\LabService;
+use App\Services\Public\ResourceModuleService;
 use App\Services\UserJobTitlesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -38,9 +39,10 @@ class JobDetailedResource extends JsonResource
         }
         $resources = [];
         $getResources = $this->related_resources;
-        $getAllResources = $getResources->pluck('resource_collection_id')->take(config('site-settings.jobs_details_par_module_limit'));
+
+        $getAllResources = $getResources->pluck('resource_module_id')->take(config('site-settings.jobs_details_par_module_limit'));
         if ($getAllResources) {
-            $resources = ResourceCollectionService::getResourceCollectionsBasedOnIds($getAllResources);
+            $resources=ResourceModuleService::getResourceModuleBasedOnIds($getAllResources);
         }
         $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
         $checkSavedOrNot = UserJobTitlesService::checkJobExistsOrNot($this->id);
