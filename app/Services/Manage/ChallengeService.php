@@ -433,7 +433,7 @@ class ChallengeService
     public static function getChallengeBasedOnSlug($slug)
     {
         try {
-            return Challenge::where('slug', $slug)->first();
+            return Challenge::where(['slug' => $slug, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
             return false;
         }
@@ -537,7 +537,7 @@ class ChallengeService
     public function getChallengeListName($request, $organization)
     {
         try {
-            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where('organization_id', '=', $organization->id);
+            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $challenge_list = self::filterChallengeList($challenge_list, $request);
             $limit = config('site-settings.listing_limit');
 

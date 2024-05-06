@@ -15,7 +15,7 @@ class ChallengeService
     public function getList($request)
     {
         try {
-            $challenge_list = Challenge::select()->where('challenges.status', '1');
+            $challenge_list = Challenge::where('challenges.status', '1')->where('challenges.is_accessible', '1');
             $challenge_list = self::filterChallengeList($request, $challenge_list);
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
@@ -160,7 +160,7 @@ class ChallengeService
             $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
             $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
 
-            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds);
+            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1');
             $challenge_list = self::filterChallengeList($request, $challenge_list);
             $limit = config('site-settings.listing_limit');
 

@@ -1110,5 +1110,11 @@
     "responses.reached_resource_module_limit": "You have reached the limit to create the Resource Module.",
     "responses.reached_resource_collection_limit": "You have reached the limit to create the Resource Collection.",
     "responses.reached_resource_group_limit": "You have reached the limit to create the Resource Group.",
-    "responses.challenge_not_accessible": "Sorry, this Challenge is not accessible with your existing plan."
+    "responses.challenge_not_accessible": "Sorry, this Challenge is not accessible with your existing plan.",
+    "responses.challenge_path_not_accessible": "Sorry, this Challenge Path is not accessible with your existing plan.",
+    "responses.lab_not_accessible": "Sorry, this Lab is not accessible with your existing plan.",
+    "responses.lab_program_not_accessible": "Sorry, this Lab Program is not accessible with your existing plan.",
+    "responses.resource_module_not_accessible": "Sorry, this Resource Module is not accessible with your existing plan.",
+    "responses.resource_collection_not_accessible": "Sorry, this Resource Collection is not accessible with your existing plan.",
+    "responses.resource_group_not_accessible": "Sorry, this Resource Group is not accessible with your existing plan."
 }

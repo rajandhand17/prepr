@@ -57,6 +57,9 @@ class ChallengeController extends AppBaseController
             if ($challenge) {
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_view'));
             }
+            if ($challenge->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);
         } catch (Exception $e) {
@@ -69,6 +72,9 @@ class ChallengeController extends AppBaseController
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if ($challenge !== null) {
+                if ($challenge->is_accessible === '0') {
+                    return $this->sendError(__('responses.challenge_not_accessible'), 403);
+                }
                 $getColumnNameValue = $this->challengeRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);
@@ -108,6 +114,9 @@ class ChallengeController extends AppBaseController
             $fetchChallengeExistsOrNot = $this->challengeRepository->getChallengeBasedOnUUID($uuid);
             if (!$fetchChallengeExistsOrNot) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            if ($fetchChallengeExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
 
             $getProjectChallengeRequirement = $this->challengeRepository->getProjectChallengeRequirement($fetchChallengeExistsOrNot);
