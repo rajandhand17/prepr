@@ -57,6 +57,9 @@ class LabProgramController extends AppBaseController
     {
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labProgram->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+            }
             if ($labProgram) {
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
@@ -112,6 +115,9 @@ class LabProgramController extends AppBaseController
             $checkComponentBasedOnSlug = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $upload_media = config('site-settings.default_lab_program_profile_image');
             if ($request->media !== null) {
@@ -174,6 +180,9 @@ class LabProgramController extends AppBaseController
             $checkLabProgramSlugExistsOrNot = $this->labProgramRepository->checkSlug($slug);
             if ($checkLabProgramSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.lab_program_not_found'), 404);
+            }
+            if ($checkLabProgramSlugExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $deletLabProgram = $this->labProgramRepository->delete($slug);
             if ($deletLabProgram) {
