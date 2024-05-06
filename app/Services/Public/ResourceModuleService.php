@@ -2,7 +2,6 @@
 
 namespace App\Services\Public;
 
-use App\Models\ResourceCollection;
 use App\Models\ResourceModule;
 
 class ResourceModuleService
