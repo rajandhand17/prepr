@@ -736,6 +736,7 @@ class ChallengeService
                     'title'             => $fetchChallenge->title,
                     'slug'              => $fetchChallenge->slug,
                     'agreement'         => $fetchChallenge->agreement,
+                    'is_accessible'     => ($fetchChallenge->is_accessible == '1') ? 'yes' : 'no',
                     'template_id'       => $getTemplate,
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
