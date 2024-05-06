@@ -266,6 +266,10 @@ class ChallengeService
             }
 
             $source_link = $request->source_link ?? null;
+            if ($request->challengeTitle && $request->challengeDescription) {
+                $request->title = $request->challengeTitle;
+                $request->description = $request->challengeDescription;
+            }
 
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($request->title, $model);
