@@ -61,12 +61,13 @@ class ResourceModuleController extends AppBaseController
     public function show($slug)
     {
         try {
-            if (!auth()->user()->isAbleTo('view_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
+            $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
-            $responseView = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if ($responseView) {
-                return $this->sendResponse(ResourceModuleResource::make($responseView), __('responses.found_resource_module_list'));
+
+            if ($checkResourceModuleExistsOrNot) {
+                return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
@@ -110,12 +111,12 @@ class ResourceModuleController extends AppBaseController
     public function update(UpdateResourceModuleRequest $request, $slug)
     {
         try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if (!$checkResourceModuleSlugExistsOrNot) {
+            $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if (!auth()->user()->isAbleTo('edit_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
+            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
@@ -173,27 +174,27 @@ class ResourceModuleController extends AppBaseController
     public function addLinksAndEmbedMedia(AddLinksResourceModuleRequest $request, $slug)
     {
         try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if (!$checkResourceModuleSlugExistsOrNot) {
+            $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if (!auth()->user()->isAbleTo('create_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
+            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             if ($request->has('links') && !empty($request->links)) {
-                $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleSlugExistsOrNot->id);
+                $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleExistsOrNot->id);
                 if (!$addLinks) {
                     return $this->sendError(__('responses.add_links_failed'), 403);
                 }
             }
             if ($request->has('embed_media') && !empty($request->embed_media)) {
-                $addEmbeddedMedia = $this->resourceModuleRepository->addEmbeddedMedia($request, $checkResourceModuleSlugExistsOrNot->id);
+                $addEmbeddedMedia = $this->resourceModuleRepository->addEmbeddedMedia($request, $checkResourceModuleExistsOrNot->id);
                 if (!$addEmbeddedMedia) {
                     return $this->sendError(__('responses.add_embedded_media_failed'), 403);
                 }
             }
 
-            return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleSlugExistsOrNot), __('responses.add_links_success'), 200);
+            return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.add_links_success'), 200);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -203,16 +204,16 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             $type = config('constants.resource_module_type.image');
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if (!$checkResourceModuleSlugExistsOrNot) {
+            $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if (!auth()->user()->isAbleTo('create_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
+            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
-            $insertData = $this->resourceModuleRepository->fileUpload($request, $checkResourceModuleSlugExistsOrNot->id);
+            $insertData = $this->resourceModuleRepository->fileUpload($request, $checkResourceModuleExistsOrNot->id);
             if ($insertData) {
-                return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleSlugExistsOrNot), __('responses.file_upload_success'), 200);
+                return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.file_upload_success'), 200);
             }
 
             return $this->sendError(__('responses.file_upload_failed'), 500);
@@ -224,14 +225,14 @@ class ResourceModuleController extends AppBaseController
     public function delete($slug)
     {
         try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if (!$checkResourceModuleSlugExistsOrNot) {
+            $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if (!auth()->user()->isAbleTo('delete_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
+            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
-            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModule($slug, $checkResourceModuleSlugExistsOrNot->id);
+            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModule($slug, $checkResourceModuleExistsOrNot->id);
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_delete'));
             }
@@ -245,14 +246,14 @@ class ResourceModuleController extends AppBaseController
     public function deleteMedia(DeleteMediaResourceModuleRequest $request, $slug)
     {
         try {
-            $checkResourceModuleSlugExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if (!$checkResourceModuleSlugExistsOrNot) {
+            $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if (!auth()->user()->isAbleTo('delete_resource_module')) {
-                return $this->sendError(__('responses.permission_forbidden'), 403);
+            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
-            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModuleMedia($request, $checkResourceModuleSlugExistsOrNot->id);
+            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModuleMedia($request, $checkResourceModuleExistsOrNot->id);
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_media_delete'));
             }
@@ -284,8 +285,15 @@ class ResourceModuleController extends AppBaseController
     public function CreateResourceModuleUsingAIPreview(CreateResourceModuleUsingAIPreviewRequest $request)
     {
         try {
+            // checks creation limits of the Resource Module
+            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceModule');
+            if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkResourceModuleCount = $this->resourceModuleRepository->getResourceModuleCountBasedOnOrganization($checkResourceModuleLimit['organizationId']);
+                if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] <= $checkResourceModuleCount) {
+                    return $this->sendError(__('responses.reached_resource_module_limit'), 400);
+                }
+            }
             $createResourceModuleUsingAIPreview = $this->resourceModuleRepository->createResourceModuleUsingAIPreview($request);
-
             if ($createResourceModuleUsingAIPreview) {
                 return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_modules_previews_created_successfully'), 200);
             } else {
@@ -302,6 +310,14 @@ class ResourceModuleController extends AppBaseController
     public function CreateResourceModuleUsingAI(CreateResourceModuleUsingAIRequest $request)
     {
         try {
+            // checks creation limits of the Resource Module
+            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceModule');
+            if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkResourceModuleCount = $this->resourceModuleRepository->getResourceModuleCountBasedOnOrganization($checkResourceModuleLimit['organizationId']);
+                if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] <= $checkResourceModuleCount) {
+                    return $this->sendError(__('responses.reached_resource_module_limit'), 400);
+                }
+            }
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             $createResourceModuleUsingAI = $this->resourceModuleRepository->CreateResourceModuleUsingAI($request, $upload_cover_image);
 
