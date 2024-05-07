@@ -8,8 +8,7 @@ interface AirmeetEventInterface
 {
     /**
      * @param AirmeetEvent $event
-     * @param array $data
+     * @param array        $data
      */
     public function getMeetUrl(AirmeetEvent $event, array $data);
-
 }

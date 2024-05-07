@@ -123,7 +123,7 @@ class LabRepository implements LabInterface
     public function canJoinLiveEvent(Lab $lab, User $user): bool
     {
         try {
-            return $this->labService->canJoinLiveEvent($lab,$user);
+            return $this->labService->canJoinLiveEvent($lab, $user);
         } catch (\Exception $e) {
             return false;
         }
@@ -137,7 +137,6 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-
 
     public function liveEventDetails(Lab $lab)
     {

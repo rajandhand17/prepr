@@ -16,7 +16,8 @@ class AirmeetEventRepository implements AirmeetEventInterface
 
     /**
      * @param AirmeetEvent $event
-     * @param array $data
+     * @param array        $data
+     *
      * @return false|string
      */
     public function getMeetUrl(AirmeetEvent $event, array $data): false|string

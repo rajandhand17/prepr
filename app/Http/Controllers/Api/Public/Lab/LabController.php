@@ -41,12 +41,12 @@ class LabController extends AppBaseController
             $lab = $this->labRepository->getList($request);
             if ($lab !== false) {
                 $response = [
-                    'total_count' => $lab->total(),
-                    'per_page' => $lab->perPage(),
-                    'count' => $lab->count(),
+                    'total_count'  => $lab->total(),
+                    'per_page'     => $lab->perPage(),
+                    'count'        => $lab->count(),
                     'current_page' => $lab->currentPage(),
-                    'total_pages' => $lab->lastPage(),
-                    'list' => LabResource::collection($lab),
+                    'total_pages'  => $lab->lastPage(),
+                    'list'         => LabResource::collection($lab),
                 ];
 
                 return $this->sendResponse($response, __('responses.found_labs_list'));
@@ -90,11 +90,11 @@ class LabController extends AppBaseController
                 $checkActivity = $this->labRepository->checkSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
                 if ($checkActivity === true) {
-                    return $this->sendError(__('responses.already_' . $action . '_lab'), 400);
+                    return $this->sendError(__('responses.already_'.$action.'_lab'), 400);
                 }
                 $lab = $this->labRepository->captureSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 if ($lab) {
-                    return $this->sendResponse([], __('responses.' . $action . '_lab_successfully'));
+                    return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
                 }
             }
 
@@ -205,18 +205,18 @@ class LabController extends AppBaseController
                     }
 
                     /**
-                     * LIVE EVENT URL
+                     * LIVE EVENT URL.
                      */
                     $eventUrl = $this->airmeetRepository->getMeetUrl($airmeet, [
-                        'user_id' => $authUser->id,
-                        'email' => data_get($authUser, 'email'),
+                        'user_id'    => $authUser->id,
+                        'email'      => data_get($authUser, 'email'),
                         'first_name' => data_get($authUser, 'first_name', data_get($authUser, 'full_name')),
-                        'last_name' => data_get($authUser, 'last_name'),
+                        'last_name'  => data_get($authUser, 'last_name'),
                     ]);
 
                     if ($eventUrl !== false) {
                         return $this->sendResponse([
-                            'event_url' => $eventUrl
+                            'event_url' => $eventUrl,
                         ], __('responses.live_event_url'));
                     }
 
@@ -225,6 +225,7 @@ class LabController extends AppBaseController
 
                 return $this->sendError(__('responses.not_allowed_to_join_the_live_event'), Response::HTTP_FORBIDDEN);
             }
+
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $exception) {
             return $this->sendError(__('responses.failed_to_get_live_event_url'), Response::HTTP_BAD_REQUEST);
@@ -244,8 +245,10 @@ class LabController extends AppBaseController
                 if ($invitationStatus !== false) {
                     return $this->sendResponse(null, __('responses.send_live_event_invitation_link_to_members'));
                 }
+
                 return $this->sendError(__('responses.failed_to_send_live_event_invitation_link_to_members'), Response::HTTP_BAD_REQUEST);
             }
+
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $exception) {
             return $this->sendError(__('responses.failed_to_send_live_event_invitation_link_to_members'), Response::HTTP_BAD_REQUEST);
@@ -265,8 +268,10 @@ class LabController extends AppBaseController
                 if ($eventDetails !== false) {
                     return $this->sendResponse($eventDetails, __('responses.live_event_details'));
                 }
+
                 return $this->sendError(__('responses.failed_to_get_live_event_details'), Response::HTTP_BAD_REQUEST);
             }
+
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $exception) {
             return $this->sendError(__('responses.failed_to_get_live_event_details'), Response::HTTP_BAD_REQUEST);

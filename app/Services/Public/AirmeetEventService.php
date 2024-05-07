@@ -11,44 +11,50 @@ class AirmeetEventService
 {
     /**
      * @param AirmeetEvent $event
-     * @param array $data
+     * @param array        $data
+     *
      * @return AirmeetEventAttendee|false
      */
     public function store(AirmeetEvent $event, array $data): AirmeetEventAttendee|false
     {
         DB::beginTransaction();
+
         try {
             $airmeetEventId = data_get($event, 'airmeet_event_id');
             $eventUrl = AirmeetEventHelper::addAttendeeToEvent($airmeetEventId, [
-                'email' => data_get($data, 'email', '-'),
-                'first_name' => data_get($data, 'first_name', '-'),
-                'last_name' => data_get($data, 'last_name', '-'),
-                'designation' => 'Member',
-                'organisation' => data_get($data, 'organisation', 'Prepr')
+                'email'        => data_get($data, 'email', '-'),
+                'first_name'   => data_get($data, 'first_name', '-'),
+                'last_name'    => data_get($data, 'last_name', '-'),
+                'designation'  => 'Member',
+                'organisation' => data_get($data, 'organisation', 'Prepr'),
             ]);
 
             if ($eventUrl === false) {
                 DB::rollBack();
+
                 return false;
             }
             /** @var AirmeetEventAttendee $attendee */
             $attendee = AirmeetEventAttendee::query()->create([
-                'attendee_id' => data_get($data, 'user_id'),
-                'airmeet_event_id' => data_get($event, 'id'),
+                'attendee_id'        => data_get($data, 'user_id'),
+                'airmeet_event_id'   => data_get($event, 'id'),
                 'airmeet_event_uuid' => data_get($event, 'airmeet_event_id'),
-                'event_url' => $eventUrl
+                'event_url'          => $eventUrl,
             ]);
             DB::commit();
+
             return $attendee;
         } catch (\Exception $exception) {
             DB::rollBack();
+
             return false;
         }
     }
 
     /**
      * @param AirmeetEvent $event
-     * @param array $data
+     * @param array        $data
+     *
      * @return string
      */
     public function getMeetUrl(AirmeetEvent $event, array $data): string
@@ -56,7 +62,7 @@ class AirmeetEventService
         try {
             $existingAttendeeDetail = AirmeetEventAttendee::query()->where([
                 'airmeet_event_id' => data_get($event, 'id'),
-                'attendee_id' => data_get($data, 'user_id'),
+                'attendee_id'      => data_get($data, 'user_id'),
             ])->first();
 
             if ($existingAttendeeDetail) {
@@ -74,5 +80,4 @@ class AirmeetEventService
             return false;
         }
     }
-
 }

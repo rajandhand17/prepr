@@ -9,7 +9,6 @@ use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
-use GuzzleHttp\Promise\PromiseInterface;
 
 class LabService
 {
@@ -29,7 +28,7 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_list = $lab_list->where('labs.title', 'like', '%' . $request->search . '%');
+                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -214,6 +213,7 @@ class LabService
     {
         try {
             $joined = $lab->joined();
+
             return ($joined && $joined !== 'NA') || $user->hasPermission('can_join_live_event_lab');
         } catch (\Exception $exception) {
             return false;
@@ -228,14 +228,15 @@ class LabService
                 $lab->members()->get()->each(function (User $user) use ($eventId) {
                     AirmeetEventHelper::addAttendeeToEvent($eventId, [
                         [
-                            'user_id' => $user->id,
-                            'email' => data_get($user, 'email'),
+                            'user_id'    => $user->id,
+                            'email'      => data_get($user, 'email'),
                             'first_name' => data_get($user, 'first_name', data_get($user, 'full_name')),
-                            'last_name' => data_get($user, 'last_name'),
-                        ]
+                            'last_name'  => data_get($user, 'last_name'),
+                        ],
                     ]);
                 });
             }
+
             return true;
         } catch (\Exception $exception) {
             return false;
@@ -249,6 +250,7 @@ class LabService
             if ($eventId) {
                 return AirmeetEventHelper::getAirmeetEventInfo($eventId)->json();
             }
+
             return false;
         } catch (\Exception $exception) {
             return false;
