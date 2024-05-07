@@ -9,6 +9,7 @@ use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use Carbon\Carbon;
 
 class LabService
 {
@@ -248,7 +249,40 @@ class LabService
         try {
             $eventId = data_get($lab->airMeet, 'airmeet_event_id');
             if ($eventId) {
-                return AirmeetEventHelper::getAirmeetEventInfo($eventId)->json();
+                $eventDetails = AirmeetEventHelper::getAirmeetEventInfo($eventId)->json();
+                $sessions = data_get($eventDetails, 'sessions');
+
+                /**
+                 * CREATING A HASHMAP BASED ON DATE FOR FRONTEND.
+                 */
+                $sessionFormatted = collect($sessions)->map(function ($value) {
+                    $date = data_get($value, 'start_time');
+                    $readable = $date ? Carbon::parse($date)->startOf('day')->format('Y-m-d') : '';
+
+                    return [
+                        'date'       => $readable,
+                        'start_time' => data_get($value, 'start_time'),
+                        'duration'   => data_get($value, 'duration'),
+                        'title'      => data_get($value, 'name'),
+                        'speakers'   => collect(data_get($value, 'speakerList', []))->map(function ($speaker) {
+                            return [
+                                'name'  => data_get($speaker, 'name'),
+                                'image' => data_get($speaker, 'speaker_img'),
+                            ];
+                        }),
+                    ];
+                })->groupBy('date')->toArray();
+
+                return [
+                    'id'         => data_get($eventDetails, 'id'),
+                    'name'       => data_get($eventDetails, 'name'),
+                    'timezone'   => data_get($eventDetails, 'timezone'),
+                    'status'     => data_get($eventDetails, 'status'),
+                    'thumbnail'  => data_get($eventDetails, 'master_img_url'),
+                    'start_time' => data_get($eventDetails, 'start_time'),
+                    'end_time'   => data_get($eventDetails, 'end_time'),
+                    'sessions'   => $sessionFormatted,
+                ];
             }
 
             return false;

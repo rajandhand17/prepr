@@ -234,7 +234,7 @@ class LabController extends AppBaseController
 
     public function sendLiveEventInvitationLinkToMembers(string $slug)
     {
-        try {
+            try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
                 $airmeet = $lab->airmeet;

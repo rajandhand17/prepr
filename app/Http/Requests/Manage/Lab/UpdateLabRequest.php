@@ -67,6 +67,7 @@ class UpdateLabRequest extends FormRequest
             'external_link_ids'      => 'array|exists:social_links,id',
             'external_links.*'       => 'url',
             'external_link_ids.*'    => 'numeric',
+            'is_live_event_enabled'   => 'nullable|in:yes,no',
         ];
 
         if ($achievement_en_switch == 'yes') {
@@ -119,6 +120,15 @@ class UpdateLabRequest extends FormRequest
                 $base_rules['invite_email'] = 'required|array';
                 $base_rules['invite_email.*'] = 'required|email';
             }
+        }
+
+        $isLiveEventEnabled = $this->get('is_live_event_enabled');
+        if ($isLiveEventEnabled === 'yes') {
+            $base_rules = [
+                ...$base_rules,
+                'live_event.url'         => ['required'],
+                'live_event.is_verified' => ['required', 'in:yes'], // FIRST CHECK FROM AN API TO VERIFY AIRMEET EVENT
+            ];
         }
 
         return $base_rules;
@@ -201,7 +211,9 @@ class UpdateLabRequest extends FormRequest
             'duration_id.exists'             => __('responses.duration_id_exists'),
             'level_id.required'              => __('responses.level_id_required'),
             'level_id.exists'                => __('responses.level_id_exists'),
-
+            'live_event.url.required'         => __('responses.event_url_required'),
+            'live_event.is_verified.required' => __('responses.event_must_be_verified'),
+            'live_event.is_verified.in'       => __('responses.event_must_be_verified'),
         ];
     }
 }

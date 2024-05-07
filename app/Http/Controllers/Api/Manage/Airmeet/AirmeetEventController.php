@@ -43,9 +43,9 @@ class AirmeetEventController extends AppBaseController
                 'end_time'   => data_get($airmeetEventDetails, 'end_time'),
             ];
         } catch (\Exception $exception) {
-            return $this->sendError(__('Invalid event !'));
+            return $this->sendError(__('responses.invalid_event'));
         }
 
-        return $this->sendResponse($eventDetails, 'Event Details');
+        return $this->sendResponse($eventDetails, 'responses.even_details');
     }
 }

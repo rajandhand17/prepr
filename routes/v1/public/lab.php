@@ -15,9 +15,9 @@ Route::middleware($middleware)->group(function () {
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/active/list', [LabController::class, 'labList']);
     Route::post('/{slug}/join', [LabController::class, 'joinLab']);
+    Route::post('/{slug}/send-live-event-invitations', [LabController::class, 'sendLiveEventInvitationLinkToMembers'])->middleware('permission:can_send_live_event_invitation_lab');
     Route::delete('/{slug}/un-join', [LabController::class, 'unJoinLab']);
     Route::post('/{slug}/{activity}', [LabController::class, 'socialActivity']);
     Route::get('/{slug}/live-event-details', [LabController::class, 'getLiveEventDetails']);
     Route::get('/{slug}/live-event-url', [LabController::class, 'getLiveEventUrl']);
-    Route::post('/{slug}/send-live-event-invitation', [LabController::class, 'sendLiveEventInvitationLinkToMembers'])->middleware('permission:can_send_live_event_invitation_lab');
 });

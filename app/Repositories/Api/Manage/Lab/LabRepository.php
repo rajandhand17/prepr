@@ -160,6 +160,16 @@ class LabRepository implements LabInterface
                     $updatedLabAchievement = $this->labAcheivementService->updateLabAchievement($request, $updateLab->id, $upload_achievement_image);
                 }
                 $updatedLabAssociations = $this->componentAssociationService->updateLabAssociation($request, $updateLab->id);
+                /** LIVE EVENT */
+                if ($request->get('is_live_event_enabled') === 'yes') {
+                    $updatedEvent = $this->airmeetEventService->createUpdateEvent(
+                        Lab::class,
+                        $updateLab->id,
+                        [
+                            'live_event_url' => $request->validated('live_event.url'),
+                        ]
+                    );
+                }
 
                 return [
                     'updatedLab'                  => $updateLab,
@@ -169,6 +179,7 @@ class LabRepository implements LabInterface
                     'updatedLabExternalLinks'     => $updatedLabExternalLinks,
                     'updatedLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
                     'updatedLabAssociations'      => $updatedLabAssociations,
+                    'updatedEvent'                => $request->is_live_event_enabled == 'yes' ? $updatedEvent : true,
                 ];
             });
             if (
