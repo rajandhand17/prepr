@@ -17,4 +17,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/join', [LabController::class, 'joinLab']);
     Route::delete('/{slug}/un-join', [LabController::class, 'unJoinLab']);
     Route::post('/{slug}/{activity}', [LabController::class, 'socialActivity']);
+    Route::get('/{slug}/live-event-details', [LabController::class, 'getLiveEventDetails']);
+    Route::get('/{slug}/live-event-url', [LabController::class, 'getLiveEventUrl']);
+    Route::post('/{slug}/send-live-event-invitation', [LabController::class, 'sendLiveEventInvitationLinkToMembers'])->middleware('permission:can_send_live_event_invitation_lab');
 });

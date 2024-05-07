@@ -118,7 +118,7 @@ class LabRepository implements LabInterface
                     'createdLabExternalLinks'     => $createdLabExternalLinks,
                     'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
                     'createdLabAssociations'      => $createdLabAssociations,
-                    'createdEvent'                => $request->boolean('is_live_event_enabled') ? $createdEvent : true,
+                    'createdEvent'                => $request->is_live_event_enabled == 'yes' ? $createdEvent : true,
                 ];
             });
             if (

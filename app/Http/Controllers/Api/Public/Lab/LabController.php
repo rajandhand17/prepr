@@ -5,19 +5,26 @@ namespace App\Http\Controllers\Api\Public\Lab;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\Lab\LabResource;
+use App\Models\AirmeetEvent;
+use App\Models\User;
+use App\Repositories\Api\Public\AirmeetEvent\AirmeetEventRepository;
 use App\Repositories\Api\Public\Lab\LabRepository;
 use App\Services\Manage\OrganizationService;
 use App\Services\Public\ChallengeService;
 use Illuminate\Http\Request;
 use stdClass;
+use Symfony\Component\HttpFoundation\Response;
 
 class LabController extends AppBaseController
 {
     private $labRepository;
 
-    public function __construct(LabRepository $labRepository)
+    private $airmeetRepository;
+
+    public function __construct(LabRepository $labRepository, AirmeetEventRepository $airmeetEventRepository)
     {
         $this->labRepository = $labRepository;
+        $this->airmeetRepository = $airmeetEventRepository;
     }
 
     public function index(Request $request)
@@ -34,12 +41,12 @@ class LabController extends AppBaseController
             $lab = $this->labRepository->getList($request);
             if ($lab !== false) {
                 $response = [
-                    'total_count'  => $lab->total(),
-                    'per_page'     => $lab->perPage(),
-                    'count'        => $lab->count(),
+                    'total_count' => $lab->total(),
+                    'per_page' => $lab->perPage(),
+                    'count' => $lab->count(),
                     'current_page' => $lab->currentPage(),
-                    'total_pages'  => $lab->lastPage(),
-                    'list'         => LabResource::collection($lab),
+                    'total_pages' => $lab->lastPage(),
+                    'list' => LabResource::collection($lab),
                 ];
 
                 return $this->sendResponse($response, __('responses.found_labs_list'));
@@ -83,11 +90,11 @@ class LabController extends AppBaseController
                 $checkActivity = $this->labRepository->checkSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
                 if ($checkActivity === true) {
-                    return $this->sendError(__('responses.already_'.$action.'_lab'), 400);
+                    return $this->sendError(__('responses.already_' . $action . '_lab'), 400);
                 }
                 $lab = $this->labRepository->captureSocialActivity($lab->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 if ($lab) {
-                    return $this->sendResponse([], __('responses.'.$action.'_lab_successfully'));
+                    return $this->sendResponse([], __('responses.' . $action . '_lab_successfully'));
                 }
             }
 
@@ -178,6 +185,91 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getLiveEventUrl(string $slug)
+    {
+        try {
+            $lab = $this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab !== null) {
+                /** @var User $authUser */
+                $authUser = auth()->user();
+
+                // CHECK PERMISSION
+                if ($this->labRepository->canJoinLiveEvent($lab, $authUser)) {
+                    /** @var AirmeetEvent|null $airmeet */
+                    $airmeet = $lab->airmeet;
+                    if (!$airmeet || !$lab->is_live_event_enabled) {
+                        return $this->sendError(__('responses.lab_dont_have_live_event_enabled'), Response::HTTP_NOT_FOUND);
+                    }
+
+                    /**
+                     * LIVE EVENT URL
+                     */
+                    $eventUrl = $this->airmeetRepository->getMeetUrl($airmeet, [
+                        'user_id' => $authUser->id,
+                        'email' => data_get($authUser, 'email'),
+                        'first_name' => data_get($authUser, 'first_name', data_get($authUser, 'full_name')),
+                        'last_name' => data_get($authUser, 'last_name'),
+                    ]);
+
+                    if ($eventUrl !== false) {
+                        return $this->sendResponse([
+                            'event_url' => $eventUrl
+                        ], __('responses.live_event_url'));
+                    }
+
+                    return $this->sendError(__('responses.failed_to_get_live_event_url'), Response::HTTP_BAD_REQUEST);
+                }
+
+                return $this->sendError(__('responses.not_allowed_to_join_the_live_event'), Response::HTTP_FORBIDDEN);
+            }
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        } catch (\Exception $exception) {
+            return $this->sendError(__('responses.failed_to_get_live_event_url'), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function sendLiveEventInvitationLinkToMembers(string $slug)
+    {
+        try {
+            $lab = $this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab !== null) {
+                $airmeet = $lab->airmeet;
+                if (!$airmeet || !$lab->is_live_event_enabled) {
+                    return $this->sendError(__('responses.lab_dont_have_live_event_enabled'), Response::HTTP_NOT_FOUND);
+                }
+                $invitationStatus = $this->labRepository->sendLiveEventInvitationLinkToMembers($lab);
+                if ($invitationStatus !== false) {
+                    return $this->sendResponse(null, __('responses.send_live_event_invitation_link_to_members'));
+                }
+                return $this->sendError(__('responses.failed_to_send_live_event_invitation_link_to_members'), Response::HTTP_BAD_REQUEST);
+            }
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        } catch (\Exception $exception) {
+            return $this->sendError(__('responses.failed_to_send_live_event_invitation_link_to_members'), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function getLiveEventDetails(string $slug)
+    {
+        try {
+            $lab = $this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab !== null) {
+                $airmeet = $lab->airmeet;
+                if (!$airmeet || !$lab->is_live_event_enabled) {
+                    return $this->sendError(__('responses.lab_dont_have_live_event_enabled'), Response::HTTP_NOT_FOUND);
+                }
+                $eventDetails = $this->labRepository->liveEventDetails($lab);
+                if ($eventDetails !== false) {
+                    return $this->sendResponse($eventDetails, __('responses.live_event_details'));
+                }
+                return $this->sendError(__('responses.failed_to_get_live_event_details'), Response::HTTP_BAD_REQUEST);
+            }
+            return $this->sendError(__('responses.lab_slug_not_found'), 404);
+        } catch (\Exception $exception) {
+            return $this->sendError(__('responses.failed_to_get_live_event_details'), Response::HTTP_BAD_REQUEST);
         }
     }
 }

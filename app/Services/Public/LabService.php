@@ -2,11 +2,14 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\Airmeet\AirmeetEventHelper;
 use App\Models\ComponentAssociation;
 use App\Models\Lab;
 use App\Models\MemberManagement;
+use App\Models\User;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use GuzzleHttp\Promise\PromiseInterface;
 
 class LabService
 {
@@ -26,7 +29,7 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
+                $lab_list = $lab_list->where('labs.title', 'like', '%' . $request->search . '%');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -74,8 +77,8 @@ class LabService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $lab_list = $lab_list->whereIn('labs.id', function ($query) use ($request) {
                     $query->select('lab_skills_groups_stack.lab_id')
-                    ->from('lab_skills_groups_stack')
-                    ->whereIn('lab_skills_groups_stack.foreign_id', $request->skills)
+                        ->from('lab_skills_groups_stack')
+                        ->whereIn('lab_skills_groups_stack.foreign_id', $request->skills)
                         ->where('lab_skills_groups_stack.type', '0')
                         ->whereNull('lab_skills_groups_stack.deleted_at')
                         ->distinct();
@@ -84,8 +87,8 @@ class LabService
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $lab_list = $lab_list->whereIn('labs.id', function ($query) use ($request) {
                     $query->select('lab_tags_groups.lab_id')
-                    ->from('lab_tags_groups')
-                    ->whereIn('lab_tags_groups.foreign_id', $request->tags)
+                        ->from('lab_tags_groups')
+                        ->whereIn('lab_tags_groups.foreign_id', $request->tags)
                         ->where('lab_tags_groups.type', '0')
                         ->whereNull('lab_tags_groups.deleted_at')
                         ->distinct();
@@ -102,7 +105,7 @@ class LabService
                     $status_array = ['accepted', 'pending', 'declined'];
                     if (in_array($request->request_status, $status_array)) {
                         $lab_list = $lab_list->join('member_management', 'labs.id', '=', 'member_management.module_id')
-                        ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email]);
+                            ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email]);
                         switch ($request->request_status) {
                             case 'invited':
                                 $lab_list->where('member_management.invite_status', '0');
@@ -162,7 +165,7 @@ class LabService
             $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id', $getLatestLabsIds);
 
             return $lab_list->get();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -182,7 +185,7 @@ class LabService
             }
 
             return $labList->get();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -193,7 +196,7 @@ class LabService
             $labList = Lab::whereIn('id', $labIds)->get();
 
             return $labList;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -203,6 +206,51 @@ class LabService
         try {
             return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function canJoinLiveEvent(Lab $lab, User $user): bool
+    {
+        try {
+            $joined = $lab->joined();
+            return ($joined && $joined !== 'NA') || $user->hasPermission('can_join_live_event_lab');
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public function sendLiveEventInvitationLinkToMembers(Lab $lab): bool
+    {
+        try {
+            $eventId = data_get($lab->airMeet, 'airmeet_event_id');
+            if ($eventId) {
+                $lab->members()->get()->each(function (User $user) use ($eventId) {
+                    AirmeetEventHelper::addAttendeeToEvent($eventId, [
+                        [
+                            'user_id' => $user->id,
+                            'email' => data_get($user, 'email'),
+                            'first_name' => data_get($user, 'first_name', data_get($user, 'full_name')),
+                            'last_name' => data_get($user, 'last_name'),
+                        ]
+                    ]);
+                });
+            }
+            return true;
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public function liveEventDetails(Lab $lab)
+    {
+        try {
+            $eventId = data_get($lab->airMeet, 'airmeet_event_id');
+            if ($eventId) {
+                return AirmeetEventHelper::getAirmeetEventInfo($eventId)->json();
+            }
+            return false;
+        } catch (\Exception $exception) {
             return false;
         }
     }

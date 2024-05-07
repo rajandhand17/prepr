@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api\Public\Lab;
 
+use App\Models\Lab;
+use App\Models\User;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Public\LabService;
 use App\Services\Public\LabSocialActivitiesService;
@@ -113,6 +115,34 @@ class LabRepository implements LabInterface
     {
         try {
             return $this->labService->getProjectLabs($request, $challengeId);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function canJoinLiveEvent(Lab $lab, User $user): bool
+    {
+        try {
+            return $this->labService->canJoinLiveEvent($lab,$user);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function sendLiveEventInvitationLinkToMembers(Lab $lab)
+    {
+        try {
+            return $this->labService->sendLiveEventInvitationLinkToMembers($lab);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+
+    public function liveEventDetails(Lab $lab)
+    {
+        try {
+            return $this->labService->liveEventDetails($lab);
         } catch (\Exception $e) {
             return false;
         }

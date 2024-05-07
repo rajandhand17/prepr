@@ -108,7 +108,6 @@ class AirmeetBaseHelper
     {
         /** @var AirmeetAuthToken|null $airmeetAuthToken */
         $airmeetAuthToken = AirmeetAuthToken::query()->first();
-
         if ($airmeetAuthToken) {
             if (self::isValidToken($airmeetAuthToken) && !$fresh) {
                 $token = data_get($airmeetAuthToken, 'token');

@@ -243,6 +243,7 @@ return [
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
+        App\Repositories\Api\Public\AirmeetEvent\AirmeetEventServiceProvider::class,
 
         /* GO1 */
         App\Repositories\Api\GO1\GO1ServiceProvider::class,
