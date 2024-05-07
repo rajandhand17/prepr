@@ -40,6 +40,8 @@ class ProjectResource extends JsonResource
             } else {
                 $templateData = $this->getProjectTemplate;
             }
+        }
+        if ($templateData) {
             $challenge_pitch = $templateData->getTemplatePitches->map(function ($task) {
                 $pitchAnswer = ProjectPitchService::getPitchAnswerBasedOnId($task, $this->id, $this->language);
 
@@ -106,7 +108,7 @@ class ProjectResource extends JsonResource
         }
 
         if ($this->challenge_id) {
-            $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $this->getProjectIdBasedTemplate);
+            $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $templateData);
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
             if ($fetchChallenge && $fetchChallenge->participation_achievement) {
                 $achievement = [
