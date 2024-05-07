@@ -148,7 +148,7 @@ class ResourceGroupService
     public static function getResourceGroupBasedOnId($id)
     {
         try {
-            return ResourceGroup::where('id', $id)->first();
+            return ResourceGroup::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }

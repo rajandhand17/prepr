@@ -361,7 +361,7 @@ class ChallengePathService
     public static function getChallengePathBasedOnId($id)
     {
         try {
-            return ChallengePath::where('id', $id)->first();
+            return ChallengePath::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
             return false;
         }

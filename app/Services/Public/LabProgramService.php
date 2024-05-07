@@ -105,7 +105,7 @@ class LabProgramService
     public static function getLabProgramBasedOnId($id)
     {
         try {
-            return LabProgram::where('id', $id)->first();
+            return LabProgram::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }
