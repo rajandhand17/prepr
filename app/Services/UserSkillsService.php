@@ -47,7 +47,7 @@ class UserSkillsService
     public static function checkUserSkillExists($id)
     {
         try {
-            return UserSkills::where(['skill'=>$id, 'user_id'=>auth()->user()->id])->first();
+            return UserSkills::where(['skill'=>$id, 'user_id'=>auth('api')->user()->id])->first();
         } catch(\Exception $e) {
             return false;
         }
