@@ -106,7 +106,6 @@ class UserService
             $user->last_name = $request->last_name;
             $user->full_name = $request->first_name.' '.$request->last_name;
             $user->username = $request->username;
-            //$user->email = $request->email;
             $user->phone_number = $request->phone_number;
             $user->preferred_language = $request->preferred_language;
             $user->preferred_timezone = $request->preferred_timezone;
