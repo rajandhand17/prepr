@@ -14,9 +14,9 @@ class LeaderboardRepository implements LeaderboardInterface
             $this->userService=$userService;
         }
 
-        public function getLeaderBoardList(){
+        public function getLeaderBoardList($request){
             try {
-                $user=$this->userService->getLeaderBoardList();
+                $user=$this->userService->getLeaderBoardList($request);
                 return $user;
             }catch (\Exception $e){
                 return false;

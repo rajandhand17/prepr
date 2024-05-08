@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserPoint;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Collection;
 
 class UserService
 {
@@ -199,12 +200,74 @@ class UserService
         }
     }
 
-    public static function getLeaderBoardList(){
+    public static function getLeaderBoardList($request){
         try {
-            $getTopUsers=UserPointService::getUsersBasedOnPoints();
-            $getUsers=User::whereIn('id',$getTopUsers)->get();
-            return $getUsers;
-        }catch (Exception $e){
+            $authUserId = auth()->user()->id;
+            $users =User::select();
+            $users=self::filterLeaderboardUsers($users,$request);
+            $users=$users->pluck('id');
+            if ($users->contains($authUserId)) {
+                $users = $users->reject(function ($user) use ($authUserId) {
+                    return $user=== $authUserId;
+                });
+            }
+            $userIds=$users->prepend($authUserId)->all();
+            $userRecords = User::whereIn('id', $userIds)
+                ->orderByRaw("FIELD(id, " . implode(',', $userIds) . ")")
+                ->get();
+            return $userRecords;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public static function filterLeaderboardUsers($users,$request){
+        try {
+            if ($request->has('lab_id') && !empty($request->lab_id)) {
+                $users = $users->whereHas('userLabs', function ($query) use ($request){
+                    $query->whereIn('id', $request->lab_id);
+                });
+            }
+            if ($request->has('organization_id') && !empty($request->organization_id)) {
+                $users = $users->whereHas('userOrganization', function ($query) use ($request){
+                    $query->whereIn('id', $request->organization_id);
+                });
+            }
+            if ($request->has('challenge_id') && !empty($request->challenge_id)) {
+                $users = $users->whereHas('userChallenge', function ($query) use ($request){
+                    $query->whereIn('id', $request->challenge_id);
+                });
+            }
+            if ($request->has('project_id') && !empty($request->project_id)) {
+                $users = $users->whereHas('userProjects', function ($query) use ($request){
+                    $query->whereIn('id', $request->project_id);
+                });
+            }
+            switch ($request->sort_by) {
+                    case 'learning_points':
+                        $users=$users->withCount(['userPoints as user_points_count' => function ($query) {
+                            $query->whereNull('deleted_at');
+                        }])->orderByDesc('user_points_count')->take(20);
+                        break;
+                    case 'learning_rank':
+                        $users=$users->withCount(['userRank as user_rank_count' => function ($query) {
+                            $query->whereNull('deleted_at');
+                        }])->orderByDesc('user_rank_count')->take(20);
+                        break;
+                    case 'achievement':
+                        $users=$users->withCount(['userAchievements as user_achievement_count' => function ($query) {
+                            $query->whereNull('deleted_at');
+                        }])->orderByDesc('user_achievement_count')->take(20);
+                        break;
+                    default:
+                        $users=$users->withCount(['userPoints as user_points_count' => function ($query) {
+                            $query->whereNull('deleted_at');
+                        }])
+                            ->orderByDesc('user_points_count')
+                            ->take(20);
+                }
+            return $users;
+        }catch (\Exception $e){
             return false;
         }
     }

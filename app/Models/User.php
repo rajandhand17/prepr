@@ -86,6 +86,10 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class);
     }
 
+    public function userPoints()
+    {
+        return $this->hasMany(UserPoint::class);
+    }
     public function userLabs()
     {
         return $this->hasMany(Lab::class, 'user_id', 'id');
@@ -96,6 +100,14 @@ class User extends Authenticatable
         return $this->hasMany(UserAchievement::class, 'user_id', 'id');
     }
 
+    public function userChallenge()
+    {
+        return $this->hasMany(Challenge::class, 'user_id', 'id');
+    }
+
+    public function userOrganizations(){
+        return $this->hasMany(Organization::class, 'user_id', 'id');
+    }
     public function userFollow()
     {
         return $this->hasMany(Friend::class, 'reference_id', 'id')

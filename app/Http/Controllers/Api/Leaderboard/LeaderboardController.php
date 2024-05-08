@@ -16,9 +16,9 @@ class LeaderboardController extends AppBaseController
         $this->leaderboardRepository=$leaderboardRepository;
     }
 
-    public function index(){
+    public function index(Request $request){
         try {
-            $user=$this->leaderboardRepository->getLeaderBoardList();
+            $user=$this->leaderboardRepository->getLeaderBoardList($request);
             if ($user){
                 return $this->sendResponse(LeaderboardResource::collection($user),__('responses.leaderboard_list'));
             }
