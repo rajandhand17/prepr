@@ -118,7 +118,6 @@ class MemberManagementController extends AppBaseController
     public function acceptOrRejectLabJoinRequest(Request $request, $component, $slug, $action)
     {
         try {
-            dd($component,$slug);
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
