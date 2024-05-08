@@ -11,8 +11,8 @@ use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
 use App\Services\JobTitleService;
 use App\Services\JobTitleSkillServices;
 use App\Services\Manage\ChallengeService;
-use App\Services\Manage\ResourceCollectionService;
 use App\Services\Public\LabService;
+use App\Services\Public\ResourceModuleService;
 use App\Services\UserJobTitlesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -38,9 +38,10 @@ class JobDetailedResource extends JsonResource
         }
         $resources = [];
         $getResources = $this->related_resources;
-        $getAllResources = $getResources->pluck('resource_collection_id')->take(config('site-settings.jobs_details_par_module_limit'));
+
+        $getAllResources = $getResources->pluck('resource_module_id')->take(config('site-settings.jobs_details_par_module_limit'));
         if ($getAllResources) {
-            $resources = ResourceCollectionService::getResourceCollectionsBasedOnIds($getAllResources);
+            $resources = ResourceModuleService::getResourceModuleBasedOnIds($getAllResources);
         }
         $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
         $checkSavedOrNot = UserJobTitlesService::checkJobExistsOrNot($this->id);
@@ -61,9 +62,9 @@ class JobDetailedResource extends JsonResource
             'id'               => $this->id,
             'uuid'             => $this->uuid,
             'title'            => $this->title,
-            'related_skills'   => $this->skills->take(config('site-settings.jobs_details_par_module_limit')),
+            'related_skills'   => $this->skills,
             'description'      => WikipediaHelper::fetchSkillDescription($this->title, $request->language),
-            'skills'           => SkillResource::collection($this->skills->take(config('site-settings.jobs_details_par_module_limit'))),
+            'skills'           => SkillResource::collection($this->skills),
             'lightcast_id'     => $this->lightcast_id,
             'challenges'       => ChallengeResource::collection($getChallenges),
             'saved_on'         => UtilityHelper::formatDateTime($saved_on),

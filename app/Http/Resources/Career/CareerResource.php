@@ -19,6 +19,7 @@ class CareerResource extends JsonResource
     public function toArray(Request $request): array
     {
         $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
+
         $response = [
             'id'                => $this->id,
             'uuid'              => $this->uuid,
@@ -33,8 +34,10 @@ class CareerResource extends JsonResource
             'saved'             => $this->saved_jobs(),
             'skills_percentage' => intval($getPercentageOfSkills),
         ];
-        if ($this->pinned && isset($this->pinned->pinned)) {
-            $response['pinned'] = $this->pinned->pinned == 0 ? 'no' : 'yes';
+        if (auth()->user()) {
+            if ($this->pinned && isset($this->pinned->pinned)) {
+                $response['pinned'] = $this->pinned->pinned == 0 ? 'no' : 'yes';
+            }
         }
 
         return $response;
