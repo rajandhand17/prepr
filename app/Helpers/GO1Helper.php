@@ -212,7 +212,7 @@ class GO1Helper
     public static function prepareGO1Query($request)
     {
         try {
-            $unwantedParams = ['page', 'language'];
+            $unwantedParams = ['page', 'language', 'search'];
             $languageMap = ['en' => 'en', 'fr-CA' => 'fr'];
 
             $dataLimit = config('go1.go1_total_resource_data');
@@ -232,6 +232,7 @@ class GO1Helper
             $defaultQueryParams = [
                 'limit'      => $limit,
                 'offset'     => $offset,
+                'keyword'    => $request->get('search'),
                 'language[]' => $languageMap[$request->language],
             ];
 
