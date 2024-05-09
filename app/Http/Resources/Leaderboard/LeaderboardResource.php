@@ -16,12 +16,11 @@ class LeaderboardResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $leaningPoints=UserPointService::getUserPoints($this->id);
         return [
             'user'                => UserResource::make($this),
-            'leaning_points'      => $leaningPoints,
+            'leaning_points'      => $this->user_points,
             'rank'                => $this->user_rank,
-            'achievement_points'  =>count($this->userAchievements),
+            'achievement_points'  =>  $this->achievement_count,
         ];
     }
 }

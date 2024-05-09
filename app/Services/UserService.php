@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\MemberManagement;
 use App\Models\User;
 use App\Models\UserPoint;
+use App\Services\Manage\MemberManagementService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Collection;
@@ -223,48 +225,57 @@ class UserService
 
     public static function filterLeaderboardUsers($users,$request){
         try {
-            if ($request->has('lab_id') && !empty($request->lab_id)) {
-                $users = $users->whereHas('userLabs', function ($query) use ($request){
-                    $query->whereIn('id', $request->lab_id);
-                });
-            }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $users = $users->whereHas('userOrganization', function ($query) use ($request){
-                    $query->whereIn('id', $request->organization_id);
-                });
+                $membersEmails = MemberManagementService::getFilteredMemberManagementList(
+                    [
+                        'module_type'   => config('constants.module_component_type.organization'),
+                        'module_id'    => $request->organization_id,
+                        'invite_status' => '1',
+                    ]
+                )->pluck('email');
+            }
+            if ($request->has('lab_id') && !empty($request->lab_id)) {
+                $membersEmails = MemberManagementService::getFilteredMemberManagementList(
+                    [
+                        'module_type'   => config('constants.module_component_type.lab'),
+                        'module_id'    => $request->lab_id,
+                        'invite_status' => '1',
+                    ]
+                )->pluck('email');
             }
             if ($request->has('challenge_id') && !empty($request->challenge_id)) {
-                $users = $users->whereHas('userChallenge', function ($query) use ($request){
-                    $query->whereIn('id', $request->challenge_id);
-                });
+                $membersEmails = MemberManagementService::getFilteredMemberManagementList(
+                    [
+                        'module_type'   => config('constants.module_component_type.challenge'),
+                        'module_id'    => $request->challenge_id,
+                        'invite_status' => '1',
+                    ]
+                )->pluck('email');
             }
             if ($request->has('project_id') && !empty($request->project_id)) {
-                $users = $users->whereHas('userProjects', function ($query) use ($request){
-                    $query->whereIn('id', $request->project_id);
-                });
+                $membersEmails = MemberManagementService::getFilteredMemberManagementList(
+                    [
+                        'module_type'   => config('constants.module_component_type.project'),
+                        'module_id'    => $request->project_id,
+                        'invite_status' => '1',
+                    ]
+                )->pluck('email');
+            }
+            if(isset($membersEmails) && !empty($membersEmails)){
+                 $users=$users->whereIn('email',$membersEmails);
             }
             switch ($request->sort_by) {
                     case 'learning_points':
-                        $users=$users->withCount(['userPoints as user_points_count' => function ($query) {
-                            $query->whereNull('deleted_at');
-                        }])->orderByDesc('user_points_count')->take(20);
+                        $users=$users->orderBy('user_points','desc')->take(20);
                         break;
                     case 'learning_rank':
-                        $users=$users->withCount(['userRank as user_rank_count' => function ($query) {
-                            $query->whereNull('deleted_at');
-                        }])->orderByDesc('user_rank_count')->take(20);
+                        $users=$users->orderBy('user_rank','desc')->take(20);
                         break;
                     case 'achievement':
-                        $users=$users->withCount(['userAchievements as user_achievement_count' => function ($query) {
-                            $query->whereNull('deleted_at');
-                        }])->orderByDesc('user_achievement_count')->take(20);
+                        $users=$users->orderBy('achievement_count','desc')->take(20);
                         break;
                     default:
-                        $users=$users->withCount(['userPoints as user_points_count' => function ($query) {
-                            $query->whereNull('deleted_at');
-                        }])
-                            ->orderByDesc('user_points_count')
-                            ->take(20);
+                        $users=$users->orderBy('user_points','desc')->take(20);
                 }
             return $users;
         }catch (\Exception $e){
