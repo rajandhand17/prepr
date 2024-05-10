@@ -223,6 +223,13 @@ class UserService
         }
     }
 
+    public static function getComponentBasedUsers($slug,$component){
+        try {
+
+        }catch (\Exception $e){
+            return false;
+        }
+    }
     public static function filterLeaderboardUsers($users,$request){
         try {
             if ($request->has('organization_id') && !empty($request->organization_id)) {

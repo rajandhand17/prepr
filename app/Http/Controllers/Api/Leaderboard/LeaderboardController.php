@@ -26,4 +26,22 @@ class LeaderboardController extends AppBaseController
             return false;
         }
     }
+
+    public function ComponentBasedLeaderboard($slug,$component){
+        try {
+            $components = [
+                'organization',
+                'lab',
+                'challenge',
+                'project',
+            ];
+            if (!in_array($component, $components)) {
+                return $this->sendError(__('responses.valid_component_error'));
+            }
+            $getComponentId=$this->leaderboardRepository->getComponentsMembers($slug,$component);
+
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

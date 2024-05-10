@@ -691,4 +691,16 @@ class MemberManagementService
             return false;
         }
     }
+
+
+    public static function getMembersBasedOnComponentId($component,$componentId){
+        try {
+            switch ($component){
+            $memberMangement= MemberMan
+            }
+
+        }catch (\Exception $exception) {
+            return false;
+        }
+    }
 }
