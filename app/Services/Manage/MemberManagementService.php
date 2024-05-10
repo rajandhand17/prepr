@@ -696,9 +696,14 @@ class MemberManagementService
     public static function getMembersBasedOnComponentId($component,$componentId){
         try {
             switch ($component){
-            $memberMangement= MemberMan
+                case 'lab':
+                $memberManagement=MemberManagement::where([
+                    'module_id'=>$componentId,
+                    'module_type'=>config('constants.module_component_type.lab'),
+                    'invite_status'=>'1',
+                    ])->pluck('email');
             }
-
+            return $memberManagement;
         }catch (\Exception $exception) {
             return false;
         }

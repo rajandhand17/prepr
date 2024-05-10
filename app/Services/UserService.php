@@ -223,9 +223,12 @@ class UserService
         }
     }
 
-    public static function getComponentBasedUsers($slug,$component){
-        try {
-
+    public static function getComponentBasedUsers($membersEmails,$request){
+        try{
+            $users=User::whereIn('email',$membersEmails);
+            $users=self::filterLeaderboardUsers($users,$request);
+            $userIds=$users->pluck('id');
+            $userRecords = User::whereIn('id', $userIds)->get();
         }catch (\Exception $e){
             return false;
         }

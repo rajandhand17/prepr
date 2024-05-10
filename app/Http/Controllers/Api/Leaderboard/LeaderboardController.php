@@ -27,7 +27,7 @@ class LeaderboardController extends AppBaseController
         }
     }
 
-    public function ComponentBasedLeaderboard($slug,$component){
+    public function ComponentBasedLeaderboard($slug,$component,Request $request){
         try {
             $components = [
                 'organization',
@@ -38,8 +38,10 @@ class LeaderboardController extends AppBaseController
             if (!in_array($component, $components)) {
                 return $this->sendError(__('responses.valid_component_error'));
             }
-            $getComponentId=$this->leaderboardRepository->getComponentsMembers($slug,$component);
-
+            $getUsersListing=$this->leaderboardRepository->getComponentsMembers($slug,$component,$request);
+            if ($getUsersListing){
+                return $this->sendResponse($getUsersListing,__('responses.get_users_listing_successfully'));
+            }
         }catch (\Exception $e) {
             return false;
         }
