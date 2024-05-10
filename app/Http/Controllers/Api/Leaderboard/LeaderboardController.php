@@ -40,7 +40,7 @@ class LeaderboardController extends AppBaseController
             }
             $getUsersListing=$this->leaderboardRepository->getComponentsMembers($slug,$component,$request);
             if ($getUsersListing){
-                return $this->sendResponse($getUsersListing,__('responses.get_users_listing_successfully'));
+                return $this->sendResponse(LeaderboardResource::collection($getUsersListing),__('responses.get_users_listing_successfully'));
             }
         }catch (\Exception $e) {
             return false;

@@ -229,6 +229,7 @@ class UserService
             $users=self::filterLeaderboardUsers($users,$request);
             $userIds=$users->pluck('id');
             $userRecords = User::whereIn('id', $userIds)->get();
+            return $userRecords;
         }catch (\Exception $e){
             return false;
         }
