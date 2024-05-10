@@ -24,7 +24,7 @@ class DailyChronicleAccessedNonAccessedData extends Command
      *
      * @var string
      */
-    protected $signature = 'Chargebee Subscription:daily-chronicle-accessed-non-accessed-data';
+    protected $signature = 'chargebee-subscription:daily-chronicle-accessed-non-accessed-data';
 
     /**
      * The console command description.
