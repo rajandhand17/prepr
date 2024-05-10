@@ -6,7 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
-use App\Repositories\Api\Dashboard\User\LabDashboardRepository;
+use App\Repositories\Api\Dashboard\Lab\LabDashboardRepository;
 use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 

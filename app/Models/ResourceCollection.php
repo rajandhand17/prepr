@@ -27,7 +27,7 @@ class ResourceCollection extends Model
         'duration',
         'privacy',
         'status',
-        'is_accessable',
+        'is_accessible',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

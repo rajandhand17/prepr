@@ -35,6 +35,7 @@ class Challenge extends Model
         'is_open',
         'is_auto_created',
         'is_ai_created',
+        'is_accessible',
     ];
 
     public function getMediaAttribute($value)

@@ -7,6 +7,7 @@ use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
 use App\Services\Manage\ResourceCollectionTagsGroupsService;
 use DB;
+use Exception;
 
 class ResourceCollectionRepository implements ResourceCollectionInterface
 {
@@ -24,6 +25,15 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         $this->componentAssociationService = $componentAssociationService;
         $this->resourceCollectionSkillsGroupStackService = $resourceCollectionSkillsGroupStackService;
         $this->resourceCollectionTagsGroupsService = $resourceCollectionTagsGroupsService;
+    }
+
+    public function getResourceCollectionCountBasedOnOrganization($organizationId)
+    {
+        try {
+            return $this->resourceCollectionService->getResourceCollectionCountBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function createResourceCollection($request, $upload_cover_image)
@@ -60,7 +70,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
     public function uploadResourceCollectionCoverImage($cover_image)
     {
         try {
-            return  $this->resourceCollectionService->uploadResourceCollectionCoverImage($cover_image);
+            return $this->resourceCollectionService->uploadResourceCollectionCoverImage($cover_image);
         } catch(\Exception $e) {
             return false;
         }

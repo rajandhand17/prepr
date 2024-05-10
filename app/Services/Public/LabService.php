@@ -13,7 +13,7 @@ class LabService
     public function getList($request)
     {
         try {
-            $lab_list = Lab::select()->where('labs.status', '1');
+            $lab_list = Lab::where('labs.status', '1')->where('labs.is_accessible', '1');
             $lab_list = self::filterLabList($request, $lab_list);
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
@@ -145,7 +145,7 @@ class LabService
 
             $userEmail = auth()->user()->email;
             $labMemberIds = MemberManagement::whereIn('module_id', $getLabList)->where(['module_type' => '1', 'invite_status' => '1', 'email' => $userEmail])->pluck('module_id');
-            $lab_list = Lab::select('uuid', 'title', 'media')->whereIn('id', $labMemberIds);
+            $lab_list = Lab::select('uuid', 'title', 'media')->whereIn('id', $labMemberIds)->where('is_accessible', '1');
             $lab_list = self::filterLabList($request, $lab_list);
             $limit = config('site-settings.listing_limit');
 
@@ -201,7 +201,7 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }

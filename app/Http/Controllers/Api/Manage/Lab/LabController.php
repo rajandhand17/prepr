@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\Lab;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
 use App\Http\Requests\Manage\Lab\CreateLabUsingAIPreviewRequest;
@@ -58,6 +59,9 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
             if ($lab) {
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }
@@ -71,6 +75,15 @@ class LabController extends AppBaseController
     public function create(CreateLabRequest $request)
     {
         try {
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_lab_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = null;
             if ($request->cover_image !== null) {
@@ -108,6 +121,9 @@ class LabController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 403);
             }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             $upload_achievement_image = null;
 
@@ -140,6 +156,9 @@ class LabController extends AppBaseController
     {
         try {
             $checkComponentBasedOnSlug = $this->labRepository->checkSlug($slug);
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.lab_not_found'), 403);
             }
@@ -203,6 +222,14 @@ class LabController extends AppBaseController
     public function createLabUsingAIPreview(CreateLabUsingAIPreviewRequest $request)
     {
         try {
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_lab_limit'), 400);
+                }
+            }
             $createLabUsingAIPreview = $this->labRepository->createLabUsingAIPreview($request);
 
             if ($createLabUsingAIPreview) {
@@ -220,6 +247,14 @@ class LabController extends AppBaseController
     public function createLabUsingAI(CreateLabUsingAIRequest $request)
     {
         try {
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_lab_limit'), 400);
+                }
+            }
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = config('site-settings.default_achievement_image');
 
