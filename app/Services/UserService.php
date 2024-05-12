@@ -227,8 +227,10 @@ class UserService
         try{
             $users=User::whereIn('email',$membersEmails);
             $users=self::filterLeaderboardUsers($users,$request);
-            $userIds=$users->pluck('id');
-            $userRecords = User::whereIn('id', $userIds)->get();
+            $userIds=$users->pluck('id')->all();
+            $userRecords = User::whereIn('id', $userIds)
+                    ->orderByRaw("FIELD(id, " . implode(',', $userIds) . ")")
+                    ->get();
             return $userRecords;
         }catch (\Exception $e){
             return false;
