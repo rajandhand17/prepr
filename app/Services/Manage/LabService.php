@@ -371,6 +371,7 @@ class LabService
             if ($checklab) {
                 return $checklab;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

@@ -2,13 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\MemberManagement;
 use App\Models\User;
-use App\Models\UserPoint;
 use App\Services\Manage\MemberManagementService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Collection;
 
 class UserService
 {
@@ -201,47 +198,53 @@ class UserService
         }
     }
 
-    public static function getLeaderBoardList($request){
+    public static function getLeaderBoardList($request)
+    {
         try {
             $authUserId = auth()->user()->id;
-            $users =User::select();
-            $users=self::filterLeaderboardUsers($users,$request);
-            $users=$users->pluck('id');
+            $users = User::select();
+            $users = self::filterLeaderboardUsers($users, $request);
+            $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
                 $users = $users->reject(function ($user) use ($authUserId) {
-                    return $user=== $authUserId;
+                    return $user === $authUserId;
                 });
             }
-            $userIds=$users->prepend($authUserId)->all();
+            $userIds = $users->prepend($authUserId)->all();
             $userRecords = User::whereIn('id', $userIds)
-                ->orderByRaw("FIELD(id, " . implode(',', $userIds) . ")")
+                ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
                 ->get();
+
             return $userRecords;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getComponentBasedUsers($membersEmails,$request){
-        try{
-            $users=User::whereIn('email',$membersEmails);
-            $users=self::filterLeaderboardUsers($users,$request);
-            $userIds=$users->pluck('id')->all();
+    public static function getComponentBasedUsers($membersEmails, $request)
+    {
+        try {
+            $users = User::whereIn('email', $membersEmails);
+            $users = self::filterLeaderboardUsers($users, $request);
+            $userIds = $users->pluck('id')->all();
             $userRecords = User::whereIn('id', $userIds)
-                    ->orderByRaw("FIELD(id, " . implode(',', $userIds) . ")")
+                    ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
                     ->get();
+
             return $userRecords;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
-    public static function filterLeaderboardUsers($users,$request){
+
+    public static function filterLeaderboardUsers($users, $request)
+    {
         try {
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $membersEmails = MemberManagementService::getFilteredMemberManagementList(
                     [
                         'module_type'   => config('constants.module_component_type.organization'),
-                        'module_id'    => $request->organization_id,
+                        'module_id'     => $request->organization_id,
                         'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ]
                 )->pluck('email');
@@ -250,7 +253,7 @@ class UserService
                 $membersEmails = MemberManagementService::getFilteredMemberManagementList(
                     [
                         'module_type'   => config('constants.module_component_type.lab'),
-                        'module_id'    => $request->lab_id,
+                        'module_id'     => $request->lab_id,
                         'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ]
                 )->pluck('email');
@@ -259,7 +262,7 @@ class UserService
                 $membersEmails = MemberManagementService::getFilteredMemberManagementList(
                     [
                         'module_type'   => config('constants.module_component_type.challenge'),
-                        'module_id'    => $request->challenge_id,
+                        'module_id'     => $request->challenge_id,
                         'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ]
                 )->pluck('email');
@@ -268,29 +271,30 @@ class UserService
                 $membersEmails = MemberManagementService::getFilteredMemberManagementList(
                     [
                         'module_type'   => config('constants.module_component_type.project'),
-                        'module_id'    => $request->project_id,
+                        'module_id'     => $request->project_id,
                         'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ]
                 )->pluck('email');
             }
-            if(isset($membersEmails) && !empty($membersEmails)){
-                 $users=$users->whereIn('email',$membersEmails);
+            if (isset($membersEmails) && !empty($membersEmails)) {
+                $users = $users->whereIn('email', $membersEmails);
             }
             switch ($request->sort_by) {
-                    case 'learning_points':
-                        $users=$users->orderBy('user_points','desc')->take(20);
-                        break;
-                    case 'learning_rank':
-                        $users=$users->orderBy('user_rank','desc')->take(20);
-                        break;
-                    case 'achievement':
-                        $users=$users->orderBy('achievement_count','desc')->take(20);
-                        break;
-                    default:
-                        $users=$users->orderBy('user_points','desc')->take(20);
-                }
+                case 'learning_points':
+                    $users = $users->orderBy('user_points', 'desc')->take(20);
+                    break;
+                case 'learning_rank':
+                    $users = $users->orderBy('user_rank', 'desc')->take(20);
+                    break;
+                case 'achievement':
+                    $users = $users->orderBy('achievement_count', 'desc')->take(20);
+                    break;
+                default:
+                    $users = $users->orderBy('user_points', 'desc')->take(20);
+            }
+
             return $users;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
