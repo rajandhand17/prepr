@@ -241,7 +241,7 @@ class UserService
                     [
                         'module_type'   => config('constants.module_component_type.organization'),
                         'module_id'    => $request->organization_id,
-                        'invite_status' => '1',
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ]
                 )->pluck('email');
             }
@@ -250,7 +250,7 @@ class UserService
                     [
                         'module_type'   => config('constants.module_component_type.lab'),
                         'module_id'    => $request->lab_id,
-                        'invite_status' => '1',
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ]
                 )->pluck('email');
             }
@@ -259,7 +259,7 @@ class UserService
                     [
                         'module_type'   => config('constants.module_component_type.challenge'),
                         'module_id'    => $request->challenge_id,
-                        'invite_status' => '1',
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ]
                 )->pluck('email');
             }
@@ -268,7 +268,7 @@ class UserService
                     [
                         'module_type'   => config('constants.module_component_type.project'),
                         'module_id'    => $request->project_id,
-                        'invite_status' => '1',
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ]
                 )->pluck('email');
             }

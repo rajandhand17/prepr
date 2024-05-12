@@ -30,10 +30,7 @@ class LeaderboardController extends AppBaseController
     public function ComponentBasedLeaderboard($slug,$component,Request $request){
         try {
             $components = [
-                'organization',
                 'lab',
-                'challenge',
-                'project',
             ];
             if (!in_array($component, $components)) {
                 return $this->sendError(__('responses.valid_component_error'));
