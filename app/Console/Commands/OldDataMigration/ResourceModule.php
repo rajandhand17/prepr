@@ -148,6 +148,7 @@ class ResourceModule extends Command
                     $newResourceModule->status = $status;
                     $newResourceModule->is_global = $is_global;
                     $newResourceModule->is_auto_created = $is_auto_created_module;
+                    $newResourceModule->is_accessible = $single_resource->is_accessable;
                     $newResourceModule->save();
 
                     // For Resource Module Skills

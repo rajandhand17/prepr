@@ -43,9 +43,12 @@ class ResourceCollectionController extends AppBaseController
     public function show($slug)
     {
         try {
-            $responseCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($responseCollection) {
-                return $this->sendResponse(ResourceCollectionResource::make($responseCollection), __('responses.found_resource_collection_list'));
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+            }
+            if ($checkResourceCollectionExistsOrNot) {
+                return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
@@ -57,18 +60,21 @@ class ResourceCollectionController extends AppBaseController
     public function socialActivity($slug, $action)
     {
         try {
-            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionSlugExistsOrNot !== null) {
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot !== null) {
+                if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+                }
                 $getColumnNameValue = $this->resourceCollectionRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
-                $checkActivity = $this->resourceCollectionRepository->checkSocialActivity($checkResourceCollectionSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $checkActivity = $this->resourceCollectionRepository->checkSocialActivity($checkResourceCollectionExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
                 if ($checkActivity === true) {
                     return $this->sendError(__('responses.already_'.$action.'_resource_collection'), 400);
                 }
-                $resourceCollection = $this->resourceCollectionRepository->captureSocialActivity($checkResourceCollectionSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $resourceCollection = $this->resourceCollectionRepository->captureSocialActivity($checkResourceCollectionExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 if ($resourceCollection) {
                     return $this->sendResponse([], __('responses.'.$action.'_resource_collection_successfully'));
                 }
@@ -83,11 +89,14 @@ class ResourceCollectionController extends AppBaseController
     public function addRating($slug, AddRatingRequest $request)
     {
         try {
-            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionSlugExistsOrNot == false) {
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            $addRating = $this->resourceCollectionRepository->addRating($checkResourceCollectionSlugExistsOrNot->id, $request);
+            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+            }
+            $addRating = $this->resourceCollectionRepository->addRating($checkResourceCollectionExistsOrNot->id, $request);
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_collection_rating_successfully'));
             }

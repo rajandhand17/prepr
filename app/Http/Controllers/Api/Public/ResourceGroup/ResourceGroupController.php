@@ -43,9 +43,12 @@ class ResourceGroupController extends AppBaseController
     public function show($slug)
     {
         try {
-            $resourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($resourceGroup) {
-                return $this->sendResponse(ResourceGroupResource::make($resourceGroup), __('responses.found_resource_group_list'));
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+            if ($checkResourceGroupExistsOrNot) {
+                return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 404);
@@ -57,18 +60,21 @@ class ResourceGroupController extends AppBaseController
     public function socialActivity($slug, $action)
     {
         try {
-            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupSlugExistsOrNot !== null) {
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot !== null) {
+                if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+                }
                 $getColumnNameValue = $this->resourceGroupRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
-                $checkActivity = $this->resourceGroupRepository->checkSocialActivity($checkResourceGroupSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $checkActivity = $this->resourceGroupRepository->checkSocialActivity($checkResourceGroupExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
                 if ($checkActivity === true) {
                     return $this->sendError(__('responses.already_'.$action.'_resource_group'), 400);
                 }
-                $resourceGroup = $this->resourceGroupRepository->captureSocialActivity($checkResourceGroupSlugExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
+                $resourceGroup = $this->resourceGroupRepository->captureSocialActivity($checkResourceGroupExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 if ($resourceGroup) {
                     return $this->sendResponse([], __('responses.'.$action.'_resource_group_successfully'));
                 }
@@ -83,11 +89,14 @@ class ResourceGroupController extends AppBaseController
     public function addRating($slug, AddRatingRequest $request)
     {
         try {
-            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupSlugExistsOrNot == false) {
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_found'), 404);
             }
-            $addRating = $this->resourceGroupRepository->addRating($checkResourceGroupSlugExistsOrNot->id, $request);
+            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+            $addRating = $this->resourceGroupRepository->addRating($checkResourceGroupExistsOrNot->id, $request);
             if ($addRating) {
                 return $this->sendResponse(null, __('responses.resource_group_rating_successfully'));
             }

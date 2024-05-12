@@ -11,7 +11,7 @@ class ResourceCollectionService
     public function getResourceCollectionList($request)
     {
         try {
-            $resourceCollectionList = ResourceCollection::select();
+            $resourceCollectionList = ResourceCollection::where('is_accessible', '1');
             $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
@@ -136,7 +136,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnId($id)
     {
         try {
-            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description', 'slug')->first();
+            return ResourceCollection::where(['id' => $id, 'is_accessible' => '1'])->select('title', 'uuid', 'media', 'description', 'slug')->first();
         } catch (\Exception $e) {
             return false;
         }

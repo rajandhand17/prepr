@@ -7,10 +7,22 @@ use App\Helpers\UtilityHelper;
 use App\Models\LabProgram;
 use App\Models\Organization;
 use App\Services\Public\LabProgramSocialActivitiesService;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class LabProgramService
 {
+    public function getLabProgramCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $labProgram_count = LabProgram::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+
+            return $labProgram_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getLabProgramList($request, $organization)
     {
         $getLabProgramList = LabProgram::select()->where('organization_id', '=', $organization->id);
@@ -257,8 +269,8 @@ class LabProgramService
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
             $labProgram->is_auto_created = '0';
-            $labProgram->is_sequential = ($request->has('is_sequential')) ? ($request->is_sequential == 'yes') ? '1' : '0' : $labProgram->is_sequential;
-            $labProgram->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? ($request->is_achievement_enabled == 'yes') ? '1' : '0' : $labProgram->is_achievement_enabled;
+            $labProgram->is_sequential = $request->has('is_sequential') ? ($request->is_sequential == 'yes' ? '1' : '0') : $labProgram->is_sequential;
+            $labProgram->is_achievement_enabled = $request->has('is_achievement_enabled') ? ($request->is_achievement_enabled == 'yes' ? '1' : '0') : $labProgram->is_achievement_enabled;
             $labProgram->save();
 
             return $labProgram;
@@ -270,7 +282,7 @@ class LabProgramService
     public function getLabProgramListName($request, $organization)
     {
         try {
-            $labProgramList = LabProgram::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $labProgramList = LabProgram::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $labProgramList = self::filterLabProgramList($labProgramList, $request);
             $limit = config('site-settings.listing_limit');
 
@@ -292,7 +304,7 @@ class LabProgramService
     public static function getLabProgramBasedOnId($Id)
     {
         try {
-            return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
+            return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }

@@ -9,7 +9,7 @@ class LabProgramService
     public function getList($request)
     {
         try {
-            $labProgramList = LabProgram::select();
+            $labProgramList = LabProgram::where('is_accessible', '1');
             $labProgramList = self::filterLabProgramList($request, $labProgramList);
 
             return $labProgramList->paginate(config('site-settings.pagination_per_page'));
@@ -105,7 +105,7 @@ class LabProgramService
     public static function getLabProgramBasedOnId($id)
     {
         try {
-            return LabProgram::where('id', $id)->first();
+            return LabProgram::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }

@@ -350,6 +350,7 @@ class ChallengeResource extends JsonResource
             'is_open'                       => ($this->is_open == '1') ? 'yes' : 'no',
             'is_auto_created'               => ($this->is_auto_created == '1') ? 'yes' : 'no',
             'is_ai_created'                 => ($this->is_ai_created) ? 'yes' : 'no',
+            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,

@@ -4,19 +4,21 @@ namespace App\Repositories\Api\Manage\Challenge;
 
 interface ChallengeInterface
 {
+    public function getChallengeCountBasedOnOrganization($organizationId);
+
     public function getChallengeList($request, $organization);
 
     public function uploadChallengeCoverImage($image);
 
     public function uploadChallengeAssessment($attachment);
 
-    public function uploadChallengeParticipationAchievementImage($image);
-
     public function createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
 
-    public function checkSlug($slug);
+    public function createChallengeUsingAIPreview($request);
 
-    public function checkNameExistsOrNot($title);
+    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image);
+
+    public function uploadChallengeParticipationAchievementImage($image);
 
     public function createChallengeSponsor($request, $challenge);
 
@@ -32,7 +34,11 @@ interface ChallengeInterface
 
     public function getChallengeBasedOnSlug($slug);
 
-    public function deleteChallenge($lab_id, $request);
+    public function deleteChallenge($challenge_id, $request);
+
+    public function checkSlug($slug);
+
+    public function checkNameExistsOrNot($title);
 
     public function getChallengeAssessmentData($challengeAssessment);
 
@@ -40,9 +46,9 @@ interface ChallengeInterface
 
     public function cloneChallenge($challengeId, $organization);
 
-    public function getChallengeListName($request, $organization);
-
     public function createChallengeAnnouncement($challengeId, $request);
 
     public function deleteChallengeAnnouncement($challengeAnnouncementId);
+
+    public function getChallengeListName($request, $organization);
 }
