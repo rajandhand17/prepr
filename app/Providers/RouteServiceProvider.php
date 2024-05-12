@@ -137,6 +137,7 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapPublicRoutes()
     {
+        Route::prefix('api/v1/public/scorm/')->middleware('api')->group(base_path('routes/v1/public/scorm.php'));
         Route::prefix('api/v1/public/organization/')->middleware('api')->group(base_path('routes/v1/public/organization.php'));
         Route::prefix('api/v1/public/lab/')->middleware('api')->group(base_path('routes/v1/public/lab.php'));
         Route::prefix('api/v1/public/invitation-management/')->middleware('api')->group(base_path('routes/v1/public/invitation-management.php'));

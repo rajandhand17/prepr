@@ -6,12 +6,16 @@ use App\Models\JobTitleSkill;
 
 class JobTitleSkillServices
 {
-    public static function getJobTitleBasedOnSkills($skills)
+    public static function getJobTitleBasedOnSkills($skills, $jobId = null)
     {
         try {
-            $getJobTitleBasedOnSKills = JobTitleSkill::whereIn('skill_id', $skills)->distinct()->pluck('job_title_id');
-            if ($getJobTitleBasedOnSKills) {
-                return $getJobTitleBasedOnSKills;
+            $getJobTitleBasedOnSkills = JobTitleSkill::whereIn('skill_id', $skills);
+            if ($jobId !== null) {
+                $getJobTitleBasedOnSkills = $getJobTitleBasedOnSkills->where('job_title_id', '!=', $jobId);
+            }
+            $getJobTitleBasedOnSkills = $getJobTitleBasedOnSkills->distinct()->pluck('job_title_id');
+            if ($getJobTitleBasedOnSkills) {
+                return $getJobTitleBasedOnSkills;
             }
 
             return false;
@@ -39,9 +43,13 @@ class JobTitleSkillServices
         try {
             $usersSkills = UserSkillsService::getUserSkills();
             $requiredSKills = self::getJobSkillsBasedOnJobId($jobId);
-            $commonSkills = $usersSkills->intersect($requiredSKills);
+            $countOfMatchedSkills = 0;
+            if (isset(auth()->user()->id)) {
+                $commonSkills = $usersSkills->intersect($requiredSKills);
+                $countOfMatchedSkills = $commonSkills->count();
+            }
             $getCountOfRequiredSkills = $requiredSKills->count();
-            $countOfMatchedSkills = $commonSkills->count();
+
             $percentage = ($countOfMatchedSkills / $getCountOfRequiredSkills) * 100;
 
             return $percentage;

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Public\ResourceModule\ResourceModuleController;
+use App\Http\Controllers\Api\Public\ResourceModule\ResourceModuleScormController;
 use Illuminate\Support\Facades\Route;
 
 $middleware = ['language'];
@@ -15,4 +16,6 @@ Route::middleware($middleware)->group(function () {
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/add-rating', [ResourceModuleController::class, 'addRating']);
     Route::post('/{slug}/{activity}', [ResourceModuleController::class, 'socialActivity']);
+    /** SCORM PLAYER URL */
+    Route::get('/scorm/player-url/{slug}', [ResourceModuleScormController::class, 'scormUrl']);
 });

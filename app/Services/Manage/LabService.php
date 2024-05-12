@@ -464,4 +464,15 @@ class LabService
         }
     }
 
+    public static function getLabBasedOnSkills($skills)
+    {
+        try {
+            $getLabIdsBasedOnSkills = LabSkillsGroupsStackService::getLabIdBasedOnSkill([$skills]);
+            $labs = Lab::whereIn('id', $getLabIdsBasedOnSkills)->take(config('site-settings.skills_par_module_limit'))->get();
+
+            return $labs;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
