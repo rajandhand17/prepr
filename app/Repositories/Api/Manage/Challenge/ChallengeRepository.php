@@ -66,6 +66,15 @@ class ChallengeRepository implements ChallengeInterface
         $this->projectPitchService = $projectPitchService;
     }
 
+    public function getChallengeCountBasedOnOrganization($organizationId)
+    {
+        try {
+            return $this->challengeService->getChallengeCountBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getChallengeList($request, $organization)
     {
         try {

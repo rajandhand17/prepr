@@ -124,6 +124,7 @@ class ChallengePath extends Command
                     $newChallengePath->is_auto_created = $is_auto_created_challengePath;
                     $newChallengePath->is_achievement_enabled = '1';
                     $newChallengePath->is_sequential = '0';
+                    $newChallengePath->is_accessible = $challengePath->is_accessable;
                     $newChallengePath->save();
 
                     // For Challenge Path Achievement

@@ -25,6 +25,7 @@ return new class() extends Migration {
             $table->unsignedBigInteger('duration');
             $table->enum('privacy', ['0', '1'])->default('0')->comment('0->no,1->yes');
             $table->enum('status', ['0', '1', '2'])->default('0')->comment('0-> draft, 1-> published, 2-> archive');
+            $table->enum('is_auto_created', ['0', '1'])->comment('0->no,1->yes')->default('0');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('level')->references('id')->on('levels')->onDelete('cascade');

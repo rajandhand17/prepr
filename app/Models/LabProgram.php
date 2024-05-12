@@ -31,6 +31,7 @@ class LabProgram extends Model
         'is_auto_created',
         'is_achievement_enabled',
         'is_sequential',
+        'is_accessible',
     ];
 
     public function getMediaAttribute($value)

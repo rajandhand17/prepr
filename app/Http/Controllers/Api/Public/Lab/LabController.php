@@ -51,10 +51,13 @@ class LabController extends AppBaseController
         }
     }
 
-    public function show(Request $request, $slug)
+    public function show($slug)
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
             if ($lab) {
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
@@ -70,6 +73,9 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
+                if ($lab->is_accessible === '0') {
+                    return $this->sendError(__('responses.lab_not_accessible'), 403);
+                }
                 $getColumnNameValue = $this->labRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);
@@ -95,6 +101,9 @@ class LabController extends AppBaseController
     {
         try {
             $checkChallenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
+            if ($checkChallenge->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
             if ($checkChallenge) {
                 $getProjectLabList = $this->labRepository->getProjectLabs($request, $checkChallenge->id);
                 if ($getProjectLabList) {
@@ -113,6 +122,9 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
+                if ($lab->is_accessible === '0') {
+                    return $this->sendError(__('responses.lab_not_accessible'), 403);
+                }
                 $component = config('constants.lab_component.lab');
                 $checkActivity = $this->labRepository->checkJoinedOrNot($lab, $component);
                 if ($checkActivity === true) {
@@ -145,6 +157,9 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
+                if ($lab->is_accessible === '0') {
+                    return $this->sendError(__('responses.lab_not_accessible'), 403);
+                }
                 $component = config('constants.lab_component.lab');
                 $checkActivity = $this->labRepository->checkJoinedOrNot($lab, $component);
                 if ($checkActivity === false) {

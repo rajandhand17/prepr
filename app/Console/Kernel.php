@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('challenges:close-challenge-for-passed-dates')->everyMinute();
         $schedule->command('member-manger:send-email')->everyMinute();
+        $schedule->command('subscription:daily-update-accessed-and-non-accessed-component-update')->everyMinute();
     }
 
     /**

@@ -9,7 +9,7 @@ class ResourceModuleService
     public static function getResourceModuleList($request)
     {
         try {
-            $resourceModule = ResourceModule::select();
+            $resourceModule = ResourceModule::where('is_accessible', '1');
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
@@ -141,7 +141,7 @@ class ResourceModuleService
     public static function getResourceModuleBasedOnId($id)
     {
         try {
-            return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $id)->first();
+            return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }

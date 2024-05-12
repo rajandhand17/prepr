@@ -208,6 +208,7 @@ class LabResource extends JsonResource
             'joined'                        => $join_status,
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
+            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'lab_address'                   => LabAddressResource::make($this->address),
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),

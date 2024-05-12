@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\LabProgram;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
 use App\Http\Requests\Manage\LabProgram\UpdateLabProgramRequest;
@@ -56,6 +57,9 @@ class LabProgramController extends AppBaseController
     {
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labProgram->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+            }
             if ($labProgram) {
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
@@ -69,6 +73,15 @@ class LabProgramController extends AppBaseController
     public function create(CreateLabProgramRequest $request)
     {
         try {
+            // checks creation limits of the Lab Program
+            $checkLabProgramLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'labProgram');
+            if ($checkLabProgramLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabProgramCount = $this->labProgramRepository->getLabProgramCountBasedOnOrganization($checkLabProgramLimit['organizationId']);
+                if ($checkLabProgramLimit['fetchOrganizationPlanDetails'] <= $checkLabProgramCount) {
+                    return $this->sendError(__('responses.reached_lab_program_limit'), 400);
+                }
+            }
+
             $upload_media = config('site-settings.default_lab_program_profile_image');
             if ($request->media !== null) {
                 $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
@@ -102,6 +115,9 @@ class LabProgramController extends AppBaseController
             $checkComponentBasedOnSlug = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $upload_media = config('site-settings.default_lab_program_profile_image');
             if ($request->media !== null) {
@@ -164,6 +180,9 @@ class LabProgramController extends AppBaseController
             $checkLabProgramSlugExistsOrNot = $this->labProgramRepository->checkSlug($slug);
             if ($checkLabProgramSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.lab_program_not_found'), 404);
+            }
+            if ($checkLabProgramSlugExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $deletLabProgram = $this->labProgramRepository->delete($slug);
             if ($deletLabProgram) {
