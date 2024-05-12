@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Leaderboard;
 
 use App\Http\Resources\User\UserResource;
-use App\Services\UserPointService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,7 +19,7 @@ class LeaderboardResource extends JsonResource
             'user'                => UserResource::make($this),
             'leaning_points'      => $this->user_points,
             'rank'                => $this->user_rank,
-            'achievement_points'  =>  $this->achievement_count,
+            'achievement_points'  => $this->achievement_count,
         ];
     }
 }

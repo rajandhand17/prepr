@@ -692,19 +692,20 @@ class MemberManagementService
         }
     }
 
-
-    public static function getMembersBasedOnComponentId($component,$componentId){
+    public static function getMembersBasedOnComponentId($component, $componentId)
+    {
         try {
-            switch ($component){
+            switch ($component) {
                 case 'lab':
-                $memberManagement=MemberManagement::where([
-                    'module_id'=>$componentId,
-                    'module_type'=>config('constants.module_component_type.lab'),
-                    'invite_status'=>'1',
+                    $memberManagement = MemberManagement::where([
+                        'module_id'    => $componentId,
+                        'module_type'  => config('constants.module_component_type.lab'),
+                        'invite_status'=> '1',
                     ])->pluck('email');
             }
+
             return $memberManagement;
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
     }
