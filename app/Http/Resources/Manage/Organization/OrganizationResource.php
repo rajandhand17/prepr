@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Manage\Organization;
 
 use App\Helpers\UtilityHelper;
-use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -26,6 +25,7 @@ class OrganizationResource extends JsonResource
             $category = null;
             $category_id = null;
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,

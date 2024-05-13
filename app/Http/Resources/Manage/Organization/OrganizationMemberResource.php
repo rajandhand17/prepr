@@ -16,8 +16,8 @@ class OrganizationMemberResource extends JsonResource
      */
     public function toArray($request)
     {
+        $membersDetails = UserService::getUserByEmail($this->email);
 
-        $membersDetails=UserService::getUserByEmail($this->email);
         return [
             'id'            => $membersDetails->id,
             'name'          => $membersDetails->first_name.' '.$membersDetails->last_name,

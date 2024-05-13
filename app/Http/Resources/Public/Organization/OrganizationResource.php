@@ -25,6 +25,7 @@ class OrganizationResource extends JsonResource
             $category = null;
             $category_id = null;
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
