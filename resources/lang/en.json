@@ -1116,5 +1116,6 @@
     "responses.lab_program_not_accessible": "Sorry, this Lab Program is not accessible with your existing plan.",
     "responses.resource_module_not_accessible": "Sorry, this Resource Module is not accessible with your existing plan.",
     "responses.resource_collection_not_accessible": "Sorry, this Resource Collection is not accessible with your existing plan.",
-    "responses.resource_group_not_accessible": "Sorry, this Resource Group is not accessible with your existing plan."
+    "responses.resource_group_not_accessible": "Sorry, this Resource Group is not accessible with your existing plan.",
+    "responses.leaderboard_list": "You have successfully fetch leaderboard listing"
 }
