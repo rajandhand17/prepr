@@ -16,13 +16,12 @@ class OrganizationMemberResource extends JsonResource
      */
     public function toArray($request)
     {
-        $membersDetails = UserService::getUserByEmail($this->email);
         return [
-            'id'            => $membersDetails->id,
-            'name'          => $membersDetails->full_name,
-            'description'   => $membersDetails->description,
-            'position'      => $this->role,
-            'image'         => $membersDetails->profile_image,
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'description'   => $this->description,
+            'position'      => $this->position,
+            'image'         => $this->image,
         ];
     }
 }

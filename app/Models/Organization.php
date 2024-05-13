@@ -62,6 +62,10 @@ class Organization extends LaratrustTeam
         return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '0', 'invite_status' => '1']);
     }
 
+    public function organizationMembers()
+    {
+        return $this->hasMany(OrganizationMember::class,'organization_id','id');
+    }
     public function labs()
     {
         return $this->hasMany(Lab::class, 'organization_id', 'id');

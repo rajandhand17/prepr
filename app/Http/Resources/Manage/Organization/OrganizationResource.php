@@ -3,6 +3,8 @@
 namespace App\Http\Resources\Manage\Organization;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
+use App\Models\MemberManagement;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -46,7 +48,8 @@ class OrganizationResource extends JsonResource
             'organization_users_count'     => $this->members->count(),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
-            'organization_members'         => OrganizationMemberResource::collection($this->members),
+            'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
+            'organization_people'          => MemberManagementResource::collection($this->members),
         ];
     }
 }
