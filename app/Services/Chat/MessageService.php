@@ -118,7 +118,7 @@ class MessageService
             return $message;
         } catch (Exception $exception) {
             DB::rollBack();
-            dd($exception);
+
             return false;
         }
     }
