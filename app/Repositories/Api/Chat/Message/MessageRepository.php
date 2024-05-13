@@ -28,6 +28,7 @@ class MessageRepository implements MessageInterface
                 'conversation_id' => $conversationId,
                 'message'         => data_get($data, 'message'),
             ];
+
             return $this->messageService->send($payload);
         } catch (Exception $e) {
             return false;
