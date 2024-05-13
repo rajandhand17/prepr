@@ -17,12 +17,11 @@ class OrganizationMemberResource extends JsonResource
     public function toArray($request)
     {
         $membersDetails = UserService::getUserByEmail($this->email);
-
         return [
             'id'            => $membersDetails->id,
             'name'          => $membersDetails->full_name,
             'description'   => $membersDetails->description,
-            'position'      => $membersDetails->user_rank,
+            'position'      => $this->role,
             'image'         => $membersDetails->profile_image,
         ];
     }
