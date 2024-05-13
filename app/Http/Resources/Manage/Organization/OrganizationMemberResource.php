@@ -20,7 +20,7 @@ class OrganizationMemberResource extends JsonResource
         $membersDetails=UserService::getUserByEmail($this->email);
         return [
             'id'            => $membersDetails->id,
-            'name'          => $membersDetails->first_name.' '.$membersDetails->last_name,
+            'name'          => $membersDetails->full_name,
             'description'   => $membersDetails->description,
             'position'      => $membersDetails->user_rank,
             'image'         => $membersDetails->profile_image,
