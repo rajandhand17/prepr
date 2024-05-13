@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\Organization;
 
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationMemberResource extends JsonResource
@@ -15,12 +16,14 @@ class OrganizationMemberResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $membersDetails=UserService::getUserByEmail($this->email);
         return [
-            'id'            => $this->id,
-            'name'          => $this->name,
-            'description'   => $this->description,
-            'position'      => $this->position,
-            'image'         => $this->image,
+            'id'            => $membersDetails->id,
+            'name'          => $membersDetails->first_name.' '.$membersDetails->last_name,
+            'description'   => $membersDetails->description,
+            'position'      => $membersDetails->user_rank,
+            'image'         => $membersDetails->profile_image,
         ];
     }
 }
