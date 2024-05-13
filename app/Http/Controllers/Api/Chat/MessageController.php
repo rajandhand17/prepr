@@ -57,9 +57,7 @@ class MessageController extends AppBaseController
             if (!$conversation) {
                 return $this->sendError(__('responses.conversation_not_found'), 404);
             }
-
             $message = $this->messageRepository->send($request->validated(), $conversation->id);
-
             if (!$message) {
                 return $this->sendError(__('responses.message_not_created'), 409);
             }
