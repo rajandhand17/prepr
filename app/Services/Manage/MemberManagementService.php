@@ -700,8 +700,36 @@ class MemberManagementService
                     $memberManagement = MemberManagement::where([
                         'module_id'    => $componentId,
                         'module_type'  => config('constants.module_component_type.lab'),
-                        'invite_status'=> '1',
+                        'invite_status'=>config('constants.member_management_invite_status.accepted'),
                     ])->pluck('email');
+                    break;
+                case 'organization':
+                    $memberManagement = MemberManagementService::getFilteredMemberManagementList(
+                        [
+                            'module_type'   => config('constants.module_component_type.organization'),
+                            'module_id'     => $componentId,
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
+                        ]
+                    )->pluck('email');
+                break;
+                case 'challenge':
+                    $memberManagement = MemberManagementService::getFilteredMemberManagementList(
+                        [
+                            'module_type'   => config('constants.module_component_type.challenge'),
+                            'module_id'     => $componentId,
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
+                        ]
+                    )->pluck('email');
+                    break;
+                case 'project':
+                    $memberManagement= MemberManagementService::getFilteredMemberManagementList(
+                        [
+                            'module_type'   => config('constants.module_component_type.project'),
+                            'module_id'     => $componentId,
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
+                        ]
+                    )->pluck('email');
+                    break;
             }
 
             return $memberManagement;
