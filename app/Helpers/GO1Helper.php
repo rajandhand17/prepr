@@ -25,7 +25,7 @@ class GO1Helper
     private static function getBaseUrl()
     {
         try {
-            return config('go1.go1_base_url') . '/' . config('go1.go1_api_version');
+            return config('go1.go1_base_url').'/'.config('go1.go1_api_version');
         } catch (Exception $exception) {
             return false;
         }
@@ -85,10 +85,10 @@ class GO1Helper
         try {
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
-            ])->post(self::getAuthBaseUrl() . '/oauth/token', [
-                'client_id' => config('go1.go1_client_id'),
+            ])->post(self::getAuthBaseUrl().'/oauth/token', [
+                'client_id'     => config('go1.go1_client_id'),
                 'client_secret' => config('go1.go1_client_secret'),
-                'grant_type' => 'client_credentials',
+                'grant_type'    => 'client_credentials',
             ]);
 
             if (!$response->ok()) {
@@ -104,7 +104,7 @@ class GO1Helper
     public static function findGO1UserByEmail($email)
     {
         $accessToken = self::getAccessToken();
-        $endPoint = self::getBaseUrl() . '/users';
+        $endPoint = self::getBaseUrl().'/users';
         $response = Http::withHeaders([
             'Authorization' => "Bearer $accessToken",
         ])->get($endPoint, ['email' => $email]);
@@ -124,10 +124,10 @@ class GO1Helper
     {
         try {
             $accessToken = self::getAccessToken();
-            $endPoint = self::getBaseUrl() . '/users';
+            $endPoint = self::getBaseUrl().'/users';
             $users = self::findGO1UserByEmail($user['email']);
 
-            if($users) {
+            if ($users) {
                 return $users;
             }
             $response = Http::withHeaders([
@@ -150,8 +150,8 @@ class GO1Helper
             $accessToken = self::getAccessToken();
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-            ])->get(self::getBaseUrl() . '/learning-objects?' . $queryParams);
+                'Authorization' => 'Bearer '.$accessToken,
+            ])->get(self::getBaseUrl().'/learning-objects?'.$queryParams);
 
             if ($response->status() >= 400) {
                 return false;
@@ -168,8 +168,8 @@ class GO1Helper
         try {
             $accessToken = self::getAccessToken();
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '.$accessToken,
+                'Accept'        => 'application/json',
             ])->post("https://api.go1.com/v2/users/{$id}/login?redirect_url=/play/$courseId");
 
             if ($response->status() >= 400) {
@@ -194,21 +194,21 @@ class GO1Helper
             }
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . self::getAccessToken(),
-                'Accept' => 'application/json',
-            ])->post(self::getBaseUrl() . '/webhooks', [
-                'enrollment_create' => true,
-                'enrollment_delete' => true,
-                'enrollment_update' => true,
-                'lo_create' => false,
-                'lo_delete' => false,
-                'lo_update' => false,
-                'enabled' => true,
-                'url' => $url,
-                'user_create' => false,
-                'user_delete' => false,
-                'user_update' => false,
-                'content_update' => false,
+                'Authorization' => 'Bearer '.self::getAccessToken(),
+                'Accept'        => 'application/json',
+            ])->post(self::getBaseUrl().'/webhooks', [
+                'enrollment_create'    => true,
+                'enrollment_delete'    => true,
+                'enrollment_update'    => true,
+                'lo_create'            => false,
+                'lo_delete'            => false,
+                'lo_update'            => false,
+                'enabled'              => true,
+                'url'                  => $url,
+                'user_create'          => false,
+                'user_delete'          => false,
+                'user_update'          => false,
+                'content_update'       => false,
                 'content_decommission' => false,
             ]);
 
@@ -227,7 +227,7 @@ class GO1Helper
         try {
             $requestQuery = request()->query();
 
-            return isset($requestQuery['page']) ? (int)$requestQuery['page'] : 1;
+            return isset($requestQuery['page']) ? (int) $requestQuery['page'] : 1;
         } catch (Exception $exception) {
             return false;
         }
@@ -254,9 +254,9 @@ class GO1Helper
 
             $offset = ($currentPage - 1) * $limit;
             $defaultQueryParams = [
-                'limit' => $limit,
-                'offset' => $offset,
-                'keyword' => $request->get('search'),
+                'limit'      => $limit,
+                'offset'     => $offset,
+                'keyword'    => $request->get('search'),
                 'language[]' => $languageMap[$request->language],
             ];
 
@@ -270,7 +270,7 @@ class GO1Helper
 
             return $finalQueryParams;
         } catch (Exception $e) {
-            Log::error('Error in prepareGO1Query in GO1Helper.php: ' . $e->getMessage());
+            Log::error('Error in prepareGO1Query in GO1Helper.php: '.$e->getMessage());
 
             return false;
         }
@@ -294,7 +294,7 @@ class GO1Helper
         try {
             $appUrl = self::removeLastSlash(config('app.url'));
 
-            return $appUrl . '/api/v1/go1/webhook';
+            return $appUrl.'/api/v1/go1/webhook';
         } catch (Exception $exception) {
             return false;
         }
