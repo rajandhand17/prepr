@@ -15,7 +15,7 @@ class AirmeetEventHelper extends AirmeetBaseHelper
     public static function getAirmeetEventInfo(string $id): false|PromiseInterface|Response
     {
         try {
-            $url = sprintf('prod/airmeet/%s/info', $id);
+            $url = sprintf(config('airmeet.airmeet_event_info_url'), $id);
 
             return self::get($url);
         } catch (\Exception $exception) {
@@ -32,7 +32,7 @@ class AirmeetEventHelper extends AirmeetBaseHelper
     public static function addAttendeeToEvent(string $airmeetEventId, array $data): mixed
     {
         try {
-            $url = sprintf('prod/airmeet/%s/attendee', $airmeetEventId);
+            $url = sprintf(config('airmeet.airmeet_add_event_attendee_url'), $airmeetEventId);
             $requestData = [
                 'email'            => data_get($data, 'email'),
                 'firstName'        => data_get($data, 'first_name'),

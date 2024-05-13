@@ -39,7 +39,7 @@ class Lab extends Model
         'is_notification_enabled',
         'is_verified',
         'is_accessible',
-        'is_live_event_enabled'
+        'is_live_event_enabled',
     ];
 
     public function getMediaAttribute($value)
