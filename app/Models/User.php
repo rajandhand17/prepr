@@ -103,17 +103,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserAchievement::class, 'user_id', 'id');
     }
-
-    public function userChallenge()
-    {
-        return $this->hasMany(Challenge::class, 'user_id', 'id');
-    }
-
-    public function userOrganizations()
-    {
-        return $this->hasMany(Organization::class, 'user_id', 'id');
-    }
-
     public function userFollow()
     {
         return $this->hasMany(Friend::class, 'reference_id', 'id')
@@ -190,12 +179,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSkills::class)->where('pinned', '0');
     }
-
-    public function userEmails()
-    {
-        return $this->hasMany(UserEmails::class);
-    }
-
     public function userJobs()
     {
         return $this->hasMany(UserJob::class)->where('pinned', '0');

@@ -20,7 +20,7 @@ class LeaderboardController extends AppBaseController
     {
         try {
             $user = $this->leaderboardRepository->getLeaderBoardList($request);
-            if ($user) {
+            if($user){
                 return $this->sendResponse(LeaderboardResource::collection($user), __('responses.leaderboard_list'));
             }
             return $this->sendResponse([], __('responses.leaderboard_list'));
