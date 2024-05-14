@@ -336,7 +336,7 @@ class User extends Authenticatable
                     $request->user_type = 'employee';
 
                     // Jobs for creating customer and subscribe plan
-                    $planDetail = config('chargebee.chargebee_plan.seed_plan_yearly'); //Default plan selected
+                    $planDetail = config('chargebee.chargebee_plan.unlimited_plan'); //Default plan selected
                     CreateCustomerJob::withChain([
                         new SubscribePlanJob($user, $organization, $planDetail),
                     ])->dispatch($user);

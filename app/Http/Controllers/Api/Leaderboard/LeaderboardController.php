@@ -23,8 +23,8 @@ class LeaderboardController extends AppBaseController
             if($user){
                 return $this->sendResponse(LeaderboardResource::collection($user), __('responses.leaderboard_list'));
             }
-            return $this->sendResponse([], __('responses.leaderboard_list'));
 
+            return $this->sendResponse([], __('responses.leaderboard_list'));
         } catch (\Exception $e) {
             return false;
         }
@@ -34,7 +34,7 @@ class LeaderboardController extends AppBaseController
     {
         try {
             $components = [
-                'lab'
+                'lab',
             ];
             if (!in_array($component, $components)) {
                 return $this->sendError(__('responses.valid_component_error'));
@@ -43,8 +43,8 @@ class LeaderboardController extends AppBaseController
             if ($getUsersListing) {
                 return $this->sendResponse(LeaderboardResource::collection($getUsersListing), __('responses.get_users_listing_successfully'));
             }
-            return $this->sendResponse([], __('responses.get_users_listing_successfully'));
 
+            return $this->sendResponse([], __('responses.get_users_listing_successfully'));
         } catch (\Exception $e) {
             return false;
         }

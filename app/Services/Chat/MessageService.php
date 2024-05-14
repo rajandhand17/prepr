@@ -23,7 +23,6 @@ class MessageService
     {
         try {
             $chatFiles = [];
-
             if (!request()->has('attachment')) {
                 return [];
             }
