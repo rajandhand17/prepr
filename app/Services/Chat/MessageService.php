@@ -113,9 +113,11 @@ class MessageService
             $this->conversationService->markAsSeen($data['conversation_id'], auth()->user()->id, $message->id);
             $this->sendNotification($message, $data['conversation_id']);
             DB::commit();
+
             return $message;
         } catch (Exception $exception) {
             DB::rollBack();
+
             return false;
         }
     }
