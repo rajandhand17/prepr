@@ -64,8 +64,9 @@ class Organization extends LaratrustTeam
 
     public function organizationMembers()
     {
-        return $this->hasMany(OrganizationMember::class,'organization_id','id');
+        return $this->hasMany(OrganizationMember::class, 'organization_id', 'id');
     }
+
     public function labs()
     {
         return $this->hasMany(Lab::class, 'organization_id', 'id');

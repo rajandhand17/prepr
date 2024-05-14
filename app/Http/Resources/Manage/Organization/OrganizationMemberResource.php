@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Manage\Organization;
 
-use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationMemberResource extends JsonResource
