@@ -6,5 +6,5 @@ interface LeaderboardInterface
 {
     public function getLeaderBoardList($request);
 
-    public function getComponentsMembers($slug, $component, $request);
+    public function getComponentsMembers($componentId, $component, $request);
 }

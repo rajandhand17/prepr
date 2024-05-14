@@ -44,18 +44,10 @@ class LeaderboardRepository implements LeaderboardInterface
         }
     }
 
-    public function getComponentsMembers($slug, $component, $request)
+    public function getComponentsMembers($componentId, $component, $request)
     {
         try {
-            switch ($component) {
-                case 'lab':
-                    $componentId = $this->labService->checkSlug($slug)->id;
-                    $userEmails = $this->memberManagerService->getMembersBasedOnComponentId($component, $componentId);
-                    break;
-                default:
-                    return false;
-            }
-
+            $userEmails = $this->memberManagerService->getMembersBasedOnComponentId($component, $componentId);
             return $this->userService->getComponentBasedUsers($userEmails, $request);
         } catch (\Exception $e) {
             return false;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Leaderboard;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Leaderboard\LeaderboardResource;
 use App\Repositories\Api\Leaderboard\LeaderboardRepository;
@@ -20,10 +21,9 @@ class LeaderboardController extends AppBaseController
     {
         try {
             $user = $this->leaderboardRepository->getLeaderBoardList($request);
-            if ($user) {
+            if ($user->count()>0){
                 return $this->sendResponse(LeaderboardResource::collection($user), __('responses.leaderboard_list'));
             }
-
             return $this->sendResponse([], __('responses.leaderboard_list'));
         } catch (\Exception $e) {
             return false;
@@ -33,13 +33,11 @@ class LeaderboardController extends AppBaseController
     public function ComponentBasedLeaderboard($slug, $component, Request $request)
     {
         try {
-            $components = [
-                'lab',
-            ];
-            if (!in_array($component, $components)) {
-                return $this->sendError(__('responses.valid_component_error'));
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
-            $getUsersListing = $this->leaderboardRepository->getComponentsMembers($slug, $component, $request);
+            $getUsersListing = $this->leaderboardRepository->getComponentsMembers($checkComponentBasedOnSlug->id, $component, $request);
             if ($getUsersListing) {
                 return $this->sendResponse(LeaderboardResource::collection($getUsersListing), __('responses.get_users_listing_successfully'));
             }
