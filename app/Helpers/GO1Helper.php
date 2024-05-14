@@ -101,11 +101,35 @@ class GO1Helper
         }
     }
 
-    public static function createUser($user)
+    public static function findGO1UserByEmail($email)
+    {
+        $accessToken = self::getAccessToken();
+        $endPoint = self::getBaseUrl().'/users';
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer $accessToken",
+        ])->get($endPoint, ['email' => $email]);
+
+        if ($response->status() >= 400) {
+            return false;
+        }
+
+        if (!data_get($response->json(), 'hits.0')) {
+            return false;
+        }
+
+        return data_get($response->json(), 'hits.0');
+    }
+
+    public static function findOrCreateUser($user)
     {
         try {
             $accessToken = self::getAccessToken();
             $endPoint = self::getBaseUrl().'/users';
+            $users = self::findGO1UserByEmail($user['email']);
+
+            if ($users) {
+                return $users;
+            }
             $response = Http::withHeaders([
                 'Authorization' => "Bearer $accessToken",
             ])->post($endPoint, array_merge($user, ['send_login_email' => false, 'password' => config('go1.default_user_password')]));
