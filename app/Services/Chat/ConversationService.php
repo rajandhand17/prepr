@@ -326,7 +326,6 @@ class ConversationService
     {
         try {
             $conversation = $this->getByUUID($uuid);
-
             if (!$conversation) {
                 return false;
             }
