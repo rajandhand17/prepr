@@ -692,6 +692,23 @@ class MemberManagementService
         }
     }
 
+    public static function getMembersManagerUsersBasedOnFilter($request){
+        try {
+            $membersEmails = [];
+            if ($request->has('organization_id') && !empty($request->organization_id)) {
+                $membersEmails = array_unique(array_merge($membersEmails, MemberManagementService::getMembersBasedOnComponentId('organization', $request->organization_id)->all()));
+            }
+            if ($request->has('lab_id') && !empty($request->lab_id)) {
+                $membersEmails = array_unique(array_merge($membersEmails, MemberManagementService::getMembersBasedOnComponentId('lab', $request->lab_id)->all()));
+            }
+            if ($request->has('challenge_id') && !empty($request->challenge_id)) {
+                $membersEmails = array_unique(array_merge($membersEmails, MemberManagementService::getMembersBasedOnComponentId('challenge', $request->challenge_id)->all()));
+            }
+            return  $membersEmails;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
     public static function getMembersBasedOnComponentId($component, $componentId)
     {
         try {
@@ -716,15 +733,6 @@ class MemberManagementService
                     $memberManagement = MemberManagementService::getFilteredMemberManagementList(
                         [
                             'module_type'   => config('constants.module_component_type.challenge'),
-                            'module_id'     => $componentId,
-                            'invite_status' => config('constants.member_management_invite_status.accepted'),
-                        ]
-                    )->pluck('email');
-                    break;
-                case 'project':
-                    $memberManagement = MemberManagementService::getFilteredMemberManagementList(
-                        [
-                            'module_type'   => config('constants.module_component_type.project'),
                             'module_id'     => $componentId,
                             'invite_status' => config('constants.member_management_invite_status.accepted'),
                         ]

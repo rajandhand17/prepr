@@ -198,12 +198,12 @@ class UserService
         }
     }
 
-    public static function getLeaderBoardList($request)
+    public static function getLeaderBoardList($request,$emails)
     {
         try {
             $authUserId = auth()->user()->id;
             $users = User::select();
-            $users = self::filterLeaderboardUsers($users, $request);
+            $users = self::filterLeaderboardUsers($users, $request,$emails);
             $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
                 $users = $users->reject(function ($user) use ($authUserId) {
@@ -237,22 +237,10 @@ class UserService
         }
     }
 
-    public static function filterLeaderboardUsers($users, $request)
+    public static function filterLeaderboardUsers($users, $request,$membersEmails=null)
     {
         try {
-            if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $membersEmails = MemberManagementService::getMembersBasedOnComponentId('organization', $request->organization_id);
-            }
-            if ($request->has('lab_id') && !empty($request->lab_id)) {
-                $membersEmails = MemberManagementService::getMembersBasedOnComponentId('lab', $request->lab_id);
-            }
-            if ($request->has('challenge_id') && !empty($request->challenge_id)) {
-                $membersEmails = MemberManagementService::getMembersBasedOnComponentId('challenge', $request->challenge_id);
-            }
-            if ($request->has('project_id') && !empty($request->project_id)) {
-                $membersEmails = MemberManagementService::getMembersBasedOnComponentId('project', $request->project_id);
-            }
-            if (isset($membersEmails) && !empty($membersEmails)) {
+            if (isset($membersEmails) && !empty($membersEmails) && $membersEmails!==null) {
                 $users = $users->whereIn('email', $membersEmails);
             }
             switch ($request->sort_by) {

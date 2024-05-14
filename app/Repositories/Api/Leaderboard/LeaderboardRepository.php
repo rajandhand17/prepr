@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Leaderboard;
 
 use App\Services\Manage\LabService;
 use App\Services\Manage\MemberManagementService;
+use App\Services\ProjectMemberManagementService;
 use App\Services\UserService;
 
 class LeaderboardRepository implements LeaderboardInterface
@@ -24,8 +25,18 @@ class LeaderboardRepository implements LeaderboardInterface
     public function getLeaderBoardList($request)
     {
         try {
-            $user = $this->userService->getLeaderBoardList($request);
-
+            $membersEmails=[];
+            if (
+                ($request->has('organization_id') && !empty($request->organization_id)) ||
+                ($request->has('lab_id') && !empty($request->lab_id)) ||
+                ($request->has('challenge_id') && !empty($request->challenge_id))
+            ) {
+                $membersEmails = array_unique(array_merge($membersEmails,MemberManagementService::getMembersManagerUsersBasedOnFilter($request)));
+            }
+            if($request->has('project_id') && !empty($request->project_id)) {
+                $membersEmails = array_unique(array_merge($membersEmails,ProjectMemberManagementService::getProjectMemberManagementEmails($request->project_id)));
+            }
+          $user = $this->userService->getLeaderBoardList($request,$membersEmails);
             return $user;
         } catch (\Exception $e) {
             return false;
