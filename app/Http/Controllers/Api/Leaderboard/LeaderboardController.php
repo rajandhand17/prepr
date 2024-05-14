@@ -21,9 +21,10 @@ class LeaderboardController extends AppBaseController
     {
         try {
             $user = $this->leaderboardRepository->getLeaderBoardList($request);
-            if ($user->count()>0){
+            if ($user->count() > 0) {
                 return $this->sendResponse(LeaderboardResource::collection($user), __('responses.leaderboard_list'));
             }
+
             return $this->sendResponse([], __('responses.leaderboard_list'));
         } catch (\Exception $e) {
             return false;
