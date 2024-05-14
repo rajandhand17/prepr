@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Leaderboard;
 
-use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

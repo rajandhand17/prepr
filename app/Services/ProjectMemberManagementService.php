@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Helpers\UtilityHelper;
-use App\Models\MemberManagement;
 use App\Models\ProjectAccessLevel;
 use App\Models\ProjectMemberManagement;
 use App\Notifications\InviteMemberNotification;
@@ -612,18 +611,19 @@ class ProjectMemberManagementService
         try {
             $memberManagement = ProjectMemberManagement::where([
                 'project_id'    => $projectId,
-                'invite_status'=> config('constants.member_management_invite_status.accepted'),
+                'invite_status' => config('constants.member_management_invite_status.accepted'),
             ])->pluck('email')->all();
+
             return $memberManagement;
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getMembersBasedOnProjectId(){
+    public static function getMembersBasedOnProjectId()
+    {
         try {
-
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

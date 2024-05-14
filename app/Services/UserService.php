@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Services\Manage\MemberManagementService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 
@@ -198,12 +197,12 @@ class UserService
         }
     }
 
-    public static function getLeaderBoardList($request,$emails)
+    public static function getLeaderBoardList($request, $emails)
     {
         try {
             $authUserId = auth()->user()->id;
             $users = User::select();
-            $users = self::filterLeaderboardUsers($users, $request,$emails);
+            $users = self::filterLeaderboardUsers($users, $request, $emails);
             $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
                 $users = $users->reject(function ($user) use ($authUserId) {
@@ -237,10 +236,10 @@ class UserService
         }
     }
 
-    public static function filterLeaderboardUsers($users, $request,$membersEmails=null)
+    public static function filterLeaderboardUsers($users, $request, $membersEmails = null)
     {
         try {
-            if (isset($membersEmails) && !empty($membersEmails) && $membersEmails!==null) {
+            if (isset($membersEmails) && !empty($membersEmails) && $membersEmails !== null) {
                 $users = $users->whereIn('email', $membersEmails);
             }
             switch ($request->sort_by) {
