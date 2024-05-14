@@ -113,7 +113,7 @@ class GO1Repository implements GO1Interface
     {
         try {
             if (!auth()->user()->go1_id) {
-                $response = GO1Helper::createUser([
+                $response = GO1Helper::findOrCreateUser([
                     'email'      => explode('@', auth()->user()->email)[0].config('go1.go1_email_prefix').'@prepr.org',
                     'first_name' => auth()->user()->first_name,
                     'last_name'  => auth()->user()->last_name,
