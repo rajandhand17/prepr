@@ -692,7 +692,8 @@ class MemberManagementService
         }
     }
 
-    public static function getMembersManagerUsersBasedOnFilter($request){
+    public static function getMembersManagerUsersBasedOnFilter($request)
+    {
         try {
             $membersEmails = [];
             if ($request->has('organization_id') && !empty($request->organization_id)) {
@@ -704,11 +705,13 @@ class MemberManagementService
             if ($request->has('challenge_id') && !empty($request->challenge_id)) {
                 $membersEmails = array_unique(array_merge($membersEmails, MemberManagementService::getMembersBasedOnComponentId('challenge', $request->challenge_id)->all()));
             }
+
             return  $membersEmails;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function getMembersBasedOnComponentId($component, $componentId)
     {
         try {
