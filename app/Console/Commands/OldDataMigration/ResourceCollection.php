@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
-use App\Models\ComponentAssociation;
 use App\Models\Organization;
 use App\Models\ResourceCollection as ResourceCollectionModule;
 use App\Models\ResourceCollectionTagsGroups;
