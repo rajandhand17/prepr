@@ -248,8 +248,10 @@ class MemberManagementService
                 if (!empty($memberList)) {
                     return $memberList;
                 }
+
                 return false;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -453,6 +455,7 @@ class MemberManagementService
             return false;
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
