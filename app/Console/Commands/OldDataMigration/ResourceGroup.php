@@ -3,13 +3,10 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ComponentAssociation;
 use App\Models\Organization;
 use App\Models\ResourceGroup as ResourceGroupModel;
 use App\Models\ResourceGroupAchievement;
 use App\Models\User;
-use App\Services\Manage\ResourceCollectionService;
-use App\Services\Manage\ResourceModuleService;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
