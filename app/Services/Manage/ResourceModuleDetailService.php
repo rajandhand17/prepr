@@ -37,10 +37,10 @@ class ResourceModuleDetailService
                     } elseif (false !== mb_strpos($file_upload->getMimeType(), 'video')) {
                         $file_type = config('constants.file_type.video');
                         $uploaded_file_path = FileUploadHelper::uploadVideoToS3($file_upload, 'resource_file');
-                    }elseif (false !== mb_strpos($file_upload->getMimeType(), 'audio')) {
+                    } elseif (false !== mb_strpos($file_upload->getMimeType(), 'audio')) {
                         $file_type = config('constants.file_type.audio');
                         $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'resource_file');
-                  }else{
+                    } else {
                         $file_type = config('constants.file_type.document');
                         $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'resource_file');
                     }
