@@ -26,7 +26,6 @@ class ConversationController extends AppBaseController
             }
 
             $conversations = $this->conversationRepository->list($type);
-
             if ($conversations) {
                 $responseData = [
                     'total_count'  => $conversations->total(),
@@ -67,9 +66,14 @@ class ConversationController extends AppBaseController
             if (!in_array($action, ['archive', 'un-archive', 'seen', 'delete'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
-
+            $conversation = $this->conversationRepository->getByUUID($uuid);
+            if (!$conversation) {
+                return $this->sendError(__('responses.conversation_not_found'), 404);
+            }
+            if ($action == 'seen' && $conversation->chats()->count() == 0) {
+                return $this->sendError(__('responses.no_message_conversation'));
+            }
             $message = $this->conversationRepository->archiveOrUnarchiveOrSeenOrDelete($uuid, $action);
-
             if ($message) {
                 return $this->sendResponse(null, __('responses.conversation_'.$action.'_successfully'));
             }
