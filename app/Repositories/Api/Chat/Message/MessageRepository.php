@@ -26,7 +26,7 @@ class MessageRepository implements MessageInterface
         try {
             $payload = [
                 'conversation_id' => $conversationId,
-                'message'         => $data['message'],
+                'message'         => data_get($data, 'message'),
             ];
 
             return $this->messageService->send($payload);

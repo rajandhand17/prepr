@@ -218,6 +218,7 @@ class LabResource extends JsonResource
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_notification_enabled'       => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
             'is_verified'                   => ($this->is_verified == '1') ? 'yes' : 'no',
+            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'address'                       => $address,
             'achievement'                   => $achievement,
             'external_links'                => LabExternalLinkResource::collection($this->external_links),

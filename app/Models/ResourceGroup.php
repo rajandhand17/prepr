@@ -27,6 +27,8 @@ class ResourceGroup extends Model
         'duration',
         'privacy',
         'status',
+        'is_auto_created',
+        'is_accessible',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

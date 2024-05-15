@@ -23,7 +23,6 @@ class MessageService
     {
         try {
             $chatFiles = [];
-
             if (!request()->has('attachment')) {
                 return [];
             }
@@ -113,7 +112,6 @@ class MessageService
             // the message you sent is seen by you.
             $this->conversationService->markAsSeen($data['conversation_id'], auth()->user()->id, $message->id);
             $this->sendNotification($message, $data['conversation_id']);
-
             DB::commit();
 
             return $message;

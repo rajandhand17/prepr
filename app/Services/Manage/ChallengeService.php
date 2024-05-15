@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Log;
 
 class ChallengeService
 {
+    public function getChallengeCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $challenge_count = Challenge::where(['organization_id' => $organizationId, 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
+
+            return $challenge_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function getChallengeList($request, $organization)
     {
         try {
@@ -426,7 +437,7 @@ class ChallengeService
     public static function getChallengeBasedOnSlug($slug)
     {
         try {
-            return Challenge::where('slug', $slug)->first();
+            return Challenge::where(['slug' => $slug, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
             return false;
         }
@@ -435,7 +446,7 @@ class ChallengeService
     public static function getChallengeBasedOnId($id)
     {
         try {
-            return Challenge::where('id', $id)->first();
+            return Challenge::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
             return false;
         }
@@ -530,7 +541,7 @@ class ChallengeService
     public function getChallengeListName($request, $organization)
     {
         try {
-            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where('organization_id', '=', $organization->id);
+            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $challenge_list = self::filterChallengeList($challenge_list, $request);
             $limit = config('site-settings.listing_limit');
 
@@ -725,6 +736,7 @@ class ChallengeService
                     'title'             => $fetchChallenge->title,
                     'slug'              => $fetchChallenge->slug,
                     'agreement'         => $fetchChallenge->agreement,
+                    'is_accessible'     => ($fetchChallenge->is_accessible == '1') ? 'yes' : 'no',
                     'template_id'       => $getTemplate,
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],

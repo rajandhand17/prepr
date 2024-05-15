@@ -32,6 +32,7 @@ class ResourceModule extends Model
         'is_global',
         'go1_course_id',
         'go1_metadata',
+        'is_accessible',
     ];
 
     protected $casts = ['go1_metadata' => 'object'];
