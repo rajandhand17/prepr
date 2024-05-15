@@ -7,8 +7,6 @@ use App\Models\Organization;
 use App\Models\ResourceCollection as ResourceCollectionModule;
 use App\Models\ResourceCollectionTagsGroups;
 use App\Models\User;
-use App\Services\Manage\ChallengeService;
-use App\Services\Manage\ResourceModuleService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
@@ -80,85 +78,6 @@ class ResourceCollection extends Command
                     $resourceCollection->is_accessible = $singleResourceCollection->is_accessable;
                     $resourceCollection->save();
 
-                    /*Add resource collection lab*/
-                    if (!empty($singleResourceCollection->assoicated_lab)) {
-                        $resourceLabIds = json_decode($singleResourceCollection->assoicated_lab);
-                        $getLabId = ChallengeService::getChallengeIdBasedOnId($resourceLabIds);
-                        if (!empty($getLabId)) {
-                            $existComponentAssociation = ComponentAssociation::where([
-                                ['resource_collection_id', '=', $singleResourceCollection->id],
-                                ['lab_id', '!=', null],
-                            ])->pluck('lab_id')->all();
-                            $newComponentAssociation = array_diff($getLabId, $existComponentAssociation);
-                            ComponentAssociation::where('resource_collection_id', $singleResourceCollection->id)->whereIn('lab_id', $newComponentAssociation)->delete();
-                            $sequence = ComponentAssociation::where([
-                                ['resource_collection_id', '=', $singleResourceCollection->id],
-                                ['lab_id', '!=', null],
-                            ])->select('sequence')->orderBy('id', 'desc')->first();
-                            $newComponentAssociationId = array_diff($existComponentAssociation, $getLabId);
-                            foreach ($newComponentAssociationId as $lab_id) {
-                                $sequence++;
-                                $challengeAssociation = new ComponentAssociation();
-                                $challengeAssociation->resource_collection_id = $singleResourceCollection->id;
-                                $challengeAssociation->lab_id = $lab_id;
-                                $challengeAssociation->sequence = $sequence;
-                                $challengeAssociation->save();
-                            }
-                        }
-                    }
-                    /*Add resource group challenge*/
-                    if (!empty($singleResourceCollection->assoicated_challange)) {
-                        $resourceGroupChallengeIDs = json_decode($singleResourceCollection->assoicated_challange);
-                        $getChallengeId = ChallengeService::getChallengeIdBasedOnId($resourceGroupChallengeIDs);
-                        if (!empty($getChallengeId)) {
-                            $existComponentAssociation = ComponentAssociation::where([
-                                ['resource_collection_id', '=', $singleResourceCollection->id],
-                                ['challenge_id', '!=', null],
-                            ])->pluck('challenge_id')->all();
-                            $newComponentAssociation = array_diff($getChallengeId, $existComponentAssociation);
-                            ComponentAssociation::where('resource_collection_id', $singleResourceCollection->id)->whereIn('challenge_id', $newComponentAssociation)->delete();
-                            $sequence = ComponentAssociation::where([
-                                ['resource_collection_id', '=', $singleResourceCollection->id],
-                                ['challenge_id', '!=', null],
-                            ])->select('sequence')->orderBy('id', 'desc')->first();
-                            $newComponentAssociationId = array_diff($existComponentAssociation, $getChallengeId);
-                            foreach ($newComponentAssociationId as $challenge_id) {
-                                $sequence++;
-                                $challengeAssociation = new ComponentAssociation();
-                                $challengeAssociation->resource_collection_id = $singleResourceCollection->id;
-                                $challengeAssociation->challenge_id = $challenge_id;
-                                $challengeAssociation->sequence = $sequence;
-                                $challengeAssociation->save();
-                            }
-                        }
-                    }
-
-                    /*Add resource module Id*/
-                    if (!empty($singleResourceCollection->resource_id)) {
-                        $newResourceModuleID = json_decode($singleResourceCollection->resource_id);
-                        $getResourceGroupId = ResourceModuleService::getResourceModuleGetBasedId($newResourceModuleID);
-                        if (!empty($getResourceGroupId)) {
-                            $existComponentAssociation = ComponentAssociation::where([
-                                ['resource_collection_id', '=', $singleResourceCollection->id],
-                                ['resource_module_id', '!=', null],
-                            ])->pluck('resource_module_id')->all();
-                            $newComponentAssociation = array_diff($getResourceGroupId, $existComponentAssociation);
-                            ComponentAssociation::where('resource_collection_id', $singleResourceCollection->id)->whereIn('resource_module_id', $newComponentAssociation)->delete();
-                            $sequence = ComponentAssociation::where([
-                                ['resource_collection_id', '=', $singleResourceCollection->id],
-                                ['resource_module_id', '!=', null],
-                            ])->select('sequence')->orderBy('id', 'desc')->first();
-                            $newResourceId = array_diff($existComponentAssociation, $getResourceGroupId);
-                            foreach ($newResourceId as $resource_module_id) {
-                                $sequence++;
-                                $challengeAssociation = new ComponentAssociation();
-                                $challengeAssociation->resource_collection_id = $singleResourceCollection->id;
-                                $challengeAssociation->resource_module_id = $resource_module_id;
-                                $challengeAssociation->sequence = $sequence;
-                                $challengeAssociation->save();
-                            }
-                        }
-                    }
                     /*Add tags*/
                     $resourceCollectionTags = json_decode($singleResourceCollection->tag, true);
                     if ($resourceCollectionTags) {

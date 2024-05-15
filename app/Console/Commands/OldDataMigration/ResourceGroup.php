@@ -106,59 +106,6 @@ class ResourceGroup extends Command
                     $newResourceGroup->is_accessible = $singleResourceGroup->is_accessable;
                     $newResourceGroup->save();
 
-                    /*Add resource module Id*/
-                    if (!empty($singleResourceGroup->resource_id)) {
-                        $newResourceModuleID = explode(',', $singleResourceGroup->resource_id);
-                        $getResourceGroupId = ResourceModuleService::getResourceModuleGetBasedId($newResourceModuleID);
-                        if (!empty($getResourceGroupId)) {
-                            $existComponentAssociation = ComponentAssociation::where([
-                                ['resource_group_id', '=', $singleResourceGroup->id],
-                                ['resource_module_id', '!=', null],
-                            ])->pluck('resource_module_id')->all();
-                            $newComponentAssociation = array_diff($getResourceGroupId, $existComponentAssociation);
-                            ComponentAssociation::where('resource_group_id', $singleResourceGroup->id)->whereIn('resource_module_id', $newComponentAssociation)->delete();
-                            $sequence = ComponentAssociation::where([
-                                ['resource_group_id', '=', $singleResourceGroup->id],
-                                ['resource_module_id', '!=', null],
-                            ])->select('sequence')->orderBy('id', 'desc')->first();
-                            $newResourceId = array_diff($existComponentAssociation, $getResourceGroupId);
-                            foreach ($newResourceId as $resource_module_id) {
-                                $sequence++;
-                                $challengeAssociation = new ComponentAssociation();
-                                $challengeAssociation->resource_group_id = $singleResourceGroup->id;
-                                $challengeAssociation->resource_module_id = $resource_module_id;
-                                $challengeAssociation->sequence = $sequence;
-                                $challengeAssociation->save();
-                            }
-                        }
-                    }
-
-                    /*Add resource collection Id*/
-                    if (!empty($singleResourceGroup->collection_id)) {
-                        $newResourceCollectionID = explode(',', $singleResourceGroup->collection_id);
-                        $getResourceGroupCollectionId = ResourceCollectionService::getResourceCollectionGetBasedId($newResourceCollectionID);
-                        if (!empty($getResourceGroupCollectionId)) {
-                            $existComponentAssociation = ComponentAssociation::where([
-                                ['resource_group_id', '=', $singleResourceGroup->id],
-                                ['resource_collection_id', '!=', null],
-                            ])->pluck('resource_collection_id')->all();
-                            $newComponentAssociation = array_diff($getResourceGroupCollectionId, $existComponentAssociation);
-                            ComponentAssociation::where('resource_group_id', $singleResourceGroup->id)->whereIn('resource_collection_id', $newComponentAssociation)->delete();
-                            $sequence = ComponentAssociation::where([
-                                ['resource_group_id', '=', $singleResourceGroup->id],
-                                ['resource_collection_id', '!=', null],
-                            ])->select('sequence')->orderBy('id', 'desc')->first();
-                            $newResourceId = array_diff($existComponentAssociation, $getResourceGroupCollectionId);
-                            foreach ($newResourceId as $resource_collection_id) {
-                                $sequence++;
-                                $challengeAssociation = new ComponentAssociation();
-                                $challengeAssociation->resource_group_id = $singleResourceGroup->id;
-                                $challengeAssociation->resource_collection_id = $resource_collection_id;
-                                $challengeAssociation->sequence = $sequence;
-                                $challengeAssociation->save();
-                            }
-                        }
-                    }
                     /*Add resource achievement*/
                     if (!empty($singleResourceGroup->prize)) {
                         $resourceGroupAchievement = ResourceGroupAchievement::firstOrNew(['resource_group_id' => $singleResourceGroup->id]);
