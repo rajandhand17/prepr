@@ -85,7 +85,6 @@ class SettingController extends AppBaseController
 
             return $this->sendError(__('responses.remove_profile_failed'), 400);
         } catch(\Exception $e) {
-            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
