@@ -35,7 +35,6 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-        $is_accessible = '';
 
         if ($this->resource_modules) {
             foreach ($this->resource_modules as $resource_module) {
@@ -142,32 +141,33 @@ class ResourceCollectionResource extends JsonResource
         }
 
         return [
-            'id'                                       => $this->uuid,
-            'language'                                 => $this->language,
-            'title'                                    => $this->title,
-            'slug'                                     => $this->slug,
-            'description'                              => $this->description,
-            'media_type'                               => $this->media_type,
-            'cover_image'                              => $this->media,
-            'privacy'                                  => $privacy,
-            'status'                                   => $status,
-            'is_accessible'                            => $is_accessible,
-            'duration_id'                              => $duration_id,
-            'duration'                                 => $duration,
-            'level_id'                                 => $level_id,
-            'level'                                    => $level,
-            'resource_modules'                         => $resourceModules,
-            'labs'                                     => $labs,
-            'challenges'                               => $challenges,
-            'organization'                             => $organization,
-            'organization_id'                          => $organization_id,
-            'skills'                                   => $skills,
-            'skill_groups'                             => $skill_groups,
-            'skill_stacks'                             => $skill_stacks,
-            'tags'                                     => $tags,
-            'tag_groups'                               => $tag_groups,
-            'rating'                                   => $rating,
-            'liked'                                    => $this->liked(),
+            'id'                            => $this->uuid,
+            'language'                      => $this->language,
+            'title'                         => $this->title,
+            'slug'                          => $this->slug,
+            'description'                   => $this->description,
+            'media_type'                    => $this->media_type,
+            'cover_image'                   => $this->media,
+            'privacy'                       => $privacy,
+            'status'                        => $status,
+            'is_accessible'                 => $is_accessible,
+            'duration_id'                   => $duration_id,
+            'duration'                      => $duration,
+            'level_id'                      => $level_id,
+            'level'                         => $level,
+            'resource_modules'              => $resourceModules,
+            'labs'                          => $labs,
+            'challenges'                    => $challenges,
+            'organization'                  => $organization,
+            'organization_id'               => $organization_id,
+            'skills'                        => $skills,
+            'skill_groups'                  => $skill_groups,
+            'skill_stacks'                  => $skill_stacks,
+            'tags'                          => $tags,
+            'tag_groups'                    => $tag_groups,
+            'rating'                        => $rating,
+            'liked'                         => $this->liked(),
+            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
         ];
     }
 }

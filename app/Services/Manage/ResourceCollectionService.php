@@ -9,10 +9,22 @@ use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
 use App\Services\Public\ResourceCollectionSocialActivitiesService;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceCollectionService
 {
+    public function getResourceCollectionCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $resourceCollection_count = ResourceCollection::where('organization_id', $organizationId)->count();
+
+            return $resourceCollection_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function createResourceCollection($request, $upload_cover_image)
     {
         try {
@@ -318,7 +330,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnId($id)
     {
         try {
-            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description', 'slug')->first();
+            return ResourceCollection::select('title', 'uuid', 'media', 'description', 'slug')->where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }
@@ -341,7 +353,7 @@ class ResourceCollectionService
     public function getListName($request, $organization)
     {
         try {
-            $resourceCollectionList = ResourceCollection::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $resourceCollectionList = ResourceCollection::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ChallengePath;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ChallengePath\CreateChallengePathRequest;
 use App\Http\Requests\Manage\ChallengePath\UpdateChallengePathRequest;
@@ -52,6 +53,15 @@ class ChallengePathController extends AppBaseController
     public function create(CreateChallengePathRequest $request)
     {
         try {
+            // checks creation limits of the Challenge Path
+            $checkChallengePathLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challengePath');
+            if ($checkChallengePathLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengePathCount = $this->challengePathRepository->getChallengePathCountBasedOnOrganization($checkChallengePathLimit['organizationId']);
+                if ($checkChallengePathLimit['fetchOrganizationPlanDetails'] <= $checkChallengePathCount) {
+                    return $this->sendError(__('responses.reached_challenge_path_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_challenge_path_cover_image');
             if ($request->media !== null) {
                 $uploaded_cover_image = $this->challengePathRepository->uploadChallengePathMedia($request->media);
@@ -87,6 +97,9 @@ class ChallengePathController extends AppBaseController
             $checkComponentBasedOnSlug = $this->challengePathRepository->checkSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_path_not_found'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             if ($request->media !== null) {
@@ -153,6 +166,9 @@ class ChallengePathController extends AppBaseController
             if ($checkChallengePathSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.challenge_path_not_found'), 404);
             }
+            if ($checkChallengePathSlugExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
+            }
             $deleteChallengePath = $this->challengePathRepository->delete($checkChallengePathSlugExistsOrNot->id);
             if ($deleteChallengePath) {
                 return $this->sendResponse(null, __('responses.challenge_path_delete'));
@@ -168,6 +184,9 @@ class ChallengePathController extends AppBaseController
     {
         try {
             $challengePath = $this->challengePathRepository->checkSlug($slug);
+            if ($challengePath->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
+            }
             if ($challengePath) {
                 return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));
             }

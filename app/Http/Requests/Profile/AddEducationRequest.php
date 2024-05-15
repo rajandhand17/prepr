@@ -58,7 +58,7 @@ class AddEducationRequest extends FormRequest
             'university.array'            => __('responses.array_status'),
             'university.required'         => __('responses.university_required'),
             'university.*.max'            => __('responses.max_content_255'),
-            'degree.required'             => __('responses.university_required'),
+            'degree.required'             => __('responses.degree_required'),
             'degree.array'                => __('responses.array_status'),
             'degree.*.max'                => __('responses.max_content_255'),
             'start_date.required'         => __('response.start_date_required'),

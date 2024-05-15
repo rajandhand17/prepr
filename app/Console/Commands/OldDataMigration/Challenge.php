@@ -203,6 +203,7 @@ class Challenge extends Command
                     $newChallenge->is_open = $challengeStatus;
                     $newChallenge->is_auto_created = $challengeAutoCreated;
                     $newChallenge->is_ai_created = $challengeAiCreated;
+                    $newChallenge->is_accessible = $challenge->is_accessable;
                     $newChallenge->save();
 
                     // For Challenge Host/Sponser

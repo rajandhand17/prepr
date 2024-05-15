@@ -46,6 +46,15 @@ class LabRepository implements LabInterface
         $this->aiService = $aiService;
     }
 
+    public function getLabCountBasedOnOrganization($organizationId)
+    {
+        try {
+            return $this->labService->getLabCountBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getLabList($request, $organization)
     {
         try {

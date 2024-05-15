@@ -170,9 +170,24 @@ class PermissionSeeder extends Seeder
                 'description'  => 'Allow user to challenge annoucements',
             ],
             [
+                'name'         => 'list_challenge_annoucements',
+                'display_name' => 'List Challenge Annoucements',
+                'description'  => 'Allow user to list challenge annoucements',
+            ],
+            [
                 'name'         => 'create_challenge_assessment',
                 'display_name' => 'Create Challenge Assessment',
                 'description'  => 'Allow user to create challenge assessment',
+            ],
+            [
+                'name'         => 'update_challenge_assessment',
+                'display_name' => 'Update Challenge Assessment',
+                'description'  => 'Allow user to update challenge assessment',
+            ],
+            [
+                'name'         => 'view_challenge_assessment',
+                'display_name' => 'View Challenge Assessment',
+                'description'  => 'Allow user to view challenge assessment',
             ],
             [
                 'name'         => 'view_project_submission',
@@ -205,7 +220,6 @@ class PermissionSeeder extends Seeder
                 'display_name' => 'Delete Challenges Members',
                 'description'  => 'Allow user to delete challenges members',
             ],
-
             [
                 'name'         => 'view_challenges_path',
                 'display_name' => 'View Challenge Path',

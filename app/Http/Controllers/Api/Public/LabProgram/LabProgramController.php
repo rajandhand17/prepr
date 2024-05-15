@@ -39,10 +39,13 @@ class LabProgramController extends AppBaseController
         }
     }
 
-    public function show(Request $request, $slug)
+    public function show($slug)
     {
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labProgram->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+            }
             if ($labProgram) {
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
             }
@@ -58,6 +61,9 @@ class LabProgramController extends AppBaseController
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if ($labProgram !== null) {
+                if ($labProgram->is_accessible === '0') {
+                    return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+                }
                 $getColumnNameValue = $this->labProgramRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);

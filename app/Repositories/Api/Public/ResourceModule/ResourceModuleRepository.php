@@ -23,7 +23,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     public function getResourceModuleList($request)
     {
         try {
-            return  $this->resourceModuleService->getResourceModuleList($request);
+            return $this->resourceModuleService->getResourceModuleList($request);
         } catch(\Exception $e) {
             return false;
         }

@@ -12,7 +12,7 @@ class ResourceGroupService
     public static function getResourceGroupList($request)
     {
         try {
-            $resourceGroupList = ResourceGroup::select();
+            $resourceGroupList = ResourceGroup::where('is_accessible', '1');
             $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
 
             return $resourceGroupList->paginate(config('site-settings.pagination_per_page'));
@@ -148,7 +148,7 @@ class ResourceGroupService
     public static function getResourceGroupBasedOnId($id)
     {
         try {
-            return ResourceGroup::where('id', $id)->first();
+            return ResourceGroup::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }

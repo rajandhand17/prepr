@@ -69,6 +69,18 @@ class ResourceGroup extends Command
                         default:
                             $privacy = null;
                     }
+                    switch ($singleResourceGroup->is_auto_created) {
+                        case '0':
+                            $is_auto_created_resourceGroup = '0';
+                            break;
+                        case '1':
+                            $is_auto_created_resourceGroup = '1';
+                            break;
+                        default:
+                            $is_auto_created_resourceGroup = '0';
+                            break;
+                    }
+
                     $checkResourceGroup = ResourceGroupModel::where('id', $singleResourceGroup->id)->first();
                     if ($checkResourceGroup) {
                         $newResourceGroup = $checkResourceGroup;
@@ -90,6 +102,8 @@ class ResourceGroup extends Command
                     $newResourceGroup->duration = '1';
                     $newResourceGroup->privacy = $privacy;
                     $newResourceGroup->status = $status;
+                    $newResourceGroup->is_auto_created = $is_auto_created_resourceGroup;
+                    $newResourceGroup->is_accessible = $singleResourceGroup->is_accessable;
                     $newResourceGroup->save();
 
                     /*Add resource module Id*/
