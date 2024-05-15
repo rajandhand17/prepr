@@ -309,13 +309,13 @@ class MemberManagementService
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
             switch ($request->auto_invite) {
-                case 'Yes':
+                case 'yes':
                     $auto_invite = config('constants.member_management_auto_invite.yes');
                     break;
-                case 'No':
+                case 'no':
                     $auto_invite = config('constants.member_management_auto_invite.no');
                     break;
-                case 'NA' :
+                case 'na' :
                     $auto_invite = config('constants.member_management_auto_invite.na');
                     break;
                 default:
