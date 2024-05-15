@@ -137,9 +137,9 @@ class ComponentAssociationMigration extends Command
                                 if ($labProgram) {
                                     if (!ComponentAssociation::where(['challenge_id' => $fetchedChallenge->id, 'lab_program_id' => $labProgramId])->exists()) {
                                         ComponentAssociation::create([
-                                            'challenge_id' => $fetchedChallenge->id,
+                                            'challenge_id'   => $fetchedChallenge->id,
                                             'lab_program_id' => $labProgramId,
-                                            'sequence' => $sequence++
+                                            'sequence'       => $sequence++,
                                         ]);
                                     }
                                 }
@@ -154,9 +154,9 @@ class ComponentAssociationMigration extends Command
                             if ($resourceModule) {
                                 if (!ComponentAssociation::where(['challenge_id' => $fetchedChallenge->id, 'resource_module_id' => $challengeResourceModuleAssociation->resource_datas_id])->exists()) {
                                     ComponentAssociation::create([
-                                        'challenge_id' => $fetchedChallenge->id,
+                                        'challenge_id'       => $fetchedChallenge->id,
                                         'resource_module_id' => $challengeResourceModuleAssociation->resource_datas_id,
-                                        'sequence' => $sequence++
+                                        'sequence'           => $sequence++,
                                     ]);
                                 }
                             }
@@ -170,9 +170,9 @@ class ComponentAssociationMigration extends Command
                             if ($resourceCollection) {
                                 if (!ComponentAssociation::where(['challenge_id' => $fetchedChallenge->id, 'resource_collection_id' => $challengeResourceCollectionAssociation->resource_collection_id])->exists()) {
                                     ComponentAssociation::create([
-                                        'challenge_id' => $fetchedChallenge->id,
+                                        'challenge_id'           => $fetchedChallenge->id,
                                         'resource_collection_id' => $challengeResourceCollectionAssociation->resource_collection_id,
-                                        'sequence' => $sequence++
+                                        'sequence'               => $sequence++,
                                     ]);
                                 }
                             }
@@ -188,9 +188,9 @@ class ComponentAssociationMigration extends Command
                                 if ($resourceGroup) {
                                     if (!ComponentAssociation::where(['challenge_id' => $fetchedChallenge->id, 'resource_group_id' => $resourceGroupId])->exists()) {
                                         ComponentAssociation::create([
-                                            'challenge_id' => $fetchedChallenge->id,
+                                            'challenge_id'      => $fetchedChallenge->id,
                                             'resource_group_id' => $resourceGroupId,
-                                            'sequence' => $sequence++
+                                            'sequence'          => $sequence++,
                                         ]);
                                     }
                                 }
