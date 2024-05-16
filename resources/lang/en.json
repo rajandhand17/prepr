@@ -1067,7 +1067,7 @@
     "responses.go1_courses_fetched_failed": "Listing Courses from GO1 failed",
     "responses.go1_course_id_required": "GO1 course id is required.",
     "responses.go1_course_title_required": "GO1 course title is required",
-    "responses.go1_course_title_unique": "The resource title should be unique while creating resource from go1",
+    "responses.go1_course_title_unique": "The GO1 course has already been added to your account!",
     "responses.go1_resource_creation_failed": "Failed to create resource from go1",
     "responses.go1_resource_creation_successful": "Resource creation from go1 is successful.",
     "responses.play_course_failed": "Playing course from go1 failed",
