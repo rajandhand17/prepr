@@ -351,9 +351,8 @@ class MemberManagementService
                         if ($checkMemberExists == null) {
                             $invite_status = config('constants.member_management_invite_status.invited');
                             if ($auto_invite == 0) {
-                                $invite_status = config('constants.member_management_invite_status.invited');
+                                $invite_status = config('constants.member_management_invite_status.pending');
                             }
-
                             if ($auto_invite == 1) {
                                 $invite_status = config('constants.member_management_invite_status.accepted');
                             }

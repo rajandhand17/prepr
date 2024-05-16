@@ -54,6 +54,7 @@ class LeaderboardRepository implements LeaderboardInterface
     {
         try {
             $userEmails = $this->memberManagerService->getMembersBasedOnComponentId($component, $componentId);
+
             return $this->userService->getComponentBasedUsers($userEmails, $request);
         } catch (\Exception $e) {
             return false;
