@@ -1120,5 +1120,16 @@
     "responses.resource_module_not_accessible": "Sorry, this Resource Module is not accessible with your existing plan.",
     "responses.resource_collection_not_accessible": "Sorry, this Resource Collection is not accessible with your existing plan.",
     "responses.resource_group_not_accessible": "Sorry, this Resource Group is not accessible with your existing plan.",
-    "responses.no_message_conversation": "There are no messages yet in the conversation so it cannot be marked as seen."
+    "responses.no_message_conversation": "There are no messages yet in the conversation so it cannot be marked as seen.",
+    "responses.invalid_event": "Invalid event.",
+    "responses.even_details":"Event details.",
+    "responses.event_url_required": "Event url is required.",
+    "responses.event_must_be_verified":"Event must be verified.",
+    "responses.lab_dont_have_live_event_enabled": "The lab don't have live event enabled.",
+    "responses.failed_to_get_live_event_url":"Failed to get live event url.",
+    "responses.not_allowed_to_join_the_live_event": "Not allowed to join the live event.",
+    "responses.send_live_event_invitation_link_to_members":"Live event invitation link has been send to the members.",
+    "responses.failed_to_send_live_event_invitation_link_to_members": "Failed to send live event event invitation to the members.",
+    "responses.live_event_details":"Live event details.",
+    "responses.failed_to_get_live_event_details": "Failed to fetch live event details."
 }

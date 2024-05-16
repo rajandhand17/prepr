@@ -226,6 +226,7 @@ return [
         App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
+        App\Repositories\Api\Manage\AirmeetEvent\AirmeetEventServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
@@ -242,6 +243,7 @@ return [
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
+        App\Repositories\Api\Public\AirmeetEvent\AirmeetEventServiceProvider::class,
 
         /* GO1 */
         App\Repositories\Api\GO1\GO1ServiceProvider::class,
