@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Public\Lab;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
@@ -206,6 +207,8 @@ class LabResource extends JsonResource
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'joined'                        => $join_status,
+            'is_live_event_enabled'         => $this->is_live_event_enabled ? 'yes' : 'no',
+            'live_event'                    => AirmeetEventResource::make($this->airmeet),
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
