@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\MemberManagementService;
 use Exception;
@@ -231,6 +230,7 @@ class UserService
             $userRecords = User::whereIn('id', $userIds)
                     ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
                    ->paginate(config('site-settings.pagination_per_page'));
+
             return $userRecords;
         } catch (\Exception $e) {
             return false;
@@ -244,7 +244,7 @@ class UserService
 //            $challengeBasedOrganizationId=MemberManagementService::getOrganizationIdBasedOnInviterId('challenge',auth()->user()->id);
 //            $getOrganizationIds=$labBasedOrganizationId->merge($challengeBasedOrganizationId);
 //            dd($getOrganizationIds);
-          //  $challengeListing=MemberManagementService::getEmailsBasedOnInviterId('challenge',auth()->user()->id);
+            //  $challengeListing=MemberManagementService::getEmailsBasedOnInviterId('challenge',auth()->user()->id);
             if (isset($membersEmails) && !empty($membersEmails) && $membersEmails !== null) {
                 $users = $users->whereIn('email', $membersEmails);
             }
@@ -265,6 +265,7 @@ class UserService
             return $users;
         } catch (\Exception $e) {
             dd($e);
+
             return false;
         }
     }

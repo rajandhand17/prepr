@@ -8,9 +8,9 @@ use App\Notifications\InviteMemberNotification;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
 use stdClass;
-use Illuminate\Support\Collection;
 
 class MemberManagementService
 {
@@ -700,16 +700,17 @@ class MemberManagementService
             $lab_id = new Collection();
             $challenge_id = new Collection();
             if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $organization_id=MemberManagementService::getMembersBasedOnComponentId('organization', $request->organization_id);
+                $organization_id = MemberManagementService::getMembersBasedOnComponentId('organization', $request->organization_id);
             }
             if ($request->has('lab_id') && !empty($request->lab_id)) {
-               $lab_id =MemberManagementService::getMembersBasedOnComponentId('lab', $request->lab_id);
+                $lab_id = MemberManagementService::getMembersBasedOnComponentId('lab', $request->lab_id);
             }
             if ($request->has('challenge_id') && !empty($request->challenge_id)) {
-                $challenge_id=MemberManagementService::getMembersBasedOnComponentId('challenge', $request->challenge_id);
+                $challenge_id = MemberManagementService::getMembersBasedOnComponentId('challenge', $request->challenge_id);
             }
 
             $mergedEmails = $membersEmails->merge($organization_id)->merge($lab_id)->merge($challenge_id);
+
             return  $mergedEmails;
         } catch (\Exception $e) {
             return false;
@@ -763,21 +764,22 @@ class MemberManagementService
                     ->orWhere('role', '=', 'organization_manager')
                     ->orWhere('role', '=', 'super_admin');
             })->pluck('email');
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function getOrganizationIdBasedOnInviterId($component,$inviterId){
+    public static function getOrganizationIdBasedOnInviterId($component, $inviterId)
+    {
         try {
-            $memberManagement='';
+            $memberManagement = '';
             switch ($component) {
                 case 'lab':
                     $memberManagement = MemberManagement::join('labs', 'member_management.module_id', '=', 'labs.id')
                     ->where([
                         'inviter_id'    => $inviterId,
                         'module_type'   => config('constants.module_component_type.lab'),
-                        'invite_status'=> config('constants.member_management_invite_status.accepted'),
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
                     ])->pluck('organization_id')->unique();
                     break;
                 case 'challenge':
@@ -786,13 +788,15 @@ class MemberManagementService
                         ->where([
                             'inviter_id'    => $inviterId,
                             'module_type'   => config('constants.module_component_type.challenge'),
-                            'invite_status'=> config('constants.member_management_invite_status.accepted'),
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
                         ])->pluck('organization_id')->unique();
                     break;
             }
+
             return  $memberManagement;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             dd($e);
+
             return false;
         }
     }

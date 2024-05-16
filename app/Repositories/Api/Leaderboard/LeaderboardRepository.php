@@ -38,12 +38,12 @@ class LeaderboardRepository implements LeaderboardInterface
                 ($request->has('challenge_id') && !empty($request->challenge_id))
             ) {
                 $membersEmails = $membersEmails->merge(MemberManagementService::getMembersManagerUsersBasedOnFilter($request));
-
             }
             if ($request->has('project_id') && !empty($request->project_id)) {
-                $membersEmails=$membersEmails->merge(ProjectMemberManagementService::getProjectMemberManagementEmails($request->project_id));
+                $membersEmails = $membersEmails->merge(ProjectMemberManagementService::getProjectMemberManagementEmails($request->project_id));
             }
             $user = $this->userService->getLeaderBoardList($request, $membersEmails);
+
             return $user;
         } catch (\Exception $e) {
             return false;
