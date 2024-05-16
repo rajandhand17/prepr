@@ -48,6 +48,8 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapDashboardRoutes();
             $this->mapTeamMatchingRoutes();
             $this->mapGO1Routes();
+
+            $this->mapMaestroDashboardRoutes();
         });
     }
 
@@ -160,5 +162,10 @@ class RouteServiceProvider extends ServiceProvider
     public function mapGO1Routes()
     {
         Route::prefix('api/v1/go1')->middleware('api')->group(base_path('routes/v1/go1.php'));
+    }
+
+    public function mapMaestroDashboardRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/dashboard/maestro-dashboard.php'));
     }
 }
