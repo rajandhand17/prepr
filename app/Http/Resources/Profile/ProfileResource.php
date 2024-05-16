@@ -92,6 +92,15 @@ class ProfileResource extends JsonResource
                 case '23':
                     $user_type = __('responses.switch_user_type_community_organization');
                     break;
+                case '24':
+                    $user_type = __('responses.switch_user_type_educator');
+                    break;
+                case '25':
+                    $user_type = __('responses.switch_user_type_government');
+                    break;
+                case '26':
+                    $user_type = __('responses.switch_user_type_others');
+                    break;
                 default:
                     $user_type = null;
                     break;
