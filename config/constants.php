@@ -390,7 +390,7 @@ return [
     ],
 
     'purpose'=> [
-        'looking_team'                   => '0',
+        'looking_teams'                  => '0',
         'currently_mentor'               => '1',
         'looking_employers'              => '2',
         'currently_team'                 => '3',
@@ -423,13 +423,16 @@ return [
         'innovator'                 => '14',
         'aspiring_entrepreneur'     => '15',
         'evaluator'                 => '16',
-        'small_mid_size_business'   => '17',
+        'small'                     => '17',
         'entrepreneur'              => '18',
-        'ngo_charity_not_for_profit'=> '19',
+        'ngo'                       => '19',
         'enterprise'                => '20',
         'applicant'                 => '21',
-        'educational_institution'   => '22',
-        'community_organization'    => '23',
+        'educational'               => '22',
+        'community'                 => '23',
+        'educator'                  => '24',
+        'government'                => '25',
+        'others'                    => '26',
     ],
 
     'project_member_management_invite_type' => [

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\MemberManagementService;
 use Exception;
@@ -231,6 +230,7 @@ class UserService
             $userRecords = User::whereIn('id', $userIds)
                     ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
                    ->paginate(config('site-settings.pagination_per_page'));
+
             return $userRecords;
         } catch (\Exception $e) {
             return false;

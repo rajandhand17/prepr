@@ -5,11 +5,8 @@ namespace App\Http\Controllers\Api\Leaderboard;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Leaderboard\LeaderboardResource;
-use App\Http\Resources\Manage\Organization\OrganizationResource;
 use App\Repositories\Api\Leaderboard\LeaderboardRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Laratrust\LaratrustFacade as Laratrust;
 
 class LeaderboardController extends AppBaseController
 {
@@ -24,7 +21,7 @@ class LeaderboardController extends AppBaseController
     {
         try {
             $user = $this->leaderboardRepository->getLeaderBoardList($request);
-            if ($user->count()>0){
+            if ($user->count() > 0) {
                 $response = [
                     'total_count'  => $user->total(),
                     'per_page'     => $user->perPage(),
@@ -33,12 +30,13 @@ class LeaderboardController extends AppBaseController
                     'total_pages'  => $user->lastPage(),
                     'list'         => LeaderboardResource::collection($user),
                 ];
+
                 return $this->sendResponse($response, __('responses.leaderboard_list'));
             }
 
             return $this->sendResponse([], __('responses.leaderboard_list'));
         } catch (\Exception $e) {
-            return $this->sendError('responses.send_error',500);
+            return $this->sendError('responses.send_error', 500);
         }
     }
 
@@ -50,20 +48,22 @@ class LeaderboardController extends AppBaseController
                 return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
             $getUsersListing = $this->leaderboardRepository->getComponentsMembers($checkComponentBasedOnSlug->id, $component, $request);
-            if ($getUsersListing->count()>0){
-                    $response = [
-                        'total_count'  => $getUsersListing->total(),
-                        'per_page'     => $getUsersListing->perPage(),
-                        'count'        => $getUsersListing->count(),
-                        'current_page' => $getUsersListing->currentPage(),
-                        'total_pages'  => $getUsersListing->lastPage(),
-                        'list'         => LeaderboardResource::collection($getUsersListing),
-                    ];
-                    return $this->sendResponse($response, __('responses.leaderboard_list'));
-                }
+            if ($getUsersListing->count() > 0) {
+                $response = [
+                    'total_count'  => $getUsersListing->total(),
+                    'per_page'     => $getUsersListing->perPage(),
+                    'count'        => $getUsersListing->count(),
+                    'current_page' => $getUsersListing->currentPage(),
+                    'total_pages'  => $getUsersListing->lastPage(),
+                    'list'         => LeaderboardResource::collection($getUsersListing),
+                ];
+
+                return $this->sendResponse($response, __('responses.leaderboard_list'));
+            }
+
             return $this->sendResponse([], __('responses.get_users_listing_successfully'));
         } catch (\Exception $e) {
-            return $this->sendError('responses.send_error',500);
+            return $this->sendError('responses.send_error', 500);
         }
     }
 }
