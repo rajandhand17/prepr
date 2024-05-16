@@ -52,7 +52,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
                 'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
                 'Expires'             => '0',
             ];
-            $columns = ['Name', 'Email', 'Role (viewer/editor)'];
+            $columns = ['Name', 'Email', 'Access (viewer/editor)'];
             $callback = function () use ($columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
