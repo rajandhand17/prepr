@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\MemberManagement;
 use App\Models\User;
+use App\Services\Manage\MemberManagementService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 
@@ -212,7 +214,7 @@ class UserService
             $userIds = $users->prepend($authUserId)->all();
             $userRecords = User::whereIn('id', $userIds)
                 ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
-                ->get();
+                ->paginate(config('site-settings.pagination_per_page'));
 
             return $userRecords;
         } catch (\Exception $e) {
@@ -228,8 +230,7 @@ class UserService
             $userIds = $users->pluck('id')->all();
             $userRecords = User::whereIn('id', $userIds)
                     ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
-                    ->get();
-
+                   ->paginate(config('site-settings.pagination_per_page'));
             return $userRecords;
         } catch (\Exception $e) {
             return false;
@@ -239,6 +240,11 @@ class UserService
     public static function filterLeaderboardUsers($users, $request, $membersEmails = null)
     {
         try {
+//            $labBasedOrganizationId=MemberManagementService::getOrganizationIdBasedOnInviterId('lab',auth()->user()->id);
+//            $challengeBasedOrganizationId=MemberManagementService::getOrganizationIdBasedOnInviterId('challenge',auth()->user()->id);
+//            $getOrganizationIds=$labBasedOrganizationId->merge($challengeBasedOrganizationId);
+//            dd($getOrganizationIds);
+          //  $challengeListing=MemberManagementService::getEmailsBasedOnInviterId('challenge',auth()->user()->id);
             if (isset($membersEmails) && !empty($membersEmails) && $membersEmails !== null) {
                 $users = $users->whereIn('email', $membersEmails);
             }
@@ -258,6 +264,7 @@ class UserService
 
             return $users;
         } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }

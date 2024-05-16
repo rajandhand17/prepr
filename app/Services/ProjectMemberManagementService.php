@@ -612,7 +612,7 @@ class ProjectMemberManagementService
             $memberManagement = ProjectMemberManagement::where([
                 'project_id'    => $projectId,
                 'invite_status' => config('constants.member_management_invite_status.accepted'),
-            ])->pluck('email')->all();
+            ])->pluck('email');
 
             return $memberManagement;
         } catch (\Exception $e) {
