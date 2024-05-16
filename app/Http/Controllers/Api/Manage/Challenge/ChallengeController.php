@@ -314,7 +314,7 @@ class ChallengeController extends AppBaseController
                 return $this->sendError(__('responses.organization_challlenge_not_same'), 404);
             }
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
