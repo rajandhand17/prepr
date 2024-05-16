@@ -27,11 +27,11 @@ class LeaderboardRepository implements LeaderboardInterface
     {
         try {
             $membersEmails = new Collection();
-//            if (auth()->user()->hasRole([
-//                'organization_owner', 'organization_manager', 'lab_manager', 'challenge_manager', 'resource_manager',
-//            ])) {
-//                $membersEmails=$this->memberManagerService->getMemberManagerModuleEmail(auth()->user()->id);
-//            }
+            if (auth()->user()->hasRole([
+                'organization_owner', 'organization_manager', 'lab_manager', 'challenge_manager', 'resource_manager',
+            ])) {
+                $membersEmails=$this->memberManagerService->getMemberManagerModuleEmail(auth()->user()->id);
+            }
             if (
                 ($request->has('organization_id') && !empty($request->organization_id)) ||
                 ($request->has('lab_id') && !empty($request->lab_id)) ||

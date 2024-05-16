@@ -240,11 +240,6 @@ class UserService
     public static function filterLeaderboardUsers($users, $request, $membersEmails = null)
     {
         try {
-//            $labBasedOrganizationId=MemberManagementService::getOrganizationIdBasedOnInviterId('lab',auth()->user()->id);
-//            $challengeBasedOrganizationId=MemberManagementService::getOrganizationIdBasedOnInviterId('challenge',auth()->user()->id);
-//            $getOrganizationIds=$labBasedOrganizationId->merge($challengeBasedOrganizationId);
-//            dd($getOrganizationIds);
-          //  $challengeListing=MemberManagementService::getEmailsBasedOnInviterId('challenge',auth()->user()->id);
             if (isset($membersEmails) && !empty($membersEmails) && $membersEmails !== null) {
                 $users = $users->whereIn('email', $membersEmails);
             }
@@ -264,7 +259,6 @@ class UserService
 
             return $users;
         } catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
