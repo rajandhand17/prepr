@@ -51,7 +51,7 @@ class CreateOrganizationRequest extends FormRequest
             $base_rules['organization_members'] = 'array';
             $base_rules['organization_members.*.name'] = 'required|string';
             $base_rules['organization_members.*.position'] = 'required|string';
-            $base_rules['organization_members.*.image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024|dimensions:width=500,height=500';
+            $base_rules['organization_members.*.image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024';
         }
 
         return $base_rules;
