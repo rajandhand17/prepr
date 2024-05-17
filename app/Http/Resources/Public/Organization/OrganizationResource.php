@@ -51,7 +51,7 @@ class OrganizationResource extends JsonResource
             'favourite'                    => $this->favourite(),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
-            'organization_members'         => OrganizationMemberResource::collection($this->members),
+            'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
         ];
     }
 }

@@ -605,4 +605,26 @@ class ProjectMemberManagementService
             return false;
         }
     }
+
+    public static function getProjectMemberManagementEmails($projectId)
+    {
+        try {
+            $memberManagement = ProjectMemberManagement::where([
+                'project_id'    => $projectId,
+                'invite_status' => config('constants.member_management_invite_status.accepted'),
+            ])->pluck('email');
+
+            return $memberManagement;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getMembersBasedOnProjectId()
+    {
+        try {
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

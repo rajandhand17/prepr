@@ -1131,5 +1131,6 @@
     "responses.send_live_event_invitation_link_to_members":"Live event invitation link has been send to the members.",
     "responses.failed_to_send_live_event_invitation_link_to_members": "Failed to send live event event invitation to the members.",
     "responses.live_event_details":"Live event details.",
-    "responses.failed_to_get_live_event_details": "Failed to fetch live event details."
+    "responses.failed_to_get_live_event_details": "Failed to fetch live event details.",
+    "responses.leaderboard_list": "You have successfully fetch leaderboard listing"
 }
