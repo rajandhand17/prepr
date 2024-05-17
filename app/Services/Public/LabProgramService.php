@@ -9,7 +9,7 @@ class LabProgramService
     public function getList($request)
     {
         try {
-            $labProgramList = LabProgram::select();
+            $labProgramList = LabProgram::where('is_accessible', '1');
             $labProgramList = self::filterLabProgramList($request, $labProgramList);
 
             return $labProgramList->paginate(config('site-settings.pagination_per_page'));
@@ -26,12 +26,6 @@ class LabProgramService
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
-            }
-            if ($request->has('organization_id') && !empty($request->organization_id)) {
-                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $labProgramList = $labProgramList->whereIn('organization_id', $getOrganizationIds);
-                }
             }
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
@@ -111,7 +105,7 @@ class LabProgramService
     public static function getLabProgramBasedOnId($id)
     {
         try {
-            return LabProgram::where('id', $id)->first();
+            return LabProgram::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }

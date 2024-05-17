@@ -40,10 +40,13 @@ class ChallengePathResource extends JsonResource
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->challenge_id) {
-                    $componentAssociation[$association->challenge_id] = ChallengeService::getChallengeBasedOnId($association->challenge_id);
-                    $componentAssociation[$association->challenge_id]['liked'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->liked();
-                    $componentAssociation[$association->challenge_id]['favourite'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->favourite();
-                    $componentAssociation[$association->challenge_id]['member_count'] = ChallengeService::getChallengeBasedOnId($association->challenge_id)->members()->count();
+                    $challengeData = ChallengeService::getChallengeBasedOnId($association->challenge_id);
+                    if ($challengeData) {
+                        $componentAssociation[$association->challenge_id] = $challengeData->only('id', 'uuid', 'title', 'media', 'slug', 'description');
+                        $componentAssociation[$association->challenge_id]['liked'] = $challengeData->liked();
+                        $componentAssociation[$association->challenge_id]['favourite'] = $challengeData->favourite();
+                        $componentAssociation[$association->challenge_id]['member_count'] = $challengeData->members()->count();
+                    }
                 }
             }
         }
@@ -127,6 +130,7 @@ class ChallengePathResource extends JsonResource
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
+            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'liked'                         => $this->liked(),
             'member_count'                  => '0', //Static for temporary basis
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),

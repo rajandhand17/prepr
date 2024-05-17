@@ -108,6 +108,8 @@ class AssignPermissionToRolesSeeder extends Seeder
                     'create_lab_programs',
                     'edit_lab_programs',
                     'delete_lab_programs',
+                    'can_send_live_event_invitation_lab',
+                    'can_join_live_event_lab',
                 ];
                 $final_permissions = $all_permissions;
                 foreach ($remove_permissions as $permission) {
@@ -166,6 +168,8 @@ class AssignPermissionToRolesSeeder extends Seeder
                     'create_challenges_path',
                     'edit_challenges_path',
                     'delete_challenges_path',
+                    'can_send_live_event_invitation_lab',
+                    'can_join_live_event_lab',
                 ];
                 $final_permissions = $all_permissions;
                 foreach ($remove_permissions as $permission) {

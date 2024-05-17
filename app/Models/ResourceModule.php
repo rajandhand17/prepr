@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ResourceModule extends Model
@@ -29,12 +30,30 @@ class ResourceModule extends Model
         'is_auto_created',
         'status',
         'is_global',
+        'go1_course_id',
+        'go1_metadata',
+        'is_accessible',
     ];
+
+    protected $casts = ['go1_metadata' => 'object'];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
+    public function getIsGO1Attribute()
+    {
+        if ($this->go1_course_id) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getMediaAttribute($value)
     {
+        if ($this->is_go1) {
+            return data_get($this->go1_metadata, 'image');
+        }
+
         return config('site-settings.aws_url').$value;
     }
 
@@ -153,5 +172,13 @@ class ResourceModule extends Model
     public function tag_groups()
     {
         return $this->hasMany(ResourceModuleTagsGroups::class, 'resource_module_id', 'id')->where('type', '1');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function scorm(): MorphOne
+    {
+        return $this->morphOne(Scorm::class, 'model')->latest();
     }
 }

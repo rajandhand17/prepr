@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Api\Manage\Lab;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
+use App\Http\Requests\Manage\Lab\CreateLabUsingAIPreviewRequest;
+use App\Http\Requests\Manage\Lab\CreateLabUsingAIRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
 use App\Services\Manage\OrganizationService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LabController extends AppBaseController
 {
@@ -45,7 +50,7 @@ class LabController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_labs_list'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -54,6 +59,9 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
+            if ($lab->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
             if ($lab) {
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }
@@ -67,6 +75,15 @@ class LabController extends AppBaseController
     public function create(CreateLabRequest $request)
     {
         try {
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_lab_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = null;
             if ($request->cover_image !== null) {
@@ -104,6 +121,9 @@ class LabController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 403);
             }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             $upload_achievement_image = null;
 
@@ -136,6 +156,9 @@ class LabController extends AppBaseController
     {
         try {
             $checkComponentBasedOnSlug = $this->labRepository->checkSlug($slug);
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.lab_not_found'), 403);
             }
@@ -193,6 +216,59 @@ class LabController extends AppBaseController
             return $this->sendResponse($getLabListName, __('responses.found_labs_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function createLabUsingAIPreview(CreateLabUsingAIPreviewRequest $request)
+    {
+        try {
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_lab_limit'), 400);
+                }
+            }
+            $createLabUsingAIPreview = $this->labRepository->createLabUsingAIPreview($request);
+
+            if ($createLabUsingAIPreview) {
+                return $this->sendResponse($createLabUsingAIPreview, __('responses.labs_previews_created_successfully'), 200);
+            } else {
+                throw new Exception('createLabUsingAIPreview has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in createLabUsingAIPreview in LabController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function createLabUsingAI(CreateLabUsingAIRequest $request)
+    {
+        try {
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_lab_limit'), 400);
+                }
+            }
+            $upload_cover_image = config('site-settings.default_lab_cover_image');
+            $upload_achievement_image = config('site-settings.default_achievement_image');
+
+            $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image);
+
+            if ($createLabUsingAI) {
+                return $this->sendResponse(LabResource::make($createLabUsingAI), __('responses.lab_created_successfully'), 200);
+            } else {
+                throw new Exception('createLabUsingAI has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in createLabUsingAI in LabController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
         }
     }
 }

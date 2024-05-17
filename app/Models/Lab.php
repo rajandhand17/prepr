@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lab extends Model
@@ -31,11 +32,14 @@ class Lab extends Model
         'status',
         'total_share',
         'is_auto_created',
+        'is_ai_created',
         'is_resource_sequential',
         'is_sequential',
         'is_achievement_enabled',
         'is_notification_enabled',
         'is_verified',
+        'is_accessible',
+        'is_live_event_enabled',
     ];
 
     public function getMediaAttribute($value)
@@ -153,5 +157,13 @@ class Lab extends Model
     public function levels()
     {
         return $this->belongsTo(Levels::class, 'level_id', 'id');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function airMeet(): MorphOne
+    {
+        return $this->morphOne(AirmeetEvent::class, 'model')->latest();
     }
 }

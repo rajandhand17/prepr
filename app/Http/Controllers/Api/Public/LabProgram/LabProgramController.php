@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Public\LabProgram;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\LabProgram\LabProgramResource;
 use App\Repositories\Api\Public\LabProgram\LabProgramRepository;
-use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
@@ -20,13 +19,6 @@ class LabProgramController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if ($request->organization_id && is_array($request->organization_id)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
-                }
-                $request->merge(['organization_id' => $organization]);
-            }
             $labProgram = $this->labProgramRepository->getList($request);
             if ($labProgram !== false) {
                 $response = [
@@ -47,10 +39,13 @@ class LabProgramController extends AppBaseController
         }
     }
 
-    public function show(Request $request, $slug)
+    public function show($slug)
     {
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labProgram->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+            }
             if ($labProgram) {
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
             }
@@ -66,6 +61,9 @@ class LabProgramController extends AppBaseController
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if ($labProgram !== null) {
+                if ($labProgram->is_accessible === '0') {
+                    return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+                }
                 $getColumnNameValue = $this->labProgramRepository->getColumnNameValue($action);
                 if (!$getColumnNameValue) {
                     return $this->sendError(__('responses.handler_bad_request'), 400);

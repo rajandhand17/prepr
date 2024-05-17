@@ -3,7 +3,20 @@
 namespace App\Http\Resources\Public\Lab;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
+use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
+use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
+use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
+use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
 use App\Services\AchievementConditionListService;
+use App\Services\Public\ChallengePathService;
+use App\Services\Public\ChallengeService;
+use App\Services\Public\LabProgramService;
+use App\Services\Public\ResourceCollectionService;
+use App\Services\Public\ResourceGroupService;
+use App\Services\Public\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -34,7 +47,12 @@ class LabResource extends JsonResource
         $tags = [];
         $tag_groups = [];
         $achievement = [];
-        $address = [];
+        $lab_programs = [];
+        $challenges = [];
+        $challenge_paths = [];
+        $resource_modules = [];
+        $resource_collections = [];
+        $resource_groups = [];
 
         if ($this->getCategory) {
             $category_id = $this->getCategory->id;
@@ -64,7 +82,6 @@ class LabResource extends JsonResource
                 $skill_groups = $this->skill_groups->pluck('foreign_id');
             }
         }
-
         if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
@@ -78,16 +95,6 @@ class LabResource extends JsonResource
         if ($this->tag_groups) {
             $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
             $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->address) {
-            $address = [
-                'latitude'  => $this->address->latitude,
-                'longitude' => $this->address->longitude,
-                'address'   => $this->address->address,
-                'city'      => $this->address->city,
-                'country'   => $this->address->country,
-            ];
         }
 
         if ($this->achievement) {
@@ -138,6 +145,40 @@ class LabResource extends JsonResource
                 break;
         }
 
+        if (!empty($this->component_association)) {
+            foreach ($this->component_association as $lab_association) {
+                if ($lab_association->lab_program_id) {
+                    $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
+                    $lab_programs[$lab_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
+                }
+
+                if ($lab_association->challenge_id) {
+                    $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
+                    $challenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallenge);
+                }
+
+                if ($lab_association->challenge_path_id) {
+                    $getChallengePath = ChallengePathService::getChallengePathBasedOnId($lab_association->challenge_path_id);
+                    $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
+                }
+
+                if ($lab_association->resource_module_id) {
+                    $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($lab_association->resource_module_id);
+                    $resource_modules[$lab_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
+                }
+
+                if ($lab_association->resource_collection_id) {
+                    $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($lab_association->resource_collection_id);
+                    $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                }
+
+                if ($lab_association->resource_group_id) {
+                    $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
+                    $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                }
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -150,8 +191,8 @@ class LabResource extends JsonResource
             'media'                         => $media,
             'category_id'                   => $category_id,
             'category'                      => $category,
-            'organization_id'               => $this->organization->uuid,
-            'organization'                  => $this->organization->title,
+            'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
+            'organization'                  => isset($this->organization->title) ? $this->organization->title : null,
             'duration'                      => $duration,
             'duration_id'                   => $duration_id,
             'level'                         => $level,
@@ -159,7 +200,6 @@ class LabResource extends JsonResource
             'status'                        => $this->status,
             'member_count'                  => $this->members()->count(),
             'skills'                        => $skills,
-            'address'                       => $address,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
             'tags'                          => $tags,
@@ -167,11 +207,26 @@ class LabResource extends JsonResource
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'joined'                        => $join_status,
+            'is_live_event_enabled'         => $this->is_live_event_enabled ? 'yes' : 'no',
+            'live_event'                    => AirmeetEventResource::make($this->airmeet),
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
+            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'lab_address'                   => LabAddressResource::make($this->address),
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),
+            'lab_program_count'             => count($lab_programs),
+            'challenge_count'               => count($challenges),
+            'challenge_path_count'          => count($challenge_paths),
+            'resource_module_count'         => count($resource_modules),
+            'resource_collection_count'     => count($resource_collections),
+            'resource_group_count'          => count($resource_groups),
+            'lab_program'                   => $lab_programs,
+            'challenge'                     => $challenges,
+            'challenge_path'                => $challenge_paths,
+            'resource_module'               => $resource_modules,
+            'resource_collection'           => $resource_collections,
+            'resource_group'                => $resource_groups,
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }

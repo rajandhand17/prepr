@@ -12,9 +12,20 @@ use HiFolks\RandoPhp\Randomize;
 
 class ChallengePathService
 {
+    public function getChallengePathCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $challengePath_count = ChallengePath::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+
+            return $challengePath_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getChallengePathList($request, $organization)
     {
-        $getChallengePathList = ChallengePath::select()->where('organization_id', '=', $organization->id);
+        $getChallengePathList = ChallengePath::where('organization_id', '=', $organization->id);
         $getChallengePathList = self::filterChallengePathList($getChallengePathList, $request);
 
         return $getChallengePathList->paginate(config('site-settings.pagination_per_page'));
@@ -350,7 +361,43 @@ class ChallengePathService
     public static function getChallengePathBasedOnId($id)
     {
         try {
-            return ChallengePath::where('id', $id)->first();
+            return ChallengePath::where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getChallengePathListName($request, $organization)
+    {
+        try {
+            $challengePathList = ChallengePath::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $challengePathList = self::filterChallengePathList($challengePathList, $request);
+            $limit = config('site-settings.listing_limit');
+
+            return $challengePathList->limit($limit)->get();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnUUID($uuid)
+    {
+        try {
+            return ChallengePath::where('UUID', $uuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnUUIDArray($challengePathUUIDArray)
+    {
+        try {
+            $challengePathIds = ChallengePath::whereIn('uuid', $challengePathUUIDArray)->pluck('id')->all();
+            if ($challengePathIds != null) {
+                return $challengePathIds;
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }

@@ -30,6 +30,7 @@ class ChallengePath extends Model
         'is_achievement_enabled',
         'is_sequential',
         'is_auto_created',
+        'is_accessible',
     ];
 
     public function getMediaAttribute($value)

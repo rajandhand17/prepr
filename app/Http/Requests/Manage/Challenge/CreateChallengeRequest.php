@@ -25,13 +25,13 @@ class CreateChallengeRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
+            'request_type'                          => 'required|in:draft,publish,archive',
             'organization_id'                       => 'required|exists:organizations,uuid',
             'category_id'                           => 'required|exists:categories,id',
             'duration_id'                           => 'required|exists:durations,id',
             'level_id'                              => 'required|exists:levels,id',
             'title'                                 => 'required_if:request_type,publish|unique:challenges,title',
             'description'                           => 'required_if:request_type,publish',
-            'request_type'                          => 'required|in:draft,publish,archive',
             'privacy'                               => 'required_if:request_type,publish|in:yes,no',
             'cover_image'                           => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'source_link'                           => 'nullable|url',
@@ -67,6 +67,8 @@ class CreateChallengeRequest extends FormRequest
             'requirement_program'                   => 'in:yes,no',
             'complete_education_program'            => 'in:yes,no',
             'complete_experience'                   => 'in:yes,no',
+            'automatic_alert'                       => 'required|in:0,1',
+            'timeline_type'                         => 'required|in:restricted,flexible',
         ];
 
         if ($this->request->has('winner_achievement_participation')) {
@@ -87,11 +89,13 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['host_id.*'] = 'required|numeric';
         }
 
-        if ($this->has('timeline_type') == 'flexible' && $this->request->has('custom_timelines_title') !== null && $this->request->has('custom_timelines_date') !== null) {
+        if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible' && $this->request->has('custom_timelines_title') !== null && $this->request->has('custom_timelines_date') !== null) {
             $base_rules['custom_timelines_title'] = 'array';
             $base_rules['custom_timelines_title.*'] = 'required';
             $base_rules['custom_timelines_date'] = 'array';
             $base_rules['custom_timelines_date.*'] = ['required', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+            $base_rules['schedule_custom_notify'] = 'array|required';
+            $base_rules['schedule_custom_notify.*'] = 'in:0,1';
         }
 
         if ($this->has('assessment_title') !== null && $this->has('assessment_score') !== null && $this->has('assessment_weight') !== null) {
@@ -105,11 +109,11 @@ class CreateChallengeRequest extends FormRequest
 
         if ($this->request->has('assessment_type')) {
             $base_rules['assessment_type'] = 'in:open,closed';
-            $base_rules['visibility'] = 'required_if:assessment_type,open|in:users,hidden';
-            $base_rules['guidelines'] = 'required_if:assessment_type,open';
-            $base_rules['attachments'] = 'required_if:assessment_type,open|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['guidelines'] = 'required_if:assessment_type,open,closed';
+            $base_rules['attachments'] = 'required_if:assessment_type,open,closed|mimes:jpeg,jpg,png,webp|max:1024';
 
             if ($this->request->get('assessment_type') == 'closed') {
+                $base_rules['visibility'] = 'in:users,hidden';
                 $base_rules['members_email'] = 'array|required';
                 $base_rules['members_email.*'] = 'email';
             }
@@ -130,6 +134,31 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
             $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+        }
+
+        if ($this->request->has('labs')) {
+            $base_rules['labs'] = 'array';
+            $base_rules['labs.*'] = 'exists:labs,uuid';
+        }
+
+        if ($this->request->has('lab_programs')) {
+            $base_rules['lab_programs'] = 'array';
+            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
+        }
+
+        if ($this->request->has('resource_modules')) {
+            $base_rules['resource_modules'] = 'array';
+            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
+        }
+
+        if ($this->request->has('resource_collections')) {
+            $base_rules['resource_collections'] = 'array';
+            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
+        }
+
+        if ($this->request->has('resource_groups')) {
+            $base_rules['resource_groups'] = 'array';
+            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
         }
 
         return $base_rules;

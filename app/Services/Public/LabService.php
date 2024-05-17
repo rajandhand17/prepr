@@ -2,14 +2,21 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\Airmeet\AirmeetEventHelper;
+use App\Models\ComponentAssociation;
 use App\Models\Lab;
+use App\Models\MemberManagement;
+use App\Models\User;
+use App\Services\Manage\LabSkillsGroupsStackService;
+use App\Services\Manage\LabTagsGroupsService;
+use Carbon\Carbon;
 
 class LabService
 {
     public function getList($request)
     {
         try {
-            $lab_list = Lab::select()->where('labs.status', '1');
+            $lab_list = Lab::where('labs.status', '1')->where('labs.is_accessible', '1');
             $lab_list = self::filterLabList($request, $lab_list);
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
@@ -70,8 +77,8 @@ class LabService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $lab_list = $lab_list->whereIn('labs.id', function ($query) use ($request) {
                     $query->select('lab_skills_groups_stack.lab_id')
-                    ->from('lab_skills_groups_stack')
-                    ->whereIn('lab_skills_groups_stack.foreign_id', $request->skills)
+                        ->from('lab_skills_groups_stack')
+                        ->whereIn('lab_skills_groups_stack.foreign_id', $request->skills)
                         ->where('lab_skills_groups_stack.type', '0')
                         ->whereNull('lab_skills_groups_stack.deleted_at')
                         ->distinct();
@@ -80,8 +87,8 @@ class LabService
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $lab_list = $lab_list->whereIn('labs.id', function ($query) use ($request) {
                     $query->select('lab_tags_groups.lab_id')
-                    ->from('lab_tags_groups')
-                    ->whereIn('lab_tags_groups.foreign_id', $request->tags)
+                        ->from('lab_tags_groups')
+                        ->whereIn('lab_tags_groups.foreign_id', $request->tags)
                         ->where('lab_tags_groups.type', '0')
                         ->whereNull('lab_tags_groups.deleted_at')
                         ->distinct();
@@ -98,7 +105,7 @@ class LabService
                     $status_array = ['accepted', 'pending', 'declined'];
                     if (in_array($request->request_status, $status_array)) {
                         $lab_list = $lab_list->join('member_management', 'labs.id', '=', 'member_management.module_id')
-                        ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email]);
+                            ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email]);
                         switch ($request->request_status) {
                             case 'invited':
                                 $lab_list->where('member_management.invite_status', '0');
@@ -130,6 +137,156 @@ class LabService
         try {
             return Lab::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectLabs($request, $challengeId)
+    {
+        try {
+            $getLabList = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_id')->get()->pluck('lab_id');
+
+            $userEmail = auth()->user()->email;
+            $labMemberIds = MemberManagement::whereIn('module_id', $getLabList)->where(['module_type' => '1', 'invite_status' => '1', 'email' => $userEmail])->pluck('module_id');
+            $lab_list = Lab::select('uuid', 'title', 'media')->whereIn('id', $labMemberIds)->where('is_accessible', '1');
+            $lab_list = self::filterLabList($request, $lab_list);
+            $limit = config('site-settings.listing_limit');
+
+            return $lab_list->limit($limit)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getTrendingLab()
+    {
+        try {
+            $getLatestLabsIds = MemberManagementService::getLatestIdsBasedOnModule(config('constants.module_component_type.lab'));
+            $lab_list = Lab::select()->where('labs.status', '1')->whereIn('id', $getLatestLabsIds);
+
+            return $lab_list->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getLabsBasedOnSKillsAndTags($usersSkills, $tags)
+    {
+        try {
+            /*gets Labs based on user skills*/
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($usersSkills);
+            /*gets Tags based on user tags*/
+            $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
+            $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique();
+            if (!empty($labIds)) {
+                $labList = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_max'));
+            } else {
+                $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
+            }
+
+            return $labList->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabsBasedOnIds($labIds)
+    {
+        try {
+            $labList = Lab::whereIn('id', $labIds)->get();
+
+            return $labList;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnId($Id)
+    {
+        try {
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function canJoinLiveEvent(Lab $lab, User $user): bool
+    {
+        try {
+            $joined = $lab->joined();
+
+            return ($joined && $joined !== 'NA') || $user->hasPermission('can_join_live_event_lab');
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public function sendLiveEventInvitationLinkToMembers(Lab $lab): bool
+    {
+        try {
+            $eventId = data_get($lab->airMeet, 'airmeet_event_id');
+            if ($eventId) {
+                $lab->members()->get()->each(function (User $user) use ($eventId) {
+                    AirmeetEventHelper::addAttendeeToEvent($eventId, [
+                        [
+                            'user_id'    => $user->id,
+                            'email'      => data_get($user, 'email'),
+                            'first_name' => data_get($user, 'first_name', data_get($user, 'full_name')),
+                            'last_name'  => data_get($user, 'last_name'),
+                        ],
+                    ]);
+                });
+            }
+
+            return true;
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public function liveEventDetails(Lab $lab)
+    {
+        try {
+            $eventId = data_get($lab->airMeet, 'airmeet_event_id');
+            if ($eventId) {
+                $eventDetails = AirmeetEventHelper::getAirmeetEventInfo($eventId)->json();
+                $sessions = data_get($eventDetails, 'sessions');
+
+                /**
+                 * CREATING A HASHMAP BASED ON DATE FOR FRONTEND.
+                 */
+                $sessionFormatted = collect($sessions)->map(function ($value) {
+                    $date = data_get($value, 'start_time');
+                    $readable = $date ? Carbon::parse($date)->startOf('day')->format('Y-m-d') : '';
+
+                    return [
+                        'date'       => $readable,
+                        'start_time' => data_get($value, 'start_time'),
+                        'duration'   => data_get($value, 'duration'),
+                        'title'      => data_get($value, 'name'),
+                        'speakers'   => collect(data_get($value, 'speakerList', []))->map(function ($speaker) {
+                            return [
+                                'name'  => data_get($speaker, 'name'),
+                                'image' => data_get($speaker, 'speaker_img'),
+                            ];
+                        }),
+                    ];
+                })->groupBy('date')->toArray();
+
+                return [
+                    'id'         => data_get($eventDetails, 'id'),
+                    'name'       => data_get($eventDetails, 'name'),
+                    'timezone'   => data_get($eventDetails, 'timezone'),
+                    'status'     => data_get($eventDetails, 'status'),
+                    'thumbnail'  => data_get($eventDetails, 'master_img_url'),
+                    'start_time' => data_get($eventDetails, 'start_time'),
+                    'end_time'   => data_get($eventDetails, 'end_time'),
+                    'sessions'   => $sessionFormatted,
+                ];
+            }
+
+            return false;
+        } catch (\Exception $exception) {
             return false;
         }
     }

@@ -26,4 +26,23 @@ class ChallengePathTemplateAchievementsService
             return false;
         }
     }
+
+    public function redeemChallengePathTemplateToChallengePathAchievement($challengePathTemplateId, $redeemChallengePathId)
+    {
+        try {
+            $getChallengePathTemplateAchievement = ChallengePathTemplateAchievement::where('challenge_path_template_id', $challengePathTemplateId)->first();
+            if ($getChallengePathTemplateAchievement) {
+                $newChallengePathAchievement = new ChallengePathAchievement();
+                $newChallengePathAchievement->challenge_path_id = $redeemChallengePathId;
+                $newChallengePathAchievement->achievement_name = $getChallengePathTemplateAchievement->achievement_name;
+                $newChallengePathAchievement->achievement_points = $getChallengePathTemplateAchievement->achievement_points;
+                $newChallengePathAchievement->achievement_image = $getChallengePathTemplateAchievement->getRawOriginal('achievement_image');
+                $newChallengePathAchievement->save();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

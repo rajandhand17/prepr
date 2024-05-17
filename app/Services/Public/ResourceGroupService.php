@@ -12,7 +12,7 @@ class ResourceGroupService
     public static function getResourceGroupList($request)
     {
         try {
-            $resourceGroupList = ResourceGroup::select();
+            $resourceGroupList = ResourceGroup::where('is_accessible', '1');
             $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
 
             return $resourceGroupList->paginate(config('site-settings.pagination_per_page'));
@@ -29,7 +29,7 @@ class ResourceGroupService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'archive') ? '2' : '3'));
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', $status);
             } else {
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', '1');
@@ -140,6 +140,15 @@ class ResourceGroupService
             ]);
 
             return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnId($id)
+    {
+        try {
+            return ResourceGroup::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }

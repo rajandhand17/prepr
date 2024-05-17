@@ -170,9 +170,24 @@ class PermissionSeeder extends Seeder
                 'description'  => 'Allow user to challenge annoucements',
             ],
             [
+                'name'         => 'list_challenge_annoucements',
+                'display_name' => 'List Challenge Annoucements',
+                'description'  => 'Allow user to list challenge annoucements',
+            ],
+            [
                 'name'         => 'create_challenge_assessment',
                 'display_name' => 'Create Challenge Assessment',
                 'description'  => 'Allow user to create challenge assessment',
+            ],
+            [
+                'name'         => 'update_challenge_assessment',
+                'display_name' => 'Update Challenge Assessment',
+                'description'  => 'Allow user to update challenge assessment',
+            ],
+            [
+                'name'         => 'view_challenge_assessment',
+                'display_name' => 'View Challenge Assessment',
+                'description'  => 'Allow user to view challenge assessment',
             ],
             [
                 'name'         => 'view_project_submission',
@@ -205,7 +220,6 @@ class PermissionSeeder extends Seeder
                 'display_name' => 'Delete Challenges Members',
                 'description'  => 'Allow user to delete challenges members',
             ],
-
             [
                 'name'         => 'view_challenges_path',
                 'display_name' => 'View Challenge Path',
@@ -288,7 +302,22 @@ class PermissionSeeder extends Seeder
                 'display_name' => 'Impersonate User',
                 'description'  => "One User can switch login into another user's account",
             ],
+            [
+                'name'         => 'create_resource_module_from_go1',
+                'display_name' => 'Create Resource Module From go1',
+                'description'  => 'Allow user to create resource from go1',
+            ],
 
+            [
+                'name'         => 'can_send_live_event_invitation_lab',
+                'display_name' => 'Send live event invitation link to lab members via email.',
+                'description'  => 'Allow user to send live event invitation link to lab members via email ',
+            ],
+            [
+                'name'         => 'can_join_live_event_lab',
+                'display_name' => 'Join live event associated with labs.',
+                'description'  => 'Allow user to join live event associated with labs.',
+            ],
         ];
 
         foreach ($permission as $key => $permission_array) {

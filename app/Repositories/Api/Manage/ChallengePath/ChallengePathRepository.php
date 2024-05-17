@@ -27,6 +27,15 @@ class ChallengePathRepository implements ChallengePathInterface
         $this->componentAssociationService = $componentAssociationService;
     }
 
+    public function getChallengePathCountBasedOnOrganization($organizationId)
+    {
+        try {
+            return $this->challengePathService->getChallengePathCountBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function getChallengePathList($request, $organization)
     {
         try {
@@ -160,6 +169,15 @@ class ChallengePathRepository implements ChallengePathInterface
     {
         try {
             return $this->challengePathService->delete($challengePathId);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getChallengePathListName($request, $organization)
+    {
+        try {
+            return $this->challengePathService->getChallengePathListName($request, $organization);
         } catch (Exception $e) {
             return false;
         }

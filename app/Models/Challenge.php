@@ -34,6 +34,8 @@ class Challenge extends Model
         'is_pre_build',
         'is_open',
         'is_auto_created',
+        'is_ai_created',
+        'is_accessible',
     ];
 
     public function getMediaAttribute($value)
@@ -118,7 +120,7 @@ class Challenge extends Model
 
     public function challenge_assessment()
     {
-        return $this->hasMany(ChallengeAssessment::class, 'challenge_id', 'id');
+        return $this->hasOne(ChallengeAssessment::class, 'challenge_id', 'id');
     }
 
     public function challenge_timelines()
@@ -148,7 +150,16 @@ class Challenge extends Model
 
     public function members()
     {
-        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1']);
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '2', 'invite_status' => '1']);
+    }
+
+    public function joined()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '2', 'email' => auth('api')->user()->email])->first();
+        }
+
+        return 'NA';
     }
 
     public function liked()
@@ -177,5 +188,15 @@ class Challenge extends Model
     public function challenge_announcement()
     {
         return $this->hasMany(ChallengeAnnouncement::class, 'challenge_id', 'id');
+    }
+
+    public function submitted_projects()
+    {
+        return $this->hasMany(Project::class, 'challenge_id', 'id')->where('is_submitted', '1');
+    }
+
+    public function challenge_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'challenge_id', 'id');
     }
 }

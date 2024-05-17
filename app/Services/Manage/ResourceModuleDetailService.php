@@ -4,6 +4,8 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\ResourceModuleDetail;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ResourceModuleDetailService
 {
@@ -32,11 +34,16 @@ class ResourceModuleDetailService
                     if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
                         $file_type = config('constants.file_type.image');
                         $uploaded_file_path = FileUploadHelper::uploadImageToS3($file_upload, 'resource_file');
+                    } elseif (false !== mb_strpos($file_upload->getMimeType(), 'video')) {
+                        $file_type = config('constants.file_type.video');
+                        $uploaded_file_path = FileUploadHelper::uploadVideoToS3($file_upload, 'resource_file');
+                    } elseif (false !== mb_strpos($file_upload->getMimeType(), 'audio')) {
+                        $file_type = config('constants.file_type.audio');
+                        $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'resource_file');
                     } else {
-                        $file_type = (mb_strpos($file_upload->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
-                        $uploaded_file_path = FileUploadHelper::UploadVideoDocToS3($file_upload, 'resource_file');
+                        $file_type = config('constants.file_type.document');
+                        $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'resource_file');
                     }
-
                     if ($uploaded_file_path == false) {
                         return false;
                     }
@@ -59,7 +66,7 @@ class ResourceModuleDetailService
             ResourceModuleDetail::where('resource_module_id', $resource_module_id)->delete();
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -103,7 +110,7 @@ class ResourceModuleDetailService
             ])->delete();
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -149,6 +156,38 @@ class ResourceModuleDetailService
 
             return true;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createResourceModuleDetailsAI($request, $resource_module_id)
+    {
+        try {
+            if (!isset($request['resource_module_items']) || !is_array($request['resource_module_items'])) {
+                Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: resource_module_items is neither set nor an array!');
+
+                return false;
+            }
+
+            foreach ($request['resource_module_items'] as $item) {
+                $resourceDetail = new ResourceModuleDetail([
+                    'title'              => $item['title'],
+                    'path'               => $item['url'],
+                    'resource_module_id' => $resource_module_id,
+                    'type'               => (isset($item['embedHTML']) && !empty($item['embedHTML'])) ? '3' : '1',
+                ]);
+
+                if (!$resourceDetail->save()) {
+                    Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: Failed to save resource detail for title: '.$item['title']);
+
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: '.$e->getMessage());
+
             return false;
         }
     }

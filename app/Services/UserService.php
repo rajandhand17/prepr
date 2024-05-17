@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -24,7 +25,7 @@ class UserService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -38,7 +39,16 @@ class UserService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserByGO1Id($go1UserId)
+    {
+        try {
+            return User::where('go1_id', $go1UserId)->first();
+        } catch (Exception $exception) {
             return false;
         }
     }
@@ -55,7 +65,7 @@ class UserService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -70,7 +80,7 @@ class UserService
             $user = $user->take(config('site-settings.pagination_per_page'))->get();
 
             return $user;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -83,7 +93,7 @@ class UserService
             $updateUser->save();
 
             return $updateUser;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -96,7 +106,6 @@ class UserService
             $user->last_name = $request->last_name;
             $user->full_name = $request->first_name.' '.$request->last_name;
             $user->username = $request->username;
-            $user->email = $request->email;
             $user->phone_number = $request->phone_number;
             $user->preferred_language = $request->preferred_language;
             $user->preferred_timezone = $request->preferred_timezone;
@@ -104,7 +113,7 @@ class UserService
             $user->save();
 
             return $user;
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -119,7 +128,7 @@ class UserService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -136,7 +145,7 @@ class UserService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -152,7 +161,38 @@ class UserService
             });
 
             return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserIdsByEmail($emailIds)
+    {
+        try {
+            $fetchusers = User::whereIn('email', $emailIds)->pluck('id');
+
+            return $fetchusers;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUsersByIds($ids)
+    {
+        try {
+            $fetchUsers = User::whereIn('id', $ids)->get();
+
+            return  $fetchUsers;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function mapGO1User($go1UserId, $response)
+    {
+        try {
+            return User::query()->where('id', auth()->user()->id)->update(['go1_id' => $go1UserId, 'go1_user_metadata' => $response]);
+        } catch (Exception $exception) {
             return false;
         }
     }

@@ -40,10 +40,13 @@ class LabProgramResource extends JsonResource
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->lab_id) {
-                    $componentAssociation[$association->lab_id] = LabService::getLabBasedOnId($association->lab_id);
-                    $componentAssociation[$association->lab_id]['liked'] = LabService::getLabBasedOnId($association->lab_id)->liked();
-                    $componentAssociation[$association->lab_id]['favourite'] = LabService::getLabBasedOnId($association->lab_id)->favourite();
-                    $componentAssociation[$association->lab_id]['member_count'] = LabService::getLabBasedOnId($association->lab_id)->members()->count();
+                    $labData = LabService::getLabBasedOnId($association->lab_id);
+                    if ($labData) {
+                        $componentAssociation[$association->lab_id] = $labData;
+                        $componentAssociation[$association->lab_id]['liked'] = $labData ? $labData->liked() : 'no';
+                        $componentAssociation[$association->lab_id]['favourite'] = $labData ? $labData->favourite() : 'no';
+                        $componentAssociation[$association->lab_id]['member_count'] = $labData ? $labData->members()->count() : 0;
+                    }
                 }
             }
         }
@@ -126,6 +129,7 @@ class LabProgramResource extends JsonResource
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
+            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'liked'                         => $this->liked(),
             'member_count'                  => '0', //Static for temporary basis,
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),

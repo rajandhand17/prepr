@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api\Manage\Organization;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
-use App\Jobs\SubscribePlanJob;
+use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
 use Illuminate\Http\Request;
 
@@ -353,10 +354,10 @@ class OrganizationController extends AppBaseController
                 if ($request->has('organization_members') && !empty($request->organization_members)) {
                     $this->organizationRepository->createOrganizationMembers($request, $organization->id);
                 }
-                $details['cust_id'] = auth()->user()->id;
-                $details['organization_id'] = $organization->id;
-                $details['plan'] = config('chargebee.base_plan');
-                dispatch(new SubscribePlanJob($details));
+                $detailsPlan = config('chargebee.chargebee_plan.unlimited_plan');
+                $userData = auth()->user();
+                dispatch(new SubscribePlanJob($userData, $organization, $detailsPlan));
+                $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_stored_success'));
             } else {
@@ -619,12 +620,12 @@ class OrganizationController extends AppBaseController
         try {
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_title_unique'), 422);
+                return $this->sendError(__('responses.organization_not_exists'), 422);
             }
             if (!auth()->user()->isAbleTo('delete_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_delete_access_denied'), 403);
             }
-            $deleteOrganization = $this->organizationRepository->deleteOrganization($slug, $request->language);
+            $deleteOrganization = $this->organizationRepository->deleteOrganization($checkOrganization->id, $request->language);
             if ($deleteOrganization) {
                 return $this->sendResponse(null, __('responses.organization_delete'), 200);
             }

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
+use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIPreviewRequest;
+use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
+use App\Http\Requests\Manage\Challenge\UpdateChallengeAssessmentRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
 use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
@@ -14,6 +18,7 @@ use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 class ChallengeController extends AppBaseController
@@ -56,9 +61,15 @@ class ChallengeController extends AppBaseController
     public function create(CreateChallengeRequest $request)
     {
         try {
-            // if (!auth()->user()->isAbleTo('create_challenge')) {
-            //     return $this->sendError(__('responses.permission_forbidden'), 403);
-            // }
+            // checks creation limits of the Challenge
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
+                if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
@@ -102,9 +113,9 @@ class ChallengeController extends AppBaseController
     {
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
-            // if (!auth()->user()->isAbleTo('view_challenge', $challenge)) {
-            //     return $this->sendError(__('responses.permission_forbidden'), 403);
-            // }
+            if ($challenge->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
             if ($challenge) {
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_detail'), 200);
             }
@@ -121,6 +132,9 @@ class ChallengeController extends AppBaseController
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             $update_participation_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->participation_achievement->achievement_image);
@@ -167,9 +181,9 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
-            // if (!auth()->user()->isAbleTo('delete_challenge', $checkComponentBasedOnSlug)) {
-            //     return $this->sendError(__('responses.challenge_delete_access_denied'), 403);
-            // }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
             $challenge = $this->challengeRepository->deleteChallenge($checkComponentBasedOnSlug->id, $request);
             if ($challenge) {
                 return $this->sendResponse(null, __('responses.challenge_delete'));
@@ -216,9 +230,12 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
             $getChallengeAssessment = [];
             $challenge_assessment_criteria = [];
-            if ($checkComponentBasedOnSlug->challenge_assessment->isNotEmpty()) {
+            if ($checkComponentBasedOnSlug->challenge_assessment) {
                 $getChallengeAssessment = $this->challengeRepository->getChallengeAssessmentData($checkComponentBasedOnSlug->challenge_assessment);
             }
 
@@ -244,15 +261,18 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function updateAssessment($slug, Request $request)
+    public function updateAssessment($slug, UpdateChallengeAssessmentRequest $request)
     {
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
-            if ($checkComponentBasedOnSlug->challenge_assessment->isNotEmpty()) {
-                $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments);
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
+            if ($checkComponentBasedOnSlug->challenge_assessment) {
+                $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment->attachments);
             }
 
             if ($request->attachments !== null) {
@@ -281,9 +301,25 @@ class ChallengeController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
+
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->organization_id !== $organization->id) {
+                return $this->sendError(__('responses.organization_challlenge_not_same'), 404);
+            }
+            // checks creation limits of the Challenge
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
+                if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
             }
             $cloneChallenge = $this->challengeRepository->cloneChallenge($checkComponentBasedOnSlug->id, $organization);
 
@@ -303,6 +339,9 @@ class ChallengeController extends AppBaseController
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
 
             $challenge_timelines = [];
@@ -356,6 +395,9 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
 
             $challenge_timelines = [];
             if ($checkComponentBasedOnSlug->challenge_timelines) {
@@ -403,6 +445,9 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
             $challengeAnnouncement = $this->challengeRepository->deleteChallengeAnnouncement($request->announcement_id);
             if ($challengeAnnouncement) {
                 return $this->sendResponse(null, __('responses.challenge_announcement_delete'));
@@ -429,6 +474,59 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function createChallengeUsingAIPreview(CreateChallengeUsingAIPreviewRequest $request)
+    {
+        try {
+            // checks creation limits of the Challenge
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
+                if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+            }
+            $createChallengeUsingAIPreview = $this->challengeRepository->createChallengeUsingAIPreview($request);
+
+            if ($createChallengeUsingAIPreview) {
+                return $this->sendResponse($createChallengeUsingAIPreview, __('responses.challenges_previews_created_successfully'), 200);
+            } else {
+                throw new Exception('createChallengeUsingAIPreview has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeUsingAIPreview in ChallengeController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function createChallengeUsingAI(CreateChallengeUsingAIRequest $request)
+    {
+        try {
+            // checks creation limits of the Challenge
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
+                if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+            }
+            $upload_cover_image = config('site-settings.default_challenge_cover_image');
+            $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
+
+            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image);
+
+            if ($createChallengeUsingAI) {
+                return $this->sendResponse(ChallengeResource::make($createChallengeUsingAI), __('responses.challenge_created_successfully'), 200);
+            } else {
+                throw new Exception('createChallengeUsingAI has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeUsingAI in ChallengeController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
         }
     }
 }

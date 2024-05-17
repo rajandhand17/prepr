@@ -3,17 +3,23 @@
 namespace App\Services\Public;
 
 use App\Models\Challenge;
+use App\Models\ChallengePitch;
+use App\Models\ChallengeTask;
+use App\Models\MemberManagement;
+use App\Models\Project;
+use App\Services\ProjectSubmissionRequirementService;
+use Exception;
 
 class ChallengeService
 {
     public function getList($request)
     {
         try {
-            $challenge_list = Challenge::select()->where('challenges.status', '1');
+            $challenge_list = Challenge::where('challenges.status', '1')->where('challenges.is_accessible', '1');
             $challenge_list = self::filterChallengeList($request, $challenge_list);
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -97,6 +103,9 @@ class ChallengeService
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $challenge_list = $challenge_list->whereIn('duration_id', $request->duration_id);
             }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
+            }
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
                     $status_array = ['accepted', 'pending', 'declined'];
@@ -120,8 +129,14 @@ class ChallengeService
                 }
             }
 
+            if ($request->has('submissions') && !empty($request->submissions) && $request->submissions === 'yes') {
+                $challenge_list = $challenge_list->whereHas('submitted_projects', function ($query) {
+                    $query->where('is_submitted', '1');
+                });
+            }
+
             return $challenge_list;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -130,7 +145,97 @@ class ChallengeService
     {
         try {
             return Challenge::where('slug', $slug)->first();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectChallenges($request)
+    {
+        try {
+            $userID = auth()->user()->id;
+            $userEmail = auth()->user()->email;
+            $challengeUsedIds = Project::where('user_id', $userID)->pluck('challenge_id');
+            $challengeMemberIds = MemberManagement::where(['module_type' => '2', 'invite_status' => '1', 'email' => $userEmail])->pluck('module_id');
+            $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
+            $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
+
+            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1');
+            $challenge_list = self::filterChallengeList($request, $challenge_list);
+            $limit = config('site-settings.listing_limit');
+
+            return $challenge_list->limit($limit)->get();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnUUID($uuid)
+    {
+        try {
+            return Challenge::where('UUID', $uuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getProjectChallengeRequirement($challengeData)
+    {
+        try {
+            $challenge_conditions = [];
+            if ($challengeData->challenge_requirements) {
+                foreach ($challengeData->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
+                    $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($challengeData->language, $project_submission_requirement);
+                    if ($challengeData->challenge_project_template) {
+                        $requirementStatus = '';
+
+                        switch ($check_achievement_condition->id) {
+                            case '1':
+                                $requirementStatus = false;
+                                $challengePitchIds = ChallengePitch::where('template_id', $challengeData->challenge_project_template->template_id)->pluck('id')->all();
+                                if (empty($challengePitchIds)) {
+                                    $requirementStatus = true;
+                                }
+                                break;
+                            case '2':
+                                $requirementStatus = false;
+                                $challengeTaskIds = ChallengeTask::where('template_id', $challengeData->challenge_project_template->template_id)->pluck('id')->all();
+                                if (empty($challengeTaskIds)) {
+                                    $requirementStatus = true;
+                                }
+                                break;
+                            case '3':
+                                $requirementStatus = false;
+                                break;
+                            case '4':
+                                $requirementStatus = false;
+                                break;
+                            case '5':
+                                $requirementStatus = false;
+                                break;
+                        }
+                        $projectStatus = ($requirementStatus) ? 'completed' : 'pending';
+                        $projectState = [
+                            'status'            => $projectStatus,
+                            'Requirement Title' => $check_achievement_condition->title,
+                        ];
+
+                        $challenge_conditions[$check_achievement_condition->id] = $projectState;
+                    }
+                }
+            }
+
+            return $challenge_conditions;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnId($id)
+    {
+        try {
+            return Challenge::where('id', $id)->first();
+        } catch (Exception $e) {
             return false;
         }
     }

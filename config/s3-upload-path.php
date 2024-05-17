@@ -14,5 +14,9 @@ return [
     'resource_collection'       => 'resource_collection/upload/',
     'resource_group'            => 'resource_group/upload/',
     'resource_group_achievement'=> 'resource_group_achievement/upload/',
+    'project'                   => 'project/upload/',
+    'project_file'              => 'project/upload_file',
     'certificate'               => 'certificate/upload/',
+    'discussion'                => 'discussion/upload',
+    'chat'                      => 'chat/upload',
 ];

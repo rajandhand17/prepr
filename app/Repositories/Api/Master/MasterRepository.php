@@ -9,6 +9,7 @@ use App\Services\CountryService;
 use App\Services\DurationService;
 use App\Services\FlexibleExpireDateDurationService;
 use App\Services\HostService;
+use App\Services\JobTitleService;
 use App\Services\LabConditionService;
 use App\Services\LevelService;
 use App\Services\PitchTemplateService;
@@ -27,6 +28,7 @@ use App\Services\SocialLinkService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class MasterRepository implements MasterInterface
 {
@@ -55,8 +57,9 @@ class MasterRepository implements MasterInterface
     private $levelService;
     private $tagGroupService;
     private $challengeAnnouncementRecipientService;
+    private $jobTitleService;
 
-    public function __construct(CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService)
+    public function __construct(CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService, JobTitleService $jobTitleService)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;
@@ -82,6 +85,7 @@ class MasterRepository implements MasterInterface
         $this->tagGroupService = $tagGroupService;
         $this->challengeAnnouncementRecipientService = $challengeAnnouncementRecipientService;
         $this->countryService = $countryService;
+        $this->jobTitleService = $jobTitleService;
     }
 
     public function getCategories($request)
@@ -96,7 +100,7 @@ class MasterRepository implements MasterInterface
     public function getSkills($request)
     {
         try {
-            return $this->skillService->getSkills($request->language, $request->search);
+            return $this->skillService->getSkills($request->language, $request->search, $sortBy = null, $skill_id = null, $pagination = null);
         } catch (\Exception $e) {
             return false;
         }
@@ -332,6 +336,17 @@ class MasterRepository implements MasterInterface
         try {
             return $this->countryService->getCountries($request);
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getJobTitles($request)
+    {
+        try {
+            return $this->jobTitleService->getJobTitles($request->language, $request->search);
+        } catch (Exception $e) {
+            Log::error('Error in getJobTitles in MasterRepository.php: '.$e->getMessage());
+
             return false;
         }
     }

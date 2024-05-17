@@ -2,8 +2,20 @@
 
 namespace App\Http\Resources\Manage\Challenge;
 
+use App\Http\Resources\Manage\Lab\LabListNameResource;
+use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
+use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
+use App\Http\Resources\Project\SubmittedProjectResource;
+use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
+use App\Services\Manage\LabProgramService;
+use App\Services\Manage\LabService;
+use App\Services\Manage\ResourceCollectionService;
+use App\Services\Manage\ResourceGroupService;
+use App\Services\Manage\ResourceModuleService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -31,6 +43,7 @@ class ChallengeResource extends JsonResource
         $level = null;
         $level_id = null;
         $skills = null;
+        $jobs = null;
         $skill_groups = null;
         $skill_stacks = null;
         $tags = null;
@@ -43,6 +56,11 @@ class ChallengeResource extends JsonResource
         $challenge_assessment = null;
         $challenge_timelines = null;
         $challenge_custom_timelines = null;
+        $labs = [];
+        $lab_programs = [];
+        $resource_modules = [];
+        $resource_collections = [];
+        $resource_groups = [];
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -62,6 +80,11 @@ class ChallengeResource extends JsonResource
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('foreign_id');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+        }
+
+        if ($this->jobs) {
+            $associatedJobs = $this->jobs->pluck('foreign_id');
+            $jobs = JobTitleService::getJobBasedOnIdArray($associatedJobs)->pluck('title', 'uuid');
         }
 
         if ($this->skill_groups) {
@@ -110,9 +133,11 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_requirements) {
             $challenge_conditions = [];
-            foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
-                $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
-                $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+            if ($this->challenge_requirements->project_submission_requirement_ids !== ['false'] && is_array($this->challenge_requirements->project_submission_requirement_ids) && count($this->challenge_requirements->project_submission_requirement_ids) > 0) {
+                foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
+                    $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
+                    $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                }
             }
             switch ($this->challenge_requirements->allow_submit_project) {
                 case '0':
@@ -194,7 +219,7 @@ class ChallengeResource extends JsonResource
             });
         }
 
-        if ($this->challenge_assessment->isNotEmpty()) {
+        if ($this->challenge_assessment) {
             $challenge_assessment = ChallengeAssessmentService::getChallengeAssessmentData($this->challenge_assessment);
         }
 
@@ -247,6 +272,57 @@ class ChallengeResource extends JsonResource
                 break;
         }
 
+        $joined_status = $this->joined();
+        $join_status = 'No';
+        if ($joined_status != 'NA' && $joined_status != null) {
+            switch ($joined_status->invite_status) {
+                case '0':
+                    $join_status = 'Invited';
+                    break;
+                case '1':
+                    $join_status = 'Yes';
+                    break;
+                case '2':
+                    $join_status = 'Pending';
+                    break;
+                case '3':
+                    $join_status = 'No';
+                    break;
+                default:
+                    $join_status = 'No';
+                    break;
+            }
+        }
+
+        if (!empty($this->challenge_association)) {
+            foreach ($this->challenge_association as $challenge_association) {
+                if ($challenge_association->lab_id) {
+                    $getLab = LabService::getLabBasedOnId($challenge_association->lab_id);
+                    $labs[$challenge_association->lab_id] = LabListNameResource::make($getLab);
+                }
+
+                if ($challenge_association->lab_program_id) {
+                    $getLabProgram = LabProgramService::getLabProgramBasedOnId($challenge_association->lab_program_id);
+                    $lab_programs[$challenge_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
+                }
+
+                if ($challenge_association->resource_module_id) {
+                    $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($challenge_association->resource_module_id);
+                    $resource_modules[$challenge_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
+                }
+
+                if ($challenge_association->resource_collection_id) {
+                    $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($challenge_association->resource_collection_id);
+                    $resource_collections[$challenge_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                }
+
+                if ($challenge_association->resource_group_id) {
+                    $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($challenge_association->resource_group_id);
+                    $resource_groups[$challenge_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                }
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -273,9 +349,12 @@ class ChallengeResource extends JsonResource
             'project_privacy'               => ($this->project_privacy == '1') ? 'yes' : 'no',
             'is_open'                       => ($this->is_open == '1') ? 'yes' : 'no',
             'is_auto_created'               => ($this->is_auto_created == '1') ? 'yes' : 'no',
+            'is_ai_created'                 => ($this->is_ai_created) ? 'yes' : 'no',
+            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
+            'jobs'                          => $jobs,
             'tags'                          => $tags,
             'tag_groups'                    => $tag_groups,
             'participation_achievement'     => $achievement,
@@ -287,13 +366,25 @@ class ChallengeResource extends JsonResource
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
             'challenge_template'            => $this->challenge_project_template,
+            'joined'                        => $join_status,
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'member_count'                  => $this->members()->count(),
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
-            'project_submitted_count'       => '0', // Till project api's are not done statically sending this
+            'submissions_count'             => $this->submitted_projects()->count(),
+            'project_submitted'             => SubmittedProjectResource::collection($this->submitted_projects),
             'external_links'                => ChallengeExternalLinkResource::collection($this->external_links),
+            'lab_count'                     => count($labs),
+            'lab_program_count'             => count($lab_programs),
+            'resource_module_count'         => count($resource_modules),
+            'resource_collection_count'     => count($resource_collections),
+            'resource_group_count'          => count($resource_groups),
+            'labs'                          => $labs,
+            'lab_programs'                  => $lab_programs,
+            'resource_modules'              => $resource_modules,
+            'resource_collections'          => $resource_collections,
+            'resource_groups'               => $resource_groups,
         ];
     }
 }

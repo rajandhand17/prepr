@@ -59,6 +59,11 @@ class Organization extends LaratrustTeam
 
     public function members()
     {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '0', 'invite_status' => '1']);
+    }
+
+    public function organizationMembers()
+    {
         return $this->hasMany(OrganizationMember::class, 'organization_id', 'id');
     }
 
@@ -107,5 +112,20 @@ class Organization extends LaratrustTeam
         }
 
         return 'NA';
+    }
+
+    public function labs_count()
+    {
+        return $this->hasMany(Lab::class, 'organization_id', 'id');
+    }
+
+    public function challenges_count()
+    {
+        return $this->hasMany(Challenge::class, 'organization_id', 'id');
+    }
+
+    public function resource_modules_count()
+    {
+        return $this->hasMany(ResourceModule::class, 'organization_id', 'id');
     }
 }

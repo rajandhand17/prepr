@@ -112,6 +112,7 @@ class LabProgram extends Command
                     $newLabProgram->is_auto_created = $is_auto_created_labProgram;
                     $newLabProgram->is_achievement_enabled = '1';
                     $newLabProgram->is_sequential = '0';
+                    $newLabProgram->is_accessible = $labProgram->is_accessable;
                     $newLabProgram->save();
 
                     // For Lab Program Achievement

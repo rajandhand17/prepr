@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
 use App\Services\Manage\OrganizationService;
@@ -23,6 +25,15 @@ class ResourceGroupController extends AppBaseController
     public function create(CreateResourceGroupRequest $request)
     {
         try {
+            // checks creation limits of the Resource Group
+            $checkResourceGroupLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceGroup');
+            if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkResourceGroupCount = $this->resourceGroupRepository->getResourceGroupCountBasedOnOrganization($checkResourceGroupLimit['organizationId']);
+                if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] <= $checkResourceGroupCount) {
+                    return $this->sendError(__('responses.reached_resource_group_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_resource_group_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
@@ -53,9 +64,12 @@ class ResourceGroupController extends AppBaseController
     public function show($slug)
     {
         try {
-            $resourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($resourceGroup) {
-                return $this->sendResponse(ResourceGroupResource::make($resourceGroup), __('responses.found_resource_group_list'));
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+            if ($checkResourceGroupExistsOrNot) {
+                return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 404);
@@ -81,11 +95,14 @@ class ResourceGroupController extends AppBaseController
     public function delete($slug)
     {
         try {
-            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupSlugExistsOrNot == false) {
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
             }
-            $deleteResourceGroup = $this->resourceGroupRepository->deleteGroupModule($checkResourceGroupSlugExistsOrNot->id);
+            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+            $deleteResourceGroup = $this->resourceGroupRepository->deleteGroupModule($checkResourceGroupExistsOrNot->id);
             if ($deleteResourceGroup) {
                 return $this->sendResponse(null, __('responses.resource_group_delete'));
             }
@@ -104,7 +121,7 @@ class ResourceGroupController extends AppBaseController
                 return $this->sendError(__('responses.resource_group_name_not_available'));
             }
 
-            return $this->sendResponse([], __('responses.resource_group_name_available'), 400);
+            return $this->sendResponse([], __('responses.resource_group_name_available'), 200);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -113,11 +130,14 @@ class ResourceGroupController extends AppBaseController
     public function update($slug, UpdateResourceGroupRequest $request)
     {
         try {
-            $checkResourceGroupSlugExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupSlugExistsOrNot == false) {
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
             }
-            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupSlugExistsOrNot->media);
+            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupExistsOrNot->media);
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
                 if (!$uploaded_cover_image) {
@@ -125,7 +145,7 @@ class ResourceGroupController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-            $upload_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupSlugExistsOrNot->achievement_image);
+            $upload_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupExistsOrNot->achievement_image);
             if ($request->achievement_image !== null) {
                 $uploaded_achievement_image = $this->resourceGroupRepository->uploadAchievementImage($request->achievement_image);
                 if (!$uploaded_achievement_image) {
@@ -167,6 +187,24 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 400);
         } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getList(Request $request)
+    {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            $getResourceGroupListName = $this->resourceGroupRepository->getResourceGroupListName($request, $organization);
+            if ($getResourceGroupListName) {
+                $response = ResourceGroupListNameResource::collection($getResourceGroupListName);
+            }
+
+            return $this->sendResponse($getResourceGroupListName, __('responses.found_resource_group_list'));
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

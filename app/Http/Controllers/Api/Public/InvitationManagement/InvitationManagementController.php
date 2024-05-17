@@ -23,16 +23,16 @@ class InvitationManagementController extends AppBaseController
         $this->invitationManagementRepository = $invitationManagementRepository;
     }
 
-    public function acceptOrRejectLabJoinRequest(Request $request, $component, $slug, $action)
+    public function acceptOrRejectComponentJoinRequest(Request $request, $component, $slug, $action)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 403);
             }
-            $checkLabStatus = $this->invitationManagementRepository->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
-            if ($checkLabStatus) {
-                $member_management = $this->invitationManagementRepository->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+            $checkComponentStatus = $this->invitationManagementRepository->checkComponentJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
+            if ($checkComponentStatus) {
+                $member_management = $this->invitationManagementRepository->acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
                 if ($member_management) {
                     return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }

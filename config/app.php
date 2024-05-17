@@ -194,7 +194,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
@@ -206,6 +206,13 @@ return [
 
         App\Repositories\Api\Master\MasterServiceProvider::class,
         App\Repositories\Api\Auth\AuthServiceProvider::class,
+        App\Repositories\Api\Discussion\DiscussionServiceProvider::class,
+        App\Repositories\Api\Project\ProjectServiceProvider::class,
+        App\Repositories\Api\ProjectMemberManagement\ProjectMemberManagementServiceProvider::class,
+        App\Repositories\Api\Chat\Conversation\ConversationServiceProvider::class,
+        App\Repositories\Api\Chat\Message\MessageServiceProvider::class,
+        /* Scorm */
+        App\Repositories\Api\Manage\Scorm\ScormServiceProvider::class,
 
         /* Manage */
         App\Repositories\Api\Manage\Organization\OrganizationServiceProvider::class,
@@ -219,6 +226,7 @@ return [
         App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionServiceProvider::class,
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
+        App\Repositories\Api\Manage\AirmeetEvent\AirmeetEventServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
@@ -232,7 +240,13 @@ return [
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
+        App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
+        App\Repositories\Api\Public\Scorm\ScormServiceProvider::class,
+        App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
+        App\Repositories\Api\Public\AirmeetEvent\AirmeetEventServiceProvider::class,
 
+        /* GO1 */
+        App\Repositories\Api\GO1\GO1ServiceProvider::class,
     ],
 
     /*

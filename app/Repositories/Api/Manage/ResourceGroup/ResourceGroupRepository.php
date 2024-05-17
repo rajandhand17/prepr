@@ -8,6 +8,7 @@ use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
 use App\Services\Manage\ResourceGroupTagsGroupsService;
 use DB;
+use Exception;
 
 class ResourceGroupRepository implements ResourceGroupInterface
 {
@@ -27,6 +28,15 @@ class ResourceGroupRepository implements ResourceGroupInterface
         $this->resourceGroupSkillsGroupStackService = $resourceGroupSkillsGroupStackService;
         $this->resourceGroupTagsGroupService = $resourceGroupTagsGroupService;
         $this->resourceGroupAchievementsService = $resourceGroupAchievementsService;
+    }
+
+    public function getResourceGroupCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $this->resourceGroupService->getResourceGroupCountBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image)
@@ -154,6 +164,15 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->getResourceGroupList($request, $organization);
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getResourceGroupListName($request, $organization)
+    {
+        try {
+            return $this->resourceGroupService->getResourceGroupListName($request, $organization);
+        } catch (\Exception $e) {
             return false;
         }
     }

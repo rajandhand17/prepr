@@ -4,19 +4,26 @@ namespace App\Services\Manage;
 
 use App\Models\ChallengeProjectTemplate;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeProjectTemplateService
 {
-    public function createChallengeProjectTemplate($request, $challenge)
+    public function createChallengeProjectTemplate($request, $challenge_id, $createChallengeProjectPitch = null)
     {
         try {
             $challengeProjectTemplate = new ChallengeProjectTemplate();
-            $challengeProjectTemplate->challenge_id = $challenge;
-            $challengeProjectTemplate->template_id = $request->template_id;
+            $challengeProjectTemplate->challenge_id = $challenge_id;
+            if ($createChallengeProjectPitch) {
+                $challengeProjectTemplate->template_id = $createChallengeProjectPitch->id;
+            } else {
+                $challengeProjectTemplate->template_id = $request->template_id;
+            }
             $challengeProjectTemplate->save();
 
             return true;
         } catch (Exception $e) {
+            Log::error('Error in createChallengeProjectTemplate in ChallengeProjectTemplateService.php: '.$e->getMessage());
+
             return false;
         }
     }

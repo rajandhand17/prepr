@@ -8,10 +8,22 @@ use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceGroup;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceGroupService
 {
+    public function getResourceGroupCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $resourceGroup_count = ResourceGroup::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+
+            return $resourceGroup_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function uploadResourceGroupCoverImage($cover_image)
     {
         try {
@@ -179,7 +191,7 @@ class ResourceGroupService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'publish') ? '1' : (($request->status == 'archive') ? '2' : '3'));
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', $status);
             } else {
                 $resourceGroupList = $resourceGroupList->where('resource_groups.status', '1');
@@ -260,7 +272,43 @@ class ResourceGroupService
     public static function getResourceGroupBasedOnId($id)
     {
         try {
-            return ResourceGroup::where('id', $id)->first();
+            return ResourceGroup::where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getResourceGroupListName($request, $organization)
+    {
+        try {
+            $resourceGroupList = ResourceGroup::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
+            $limit = config('site-settings.listing_limit');
+
+            return $resourceGroupList->limit($limit)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnUUID($uUID)
+    {
+        try {
+            return ResourceGroup::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnUUIDArray($resourceGroupUUIDArray)
+    {
+        try {
+            $resourceGroupIds = ResourceGroup::whereIn('uuid', $resourceGroupUUIDArray)->pluck('id')->all();
+            if ($resourceGroupIds != null) {
+                return $resourceGroupIds;
+            }
+
+            return false;
         } catch (\Exception $e) {
             return false;
         }

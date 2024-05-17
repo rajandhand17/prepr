@@ -9,10 +9,22 @@ use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
 use App\Services\Public\ResourceCollectionSocialActivitiesService;
+use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class ResourceCollectionService
 {
+    public function getResourceCollectionCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $resourceCollection_count = ResourceCollection::where('organization_id', $organizationId)->count();
+
+            return $resourceCollection_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function createResourceCollection($request, $upload_cover_image)
     {
         try {
@@ -187,7 +199,7 @@ class ResourceCollectionService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'archive') ? '2' : '3'));
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', $status);
             } else {
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', '1');
@@ -318,7 +330,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnId($id)
     {
         try {
-            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description', 'slug')->first();
+            return ResourceCollection::select('title', 'uuid', 'media', 'description', 'slug')->where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }
@@ -341,10 +353,28 @@ class ResourceCollectionService
     public function getListName($request, $organization)
     {
         try {
-            $resourceCollectionList = ResourceCollection::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $resourceCollectionList = ResourceCollection::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionBasedOnUUID($uUID)
+    {
+        try {
+            return ResourceCollection::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionsBasedOnIds($ids)
+    {
+        try {
+            return ResourceCollection::select()->whereIn('id', $ids)->get();
         } catch (\Exception $e) {
             return false;
         }

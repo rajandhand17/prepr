@@ -11,7 +11,7 @@ class ResourceCollectionService
     public function getResourceCollectionList($request)
     {
         try {
-            $resourceCollectionList = ResourceCollection::select();
+            $resourceCollectionList = ResourceCollection::where('is_accessible', '1');
             $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
@@ -26,7 +26,6 @@ class ResourceCollectionService
             if ($request->has('search') && !empty($request->search)) {
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
             }
-
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
                 if (!empty($getOrganizationIds)) {
@@ -35,7 +34,7 @@ class ResourceCollectionService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'archive') ? '2' : '3'));
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', $status);
             } else {
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', '1');
@@ -107,22 +106,16 @@ class ResourceCollectionService
             }
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
                 $getCollectionLikedList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('like');
-                if ($getCollectionLikedList && $getCollectionLikedList->count() > 0) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionLikedList->pluck('resource_collection_id'));
-                }
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionLikedList->pluck('resource_collection_id'));
             }
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourites') {
                 $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('favourite');
-                if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
-                }
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
             }
 
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'shared') {
                 $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('share');
-                if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
-                }
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
             }
 
             return $resourceCollectionList;
@@ -143,7 +136,7 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnId($id)
     {
         try {
-            return ResourceCollection::where('id', $id)->select('title', 'uuid', 'media', 'description', 'slug')->first();
+            return ResourceCollection::where(['id' => $id, 'is_accessible' => '1'])->select('title', 'uuid', 'media', 'description', 'slug')->first();
         } catch (\Exception $e) {
             return false;
         }

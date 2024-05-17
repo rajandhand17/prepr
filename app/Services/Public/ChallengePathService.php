@@ -10,7 +10,7 @@ class ChallengePathService
     public function getList($request)
     {
         try {
-            $challengePathList = ChallengePath::select();
+            $challengePathList = ChallengePath::where('is_accessible', '1');
             $challengePathList = self::filterChallengePathList($request, $challengePathList);
 
             return $challengePathList->paginate(config('site-settings.pagination_per_page'));
@@ -104,6 +104,15 @@ class ChallengePathService
     {
         try {
             return ChallengePath::where('slug', $slug)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnId($id)
+    {
+        try {
+            return ChallengePath::where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }

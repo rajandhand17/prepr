@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Manage\Organization;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -23,6 +24,7 @@ class OrganizationResource extends JsonResource
             $category = $this->getCategory->title;
         } else {
             $category = null;
+            $category_id = null;
         }
 
         return [
@@ -39,13 +41,14 @@ class OrganizationResource extends JsonResource
             'total_employees'              => $this->total_employees,
             'category_id'                  => $category_id,
             'category'                     => $category,
-            'lab_count'                    => $this->members->count(),
-            'challenge_count'              => 0,
-            'resource_count'               => 0,
-            'organization_users_count'     => 0,
+            'lab_count'                    => $this->labs_count()->count(),
+            'challenge_count'              => $this->challenges_count()->count(),
+            'resource_count'               => $this->resource_modules_count()->count(),
+            'organization_users_count'     => $this->members->count(),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
-            'organization_members'         => OrganizationMemberResource::collection($this->members),
+            'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
+            'organization_people'          => MemberManagementResource::collection($this->members),
         ];
     }
 }

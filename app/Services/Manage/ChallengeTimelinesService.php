@@ -5,12 +5,18 @@ namespace App\Services\Manage;
 use App\Models\ChallengeTimelines;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeTimelinesService
 {
-    public function createChallengeTimelines($request, $challenge)
+    public function createChallengeTimelines($request, $challenge_id)
     {
         try {
+            $time_line = config('constants.challenge_timeline_type.flexible');
+            if (!$request->has('timeline_type')) {
+                $request->timeline_type = 'flexible';
+            }
+
             switch ($request->timeline_type) {
                 case 'restricted':
                     $time_line = config('constants.challenge_timeline_type.restricted');
@@ -33,7 +39,7 @@ class ChallengeTimelinesService
                 $challenge_duration = $open_date->diffInDays($close_date);
 
                 $challengeRestrictedTimeLine = new ChallengeTimelines();
-                $challengeRestrictedTimeLine->challenge_id = $challenge;
+                $challengeRestrictedTimeLine->challenge_id = $challenge_id;
                 $challengeRestrictedTimeLine->timeline_type = $time_line;
                 $challengeRestrictedTimeLine->open_call_date = $openDate;
                 $challengeRestrictedTimeLine->open_call_date_description = $request->open_call_date_description ?? null;
@@ -50,17 +56,23 @@ class ChallengeTimelinesService
                 if ($request->flexible_expire_deadline) {
                     $flexibleDeadlineDate = date('Y-m-d H:i:s', strtotime($request->flexible_expire_deadline));
                 }
+                $flexible_date_number = $request->flexible_date_number ?? null;
+                $flexible_date_duration = $request->flexible_date_duration ?? null;
+                $automatic_alert = $request->automatic_alert ?? '0';
+
                 $challengeFlexibleTimeLine = new ChallengeTimelines();
-                $challengeFlexibleTimeLine->challenge_id = $challenge;
-                $challengeFlexibleTimeLine->flexible_date_number = $request->flexible_date_number;
-                $challengeFlexibleTimeLine->flexible_date_duration = $request->flexible_date_duration;
-                $challengeFlexibleTimeLine->automatic_alert = $request->automatic_alert;
-                $challengeFlexibleTimeLine->flexible_expire_deadline = $flexibleDeadlineDate;
+                $challengeFlexibleTimeLine->challenge_id = $challenge_id;
+                $flexible_date_number && $challengeFlexibleTimeLine->flexible_date_number = $flexible_date_number;
+                $flexible_date_duration && $challengeFlexibleTimeLine->flexible_date_duration = $flexible_date_duration;
+                $challengeFlexibleTimeLine->automatic_alert = $automatic_alert;
+                $flexibleDeadlineDate && $challengeFlexibleTimeLine->flexible_expire_deadline = $flexibleDeadlineDate;
                 $challengeFlexibleTimeLine->save();
             }
 
             return true;
         } catch (Exception $e) {
+            Log::error('Error in createChallengeTimelines in ChallengeTimelinesService.php: '.$e->getMessage());
+
             return false;
         }
     }

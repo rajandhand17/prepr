@@ -21,8 +21,22 @@ class ChallengeAssessment extends Model
         'attachments',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'members_email' => 'json',
+    ];
+
     public function getAttachmentsAttribute($value)
     {
         return config('site-settings.aws_url').$value;
+    }
+
+    public function getAssessmentCriterias()
+    {
+        return $this->hasMany(ChallengeAssessmentCriteria::class, 'assessment_id', 'id');
     }
 }

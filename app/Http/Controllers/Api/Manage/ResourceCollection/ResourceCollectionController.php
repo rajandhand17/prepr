@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
+use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
@@ -23,6 +24,15 @@ class ResourceCollectionController extends AppBaseController
     public function create(CreateResourceCollectionRequest $request)
     {
         try {
+            // checks creation limits of the Resource Collection
+            $checkResourceCollectionLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceCollection');
+            if ($checkResourceCollectionLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkResourceCollectionCount = $this->resourceCollectionRepository->getResourceCollectionCountBasedOnOrganization($checkResourceCollectionLimit['organizationId']);
+                if ($checkResourceCollectionLimit['fetchOrganizationPlanDetails'] <= $checkResourceCollectionCount) {
+                    return $this->sendError(__('responses.reached_resource_collection_limit'), 400);
+                }
+            }
+
             $upload_cover_image = config('site-settings.default_resource_collection_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
@@ -50,7 +60,7 @@ class ResourceCollectionController extends AppBaseController
                 return $this->sendError(__('responses.resource_collection_slug_not_available'));
             }
 
-            return $this->sendResponse([], __('responses.resource_collection_slug_available'), 400);
+            return $this->sendResponse([], __('responses.resource_collection_slug_available'), 200);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -64,7 +74,7 @@ class ResourceCollectionController extends AppBaseController
                 return $this->sendError(__('responses.resource_collection_name_not_available'));
             }
 
-            return $this->sendResponse([], __('responses.resource_collection_name_available'), 400);
+            return $this->sendResponse([], __('responses.resource_collection_name_available'), 200);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -73,9 +83,12 @@ class ResourceCollectionController extends AppBaseController
     public function show($slug)
     {
         try {
-            $responseCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($responseCollection) {
-                return $this->sendResponse(ResourceCollectionResource::make($responseCollection), __('responses.found_resource_collection_list'));
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+            }
+            if ($checkResourceCollectionExistsOrNot) {
+                return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
@@ -87,11 +100,18 @@ class ResourceCollectionController extends AppBaseController
     public function update($slug, UpdateResourceCollectionRequest $request)
     {
         try {
-            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionSlugExistsOrNot == false) {
+            $checkOrganizationExistsOrNot = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            if ($checkOrganizationExistsOrNot == false) {
+                return $this->sendError(__('responses.organization_not_found'), 422);
+            }
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceCollectionSlugExistsOrNot->media);
+            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+            }
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceCollectionExistsOrNot->media);
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
                 if (!$uploaded_cover_image) {
@@ -137,11 +157,14 @@ class ResourceCollectionController extends AppBaseController
     public function delete($slug)
     {
         try {
-            $checkResourceCollectionSlugExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionSlugExistsOrNot == false) {
+            $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if ($checkResourceCollectionExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            $responseCollectionDelete = $this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionSlugExistsOrNot->id);
+            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+            }
+            $responseCollectionDelete = $this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionExistsOrNot->id);
             if ($responseCollectionDelete) {
                 return $this->sendResponse(null, __('responses.resource_collection_delete'));
             }

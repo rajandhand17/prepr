@@ -15,6 +15,12 @@ return [
         'external' => '1',
     ],
 
+    'discussion_module_type' => [
+        'lab'           => '0',
+        'challenge'     => '1',
+        'project'       => '2',
+    ],
+
     'member_management_type' => [
         'invite'       => '0',
         'join_request' => '1',
@@ -32,7 +38,7 @@ return [
         'organization' => '0',
         'lab'          => '1',
         'challenge'    => '2',
-        'project'      => '3',
+        'project'      => '5',
     ],
 
     'member_management_invite_status' => [
@@ -61,67 +67,67 @@ return [
     ],
 
     'email_template_module_type' => [
-        'organization'      => '0',
-        'lab'               => '1',
-        'lab_program'       => '2',
-        'challenge'         => '3',
-        'challenge_path'    => '4',
-        'project'           => '5',
+        'organization'   => '0',
+        'lab'            => '1',
+        'lab_program'    => '2',
+        'challenge'      => '3',
+        'challenge_path' => '4',
+        'project'        => '5',
     ],
 
-    'lab_status'=> [
+    'lab_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
     ],
 
-    'lab_type'=> [
-        'assess'   => '0',
-        'onboard'  => '1',
-        'engage'   => '2',
-        'grow'     => '3',
-        'na'       => '4',
+    'lab_type' => [
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+        'na'      => '4',
     ],
 
-    'lab_privacy'=> [
+    'lab_privacy' => [
         'no'  => '0',
         'yes' => '1',
     ],
 
-    'lab_social_activity_is_like'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'lab_social_activity_is_like' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'lab_social_activity_is_follow'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'lab_social_activity_is_follow' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'lab_social_activity_favourite'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'lab_social_activity_favourite' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'lab_social_activity_share'=> [
-        'yes'    => '1',
-        'no'     => '0',
+    'lab_social_activity_share' => [
+        'yes' => '1',
+        'no'  => '0',
     ],
-    'lab_social_activity_refence_type'=> [
-        'lab'            => '0',
-        'project'        => '1',
-        'user'           => '2',
-        'challenge'      => '3',
-        'challenge-group'=> '4',
-        'lab-group'      => '5',
-    ],
-
-    'lab_component'=> [
-        'lab'            => 'lab',
-        'organization'   => 'organization',
+    'lab_social_activity_refence_type' => [
+        'lab'             => '0',
+        'project'         => '1',
+        'user'            => '2',
+        'challenge'       => '3',
+        'challenge-group' => '4',
+        'lab-group'       => '5',
     ],
 
-    'resource_module_status'=> [
+    'lab_component' => [
+        'lab'          => 'lab',
+        'organization' => 'organization',
+    ],
+
+    'resource_module_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
@@ -133,7 +139,7 @@ return [
         'archive' => '2',
     ],
 
-    'resource_module_type'=> [
+    'resource_module_type' => [
         'document'             => '0',
         'video'                => '1',
         'audio'                => '2',
@@ -144,20 +150,15 @@ return [
         'Embedded_Cover_Video' => '7',
     ],
 
-    'resource_module_privacy'=> [
+    'resource_module_privacy' => [
         'no'  => '0',
         'yes' => '1',
     ],
-    'resource_module_is_global'=> [
+    'resource_module_is_global' => [
         'no'  => '0',
         'yes' => '1',
     ],
     'challenge_privacy' => [
-        'no'  => '0',
-        'yes' => '1',
-    ],
-
-    'project_privacy' => [
         'no'  => '0',
         'yes' => '1',
     ],
@@ -168,11 +169,16 @@ return [
     ],
 
     'challenge_open_close' => [
+        'no'  => '1',
+        'yes' => '0',
+    ],
+
+    'challenge_auto_created' => [
         'no'  => '0',
         'yes' => '1',
     ],
 
-    'challenge_auto_created' => [
+    'challenge_ai_created' => [
         'no'  => '0',
         'yes' => '1',
     ],
@@ -184,9 +190,9 @@ return [
     ],
 
     'challenge_visibility_type' => [
-        'null'    => '0',
-        'users'   => '1',
-        'hidden'  => '2',
+        'null'   => '0',
+        'users'  => '1',
+        'hidden' => '2',
     ],
 
     'challenge_timeline_type' => [
@@ -209,23 +215,23 @@ return [
         'yes' => '1',
     ],
 
-    'resource_collection_status'=> [
+    'resource_collection_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
     ],
 
-    'resource_collection_privacy'=> [
+    'resource_collection_privacy' => [
         'no'  => '0',
         'yes' => '1',
     ],
 
-    'resource_collection_is_accessible'=> [
+    'resource_collection_is_accessible' => [
         'no'  => '0',
         'yes' => '1',
     ],
 
-    'resource_group_status'=> [
+    'resource_group_status' => [
         'draft'   => '0',
         'publish' => '1',
         'archive' => '2',
@@ -237,9 +243,9 @@ return [
     ],
 
     'challenge_announcement_by' => [
-        'email'     => '0',
-        'inbox'     => '1',
-        'both'      => '2',
+        'email' => '0',
+        'inbox' => '1',
+        'both'  => '2',
     ],
 
     'challenge_announcement_send_status' => [
@@ -248,93 +254,222 @@ return [
         'scheduled' => '2',
     ],
 
-    'gender'=> [
-        'male'             => '0',
-        'female'           => '1',
-        'other'            => '2',
-        'decline_to_answer'=> '3',
+    'gender' => [
+        'male'              => '0',
+        'female'            => '1',
+        'other'             => '2',
+        'decline_to_answer' => '3',
     ],
 
-    'user_achievement_type'=> [
-        'lab'                => '0',
-        'lab_program'        => '1',
-        'challenge'          => '2',
-        'challenge_path'     => '3',
-        'resource_group'     => '4',
-        'appreciation_award' => '5',
-        'activity_award'     => '6',
-        'skill_activity'     => '7',
-        'imported_award'     => '8',
-        'winner_award'       => '9',
-        'participation_award'=> '10',
+    'user_achievement_type' => [
+        'lab'                 => '0',
+        'lab_program'         => '1',
+        'challenge'           => '2',
+        'challenge_path'      => '3',
+        'resource_group'      => '4',
+        'appreciation_award'  => '5',
+        'activity_award'      => '6',
+        'skill_activity'      => '7',
+        'imported_award'      => '8',
+        'winner_award'        => '9',
+        'participation_award' => '10',
     ],
 
-    'recent_immigrant'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'recent_immigrant' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'indigenous_group'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'indigenous_group' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'visible_minority'=> [
-        'yes'    => '1',
-        'no'     => '2',
-    ],
-    'disability'=> [
-        'yes'    => '1',
-        'no'     => '2',
+    'visible_minority' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'file_type'=> [
-        'document'            => '0',
-        'video'               => '1',
-        'audio'               => '2',
-        'embedded'            => '3',
-        'embedded_audio'      => '4',
-        'url'                 => '5',
-        'image'               => '6',
-        'embedded_Cover_Video'=> '7',
+    'disability' => [
+        'yes' => '1',
+        'no'  => '2',
     ],
 
-    'subscription_options'=> [
-        '0'=> 'unsubscribed',
-        '1'=> 'monthly',
-        '2'=> 'weekly',
+    'file_type' => [
+        'document'             => '0',
+        'video'                => '1',
+        'audio'                => '2',
+        'embedded'             => '3',
+        'embedded_audio'       => '4',
+        'url'                  => '5',
+        'image'                => '6',
+        'embedded_Cover_Video' => '7',
     ],
 
-    'privacy_options'=> [
-        '0'=> 'public',
-        '1'=> 'private',
-        '2'=> 'signed-in',
+    'project_view_enabled' => [
+        'no'        => '0',
+        'yes'       => '1',
     ],
 
-    'friend_request_options'=> [
-        '0'=> 'any-one',
-        '1'=> 'no-one',
+    'project_download_enabled' => [
+        'no'        => '0',
+        'yes'       => '1',
     ],
 
-    'notification_options'=> [
-        'unsubscribed'=> '0',
+    'project_media_type' => [
+        'image'         => '0',
+        'embedded'      => '1',
+        'video'         => '2',
+    ],
+
+    'project_privacy' => [
+        'public'       => '0',
+        'private'      => '1',
+    ],
+
+    'project_file_type' => [
+        'image' => 'image',
+        'video' => 'video',
+        'docs'  => 'docs',
+        'audio' => 'audio',
+    ],
+
+    'subscription_options' => [
+        '0' => 'unsubscribe',
+        '1' => 'monthly',
+        '2' => 'weekly',
+    ],
+
+    'privacy_options' => [
+        '0' => 'public',
+        '1' => 'private',
+        '2' => 'signed-in',
+    ],
+
+    'friend_request_options' => [
+        '0' => 'public',
+        '1' => 'private',
+    ],
+
+    'notification_options' => [
+        'unsubscribe' => '0',
         'monthly'     => '1',
         'weekly'      => '2',
     ],
 
-    'subscribe_unsubscribe'=> [
-        'unsubscribed'=> '0',
-        'subscribed'  => '1',
+    'subscribe_unsubscribe' => [
+        'unsubscribe' => '0',
+        'subscribe'   => '1',
     ],
 
-    'profile_visibility'=> [
+    'profile_visibility' => [
         'signed-in' => '2',
         'private'   => '1',
         'public'    => '0',
     ],
 
-    'privacy_friend_request'=> [
-        'public'   => '0',
-        'private'  => '1',
+    'privacy_friend_request' => [
+        'public'  => '0',
+        'private' => '1',
+    ],
+
+    'subscribe_unsubscribe_id' => [
+        '0' => 'unsubscribe',
+        '1' => 'subscribe',
+    ],
+
+    'conversation_type' => [
+        'direct_message' => '0',
+        'group_message'  => '1',
+        'announcement'   => '2',
+    ],
+    'conversation_type_id' => [
+        '0' => 'direct_message',
+        '1' => 'group',
+        '2' => 'announcement',
+    ],
+
+    'purpose'=> [
+        'looking_teams'                  => '0',
+        'currently_mentor'               => '1',
+        'looking_employers'              => '2',
+        'currently_team'                 => '3',
+        'looking_teammates'              => '4',
+        'looking_employees'              => '5',
+        'looking_invest'                 => '6',
+        'looking_mentor'                 => '7',
+        'looking_for_investors'          => '8',
+        'looking_to_create_social_impact'=> '9',
+        'looking_to_learn'               => '10',
+        'looking_to_solve_problems'      => '11',
+        'looking_to_build_skills'        => '12',
+    ],
+
+    'user_types'=> [
+        'employee'                  => '0',
+        'investor'                  => '1',
+        'teacher'                   => '2',
+        'job_seeker'                => '3',
+        'student'                   => '4',
+        'recent_grad'               => '5',
+        'expert'                    => '6',
+        'employer'                  => '7',
+        'Recent Grad'               => '8',
+        'facilitator'               => '9',
+        'Job Seeker'                => '10',
+        'startup'                   => '11',
+        'learner'                   => '12',
+        'mentor'                    => '13',
+        'innovator'                 => '14',
+        'aspiring_entrepreneur'     => '15',
+        'evaluator'                 => '16',
+        'small'                     => '17',
+        'entrepreneur'              => '18',
+        'ngo'                       => '19',
+        'enterprise'                => '20',
+        'applicant'                 => '21',
+        'educational'               => '22',
+        'community'                 => '23',
+        'educator'                  => '24',
+        'government'                => '25',
+        'others'                    => '26',
+    ],
+
+    'project_member_management_invite_type' => [
+        'email'        => '0',
+        'network'      => '1',
+        'csv'          => '2',
+    ],
+
+    'project_member_management_invite_status' => [
+        'invited'      => '0',
+        'accepted'     => '1',
+        'pending'      => '2',
+        'declined'     => '3',
+    ],
+
+    'project_member_management_email_status' => [
+        'scheduled' => '0',
+        'sent'      => '1',
+        'fail'      => '2',
+        'na'        => '3',
+    ],
+
+    'project_access_level' => [
+        'viewer'        => '0',
+        'editor'        => '1',
+        'team_leader'   => '2',
+    ],
+
+    'recent_immigration'=> [
+        'yes' => '1',
+        'no'  => '2',
+    ],
+
+    'module_component_type' => [
+        'organization' => '0',
+        'lab'          => '1',
+        'challenge'    => '2',
+        'project'      => '3',
     ],
 ];

@@ -12,6 +12,17 @@ use HiFolks\RandoPhp\Randomize;
 
 class LabService
 {
+    public function getLabCountBasedOnOrganization($organizationId)
+    {
+        try {
+            $lab_count = Lab::where(['organization_id' => $organizationId, 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
+
+            return $lab_count;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function getLabList($request, $organization)
     {
         try {
@@ -33,7 +44,7 @@ class LabService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
+                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated' || $request->status == 'archived') ? '2' : '3'));
                 $lab_list = $lab_list->where('labs.status', $status);
             } else {
                 $lab_list = $lab_list->where('labs.status', '1');
@@ -116,56 +127,131 @@ class LabService
 
     public static function createLab($request, $upload_cover_image)
     {
+        try {
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $status = config('constants.lab_status.draft');
+            switch ($request->request_type) {
+                case 'draft':
+                    $status = config('constants.lab_status.draft');
+                    break;
+                case 'publish':
+                    $status = config('constants.lab_status.publish');
+                    break;
+                case 'archive':
+                    $status = config('constants.lab_status.archive');
+                    break;
+                default:
+                    $status = config('constants.lab_status.draft');
+                    break;
+            }
+
+            $type = config('constants.lab_type.na');
+            switch ($request->type) {
+                case 'assess':
+                    $type = config('constants.lab_type.assess');
+                    break;
+                case 'onboard':
+                    $type = config('constants.lab_type.onboard');
+                    break;
+                case 'engage':
+                    $type = config('constants.lab_type.engage');
+                    break;
+                case 'grow':
+                    $type = config('constants.lab_type.grow');
+                    break;
+                default:
+                    $type = config('constants.lab_type.na');
+                    break;
+            }
+
+            $privacy = config('constants.lab_privacy.no');
+            switch ($request->privacy) {
+                case 'yes':
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+                case 'no':
+                    $privacy = config('constants.lab_privacy.no');
+                    break;
+                default:
+                    $privacy = config('constants.lab_privacy.yes');
+                    break;
+            }
+
+            $is_ai_created = config('constants.challenge_ai_created.no');
+            if ($request->has('is_ai_created')) {
+                switch ($request->is_ai_created) {
+                    case 'yes':
+                        $is_ai_created = config('constants.challenge_ai_created.yes');
+                        break;
+                    case 'no':
+                        $is_ai_created = config('constants.challenge_ai_created.no');
+                        break;
+                    default:
+                        $is_ai_created = config('constants.challenge_ai_created.no');
+                        break;
+                }
+            }
+
+            $model = new Lab();
+            $slug = UtilityHelper::generateSlug($request->title, $model);
+
+            $lab = new Lab();
+            $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $lab->language = $request->language;
+            $lab->user_id = auth()->user()->id;
+            $lab->organization_id = $organization->id;
+            $lab->category_id = $request->category_id;
+            $lab->duration_id = $request->duration_id;
+            $lab->level_id = $request->level_id;
+            $lab->type = $type;
+            $lab->slug = $slug;
+            $lab->title = $request->title;
+            $lab->description = $request->description;
+            $lab->privacy = $privacy;
+            $lab->media_type = 'image';
+            $lab->media = $upload_cover_image;
+            $lab->status = $status;
+            $lab->total_share = 0;
+            $lab->is_auto_created = '0';
+            $lab->is_ai_created = $is_ai_created;
+            $lab->is_resource_sequential = ($request->is_resource_sequential == 'yes') ? '1' : '0';
+            $lab->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
+            $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
+            $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
+            $lab->is_verified = '0';
+            $lab->is_live_event_enabled = $request->get('is_live_event_enabled') === 'yes' ? true : false;
+            $lab->save();
+
+            return $lab;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createLabUsingAI($request, $upload_cover_image)
+    {
         $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-        $status = config('constants.lab_status.draft');
-        switch($request->request_type) {
-            case 'draft':
-                $status = config('constants.lab_status.draft');
-                break;
-            case 'publish':
-                $status = config('constants.lab_status.publish');
-                break;
-            case 'archive':
-                $status = config('constants.lab_status.archive');
-                break;
-            default:
-                $status = config('constants.lab_status.draft');
-                break;
-        }
-
+        $status = config('constants.lab_status.publish');
         $type = config('constants.lab_type.na');
-        switch($request->type) {
-            case 'assess':
-                $type = config('constants.lab_type.assess');
-                break;
-            case 'onboard':
-                $type = config('constants.lab_type.onboard');
-                break;
-            case 'engage':
-                $type = config('constants.lab_type.engage');
-                break;
-            case 'grow':
-                $type = config('constants.lab_type.grow');
-                break;
-            default:
-                $type = config('constants.lab_type.na');
-                break;
+        $privacy = config('constants.lab_privacy.yes');
+
+        $is_ai_created = config('constants.challenge_ai_created.no');
+        if ($request->has('is_ai_created')) {
+            switch ($request->is_ai_created) {
+                case 'yes':
+                    $is_ai_created = config('constants.challenge_ai_created.yes');
+                    break;
+                case 'no':
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+                default:
+                    $is_ai_created = config('constants.challenge_ai_created.no');
+                    break;
+            }
         }
 
-        $privacy = config('constants.lab_privacy.no');
-        switch($request->privacy) {
-            case 'yes':
-                $privacy = config('constants.lab_privacy.yes');
-                break;
-            case 'no':
-                $privacy = config('constants.lab_privacy.no');
-                break;
-            default:
-                $privacy = config('constants.lab_privacy.yes');
-                break;
-        }
         $model = new Lab();
-        $slug = UtilityHelper::generateSlug($request->title, $model);
+        $slug = UtilityHelper::generateSlug($request->labTitle, $model);
 
         $lab = new Lab();
         $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -177,22 +263,19 @@ class LabService
         $lab->level_id = $request->level_id;
         $lab->type = $type;
         $lab->slug = $slug;
-        $lab->title = $request->title;
-        $lab->description = $request->description;
+        $lab->title = $request->labTitle;
+        $lab->description = $request->labDescription;
         $lab->privacy = $privacy;
         $lab->media_type = 'image';
         $lab->media = $upload_cover_image;
-
         $lab->status = $status;
-
         $lab->total_share = 0;
-
         $lab->is_auto_created = '0';
-
-        $lab->is_resource_sequential = ($request->is_resource_sequential == 'yes') ? '1' : '0';
-        $lab->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
-        $lab->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
-        $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
+        $lab->is_ai_created = $is_ai_created;
+        $lab->is_resource_sequential = '0';
+        $lab->is_sequential = '0';
+        $lab->is_achievement_enabled = '0';
+        $lab->is_notification_enabled = '0';
         $lab->is_verified = '0';
         $lab->save();
 
@@ -207,7 +290,7 @@ class LabService
             if ($lab !== null) {
                 $privacy = $lab->privacy;
                 if ($request->has('privacy')) {
-                    switch($request->privacy) {
+                    switch ($request->privacy) {
                         case 'yes':
                             $privacy = config('constants.lab_privacy.yes');
                             break;
@@ -221,7 +304,7 @@ class LabService
                 }
 
                 $type = config('constants.lab_type.na');
-                switch($request->type) {
+                switch ($request->type) {
                     case 'assess':
                         $type = config('constants.lab_type.assess');
                         break;
@@ -255,6 +338,7 @@ class LabService
                 $lab->is_sequential = ($request->has('is_sequential')) ? (($request->is_sequential == 'yes') ? '1' : '0') : $lab->is_sequential;
                 $lab->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_achievement_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
                 $lab->is_notification_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_notification_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
+                $lab->is_live_event_enabled = $request->get('is_live_event_enabled') === 'yes' ? true : false;
                 $lab->save();
 
                 return $lab;
@@ -313,7 +397,7 @@ class LabService
     public function getLabListName($request, $organization)
     {
         try {
-            $lab_list = Lab::select('uuid', 'title', 'media')->where('organization_id', '=', $organization->id);
+            $lab_list = Lab::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $lab_list = self::filterLabList($lab_list, $request);
             $limit = config('site-settings.listing_limit');
 
@@ -381,6 +465,27 @@ class LabService
 
             return true;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnUUID($uUID)
+    {
+        try {
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnSkills($skills)
+    {
+        try {
+            $getLabIdsBasedOnSkills = LabSkillsGroupsStackService::getLabIdBasedOnSkill([$skills]);
+            $labs = Lab::whereIn('id', $getLabIdsBasedOnSkills)->take(config('site-settings.skills_par_module_limit'))->get();
+
+            return $labs;
+        } catch (\Exception $e) {
             return false;
         }
     }

@@ -7,5 +7,5 @@ return [
     'AWS_DEFAULT_REGION'          => env('AWS_DEFAULT_REGION'),
     'AWS_URL'                     => env('AWS_URL'),
     'AWS_ENDPOINT'                => env('AWS_ENDPOINT'),
-    'Aws_USE_PATH_STYLE_ENDPOINT' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+    'AWS_USE_PATH_STYLE_ENDPOINT' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
 ];

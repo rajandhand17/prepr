@@ -36,9 +36,18 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('api/v1/user/')->middleware('api')->group(base_path('routes/v1/user.php'));
 
             $this->mapProfileRoutes();
+            $this->mapDiscussionsRoute();
+            $this->mapExploreRoutes();
+            $this->mapCareerRoutes();
             $this->mapSettingRoutes();
             $this->mapManageRoutes();
             $this->mapPublicRoutes();
+            $this->mapChatRoutes();
+            $this->mapProjectRoutes();
+            $this->mapProjectMemberManagementRoutes();
+            $this->mapDashboardRoutes();
+            $this->mapTeamMatchingRoutes();
+            $this->mapGO1Routes();
         });
     }
 
@@ -69,9 +78,40 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/profile/')->middleware('api')->group(base_path('routes/v1/profile.php'));
     }
 
+    protected function mapExploreRoutes()
+    {
+        Route::prefix('api/v1/explore/')->middleware('api')->group(base_path('routes/v1/explore.php'));
+    }
+
+    protected function mapCareerRoutes()
+    {
+        Route::prefix('api/v1/career/')->middleware('api')->group(base_path('routes/v1/career.php'));
+    }
+
+    public function mapDiscussionsRoute()
+    {
+        Route::prefix('api/v1/discussion/')->middleware('api')->group(base_path('routes/v1/discussion.php'));
+    }
+
+    protected function mapChatRoutes()
+    {
+        Route::prefix('api/v1/chat/conversation')->middleware('api')->group(base_path('routes/v1/chat/conversation.php'));
+        Route::prefix('api/v1/chat/conversation')->middleware('api')->group(base_path('routes/v1/chat/message.php'));
+    }
+
     protected function mapSettingRoutes()
     {
         Route::prefix('api/v1/setting/')->middleware('api')->group(base_path('routes/v1/setting.php'));
+    }
+
+    protected function mapProjectRoutes()
+    {
+        Route::prefix('api/v1/project/')->middleware('api')->group(base_path('routes/v1/project.php'));
+    }
+
+    protected function mapProjectMemberManagementRoutes()
+    {
+        Route::prefix('api/v1/member-management/project/')->middleware('api')->group(base_path('routes/v1/project-member-management.php'));
     }
 
     protected function mapManageRoutes()
@@ -87,10 +127,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/resource-group/')->middleware('api')->group(base_path('routes/v1/manage/resource-group.php'));
         Route::prefix('api/v1/manage/lab-marketplace/')->middleware('api')->group(base_path('routes/v1/manage/lab-marketplace.php'));
         Route::prefix('api/v1/manage/challenge-template/')->middleware('api')->group(base_path('routes/v1/manage/challenge-template.php'));
+        Route::prefix('api/v1/manage/airmeet/')->middleware('api')->group(base_path('routes/v1/manage/airmeet.php'));
     }
 
     protected function mapPublicRoutes()
     {
+        Route::prefix('api/v1/public/scorm/')->middleware('api')->group(base_path('routes/v1/public/scorm.php'));
         Route::prefix('api/v1/public/organization/')->middleware('api')->group(base_path('routes/v1/public/organization.php'));
         Route::prefix('api/v1/public/lab/')->middleware('api')->group(base_path('routes/v1/public/lab.php'));
         Route::prefix('api/v1/public/invitation-management/')->middleware('api')->group(base_path('routes/v1/public/invitation-management.php'));
@@ -101,5 +143,23 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-collection/')->middleware('api')->group(base_path('routes/v1/public/resource-collection.php'));
         Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
+        Route::prefix('api/v1/public/skills/')->middleware('api')->group(base_path('routes/v1/public/skills.php'));
+    }
+
+    public function mapDashboardRoutes()
+    {
+        Route::prefix('api/v1/dashboard/organization')->middleware('api')->group(base_path('routes/v1/dashboard/organization.php'));
+        Route::prefix('api/v1/dashboard/lab')->middleware('api')->group(base_path('routes/v1/dashboard/lab.php'));
+        Route::prefix('api/v1/dashboard/user')->middleware('api')->group(base_path('routes/v1/dashboard/user.php'));
+    }
+
+    protected function mapTeamMatchingRoutes()
+    {
+        Route::prefix('api/v1/team/matching/')->middleware('api')->group(base_path('routes/v1/team-matching.php'));
+    }
+
+    public function mapGO1Routes()
+    {
+        Route::prefix('api/v1/go1')->middleware('api')->group(base_path('routes/v1/go1.php'));
     }
 }

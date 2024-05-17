@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\Chargebee\CreateCustomerJob;
+use App\Jobs\Chargebee\SubscribePlanJob;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +26,7 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -50,6 +54,8 @@ class User extends Authenticatable
         'is_profile_completed',
         'remember_token',
         'is_deactivated',
+        'go1_id',
+        'go1_user_metadata',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -60,6 +66,13 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $casts = ['go1_user_metadata' => 'object'];
+
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'users.'.$this->id;
+    }
 
     public function getProfileImageAttribute($value)
     {
@@ -163,6 +176,11 @@ class User extends Authenticatable
         return $this->hasMany(UserSkills::class)->where('pinned', '0');
     }
 
+    public function userJobs()
+    {
+        return $this->hasMany(UserJob::class)->where('pinned', '0');
+    }
+
     public function userTags()
     {
         return $this->hasMany(UserTag::class, 'user_id', 'id');
@@ -181,6 +199,16 @@ class User extends Authenticatable
     public function userPersonalFiles()
     {
         return $this->hasMany(UserPersonalFile::class);
+    }
+
+    public function userResume()
+    {
+        return $this->hasOne(UserPersonalFile::class)->where('type', '0');
+    }
+
+    public function userProjects()
+    {
+        return $this->hasMany(Project::class, 'user_id', 'id');
     }
 
     /**login apis */
@@ -213,27 +241,27 @@ class User extends Authenticatable
                         $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
-                            return ['success' => true, 'message'=> __('responses.two_factor_otp'), 'code' => 2];
+                            return ['success' => true, 'message' => __('responses.two_factor_otp'), 'code' => 2];
                         }
 
-                        return ['success' => false, 'message' => __('responses.failed_email'), 'code'=>null];
+                        return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
                     $data = User::where('email', $request->email)->first();
-                    $response = ['success' => true,  'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                    $response = ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                     return $response;
                 } else {
-                    $response = ['success' => false, 'message'=>__('responses.invalid_credentials'), 'code' => 4];
+                    $response = ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
 
                     return $response;
                 }
             } else {
-                $response = ['success' => false, 'message'=>__('responses.user_not_found'), 'code' => 5];
+                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 
                 return $response;
             }
         } catch (\Exception $e) {
-            $response = ['success' => false, 'message'=>__('responses.send_error'), 'code' => 6];
+            $response = ['success' => false, 'message' => __('responses.send_error'), 'code' => 6];
 
             return $response;
         }
@@ -288,7 +316,7 @@ class User extends Authenticatable
             if ($member_manager) {
                 foreach ($member_manager as $member) {
                     $user->attachRole($member->role, $member->module_id);
-                    $member_manager = MemberManagement::where('id', $member->id)->update(['invite_status'=>'1']);
+                    $member_manager = MemberManagement::where('id', $member->id)->update(['invite_status' => '1']);
                 }
             }
             if ($user->id) {
@@ -303,7 +331,14 @@ class User extends Authenticatable
                     $user = User::find($user->id);
                     $user->attachRole('organization_owner', $organization->id);
                     $request->user_type = 'employee';
+
+                    // Jobs for creating customer and subscribe plan
+                    $planDetail = config('chargebee.chargebee_plan.unlimited_plan'); //Default plan selected
+                    CreateCustomerJob::withChain([
+                        new SubscribePlanJob($user, $organization, $planDetail),
+                    ])->dispatch($user);
                 }
+                $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
                 if ($userpersonal && $usersetting) {
@@ -392,7 +427,7 @@ class User extends Authenticatable
                 if ($user->save()) {
                     /**sending otp for forget password*/
                     if ($request->purpose === 'forget_password') {
-                        $data = ['subject' =>__('responses.email_subject_forget_password'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
+                        $data = ['subject' => __('responses.email_subject_forget_password'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                         $mail = SendMailHelper::sendMail($user, 'email.forget_password_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'forget_password', 'code' => 1];
@@ -404,7 +439,7 @@ class User extends Authenticatable
                     }
                     /**sending otp for verify email*/
                     if ($request->purpose === 'verify_email') {
-                        $data = ['subject' =>__('responses.verify_your_email'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
+                        $data = ['subject' => __('responses.verify_your_email'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                         $mail = SendMailHelper::sendMail($user, 'email.verify_otp', $data);
                         if ($mail) {
                             $response = ['success' => true, 'purpose' => 'verify_email', 'code' => 2];
@@ -456,7 +491,7 @@ class User extends Authenticatable
                 $user->email_verified_at = Carbon::now();
                 $user->verified_user = '1';
                 if ($user->save()) {
-                    $data = ['subject' =>__('responses.email_subject_verified_successfully'), 'first_name' => $user->first_name, 'last_name' => $user->last_name];
+                    $data = ['subject' => __('responses.email_subject_verified_successfully'), 'first_name' => $user->first_name, 'last_name' => $user->last_name];
                     $mail = SendMailHelper::sendMail($user, 'email.verified_successfully', $data);
                     if ($mail) {
                         $success = ['success' => true, 'user' => $user, 'code' => 2];
@@ -469,7 +504,7 @@ class User extends Authenticatable
 
                 return false;
             } else {
-                $response = ['success' => false, 'message' =>__('responses.otp_correct_required'), 'code' => 4];
+                $response = ['success' => false, 'message' => __('responses.otp_correct_required'), 'code' => 4];
 
                 return $response;
             }
@@ -529,7 +564,7 @@ class User extends Authenticatable
             $user = User::where(['email' => $request->email])->first();
             /**check user account verified or not */
             if ($user->verified_user == 0) {
-                $response = ['success' => false, 'message' =>__('responses.account_not_verified'), 'code' => 1];
+                $response = ['success' => false, 'message' => __('responses.account_not_verified'), 'code' => 1];
 
                 return $response;
             }
@@ -548,7 +583,7 @@ class User extends Authenticatable
                     return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
                 }
             } else {
-                $response = ['success' => false, 'message' =>__('responses.otp_correct_required'), 'code' => 3];
+                $response = ['success' => false, 'message' => __('responses.otp_correct_required'), 'code' => 3];
 
                 return $response;
             }
@@ -600,7 +635,7 @@ class User extends Authenticatable
                 } else {
                     $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
                 }
-                $response = ['success' => true,  'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                $response = ['success' => true, 'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                 return $response;
             } else {
@@ -633,7 +668,7 @@ class User extends Authenticatable
 //                } else {
 //                    $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
 //                }
-                $response = ['success' => true,  'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                $response = ['success' => true, 'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                 return $response;
             } else {
@@ -641,7 +676,7 @@ class User extends Authenticatable
                     'user'         => $magnetUserDetails['data'],
                     'access_token' => $magnetUserDetails['access_token'],
                 ];
-                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData,  'code' => 5];
+                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData, 'code' => 5];
 
                 return $response;
             }
@@ -664,5 +699,15 @@ class User extends Authenticatable
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_users', 'user_id', 'conversation_id');
+    }
+
+    public function presence()
+    {
+        return $this->hasOne(ConversationUserPresenceStatus::class, 'user_id', 'id');
     }
 }
