@@ -43,8 +43,8 @@ class UserEducation extends Command
                     $createdAt = !empty($single_user_education->created_at) ? Carbon::createFromTimestamp($single_user_education->created_at) : null;
                     $updatedAt = !empty($single_user_education->updated_at) ? Carbon::createFromTimestamp($single_user_education->updated_at) : null;
                     $deletedAt = !empty($single_user_education->deleted_at) ? Carbon::createFromTimestamp($single_user_education->deleted_at) : null;
-                    $startAt   = !empty($single_user_education->start_date) ? Carbon::createFromTimestamp($single_user_education->start_date) : null;
-                    $endAt     = !empty($single_user_education->end_date) ? Carbon::createFromTimestamp($single_user_education->end_date) : null;
+                    $startAt = !empty($single_user_education->start_date) ? Carbon::createFromTimestamp($single_user_education->start_date) : null;
+                    $endAt = !empty($single_user_education->end_date) ? Carbon::createFromTimestamp($single_user_education->end_date) : null;
                     // Fill the model attributes
                     $userEducation->fill([
                         'user_id'      => $single_user_education->user_id,
