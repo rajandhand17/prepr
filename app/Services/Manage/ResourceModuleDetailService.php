@@ -34,11 +34,16 @@ class ResourceModuleDetailService
                     if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
                         $file_type = config('constants.file_type.image');
                         $uploaded_file_path = FileUploadHelper::uploadImageToS3($file_upload, 'resource_file');
+                    } elseif (false !== mb_strpos($file_upload->getMimeType(), 'video')) {
+                        $file_type = config('constants.file_type.video');
+                        $uploaded_file_path = FileUploadHelper::uploadVideoToS3($file_upload, 'resource_file');
+                    } elseif (false !== mb_strpos($file_upload->getMimeType(), 'audio')) {
+                        $file_type = config('constants.file_type.audio');
+                        $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'resource_file');
                     } else {
-                        $file_type = (mb_strpos($file_upload->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
-                        $uploaded_file_path = FileUploadHelper::UploadVideoDocToS3($file_upload, 'resource_file');
+                        $file_type = config('constants.file_type.document');
+                        $uploaded_file_path = FileUploadHelper::uploadDocToS3($file_upload, 'resource_file');
                     }
-
                     if ($uploaded_file_path == false) {
                         return false;
                     }

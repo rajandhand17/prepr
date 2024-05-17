@@ -337,8 +337,8 @@ class User extends Authenticatable
                     CreateCustomerJob::withChain([
                         new SubscribePlanJob($user, $organization, $planDetail),
                     ])->dispatch($user);
+                    $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
                 }
-                $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
                 if ($userpersonal && $usersetting) {
