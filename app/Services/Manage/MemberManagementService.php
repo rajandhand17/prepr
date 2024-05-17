@@ -724,10 +724,10 @@ class MemberManagementService
                 case 'lab':
                     $memberManagement = self::getFilteredMemberManagementList(
                         [
-                        'module_id'    => $componentId,
-                        'module_type'  => config('constants.module_component_type.lab'),
-                        'invite_status'=> config('constants.member_management_invite_status.accepted'),
-                    ]
+                            'module_id'    => $componentId,
+                            'module_type'  => config('constants.module_component_type.lab'),
+                            'invite_status'=> config('constants.member_management_invite_status.accepted'),
+                        ]
                     )->pluck('email');
                     break;
                 case 'organization':

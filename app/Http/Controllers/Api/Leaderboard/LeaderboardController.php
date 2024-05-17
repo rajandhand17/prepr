@@ -30,8 +30,10 @@ class LeaderboardController extends AppBaseController
                     'total_pages'  => $user->lastPage(),
                     'list'         => LeaderboardResource::collection($user),
                 ];
-               return $this->sendResponse($response, __('responses.leaderboard_list'));
+
+                return $this->sendResponse($response, __('responses.leaderboard_list'));
             }
+
             return $this->sendResponse([], __('responses.leaderboard_list'));
         } catch (\Exception $e) {
             return $this->sendError('responses.send_error', 500);
