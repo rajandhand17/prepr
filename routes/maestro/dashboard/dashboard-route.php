@@ -8,6 +8,6 @@ use Illuminate\Support\Facades\Route;
 //     Route::get('dashboard', [MaestroDashboardController::class, 'index']);
 // });
 
-    Route::get('/', [MaestroDashboardController::class, 'index']);
-    Route::get('dashboard', [MaestroDashboardController::class, 'index']);
+    Route::get('/', [MaestroDashboardController::class, 'index'])->name('superAdminDashboard');
+    Route::get('dashboard', [MaestroDashboardController::class, 'index'])->name('superAdminDashboard');
 

@@ -13,7 +13,7 @@ class MaestroDashboardController extends AppBaseController
      */
     public function index()
     {
-        return view('welcome');
+        return view('maestro.dashboard.dashboard');
     }
 
     /**
