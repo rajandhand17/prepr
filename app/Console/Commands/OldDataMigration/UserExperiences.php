@@ -47,8 +47,8 @@ class UserExperiences extends Command
                     $createdAt = !empty($experience->created_at) ? Carbon::createFromTimestamp($experience->created_at) : null;
                     $updatedAt = !empty($experience->updated_at) ? Carbon::createFromTimestamp($experience->updated_at) : null;
                     $deletedAt = !empty($experience->deleted_at) ? Carbon::createFromTimestamp($experience->deleted_at) : null;
-                    $start_date= !empty($experience->start_Date) ? Carbon::createFromTimestamp($experience->start_date):null;                    // Fill the model attributes
-                    $end_date  = !empty($experience->end_Date) ? Carbon::createFromTimestamp($experience->end_Date):null;                    // Fill the model attributes
+                    $start_date = !empty($experience->start_Date) ? Carbon::createFromTimestamp($experience->start_date) : null;                    // Fill the model attributes
+                    $end_date = !empty($experience->end_Date) ? Carbon::createFromTimestamp($experience->end_Date) : null;                    // Fill the model attributes
                     $userExperience->fill([
                         'user_id'     => $experience->user_id,
                         'company'     => $experience->company,
