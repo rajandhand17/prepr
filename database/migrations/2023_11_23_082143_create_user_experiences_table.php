@@ -13,8 +13,8 @@ return new class() extends Migration {
         Schema::create('user_experiences', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('company');
-            $table->string('position');
+            $table->string('company')->nullable();
+            $table->string('position')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->string('address')->nullable();
