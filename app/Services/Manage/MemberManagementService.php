@@ -722,14 +722,16 @@ class MemberManagementService
         try {
             switch ($component) {
                 case 'lab':
-                    $memberManagement = MemberManagement::where([
+                    $memberManagement = self::getFilteredMemberManagementList(
+                        [
                         'module_id'    => $componentId,
                         'module_type'  => config('constants.module_component_type.lab'),
                         'invite_status'=> config('constants.member_management_invite_status.accepted'),
-                    ])->pluck('email');
+                    ]
+                    )->pluck('email');
                     break;
                 case 'organization':
-                    $memberManagement = MemberManagementService::getFilteredMemberManagementList(
+                    $memberManagement = self::getFilteredMemberManagementList(
                         [
                             'module_type'   => config('constants.module_component_type.organization'),
                             'module_id'     => $componentId,
@@ -738,7 +740,7 @@ class MemberManagementService
                     )->pluck('email');
                     break;
                 case 'challenge':
-                    $memberManagement = MemberManagementService::getFilteredMemberManagementList(
+                    $memberManagement = self::getFilteredMemberManagementList(
                         [
                             'module_type'   => config('constants.module_component_type.challenge'),
                             'module_id'     => $componentId,

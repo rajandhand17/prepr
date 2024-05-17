@@ -27,11 +27,6 @@ class LeaderboardRepository implements LeaderboardInterface
     {
         try {
             $membersEmails = new Collection();
-            if (auth()->user()->hasRole([
-                'organization_owner', 'organization_manager', 'lab_manager', 'challenge_manager', 'resource_manager',
-            ])) {
-                $membersEmails=$this->memberManagerService->getMemberManagerModuleEmail(auth()->user()->id);
-            }
             if (
                 ($request->has('organization_id') && !empty($request->organization_id)) ||
                 ($request->has('lab_id') && !empty($request->lab_id)) ||
@@ -42,7 +37,8 @@ class LeaderboardRepository implements LeaderboardInterface
             if ($request->has('project_id') && !empty($request->project_id)) {
                 $membersEmails = $membersEmails->merge(ProjectMemberManagementService::getProjectMemberManagementEmails($request->project_id));
             }
-            $user = $this->userService->getLeaderBoardList($request, $membersEmails);
+            $uniqueEmails = $membersEmails->unique();
+            $user = $this->userService->getLeaderBoardList($request, $uniqueEmails);
 
             return $user;
         } catch (\Exception $e) {
