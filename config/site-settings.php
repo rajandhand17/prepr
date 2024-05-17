@@ -44,5 +44,5 @@ return [
 
     'default_logo_image'        => 'default_images/prepr_logo.webp',
     'default_achievement_image' => 'default_images/badge.webp',
-
+    'maestro_cdn_url'           => env('CDN_URL'),
 ];
