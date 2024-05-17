@@ -8,6 +8,7 @@ use App\Notifications\InviteMemberNotification;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
 use stdClass;
 
@@ -687,6 +688,117 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function getMembersManagerUsersBasedOnFilter($request)
+    {
+        try {
+            $membersEmails = new Collection();
+            $organization_id = new Collection();
+            $lab_id = new Collection();
+            $challenge_id = new Collection();
+            if ($request->has('organization_id') && !empty($request->organization_id)) {
+                $organization_id = MemberManagementService::getMembersBasedOnComponentId('organization', $request->organization_id);
+            }
+            if ($request->has('lab_id') && !empty($request->lab_id)) {
+                $lab_id = MemberManagementService::getMembersBasedOnComponentId('lab', $request->lab_id);
+            }
+            if ($request->has('challenge_id') && !empty($request->challenge_id)) {
+                $challenge_id = MemberManagementService::getMembersBasedOnComponentId('challenge', $request->challenge_id);
+            }
+
+            $mergedEmails = $membersEmails->merge($organization_id)->merge($lab_id)->merge($challenge_id);
+
+            return  $mergedEmails;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getMembersBasedOnComponentId($component, $componentId)
+    {
+        try {
+            switch ($component) {
+                case 'lab':
+                    $memberManagement = self::getFilteredMemberManagementList(
+                        [
+                            'module_id'    => $componentId,
+                            'module_type'  => config('constants.module_component_type.lab'),
+                            'invite_status'=> config('constants.member_management_invite_status.accepted'),
+                        ]
+                    )->pluck('email');
+                    break;
+                case 'organization':
+                    $memberManagement = self::getFilteredMemberManagementList(
+                        [
+                            'module_type'   => config('constants.module_component_type.organization'),
+                            'module_id'     => $componentId,
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
+                        ]
+                    )->pluck('email');
+                    break;
+                case 'challenge':
+                    $memberManagement = self::getFilteredMemberManagementList(
+                        [
+                            'module_type'   => config('constants.module_component_type.challenge'),
+                            'module_id'     => $componentId,
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
+                        ]
+                    )->pluck('email');
+                    break;
+            }
+
+            return $memberManagement;
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function getMemberManagerModuleEmail($id)
+    {
+        try {
+            return MemberManagement::where(['user_id' => $id])->where(function ($query) {
+                $query->where('role', '=', 'challenge_manager')
+                    ->orWhere('role', '=', 'lab_manager')
+                    ->orWhere('role', '=', 'resource_manager')
+                    ->orWhere('role', '=', 'organization_manager')
+                    ->orWhere('role', '=', 'super_admin');
+            })->pluck('email');
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationIdBasedOnInviterId($component, $inviterId)
+    {
+        try {
+            $memberManagement = '';
+            switch ($component) {
+                case 'lab':
+                    $memberManagement = MemberManagement::join('labs', 'member_management.module_id', '=', 'labs.id')
+                    ->where([
+                        'inviter_id'    => $inviterId,
+                        'module_type'   => config('constants.module_component_type.lab'),
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
+                    ])->pluck('organization_id')->unique();
+                    break;
+                case 'challenge':
+
+                    $memberManagement = MemberManagement::join('challenges', 'member_management.module_id', '=', 'challenges.id')
+                        ->where([
+                            'inviter_id'    => $inviterId,
+                            'module_type'   => config('constants.module_component_type.challenge'),
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
+                        ])->pluck('organization_id')->unique();
+                    break;
+            }
+
+            return  $memberManagement;
+        } catch (\Exception $e) {
+            dd($e);
+
             return false;
         }
     }

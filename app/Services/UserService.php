@@ -196,4 +196,69 @@ class UserService
             return false;
         }
     }
+
+    public static function getLeaderBoardList($request, $emails)
+    {
+        try {
+            $authUserId = auth()->user()->id;
+            $users = User::select();
+            $users = self::filterLeaderboardUsers($users, $request, $emails);
+            $users = $users->pluck('id');
+            if ($users->contains($authUserId)) {
+                $users = $users->reject(function ($user) use ($authUserId) {
+                    return $user === $authUserId;
+                });
+            }
+            $userIds = $users->prepend($authUserId)->all();
+            $userRecords = User::whereIn('id', $userIds)
+                ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
+                ->paginate(config('site-settings.pagination_per_page'));
+
+            return $userRecords;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getComponentBasedUsers($membersEmails, $request)
+    {
+        try {
+            $users = User::whereIn('email', $membersEmails);
+            $users = self::filterLeaderboardUsers($users, $request);
+            $userIds = $users->pluck('id')->all();
+            $userRecords = User::whereIn('id', $userIds)
+                    ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
+                   ->paginate(config('site-settings.pagination_per_page'));
+
+            return $userRecords;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function filterLeaderboardUsers($users, $request, $membersEmails = null)
+    {
+        try {
+            if (isset($membersEmails) && !empty($membersEmails) && $membersEmails !== null) {
+                $users = $users->whereIn('email', $membersEmails);
+            }
+            switch ($request->sort_by) {
+                case 'learning_points':
+                    $users = $users->orderBy('user_points', 'desc')->take(20);
+                    break;
+                case 'learning_rank':
+                    $users = $users->orderBy('user_rank', 'desc')->take(20);
+                    break;
+                case 'achievement':
+                    $users = $users->orderBy('achievement_count', 'desc')->take(20);
+                    break;
+                default:
+                    $users = $users->orderBy('user_points', 'desc')->take(20);
+            }
+
+            return $users;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

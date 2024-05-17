@@ -152,10 +152,10 @@ class ProjectMemberManagementService
                 if (($handle = fopen($file->getPathname(), 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
                     $count_header = count($header);
-                    if ($count_header == 3 && in_array('Name', $header) && in_array('Email', $header) && in_array('Role', $header)) {
+                    if ($count_header == 3 && in_array('Name', $header) && in_array('Email', $header) && in_array('Access', $header)) {
                         $email_column = array_search('Email', $header);
                         $name_column = array_search('Name', $header);
-                        $access_column = array_search('Role', $header);
+                        $access_column = array_search('Access', $header);
                         if ($email_column === false || $name_column === false || $access_column === false) {
                             fclose($handle);
 
@@ -601,6 +601,28 @@ class ProjectMemberManagementService
             ])->pluck('project_id');
 
             return $getMatchedTeams;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getProjectMemberManagementEmails($projectId)
+    {
+        try {
+            $memberManagement = ProjectMemberManagement::where([
+                'project_id'    => $projectId,
+                'invite_status' => config('constants.member_management_invite_status.accepted'),
+            ])->pluck('email');
+
+            return $memberManagement;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getMembersBasedOnProjectId()
+    {
+        try {
         } catch (\Exception $e) {
             return false;
         }
