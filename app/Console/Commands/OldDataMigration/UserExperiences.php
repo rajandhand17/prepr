@@ -49,23 +49,25 @@ class UserExperiences extends Command
                     $deletedAt = !empty($experience->deleted_at) ? Carbon::createFromTimestamp($experience->deleted_at) : null;
                     $start_date= !empty($experience->start_Date) ? Carbon::createFromTimestamp($experience->start_date):null;                    // Fill the model attributes
                     $end_date  = !empty($experience->end_Date) ? Carbon::createFromTimestamp($experience->end_Date):null;                    // Fill the model attributes
-                    $userExperience->fill([
-                        'user_id'     => $experience->user_id,
-                        'company'     => $experience->company,
-                        'position'    => $experience->position,
-                        'start_date'  => $start_date,
-                        'end_date'    => $end_date,
-                        'address'     => $experience->address,
-                        'state'       => $experience->state,
-                        'country'     => $experience->country,
-                        'description' => $experience->description,
-                        'created_at'  => $createdAt,
-                        'updated_at'  => $updatedAt,
-                        'deleted_at'  => $deletedAt,
-                    ]);
+                    if($experience->company && $experience->position){
+                        $userExperience->fill([
+                            'user_id'     => $experience->user_id,
+                            'company'     => $experience->company,
+                            'position'    => $experience->position,
+                            'start_date'  => $start_date,
+                            'end_date'    => $end_date,
+                            'address'     => $experience->address,
+                            'state'       => $experience->state,
+                            'country'     => $experience->country,
+                            'description' => $experience->description,
+                            'created_at'  => $createdAt,
+                            'updated_at'  => $updatedAt,
+                            'deleted_at'  => $deletedAt,
+                        ]);
 
-                    // Save the model
-                    $userExperience->save();
+                        // Save the model
+                        $userExperience->save();
+                    }
                 }
             });
             DB::commit();

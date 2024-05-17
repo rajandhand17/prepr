@@ -39,13 +39,12 @@ class UserEducation extends Command
                     }
                     // Retrieve an existing UserEducation or create a new one
                     $userEducation = \App\Models\UserEducation::firstOrNew(['id' => $single_user_education->id]);
-
                     // Parse date fields with Carbon or set them to null if empty
-                    $createdAt = !empty($single_user_education->created_at) ? Carbon::parse($single_user_education->created_at) : null;
-                    $updatedAt = !empty($single_user_education->updated_at) ? Carbon::parse($single_user_education->updated_at) : null;
-                    $deletedAt = !empty($single_user_education->deleted_at) ? Carbon::parse($single_user_education->deleted_at) : null;
-                    $startAt   = !empty($single_user_education->start_date) ? Carbon::parse($single_user_education->start_date) : null;
-                    $endAt     = !empty($single_user_education->end_date) ? Carbon::parse($single_user_education->end_date) : null;
+                    $createdAt = !empty($single_user_education->created_at) ? Carbon::createFromTimestamp($single_user_education->created_at) : null;
+                    $updatedAt = !empty($single_user_education->updated_at) ? Carbon::createFromTimestamp($single_user_education->updated_at) : null;
+                    $deletedAt = !empty($single_user_education->deleted_at) ? Carbon::createFromTimestamp($single_user_education->deleted_at) : null;
+                    $startAt   = !empty($single_user_education->start_date) ? Carbon::createFromTimestamp($single_user_education->start_date) : null;
+                    $endAt     = !empty($single_user_education->end_date) ? Carbon::createFromTimestamp($single_user_education->end_date) : null;
                     // Fill the model attributes
                     $userEducation->fill([
                         'user_id'      => $single_user_education->user_id,
