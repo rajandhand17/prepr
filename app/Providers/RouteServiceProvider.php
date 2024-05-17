@@ -48,6 +48,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapDashboardRoutes();
             $this->mapTeamMatchingRoutes();
             $this->mapGO1Routes();
+            $this->mapLeaderboardRoutes();
         });
     }
 
@@ -86,6 +87,11 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapCareerRoutes()
     {
         Route::prefix('api/v1/career/')->middleware('api')->group(base_path('routes/v1/career.php'));
+    }
+
+    protected function mapLeaderboardRoutes()
+    {
+        Route::prefix('api/v1/leaderboard/')->middleware('api')->group(base_path('routes/v1/leaderboard.php'));
     }
 
     public function mapDiscussionsRoute()
@@ -127,6 +133,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/resource-group/')->middleware('api')->group(base_path('routes/v1/manage/resource-group.php'));
         Route::prefix('api/v1/manage/lab-marketplace/')->middleware('api')->group(base_path('routes/v1/manage/lab-marketplace.php'));
         Route::prefix('api/v1/manage/challenge-template/')->middleware('api')->group(base_path('routes/v1/manage/challenge-template.php'));
+        Route::prefix('api/v1/manage/airmeet/')->middleware('api')->group(base_path('routes/v1/manage/airmeet.php'));
     }
 
     protected function mapPublicRoutes()

@@ -307,6 +307,17 @@ class PermissionSeeder extends Seeder
                 'display_name' => 'Create Resource Module From go1',
                 'description'  => 'Allow user to create resource from go1',
             ],
+
+            [
+                'name'         => 'can_send_live_event_invitation_lab',
+                'display_name' => 'Send live event invitation link to lab members via email.',
+                'description'  => 'Allow user to send live event invitation link to lab members via email ',
+            ],
+            [
+                'name'         => 'can_join_live_event_lab',
+                'display_name' => 'Join live event associated with labs.',
+                'description'  => 'Allow user to join live event associated with labs.',
+            ],
         ];
 
         foreach ($permission as $key => $permission_array) {

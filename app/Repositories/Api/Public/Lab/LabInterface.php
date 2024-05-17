@@ -2,6 +2,9 @@
 
 namespace App\Repositories\Api\Public\Lab;
 
+use App\Models\Lab;
+use App\Models\User;
+
 interface LabInterface
 {
     public function getList($request);
@@ -17,4 +20,10 @@ interface LabInterface
     public function joinLab($lab, $component, $request, $memberList);
 
     public function unJoinLab($lab, $component, $request);
+
+    public function canJoinLiveEvent(Lab $lab, User $user);
+
+    public function sendLiveEventInvitationLinkToMembers(Lab $lab);
+
+    public function liveEventDetails(Lab $lab);
 }

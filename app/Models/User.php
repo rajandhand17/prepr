@@ -89,6 +89,11 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class);
     }
 
+    public function userPoints()
+    {
+        return $this->hasMany(UserPoint::class);
+    }
+
     public function userLabs()
     {
         return $this->hasMany(Lab::class, 'user_id', 'id');
@@ -337,8 +342,8 @@ class User extends Authenticatable
                     CreateCustomerJob::withChain([
                         new SubscribePlanJob($user, $organization, $planDetail),
                     ])->dispatch($user);
+                    $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
                 }
-                $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
                 if ($userpersonal && $usersetting) {

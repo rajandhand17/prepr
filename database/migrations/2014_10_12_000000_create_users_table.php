@@ -30,6 +30,7 @@ return new class() extends Migration {
             $table->text('profile_image')->nullable();
             $table->integer('user_points')->nullable();
             $table->integer('user_rank')->nullable();
+            $table->integer('achievement_count')->nullable();
             $table->enum('verified_user', ['0', '1'])->comment('0 -> no, 1 -> yes')->default('0');
             $table->string('verify_token')->nullable();
             $table->string('referral_code')->nullable();

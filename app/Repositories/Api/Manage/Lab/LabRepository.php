@@ -2,7 +2,9 @@
 
 namespace App\Repositories\Api\Manage\Lab;
 
+use App\Models\Lab;
 use App\Services\DurationService;
+use App\Services\Manage\AirmeetEventService;
 use App\Services\Manage\AIService;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
@@ -30,8 +32,9 @@ class LabRepository implements LabInterface
     private $componentAssociationService;
     private $durationService;
     private $aiService;
+    private $airmeetEventService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService)
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, AirmeetEventService $airmeetEventService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -44,6 +47,7 @@ class LabRepository implements LabInterface
         $this->componentAssociationService = $componentAssociationService;
         $this->durationService = $durationService;
         $this->aiService = $aiService;
+        $this->airmeetEventService = $airmeetEventService;
     }
 
     public function getLabCountBasedOnOrganization($organizationId)
@@ -95,6 +99,16 @@ class LabRepository implements LabInterface
                     $createdLabAchievement = $this->labAcheivementService->createLabAchievement($request, $createLab, $upload_achievements_image);
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLab);
+                /** LIVE EVENT */
+                if ($request->get('is_live_event_enabled') === 'yes') {
+                    $createdEvent = $this->airmeetEventService->createUpdateEvent(
+                        Lab::class,
+                        $createLab->id,
+                        [
+                            'live_event_url' => $request->validated('live_event.url'),
+                        ]
+                    );
+                }
 
                 return [
                     'createdLab'                  => $createLab,
@@ -104,6 +118,7 @@ class LabRepository implements LabInterface
                     'createdLabExternalLinks'     => $createdLabExternalLinks,
                     'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
                     'createdLabAssociations'      => $createdLabAssociations,
+                    'createdEvent'                => $request->is_live_event_enabled == 'yes' ? $createdEvent : true,
                 ];
             });
             if (
@@ -113,7 +128,8 @@ class LabRepository implements LabInterface
                 $createdLab['createdLabTagAssociations'] &&
                 $createdLab['createdLabExternalLinks'] &&
                 $createdLab['createdLabAchievement'] &&
-                $createdLab['createdLabAssociations']
+                $createdLab['createdLabAssociations'] &&
+                $createdLab['createdEvent']
             ) {
                 DB::commit();
 
@@ -144,6 +160,16 @@ class LabRepository implements LabInterface
                     $updatedLabAchievement = $this->labAcheivementService->updateLabAchievement($request, $updateLab->id, $upload_achievement_image);
                 }
                 $updatedLabAssociations = $this->componentAssociationService->updateLabAssociation($request, $updateLab->id);
+                /** LIVE EVENT */
+                if ($request->get('is_live_event_enabled') === 'yes') {
+                    $updatedEvent = $this->airmeetEventService->createUpdateEvent(
+                        Lab::class,
+                        $updateLab->id,
+                        [
+                            'live_event_url' => $request->validated('live_event.url'),
+                        ]
+                    );
+                }
 
                 return [
                     'updatedLab'                  => $updateLab,
@@ -153,6 +179,7 @@ class LabRepository implements LabInterface
                     'updatedLabExternalLinks'     => $updatedLabExternalLinks,
                     'updatedLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
                     'updatedLabAssociations'      => $updatedLabAssociations,
+                    'updatedEvent'                => $request->is_live_event_enabled == 'yes' ? $updatedEvent : true,
                 ];
             });
             if (
