@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Services\Manage\MemberManagementService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 
