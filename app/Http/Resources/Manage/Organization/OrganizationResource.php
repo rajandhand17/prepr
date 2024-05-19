@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\Organization;
 
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -27,6 +28,9 @@ class OrganizationResource extends JsonResource
             $category_id = null;
         }
 
+        if (empty($this->chargebee_details)) {
+            $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
+        }
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -49,6 +53,7 @@ class OrganizationResource extends JsonResource
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_people'          => MemberManagementResource::collection($this->members),
+            'organization_limits'          => OrganizationChargebeeLimitResource::make($this),
         ];
     }
 }
