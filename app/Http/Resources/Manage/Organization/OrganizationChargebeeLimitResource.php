@@ -60,6 +60,7 @@ class OrganizationChargebeeLimitResource extends JsonResource
                 $userInviteLimit = $this->chargebee_details->user_invite_limits;
                 $managerLimit = $this->chargebee_details->organization_invite_limits;
             }
+
             return [
                 'plan'                      => $planName,
                 'labLimit'                  => $labLimit,

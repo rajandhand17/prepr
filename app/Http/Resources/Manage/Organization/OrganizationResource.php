@@ -31,6 +31,7 @@ class OrganizationResource extends JsonResource
         if (empty($this->chargebee_details)) {
             $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
