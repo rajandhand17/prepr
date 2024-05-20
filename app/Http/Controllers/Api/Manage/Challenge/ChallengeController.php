@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\Challenge;
 use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
+use App\Http\Requests\Manage\Challenge\CreateChallengeFromResourceUsingAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
@@ -502,7 +503,7 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function createChallengeFromResourceUsingAIPreview(Request $request)
+    public function createChallengeFromResourceUsingAIPreview(CreateChallengeFromResourceUsingAIPreviewRequest $request)
     {
         try {
             // checks creation limits of the Challenge
@@ -518,7 +519,7 @@ class ChallengeController extends AppBaseController
             if ($createChallengeFromResourceUsingAIPreview) {
                 return $this->sendResponse($createChallengeFromResourceUsingAIPreview, __('responses.challenges_previews_created_successfully'), 200);
             } else {
-                throw new Exception('createChallengeUsingAIPreview has no value!');
+                throw new Exception('createChallengeFromResourceUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
             Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeController.php: '.$e->getMessage());
