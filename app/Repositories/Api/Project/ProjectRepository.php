@@ -17,6 +17,7 @@ use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
 use App\Services\ProjectSkillsService;
 use App\Services\ProjectSocialActivitiesService;
+use App\Services\Manage\AIService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -36,8 +37,9 @@ class ProjectRepository implements ProjectInterface
     private $challengeAssessmentUserService;
     private $projectSkillsService;
     private $projectHistoryService;
+    private $aiService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService, AIService $aiService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -53,6 +55,7 @@ class ProjectRepository implements ProjectInterface
         $this->challengeAssessmentUserService = $challengeAssessmentUserService;
         $this->projectSkillsService = $projectSkillsService;
         $this->projectHistoryService = $projectHistoryService;
+        $this->aiService = $aiService;
     }
 
     public function getMyProjectIds($userId)

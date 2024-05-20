@@ -1137,5 +1137,7 @@
     "responses.bloom_plan": "Bloom Plan",
     "responses.budd_plan": "Budd Plan",
     "responses.sprout_plan": "Sprout Plan",
-    "responses.enterprise_plan": "Enterprise Plan"
+    "responses.enterprise_plan": "Enterprise Plan",
+    "responses.resource_modules_exists": "This resource module does not exist!",
+    "responses.is_ai_created_required": "is_ai_created value is required!"
 }
