@@ -502,6 +502,31 @@ class ChallengeController extends AppBaseController
         }
     }
 
+    public function createChallengeFromResourceUsingAIPreview(Request $request)
+    {
+        try {
+            // checks creation limits of the Challenge
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
+                if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+            }
+            $createChallengeFromResourceUsingAIPreview = $this->challengeRepository->createChallengeFromResourceUsingAIPreview($request);
+
+            if ($createChallengeFromResourceUsingAIPreview) {
+                return $this->sendResponse($createChallengeFromResourceUsingAIPreview, __('responses.challenges_previews_created_successfully'), 200);
+            } else {
+                throw new Exception('createChallengeUsingAIPreview has no value!');
+            }
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
     public function createChallengeUsingAI(CreateChallengeUsingAIRequest $request)
     {
         try {

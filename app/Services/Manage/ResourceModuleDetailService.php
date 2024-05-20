@@ -170,15 +170,16 @@ class ResourceModuleDetailService
             }
 
             foreach ($request['resource_module_items'] as $item) {
+                $type = ($item['type'] == "link") ? '5' : ((isset($item['embedHTML']) && !empty($item['embedHTML'])) ? '3' : '1');
                 $resourceDetail = new ResourceModuleDetail([
                     'title'              => $item['title'],
-                    'path'               => $item['url'],
+                    'path'               => (isset($item['embedHTML']) && !empty($item['embedHTML'])) ? $item['embedHTML'] : $item['url'],
                     'resource_module_id' => $resource_module_id,
-                    'type'               => (isset($item['embedHTML']) && !empty($item['embedHTML'])) ? '3' : '1',
+                    'type'               => $type,
                 ]);
 
                 if (!$resourceDetail->save()) {
-                    Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: Failed to save resource detail for title: '.$item['title']);
+                    Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: Failed to save resource detail for title: ' . $item['title']);
 
                     return false;
                 }
@@ -186,7 +187,7 @@ class ResourceModuleDetailService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: '.$e->getMessage());
+            Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: ' . $e->getMessage());
 
             return false;
         }
