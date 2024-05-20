@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Chargebee;
 
 use App\Helpers\ChargebeeHelper;
+use App\Models\ChargebeeSubscription;
 use App\Models\Organization;
 use Exception;
 use Illuminate\Console\Command;
@@ -34,7 +35,10 @@ class FeedChargebeeDataToDataBase extends Command
             DB::beginTransaction();
             $fetchOrganizations = Organization::orderBy('id', 'ASC')->get();
             foreach ($fetchOrganizations as $organization) {
-                $organizationData = ChargebeeHelper::createChargebeePlanDetails($organization->id);
+                $checkChargebeeDetail = ChargebeeSubscription::where('organization_id', $organization->id)->first();
+                if (!$checkChargebeeDetail) {
+                    $organizationData = ChargebeeHelper::createChargebeePlanDetails($organization->id);
+                }
             }
             DB::commit();
             $this->info('Migrating of old data for Challanges table completed.');
