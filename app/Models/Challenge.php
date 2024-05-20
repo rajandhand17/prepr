@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Challenge extends Model
@@ -198,5 +199,20 @@ class Challenge extends Model
     public function challenge_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'challenge_id', 'id');
+    }
+
+    public function campusConnectOpportunity(): MorphOne
+    {
+        return $this->morphOne(CampusConnectOpportunity::class, 'model');
+    }
+
+    public function campusConnectStory(): MorphOne
+    {
+        return $this->morphOne(CampusConnectStory::class, 'model');
+    }
+
+    public function getCampusConnectStatusAttribute($value)
+    {
+        return config('constants.campus_connect_status_id.'.$value);
     }
 }
