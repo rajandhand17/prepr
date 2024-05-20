@@ -35,7 +35,7 @@ class CreateChallengeUsingAIRequest extends FormRequest
             'skills'                                => 'required|array',
             'skills.*'                              => 'numeric|exists:skills,id',
             'skill_titles'                          => 'nullable|array',
-            'jobs'                                  => 'required|array',
+            'jobs'                                  => 'nullable|array',
             'jobs.*'                                => 'numeric|exists:job_titles,id',
             'job_titles'                            => 'nullable|array',
             'steps'                                 => 'required|array',
