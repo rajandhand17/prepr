@@ -459,33 +459,6 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
-    public function captureProjectAIAssessment($projectData, $userData, $request)
-    {
-        try {
-            $fetchChallengeData = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
-            if ($fetchChallengeData->challenge_assessment_criteria->isNotEmpty()) {
-                $challengeAssessment = $fetchChallengeData->challenge_assessment_criteria;
-                $addProjectAIEvaluation = DB::transaction(function () use ($challengeAssessment, $projectData, $userData, $request) {
-                    $addProjectAIEvaluation = $this->aiService->addAIProjectEvaluation($challengeAssessment, $projectData, $userData, $request);
-
-                    return $addProjectAIEvaluation;
-                });
-
-                if ($addProjectAIEvaluation) {
-                    DB::commit();
-
-                    return true;
-                }
-            }
-
-            return false;
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            return false;
-        }
-    }
-
     public function addUpdateProjectSkillsRecruitingStatus($projectId, $request)
     {
         try {
