@@ -27,7 +27,6 @@ class LabDashboardController extends AppBaseController
                 if (!$organization) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
                 }
-                $request->merge(['organization_id' => $organization]);
             }
             $lab = $this->labDashboardRepository->getLabList($request);
             if ($lab !== false) {
@@ -57,7 +56,6 @@ class LabDashboardController extends AppBaseController
                 if (!$organization) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
                 }
-                $request->merge(['organization_id' => $organization]);
             }
             $challenges = $this->labDashboardRepository->getChallengeList($request);
             if ($challenges !== false) {
