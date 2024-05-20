@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
-use App\Helpers\ChargebeeHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
-use App\Jobs\Chargebee\CreateCustomerJob;
-use App\Jobs\Chargebee\SubscribePlanJob;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -336,13 +333,6 @@ class User extends Authenticatable
                     $user = User::find($user->id);
                     $user->attachRole('organization_owner', $organization->id);
                     $request->user_type = 'employee';
-
-                    // Jobs for creating customer and subscribe plan
-                    $planDetail = config('chargebee.chargebee_plan.unlimited_plan'); //Default plan selected
-                    CreateCustomerJob::withChain([
-                        new SubscribePlanJob($user, $organization, $planDetail),
-                    ])->dispatch($user);
-                    $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
                 }
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);

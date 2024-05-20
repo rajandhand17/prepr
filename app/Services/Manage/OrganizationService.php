@@ -3,8 +3,10 @@
 namespace App\Services\Manage;
 
 use App\Events\Organization\DeleteOrganizationAssociatedData;
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Models\Organization;
 use DB;
 use HiFolks\RandoPhp\Randomize;
@@ -40,6 +42,10 @@ class OrganizationService
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
+            if ($request->has('organization_id') && !empty($request->organization_id) && is_array($request->organization_id)) {
+                $organization_list = $organization_list->whereIn('organizations.uuid', $request->organization_id);
+            }
+
             if ($request->has('owner') && !empty($request->owner)) {
                 $organization_list = self::filterOrganizationBasedOnRoles($organization_list, $request);
             }
@@ -332,5 +338,41 @@ class OrganizationService
         }
 
         return $organization_list;
+    }
+
+    public function selectPlan($organization, $request)
+    {
+        try {
+            switch ($request->plan_name) {
+                case 'seed_plan_yearly':
+                    $detailsPlan = config('chargebee.chargebee_plan.seed_plan_yearly');
+                    break;
+                case 'sprout_plan_yearly':
+                    $detailsPlan = config('chargebee.chargebee_plan.sprout_plan_yearly');
+                    break;
+                case 'budd_plan_yearly':
+                    $detailsPlan = config('chargebee.chargebee_plan.budd_plan_yearly');
+                    break;
+                case 'bloom_plan_yearly':
+                    $detailsPlan = config('chargebee.chargebee_plan.bloom_plan_yearly');
+                    break;
+                case 'unlimited_plan':
+                    $detailsPlan = config('chargebee.chargebee_plan.unlimited_plan');
+                    break;
+                default:
+                    $detailsPlan = config('chargebee.chargebee_plan.seed_plan_yearly');
+                    break;
+            }
+            $userData = auth()->user();
+            dispatch(new SubscribePlanJob($userData, $organization, $detailsPlan));
+            $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
+            if ($checkLocalEntry) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }
