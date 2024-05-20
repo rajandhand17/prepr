@@ -1,8 +1,9 @@
 <!-- Brand Logo -->
-<a href="{{ route('superAdminDashboard') }}" class="brand-link">
+{{-- <a href="{{ route('superAdminDashboard') }}" class="brand-link">
     <img src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/img/AdminLTELogo.png'}}" alt="Preprlabs" class="brand-image img-circle elevation-3" style="opacity: .8">
     <span class="brand-text font-weight-light">Preprlabs</span>
-  </a>
+  </a> --}}
+  <a href="{{ route('superAdminDashboard') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
