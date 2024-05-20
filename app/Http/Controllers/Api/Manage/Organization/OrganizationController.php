@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Api\Manage\Organization;
 
-use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
-use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -679,6 +677,7 @@ class OrganizationController extends AppBaseController
             if ($selectPlan) {
                 return $this->sendResponse([], __('responses.plan_selected'));
             }
+
             return $this->sendError(__('responses.plan_not_selected'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
