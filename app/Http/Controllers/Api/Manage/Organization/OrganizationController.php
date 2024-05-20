@@ -9,6 +9,7 @@ use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
 use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
+use Exception;
 use Illuminate\Http\Request;
 
 class OrganizationController extends AppBaseController
@@ -354,10 +355,7 @@ class OrganizationController extends AppBaseController
                 if ($request->has('organization_members') && !empty($request->organization_members)) {
                     $this->organizationRepository->createOrganizationMembers($request, $organization->id);
                 }
-                $detailsPlan = config('chargebee.chargebee_plan.unlimited_plan');
-                $userData = auth()->user();
-                dispatch(new SubscribePlanJob($userData, $organization, $detailsPlan));
-                $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organization->id);
+                $selectPlan = $this->organizationRepository->selectPlan($organization, $request);
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_stored_success'));
             } else {
@@ -665,6 +663,24 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function selectPlan($slug, Request $request)
+    {
+        try {
+            $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            if (!$checkOrganization) {
+                return $this->sendError(__('responses.organization_not_exists'), 422);
+            }
+
+            $selectPlan = $this->organizationRepository->selectPlan($checkOrganization, $request);
+            if ($selectPlan) {
+                return $this->sendResponse([], __('responses.plan_selected'));
+            }
+            return $this->sendError(__('responses.plan_not_selected'), 400);
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
