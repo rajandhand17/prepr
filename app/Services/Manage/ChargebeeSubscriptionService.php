@@ -20,16 +20,16 @@ class ChargebeeSubscriptionService
             }
 
             // Setting values to chargebee_subscription table if values are set to unlimited then it would be -1 rest it can be zero or defined one's
-            $managerInvite = ($chargebeeDetails['featureLimits']['managerInvite'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['managerInvite'] ?? 0);
-            $userInvite = ($chargebeeDetails['featureLimits']['userInvite'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['userInvite'] ?? 0);
-            $lab = ($chargebeeDetails['featureLimits']['lab'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['lab'] ?? 0);
-            $labProgram = ($chargebeeDetails['featureLimits']['labProgram'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['labProgram'] ?? 0);
-            $challenge = ($chargebeeDetails['featureLimits']['challenge'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['challenge'] ?? 0);
-            $challengePath = ($chargebeeDetails['featureLimits']['challengePath'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['challengePath'] ?? 0);
-            $resourceModule = ($chargebeeDetails['featureLimits']['resourceModule'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['resourceModule'] ?? 0);
-            $resourceCollection = ($chargebeeDetails['featureLimits']['resourceCollection'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['resourceCollection'] ?? 0);
-            $resourceGroup = ($chargebeeDetails['featureLimits']['resourceGroup'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['resourceGroup'] ?? 0);
-            $preBuiltLab = ($chargebeeDetails['featureLimits']['preBuiltLab'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['preBuiltLab'] ?? 0);
+            $managerInvite = (isset($chargebeeDetails['featureLimits']['managerInvite']) && $chargebeeDetails['featureLimits']['managerInvite'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['managerInvite'] ?? 0);
+            $userInvite = (isset($chargebeeDetails['featureLimits']['userInvite']) && $chargebeeDetails['featureLimits']['userInvite'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['userInvite'] ?? 0);
+            $lab = (isset($chargebeeDetails['featureLimits']['lab']) && $chargebeeDetails['featureLimits']['lab'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['lab'] ?? 0);
+            $labProgram = (isset($chargebeeDetails['featureLimits']['labProgram']) && $chargebeeDetails['featureLimits']['labProgram'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['labProgram'] ?? 0);
+            $challenge = (isset($chargebeeDetails['featureLimits']['challenge']) && $chargebeeDetails['featureLimits']['challenge'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['challenge'] ?? 0);
+            $challengePath = (isset($chargebeeDetails['featureLimits']['challengePath']) && $chargebeeDetails['featureLimits']['challengePath'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['challengePath'] ?? 0);
+            $resourceModule = (isset($chargebeeDetails['featureLimits']['resourceModule']) && $chargebeeDetails['featureLimits']['resourceModule'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['resourceModule'] ?? 0);
+            $resourceCollection = (isset($chargebeeDetails['featureLimits']['resourceCollection']) && $chargebeeDetails['featureLimits']['resourceCollection'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['resourceCollection'] ?? 0);
+            $resourceGroup = (isset($chargebeeDetails['featureLimits']['resourceGroup']) && $chargebeeDetails['featureLimits']['resourceGroup'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['resourceGroup'] ?? 0);
+            $preBuiltLab = (isset($chargebeeDetails['featureLimits']['preBuiltLab']) && $chargebeeDetails['featureLimits']['preBuiltLab'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['preBuiltLab'] ?? 0);
 
             $chargebeeSubscription = new ChargebeeSubscription();
             $chargebeeSubscription->organization_id = $organizationId;
