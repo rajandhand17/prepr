@@ -119,13 +119,38 @@ class Organization extends LaratrustTeam
         return $this->hasMany(Lab::class, 'organization_id', 'id');
     }
 
+    public function lab_programs_count()
+    {
+        return $this->hasMany(LabProgram::class, 'organization_id', 'id');
+    }
+
     public function challenges_count()
     {
         return $this->hasMany(Challenge::class, 'organization_id', 'id');
     }
 
+    public function challenge_paths_count()
+    {
+        return $this->hasMany(ChallengePath::class, 'organization_id', 'id');
+    }
+
     public function resource_modules_count()
     {
         return $this->hasMany(ResourceModule::class, 'organization_id', 'id');
+    }
+
+    public function resource_collections_count()
+    {
+        return $this->hasMany(ResourceCollection::class, 'organization_id', 'id');
+    }
+
+    public function resource_groups_count()
+    {
+        return $this->hasMany(ResourceGroup::class, 'organization_id', 'id');
+    }
+
+    public function chargebee_details()
+    {
+        return $this->hasOne(ChargebeeSubscription::class, 'organization_id', 'id');
     }
 }

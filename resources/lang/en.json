@@ -1132,5 +1132,10 @@
     "responses.failed_to_send_live_event_invitation_link_to_members": "Failed to send live event event invitation to the members.",
     "responses.live_event_details":"Live event details.",
     "responses.failed_to_get_live_event_details": "Failed to fetch live event details.",
-    "responses.leaderboard_list": "You have successfully fetch leaderboard listing"
+    "responses.leaderboard_list": "You have successfully fetch leaderboard listing",
+    "responses.seed_plan": "Seed Plan",
+    "responses.bloom_plan": "Bloom Plan",
+    "responses.budd_plan": "Budd Plan",
+    "responses.sprout_plan": "Sprout Plan",
+    "responses.enterprise_plan": "Enterprise Plan"
 }
