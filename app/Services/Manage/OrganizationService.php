@@ -41,7 +41,7 @@ class OrganizationService
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
             if ($request->has('organization_id') && !empty($request->organization_id) && is_array($request->organization_id)) {
-              $organization_list = $organization_list->whereIn('organizations.uuid', $request->organization_id);
+                $organization_list = $organization_list->whereIn('organizations.uuid', $request->organization_id);
             }
 
             if ($request->has('owner') && !empty($request->owner)) {

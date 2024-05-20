@@ -48,7 +48,7 @@ class OrganizationDashboardController extends AppBaseController
         try {
             if ($request->organization_id && is_array($request->organization_id)) {
                 $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!$organization->count()>0) {
+                if (!$organization->count() > 0) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
                 }
             }
