@@ -250,12 +250,12 @@ class AIService
 
                 // Ensure all non-YouTube and non-iframe URLs are prefixed properly
                 if (!preg_match('/^https?:\/\//', $url)) {
-                    $url = "https://dshccgz9le1qv.cloudfront.net/" . ltrim($url, '/');
+                    $url = config('site-settings.aws_url') . ltrim($url, '/');
                 }
 
                 // Remove the prefix if it's a URL
-                if ($type == 'url' && strpos($url, 'https://dshccgz9le1qv.cloudfront.net/') === 0) {
-                    $url = substr($url, strlen('https://dshccgz9le1qv.cloudfront.net/'));
+                if ($type == 'url' && strpos($url, config('site-settings.aws_url')) === 0) {
+                    $url = substr($url, strlen(config('site-settings.aws_url')));
                 }
 
                 $items[] = ['url' => $url, 'type' => $type];
