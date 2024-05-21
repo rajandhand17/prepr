@@ -8,7 +8,7 @@ use Exception;
 
 class ChallengeAssessmentUserService
 {
-    public function addProjectEvaluation($challengeAssessment, $projectData, $userData, $request)
+    public function addProjectEvaluation($challengeAssessment = null, $projectData = null, $userData = null, $request)
     {
         try {
             $assessmentStatus = $request->status == 'published' ? config('constants.challenge_status.publish') : config('constants.challenge_status.draft');
@@ -18,8 +18,8 @@ class ChallengeAssessmentUserService
                     $challengeAssessmentUser = ChallengeAssessmentUser::updateOrCreate(
                         [
                             'criteria_id' => $criteriaId,
-                            'project_id'  => $projectData->id,
-                            'user_id'     => $userData->id,
+                            'project_id'  => $request->project_id ?? $projectData->id,
+                            'user_id'     => $request->user_id ?? $userData->id,
                         ],
                         [
                             'score'            => $request->score[$key],
@@ -43,7 +43,7 @@ class ChallengeAssessmentUserService
     public static function getcriteriaDataBasedOnId($criteriaData, $projectId, $userId)
     {
         try {
-            $challenge_assessment_criteria = ChallengeAssessmentCriteria::select('id', 'title', 'score', 'weight')->where('id', $criteriaData->id)->first();
+            $challenge_assessment_criteria = ChallengeAssessmentCriteria::select('id', 'title', 'description', 'score', 'weight')->where('id', $criteriaData->id)->first();
 
             $check_assessment_criteria = ChallengeAssessmentUser::where(['criteria_id' => $criteriaData->id, 'project_id' => $projectId, 'user_id' => $userId])->first();
 
@@ -79,6 +79,7 @@ class ChallengeAssessmentUserService
                     return [
                         'id'                => $criteriaData->id,
                         'title'             => $criteriaData->title,
+                        'description'       => $criteriaData->description,
                         'score'             => $criteriaData->score,
                         'weight'            => $criteriaData->weight,
                         'score_received'    => $criteriaData->score_received,

@@ -23,7 +23,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::delete('/{slug}/un-join', [ProjectController::class, 'unJoinProject']);
     Route::get('/{slug}/assessment', [ProjectController::class, 'viewAssessedProject']);
     Route::post('/{slug}/assessment/add', [ProjectController::class, 'captureAssessmentProject']);
-    Route::post('/ai/{slug}/assessment', [ProjectController::class, 'captureAIAssessmentProject']);
+    Route::post('/ai/{slug}/assessment/add', [ProjectController::class, 'addAIAssessmentProject']);
     Route::delete('/{slug}/assessment/delete', [ProjectController::class, 'deleteAssessmentProject']);
     Route::post('/{slug}/{activity}', [ProjectController::class, 'socialActivity']);
 });
