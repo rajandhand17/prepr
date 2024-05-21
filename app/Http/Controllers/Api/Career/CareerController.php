@@ -39,9 +39,9 @@ class CareerController extends AppBaseController
     public function addJobs(Request $request)
     {
         try {
-            $checkJobsExistsOrNot=$this->careerRepository->getJobDetails($request->job_id);
-            if($checkJobsExistsOrNot==null){
-                return $this->sendError(__("responses.job_not_exists"));
+            $checkJobsExistsOrNot = $this->careerRepository->getJobDetails($request->job_id);
+            if ($checkJobsExistsOrNot == null) {
+                return $this->sendError(__('responses.job_not_exists'));
             }
             $checkJobsExistsOrNotInUserProfile = $this->careerRepository->checkJobsExistsInUsers($request->job_id);
             if ($checkJobsExistsOrNotInUserProfile !== false) {
