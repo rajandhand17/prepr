@@ -279,6 +279,7 @@ class UserService
                 $fetchUserById->user_points += $userPoint;
                 $fetchUserById->save();
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
