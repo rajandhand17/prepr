@@ -134,7 +134,14 @@
             </li>
           </ul>
         </li>
-        
+        <ul>
+          <li class="nav-item">
+            <a href="{{ route('maestroLogout') }}" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Logout</p>
+            </a>
+          </li>
+        </ul>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

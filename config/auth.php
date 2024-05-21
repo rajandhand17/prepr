@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
         ],
 
+        'maestro' => [
+            'driver'   => 'session',
+            'provider' => 'users',
+        ],
+
         'api' => [
             'driver'   => 'passport',
             'provider' => 'users',
@@ -66,6 +71,11 @@ return [
 
     'providers' => [
         'users' => [
+            'driver' => 'eloquent',
+            'model'  => App\Models\User::class,
+        ],
+
+        'maestro' => [
             'driver' => 'eloquent',
             'model'  => App\Models\User::class,
         ],

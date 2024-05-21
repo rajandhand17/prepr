@@ -24,9 +24,10 @@
     <div class="card-body">
       <p class="login-box-msg">Sign in to Prepr Network</p>
 
-      <form action="" method="post">
+      <form action="{{ route('loginSubmit') }}" method="POST">
+        @csrf
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="Email Address">
+          <input class="form-control" type="email" id="email" name="email" placeholder="Email Address" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -34,7 +35,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password">
+          <input type="password" class="form-control" placeholder="Password" id="password" name="password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -56,7 +57,7 @@
           </div> --}}
           <!-- /.col -->
         </div>
-      </form>
+     
 
       <div class="social-auth-links text-center mt-2 mb-3">
         {{-- <a href="#" class="btn btn-block btn-primary">
@@ -68,6 +69,7 @@
         </a> --}}
       </div>
       <!-- /.social-auth-links -->
+    </form>
 
       {{-- <p class="mb-1">
         <a href="forgot-password.html">I forgot my password</a>
