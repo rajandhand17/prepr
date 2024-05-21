@@ -25,7 +25,7 @@ class FileUploadRequest extends FormRequest
     {
         $base_rules = [
 
-            'file'          => 'required|mimes:pdf,doc,docx|max:1024',
+            'file'          => 'required|mimes:pdf,doc,docx,txt|max:1024',
         ];
 
         return $base_rules;

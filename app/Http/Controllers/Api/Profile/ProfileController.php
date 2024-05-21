@@ -398,4 +398,18 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function uploadResume(FileUploadRequest $request)
+    {
+        try {
+            $response=$this->profileRepository->resumePerser($request);
+            dd($response);
+            if($response){
+             //   return $this->sendResponse($response);
+            }
+        }catch (\Exception $e) {
+            dd($e);
+          //  return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

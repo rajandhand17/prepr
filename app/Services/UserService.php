@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserService
 {
@@ -258,6 +259,18 @@ class UserService
 
             return $users;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function resumePerser($request)
+    {
+        try {
+            $resumeFile = $request->file('resume');
+            $resumePath = 'uploads/resume/'.auth()->user()->id.'_'.$resumeFile->getClientOriginalName();
+            $storeResumePath = Storage::disk('s3')->put($resumePath, file_get_contents($resumeFile));
+        }catch (\Exception $e){
+            dd($e);
             return false;
         }
     }
