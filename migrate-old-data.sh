@@ -30,6 +30,7 @@ php artisan migrate-old-data:users-achievement
 php artisan migrate-old-data:jobs-titles
 php artisan register:go1-webhook
 php artisan migrate-old-data:component-association-migration
+php artisan migrate:feed-chargebee-data-to-data-base
 php artisan migrate-old-data:users-skills
 php artisan migrate-old-data:users-personal
 php artisan migrate-old-data:users-patent

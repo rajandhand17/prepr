@@ -1054,7 +1054,6 @@ class AIService
             $modules = ResourceModule::whereNull('deleted_at')
                 ->where('is_global', 1)
                 ->where('language', $language)
-                ->where('level_id', $levelID)
                 ->whereHas('skills', function ($query) use ($firstThreeSkills) {
                     $query->whereIn('foreign_id', $firstThreeSkills)
                         ->where('type', '0');
@@ -1065,7 +1064,7 @@ class AIService
             $filteredModules = $modules->filter(function ($module) use ($firstThreeSkills) {
                 $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
 
-                return count(array_intersect($moduleSkills, $firstThreeSkills)) >= 2;
+                return count(array_intersect($moduleSkills, $firstThreeSkills)) >= 1;
             });
 
             $sortedModules = $filteredModules->sortByDesc(function ($module) use ($firstThreeSkills) {

@@ -161,4 +161,13 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         }
     }
+
+    public function selectPlan($organization, $request)
+    {
+        try {
+            return $this->organizationService->selectPlan($organization, $request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
