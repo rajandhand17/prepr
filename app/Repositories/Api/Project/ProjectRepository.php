@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Project;
 
 use App\Services\AchievementService;
 use App\Services\ChallengeAssessmentUserService;
+use App\Services\Manage\AIService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;

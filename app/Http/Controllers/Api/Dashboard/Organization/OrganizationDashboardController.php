@@ -48,10 +48,9 @@ class OrganizationDashboardController extends AppBaseController
         try {
             if ($request->organization_id && is_array($request->organization_id)) {
                 $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!$organization) {
+                if (!$organization->count() > 0) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
                 }
-                $request->merge(['organization_id' => $organization]);
             }
             $lab = $this->organizationDashboardRepository->getLabList($request);
             if ($lab !== false) {
@@ -81,7 +80,6 @@ class OrganizationDashboardController extends AppBaseController
                 if (!$organization) {
                     return $this->sendError(__('responses.organization_not_found'), 404);
                 }
-                $request->merge(['organization_id' => $organization]);
             }
             $challenges = $this->organizationDashboardRepository->getChallengeList($request);
             if ($challenges !== false) {
