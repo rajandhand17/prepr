@@ -9,11 +9,14 @@ use App\Models\Challenge;
 use App\Models\Duration;
 // use App\Models\Lab;
 use App\Models\Levels;
+use App\Models\ProjectFile;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\Skill;
+use App\Services\ChallengeAssessmentUserService;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -24,12 +27,19 @@ class AIService
     protected $bingArticleClient;
     protected $bingVideoClient;
     protected $resourceSummarizerClient;
+    protected $projectAssessorClient;
 
-    public function __construct()
+
+    private $challengeAssessmentUserService;
+
+    public function __construct(ChallengeAssessmentUserService $challengeAssessmentUserService)
     {
+        $this->challengeAssessmentUserService = $challengeAssessmentUserService;
+
         $openAIAPIKey = config('ai.openai_api_key');
         $bingAPIKey = config('ai.bing_api_key');
         $resourceSummarizerApiKey = config('ai.resource_summarizer_api_key');
+        $projectAssessorApiKey = config('ai.project_assessor_api_key');
 
         $this->openAIClient = new Client([
             'base_uri' => 'https://api.openai.com/v1/chat/completions',
@@ -60,6 +70,14 @@ class AIService
             'headers'  => [
                 'Content-Type' => 'application/json',
                 'authorization-token' => $resourceSummarizerApiKey,
+            ],
+        ]);
+
+        $this->projectAssessorClient = new Client([
+            'base_uri' => 'https://th7cgys3gq4nz4ipzr5aekbtnu0hlywt.lambda-url.ca-central-1.on.aws/',
+            'headers'  => [
+                'Content-Type' => 'application/json',
+                'authorization' => $projectAssessorApiKey,
             ],
         ]);
     }
@@ -270,7 +288,6 @@ class AIService
 
             while ($attempt < 3 && count($validChallenges) < 2) {
                 $attempt++;
-                Log::info($resourceModulesSummary);
                 $openAIResponse = $this->fetchChallengesFromResourcesByOpenAI($durationTitles, $levelTitles, $additionalInformation, $categoryTitles, $resourceModulesTitlesAndDescriptions, $resourceModulesSummary);
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
@@ -1054,7 +1071,6 @@ class AIService
             $modules = ResourceModule::whereNull('deleted_at')
                 ->where('is_global', 1)
                 ->where('language', $language)
-                ->where('level_id', $levelID)
                 ->whereHas('skills', function ($query) use ($firstThreeSkills) {
                     $query->whereIn('foreign_id', $firstThreeSkills)
                         ->where('type', '0');
@@ -1065,7 +1081,7 @@ class AIService
             $filteredModules = $modules->filter(function ($module) use ($firstThreeSkills) {
                 $moduleSkills = $module->skills->pluck('foreign_id')->toArray();
 
-                return count(array_intersect($moduleSkills, $firstThreeSkills)) >= 2;
+                return count(array_intersect($moduleSkills, $firstThreeSkills)) >= 1;
             });
 
             $sortedModules = $filteredModules->sortByDesc(function ($module) use ($firstThreeSkills) {
@@ -1252,5 +1268,118 @@ class AIService
         $shuffledModules = $combinedModules;
 
         return $shuffledModules;
+    }
+
+    public function addAIProjectEvaluation($challengeAssessment, $projectData, $userData, $request)
+    {
+        try {
+            $criteria = collect($challengeAssessment)->map(function ($item) {
+                return [
+                    'id' => $item['id'],
+                    'title' => $item['title'],
+                    'description' => $item['description'] ?? "",
+                    'score' => $item['score'],
+                    'weight' => $item['weight'],
+                ];
+            })->values()->all();
+
+            $challengeID = $challengeAssessment[0]->challenge_id;
+            $challenge = ChallengeService::getChallengeBasedOnId($challengeID);
+
+            $projectFiles = ProjectFile::where('project_id', $projectData['id'])->get();
+            $items = [];
+
+            foreach ($projectFiles as $file) {
+                $url = $file->path;
+                $type = '';
+
+                // Check for YouTube URLs embedded in iframe tags and capture only the video ID
+                if (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                    $url = "https://www.youtube.com/watch?v=" . $match[1];
+                    $type = 'youtube_video';
+                } else if (preg_match('/^https?:\/\/www\.youtube\.com\/watch\?v=([\w\-_]+)(\?.*)?$/i', $url, $match)) {
+                    $url = "https://www.youtube.com/watch?v=" . $match[1];
+                    $type = 'youtube_video';
+                } else if (preg_match('/^https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?$/i', $url, $match)) {
+                    $url = "https://www.youtube.com/watch?v=" . $match[1]; // Convert embed URL to watch URL
+                    $type = 'youtube_video';
+                } else if (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
+                    $url = $match[1];
+                    $type = 'video';
+                } else {
+                    switch ($file->type) {
+                        case 'docs':
+                            $type = 'file';
+                            break;
+                        case 'video':
+                        case 'audio':
+                            $type = 'video';
+                            break;
+                        case 'image':
+                            $type = 'image';
+                            break;
+                        default:
+                            $type = 'file';
+                    }
+                }
+
+                // Ensure all non-YouTube and non-iframe URLs are prefixed properly
+                if (!preg_match('/^https?:\/\//', $url)) {
+                    $url = config('site-settings.aws_url') . ltrim($url, '/');
+                }
+
+                // Remove the prefix if it's a URL
+                if ($type == 'url' && strpos($url, config('site-settings.aws_url')) === 0) {
+                    $url = substr($url, strlen(config('site-settings.aws_url')));
+                }
+
+                $items[] = ['url' => $url, 'type' => $type];
+            }
+
+            try {
+                $requestBody = [
+                    'language' => 'en',
+                    'status' => 'published',
+                    'app_url' => config('app.url'),
+                    'user_id' => $userData['id'],
+                    'project_id' => $projectData['id'],
+                    'project_slug' => $projectData['slug'],
+                    'project_title' => $projectData['title'],
+                    'project_description' => preg_replace(['/[\r\n\t\x{00A0}]+/u', '/[\x{2019}\x{2018}]/u'], ['', "'"], strip_tags(html_entity_decode($projectData['description'], ENT_QUOTES | ENT_HTML5))),
+                    'challenge_title' => $challenge['title'],
+                    'challenge_description' => preg_replace(['/[\r\n\t\x{00A0}]+/u', '/[\x{2019}\x{2018}]/u'], ['', "'"], strip_tags(html_entity_decode($challenge['description'], ENT_QUOTES | ENT_HTML5))),
+                    'criteria' => $criteria,
+                    // We are not retrieving the below fields yet due to not having the necessary tables. 5/20/2024
+                    // Give the "pitch" with "question" and "answer" just like criteria (table project_pitches)
+                    'items' => $items
+                ];
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
+            try {
+                $response = $this->projectAssessor($requestBody);
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
+            if ($response) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in addAIProjectEvaluation in AIService.php: ' . $e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function projectAssessor($data)
+    {
+        $request = new Request("POST", '', [], json_encode($data));
+        $this->projectAssessorClient->sendAsync($request);
+
+        return true;
     }
 }

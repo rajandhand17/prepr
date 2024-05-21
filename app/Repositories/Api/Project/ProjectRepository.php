@@ -20,6 +20,7 @@ use App\Services\ProjectSocialActivitiesService;
 use App\Services\Manage\AIService;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProjectRepository implements ProjectInterface
 {
@@ -168,7 +169,7 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
-                $activity = auth()->user()->full_name.' '.__('responses.project_created_activty').' '.$createProject['createProject']->title;
+                $activity = auth()->user()->full_name . ' ' . __('responses.project_created_activty') . ' ' . $createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 DB::commit();
 
@@ -258,7 +259,7 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($updateProject['updateProject']) {
-                $activity = auth()->user()->full_name.' '.__('responses.project_updated_activty').' '.$updateProject['updateProject']->title;
+                $activity = auth()->user()->full_name . ' ' . __('responses.project_updated_activty') . ' ' . $updateProject['updateProject']->title;
                 self::storeHistory($updateProject['updateProject']->id, auth()->user()->id, $activity);
                 DB::commit();
 
@@ -379,9 +380,11 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
 
-            if ($submitProject['submitProject'] &&
-                $submitProject['addAchievement']) {
-                $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
+            if (
+                $submitProject['submitProject'] &&
+                $submitProject['addAchievement']
+            ) {
+                $activity = auth()->user()->full_name . ' ' . __('responses.project_submit_activty') . ' ' . $projectData->title;
                 self::storeHistory($projectData->id, auth()->user()->id, $activity);
                 DB::commit();
 
@@ -459,6 +462,51 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
+    public function captureProjectAIAssessment($projectData, $userData, $request)
+    {
+        try {
+            $fetchChallengeData = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
+            if ($fetchChallengeData->challenge_assessment_criteria->isNotEmpty()) {
+                $challengeAssessment = $fetchChallengeData->challenge_assessment_criteria;
+                $addProjectAIEvaluation = $this->aiService->addAIProjectEvaluation($challengeAssessment, $projectData, $userData, $request);
+
+                if ($addProjectAIEvaluation) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in captureProjectAIAssessment in ProjectRepository.php: ' . $e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function assessProjectAI($request)
+    {
+        try {
+            $addProjectAIEvaluation = DB::transaction(function () use ($request) {
+                $addProjectAIEvaluation = $this->challengeAssessmentUserService->addProjectEvaluation($challengeAssessment = null, $projectData = null, $userData = null, $request);
+
+                return $addProjectAIEvaluation;
+            });
+
+            if ($addProjectAIEvaluation) {
+                DB::commit();
+
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in assessProjectAI in ProjectRepository.php: ' . $e->getMessage());
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
     public function addUpdateProjectSkillsRecruitingStatus($projectId, $request)
     {
         try {
@@ -472,7 +520,8 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
 
-            if ($addUpdateProjectSkillsRecruitingStatus['addUpdateProjectSkills'] &&
+            if (
+                $addUpdateProjectSkillsRecruitingStatus['addUpdateProjectSkills'] &&
                 $addUpdateProjectSkillsRecruitingStatus['updateProjectRecruitingStatus']
             ) {
                 DB::commit();

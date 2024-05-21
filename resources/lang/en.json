@@ -1139,5 +1139,6 @@
     "responses.sprout_plan": "Sprout Plan",
     "responses.enterprise_plan": "Enterprise Plan",
     "responses.resource_modules_exists": "This resource module does not exist!",
-    "responses.is_ai_created_required": "is_ai_created value is required!"
+    "responses.is_ai_created_required": "is_ai_created value is required!",
+    "responses.project_assessment_received": "The project assessment has been received successfully!"
 }

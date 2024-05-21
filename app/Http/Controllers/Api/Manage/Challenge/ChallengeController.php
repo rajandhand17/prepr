@@ -243,9 +243,10 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->challenge_assessment_criteria->isNotEmpty()) {
                 $challenge_assessment_criteria = $checkComponentBasedOnSlug->challenge_assessment_criteria->map(function ($item) {
                     return [
-                        'assessment_title'   => $item->title,
-                        'assessment_score'   => $item->score,
-                        'assessment_weight'  => $item->weight,
+                        'assessment_title'        => $item->title,
+                        'assessment_description'  => $item->description,
+                        'assessment_score'        => $item->score,
+                        'assessment_weight'       => $item->weight,
                     ];
                 });
             }
