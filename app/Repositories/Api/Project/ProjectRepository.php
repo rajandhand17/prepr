@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Project;
 
 use App\Services\AchievementService;
 use App\Services\ChallengeAssessmentUserService;
+use App\Services\Manage\AIService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
@@ -17,7 +18,6 @@ use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
 use App\Services\ProjectSkillsService;
 use App\Services\ProjectSocialActivitiesService;
-use App\Services\Manage\AIService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -169,7 +169,7 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
-                $activity = auth()->user()->full_name . ' ' . __('responses.project_created_activty') . ' ' . $createProject['createProject']->title;
+                $activity = auth()->user()->full_name.' '.__('responses.project_created_activty').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 DB::commit();
 
@@ -259,7 +259,7 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($updateProject['updateProject']) {
-                $activity = auth()->user()->full_name . ' ' . __('responses.project_updated_activty') . ' ' . $updateProject['updateProject']->title;
+                $activity = auth()->user()->full_name.' '.__('responses.project_updated_activty').' '.$updateProject['updateProject']->title;
                 self::storeHistory($updateProject['updateProject']->id, auth()->user()->id, $activity);
                 DB::commit();
 
@@ -384,7 +384,7 @@ class ProjectRepository implements ProjectInterface
                 $submitProject['submitProject'] &&
                 $submitProject['addAchievement']
             ) {
-                $activity = auth()->user()->full_name . ' ' . __('responses.project_submit_activty') . ' ' . $projectData->title;
+                $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
                 self::storeHistory($projectData->id, auth()->user()->id, $activity);
                 DB::commit();
 
@@ -477,7 +477,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
-            Log::error('Error in captureProjectAIAssessment in ProjectRepository.php: ' . $e->getMessage());
+            Log::error('Error in captureProjectAIAssessment in ProjectRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -500,7 +500,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
-            Log::error('Error in assessProjectAI in ProjectRepository.php: ' . $e->getMessage());
+            Log::error('Error in assessProjectAI in ProjectRepository.php: '.$e->getMessage());
             DB::rollBack();
 
             return false;
