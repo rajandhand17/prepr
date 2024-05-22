@@ -87,7 +87,6 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
             'jobs.required'                         => __('responses.jobs_required'),
             'steps.array'                           => __('responses.steps_array'),
             'reflections.array'                     => __('responses.reflections_array'),
-            'is_ai_created.required'                => __('responses.is_ai_created_required'),
             'is_ai_created.boolean'                 => __('responses.true_or_false'),
             'resource_modules.required'             => __('responses.resource_modules_required'),
             'resource_modules.boolean'              => __('responses.true_or_false'),
