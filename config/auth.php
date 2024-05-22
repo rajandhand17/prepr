@@ -75,11 +75,6 @@ return [
             'model'  => App\Models\User::class,
         ],
 
-        'maestro' => [
-            'driver' => 'eloquent',
-            'model'  => App\Models\User::class,
-        ],
-
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
