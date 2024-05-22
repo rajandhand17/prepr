@@ -13,7 +13,6 @@ use App\Models\ProjectFile;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\Skill;
-use App\Services\ChallengeAssessmentUserService;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -30,12 +29,8 @@ class AIService
     protected $projectAssessorClient;
 
 
-    private $challengeAssessmentUserService;
-
-    public function __construct(ChallengeAssessmentUserService $challengeAssessmentUserService)
+    public function __construct()
     {
-        $this->challengeAssessmentUserService = $challengeAssessmentUserService;
-
         $openAIAPIKey = config('ai.openai_api_key');
         $bingAPIKey = config('ai.bing_api_key');
         $resourceSummarizerApiKey = config('ai.resource_summarizer_api_key');
@@ -79,6 +74,7 @@ class AIService
                 'Content-Type' => 'application/json',
                 'authorization' => $projectAssessorApiKey,
             ],
+            'timeout'  => .5,
         ]);
     }
 
@@ -1378,7 +1374,10 @@ class AIService
     public function projectAssessor($data)
     {
         $request = new Request("POST", '', [], json_encode($data));
-        $this->projectAssessorClient->sendAsync($request);
+        try {
+            $this->projectAssessorClient->send($request);
+        } catch (Exception $e) {
+        }
 
         return true;
     }
