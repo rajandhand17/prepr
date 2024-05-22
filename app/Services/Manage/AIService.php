@@ -1272,7 +1272,7 @@ class AIService
                 return [
                     'id'          => $item['id'],
                     'title'       => $item['title'],
-                    'description' => $item['description'] ?? '',
+                    'description' => $item['description'] ?? null,
                     'score'       => $item['score'],
                     'weight'      => $item['weight'],
                 ];
