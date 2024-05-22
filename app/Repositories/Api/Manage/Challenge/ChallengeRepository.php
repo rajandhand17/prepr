@@ -160,7 +160,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return false;
         } catch (Exception $e) {
-            Log::error('Error in createChallenge in ChallengeRepository.php: ' . $e->getMessage());
+            Log::error('Error in createChallenge in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -173,7 +173,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return $createChallengeUsingAIPreview;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeUsingAIPreview in ChallengeRepository.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeUsingAIPreview in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -183,9 +183,11 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             $createChallengeFromResourceUsingAIPreview = $this->aiService->createChallengeFromResourceUsingAIPreview($request);
+
             return $createChallengeFromResourceUsingAIPreview;
         } catch (Exception $e) {
-            Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeRepository.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeRepository.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -219,7 +221,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return $createdChallenge['createChallenge'];
         } catch (Exception $e) {
-            Log::error('Error in createChallengeUsingAI in ChallengeRepository.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeUsingAI in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
         }
