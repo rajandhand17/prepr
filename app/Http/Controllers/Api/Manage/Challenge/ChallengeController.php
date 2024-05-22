@@ -497,7 +497,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
-            Log::error('Error in createChallengeUsingAIPreview in ChallengeController.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeUsingAIPreview in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
         }
@@ -521,7 +521,8 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeFromResourceUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
-            Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeController.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeController.php: '.$e->getMessage());
+
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }
@@ -548,7 +549,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeUsingAI has no value!');
             }
         } catch (Exception $e) {
-            Log::error('Error in createChallengeUsingAI in ChallengeController.php: ' . $e->getMessage());
+            Log::error('Error in createChallengeUsingAI in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
         }
