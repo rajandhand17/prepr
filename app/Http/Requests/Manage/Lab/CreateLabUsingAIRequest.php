@@ -78,7 +78,6 @@ class CreateLabUsingAIRequest extends FormRequest
             'duration_id.exists'                       => __('responses.duration_id_exists'),
             'level_id.required'                        => __('responses.level_id_required'),
             'level_id.exists'                          => __('responses.level_id_exists'),
-            'is_ai_created.required'                   => __('responses.is_ai_created_required'),
             'is_ai_created.boolean'                    => __('responses.true_or_false'),
             'skills.array'                             => __('responses.skills_array'),
             'skills.*.numeric'                         => __('responses.skills_numeric'),

@@ -18,7 +18,6 @@ class ChallengeTemplateAssessmentCriteriaService
                     $challengeTemplateAssessmentCriteria->challenge_template_id = $templateChallengeId;
                     $challengeTemplateAssessmentCriteria->template_assessment_id = $templateChallengeAssessmentId->id;
                     $challengeTemplateAssessmentCriteria->title = $challengeAssessmentCriterion->title;
-                    $challengeTemplateAssessmentCriteria->description = $challengeAssessmentCriterion->description;
                     $challengeTemplateAssessmentCriteria->score = $challengeAssessmentCriterion->score;
                     $challengeTemplateAssessmentCriteria->weight = $challengeAssessmentCriterion->weight;
                     $challengeTemplateAssessmentCriteria->save();
@@ -40,7 +39,6 @@ class ChallengeTemplateAssessmentCriteriaService
                 $newChallengeAssessmentCriterias->challenge_id = $redeemChallengeId;
                 $newChallengeAssessmentCriterias->assessment_id = $challengeAsessmentData->id;
                 $newChallengeAssessmentCriterias->title = $checkChallengeTemplateAssessmentCriterias->title;
-                $newChallengeAssessmentCriterias->description = $checkChallengeTemplateAssessmentCriterias->description;
                 $newChallengeAssessmentCriterias->score = $checkChallengeTemplateAssessmentCriterias->score;
                 $newChallengeAssessmentCriterias->weight = $checkChallengeTemplateAssessmentCriterias->weight;
                 $newChallengeAssessmentCriterias->save();

@@ -484,7 +484,7 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function scoreAIAssessmentProject($slug, Request $request)
+    public function addAIAssessmentProject($slug, Request $request)
     {
         try {
             $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
@@ -492,18 +492,20 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            $assessProjectAI = $this->projectRepository->assessProjectAI($request);
+            if ($request->user_id) {
+                $assessProjectAI = $this->projectRepository->assessProjectAI($request);
 
-            if ($assessProjectAI) {
-                ChallengeAssessmentUserService::getProjectAssessmentData($checkProjectSlugExistsOrNot, auth()->user()->id);
-                $responseMessage = __('responses.project_assessment_received');
+                if ($assessProjectAI) {
+                    ChallengeAssessmentUserService::getProjectAssessmentData($checkProjectSlugExistsOrNot, auth()->user()->id);
+                    $responseMessage = __('responses.project_assessment_received');
+                }
 
                 return $this->sendResponse(null, $responseMessage, 200);
             }
 
             return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
         } catch (Exception $e) {
-            Log::error('Error in scoreAIAssessmentProject in ProjectController.php: '.$e->getMessage());
+            Log::error('Error in addAIAssessmentProject in ProjectController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.send_error'), 500);
         }

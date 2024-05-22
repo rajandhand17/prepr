@@ -170,12 +170,11 @@ class ResourceModuleDetailService
             }
 
             foreach ($request['resource_module_items'] as $item) {
-                $type = ($item['type'] == 'link') ? '5' : ((isset($item['embedHTML']) && !empty($item['embedHTML'])) ? '3' : '1');
                 $resourceDetail = new ResourceModuleDetail([
                     'title'              => $item['title'],
-                    'path'               => (isset($item['embedHTML']) && !empty($item['embedHTML'])) ? $item['embedHTML'] : $item['url'],
+                    'path'               => $item['url'],
                     'resource_module_id' => $resource_module_id,
-                    'type'               => $type,
+                    'type'               => (isset($item['embedHTML']) && !empty($item['embedHTML'])) ? '3' : '1',
                 ]);
 
                 if (!$resourceDetail->save()) {

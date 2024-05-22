@@ -79,7 +79,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function createResourceModuleUsingAI($request, $upload_cover_image)
+    public function CreateResourceModuleUsingAI($request, $upload_cover_image)
     {
         try {
             $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image) {

@@ -319,7 +319,7 @@ class ResourceModuleController extends AppBaseController
                 }
             }
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
-            $createResourceModuleUsingAI = $this->resourceModuleRepository->createResourceModuleUsingAI($request, $upload_cover_image);
+            $createResourceModuleUsingAI = $this->resourceModuleRepository->CreateResourceModuleUsingAI($request, $upload_cover_image);
 
             $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request, $createResourceModuleUsingAI->id);
 

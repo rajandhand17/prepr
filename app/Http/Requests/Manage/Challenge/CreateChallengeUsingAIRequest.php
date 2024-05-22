@@ -92,7 +92,6 @@ class CreateChallengeUsingAIRequest extends FormRequest
             'steps.array'                                 => __('responses.steps_array'),
             'reflections.required'                        => __('responses.reflections_required'),
             'reflections.array'                           => __('responses.reflections_array'),
-            'is_ai_created.required'                      => __('responses.is_ai_created_required'),
             'is_ai_created.boolean'                       => __('responses.true_or_false'),
             'resource_modules.array'                      => __('responses.resource_modules_array'),
             'resource_modules.*.exists'                   => __('responses.resource_ids_array_not_exists'),
