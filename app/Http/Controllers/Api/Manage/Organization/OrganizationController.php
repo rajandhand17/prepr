@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Manage\Organization;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
+use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
 use Exception;
@@ -675,11 +676,25 @@ class OrganizationController extends AppBaseController
 
             $selectPlan = $this->organizationRepository->selectPlan($checkOrganization, $request);
             if ($selectPlan) {
-                return $this->sendResponse([], __('responses.plan_selected'));
+                return $this->sendResponse(OrganizationChargebeeLimitResource::make($checkOrganization), __('responses.plan_selected'));
             }
 
             return $this->sendError(__('responses.plan_not_selected'), 400);
         } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function subscriptionDetails($slug)
+    {
+        try {
+            $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            if (!$checkOrganization) {
+                return $this->sendError(__('responses.organization_not_exists'), 422);
+            }
+
+            return $this->sendResponse(OrganizationChargebeeLimitResource::make($checkOrganization), __('responses.plan_details_retrived'));
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

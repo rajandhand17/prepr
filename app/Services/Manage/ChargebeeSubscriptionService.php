@@ -10,13 +10,12 @@ class ChargebeeSubscriptionService
     public static function feedChargebeeDetails($organizationId, $chargebeeDetails)
     {
         try {
-            $checkChargebeeDetail = ChargebeeSubscription::where('organization_id', $organizationId)->first();
+            $checkChargebeeDetail = ChargebeeSubscription::where('organization_id', $organizationId)->orderby('id', 'ASC')->first();
             if ($checkChargebeeDetail && $checkChargebeeDetail->plan === $chargebeeDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId) {
                 return true; //marking true if no change in plan subscription
             }
             if ($checkChargebeeDetail) {
-                $chargebeeDetail = $checkChargebeeDetail;
-                $chargebeeDetail->delete();
+                $chargebeeOldDetailDelete = ChargebeeSubscription::where('organization_id', $organizationId)->delete();
             }
 
             // Setting values to chargebee_subscription table if values are set to unlimited then it would be -1 rest it can be zero or defined one's
