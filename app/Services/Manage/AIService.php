@@ -32,7 +32,7 @@ class AIService
         $resourceSummarizerApiKey = config('ai.resource_summarizer_api_key');
 
         $this->openAIClient = new Client([
-            'base_uri' => 'https://api.openai.com/v1/chat/completions',
+            'base_uri' => config('ai.openai_endpoint'),
             'headers'  => [
                 'Content-Type'  => 'application/json',
                 'Authorization' => 'Bearer ' . $openAIAPIKey,
@@ -40,7 +40,7 @@ class AIService
         ]);
 
         $this->bingArticleClient = new Client([
-            'base_uri' => 'https://api.bing.microsoft.com/v7.0/search',
+            'base_uri' => config('ai.bing_default_endpoint'),
             'headers'  => [
                 'Content-Type'              => 'application/json',
                 'Ocp-Apim-Subscription-Key' => $bingAPIKey,
@@ -48,7 +48,7 @@ class AIService
         ]);
 
         $this->bingVideoClient = new Client([
-            'base_uri' => 'https://api.bing.microsoft.com/v7.0/videos/search',
+            'base_uri' => config('ai.bing_video_endpoint'),
             'headers'  => [
                 'Content-Type'              => 'application/json',
                 'Ocp-Apim-Subscription-Key' => $bingAPIKey,
@@ -56,7 +56,7 @@ class AIService
         ]);
 
         $this->resourceSummarizerClient = new Client([
-            'base_uri' => 'https://wcpdseh3sxrkxx43msoncus3o40echeh.lambda-url.ca-central-1.on.aws/',
+            'base_uri' => config('ai.resource_summarizer_endpoint'),
             'headers'  => [
                 'Content-Type' => 'application/json',
                 'authorization-token' => $resourceSummarizerApiKey,
