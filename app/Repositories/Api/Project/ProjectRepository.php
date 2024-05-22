@@ -463,6 +463,27 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
+    public function captureProjectAIAssessment($projectData, $userData, $request)
+    {
+        try {
+            $fetchChallengeData = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
+            if ($fetchChallengeData->challenge_assessment_criteria->isNotEmpty()) {
+                $challengeAssessment = $fetchChallengeData->challenge_assessment_criteria;
+                $addProjectAIEvaluation = $this->aiService->addAIProjectEvaluation($challengeAssessment, $projectData, $userData, $request);
+
+                if ($addProjectAIEvaluation) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in captureProjectAIAssessment in ProjectRepository.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
     public function assessProjectAI($request)
     {
         try {
@@ -480,7 +501,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
-            Log::warning('Error in assessProjectAI in ProjectRepository.php: '.$e->getMessage());
+            Log::error('Error in assessProjectAI in ProjectRepository.php: '.$e->getMessage());
             DB::rollBack();
 
             return false;

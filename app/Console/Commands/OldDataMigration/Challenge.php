@@ -430,6 +430,7 @@ class Challenge extends Command
                                         $challengeAssessmentCriteria->challenge_id = $challenge->id;
                                         $challengeAssessmentCriteria->assessment_id = $challengeAssessmentCriteriaOld->challenge_assessment_id;
                                         $challengeAssessmentCriteria->title = $challengeAssessmentCriteriaOld->title;
+                                        $challengeAssessmentCriteria->description = $challengeAssessmentCriteriaOld->description;
                                         $challengeAssessmentCriteria->score = $challengeAssessmentCriteriaOld->score;
                                         $challengeAssessmentCriteria->weight = $challengeAssessmentCriteriaOld->weight;
                                         $challengeAssessmentCriteria->save();

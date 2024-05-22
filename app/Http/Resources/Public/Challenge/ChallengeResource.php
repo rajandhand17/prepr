@@ -203,9 +203,10 @@ class ChallengeResource extends JsonResource
         if ($this->challenge_assessment_criteria) {
             $challenge_assessment_criteria = $this->challenge_assessment_criteria->map(function ($item) {
                 return [
-                    'assessment_title'   => $item->title,
-                    'assessment_score'   => $item->score,
-                    'assessment_weight'  => $item->weight,
+                    'assessment_title'        => $item->title,
+                    'assessment_description'  => $item->description,
+                    'assessment_score'        => $item->score,
+                    'assessment_weight'       => $item->weight,
                 ];
             });
         }
