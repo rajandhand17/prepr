@@ -498,10 +498,10 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'    => 'gpt-3.5-turbo',
-                'n'        => 10,
+                'model'           => 'gpt-3.5-turbo',
+                'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
-                'messages' => [
+                'messages'        => [
                     [
                         'role'    => 'user',
                         'content' => '
@@ -525,7 +525,7 @@ class AIService
                         ',
                     ],
                 ],
-            ];            
+            ];
 
             $retry = 0;
             $maxRetries = 1;
@@ -558,10 +558,10 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'    => 'gpt-3.5-turbo',
-                'n'        => 10,
+                'model'           => 'gpt-3.5-turbo',
+                'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
-                'messages' => [
+                'messages'        => [
                     [
                         'role'    => 'user',
                         'content' => '
@@ -592,7 +592,7 @@ class AIService
                         ',
                     ],
                 ],
-            ];            
+            ];
 
             $retry = 0;
             $maxRetries = 1;
@@ -627,10 +627,10 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'    => 'gpt-3.5-turbo',
-                'n'        => 10,
+                'model'           => 'gpt-3.5-turbo',
+                'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
-                'messages' => [
+                'messages'        => [
                     [
                         'role'    => 'user',
                         'content' => '
@@ -664,7 +664,7 @@ class AIService
                         ',
                     ],
                 ],
-            ];            
+            ];
 
             $retry = 0;
             $maxRetries = 1;
