@@ -62,24 +62,24 @@ class OrganizationChargebeeLimitResource extends JsonResource
             }
 
             return [
-                'plan'                      => $planName,
-                'lab_limit'                  => $labLimit,
-                'lab_count'                 => $this->labs_count->count(),
+                'plan'                        => $planName,
+                'lab_limit'                   => $labLimit,
+                'lab_count'                   => $this->labs_count->count(),
                 'lab_program_limit'           => $labProgramLimit,
-                'lab_program_count'         => $this->lab_programs_count->count(),
+                'lab_program_count'           => $this->lab_programs_count->count(),
                 'pre_build_lab'               => $preBuildLab,
-                'challenge_limit'            => $challengeLimit,
-                'challenge_count'           => $this->challenges_count->count(),
+                'challenge_limit'             => $challengeLimit,
+                'challenge_count'             => $this->challenges_count->count(),
                 'challenge_path_limit'        => $challengePathLimit,
-                'challenge_path_count'      => $this->challenge_paths_count->count(),
+                'challenge_path_count'        => $this->challenge_paths_count->count(),
                 'resource_module_limit'       => $resourceModuleLimit,
-                'resource_module_count'     => $this->resource_modules_count->count(),
+                'resource_module_count'       => $this->resource_modules_count->count(),
                 'resource_collection_limit'   => $resourceCollectionLimit,
-                'resource_collection_count' => $this->resource_collections_count->count(),
+                'resource_collection_count'   => $this->resource_collections_count->count(),
                 'resource_group_limit'        => $resourceGroupLimit,
-                'resource_group_count'      => $this->resource_groups_count->count(),
+                'resource_group_count'        => $this->resource_groups_count->count(),
                 'user_invite_limit'           => $userInviteLimit,
-                'manager_limit'              => $managerLimit,
+                'manager_limit'               => $managerLimit,
             ];
         }
     }
