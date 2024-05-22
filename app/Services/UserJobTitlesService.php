@@ -90,8 +90,10 @@ class UserJobTitlesService
             $job = UserJobTitle::where(['user_id'=>auth()->user()->id, 'job_title_id'=>$jobId])->first();
             if ($job) {
                 UserJobTitle::where(['user_id'=>auth()->user()->id, 'job_title_id'=>$jobId])->delete();
+
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
