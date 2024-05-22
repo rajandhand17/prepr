@@ -59,7 +59,7 @@ class AIService
             'base_uri' => 'https://wcpdseh3sxrkxx43msoncus3o40echeh.lambda-url.ca-central-1.on.aws/',
             'headers'  => [
                 'Content-Type'        => 'application/json',
-                'authorization-token' => $resourceSummarizerApiKey,
+                'authorization' => $resourceSummarizerApiKey,
             ],
         ]);
     }
