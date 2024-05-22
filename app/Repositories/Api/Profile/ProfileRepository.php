@@ -402,13 +402,4 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
-
-    public function resumePerser($request)
-    {
-        try {
-            return $this->userService->resumePerser($request);
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
 }

@@ -262,16 +262,4 @@ class UserService
             return false;
         }
     }
-
-    public function resumePerser($request)
-    {
-        try {
-            $resumeFile = $request->file('resume');
-            $resumePath = 'uploads/resume/'.auth()->user()->id.'_'.$resumeFile->getClientOriginalName();
-            $storeResumePath = Storage::disk('s3')->put($resumePath, file_get_contents($resumeFile));
-        }catch (\Exception $e){
-            dd($e);
-            return false;
-        }
-    }
 }
