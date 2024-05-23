@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Http\Resources\Settings\UserNotificationResource;
 use App\Http\Resources\Settings\UserPrivacyResource;
 use App\Services\Manage\MemberManagementService;
+use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -26,6 +27,14 @@ class UserResource extends JsonResource
             $roles = [];
         }
 
+        $organization_details = null;
+        if ($this->verify_flag) {
+            $fetchOrganization = OrganizationService::fetchOrganizationBasedOnUserId($this->id);
+            $organization_details['id'] = $fetchOrganization->uuid;
+            $organization_details['title'] = $fetchOrganization->title;
+            $organization_details['slug'] = $fetchOrganization->slug;
+            $organization_details['plan_name'] = 'seed_plan_yearly';
+        }
         $memberManagement = new MemberManagementService();
 
         return [
@@ -60,6 +69,7 @@ class UserResource extends JsonResource
                 'microsoft'     => 'inactive',
                 'apple'         => 'inactive',
             ],
+            'organization_details'      => $organization_details,
 
             'resume'           => $this->userResume ? 'yes' : 'no',
         ];

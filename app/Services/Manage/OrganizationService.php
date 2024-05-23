@@ -375,4 +375,13 @@ class OrganizationService
             return false;
         }
     }
+
+    public static function fetchOrganizationBasedOnUserId($userId)
+    {
+        try {
+            return Organization::where('user_id', $userId)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
