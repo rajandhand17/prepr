@@ -1135,10 +1135,5 @@
     "responses.leaderboard_list": "You have successfully fetch leaderboard listing",
     "responses.plan_selected": "Congratulations, you have successfully subscribed.",
     "responses.plan_details_retrived": "Organization subscription details retrieved successfully.",
-    "responses.plan_not_selected": "Sorry, Something went wrong will subscribing the plan, please try later",
-    "responses.seed_plan": "Seed Plan",
-    "responses.bloom_plan": "Bloom Plan",
-    "responses.budd_plan": "Budd Plan",
-    "responses.sprout_plan": "Sprout Plan",
-    "responses.enterprise_plan": "Enterprise Plan"
+    "responses.plan_not_selected": "Sorry, Something went wrong will subscribing the plan, please try later"
 }

@@ -59,7 +59,7 @@ class AIService
             'base_uri' => config('ai.resource_summarizer_endpoint'),
             'headers'  => [
                 'Content-Type'        => 'application/json',
-                'authorization-token' => $resourceSummarizerApiKey,
+                'authorization'       => $resourceSummarizerApiKey,
             ],
         ]);
     }
