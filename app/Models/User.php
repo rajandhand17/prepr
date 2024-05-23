@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\Chargebee\CreateCustomerJob;
+use App\Jobs\Chargebee\SubscribePlanJob;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,6 +65,14 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    // for static response as needed for ChargeBee
+    protected $verify_flag = false;
+
+    public function getVerifyFlagAttribute()
+    {
+        return $this->verify_flag;
+    }
 
     protected $casts = ['go1_user_metadata' => 'object'];
 
@@ -333,6 +343,12 @@ class User extends Authenticatable
                     $user = User::find($user->id);
                     $user->attachRole('organization_owner', $organization->id);
                     $request->user_type = 'employee';
+
+                    // Jobs for creating customer and subscribe plan
+                    $planDetail = config('chargebee.chargebee_plan.seed_plan_yearly'); //Default plan selected
+                    CreateCustomerJob::withChain([
+                        new SubscribePlanJob($user, $organization, $planDetail),
+                    ])->dispatch($user);
                 }
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
@@ -485,6 +501,7 @@ class User extends Authenticatable
             if ($user->otp == $request->otp) {
                 $user->email_verified_at = Carbon::now();
                 $user->verified_user = '1';
+                $user->verify_flag = true;
                 if ($user->save()) {
                     $data = ['subject' => __('responses.email_subject_verified_successfully'), 'first_name' => $user->first_name, 'last_name' => $user->last_name];
                     $mail = SendMailHelper::sendMail($user, 'email.verified_successfully', $data);
