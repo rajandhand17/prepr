@@ -33,7 +33,7 @@ class UserResource extends JsonResource
             $organization_details['id'] = $fetchOrganization->uuid;
             $organization_details['title'] = $fetchOrganization->title;
             $organization_details['slug'] = $fetchOrganization->slug;
-            $organization_details['plan_name'] = __('responses.seed_plan');
+            $organization_details['plan_name'] = 'seed_plan_yearly';
         }
         $memberManagement = new MemberManagementService();
 
