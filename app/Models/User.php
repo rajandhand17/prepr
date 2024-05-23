@@ -74,7 +74,6 @@ class User extends Authenticatable
         return $this->verify_flag;
     }
 
-
     protected $casts = ['go1_user_metadata' => 'object'];
 
     public function receivesBroadcastNotificationsOn(): string
