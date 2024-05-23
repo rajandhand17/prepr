@@ -4,7 +4,7 @@ namespace App\Http\Resources\Manage\Organization;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class   OrganizationChargebeeLimitResource extends JsonResource
+class OrganizationChargebeeLimitResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
