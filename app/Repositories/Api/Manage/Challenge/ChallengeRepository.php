@@ -179,6 +179,19 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
+    public function createChallengeFromResourceUsingAIPreview($request)
+    {
+        try {
+            $createChallengeFromResourceUsingAIPreview = $this->aiService->createChallengeFromResourceUsingAIPreview($request);
+
+            return $createChallengeFromResourceUsingAIPreview;
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeRepository.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
     public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image)
     {
         try {
