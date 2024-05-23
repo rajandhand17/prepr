@@ -68,7 +68,7 @@ class AIService
         ]);
 
         $this->projectAssessorClient = new Client([
-            'base_uri' => 'https://th7cgys3gq4nz4ipzr5aekbtnu0hlywt.lambda-url.ca-central-1.on.aws/',
+            'base_uri' => config('ai.project_assessor_endpoint'),
             'headers'  => [
                 'Content-Type'  => 'application/json',
                 'authorization' => $projectAssessorApiKey,
