@@ -18,19 +18,19 @@ class OrganizationChargebeeLimitResource extends JsonResource
         if (!empty($this->chargebee_details)) {
             switch ($this->chargebee_details->plan) {
                 case 'free-plan-CAD-Yearly':
-                    $planName = __('responses.seed_plan');
+                    $planName = 'seed_plan_yearly';
                     break;
                 case 'Sprout-Plan-CAD-Yearly':
-                    $planName = __('responses.sprout_plan');
+                    $planName = 'sprout_plan_yearly';
                     break;
                 case 'Budd-Plan-CAD-Yearly':
-                    $planName = __('responses.budd_plan');
+                    $planName = 'budd_plan_yearly';
                     break;
                 case 'Bloom-Plan-CAD-Yearly':
-                    $planName = __('responses.bloom_plan');
+                    $planName = 'bloom_plan_yearly';
                     break;
                 case 'Unlimited-Plan-CAD-Yearly':
-                    $planName = __('responses.enterprise_plan');
+                    $planName = 'unlimited_plan';
                     break;
                 default:
                     $planName = $this->chargebee_details->plan;

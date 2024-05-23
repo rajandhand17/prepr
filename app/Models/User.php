@@ -66,6 +66,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // for static response as needed for ChargeBee
+    protected $verify_flag = false;
+
+    public function getVerifyFlagAttribute()
+    {
+        return $this->verify_flag;
+    }
+
     protected $casts = ['go1_user_metadata' => 'object'];
 
     public function receivesBroadcastNotificationsOn(): string
@@ -493,6 +501,7 @@ class User extends Authenticatable
             if ($user->otp == $request->otp) {
                 $user->email_verified_at = Carbon::now();
                 $user->verified_user = '1';
+                $user->verify_flag = true;
                 if ($user->save()) {
                     $data = ['subject' => __('responses.email_subject_verified_successfully'), 'first_name' => $user->first_name, 'last_name' => $user->last_name];
                     $mail = SendMailHelper::sendMail($user, 'email.verified_successfully', $data);
