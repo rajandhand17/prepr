@@ -669,6 +669,10 @@ class OrganizationController extends AppBaseController
     public function selectPlan($slug, Request $request)
     {
         try {
+            if (!in_array($request->plan_name, ['seed_plan_yearly', 'sprout_plan_yearly', 'budd_plan_yearly', 'bloom_plan_yearly', 'unlimited_plan'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_not_exists'), 422);
