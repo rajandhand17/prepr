@@ -2,14 +2,9 @@
 
 namespace App\Services;
 
-use App\Helpers\WikipediaHelper;
-use App\Models\Skill;
 use App\Models\User;
-use App\Models\UserExperience;
 use Exception;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Http;
 
 class UserService
 {
@@ -145,6 +140,7 @@ class UserService
             if ($user) {
                 $user->profile_image = config('site-settings.default_user_profile_image');
                 $user->save();
+
                 return $user;
             }
 
@@ -266,4 +262,3 @@ class UserService
         }
     }
 }
-
