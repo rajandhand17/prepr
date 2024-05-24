@@ -101,6 +101,7 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('assessment_title') !== null && $this->has('assessment_score') !== null && $this->has('assessment_weight') !== null) {
             $base_rules['assessment_title'] = 'array';
             $base_rules['assessment_title.*'] = 'required';
+            $base_rules['assessment_description'] = 'array';
             $base_rules['assessment_score'] = 'array';
             $base_rules['assessment_score.*'] = 'required|numeric';
             $base_rules['assessment_weight'] = 'array';
