@@ -28,16 +28,6 @@ class RedirectIfAuthenticated
             }
         }
 
-        // if ($guard == "maestro" && Auth::guard($guard)->check()) {
-        //     return redirect('/maestro');
-        // }
-
-        // if (Auth::guard($guard)->check()) {
-        //     return redirect('/maestro/dashboard');
-        // } else {
-        //     return redirect('/maestro/login');
-        // }
-
         return $next($request);
     }
 }
