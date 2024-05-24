@@ -706,7 +706,8 @@ class AuthController extends AppBaseController
         try {
             $verify = $this->authRepository->verifyAccount($request);
             if ($verify['success'] === true) {
-                return $this->sendResponse(UserResource::make($verify['user']), __('responses.verify_success'), 200);
+                $response = ['token' => LoginResource::make(json_decode(json_encode($verify), false)), 'user' => UserResource::make($verify['user'])];
+                return $this->sendResponse($response, $verify['message'], 200);
             }
             if ($verify['success'] === false) {
                 return $this->sendError($verify['message'], 208);
