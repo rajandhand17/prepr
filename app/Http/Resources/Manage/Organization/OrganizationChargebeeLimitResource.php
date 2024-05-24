@@ -18,19 +18,19 @@ class OrganizationChargebeeLimitResource extends JsonResource
         if (!empty($this->chargebee_details)) {
             switch ($this->chargebee_details->plan) {
                 case 'free-plan-CAD-Yearly':
-                    $planName = __('responses.seed_plan');
+                    $planName = 'seed_plan_yearly';
                     break;
                 case 'Sprout-Plan-CAD-Yearly':
-                    $planName = __('responses.sprout_plan');
+                    $planName = 'sprout_plan_yearly';
                     break;
                 case 'Budd-Plan-CAD-Yearly':
-                    $planName = __('responses.budd_plan');
+                    $planName = 'budd_plan_yearly';
                     break;
                 case 'Bloom-Plan-CAD-Yearly':
-                    $planName = __('responses.bloom_plan');
+                    $planName = 'bloom_plan_yearly';
                     break;
                 case 'Unlimited-Plan-CAD-Yearly':
-                    $planName = __('responses.enterprise_plan');
+                    $planName = 'unlimited_plan';
                     break;
                 default:
                     $planName = $this->chargebee_details->plan;
@@ -62,24 +62,24 @@ class OrganizationChargebeeLimitResource extends JsonResource
             }
 
             return [
-                'plan'                      => $planName,
-                'labLimit'                  => $labLimit,
-                'lab_count'                 => $this->labs_count->count(),
-                'labProgramLimit'           => $labProgramLimit,
-                'lab_program_count'         => $this->lab_programs_count->count(),
-                'preBuildLab'               => $preBuildLab,
-                'challengeLimit'            => $challengeLimit,
-                'challenge_count'           => $this->challenges_count->count(),
-                'challengePathLimit'        => $challengePathLimit,
-                'challenge_path_count'      => $this->challenge_paths_count->count(),
-                'resourceModuleLimit'       => $resourceModuleLimit,
-                'resource_module_count'     => $this->resource_modules_count->count(),
-                'resourceCollectionLimit'   => $resourceCollectionLimit,
-                'resource_collection_count' => $this->resource_collections_count->count(),
-                'resourceGroupLimit'        => $resourceGroupLimit,
-                'resource_group_count'      => $this->resource_groups_count->count(),
-                'userInviteLimit'           => $userInviteLimit,
-                'managerLimit'              => $managerLimit,
+                'plan'                        => $planName,
+                'lab_limit'                   => $labLimit,
+                'lab_count'                   => $this->labs_count->count(),
+                'lab_program_limit'           => $labProgramLimit,
+                'lab_program_count'           => $this->lab_programs_count->count(),
+                'pre_build_lab'               => $preBuildLab,
+                'challenge_limit'             => $challengeLimit,
+                'challenge_count'             => $this->challenges_count->count(),
+                'challenge_path_limit'        => $challengePathLimit,
+                'challenge_path_count'        => $this->challenge_paths_count->count(),
+                'resource_module_limit'       => $resourceModuleLimit,
+                'resource_module_count'       => $this->resource_modules_count->count(),
+                'resource_collection_limit'   => $resourceCollectionLimit,
+                'resource_collection_count'   => $this->resource_collections_count->count(),
+                'resource_group_limit'        => $resourceGroupLimit,
+                'resource_group_count'        => $this->resource_groups_count->count(),
+                'user_invite_limit'           => $userInviteLimit,
+                'manager_limit'               => $managerLimit,
             ];
         }
     }
