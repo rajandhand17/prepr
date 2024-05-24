@@ -4,6 +4,8 @@ namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Models\Challenge;
 use App\Services\Manage\AIService;
+use App\Services\Manage\CampusConnectOpportunityService;
+use App\Services\Manage\CampusConnectStoryService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAnnouncementService;
 use App\Services\Manage\ChallengeAssessmentCriteriaService;
@@ -19,6 +21,7 @@ use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTagsGroupsService;
 use App\Services\Manage\ChallengeTimelinesService;
 use App\Services\Manage\ComponentAssociationService;
+use App\Services\Manage\OrganizationService;
 use App\Services\ProjectPitchService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -43,8 +46,11 @@ class ChallengeRepository implements ChallengeInterface
     private $aiService;
     private $componentAssociationService;
     private $projectPitchService;
+    private $campusConnectOpportunityService;
+    private $campusConnectStoryService;
+    private $organizationService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
@@ -64,6 +70,9 @@ class ChallengeRepository implements ChallengeInterface
         $this->aiService = $aiService;
         $this->componentAssociationService = $componentAssociationService;
         $this->projectPitchService = $projectPitchService;
+        $this->campusConnectOpportunityService = $campusConnectOpportunityService;
+        $this->campusConnectStoryService = $campusConnectStoryService;
+        $this->organizationService = $organizationService;
     }
 
     public function getChallengeCountBasedOnOrganization($organizationId)
@@ -106,6 +115,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
+                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
                 $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
@@ -120,20 +130,46 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeExternalLink = $this->challengeExternalLinkService->createChallengeExternalLink($request, $createChallenge->id);
                 $createChallengeComponentAssociation = $this->componentAssociationService->createChallengeComponentAssociation($request, $createChallenge->id);
 
+                $campusConnectOpportunity = true;
+                $campusConnectStory = true;
+                if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
+                    $campusConnectOpportunity = $this->campusConnectOpportunityService->updateOrCreate(
+                        data_get($createChallenge, 'id'),
+                        data_get($createChallenge, 'slug', '-'),
+                        Challenge::class,
+                        $request->all(),
+                        $organization,
+                        auth()->user(),
+                        $request->get('skills', [])
+                    );
+                }
+
+                if (in_array($request->integrate_campus_connect, ['story', 'both'])) {
+                    $campusConnectStory = $this->campusConnectStoryService->UpdateOrCreate(
+                        data_get($createChallenge, 'id'),
+                        data_get($createChallenge, 'slug', '-'),
+                        Challenge::class,
+                        $request->all(),
+                        $organization,
+                    );
+                }
+
                 return [
-                    'createChallenge'                       => $createChallenge,
-                    'createChallengeAchievement'            => $createChallengeAchievement,
-                    'createChallengeSponsor'                => $createChallengeSponsor,
-                    'createChallengeSkillsGroupsStack'      => $createChallengeSkillsGroupsStack,
-                    'createChallengeTagsGroups'             => $createChallengeTagsGroups,
-                    'createChallengeRequirement'            => $createChallengeRequirement,
-                    'createChallengeAssessmentCriteria'     => $createChallengeAssessmentCriteria,
-                    'createChallengeAssessment'             => $createChallengeAssessment,
-                    'createChallengeProjectTemplate'        => $createChallengeProjectTemplate,
-                    'createChallengeTimelines'              => $createChallengeTimelines,
-                    'createChallengeCustomTimelines'        => $createChallengeCustomTimelines,
-                    'createChallengeExternalLink'           => $createChallengeExternalLink,
-                    'createChallengeComponentAssociation'   => $createChallengeComponentAssociation,
+                    'createChallenge'                     => $createChallenge,
+                    'createChallengeAchievement'          => $createChallengeAchievement,
+                    'createChallengeSponsor'              => $createChallengeSponsor,
+                    'createChallengeSkillsGroupsStack'    => $createChallengeSkillsGroupsStack,
+                    'createChallengeTagsGroups'           => $createChallengeTagsGroups,
+                    'createChallengeRequirement'          => $createChallengeRequirement,
+                    'createChallengeAssessmentCriteria'   => $createChallengeAssessmentCriteria,
+                    'createChallengeAssessment'           => $createChallengeAssessment,
+                    'createChallengeProjectTemplate'      => $createChallengeProjectTemplate,
+                    'createChallengeTimelines'            => $createChallengeTimelines,
+                    'createChallengeCustomTimelines'      => $createChallengeCustomTimelines,
+                    'createChallengeExternalLink'         => $createChallengeExternalLink,
+                    'createChallengeComponentAssociation' => $createChallengeComponentAssociation,
+                    'campusConnectOpportunity'            => $campusConnectOpportunity,
+                    'campusConnectStory'                  => $campusConnectStory,
                 ];
             });
 
@@ -150,7 +186,9 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['createChallengeTimelines'] &&
                 $createChallenge['createChallengeCustomTimelines'] &&
                 $createChallenge['createChallengeExternalLink'] &&
-                $createChallenge['createChallengeComponentAssociation']
+                $createChallenge['createChallengeComponentAssociation'] &&
+                $createChallenge['campusConnectOpportunity'] &&
+                $createChallenge['campusConnectStory']
             ) {
                 DB::commit();
 
@@ -207,15 +245,15 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeAssociations = $this->componentAssociationService->createChallengeComponentAssociation($request, $createChallenge->id);
 
                 return [
-                    'createChallenge'                   => $createChallenge,
-                    'createChallengeAchievement'        => $createChallengeAchievement,
-                    'createChallengeSkillsGroupsStack'  => $createChallengeSkillsGroupsStack,
-                    'createChallengeRequirement'        => $createChallengeRequirement,
-                    'createChallengeJobs'               => $createChallengeJobs,
-                    'createChallengeProjectPitch'       => $createChallengeProjectPitch,
-                    'createChallengeProjectTemplate'    => $createChallengeProjectTemplate,
-                    'createChallengeTimelines'          => $createChallengeTimelines,
-                    'createChallengeAssociations'       => $createChallengeAssociations,
+                    'createChallenge'                  => $createChallenge,
+                    'createChallengeAchievement'       => $createChallengeAchievement,
+                    'createChallengeSkillsGroupsStack' => $createChallengeSkillsGroupsStack,
+                    'createChallengeRequirement'       => $createChallengeRequirement,
+                    'createChallengeJobs'              => $createChallengeJobs,
+                    'createChallengeProjectPitch'      => $createChallengeProjectPitch,
+                    'createChallengeProjectTemplate'   => $createChallengeProjectTemplate,
+                    'createChallengeTimelines'         => $createChallengeTimelines,
+                    'createChallengeAssociations'      => $createChallengeAssociations,
                 ];
             });
 
@@ -285,6 +323,7 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment) {
+                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
                 $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image);
                 $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
                 $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
@@ -298,6 +337,30 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallengeCustomTimelines = $this->challengeCustomTimelinesService->updateChallengeCustomTimelines($request, $updateChallenge->id);
                 $updateChallengeExternalLinks = $this->challengeExternalLinkService->updateChallengeExternalLink($request, $updateChallenge->id);
                 $updateChallengeAssociation = $this->componentAssociationService->updateChallengeComponentAssociation($request, $updateChallenge->id);
+
+                $campusConnectOpportunity = true;
+                $campusConnectStory = true;
+                if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
+                    $campusConnectOpportunity = $this->campusConnectOpportunityService->updateOrCreate(
+                        data_get($updateChallenge, 'id'),
+                        data_get($updateChallenge, 'slug', '-'),
+                        Challenge::class,
+                        $request->all(),
+                        $organization,
+                        auth()->user(),
+                        $request->get('skills', [])
+                    );
+                }
+
+                if (in_array($request->integrate_campus_connect, ['story', 'both'])) {
+                    $campusConnectStory = $this->campusConnectStoryService->UpdateOrCreate(
+                        data_get($updateChallenge, 'id'),
+                        data_get($updateChallenge, 'slug', '-'),
+                        Challenge::class,
+                        $request->all(),
+                        $organization,
+                    );
+                }
 
                 return [
                     'updateChallenge'                   => $updateChallenge,
@@ -313,6 +376,8 @@ class ChallengeRepository implements ChallengeInterface
                     'updateChallengeCustomTimelines'    => $updateChallengeCustomTimelines,
                     'updateChallengeExternalLinks'      => $updateChallengeExternalLinks,
                     'updateChallengeAssociation'        => $updateChallengeAssociation,
+                    'campusConnectOpportunity'          => $campusConnectOpportunity,
+                    'campusConnectStory'                => $campusConnectStory,
                 ];
             });
 
@@ -329,7 +394,9 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['updateChallengeTimelines'] &&
                 $updateChallenge['updateChallengeCustomTimelines'] &&
                 $updateChallenge['updateChallengeExternalLinks'] &&
-                $updateChallenge['updateChallengeAssociation']
+                $updateChallenge['updateChallengeAssociation'] &&
+                $updateChallenge['campusConnectOpportunity'] &&
+                $updateChallenge['campusConnectStory']
             ) {
                 DB::commit();
 
@@ -455,23 +522,23 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallengeAssociaton = $this->componentAssociationService->cloneChallengeAssociaton($originalChallenge->challenge_association, $cloneChallenge->id);
 
                 return [
-                    'cloneChallenge'                             => $cloneChallenge,
-                    'cloneChallengeParticipationAchievement'     => $cloneChallengeParticipationAchievement,
-                    'cloneChallengeIncentiveAchievement'         => $cloneChallengeIncentiveAchievement,
-                    'cloneChallengeSkills'                       => $cloneChallengeSkills,
-                    'cloneChallengeGroups'                       => $cloneChallengeGroups,
-                    'cloneChallengeStack'                        => $cloneChallengeStack,
-                    'cloneChallengeSponsor'                      => $cloneChallengeSponsor,
-                    'cloneChallengeTags'                         => $cloneChallengeTags,
-                    'cloneChallengeTagsGroups'                   => $cloneChallengeTagsGroups,
-                    'cloneChallengeRequirement'                  => $cloneChallengeRequirement,
-                    'cloneChallengeAssessmentCriteria'           => $cloneChallengeAssessmentCriteria,
-                    'cloneChallengeAssessment'                   => $cloneChallengeAssessment,
-                    'cloneChallengeProjectTemplate'              => $cloneChallengeProjectTemplate,
-                    'cloneChallengeTimelines'                    => $cloneChallengeTimelines,
-                    'cloneChallengeCustomTimelines'              => $cloneChallengeCustomTimelines,
-                    'cloneChallengeExternalLink'                 => $cloneChallengeExternalLink,
-                    'cloneChallengeAssociaton'                   => $cloneChallengeAssociaton,
+                    'cloneChallenge'                         => $cloneChallenge,
+                    'cloneChallengeParticipationAchievement' => $cloneChallengeParticipationAchievement,
+                    'cloneChallengeIncentiveAchievement'     => $cloneChallengeIncentiveAchievement,
+                    'cloneChallengeSkills'                   => $cloneChallengeSkills,
+                    'cloneChallengeGroups'                   => $cloneChallengeGroups,
+                    'cloneChallengeStack'                    => $cloneChallengeStack,
+                    'cloneChallengeSponsor'                  => $cloneChallengeSponsor,
+                    'cloneChallengeTags'                     => $cloneChallengeTags,
+                    'cloneChallengeTagsGroups'               => $cloneChallengeTagsGroups,
+                    'cloneChallengeRequirement'              => $cloneChallengeRequirement,
+                    'cloneChallengeAssessmentCriteria'       => $cloneChallengeAssessmentCriteria,
+                    'cloneChallengeAssessment'               => $cloneChallengeAssessment,
+                    'cloneChallengeProjectTemplate'          => $cloneChallengeProjectTemplate,
+                    'cloneChallengeTimelines'                => $cloneChallengeTimelines,
+                    'cloneChallengeCustomTimelines'          => $cloneChallengeCustomTimelines,
+                    'cloneChallengeExternalLink'             => $cloneChallengeExternalLink,
+                    'cloneChallengeAssociaton'               => $cloneChallengeAssociaton,
                 ];
             });
 
@@ -514,7 +581,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createAnnouncement = $this->challengeAnnouncementService->createChallengeAnnouncement($challengeId, $request);
 
                 return [
-                    'createAnnouncement'    => $createAnnouncement,
+                    'createAnnouncement' => $createAnnouncement,
                 ];
             });
 
