@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Helpers\WikipediaHelper;
+use App\Models\Skill;
 use App\Models\UserSkills;
+use stdClass;
 
 class UserSkillsService
 {
@@ -81,7 +84,7 @@ class UserSkillsService
         }
     }
 
-    public function addSingleSkill($request)
+    public static function addSingleSkill($request)
     {
         try {
             $checkExisitngSKills = UserSkills::where(['user_id' => auth()->user()->id, 'skill'=>$request->skill_id])->first();
@@ -90,9 +93,11 @@ class UserSkillsService
                     'user_id' => auth()->user()->id,
                     'skill'   => $request->skill_id,
                 ]);
-
-                return $addSkill;
-            } else {
+                if($addSkill==true){
+                    return $addSkill;
+                }
+                return false;
+            }else {
                 return 'already';
             }
 
@@ -140,6 +145,51 @@ class UserSkillsService
 
             return true;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+
+    public static function deleteUserSkillsBasedOnUserId($userId)
+    {
+        try {
+            $checkExists=UserSkills::where('user_id',$userId)->first();
+            if ($checkExists){
+                UserSkills::where('user_id',$userId)->delete();
+            }
+            return true;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addUserSkillsByUsingResumeData($data,$user){
+        try {
+            $deleteExistingSkills=self::deleteUserSkillsBasedOnUserId($user->id);
+            if(!$deleteExistingSkills){
+               return false;
+           }
+            foreach($data['data']['skills']['overall_skills'] as $skillName){
+                $skillResponse=WikipediaHelper::fetchRelatedSkills(config('wikipedia.SKILLS_RECOMMENDATION_ENGINE_URL').strtolower($skillName));
+                if (is_array($skillResponse)){
+                    foreach ($skillResponse as $relatedSkillName=>$relatedSkillScore){
+                        if ($relatedSkillScore >= 0.95) {
+                            $dbSkill = Skill::where('title', $relatedSkillName)->first();
+                            if ($dbSkill) {
+                                $skills = new stdClass();
+                                $skills->skill_id = $dbSkill->id;
+                                $response = self::addSingleSkill($skills);
+                                if (!$response){
+                                    return false;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            return true;
+        }catch (\Exception $e) {
             return false;
         }
     }

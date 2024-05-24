@@ -72,4 +72,48 @@ class UserExperienceService
             return false;
         }
     }
+
+    public static function deleteExperienceBasedOnUserId($userId)
+    {
+        try {
+            $userExperience=UserExperience::where('user_id', $userId)->delete();
+            if($userExperience){
+                return true;
+            }
+            return false;
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addUserExperienceByUsingResumeData($response,$user)
+    {
+        try {
+            $userExperience=UserExperienceService::deleteExperienceBasedOnUserId($user->id);
+            foreach ($response['data']['employer'] as $key => $value) {
+                if ($value && isset($value['company_name']) && isset($value['role'])) {
+                    $startDate = isset($value['from_year'], $value['from_month'])
+                        ? date('Y-m-d', strtotime($value['from_year'] . '-' . $value['from_month'] . '-01'))
+                        : now()->toDateString();
+
+                    $endDate = isset($value['to_year'], $value['to_month'])
+                        ? date('Y-m-d', strtotime($value['to_year'] . '-' . $value['to_month'] . '-01'))
+                        : now()->toDateString();
+                    $userExperience=UserExperience::create([
+                        'user_id' => $user->id,
+                        'company' => trim(str_replace("&nbsp;", " ", strip_tags($value['company_name']))),
+                        'position' => trim(str_replace("&nbsp;", " ", strip_tags($value['role']))),
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'country' => "",
+                        'state' => "",
+                        'description' => trim(str_replace("&nbsp;", " ", strip_tags($value['description']))),
+                    ]);
+                }
+            }
+            return true;
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
 }
