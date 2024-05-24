@@ -137,26 +137,28 @@ class ProfileRepository implements ProfileInterface
     public function resumeUpload($request)
     {
         try {
-            $getResumeData=ResumeParserHelper::getResumeData($request);
-            $user=auth()->user();
-            if(!empty($getResumeData)){
-                if($getResumeData['data']){
-                    $getResume = DB::transaction(function () use ($getResumeData,$user) {
-                    $userSKills=$this->userSkillsService->addUserSkillsByUsingResumeData($getResumeData,$user);
-                    $userExperience=$this->userExperienceService->addUserExperienceByUsingResumeData($getResumeData,$user);
-                    return [
-                        'skills'     =>$userSKills,
-                        'experience' =>$userExperience,
-                    ];
-                });
+            $getResumeData = ResumeParserHelper::getResumeData($request);
+            $user = auth()->user();
+            if (!empty($getResumeData)) {
+                if ($getResumeData['data']) {
+                    $getResume = DB::transaction(function () use ($getResumeData, $user) {
+                        $userSKills = $this->userSkillsService->addUserSkillsByUsingResumeData($getResumeData, $user);
+                        $userExperience = $this->userExperienceService->addUserExperienceByUsingResumeData($getResumeData, $user);
+
+                        return [
+                            'skills'     => $userSKills,
+                            'experience' => $userExperience,
+                        ];
+                    });
                 }
-                if ($getResume['skills'] && $getResume['experience']){
+                if ($getResume['skills'] && $getResume['experience']) {
                     DB::commit();
+
                     return $user;
                 }
                 DB::rollBack();
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
