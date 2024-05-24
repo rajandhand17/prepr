@@ -247,6 +247,9 @@ return [
 
         /* GO1 */
         App\Repositories\Api\GO1\GO1ServiceProvider::class,
+
+        /* Campus Connect */
+        App\Repositories\Api\Manage\CampusConnect\CampusConnectServiceProvider::class,
     ],
 
     /*
