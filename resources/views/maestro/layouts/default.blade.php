@@ -9,7 +9,7 @@
     <div class="wrapper">
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+            <img class="animation__shake" src="{{config('site-settings.maestro_cdn_url').'public/front/img/gif-loader.gif'}}" alt="Preprlabs logo" height="60" width="60">
         </div>
 
         <!-- Navbar -->

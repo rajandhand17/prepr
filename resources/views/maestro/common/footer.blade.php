@@ -22,6 +22,13 @@
 <script>
     $.widget.bridge('uibutton', $.ui.button)
 </script>
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+</script>
 <!-- Bootstrap 4 -->
 <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/bootstrap/js/bootstrap.bundle.min.js'}}"></script>
 <!-- ChartJS -->
