@@ -23,3 +23,7 @@
 <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/daterangepicker/daterangepicker.css'}}">
 <!-- summernote -->
 <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/summernote/summernote-bs4.min.css'}}">
+<!-- DataTables -->
+<link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'}}">
+<link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'plugins/datatables-responsive/css/responsive.bootstrap4.min.css'}}">
+<link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'plugins/datatables-buttons/css/buttons.bootstrap4.min.css'}}">
