@@ -12,4 +12,5 @@ return [
     'bing_video_endpoint'               => env('BING_VIDEO_ENDPOINT'),
     'resource_summarizer_endpoint'      => env('RESOURCE_SUMMARIZER_ENDPOINT'),
     'project_assessor_endpoint'         => env('PROJECT_ASSESSOR_ENDPOINT'),
+    'project_assessor_api_key'          => env('PROJECT_ASSESSOR_API_KEY'),
 ];

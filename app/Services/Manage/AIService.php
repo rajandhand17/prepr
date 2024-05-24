@@ -9,11 +9,13 @@ use App\Models\Challenge;
 use App\Models\Duration;
 // use App\Models\Lab;
 use App\Models\Levels;
+use App\Models\ProjectFile;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\Skill;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -24,12 +26,14 @@ class AIService
     protected $bingArticleClient;
     protected $bingVideoClient;
     protected $resourceSummarizerClient;
+    protected $projectAssessorClient;
 
     public function __construct()
     {
         $openAIAPIKey = config('ai.openai_api_key');
         $bingAPIKey = config('ai.bing_api_key');
         $resourceSummarizerApiKey = config('ai.resource_summarizer_api_key');
+        $projectAssessorApiKey = config('ai.project_assessor_api_key');
 
         $this->openAIClient = new Client([
             'base_uri' => config('ai.openai_endpoint'),
@@ -61,6 +65,15 @@ class AIService
                 'Content-Type'        => 'application/json',
                 'authorization'       => $resourceSummarizerApiKey,
             ],
+        ]);
+
+        $this->projectAssessorClient = new Client([
+            'base_uri' => config('ai.project_assessor_endpoint'),
+            'headers'  => [
+                'Content-Type'  => 'application/json',
+                'authorization' => $projectAssessorApiKey,
+            ],
+            'timeout'  => .5,
         ]);
     }
 
@@ -270,7 +283,6 @@ class AIService
 
             while ($attempt < 3 && count($validChallenges) < 2) {
                 $attempt++;
-                Log::info($resourceModulesSummary);
                 $openAIResponse = $this->fetchChallengesFromResourcesByOpenAI($durationTitles, $levelTitles, $additionalInformation, $categoryTitles, $resourceModulesTitlesAndDescriptions, $resourceModulesSummary);
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
@@ -486,29 +498,31 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'    => 'gpt-3.5-turbo',
-                'n'        => 10,
-                'messages' => [
+                'model'           => 'gpt-3.5-turbo',
+                'n'               => 10,
+                'response_format' => ['type' => 'json_object'],
+                'messages'        => [
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational challenge for the careers: "'.$jobTitlesStr.'", with skills: "'.$skillTitlesStr.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the challenge to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'").
-                            1. **Title**: Craft a brief creative title for the challenge.
-                            2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
-                            3. **Steps**: Write the exact same steps mentioned in description in an array as well.
-                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitlesStr.'".
-                            6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
-                
-                            Output format (Make sure you exactly follow it):
+                            Please create an educational challenge tailored for the following careers: "'.$jobTitlesStr.'", focusing on the specified skills: "'.$skillTitlesStr.'", designed for "'.$levelTitle.'" level, with a duration of "'.$durationTitle.'". Additional prioritized information includes: ("'.$additionalInformation.'").
+                            1. **Challenge Title**: Develop a succinct and creative title for the challenge.
+                            2. **Challenge Description**: Present a paragraph describing the challenge and provide a detailed, step-by-step guide in HTML format suitable for online implementation.
+                            3. **Challenge Steps**: List the exact steps mentioned in the description in an array format.
+                            4. **Essential Skills**: Enumerate 10 essential skills required for this challenge, with emphasis on the provided and important skills.
+                            5. **Category Selection**: Based on the specified careers, skills, and level, select one category from the following options: "'.$categoryTitlesStr.'".
+                            6. **Reflective Questions**: Provide 5 reflective questions for participants to answer after completing the challenge. These questions should prompt participants to reflect on their approach, applied skills, encountered obstacles, and overall learning experience.
+                            
+                            JSON output format (Ensure precise adherence):
                             {
-                            "challengeTitle": "Challenge Title",
-                            "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so on)",
-                            "category": "Selected Category",
-                            "steps": ["Step 1", "Step 2", (all the steps)],
-                            "skills": ["Skill 1", "Skill 2", (all the skills)],
-                            "reflections": ["Reflection 1", "Reflection 2", (all the reflections)]
-                        }',
+                                "challengeTitle": "Challenge Title",
+                                "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so forth)",
+                                "category": "Selected Category",
+                                "steps": ["Step 1", "Step 2", (all steps)],
+                                "skills": ["Skill 1", "Skill 2", (all skills)],
+                                "reflections": ["Reflection 1", "Reflection 2", (all reflections)]
+                            }
+                        ',
                     ],
                 ],
             ];
@@ -544,36 +558,37 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'    => 'gpt-3.5-turbo',
-                'n'        => 10,
-                'messages' => [
+                'model'           => 'gpt-3.5-turbo',
+                'n'               => 10,
+                'response_format' => ['type' => 'json_object'],
+                'messages'        => [
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational challenge using the provided information that you receive from the summary of one or more resource modules. Additional information that needs to be prioritize would be ("'.$additionalInformation.'").
-                            1. **Title**: Craft a brief creative title for the challenge.
-                            2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
-                            3. **Steps**: Write the exact same steps mentioned in description in an array as well.
-                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the given information, select one category from these options: "'.$categoryTitlesStr.'".
-                            6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
-                            7. **Level**: Select one of these levels for the challenge: "'.$levelTitles.'".
-                            8. **Duration**: Select one of these durations for the challenge to end: "'.$durationTitles.'".
-
-                            Output format (Make sure you exactly follow it):
+                            Please craft a distinct educational challenge utilizing the insights provided in the summaries of one or more resource modules. Emphasize any additional information as follows: ("'.$additionalInformation.'").
+                            1. **Challenge Title**: Create an inventive title for the challenge.
+                            2. **Challenge Description**: Compose a paragraph describing the challenge and provide a detailed, step-by-step guide in HTML format suitable for online implementation.
+                            3. **Challenge Steps**: List the exact steps mentioned in the description in an array.
+                            4. **Essential Skills**: Enumerate 10 crucial skills necessary for this challenge, with priority given to the provided and important skills.
+                            5. **Category Selection**: Choose one category from the following options: "'.$categoryTitlesStr.'".
+                            6. **Reflective Questions**: Provide 5 questions for participants to contemplate after completing the challenge, focusing on their approach, applied skills, encountered obstacles, and overall learning experience.
+                            7. **Challenge Level**: Specify the difficulty level of the challenge: "'.$levelTitles.'".
+                            8. **Challenge Duration**: Determine the duration for the challenge to end: "'.$durationTitles.'".
+            
+                            JSON output format (Ensure precise adherence):
                             {
                                 "challengeTitle": "Challenge Title",
-                                "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so on)",
+                                "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so forth)",
                                 "category": "Selected Category",
-                                "steps": ["Step 1", "Step 2", (all the steps)],
-                                "skills": ["Skill 1", "Skill 2", (all the skills)],
-                                "reflections": ["Reflection 1", "Reflection 2", (all the reflections)],
+                                "steps": ["Step 1", "Step 2", (all steps)],
+                                "skills": ["Skill 1", "Skill 2", (all skills)],
+                                "reflections": ["Reflection 1", "Reflection 2", (all reflections)],
                                 "level": "Selected Level",
                                 "duration": "Selected Duration"
                             }
-
-                            The title and description of the resource modules: "'.$resourceModulesTitlesAndDescriptions.'".
-                            The summary of the resource modules\' contents: "'.$resourceModulesSummary.'".
+            
+                            Utilize the titles and descriptions of the resource modules creatively: "'.$resourceModulesTitlesAndDescriptions.'".
+                            Summarize the contents of the resource modules: "'.$resourceModulesSummary.'".
                         ',
                     ],
                 ],
@@ -612,40 +627,41 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'    => 'gpt-3.5-turbo',
-                'n'        => 10,
-                'messages' => [
+                'model'           => 'gpt-3.5-turbo',
+                'n'               => 10,
+                'response_format' => ['type' => 'json_object'],
+                'messages'        => [
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational lab with 5 challenges for the careers: "'.$jobTitlesStr.'", with skills: "'.$skillTitlesStr.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the lab to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
-                            1. **Title**: Craft a brief creative title for the challenge without counting it (ex. without saying challenge 1, challenge 2, or similar). Write just the title.
-                            2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
-                            3. **Steps**: Write the exact same steps mentioned in description in an array as well.
-                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitlesStr.'".
-                            6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
-                            6. **Lab Title**: Craft a brief title for the lab.
-                            6. **Lab Description**: Provide a paragraph description about the lab and what it focuses on.
-                
-                            Output format (Make sure you exactly follow it):
-                                {
-                                    "labTitle": "Lab Title",
-                                    "labDescription": "Lab Description"
-                                    "challenges": [
-                                        {
-                                            "challengeTitle": "Creative Challenge Title",
-                                            "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so on)",
-                                            "category": "Selected Category",
-                                            "steps": ["Step 1", "Step 2", (all the steps)],
-                                            "skills": ["Skill 1", "Skill 2", (all the skills)],
-                                            "reflections": ["Reflection 1", "Reflection 2", (all the reflections)]
-                                        },
-                                        ...
-                                        (5 challenges)
-                                    ]
-                                }
-                            ',
+                            Please design an educational lab comprising 5 sequential challenges tailored for the following careers: "'.$jobTitlesStr.'", focusing on the specified skills: "'.$skillTitlesStr.'", designed for "'.$levelTitle.'" level, with a duration of "'.$durationTitle.'" for the lab to finish. Additional prioritized information includes: ("'.$additionalInformation.'"). The challenges must be arranged in order and preferably build upon each other to achieve the lab\'s objective.
+                            1. **Challenge Title**: Devise a brief and creative title for the challenge without numbering (e.g., avoid "Challenge 1," "Challenge 2," etc.). Only provide the title.
+                            2. **Challenge Description**: Present a paragraph describing the challenge and provide a detailed, step-by-step guide in HTML format suitable for online implementation.
+                            3. **Challenge Steps**: List the exact steps mentioned in the description in an array format.
+                            4. **Essential Skills**: Enumerate 10 vital skills required for this challenge, prioritizing the provided and important skills.
+                            5. **Category Selection**: Based on the specified careers, skills, and level, select one category from the following options: "'.$categoryTitlesStr.'".
+                            6. **Reflective Questions**: Provide 5 reflective questions for participants to answer after completing the challenge. These questions should encourage participants to reflect on their approach, applied skills, encountered obstacles, and overall learning experience.
+                            7. **Lab Title**: Craft a concise title for the lab.
+                            8. **Lab Description**: Provide a paragraph description about the lab and its focus.
+            
+                            JSON output format (Ensure precise adherence):
+                            {
+                                "labTitle": "Lab Title",
+                                "labDescription": "Lab Description",
+                                "challenges": [
+                                    {
+                                        "challengeTitle": "Creative Challenge Title",
+                                        "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so forth)",
+                                        "category": "Selected Category",
+                                        "steps": ["Step 1", "Step 2", (all steps)],
+                                        "skills": ["Skill 1", "Skill 2", (all skills)],
+                                        "reflections": ["Reflection 1", "Reflection 2", (all reflections)]
+                                    },
+                                    ...
+                                    (5 challenges)
+                                ]
+                            }
+                        ',
                     ],
                 ],
             ];
@@ -1251,5 +1267,122 @@ class AIService
         $shuffledModules = $combinedModules;
 
         return $shuffledModules;
+    }
+
+    public function addAIProjectEvaluation($challengeAssessment, $projectData, $userData, $request)
+    {
+        try {
+            $criteria = collect($challengeAssessment)->map(function ($item) {
+                return [
+                    'id'          => $item['id'],
+                    'title'       => $item['title'],
+                    'description' => $item['description'] ?? null,
+                    'score'       => $item['score'],
+                    'weight'      => $item['weight'],
+                ];
+            })->values()->all();
+
+            $challengeID = $challengeAssessment[0]->challenge_id;
+            $challenge = ChallengeService::getChallengeBasedOnId($challengeID);
+
+            $projectFiles = ProjectFile::where('project_id', $projectData['id'])->get();
+            $items = [];
+
+            foreach ($projectFiles as $file) {
+                $url = $file->path;
+                $type = '';
+
+                // Check for YouTube URLs embedded in iframe tags and capture only the video ID
+                if (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
+                    $type = 'youtube_video';
+                } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/watch\?v=([\w\-_]+)(\?.*)?$/i', $url, $match)) {
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
+                    $type = 'youtube_video';
+                } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?$/i', $url, $match)) {
+                    $url = 'https://www.youtube.com/watch?v='.$match[1]; // Convert embed URL to watch URL
+                    $type = 'youtube_video';
+                } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
+                    $url = $match[1];
+                    $type = 'video';
+                } else {
+                    switch ($file->type) {
+                        case 'docs':
+                            $type = 'file';
+                            break;
+                        case 'video':
+                        case 'audio':
+                            $type = 'video';
+                            break;
+                        case 'image':
+                            $type = 'image';
+                            break;
+                        default:
+                            $type = 'file';
+                    }
+                }
+
+                // Ensure all non-YouTube and non-iframe URLs are prefixed properly
+                if (!preg_match('/^https?:\/\//', $url)) {
+                    $url = config('site-settings.aws_url').ltrim($url, '/');
+                }
+
+                // Remove the prefix if it's a URL
+                if ($type == 'url' && strpos($url, config('site-settings.aws_url')) === 0) {
+                    $url = substr($url, strlen(config('site-settings.aws_url')));
+                }
+
+                $items[] = ['url' => $url, 'type' => $type];
+            }
+
+            try {
+                $requestBody = [
+                    'language'              => 'en',
+                    'status'                => 'published',
+                    'app_url'               => config('app.url'),
+                    'user_id'               => $userData['id'],
+                    'project_id'            => $projectData['id'],
+                    'project_slug'          => $projectData['slug'],
+                    'project_title'         => $projectData['title'],
+                    'project_description'   => preg_replace(['/[\r\n\t\x{00A0}]+/u', '/[\x{2019}\x{2018}]/u'], ['', "'"], strip_tags(html_entity_decode($projectData['description'], ENT_QUOTES | ENT_HTML5))),
+                    'challenge_title'       => $challenge['title'],
+                    'challenge_description' => preg_replace(['/[\r\n\t\x{00A0}]+/u', '/[\x{2019}\x{2018}]/u'], ['', "'"], strip_tags(html_entity_decode($challenge['description'], ENT_QUOTES | ENT_HTML5))),
+                    'criteria'              => $criteria,
+                    // We are not retrieving the below fields yet due to not having the necessary tables. 5/20/2024
+                    // Give the "pitch" with "question" and "answer" just like criteria (table project_pitches)
+                    'items' => $items,
+                ];
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
+            try {
+                $response = $this->projectAssessor($requestBody);
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
+            if ($response) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in addAIProjectEvaluation in AIService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function projectAssessor($data)
+    {
+        $request = new Request('POST', '', [], json_encode($data));
+
+        try {
+            $this->projectAssessorClient->send($request);
+        } catch (Exception $e) {
+        }
+
+        return true;
     }
 }
