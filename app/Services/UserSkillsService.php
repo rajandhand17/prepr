@@ -93,10 +93,7 @@ class UserSkillsService
                     'user_id' => auth()->user()->id,
                     'skill'   => $request->skill_id,
                 ]);
-                if($addSkill==true){
-                    return $addSkill;
-                }
-                return false;
+                return $addSkill;
             }else {
                 return 'already';
             }
@@ -179,7 +176,7 @@ class UserSkillsService
                                 $skills = new stdClass();
                                 $skills->skill_id = $dbSkill->id;
                                 $response = self::addSingleSkill($skills);
-                                if (!$response){
+                                if (!$response && $response!=='already'){
                                     return false;
                                 }
                             }
