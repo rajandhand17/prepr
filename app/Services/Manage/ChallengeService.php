@@ -274,6 +274,7 @@ class ChallengeService
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($request->title, $model);
 
+            $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
             $challenge = new Challenge();
             $challenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $challenge->language = $request->language;
@@ -296,6 +297,7 @@ class ChallengeService
             $challenge->is_open = $is_open;
             $challenge->is_auto_created = $is_auto_created;
             $challenge->is_ai_created = $is_ai_created;
+            $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
             $challenge->save();
 
             return $challenge;
@@ -408,6 +410,7 @@ class ChallengeService
                             break;
                     }
                 }
+                $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
                 $challenge->language = ($request->has('language')) ? $request->language : $challenge->language;
                 $challenge->organization_id = $organization->id;
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
@@ -425,6 +428,7 @@ class ChallengeService
                 $challenge->project_privacy = $project_privacy;
                 $challenge->is_open = $is_open;
                 $challenge->is_auto_created = $is_auto_created;
+                $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
                 $challenge->save();
 
                 return $challenge;
