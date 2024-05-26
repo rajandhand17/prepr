@@ -472,4 +472,16 @@ return [
         'challenge'    => '2',
         'project'      => '3',
     ],
+    'campus_connect_status'  => [
+        'job'   => '0',
+        'story' => '1',
+        'both'  => '2',
+        'no'    => '3',
+    ],
+    'campus_connect_status_id' => [
+        '0' => 'job',
+        '1' => 'story',
+        '2' => 'both',
+        '3' => 'no',
+    ],
 ];

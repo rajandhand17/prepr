@@ -58,8 +58,6 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
             'resource_module_prepr'                 => 'nullable|boolean',
             'skill_titles'                          => 'nullable|array',
             'job_titles'                            => 'nullable|array',
-            'level'                                 => 'required',
-            'duration'                              => 'required',
         ];
 
         return $base_rules;
@@ -73,10 +71,8 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
             'category_id.exists'                    => __('responses.category_not_found'),
             'duration_id.required'                  => __('responses.duration_id_required'),
             'duration_id.exists'                    => __('responses.duration_id_exists'),
-            'duration.required'                     => __('responses.duration_required'),
             'level_id.required'                     => __('responses.level_id_required'),
             'level_id.exists'                       => __('responses.level_id_exists'),
-            'level.required'                        => __('responses.level_required'),
             'skills.array'                          => __('responses.skills_array'),
             'skills.*.numeric'                      => __('responses.skills_numeric'),
             'skills.*.exists'                       => __('responses.skill_not_exists'),

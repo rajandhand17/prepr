@@ -7,6 +7,7 @@ use App\Helpers\RecommendationEngineHelper;
 use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Duration;
+use App\Models\JobTitle;
 // use App\Models\Lab;
 use App\Models\Levels;
 use App\Models\ProjectFile;
@@ -87,19 +88,20 @@ class AIService
 
             // Extract job IDs and titles
             $jobIdsArray = array_column($request['jobs'], 'key');
-            $jobTitlesArray = array_column($request['jobs'], 'value');
+            $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
             $jobTitles = implode(', ', $jobTitlesArray);
 
             // Extract skill titles
-            $skillTitlesArray = array_column($request['skills'], 'value');
+            $skillIdsArray = array_column($request['skills'], 'key');
+            $skillTitlesArray = Skill::whereIn('id', $skillIdsArray)->pluck('title')->toArray();
             $skillTitles = implode(', ', $skillTitlesArray);
 
             // Extract duration and level IDs and titles
             $durationID = $request['duration_id'][0]['key'];
-            $durationTitle = $request['duration_id'][0]['value'];
+            $durationTitle = Duration::where('id', $durationID)->pluck('title')->first();
 
             $levelID = $request['level_id'][0]['key'];
-            $levelTitle = $request['level_id'][0]['value'];
+            $levelTitle = Levels::where('id', $levelID)->pluck('title')->first();
 
             $additionalInformation = $request['additional_information'] ?? 'No additional information';
 
@@ -357,19 +359,20 @@ class AIService
 
             // Extract job IDs and titles
             $jobIdsArray = array_column($request['jobs'], 'key');
-            $jobTitlesArray = array_column($request['jobs'], 'value');
+            $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
             $jobTitles = implode(', ', $jobTitlesArray);
 
             // Extract skill titles
-            $skillTitlesArray = array_column($request['skills'], 'value');
+            $skillIdsArray = array_column($request['skills'], 'key');
+            $skillTitlesArray = Skill::whereIn('id', $skillIdsArray)->pluck('title')->toArray();
             $skillTitles = implode(', ', $skillTitlesArray);
 
             // Extract duration and level IDs and titles
             $durationID = $request['duration_id'][0]['key'];
-            $durationTitle = $request['duration_id'][0]['value'];
+            $durationTitle = Duration::where('id', $durationID)->pluck('title')->first();
 
             $levelID = $request['level_id'][0]['key'];
-            $levelTitle = $request['level_id'][0]['value'];
+            $levelTitle = Levels::where('id', $levelID)->pluck('title')->first();
 
             $additionalInformation = $request['additional_information'] ?? 'No additional information';
 
@@ -411,8 +414,8 @@ class AIService
                             $updatedSkills = $this->processSkills($challenge['skills']);
                             $updatedSkills = array_values($updatedSkills);
                             $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
-                            // Making sure each challenge has more than 5 verified skill
 
+                            // Making sure each challenge has more than 5 verified skill
                             if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                                 continue;
                             }
@@ -750,11 +753,12 @@ class AIService
 
         $additionalInformation = $request['additional_information'] ?? '';
 
+        // Extract duration and level IDs and titles
         $durationID = $request->duration_id;
-        $durationTitle = $request->duration;
+        $durationTitle = Duration::where('id', $durationID)->pluck('title')->first();
 
         $levelID = $request->level_id;
-        $levelTitle = $request->level;
+        $levelTitle = Levels::where('id', $levelID)->pluck('title')->first();
 
         $aiCombinedGroups = [];
 
