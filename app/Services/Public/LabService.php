@@ -290,4 +290,15 @@ class LabService
             return false;
         }
     }
+
+    public static function fetchLabOrganizations($labIds)
+    {
+        try {
+            $fetchLabOrganizations = Lab::whereIn('id', $labIds)->pluck('organization_id');
+
+            return $fetchLabOrganizations;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

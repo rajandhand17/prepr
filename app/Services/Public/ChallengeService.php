@@ -239,4 +239,15 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function fetchChallengeOrganizations($challengeIds)
+    {
+        try {
+            $fetchChallengeOrganizations = Challenge::whereIn('id', $challengeIds)->pluck('organization_id');
+
+            return $fetchChallengeOrganizations;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -93,4 +93,30 @@ class OrganizationService
             return false;
         }
     }
+
+    public function fetchOrganizationIds($userId)
+    {
+        try {
+            $organizations = Organization::where('user_id', $userId)->pluck('id');
+
+            return $organizations;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function fetchOrganizations($organizationIds)
+    {
+        try {
+            $fetchOrganizations = Organization::select('id', 'uuid', 'title', 'slug', 'cover_image', 'profile_image')->whereIn('id', $organizationIds)->get();
+            if ($fetchOrganizations->isEmpty()) {
+                //Statically sending back if no org is available then sending back Prepr organization
+                $fetchOrganizations = Organization::select('id', 'uuid', 'title', 'slug', 'cover_image', 'profile_image')->where('id', '19')->get();
+            }
+
+            return $fetchOrganizations;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
