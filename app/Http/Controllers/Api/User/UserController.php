@@ -62,6 +62,7 @@ class UserController extends AppBaseController
             $checkComponentSlugExistOrNot = UtilityHelper::checkComponentSlugExistOrNot('organization', $slug);
             if ($checkComponentSlugExistOrNot) {
                 $setOrganizationPreference = $this->userRepository->setOrganizationPreference($checkComponentSlugExistOrNot->id);
+
                 return $this->sendResponse(UserResource::make(auth()->user()), __('responses.preferred_organization_updated'));
             }
         } catch (\Exception $e) {

@@ -42,7 +42,7 @@ class UserRepository implements UserInterface
             if ($user->hasRole(['lab_manager', 'challenge_manager', 'resource_manager', 'user'] && $fetchOrganizationIds->isEmpty())) {
                 $fetchOrganizationIds = $this->memberManagementService->fetchComponentBasedOrganizationIds($userEmail);
             }
-            
+
             return $this->organizationService->fetchOrganizations($fetchOrganizationIds);
         } catch (\Exception $e) {
             return false;

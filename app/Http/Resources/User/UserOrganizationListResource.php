@@ -38,6 +38,7 @@ class UserOrganizationListResource extends JsonResource
                     break;
             }
         }
+
         return [
             'id'                => $this->uuid,
             'title'             => $this->title,
