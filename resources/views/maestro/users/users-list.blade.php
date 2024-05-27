@@ -18,76 +18,87 @@
 </div>
 <!-- /.content-header -->
 
- <!-- Main content -->
- <section class="content">
+<!-- Main content -->
+<section class="content">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <!-- /.card -->
+        <div class="row">
+            <div class="col-12">
+                <!-- /.card -->
 
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"></h3>
+                        <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
+                            href="{{route('users.create')}}" role="menuitem">Create User</a>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered data-table">
+                            {!! $html->table([],true) !!}
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
             </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-              <table id="tableInit" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Role</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                    <tbody>
-                        @if($users)
-                            @foreach($users as $key => $user)
-                                <tr>
-                                    <td>{{ 'User' }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td> Status</td>
-                                    <td>X</td>
-                                </tr>
-                            @endforeach
-                        @endif  
-                    </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Role</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
-              </table>
-            </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
+            <!-- /.col -->
         </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
+        <!-- /.row -->
     </div>
     <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+</section>
+<!-- /.content -->
 @stop
-<script src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/jquery/jquery.min.js'}}"></script>
+
+@section('scripts')
+{!! $html->scripts() !!}
+
 <script>
-    $(function () {
-        $('#tableInit').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
+    function deleteUser(url) {
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    },
+                    success: function (result) {
+                        Swal.fire(
+                            'Deleted!',
+                            result.message,
+                            'success'
+                        );
+                        setTimeout(
+                        function () {
+                            window.location.reload(true);
+                        }, 1500);
+                    },
+                    error: function (error) {
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while deleting the user.',
+                            'error'
+                        );
+                    }
+                });
+            }else {
+                Swal.fire(
+                    'Canceled!',
+                    'You are safe , Record is not deleted!',
+                    'error'
+                );
+            }
         });
-    });
+    }
 </script>
+@endsection
