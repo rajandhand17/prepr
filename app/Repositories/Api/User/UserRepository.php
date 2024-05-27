@@ -28,7 +28,7 @@ class UserRepository implements UserInterface
         }
     }
 
-    public function organizationListing()
+    public function organizationListing($request)
     {
         try {
             $user = auth()->user();
@@ -43,7 +43,7 @@ class UserRepository implements UserInterface
                 $fetchOrganizationIds = $this->memberManagementService->fetchComponentBasedOrganizationIds($userEmail);
             }
 
-            return $this->organizationService->fetchOrganizations($fetchOrganizationIds);
+            return $this->organizationService->fetchOrganizations($request, $fetchOrganizationIds);
         } catch (\Exception $e) {
             return false;
         }

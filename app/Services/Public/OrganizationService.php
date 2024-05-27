@@ -105,16 +105,18 @@ class OrganizationService
         }
     }
 
-    public static function fetchOrganizations($organizationIds)
+    public static function fetchOrganizations($request, $organizationIds)
     {
         try {
-            $fetchOrganizations = Organization::select('id', 'uuid', 'title', 'slug', 'cover_image', 'profile_image')->whereIn('id', $organizationIds)->get();
-            if ($fetchOrganizations->isEmpty()) {
+            $limit = config('site-settings.listing_limit');
+            $organization_list = Organization::select('id', 'uuid', 'title', 'slug', 'cover_image', 'profile_image')->whereIn('id', $organizationIds);
+            $fetchOrganizations = self::filterOrganizationList($request, $organization_list)->limit(config('site-settings.switcher_listing_limit'));
+            if ($fetchOrganizations->get()->isEmpty()) {
                 //Statically sending back if no org is available then sending back Prepr organization
-                $fetchOrganizations = Organization::select('id', 'uuid', 'title', 'slug', 'cover_image', 'profile_image')->where('id', '19')->get();
+                $fetchOrganizations = Organization::select('id', 'uuid', 'title', 'slug', 'cover_image', 'profile_image')->where('id', '19');
             }
 
-            return $fetchOrganizations;
+            return $fetchOrganizations->get();
         } catch (\Exception $e) {
             return false;
         }

@@ -42,10 +42,10 @@ class UserController extends AppBaseController
         }
     }
 
-    public function getOrganizationList()
+    public function getOrganizationList(Request $request)
     {
         try {
-            $organizationListing = $this->userRepository->organizationListing();
+            $organizationListing = $this->userRepository->organizationListing($request);
             if ($organizationListing != false) {
                 return $this->sendResponse(UserOrganizationListResource::collection($organizationListing), __('responses.found_organization_list'));
             }
