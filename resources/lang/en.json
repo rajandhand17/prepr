@@ -71,7 +71,7 @@
     "responses.purpose_required": "This purpose field is required",
     "responses.unique_username": "Please provide unique username, this username already taken!",
     "responses.username_field_required": "This username field is required",
-    "responses.username_regex_pattern": "Username should contain letters, numbers and `-_`",
+    "responses.username_regex_pattern": "Username should only contain letters, numbers or underscore( _ )",
     "responses.user_type_required": "This user type field is required",
     "responses.password_confirmation_required_field": "This password confirmation field is required",
     "responses.match_confirmed_password": "The password does not match the confirmed password!",
@@ -1167,5 +1167,6 @@
     "responses.campus_connect_story_body_required": "The story body field is required",
     "responses.campus_connect_story_image_mimes": "The allowed extension for image are png, jpg and jpeg",
     "responses.school_fetched_failed" : "Failed to fetch list of school from campus connect",
-    "responses.school_fetched_success": "The school list has been successfully retrieved"
+    "responses.school_fetched_success": "The school list has been successfully retrieved",
+    "responses.preferred_organization_updated": "Preferred Organization has been updated successfully."
 }
