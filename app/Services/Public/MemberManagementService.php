@@ -86,4 +86,34 @@ class MemberManagementService
             return false;
         }
     }
+
+    public function fetchComponentBasedOrganizationIds($userEmail)
+    {
+        try {
+            // Fetch all member management records for the user
+            $memberRecords = MemberManagement::where('email', $userEmail)
+                ->where('invite_status', '1')
+                ->get(['module_id', 'module_type']);
+
+            $organizationIds = collect();
+            $moduleIdsByType = $memberRecords->groupBy('module_type');
+            if (isset($moduleIdsByType[0])) {
+                $organizationIds = $organizationIds->merge($moduleIdsByType[0]->pluck('module_id'));
+            }
+
+            if (isset($moduleIdsByType[1])) {
+                $fetchLabOrganizations = LabService::fetchLabOrganizations($moduleIdsByType[1]->pluck('module_id'));
+                $organizationIds = $organizationIds->merge($fetchLabOrganizations);
+            }
+
+            if (isset($moduleIdsByType[2])) {
+                $fetchChallengeOrganizations = ChallengeService::fetchChallengeOrganizations($moduleIdsByType[2]->pluck('module_id'));
+                $organizationIds = $organizationIds->merge($fetchChallengeOrganizations);
+            }
+
+            return $organizationIds->unique()->values();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
