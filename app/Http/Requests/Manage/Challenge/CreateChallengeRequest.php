@@ -25,52 +25,94 @@ class CreateChallengeRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'request_type'                          => 'required|in:draft,publish,archive',
-            'organization_id'                       => 'required|exists:organizations,uuid',
-            'category_id'                           => 'required|exists:categories,id',
-            'duration_id'                           => 'required|exists:durations,id',
-            'level_id'                              => 'required|exists:levels,id',
-            'title'                                 => 'required_if:request_type,publish|unique:challenges,title',
-            'description'                           => 'required_if:request_type,publish',
-            'privacy'                               => 'required_if:request_type,publish|in:yes,no',
-            'cover_image'                           => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
-            'source_link'                           => 'nullable|url',
-            'agreement'                             => 'required',
-            'is_notification_enabled'               => 'in:yes,no',
-            'project_privacy'                       => 'in:yes,no',
-            'is_open'                               => 'in:yes,no',
-            'is_auto_created'                       => 'in:yes,no',
-            'achievement_image'                     => 'required|mimes:jpeg,jpg,png,webp|max:1024',
-            'achievement_participation'             => 'required',
-            'achievement_name'                      => 'required',
-            'achievement_prize'                     => 'required|numeric',
-            'achievement_points'                    => 'required|numeric',
-            'skills'                                => 'required|array',
-            'skills.*'                              => 'numeric|exists:skills,id',
-            'skill_groups'                          => 'nullable|array',
-            'skill_groups.*'                        => 'numeric|exists:skill_groups,id',
-            'skill_stacks'                          => 'nullable|array',
-            'skill_stacks.*'                        => 'numeric|exists:skill_stacks,id',
-            'tags'                                  => 'required|array',
-            'tags.*'                                => 'numeric|exists:tags,id',
-            'tag_groups'                            => 'nullable|array',
-            'tag_groups.*'                          => 'numeric|exists:tag_groups,id',
-            'min_rank'                              => 'required|numeric',
-            'min_points'                            => 'required|numeric',
-            'project_submission_requirement_ids'    => 'required|array',
-            'max_project_submission'                => 'required|numeric',
-            'min_experience'                        => 'required|numeric',
-            'min_imported_badges'                   => 'required|numeric',
-            'min_achievement_counts'                => 'required|numeric',
-            'template_id'                           => 'required|numeric',
-            'allow_submit_project'                  => 'in:yes,no',
-            'requirement_program'                   => 'in:yes,no',
-            'complete_education_program'            => 'in:yes,no',
-            'complete_experience'                   => 'in:yes,no',
-            'automatic_alert'                       => 'required|in:0,1',
-            'timeline_type'                         => 'required|in:restricted,flexible',
+            'request_type'                       => 'required|in:draft,publish,archive',
+            'organization_id'                    => 'required|exists:organizations,uuid',
+            'category_id'                        => 'required|exists:categories,id',
+            'duration_id'                        => 'required|exists:durations,id',
+            'level_id'                           => 'required|exists:levels,id',
+            'title'                              => 'required_if:request_type,publish|unique:challenges,title',
+            'description'                        => 'required_if:request_type,publish',
+            'privacy'                            => 'required_if:request_type,publish|in:yes,no',
+            'cover_image'                        => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
+            'source_link'                        => 'nullable|url',
+            'agreement'                          => 'required',
+            'is_notification_enabled'            => 'in:yes,no',
+            'project_privacy'                    => 'in:yes,no',
+            'is_open'                            => 'in:yes,no',
+            'is_auto_created'                    => 'in:yes,no',
+            'achievement_image'                  => 'required|mimes:jpeg,jpg,png,webp|max:1024',
+            'achievement_participation'          => 'required',
+            'achievement_name'                   => 'required',
+            'achievement_prize'                  => 'required|numeric',
+            'achievement_points'                 => 'required|numeric',
+            'skills'                             => 'required|array',
+            'skills.*'                           => 'numeric|exists:skills,id',
+            'skill_groups'                       => 'nullable|array',
+            'skill_groups.*'                     => 'numeric|exists:skill_groups,id',
+            'skill_stacks'                       => 'nullable|array',
+            'skill_stacks.*'                     => 'numeric|exists:skill_stacks,id',
+            'tags'                               => 'required|array',
+            'tags.*'                             => 'numeric|exists:tags,id',
+            'tag_groups'                         => 'nullable|array',
+            'tag_groups.*'                       => 'numeric|exists:tag_groups,id',
+            'min_rank'                           => 'required|numeric',
+            'min_points'                         => 'required|numeric',
+            'project_submission_requirement_ids' => 'required|array',
+            'max_project_submission'             => 'required|numeric',
+            'min_experience'                     => 'required|numeric',
+            'min_imported_badges'                => 'required|numeric',
+            'min_achievement_counts'             => 'required|numeric',
+            'template_id'                        => 'required|numeric',
+            'allow_submit_project'               => 'in:yes,no',
+            'requirement_program'                => 'in:yes,no',
+            'complete_education_program'         => 'in:yes,no',
+            'complete_experience'                => 'in:yes,no',
+            'automatic_alert'                    => 'required|in:0,1',
+            'timeline_type'                      => 'required|in:restricted,flexible',
+            'integrate_campus_connect'           => 'in:both,job,story,no',
         ];
 
+        /*** CAMPUS CONNECT JOB RULE */
+        if (in_array($this->get('integrate_campus_connect'), ['both', 'job'])) {
+            $base_rules['campus_connect_job_title'] = 'required|max:140|min:5';
+            $base_rules['campus_connect_job_type'] = 'required';
+            $base_rules['campus_connect_no_of_position'] = 'required';
+            $base_rules['campus_connect_qualification'] = 'required';
+            $base_rules['campus_connect_province'] = 'required';
+            $base_rules['campus_connect_city'] = 'required';
+            $base_rules['campus_connect_description'] = 'required';
+            $base_rules['campus_connect_deadline'] = 'required';
+            $base_rules['campus_connect_hours_per_week'] = 'required';
+            $base_rules['campus_connect_application_instructions'] = 'required';
+            $base_rules['campus_connect_preferred_response'] = 'required';
+            $base_rules['campus_connect_schools'] = 'required';
+            $base_rules['campus_connect_salary_amount'] = 'required|numeric';
+            $base_rules['campus_connect_salary_payment_frequency'] = 'required';
+
+            if ($this->get('campus_connect_preferred_response') == 'Via Email') {
+                $base_rules['campus_connect_application_email'] = 'required';
+            }
+        }
+        /*** CAMPUS CONNECT JOB RULE END */
+
+        /** CAMPUS CONNECT STORY FORM VALIDATION */
+        if (in_array($this->get('integrate_campus_connect'), ['both', 'story'])) {
+            $base_rules['campus_connect_story_title'] = 'required|max:140|min:5';
+            $base_rules['campus_connect_story_body'] = 'required';
+            $base_rules['campus_connect_story_media_type'] = 'nullable';
+            $base_rules['campus_connect_story_image_title'] = 'nullable';
+            $base_rules['campus_connect_story_image_description'] = 'nullable';
+            $base_rules['campus_connect_story_video_youtube_url'] = 'nullable';
+            $base_rules['campus_connect_has_image_file'] = 'nullable';
+            $base_rules['campus_connect_schools'] = 'required';
+
+            if ($this->get('campus_connect_has_image_file') == 'true' && $this->file('campus_connect_story_image')) {
+                $base_rules['campus_connect_story_image'] = 'nullable|file|mimes:jpeg,png,jpg';
+            } else {
+                $base_rules['campus_connect_story_image'] = 'nullable|string';
+            }
+        }
+        /** CAMPUS CONNECT STORY FORM VALIDATION END */
         if ($this->request->has('winner_achievement_participation')) {
             $base_rules['winner_achievement_image'] = 'array';
             $base_rules['winner_achievement_image.*'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
@@ -168,69 +210,93 @@ class CreateChallengeRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors(),
+            'success' => false,
+            'message' => 'Validation errors',
+            'data'    => $validator->errors(),
         ], 422));
     }
 
-    public function message()
+    public function messages()
     {
         return [
-            'organization_id.required'                    => __('responses.organization_id_required'),
-            'organization_id.exists'                      => __('responses.organization_not_found'),
-            'category_id.required'                        => __('responses.category_id_required'),
-            'category_id.exists'                          => __('responses.category_not_found'),
-            'duration_id.required'                        => __('responses.duration_id_required'),
-            'duration_id.exists'                          => __('responses.duration_id_exists'),
-            'level_id.required'                           => __('responses.level_id_required'),
-            'level_id.exists'                             => __('responses.level_id_exists'),
-            'title.required_if'                           => __('responses.title_required'),
-            'title.unique'                                => __('responses.challenge_title_unique'),
-            'description.required_if'                     => __('responses.description_required'),
-            'request_type.required'                       => __('responses.request_type_required'),
-            'privacy.in'                                  => __('responses.choose_yes_no'),
-            'privacy.required_if'                         => __('responses.privacy_required'),
-            'source_link'                                 => __('responses.challenge_source_link'),
-            'is_notification_enabled.in'                  => __('responses.choose_yes_no'),
-            'project_privacy.in'                          => __('responses.choose_yes_no'),
-            'is_open'                                     => __('responses.choose_yes_no'),
-            'is_auto_created'                             => __('responses.choose_yes_no'),
-            'achievement_name.required'                   => __('responses.achievement_name_required'),
-            'achievement_points.required'                 => __('responses.achievement_points_required'),
-            'achievement_prize.required'                  => __('responses.achievement_prize_required'),
-            'achievement_image.required'                  => __('responses.achievement_image_required'),
-            'skills.required'                             => __('responses.skills_required'),
-            'skills.required_if'                          => __('responses.skill_not_found'),
-            'skill_groups.*.exists'                       => __('responses.skill_groups_not_exists'),
-            'skill_groups.*.array'                        => __('responses.skill_groups_array'),
-            'skill_stacks.*.array'                        => __('responses.skill_stacks_array'),
-            'skill_stacks.*.exists'                       => __('responses.skill_stack_not_found'),
-            'tags.required'                               => __('responses.tags_required'),
-            'tags.numeric'                                => __('responses.tags_numeric'),
-            'tag_groups.*.exists'                         => __('responses.tag_groups_not_found'),
-            'tag_groups.*.array'                          => __('responses.tag_groups_array'),
-            'tag_groups.*.numeric'                        => __('responses.tag_groups_numeric'),
-            'winner_achievement_image.required'           => __('responses.winner_achievement_image_required'),
-            'winner_achievement_image.array'              => __('responses.winner_achievement_image_array'),
-            'winner_achievement_participation.required'   => __('responses.winner_achievement_participation_required'),
-            'winner_achievement_participation.array'      => __('responses.winner_achievement_participation_array'),
-            'winner_achievement_name.required'            => __('responses.winner_achievement_name_required'),
-            'winner_achievement_name.array'               => __('responses.winner_achievement_name_array'),
-            'winner_achievement_prize.required'           => __('responses.winner_achievement_prize_required'),
-            'winner_achievement_prize.array'              => __('responses.winner_achievement_prize_array'),
-            'winner_achievement_points.required'          => __('responses.winner_achievement_points_required'),
-            'winner_achievement_points.array'             => __('responses.winner_achievement_points_array'),
-            'achievement_conditions.required'             => __('responses.achievement_conditions_required'),
-            'achievement_conditions.array'                => __('responses.achievement_conditions_array'),
-            'host_id.required'                            => __('responses.host_id_required'),
-            'host_id.array'                               => __('responses.host_id_array'),
-            'project_submission_requirement_ids.required' => __('responses.project_submission_requirement_ids_required'),
-            'project_submission_requirement_ids.array'    => __('responses.project_submission_requirement_ids_array'),
-            'custom_timelines_title.required'             => __('responses.custom_timelines_title_required'),
-            'custom_timelines_title.array'                => __('responses.custom_timelines_title_array'),
-            'custom_timelines_date.required'              => __('responses.custom_timelines_date_required'),
-            'custom_timelines_date.array'                 => __('responses.custom_timelines_date_array'),
+            'organization_id.required'                         => __('responses.organization_id_required'),
+            'organization_id.exists'                           => __('responses.organization_not_found'),
+            'category_id.required'                             => __('responses.category_id_required'),
+            'category_id.exists'                               => __('responses.category_not_found'),
+            'duration_id.required'                             => __('responses.duration_id_required'),
+            'duration_id.exists'                               => __('responses.duration_id_exists'),
+            'level_id.required'                                => __('responses.level_id_required'),
+            'level_id.exists'                                  => __('responses.level_id_exists'),
+            'title.required_if'                                => __('responses.title_required'),
+            'title.unique'                                     => __('responses.challenge_title_unique'),
+            'description.required_if'                          => __('responses.description_required'),
+            'request_type.required'                            => __('responses.request_type_required'),
+            'privacy.in'                                       => __('responses.choose_yes_no'),
+            'privacy.required_if'                              => __('responses.privacy_required'),
+            'source_link'                                      => __('responses.challenge_source_link'),
+            'is_notification_enabled.in'                       => __('responses.choose_yes_no'),
+            'project_privacy.in'                               => __('responses.choose_yes_no'),
+            'is_open'                                          => __('responses.choose_yes_no'),
+            'is_auto_created'                                  => __('responses.choose_yes_no'),
+            'achievement_name.required'                        => __('responses.achievement_name_required'),
+            'achievement_points.required'                      => __('responses.achievement_points_required'),
+            'achievement_prize.required'                       => __('responses.achievement_prize_required'),
+            'achievement_image.required'                       => __('responses.achievement_image_required'),
+            'skills.required'                                  => __('responses.skills_required'),
+            'skills.required_if'                               => __('responses.skill_not_found'),
+            'skill_groups.*.exists'                            => __('responses.skill_groups_not_exists'),
+            'skill_groups.*.array'                             => __('responses.skill_groups_array'),
+            'skill_stacks.*.array'                             => __('responses.skill_stacks_array'),
+            'skill_stacks.*.exists'                            => __('responses.skill_stack_not_found'),
+            'tags.required'                                    => __('responses.tags_required'),
+            'tags.numeric'                                     => __('responses.tags_numeric'),
+            'tag_groups.*.exists'                              => __('responses.tag_groups_not_found'),
+            'tag_groups.*.array'                               => __('responses.tag_groups_array'),
+            'tag_groups.*.numeric'                             => __('responses.tag_groups_numeric'),
+            'winner_achievement_image.required'                => __('responses.winner_achievement_image_required'),
+            'winner_achievement_image.array'                   => __('responses.winner_achievement_image_array'),
+            'winner_achievement_participation.required'        => __('responses.winner_achievement_participation_required'),
+            'winner_achievement_participation.array'           => __('responses.winner_achievement_participation_array'),
+            'winner_achievement_name.required'                 => __('responses.winner_achievement_name_required'),
+            'winner_achievement_name.array'                    => __('responses.winner_achievement_name_array'),
+            'winner_achievement_prize.required'                => __('responses.winner_achievement_prize_required'),
+            'winner_achievement_prize.array'                   => __('responses.winner_achievement_prize_array'),
+            'winner_achievement_points.required'               => __('responses.winner_achievement_points_required'),
+            'winner_achievement_points.array'                  => __('responses.winner_achievement_points_array'),
+            'achievement_conditions.required'                  => __('responses.achievement_conditions_required'),
+            'achievement_conditions.array'                     => __('responses.achievement_conditions_array'),
+            'host_id.required'                                 => __('responses.host_id_required'),
+            'host_id.array'                                    => __('responses.host_id_array'),
+            'project_submission_requirement_ids.required'      => __('responses.project_submission_requirement_ids_required'),
+            'project_submission_requirement_ids.array'         => __('responses.project_submission_requirement_ids_array'),
+            'custom_timelines_title.required'                  => __('responses.custom_timelines_title_required'),
+            'custom_timelines_title.array'                     => __('responses.custom_timelines_title_array'),
+            'custom_timelines_date.required'                   => __('responses.custom_timelines_date_required'),
+            'custom_timelines_date.array'                      => __('responses.custom_timelines_date_array'),
+            'integrate_campus_connect.in'                      => __('responses.integrate_campus_connect_in'),
+            'campus_connect_job_title.required'                => __('responses.campus_connect_job_title_required'),
+            'campus_connect_job_title.max'                     => __('responses.campus_connect_job_title_max'),
+            'campus_connect_job_title.min'                     => __('responses.campus_connect_job_title_min'),
+            'campus_connect_job_type.required'                 => __('responses.campus_connect_job_type_required'),
+            'campus_connect_no_of_position.required'           => __('responses.campus_connect_no_of_position_required'),
+            'campus_connect_qualification.required'            => __('responses.campus_connect_qualification_required'),
+            'campus_connect_province.required'                 => __('responses.campus_connect_province_required'),
+            'campus_connect_city.required'                     => __('responses.campus_connect_city_required'),
+            'campus_connect_description.required'              => __('responses.campus_connect_description_required'),
+            'campus_connect_deadline.required'                 => __('responses.campus_connect_deadline_required'),
+            'campus_connect_hours_per_week.required'           => __('responses.campus_connect_hours_per_week_required'),
+            'campus_connect_application_instructions.required' => __('responses.campus_connect_application_instructions_required'),
+            'campus_connect_preferred_response.required'       => __('responses.campus_connect_preferred_response_required'),
+            'campus_connect_schools.required'                  => __('responses.campus_connect_schools_required'),
+            'campus_connect_salary_amount.required'            => __('responses.campus_connect_salary_amount_required'),
+            'campus_connect_salary_amount.numeric'             => __('responses.campus_connect_salary_amount_numeric'),
+            'campus_connect_salary_payment_frequency.required' => __('responses.campus_connect_salary_payment_frequency_required'),
+            'campus_connect_application_email.required'        => __('responses.campus_connect_application_email_required'),
+            'campus_connect_story_title.required'              => __('responses.campus_connect_story_title_required'),
+            'campus_connect_story_title.max'                   => __('responses.campus_connect_story_title_max'),
+            'campus_connect_story_title.min'                   => __('responses.campus_connect_story_title_min'),
+            'campus_connect_story_body.required'               => __('responses.campus_connect_story_body_required'),
+            'campus_connect_story_image.mimes'                 => __('responses.campus_connect_story_image_mimes'),
         ];
     }
 }

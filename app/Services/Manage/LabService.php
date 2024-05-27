@@ -195,6 +195,7 @@ class LabService
             $model = new Lab();
             $slug = UtilityHelper::generateSlug($request->title, $model);
 
+            $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
             $lab = new Lab();
             $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $lab->language = $request->language;
@@ -220,6 +221,7 @@ class LabService
             $lab->is_notification_enabled = ($request->is_notification_enabled == 'yes') ? '1' : '0';
             $lab->is_verified = '0';
             $lab->is_live_event_enabled = $request->get('is_live_event_enabled') === 'yes' ? true : false;
+            $lab->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
             $lab->save();
 
             return $lab;
@@ -322,6 +324,7 @@ class LabService
                         break;
                 }
 
+                $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
                 $lab->language = ($request->has('language')) ? $request->language : $lab->language;
                 $lab->organization_id = $organization->id;
                 $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
@@ -339,6 +342,7 @@ class LabService
                 $lab->is_achievement_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_achievement_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
                 $lab->is_notification_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_notification_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
                 $lab->is_live_event_enabled = $request->get('is_live_event_enabled') === 'yes' ? true : false;
+                $lab->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
                 $lab->save();
 
                 return $lab;

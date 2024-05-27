@@ -150,7 +150,6 @@ class ResourceCollectionResource extends JsonResource
             'cover_image'                   => $this->media,
             'privacy'                       => $privacy,
             'status'                        => $status,
-            'is_accessible'                 => $is_accessible,
             'duration_id'                   => $duration_id,
             'duration'                      => $duration,
             'level_id'                      => $level_id,
