@@ -261,4 +261,17 @@ class UserService
             return false;
         }
     }
+
+    public function setOrganizationPreference($organizationId)
+    {
+        try {
+            $user = auth()->user();
+            $user->preferred_organization = $organizationId;
+            $user->save();
+
+            return $user;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 }
