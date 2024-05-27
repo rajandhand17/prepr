@@ -5,6 +5,7 @@ return [
     'pagination_per_page_career'   => '3',
     'message_per_page'             => '30',
     'listing_limit'                => '20',
+    'switcher_listing_limit'       => '5',
     'dropdown_listing_limit'       => '20',
     'explore_page_limit_max'       => '12',
     'explore_page_limit_min'       => '6',
