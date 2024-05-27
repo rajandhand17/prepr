@@ -116,5 +116,4 @@ class MemberManagementService
             return false;
         }
     }
-
 }
